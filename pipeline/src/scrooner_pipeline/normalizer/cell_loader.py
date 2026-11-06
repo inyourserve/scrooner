@@ -11,7 +11,9 @@ facts.normalize_payload with an fsn:// lineage row, delete the family's data
 points for the company, insert the valued cells, and replace the blank
 reasons under one analytics.rule_run (scope run + company + rule). Plan mode
 does all of it and rolls back. Idempotent: the same file twice gives the same
-rows. There is no before-image and no rollback: re-load the family file.
+rows. The loader takes no before-image itself; a caller that needs a rollback
+copies the companies' canonical_fact and cell_blank_reason rows first
+(`scrooner-fsn pilot-prod`) and puts them back with `restore` (`scrooner-cells restore`).
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date
@@ -158,6 +161,8 @@ class LoadReport:
     overridden: int = 0
     lineage_defects: int = 0
     skipped_loaded: int = 0
+    headroom_waits: int = 0
+    protected: int = 0
     per_company: list[dict[str, Any]] = field(default_factory=list)
 
     def reject(self, line: int, why: str, **ctx: Any) -> None:
@@ -438,6 +443,90 @@ def materialize_fsn_fact(
         return [x[0] for x in cur.fetchall()]
 
 
+HEADROOM_SLEEP_S = 30.0
+HEADROOM_MAX_WAITS = 60  # 30 min, then the shard fails rather than wait forever
+
+
+def wait_for_headroom(
+    conn: psycopg.Connection,
+    max_backends: int,
+    sleep: Callable[[float], None] = time.sleep,
+) -> int:
+    """Pause while more than max_backends client backends are open (the founder's connection budget,
+    re-checked during a run, not only at its start). Returns the number of waits; raises after
+    HEADROOM_MAX_WAITS."""
+    for waits in range(HEADROOM_MAX_WAITS + 1):
+        used = conn.execute(
+            "select count(*) from pg_stat_activity where backend_type = 'client backend'"
+        ).fetchone()[0]  # type: ignore[index]
+        conn.commit()
+        if used <= max_backends:
+            return waits
+        logger.warning(
+            "cell_loader.headroom_wait", used=used, max_backends=max_backends
+        )
+        sleep(HEADROOM_SLEEP_S)
+    raise RuntimeError(
+        f"client backends stayed above {max_backends} for {HEADROOM_MAX_WAITS} checks"
+    )
+
+
+def protect_cells(
+    conn: psycopg.Connection,
+    cid: int,
+    scope_ids: list[int],
+    valued: list[CellRow],
+    blanks: list[CellRow],
+    concept_ids: dict[str, int],
+    run_id: str,
+    package_sha: str,
+) -> int:
+    """Inside the company's transaction: the family's keys of this company are protected (0113) exactly
+    where this load wrote them. Valued keys carry their value; a reasoned blank is protected with value
+    null (0115: "null = a protected blank"); on a schema without 0115 blanks stay unprotected."""
+    nullable = (
+        conn.execute(
+            "select is_nullable from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'slot_protected_cell' and column_name = 'value'"
+        ).fetchone()
+        or ("NO",)
+    )[0] == "YES"
+    keys: dict[tuple[int, int], tuple[str, Decimal | None]] = {}
+    if nullable:
+        for b in blanks:
+            if b.period_id is not None:
+                keys[(concept_ids[b.key.data_point_name], b.period_id)] = (
+                    b.rule_id,
+                    None,
+                )
+    for r in valued:
+        keys[(concept_ids[r.key.data_point_name], r.period_id)] = (r.rule_id, r.value)  # type: ignore[index]
+    with conn.cursor() as cur:
+        cur.execute(
+            "delete from analytics.slot_protected_cell where company_id = %s and canonical_concept_id = any(%s)",
+            (cid, scope_ids),
+        )
+        if keys:
+            cur.execute(
+                """
+                insert into analytics.slot_protected_cell
+                    (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)
+                select %s, u.c, u.p, u.r, u.v, %s, %s
+                from unnest(%s::bigint[], %s::bigint[], %s::text[], %s::numeric[]) as u(c, p, r, v)
+                """,
+                (
+                    cid,
+                    run_id,
+                    package_sha,
+                    [k[0] for k in keys],
+                    [k[1] for k in keys],
+                    [v[0] for v in keys.values()],
+                    [v[1] for v in keys.values()],
+                ),
+            )
+    return len(keys)
+
+
 def _has_source_value_ids(conn: psycopg.Connection) -> bool:
     with conn.cursor() as cur:
         cur.execute(
@@ -575,10 +664,16 @@ def load(
     connect: Callable[[], psycopg.Connection] | None = None,
     shard: tuple[int, int] | None = None,
     skip_loaded: bool = False,
+    max_backends: int | None = None,
+    sleep: Callable[[float], None] = time.sleep,
+    protect: bool = False,
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
-    file's data points). apply=False plans inside a transaction and rolls back."""
+    file's data points). apply=False plans inside a transaction and rolls back.
+    max_backends: before each company, wait while more client backends than this are open.
+    protect: record every written key in analytics.slot_protected_cell (0113) so the nightly refresh
+    cannot overwrite it; the family's other keys of the company lose their protection."""
     mode = "apply" if apply else "dry_run"
     rep = LoadReport(family, mode, [str(p) for p in paths], {})
     raw_rows: list[tuple[int, dict[str, Any]]] = []
@@ -719,6 +814,8 @@ def load(
     done = 0
     for cid in sorted(by_company):
         company_rows = by_company[cid]
+        if max_backends is not None:
+            rep.headroom_waits += wait_for_headroom(conn, max_backends, sleep)
         for attempt in range(1, 4):
             try:
                 _load_company(
@@ -733,6 +830,8 @@ def load(
                     prov,
                     apply,
                     rep,
+                    protect=protect,
+                    package_sha=",".join(rep.sha256.values())[:200],
                 )
             except _PlanRollback:
                 break
@@ -784,6 +883,9 @@ def _load_company(
     prov: bool,
     apply: bool,
     rep: LoadReport,
+    *,
+    protect: bool = False,
+    package_sha: str = "",
 ) -> None:
     """One company in one transaction; plan mode raises _PlanRollback at the end so it rolls back."""
     if True:
@@ -944,6 +1046,18 @@ def _load_company(
             for rid, reasons in reasons_by_rule.items():
                 n_reasons += replace_rule_reasons(conn, run_id, cid, rid, reasons)
             rep.reasons_written += n_reasons
+            if protect:
+                blanks = [r for r in bound if r.state in BLANK_STATES]
+                rep.protected += protect_cells(
+                    conn,
+                    cid,
+                    scope_ids,
+                    valued,
+                    blanks,
+                    concept_ids,
+                    run_id,
+                    package_sha,
+                )
             rep.companies += 1
             rep.per_company.append(
                 {
@@ -978,3 +1092,92 @@ def _finish(
         **{k: v for k, v in stats.items() if k not in ("sha256", "files")},
     )
     return rep
+
+
+BEFORE_IMAGE_TABLES = (
+    ("analytics.canonical_fact", "canonical_fact.csv.gz", "canonical_concept_id"),
+    ("analytics.cell_blank_reason", "cell_blank_reason.csv.gz", "data_point_name"),
+    # protection rows (0113): a restored key is protected exactly as before the write
+    (
+        "analytics.slot_protected_cell",
+        "slot_protected_cell.csv.gz",
+        "canonical_concept_id",
+    ),
+)
+
+
+def restore(
+    conn: psycopg.Connection,
+    before_dir: Path,
+    company_ids: list[int],
+    data_points: list[str],
+    *,
+    apply: bool,
+) -> dict[str, Any]:
+    """Put a before-image (CSV with header, as `copy ... to stdout with csv header` wrote it) back for the
+    named companies and data points: per company, in one transaction, delete the current canonical_fact,
+    cell_blank_reason and slot_protected_cell rows in scope and insert the before-image rows (original ids). Rows outside the
+    data points are not touched; core.period rows a load created stay (harmless, unreferenced). Plan mode rolls
+    back each company."""
+    import gzip
+
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, name from analytics.canonical_concept where name = any(%s)",
+            (data_points,),
+        )
+        concept_ids = [r[0] for r in cur.fetchall()]
+    staged: dict[str, tuple[str, list[str]]] = {}
+    for table, fname, _ in BEFORE_IMAGE_TABLES:
+        path = before_dir / fname
+        with gzip.open(path, "rt") as fh:
+            header = fh.readline().strip()
+        cols = header.split(",")
+        tmp = "_before_" + table.split(".")[1]
+        conn.execute(f"create temp table if not exists {tmp} (like {table})")
+        conn.execute(f"truncate {tmp}")
+        with (
+            gzip.open(path, "rb") as fh,
+            conn.cursor().copy(
+                f"copy {tmp} ({header}) from stdin with csv header"
+            ) as cp,
+        ):
+            while chunk := fh.read(1 << 20):
+                cp.write(chunk)
+        staged[table] = (tmp, cols)
+    conn.commit()
+    out: dict[str, Any] = {"mode": "apply" if apply else "dry_run", "companies": {}}
+    for cid in company_ids:
+        counts: dict[str, int] = {}
+        try:
+            with conn.transaction():
+                conn.execute("set local scrooner.slot_writer = 'on'")
+                for table, _, key in BEFORE_IMAGE_TABLES:
+                    tmp, cols = staged[table]
+                    scope = (
+                        concept_ids if key == "canonical_concept_id" else data_points
+                    )
+                    collist = ", ".join(cols)
+                    with conn.cursor() as cur:
+                        cur.execute(
+                            f"delete from {table} where company_id = %s and {key} = any(%s)",
+                            (cid, scope),
+                        )
+                        counts[f"{table}.deleted"] = cur.rowcount
+                        overriding = (
+                            ""
+                            if table == "analytics.slot_protected_cell"
+                            else " overriding system value"
+                        )
+                        cur.execute(
+                            f"insert into {table} ({collist}){overriding} "
+                            f"select {collist} from {tmp} where company_id = %s and {key} = any(%s)",
+                            (cid, scope),
+                        )
+                        counts[f"{table}.restored"] = cur.rowcount
+                if not apply:
+                    raise _PlanRollback
+        except _PlanRollback:
+            pass
+        out["companies"][cid] = counts
+    return out

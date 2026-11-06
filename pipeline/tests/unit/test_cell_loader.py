@@ -339,3 +339,210 @@ def test_fsn_store_cell_keeps_source_value_ids_as_its_lineage(conn, tmp_path):
         (cid, ccid, pid),
     ).fetchone()
     assert got == (Decimal("100"), [], [7001, 7002])
+
+
+class _Backends:
+    """A connection whose client-backend count follows a script."""
+
+    def __init__(self, counts):
+        self.counts = list(counts)
+
+    def execute(self, sql, *a):
+        n = self.counts.pop(0)
+        return type("R", (), {"fetchone": lambda self: (n,)})()
+
+    def commit(self):
+        pass
+
+
+@pytest.mark.unit
+def test_headroom_waits_while_backends_exceed_the_budget_then_fails_closed(monkeypatch):
+    slept = []
+    assert cl.wait_for_headroom(_Backends([64, 61, 60]), 60, slept.append) == 2
+    assert slept == [cl.HEADROOM_SLEEP_S] * 2
+    assert cl.wait_for_headroom(_Backends([10]), 60, slept.append) == 0
+    monkeypatch.setattr(cl, "HEADROOM_MAX_WAITS", 3)
+    with pytest.raises(RuntimeError):
+        cl.wait_for_headroom(_Backends([99] * 5), 60, lambda s: None)
+
+
+def _before_image(conn, cid, out):
+    out.mkdir()
+    for table, fname, _ in cl.BEFORE_IMAGE_TABLES:
+        with (
+            gzip.open(out / fname, "wb") as fh,
+            conn.cursor().copy(
+                f"copy (select * from {table} where company_id = %s order by 1) to stdout with csv header",
+                (cid,),
+            ) as cp,
+        ):
+            for chunk in cp:
+                fh.write(bytes(chunk))
+    conn.commit()
+
+
+@pytest.mark.integration
+def test_restore_puts_the_before_image_back_for_the_written_data_points(conn, tmp_path):
+    cid, pid, fact, ccid, cash_id = _seed(conn)
+    snap = "select canonical_concept_id, period_id, value, id from analytics.canonical_fact where company_id = %s order by 1"
+    before = conn.execute(snap, (cid,)).fetchall()
+    _before_image(conn, cid, tmp_path / "before")
+    path = _write(
+        tmp_path,
+        [
+            _row(
+                company_id=cid,
+                period_start=None,
+                period_end=None,
+                fiscal_year=2024,
+                fiscal_period="Q1",
+                period_type="duration",
+                fsn_end="2024-03-31",
+            ),
+            _row(
+                company_id=cid,
+                data_point_name="cash_and_equivalents_resolved",
+                period_grain="I",
+                period_type="instant",
+                period_start="2024-04-02",
+                period_end="2024-04-02",
+                state="not_presented",
+                value=None,
+                unit=None,
+                accession=None,
+                tag=None,
+                reason_code="line_not_presented_in_filing",
+                reason_text="not on the balance sheet",
+                rule_id="slot.cash_and_equivalents@1",
+                evidence_level="DATA-INFERRED",
+            ),
+        ],
+    )
+    cl.load(conn, "capex_da_cash_debt", [path], apply=True, protect=True)
+    after_load = conn.execute(snap, (cid,)).fetchall()
+    assert after_load != before
+    points = ["capex_resolved", "cash_and_equivalents_resolved"]
+    plan = cl.restore(conn, tmp_path / "before", [cid], points, apply=False)
+    assert plan["mode"] == "dry_run"
+    assert conn.execute(snap, (cid,)).fetchall() == after_load
+    rep = cl.restore(conn, tmp_path / "before", [cid], points, apply=True)
+    assert rep["companies"][cid]["analytics.canonical_fact.restored"] == len(before)
+    assert conn.execute(snap, (cid,)).fetchall() == before
+    # the write's protection is gone with it: the restored keys refresh as before the write
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.slot_protected_cell where company_id = %s",
+            (cid,),
+        )
+        == 0
+    )
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.cell_blank_reason where company_id = %s",
+            (cid,),
+        )
+        == 0
+    )
+
+
+@pytest.mark.integration
+def test_protected_write_survives_a_non_slot_writer_update_which_is_logged(
+    conn, tmp_path
+):
+    cid, pid, fact, ccid, cash_id = _seed(conn)
+    path = _write(
+        tmp_path,
+        [
+            _row(
+                company_id=cid,
+                period_start=None,
+                period_end=None,
+                fiscal_year=2024,
+                fiscal_period="Q1",
+                period_type="duration",
+                fsn_end="2024-03-31",
+            ),
+            # a reasoned blank: protected with value null (0115)
+            _row(
+                company_id=cid,
+                data_point_name="capex_resolved",
+                period_grain="Q",
+                period_start="2023-10-01",
+                period_end="2023-12-31",
+                fiscal_year=2023,
+                fiscal_period="Q4",
+                state="not_presented",
+                value=None,
+                unit=None,
+                accession=None,
+                tag=None,
+                reason_code="line_not_presented_in_filing",
+                reason_text="not in the cash flow statement",
+                rule_id="slot.capex@1",
+                evidence_level="DATA-INFERRED",
+            ),
+        ],
+    )
+    rep = cl.load(conn, "capex_da_cash_debt", [path], apply=True, protect=True)
+    assert rep.protected == 2
+    got = conn.execute(
+        "select p.end_date, s.value, s.run_id from analytics.slot_protected_cell s join core.period p on p.id = s.period_id where s.company_id = %s and s.canonical_concept_id = %s order by 1",
+        (cid, ccid),
+    ).fetchall()
+    assert got == [
+        (date(2023, 12, 31), None, rep.run_id),
+        (date(2024, 4, 2), Decimal("100"), rep.run_id),
+    ]
+    # the nightly cannot insert an old value under the protected blank
+    blank_pid = _one(
+        conn,
+        "select id from core.period where company_id = %s and end_date = '2023-12-31'",
+        (cid,),
+    )
+    conn.execute(
+        "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s, %s, %s, 7, '{}')",
+        (cid, ccid, blank_pid),
+    )
+    conn.commit()
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.canonical_fact where company_id = %s and period_id = %s",
+            (cid, blank_pid),
+        )
+        == 0
+    )
+    # the nightly mapper is not the slot writer: its update is skipped and logged
+    conn.execute(
+        "update analytics.canonical_fact set value = 555 where company_id = %s and canonical_concept_id = %s",
+        (cid, ccid),
+    )
+    conn.commit()
+    assert (
+        _one(
+            conn,
+            "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s",
+            (cid, ccid),
+        )
+        == 100
+    )
+    assert conn.execute(
+        "select operation, attempted_value from analytics.slot_protected_write_skipped where company_id = %s and canonical_concept_id = %s order by id",
+        (cid, ccid),
+    ).fetchall() == [("INSERT", Decimal("7")), ("UPDATE", Decimal("555"))]
+    # an unprotected family key of the same company still refreshes (cash was not written here)
+    conn.execute(
+        "update analytics.canonical_fact set value = 1000 where company_id = %s and canonical_concept_id = %s",
+        (cid, cash_id),
+    )
+    conn.commit()
+    assert (
+        _one(
+            conn,
+            "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s",
+            (cid, cash_id),
+        )
+        == 1000
+    )

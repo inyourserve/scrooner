@@ -79,6 +79,15 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 | Stripe for billing                      | Selected direction    | Implement when paid plan enters the build.                                                  |
 | GitHub Actions + lightweight monitoring | Selected direction    | Automated checks/deployments; Sentry and simple analytics when needed.                      |
 
+- **Founder decision of 2026-11-01: database connection budget for data loads** (typed by the founder in Dhairya's session, scrooner-df, and relayed to the release approver; the approver did not hear it directly). In the founder's words: "Great we have 90 connections limits. Use maximum connections" and "Faster the process. Use shard."
+  1. Measured: `max_connections` = 90 on the dev Supabase (checked by the approver 2026-11-03, 16 in use).
+  2. Budget within that (Dhairya's, under delegation): data loads use at most **40 connections**. The rest stays free for the app, backend, nightly refresh and superuser slots.
+  3. Heavy jobs connect directly or through the transaction pooler, run outside the 18:00–21:30 UTC nightly window and set their own `statement_timeout`.
+  4. Shards are company-disjoint: two writers never touch one company's rows.
+  5. A 60-backend preflight runs at the start of a job, and every shard re-checks it during the run, pausing while `pg_stat_activity` exceeds 60.
+  6. Example: the FSN cohort write runs 16 shards × at most 2 connections.
+  7. The root `CLAUDE.md` line "at most 4 shards" is not changed by this entry; changing it needs the founder's OK. Until then, this entry governs data loads that stay within the 40-connection budget.
+
 ## Locked data decisions
 
 - The Collector is dumb, lossless and immutable: it fetches and preserves raw SEC responses plus provenance, timestamps and checksums.

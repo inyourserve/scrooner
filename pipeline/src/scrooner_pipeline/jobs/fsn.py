@@ -348,6 +348,7 @@ def pilot_prod_cmd(
         for table, cols in (
             ("analytics.canonical_fact", "*"),
             ("analytics.cell_blank_reason", "*"),
+            ("analytics.slot_protected_cell", "*"),
         ):
             path = root / "before_image" / f"{table.split('.')[1]}.csv.gz"
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -383,6 +384,33 @@ def pilot_prod_cmd(
         "filings in core.filing but not in the store: "
         + json.dumps({k: len(v) for k, v in missing.items()})
     )
+
+
+@app.command("done-gate")
+def done_gate_cmd(
+    pilot_out: str = typer.Option(
+        "pilot-out", help="The `pilot` + `pilot-prod` output directory."
+    ),
+    data_points: str = typer.Option(
+        ..., help="Comma-separated data points the write switches."
+    ),
+) -> None:
+    """Design §5 criteria 1-5 per company (read-only): writes done_companies.txt (company ids that may
+    switch) and not_done.json (company id -> failed criteria) into the output directory."""
+    from scrooner_pipeline.fsn_store.pilot import done_gate
+
+    root = Path(pilot_out)
+    reports = json.loads((root / "report.json").read_text())
+    gaps_path = root / "gaps.csv"
+    gaps = list(csv.DictReader(gaps_path.open())) if gaps_path.exists() else []
+    missing = json.loads((root / "missing_filings.json").read_text())
+    res = done_gate(reports, gaps, missing, {s for s in data_points.split(",") if s})
+    done = sorted(c for c, f in res.items() if not f)
+    (root / "done_companies.txt").write_text("".join(f"{c}\n" for c in done))
+    (root / "not_done.json").write_text(
+        json.dumps({c: f for c, f in res.items() if f}, indent=1)
+    )
+    typer.echo(f"done gate: {len(done)} of {len(res)} companies may switch")
 
 
 @app.command("extract-sec")

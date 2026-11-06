@@ -1,46 +1,62 @@
 name: FSN store production write (cohort)
 
 # Manual only. PRODUCTION WRITE: dispatch only on the founder's typed go-ahead (scrooner-87 session).
-# For the v1.1 cohort, sharded, one transaction per company:
+# For the v1.1 cohort, sharded by company (company_id % shards: a company is in exactly one shard, so two
+# writers never touch one company's rows), one transaction per company:
 #   stage load_map:     shard from the bucket -> load fsn.* (filing, report, tag, dim, line, value, calc_arc,
 #                       company_load) -> map fsn.line_map (the library) and fsn.filing_check
 #   stage select_write: (also runs load_map) -> select -> before-image of the shard's canonical_fact and
-#                       cell_blank_reason -> `scrooner-cells load --apply` for the PASSED data points only
-# Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, capex and D&A
-# stay out of the cell write until the release approver clears them (data_points input). Own queue
-# (manual-db-jobs) and a connection-headroom preflight; never beside the nightly refresh window it guards.
+#                       cell_blank_reason (uploaded BEFORE the write) -> done gate (design §5 criteria 1-5 per
+#                       company) -> `scrooner-cells load --apply` for the passed data points of the companies
+#                       that passed; a company that fails keeps its current rows (design §7.6)
+#                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
+#                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
+#   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
+#                       company with a served cell_proof DISAGREE after the write is restored)
+# Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
+# capex and D&A cells stay out until the release approver clears them (data_points input). Connections: at
+# most 2 per shard, preflight at start and a re-check before every company (pause while client backends
+# exceed 60); never inside the nightly refresh window.
 on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "load_map (fsn.* + library) or select_write (also writes canonical_fact for the passed data points)"
+        description: "load_map (fsn.* + library), select_write (also writes canonical_fact) or restore"
         type: choice
-        options: [load_map, select_write]
+        options: [load_map, select_write, restore]
         default: load_map
       shards:
-        description: "Shards, 1..20 (each holds 1-2 production connections)"
-        default: "10"
+        description: "Shards, 1..20 (each holds at most 2 production connections: budget 40)"
+        default: "16"
       limit:
         description: "Only the first N cohort companies (rank order); empty = all 1,000"
         default: ""
       data_points:
         description: "Data points the cell write may touch (passed families)"
-        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved,current_assets_resolved,current_liabilities_resolved"
+        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved"
+      restore_run:
+        description: "restore only: the select_write run id whose before-images to put back"
+        default: ""
+      restore_company_ids:
+        description: "restore only: comma-separated company ids"
+        default: ""
       code_ref:
         description: "Git ref holding the store code"
         default: "main"
 
 permissions:
   contents: read
+  actions: read
 
 # Own queue: it must not wait behind (or block) a running manual proof run; the headroom
-# preflight keeps the two inside the connection budget.
+# preflight and the per-company re-check keep the two inside the connection budget.
 concurrency:
   group: fsn-write
   cancel-in-progress: false
 
 env:
   COHORT_CSV: data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv
+  MAX_BACKENDS: "60"
 
 jobs:
   seed:
@@ -66,7 +82,7 @@ jobs:
           if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 20 ]; then echo "::error::shards must be 1..20"; exit 1; fi
           used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")
           echo "client backends now: $used; this run adds up to $((SHARDS * 2))"
-          if [ $((used + SHARDS * 2)) -gt 60 ]; then echo "::error::$used + $((SHARDS * 2)) would exceed 60 of 90"; exit 1; fi
+          if [ $((used + SHARDS * 2)) -gt "$MAX_BACKENDS" ]; then echo "::error::$used + $((SHARDS * 2)) would exceed $MAX_BACKENDS of 90"; exit 1; fi
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.code_ref }}
@@ -76,6 +92,7 @@ jobs:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
       - name: Seed concept rules (production fsn.concept_rule)
+        if: inputs.stage != 'restore'
         run: uv run --project pipeline scrooner-fsn seed-rules $(ls data-team/47-fsn-store/concept_rules/*.jsonl | grep -v _provenance) --apply
       - id: s
         run: |
@@ -84,14 +101,17 @@ jobs:
           rows = list(csv.DictReader(open(os.environ["COHORT_CSV"])))
           if os.environ["LIMIT"]:
               rows = rows[: int(os.environ["LIMIT"])]
-          ciks = [r["cik"].zfill(10) for r in rows]
-          n = max(1, min(int(os.environ["SHARDS"]), len(ciks)))
-          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n)]))
+          n = max(1, min(int(os.environ["SHARDS"]), len(rows)))
+          shards = [[] for _ in range(n)]
+          for r in rows:
+              shards[int(r["company_id"]) % n].append(r["cik"].zfill(10))
+          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(c)} for i, c in enumerate(shards) if c]))
           EOF
 
   write:
     name: write shard ${{ matrix.shard.i }}
     needs: seed
+    if: inputs.stage != 'restore'
     runs-on: ubuntu-latest
     timeout-minutes: 340
     strategy:
@@ -131,8 +151,22 @@ jobs:
         run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
       - name: Before-image of canonical_fact and reasons (read)
         if: inputs.stage == 'select_write'
-        run: uv run --project pipeline scrooner-fsn pilot-prod --pilot-out out
-      - name: Write the passed data points to canonical_fact
+        run: |
+          uv run --project pipeline scrooner-fsn pilot-prod --pilot-out out
+          python3 -c "import json; print('\n'.join(str(r['company_id']) for r in json.load(open('out/report.json'))))" > out/before_image/companies.txt
+          echo "$DATA_POINTS" > out/before_image/data_points.txt
+      - name: Store the before-image before any write
+        if: inputs.stage == 'select_write'
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsn-write-before-image-${{ matrix.shard.i }}
+          path: out/before_image/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Done gate (design §5 criteria 1-5 per company, read)
+        if: inputs.stage == 'select_write'
+        run: uv run --project pipeline scrooner-fsn done-gate --pilot-out out --data-points "$DATA_POINTS"
+      - name: Write the passed data points of the done companies to canonical_fact
         if: inputs.stage == 'select_write'
         run: |
           set -u
@@ -140,21 +174,28 @@ jobs:
             fam=$(basename "$d")
             [ "$fam" = "unowned" ] && continue
             mkdir -p "out/write/$fam"
-            python3 - "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" <<'EOF'
+            python3 - "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_companies.txt <<'EOF'
           import gzip, json, sys
-          src, dst, allowed = sys.argv[1], sys.argv[2], set(sys.argv[3].split(","))
+          src, dst, allowed, done_path = sys.argv[1], sys.argv[2], set(sys.argv[3].split(",")), sys.argv[4]
+          done = {int(x) for x in open(done_path).read().split()}
           rows = [json.loads(l) for l in gzip.open(src, "rt")]
-          keep = [r for r in rows if r["data_point_name"] in allowed]
+          keep = [
+              r for r in rows
+              if r["data_point_name"] in allowed and int(r["company_id"]) in done
+              # operating income is never note-sourced (Ritwik 2026-11-03); select never emits it, refuse it here too
+              and not (r["data_point_name"] == "operating_income_resolved" and (r.get("input_refs") or {}).get("source") == "note")
+          ]
           with gzip.open(dst, "wt") as fh:
               for r in keep:
                   fh.write(json.dumps(r) + "\n")
           json.dump({"family": src.split("/")[-2], "rule_id": "fsn.select@1", "rows": len(keep),
                      "data_points": sorted({r["data_point_name"] for r in keep}), "period_floor": "2014-01-01"},
                     open(dst.rsplit("/", 1)[0] + "/manifest.json", "w"))
-          print(f"{src}: {len(keep)} of {len(rows)} rows in the passed data points")
+          print(f"{src}: {len(keep)} of {len(rows)} rows (passed data points, {len(done)} done companies)")
           EOF
             if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
             uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell write $fam failed"
           done
       - uses: actions/upload-artifact@v4
@@ -167,6 +208,45 @@ jobs:
             out/library.csv
             out/load.json
             out/summary.md
+            out/done_companies.txt
+            out/not_done.json
+            out/missing_filings.json
             out/write-*.json
-            out/before_image/
           if-no-files-found: ignore
+
+  restore:
+    name: Restore before-images
+    needs: seed
+    if: inputs.stage == 'restore'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      RESTORE_IDS: ${{ inputs.restore_company_ids }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fsn-write-before-image-*
+          path: before
+          run-id: ${{ inputs.restore_run }}
+          github-token: ${{ github.token }}
+      - name: Restore (each company from the shard whose before-image holds it)
+        run: |
+          set -eu
+          [ -n "$RESTORE_IDS" ] || { echo "::error::restore_company_ids is empty"; exit 1; }
+          missing=$(python3 -c "import glob, sys; want=set(sys.argv[1].split(',')); have=set(); [have.update(open(p).read().split()) for p in glob.glob('before/*/companies.txt')]; print(','.join(sorted(want - have)))" "$RESTORE_IDS")
+          [ -z "$missing" ] || { echo "::error::no before-image holds company ids $missing"; exit 1; }
+          for d in before/*/; do
+            ids=$(python3 -c "import sys; want=set(sys.argv[1].split(',')); have=set(open(sys.argv[2]).read().split()); print(','.join(sorted(want & have)))" "$RESTORE_IDS" "$d/companies.txt")
+            [ -z "$ids" ] && continue
+            uv run --project pipeline scrooner-cells restore --before-image "$d" --company-ids "$ids" \
+              --data-points "$(cat "$d/data_points.txt")" --apply
+          done
