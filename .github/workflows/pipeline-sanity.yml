@@ -182,6 +182,14 @@ jobs:
         run: |
           uv run --project pipeline scrooner-map run-parser cost_of_revenue
           uv run --project pipeline scrooner-map resolve-parser-results cost_of_revenue
+      # 2026-11-02: the fix steps above (investigate, the rendered-report parsers) rewrite
+      # revenue_sanity_resolved after `run` has already written its findings, so a finding they
+      # resolved reached the gate stale (FRHC, run 41343223897). Re-check every company that still
+      # has a critical finding, against the data as it is now, before the gate counts them.
+      - name: Re-check critical findings after the fix steps
+        if: always()
+        timeout-minutes: 15
+        run: uv run --project pipeline scrooner-sanity recheck-critical
       - name: Report findings
         if: always()
         run: uv run --project pipeline scrooner-sanity report --github-summary --fail-on-findings

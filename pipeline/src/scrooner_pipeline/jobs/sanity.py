@@ -12,6 +12,7 @@ import typer
 
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.sanity.yfinance_check import (
+    critical_finding_company_ids,
     run_sanity_checks,
     pick_rotation_batch,
 )
@@ -74,6 +75,18 @@ def run_cmd(
         )
         stats = run_sanity_checks(conn, company_ids)
     typer.echo(f"sanity run: {stats}")
+
+
+@app.command("recheck-critical")
+def recheck_critical_cmd() -> None:
+    """Re-run the yfinance checks for every company that currently has a
+    critical finding, so a finding the later fix steps (investigate, the
+    rendered-report parsers) already resolved does not reach the gate stale.
+    Run just before `report --fail-on-findings`."""
+    with get_connection() as conn:
+        company_ids = critical_finding_company_ids(conn)
+        stats = run_sanity_checks(conn, company_ids)
+    typer.echo(f"sanity recheck-critical: {stats}")
 
 
 @app.command("report")
