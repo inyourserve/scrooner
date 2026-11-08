@@ -15,23 +15,25 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 ## Scoreboard
 
 - Certified companies: 0 / 1,000.
-- 1,000-company FSN write (`pipeline-fsn-write.yml`, stage `select_write`, 16 shards, code_ref bc6ab31): founder approved 2026-11-08 ~17:49 UTC; scheduled to start ~21:32 UTC, after the nightly window. Earlier runs 41515572580 and 41708619888 stopped at the nightly-window preflight (nothing written).
+- 1,000-company FSN write (`pipeline-fsn-write.yml`, stage `select_write`, 16 shards, code_ref bc6ab31): founder approved 2026-11-08 ~17:49 UTC; scheduled for 2026-11-09 ~03:00 UTC, after the nightly refresh really ends (it starts 17:47-21:49 and ends as late as 01:34 UTC; PR #5). Earlier runs 41515572580 and 41708619888 stopped at the nightly-window preflight (nothing written).
 - Latest full dry run (reported by the manager session 2026-11-06): 73.2% of template cells valued across 960 of 1,000 companies (top 100: 76.5%); one batch of 40 failed.
 
 ## In flight (no production writes)
 
 | Lane | Branch | Next |
 |---|---|---|
-| Balance sheet: derived total liabilities, unclassified-balance-sheet reason (~94% of those gap keys, 380 companies) | `work/bs/derive-tl-current` | rebase on main, tests, PR, Verifier draw |
-| Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | `work/cashflow/fsn-gaps` | rebase, cohort dry run after the write finishes, PR, Verifier draw |
-| Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; merge when CI green |
+| Balance sheet: derived total liabilities, unclassified-balance-sheet reason (~94% of those gap keys, 380 companies) | draft PR #6 (`work/bs/derive-tl-current`, rebased, CI green) | Verifier draw (33-key sample), cohort dry run after the write |
+| Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | draft PR #4 (`work/cashflow/fsn-gaps-rebased`, CI green) | Verifier draw (38-key sample), cohort dry run after the write; CAD filers CP/IMO open pending the currency ruling |
+| Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
+| FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
 ## Waiting on the founder
 
 - Restore stage for any company whose `cell_proof` disagrees after the write (founder's typed words).
-- Merging code PRs from the balance-sheet and cash-flow lanes after the Verifier draw.
+- Merging PRs #2-#6 (the manager session may not merge).
+- Currency ruling for CAD filers (RULINGS-CURRENCY-REIT-VINTAGE-2026-10-25.md, Ruling 1, PROPOSED).
 
 ## Canonical files
 
