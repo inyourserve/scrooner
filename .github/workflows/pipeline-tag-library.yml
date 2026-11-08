@@ -55,8 +55,17 @@ jobs:
           test -n "$SEC_USER_AGENT"
       - name: Install locked dependencies
         run: uv sync --project pipeline --locked
-      - name: Build tag library
-        run: uv run --project pipeline scrooner-map build-tag-library
+      # Split into two steps with their own caps (2026-11-02): runs 40251015742 and 41375022141
+      # finished lineage, then the leads stage ran silently for 2h09m until the 180-minute job
+      # limit. Every statement now has a timeout and leads log one line per concept; the step caps
+      # make sure one stage can never consume the whole job again.
+      - name: Build tag library (company tags, library, lineage)
+        timeout-minutes: 120
+        run: uv run --project pipeline scrooner-map build-tag-library --stages company_tags,library,lineage
+      - name: Build tag leads
+        timeout-minutes: 50
+        run: uv run --project pipeline scrooner-map build-tag-library --stages leads --leads-budget-minutes 40
       - name: Top unmapped tags among companies missing total debt
         if: always()
-        run: uv run --project pipeline scrooner-map gap-tags total_debt_resolved --period-type instant --limit 20
+        # gap-tags has no --period-type option; passing it failed this step with exit 2 (run 40048907814).
+        run: uv run --project pipeline scrooner-map gap-tags total_debt_resolved --limit 20
