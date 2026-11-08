@@ -4,6 +4,15 @@ Owner of this page: scrooner-25 (core engine lane), with lane B/C lines supplied
 
 States: **done** = verified and on main or applied; **wip** = being built, evidence named; **blocked** = waiting on a named thing; **not started**.
 
+## Latest state, 2026-11-08 (manager session; supersedes older headline lines below where they disagree)
+
+- Operating model since 2026-11-04 (doc 02): the FSN hybrid build replaces old values in `canonical_fact` for the 1,000; no release packages, no fallback. Rows below written before that date describe the old patch-release route.
+- Certified companies: 0. No FSN-store value has reached production yet (runs 41515572580, 41708619888 stopped at the nightly-window preflight).
+- 1,000-company write: founder approved 2026-11-08 ~17:49 UTC; dispatch scheduled ~21:32 UTC (`pipeline-fsn-write.yml`, `select_write`, 16 shards, code_ref bc6ab31). Then `cell_proof`, then Verifier sample; restore of a disagreeing company needs the founder's words.
+- PR #1 merged (3d093b3): nightly refresh row-count alert, CI flakes, tag-library timeouts.
+- PR #2 open: Verifier reports 2026-11-01..03 consolidated (docs only; META 2022-12-31 debt corrected to 10,610).
+- wip, not on main: `work/bs/derive-tl-current` (total liabilities derived from calc tree / L&E identity; unclassified-balance-sheet reason) and `work/cashflow/fsn-gaps` (FX tags, buyback/dividend detector, absent-line reasons). Both: rebase, PR, Verifier draw, then reload.
+
 ## 0. The scoreboard (what the user would see today)
 
 **Task count (39 tasks, 2026-10-25 late night): done 12 (31%), in progress 16 (41%), blocked 1 (3%), not started 10 (26%). Remaining 27 (69%).**

@@ -2,34 +2,42 @@
 
 Compact orientation only. Generated evidence and the task board win if this file becomes stale.
 
-Updated: 2026-10-26 IST.
+Updated: 2026-11-08 UTC (Dhairya, manager session `session_01GLmSDyzegqZw4JqC91z7XH`).
 
 ## Product objective
 
 For the top 1,000 US companies, every displayed financial cell is either a filing-traceable correct value or a visible, evidenced reason. Never claim universal correctness; publish measured error rates.
 
+## Operating model (founder, 2026-11-04; doc 02 "Locked data decisions")
+
+The hybrid FSN-structure plus company-API build replaces old values in `analytics.canonical_fact` for the 1,000 companies. Load first, prove (`cell_proof`) right after, Verifier samples after; a failed draw means fix and reload. No old-table fallback, no switch view, no per-family patch packages.
+
 ## Scoreboard
 
 - Certified companies: 0 / 1,000.
-- Production cells changed by the certification programme: 0.
-- Cohort cells: 161,533; valued: 124,029 (76.8%); reasonless blanks: 13,354.
-- Migrations 0098-0100 are applied. Migration 0110 (`company_slot_record`) is not applied.
-- Balance-sheet slot records have been produced for 999 companies and passed multiple filing-check samples; they are not serving users.
-- Total debt passed its 33-company verifier gate. D&A/capex is under V3 verification.
+- 1,000-company FSN write (`pipeline-fsn-write.yml`, stage `select_write`, 16 shards, code_ref bc6ab31): founder approved 2026-11-08 ~17:49 UTC; scheduled to start ~21:32 UTC, after the nightly window. Earlier runs 41515572580 and 41708619888 stopped at the nightly-window preflight (nothing written).
+- Latest full dry run (reported by the manager session 2026-11-06): 73.2% of template cells valued across 960 of 1,000 companies (top 100: 76.5%); one batch of 40 failed.
 
-## Current critical path
+## In flight (no production writes)
 
-1. Finish migration sequence 0101-0109, merge/apply 0110.
-2. Approve and load balance-sheet slot records.
-3. Wire them behind a flag; dry-run and rehearse rollback.
-4. Switch on one company and generate its certificate.
-5. Continue families: debt, D&A/capex, then revenue/net income/operating income/shares/EPS/CFO/dividends/buybacks/interest/tax.
+| Lane | Branch | Next |
+|---|---|---|
+| Balance sheet: derived total liabilities, unclassified-balance-sheet reason (~94% of those gap keys, 380 companies) | `work/bs/derive-tl-current` | rebase on main, tests, PR, Verifier draw |
+| Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | `work/cashflow/fsn-gaps` | rebase, cohort dry run after the write finishes, PR, Verifier draw |
+| Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; merge when CI green |
+
+Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
+
+## Waiting on the founder
+
+- Restore stage for any company whose `cell_proof` disagrees after the write (founder's typed words).
+- Merging code PRs from the balance-sheet and cash-flow lanes after the Verifier draw.
 
 ## Canonical files
 
 - Direction: `data-team/strategy/THE-PLAN.md`
 - Execution state: `data-team/strategy/TASK-BOARD-TOP1000.md`
 - Compact live view: `python3 scripts/agent_context.py`
-- Detailed evidence: files linked by the task-board row being worked.
+- Decisions: `doc/foundational/02_Scrooner_Decision_Register.md`
 
 Do not expand this file into a work log. Keep it under roughly 80 lines.
