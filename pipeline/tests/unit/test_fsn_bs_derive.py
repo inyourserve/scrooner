@@ -88,3 +88,27 @@ def test_current_total_in_another_statement_blocks_the_unclassified_reason():
     assert bd.current_reason(shell, current_in_filing=True) is None
     assert bd.current_reason(shell, current_in_filing=False) == bd.REASON
     assert bd.current_reason(NEE_FACE, current_in_filing=False) is None
+
+
+def test_derived_and_not_presented_rows_pass_the_cell_loader_contract():
+    """The rows pilot.report_company adds go to the FSN write path (jobs/fsn.py writes them with json default=str,
+    normalizer.cell_loader.parse_row reads them): a derived total and an unclassified reason must both be accepted."""
+    import json
+    from datetime import date, datetime
+
+    from scrooner_pipeline.fsn_store import select as sel
+    from scrooner_pipeline.normalizer import cell_loader
+
+    filings = {7: sel.Filing(7, "0000753308-20-000150", datetime(2020, 7, 24), "10-Q", date(2020, 6, 30), 2020, "Q2", "1231")}
+    (value, ids), rule, inputs = bd.derive_tl(NEE_FACE, NEE_ARCS, NEE_COL)
+    derived = sel.Cell(bd.TL, date(2020, 6, 30), 0, "derived", value=value, filing_id=7, source_value_ids=ids, rule_id=rule,
+                       derivation={"formula": "sum of the L&E calc children classed liability",
+                                   "accession": "0000753308-20-000150", "inputs": inputs})
+    reasoned = sel.Cell(bd.CA, date(2020, 6, 30), 0, "not_presented", filing_id=7, rule_id=bd.RULE_UNCLASSIFIED,
+                        reason_code=bd.REASON, input_refs={"accession": "0000753308-20-000150", "face_lines": 9})
+    for c in (derived, reasoned):
+        row = json.loads(json.dumps(sel.to_row(c, 1, filings), default=str))
+        parsed = cell_loader.parse_row(1, row, {bd.TL, bd.CA, bd.CL})
+        assert not isinstance(parsed, str), parsed
+        assert parsed.state == c.state
+    assert sel.REASON_TEXT[bd.REASON]

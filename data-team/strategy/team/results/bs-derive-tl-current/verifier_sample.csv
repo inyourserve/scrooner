@@ -1,0 +1,34 @@
+stratum,cik,company,data_point,date,accession,value,rule_id,printed_le,blank_children
+calc_plain,0001047862,CONSOLIDATED EDISON INC,total_liabilities_resolved,2014-12-31,0001047862-16-000225,31486000000,fsn.derive_total_liabilities_calc@1,44071000000.0000,
+calc_plain,0000078128,"Essential Utilities, Inc.",total_liabilities_resolved,2015-09-30,0000078128-15-000011,3972664000,fsn.derive_total_liabilities_calc@1,5701345000.0000,
+calc_plain,0000853816,LANDSTAR SYSTEM INC,total_liabilities_resolved,2020-03-31,0001193125-20-129965,609338000,fsn.derive_total_liabilities_calc@1,1236433000.0000,
+calc_plain,0000055785,KIMBERLY CLARK CORP,total_liabilities_resolved,2024-03-31,0000055785-24-000054,15908000000,fsn.derive_total_liabilities_calc@1,17092000000.0000,
+calc_plain,0001467373,Accenture plc,total_liabilities_resolved,2017-08-31,0001467373-18-000318,12979690000,fsn.derive_total_liabilities_calc@1,22689890000.0000,
+calc_plain,0001089063,"DICK'S SPORTING GOODS, INC.",total_liabilities_resolved,2022-10-31,0001089063-23-000145,6579428000,fsn.derive_total_liabilities_calc@1,8956600000.0000,
+calc_plain,0000773840,HONEYWELL INTERNATIONAL INC,total_liabilities_resolved,2016-09-30,0000930413-16-008530,34182000000,fsn.derive_total_liabilities_calc@1,53556000000.0000,
+calc_plain,0000797468,OCCIDENTAL PETROLEUM CORP /DE/,total_liabilities_resolved,2024-09-30,0000797468-24-000164,50869000000,fsn.derive_total_liabilities_calc@1,85803000000.0000,
+calc_blank_commitments,0000089089,SERVICE CORP INTERNATIONAL,total_liabilities_resolved,2019-09-30,0000089089-19-000039,11540801000,fsn.derive_total_liabilities_calc@1,13316321000.0000,CommitmentsAndContingencies
+calc_blank_commitments,0001219601,"CROWN HOLDINGS, INC.",total_liabilities_resolved,2014-06-30,0001219601-14-000027,9483000000,fsn.derive_total_liabilities_calc@1,9895000000.0000,CommitmentsAndContingencies
+calc_blank_commitments,0001609711,GoDaddy Inc.,total_liabilities_resolved,2024-03-31,0001609711-24-000072,7564000000,fsn.derive_total_liabilities_calc@1,7978800000.0000,CommitmentsAndContingencies
+calc_blank_commitments,0001020569,IRON MOUNTAIN INC,total_liabilities_resolved,2019-12-31,0001020569-21-000067,12284907000,fsn.derive_total_liabilities_calc@1,13816816000.0000,CommitmentsAndContingencies
+calc_blank_commitments,0001571123,Science Applications International Corp,total_liabilities_resolved,2023-01-31,0001571123-24-000045,3839000000,fsn.derive_total_liabilities_calc@1,5543000000.0000,CommitmentsAndContingencies
+calc_blank_other,0001646972,"Albertsons Companies, Inc.",total_liabilities_resolved,2024-02-29,0001646972-25-000052,23473600000,fsn.derive_total_liabilities_calc@1,26221100000.0000,CommitmentsAndContingencies;RedeemableNoncontrollingInterestEquityPreferredCarryingAmount
+calc_blank_other,0001368622,AeroVironment Inc,total_liabilities_resolved,2019-10-31,0001558370-19-011303,54136000,fsn.derive_total_liabilities_calc@1,544493000.0000,DeferredRentCreditNoncurrent
+calc_blank_other,0001564708,NEWS CORP,total_liabilities_resolved,2019-03-31,0001193125-19-143603,5600000000,fsn.derive_total_liabilities_calc@1,16058000000.0000,TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests
+calc_blank_other,0000052827,RAYONIER INC,total_liabilities_resolved,2021-09-30,0000052827-21-000176,1773399000,fsn.derive_total_liabilities_calc@1,3706414000.0000,CommitmentsAndContingencies;PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest
+calc_blank_other,0001032208,SEMPRA,total_liabilities_resolved,2015-12-31,0000086521-17-000017,28571000000,fsn.derive_total_liabilities_calc@1,41150000000.0000,InterestPayableCurrent;AccruedIncomeTaxesCurrent;OtherAccruedLiabilitiesCurrent;AssetRetirementObligationCurrent;PensionObligationNetOfPlanAssets
+identity,0000007431,ARMSTRONG WORLD INDUSTRIES INC,total_liabilities_resolved,2024-09-30,0000950170-24-117930,1087000000,fsn.derive_total_liabilities_identity@1,1804000000.0000,
+identity,0001341439,ORACLE CORP,total_liabilities_resolved,2024-08-31,0000950170-24-104905,132945000000,fsn.derive_total_liabilities_identity@1,144214000000.0000,
+identity,0000860730,"HCA Healthcare, Inc.",total_liabilities_resolved,2024-06-30,0000950170-24-087322,56040000000,fsn.derive_total_liabilities_identity@1,57379000000.0000,
+identity,0000788784,PUBLIC SERVICE ENTERPRISE GROUP INC,total_liabilities_resolved,2024-09-30,0000950170-24-120749,37985000000,fsn.derive_total_liabilities_identity@1,54080000000.0000,
+identity,0000795403,WATTS WATER TECHNOLOGIES INC,total_liabilities_resolved,2024-09-30,0001558370-24-014022,710000000,fsn.derive_total_liabilities_identity@1,2399100000.0000,
+identity,0001451505,Transocean Ltd.,total_liabilities_resolved,2024-09-30,0001451505-24-000142,9282000000,fsn.derive_total_liabilities_identity@1,19510000000.0000,
+unclassified:bank,0000109380,"ZIONS BANCORPORATION, NATIONAL ASSOCIATION /UT/",current_assets_resolved,2014-06-30,0000109380-14-000171,,fsn.unclassified_balance_sheet@1,,
+unclassified:bank,0000714310,VALLEY NATIONAL BANCORP,current_assets_resolved,2015-09-30,0000714310-15-000156,,fsn.unclassified_balance_sheet@1,,
+unclassified:insurer,0000020286,CINCINNATI FINANCIAL CORP,current_assets_resolved,2018-03-31,0000020286-18-000030,,fsn.unclassified_balance_sheet@1,,
+unclassified:insurer,0000005513,Unum Group,current_assets_resolved,2014-12-31,0000005513-16-000045,,fsn.unclassified_balance_sheet@1,,
+unclassified:equity_reit,0001360604,Healthcare Realty Trust Inc,current_assets_resolved,2023-03-31,0001360604-23-000043,,fsn.unclassified_balance_sheet@1,,
+unclassified:equity_reit,0001423689,AGNC Investment Corp.,current_assets_resolved,2025-06-30,0001423689-25-000073,,fsn.unclassified_balance_sheet@1,,
+unclassified:general,0000914208,Invesco Ltd.,current_assets_resolved,2024-09-30,0000914208-24-000427,,fsn.unclassified_balance_sheet@1,,
+unclassified:general,0000886982,GOLDMAN SACHS GROUP INC,current_assets_resolved,2020-06-30,0001193125-20-212201,,fsn.unclassified_balance_sheet@1,,
+unclassified:general,0001570827,"Victory Capital Holdings, Inc.",current_assets_resolved,2018-09-30,0001558370-18-009272,,fsn.unclassified_balance_sheet@1,,

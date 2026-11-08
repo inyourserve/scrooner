@@ -134,9 +134,26 @@ I refused rather than guessed in every one of these.
 
 Every derived cell carries `derivation = {formula, accession, inputs}`, with each input tag and value. A reviewer can check it against that one filing.
 
+## Verifier sample
+
+[`results/bs-derive-tl-current/verifier_sample.csv`](results/bs-derive-tl-current/verifier_sample.csv) holds 33 keys from 33 companies. They were drawn at random (seed 20261108), at most one key per company:
+
+| Stratum | Keys |
+|---|---|
+| Calc route, no blank child | 8 |
+| Calc route, only `CommitmentsAndContingencies` blank | 5 |
+| Calc route, another child blank | 5 |
+| Identity route | 6 |
+| Unclassified reason (bank 2, insurer 2, REIT 2, general 3) | 9 |
+
+- Each row gives the accession, date, value and the printed L&E, so the check needs only that one filing.
+- Worth a close look: Sempra 2015-12-31 (combined Sempra / SDG&E / SoCalGas filing, five current lines blank in the column) and News Corp 2019-03-31 (temporary equity blank).
+
 ## Tests and rerun
 
-- `pipeline/tests/unit/test_fsn_bs_derive.py`: 7 tests. They use NextEra's real numbers and the Planet Fitness shell case. Each was mutation-checked: it fails when the guard it covers is removed.
+- `pipeline/tests/unit/test_fsn_bs_derive.py`: 8 tests. One checks that a derived row and a reason row pass main's cell-loader contract (`normalizer.cell_loader.parse_row`), which is the FSN write path these cells take after merge.
+- The full pipeline suite passed after the rebase onto main 3d093b30, the way CI runs it (Postgres 16, every migration): 2,378 passed, 1 skipped (live SEC).
+- The tests use NextEra's real numbers and the Planet Fitness shell case. Each was mutation-checked: it fails when the guard it covers is removed.
 - Measurement script, scratch database only (it refuses anything else):
 
 ```bash
@@ -147,8 +164,8 @@ SCRATCH_DATABASE_URL=postgresql://scrooner_test@/scrooner_test_1?host=/tmp&port=
 
 The script is resumable (`progress.jsonl` per company), and it writes `measure.json` and `rows.jsonl`.
 
-## Not done, needs a decision
+## Path to production
 
-- Nothing is promoted. The derived and `not_presented` cells appear only in pilot reports.
-- Writing them to production cells is a production write, so it needs the founder's typed approval.
-- A Verifier pass on a sample of calc-route values (especially the blank-child ones) is the natural next step before any release.
+- The branch is rebased onto main. `pilot.report_company` adds these cells to `_cells`, which `scrooner-fsn pilot` writes and the FSN write path loads. They need no separate promotion step.
+- Merge after the Verifier pass on the sample above.
+- The cells reach production in the next 1,000-company write/reload, which the founder starts himself. No database write was made from this lane.
