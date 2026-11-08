@@ -1,11 +1,11 @@
-Under test: inyourserve/scrooner#6, branch work/bs/derive-tl-current 5e4f616. Sample: data-team/strategy/team/results/bs-derive-tl-current/verifier_sample.csv (33 rows, seed 20261108; ConEd 2014-12-31 is listed twice, so 32 distinct keys).
+Under test: inyourserve/scrooner#6, branch work/bs/derive-tl-current 5e4f616. Sample: data-team/strategy/team/results/bs-derive-tl-current/verifier_sample.csv (33 rows, seed 20261108; 33 distinct keys. CORRECTED: the first version said ConEd was listed twice; that was a slip in my own output, where head and tail both printed the row).
 SEC requests: 87 (sec.gov only, <= 3.4/s, the repo's declared User-Agent). Verifier session scrooner-c3. No DB access for this verdict.
 
 # Verify: derived total liabilities and unclassified-balance-sheet reasons (2026-11-08)
 
 ## Result
 
-**32 distinct keys: 31 right, 1 wrong.**
+**33 keys: 32 right, 1 wrong** (corrected count; the first version said 32 / 31).
 
 | route | keys | right | wrong |
 |---|---|---|---|
@@ -79,7 +79,40 @@ Caveat: a custom-extension current total, outside us-gaap, would not be caught b
 ## Findings for the lane
 
 1. **Mezzanine classification in the calc route:** a redeemable or temporary line between the last liability and equity is not a liability (KMB `RedeemableCommonAndPreferredSecuritiesOfSubsidiaries`). Fix it and re-draw calc keys whose children include a `Redeemable*` or `Temporary*` tag.
-2. **Sample file:** ConEd 2014-12-31 is listed twice.
+2. ~~Sample file: ConEd listed twice~~ withdrawn: the file has 33 distinct keys.
+
+
+## Re-draw at 5461439 (mezzanine fix), 2026-11-08
+
+The lane's rule: a liability-classed line whose tag or label says Redeemable or Temporary, printed after the last other liability and before the first equity line, is temporary equity; "mandatorily redeemable" stays a liability. Only Kimberly-Clark changes: 19 total-liabilities keys in `results/bs-derive-tl-current/kmb_mezz_changed_keys.csv`.
+
+**All 19 checked: 19 right, 0 wrong.** Each new value equals that filing's printed total L&E − Total Stockholders' Equity − its printed redeemable line, read from the accession the key cites (R4/R5/R6). SEC requests: 36.
+
+| date | accession | L&E | equity | redeemable line (printed) | TL = new value |
+|---|---|---|---|---|---|
+| 2021-12-31 | 0000055785-23-000012 | 17,837 | 737 | Redeemable Common and Preferred Securities of Subsidiaries 26 | 17,074 |
+| 2022-03-31 | 0000055785-22-000035 | 18,672 | 854 | same, 260 | 17,558 |
+| 2022-06-30 | 0000055785-22-000055 | 18,114 | 742 | 260 | 17,112 |
+| 2022-09-30 | 0000055785-22-000074 | 17,836 | 583 | 260 | 16,993 |
+| 2022-12-31 | 0000055785-24-000018 | 17,970 | 700 | 258 | 17,012 |
+| 2023-03-31 | 0000055785-23-000029 | 18,177 | 861 | 210 | 17,106 |
+| 2023-06-30 | 0000055785-23-000054 | 17,383 | 651 | 210 | 16,522 |
+| 2023-09-30 | 0000055785-23-000064 | 17,153 | 840 | 210 | 16,103 |
+| 2023-12-31 | 0000055785-25-000013 | 17,344 | 1,068 | Redeemable Preferred Securities of Subsidiaries 26 | 16,250 |
+| 2024-03-31 | 0000055785-24-000054 | 17,092 | 1,184 | 26 | **15,882** |
+| 2024-06-30 | 0000055785-24-000085 | 17,280 | 1,281 | 26 | 15,973 |
+| 2024-09-30 | 0000055785-24-000094 | 17,165 | 1,444 | 26 | 15,695 |
+| 2024-12-31 | 0001628280-26-007567 | 16,546 | 975 | 37 | 15,534 |
+| 2025-03-31 | 0000055785-25-000039 | 16,305 | 1,224 | 37 | 15,044 |
+| 2025-06-30 | 0000055785-25-000080 | 16,771 | 1,403 | 37 | 15,331 |
+| 2025-09-30 | 0001628280-25-047387 | 16,888 | 1,468 | 37 | 15,383 |
+| 2025-12-31 | 0001628280-26-052348 | 17,098 | 1,630 | 22 | **15,446** |
+| 2026-03-31 | 0001628280-26-027800 | 17,184 | 1,914 | 22 | 15,248 |
+| 2026-06-30 | 0001628280-26-052348 | 18,554 | 1,874 | 22 | 16,658 |
+
+The 2022-23 line includes redeemable *common* securities of subsidiaries (redeemable NCI). That is also mezzanine, so the larger moves (260 / 258 / 210) are right. The "mandatorily redeemable stays a liability" branch has no case in this sample and was not exercised.
+
+**PR #6 result after the re-draw: 33 of 33 sampled keys right, plus 19 of 19 changed KMB keys.**
 
 ## Untested scope
 
