@@ -98,6 +98,46 @@ The expected state below is what the cash-flow face supports. Grading the store 
 
 **(a) after this update:** 5 right (adding Cheniere Q4 2018 and Somnigroup Q2 2020 buybacks), 1 to change under the ruling (Brixmor FY/Q4 2015-16), 3 pending the store run (Kraft Heinz, Erie, BXP).
 
+
+## Final grade at d1a0050 (store output for 60 cohort companies), 2026-11-08
+
+Inputs: `results/cf_gaps_2026-11-08/` at d1a0050. That is `answer_key_vs_store.csv`, `store_cells_60_companies.csv.gz` (10,346 cells), and the final `new_values.csv` (47 new values, 32 reason changes, 0 withdrawn). SEC requests for this round: 14.
+
+**Overall verdict for PR #4: PASS.** There are no wrong shown values, every sampled value and derived quarter is right, and all 15 cohort absent-line claims are right. One non-blocking reason residual is noted below.
+
+### (c) The 12 fresh picks plus Kraft Heinz, Erie and BXP, against the store cells
+
+I read each key from `store_cells_60_companies.csv.gz`, not from the lane's self-grade. All 15 match the answer-key file (Kraft Heinz is stored at the month-end 2017-06-30 for the 52-week date 2017-07-01).
+
+**15 of 15 store claims are right against the filings.** Two of these needed my own answer key corrected; the lane's disputes are upheld:
+- **Kraft Heinz buybacks Q2 2017 → only_excluded_lines_presented: RIGHT.** My key was wrong. The financing section of 0001637459-17-000101 R7 prints "Redemption of Series A Preferred Stock 0" (PaymentsForRepurchaseOfRedeemablePreferredStock). A preferred redemption is a line the buyback perimeter excludes. My label filter did not include "redemption".
+- **International Seaways buybacks Q1 2018 → only_excluded_lines_presented: RIGHT.** My key was wrong. 0001144204-18-025525 R7 prints "Cash paid to tax authority upon vesting of stock-based compensation (278)" (PaymentsRelatedToTaxWithholdingForShareBasedCompensation), a tax-withholding line. This is consistent with Viasat Q1 FY16. My filter did not include "tax authority".
+- **The other 13 match my key:**
+  - Erie, Valaris, ESCO, Dominion, T-Mobile and Sunoco: line_not_presented_in_filing.
+  - Public Storage and Atmos: only_excluded_lines_presented.
+  - BXP, Ares, STAG and Clearway: line_presented_combined_with_others.
+  - West Pharmaceutical: derived 12.6M = FY 48.1 − 9M 35.5 ("Dividend payments", 0000105770-21-000083 R7). The equal 12.6 of "Dividends declared, not paid" is a coincidence; the non-cash line is not used.
+
+### (3) New since the last draw
+
+- **Zero-input YTD derive to 0: RIGHT** on the keys drawn:
+  - Modine buybacks Q2 FY19 (2018-09-30): 6M 0.0 (0001140361-19-020095 R7) − Q1 0.0 (0001140361-19-013948 R7), "Purchases of treasury stock under share repurchase program".
+  - Brixmor buybacks Q2 2017: 6M 0 (0001581068-18-000024 R8) − Q1 0 (0001581068-18-000017 R8), "Repurchases of common shares". The equity-award line sits separately under the tax-withholding tag.
+- **Reason from the cited filing's own lines (original before amendment): RIGHT** for Sunoco FY2023 (0001552275-24-000013) and Clearway FY2021 (0001567683-22-000006). Both are original 10-Ks whose financing sections were read above.
+- **Tax-withholding lines as excluded: RIGHT** (Viasat Q1 FY16; International Seaways Q1 2018).
+- **Brixmor FY2015 / FY2016 buybacks:** the final new_values has 0 withdrawals, so they stay at the printed 0 from the latest copies, per the ruling. RIGHT.
+- **New reason changes in the final file: consistent with the faces read.** Viasat dividends FY2024-25 → line_not_presented_in_filing (Viasat pays no dividend), and Cheniere Partners buybacks 2022-23 → line_not_presented_in_filing (an LP with distributions only).
+
+### Residual (non-blocking)
+
+- **Brixmor buybacks Q4 2015 / Q4 2016** keep `defect no_prior_quarter_end` from the sampled run. The blank is safe, but the reason is not what the filings show. The 9M copies exist, and they carry only the equity-award line under the buyback tag, while the latest FY copies print a common buyback of 0. A mixed-basis reason (or 0 if the bases are accepted as the same) would describe it. Fix in a follow-up; it does not block the PR.
+
+**Totals across both draws of PR #4:**
+- **Shown values:** 0 wrong.
+- **New and derived values checked:** 17 + 4 = 21, all right.
+- **Cohort absent-line claims:** 15 of 15 right.
+- **First-draw failures:** all fixed or ruled, except the one reason residual.
+
 ## Untested scope
 
 Everything marked pending above.
