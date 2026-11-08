@@ -112,7 +112,9 @@ def dividend_class(tag, label):
         return None
     if tag.startswith("EquityMethodInvestment") or re.search(r"received|from (unconsolidated|equity|affiliat)|of equity investment", label, re.I):
         return None  # an inflow from investees, not a dividend the company pays
-    if NONCASH_RX.search(label) or re.search(r"declared|payable", label, re.I) and not re.search(r"paid|payment", label, re.I):
+    if (NONCASH_RX.search(label) or re.search(r"declared|payable", label, re.I) and not re.search(r"paid|payment", label, re.I)
+            or re.search(r"\bnot\s+(yet\s+)?paid\b|\bunpaid\b", label, re.I)):
+        # Verifier 2026-11-08: BXP "Dividends and distributions declared but not paid" is a non-cash disclosure
         return "excluded_noncash"
     pref, nci = DIV_PREFERRED_RX.search(label) or "Preferred" in tag, DIV_NCI_RX.search(label) or "Minority" in tag or "Noncontrolling" in tag
     common_named = DIV_COMMON_RX.search(label) is not None
@@ -122,6 +124,10 @@ def dividend_class(tag, label):
         return "perimeter_preferred"
     if nci:
         return "perimeter_nci"
+    if re.search(r"\bdividends?\s+and\s+distributions?\b|\bdistributions?\s+and\s+dividends?\b", label, re.I):
+        # Verifier 2026-11-08: BXP "Dividends and distributions" pays stockholders AND operating-partnership unit
+        # holders in one line: combined, never counted as common dividends
+        return "combined"
     if DIV_EQUIV_RX.search(label) and not re.search(r"dividends? and (dividend )?equivalents?|dividends?,? including", label, re.I):
         # a standalone equivalents line (EPD); AAPL's "dividends and dividend
         # equivalents" IS its common dividend line (equivalents on unvested shares)

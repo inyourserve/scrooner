@@ -244,28 +244,80 @@ ABSENT_LINE_CONCEPTS = ("share_buybacks_resolved", "dividends_paid_resolved")
 SHARE_PURCHASE_RX = re.compile(r"(purchas|acqui)\w*\b.*\b(shares?|stock)\b", re.I)
 
 
-def cf_line_classes(
-    conn: psycopg.Connection, company_id: int
-) -> dict[str, dict[int, list[str]]]:
-    """concept -> filing_id -> the run 7 lane classes of that filing's cash-flow lines (tag and label only; the
-    lane's buyback_class / dividend_class, imported). A buyback line counts only when the lane's repurchase test
-    hits it, so abstract and unrelated rows are never 'excluded lines'."""
-    from scrooner_pipeline.fsn_store.cf_detector import _lane  # noqa: PLC0415
+SHAPE_TAG = ("Abstract", "Table", "Axis", "Domain", "Member", "LineItems")
+INV_TOTALS = (
+    "NetCashProvidedByUsedInInvestingActivities",
+    "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+)
 
-    lane = _lane()
+
+def financing_rows(face_rows: list[tuple], lane: Any) -> list[tuple[str, str]] | None:
+    """(tag, label) of the financing-section rows of ONE filing's primary cash-flow statement: the rows after the
+    investing total up to the financing total, in printed line order (run 7's primary_face picks the report).
+    None when the section cannot be located: then nothing is claimed about the filing. Section headers and
+    table/axis rows are dropped; supplemental and non-cash rows sit after the financing total and never count."""
+    face = {"f": list(face_rows)}
+    lane.primary_face(face)
+    rows = face["f"]  # (line, tag, label, custom, negating), primary report only
+    inv = [i for i, r in enumerate(rows) if r[1] in INV_TOTALS]
+    if not inv:
+        return None
+    fin = next(
+        (i for i in range(inv[-1] + 1, len(rows)) if rows[i][1] in lane.FIN_TOTALS),
+        None,
+    )
+    if fin is None:
+        return None
+    return [
+        (t, lab)
+        for _ln, t, lab, _cu, _ng in rows[inv[-1] + 1 : fin]
+        if not t.endswith(SHAPE_TAG)
+    ]
+
+
+def definitional_exclusions(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[tuple[str, date, int], list[int]]]:
+    """concept -> (tag, ddate, qtrs) -> filing ids whose cash-flow detector held that tag's line because every
+    family line of the filing is excluded by definition (`excluded_only:*`: tax withholding, SBC-plan purchases,
+    NCI or preferred dividends). Verifier 2026-11-08: Brixmor's FY2015/FY2016 10-Ks label PaymentsForRepurchaseOf
+    CommonStock "Repurchase of common shares in conjunction with equity award plans" (excluded); its FY2017 10-K
+    reprints the same periods under the same tag as "Repurchase of common shares". The more specific label wins."""
     rows = conn.execute(
-        """select l.filing_id, t.tag, coalesce(l.plabel, '') from fsn.line l join fsn.tag t on t.id = l.tag_id
-           join fsn.filing f on f.id = l.filing_id
-           where f.company_id = %s and l.stmt = 'CF' and not l.inpth""",
+        """
+        select lm.evidence->>'concept', t.tag, v.ddate, v.qtrs, lm.filing_id
+        from fsn.line_map lm
+        join fsn.line l using (filing_id, report, line)
+        join fsn.tag t on t.id = l.tag_id
+        join fsn.value v on v.filing_id = lm.filing_id and v.tag_id = l.tag_id
+        join fsn.filing f on f.id = lm.filing_id
+        where f.company_id = %s and lm.rule_id = 'cf.buybacks_dividends_held@1'
+          and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.qtrs > 0 and v.value is not null
+          and jsonb_array_length(lm.evidence->'held') > 0
+          and not exists (
+            select 1 from jsonb_array_elements_text(lm.evidence->'held') h where h not like 'excluded_only:%%'
+          )
+        """,
         (company_id,),
     ).fetchall()
-    out: dict[str, dict[int, list[str]]] = {
-        c: defaultdict(list) for c in ABSENT_LINE_CONCEPTS
-    }
-    for fid, tag, label in rows:
+    out: dict[str, dict[tuple[str, date, int], list[int]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    for concept, tag, ddate, qtrs, fid in rows:
+        out[concept][(tag, ddate, int(qtrs))].append(fid)
+    return out
+
+
+def classify_filing(face_rows: list[tuple], lane: Any) -> dict[str, list[str]]:
+    """concept -> the lane classes of ONE filing's financing-section lines (pure; see cf_line_classes)."""
+    out: dict[str, list[str]] = {c: [] for c in ABSENT_LINE_CONCEPTS}
+    fin = financing_rows(face_rows, lane)
+    if fin is None:
+        return {c: ["no_financing_section"] for c in ABSENT_LINE_CONCEPTS}
+    for tag, label in fin:
         d = lane.dividend_class(tag, label)
-        if d:
-            out["dividends_paid_resolved"][fid].append(d)
+        if d and d != "excluded_noncash":
+            out["dividends_paid_resolved"].append(d)
         if (
             lane.REPURCHASE_RX.search(label)
             or "Repurchase" in tag
@@ -273,13 +325,45 @@ def cf_line_classes(
         ):
             b = lane.buyback_class(tag, label)
             if b:
-                out["share_buybacks_resolved"][fid].append(b)
+                out["share_buybacks_resolved"].append(b)
         elif SHARE_PURCHASE_RX.search(label) and not re.match(
             r"\s*(proceeds|issuance|issue)\b", label, re.I
         ):
-            # a purchase of shares the lane's repurchase test does not name ("Purchase of CP Common Shares" under a
-            # custom tag): never evidence that no buyback line is printed, so no absent-line claim is made
-            out["share_buybacks_resolved"][fid].append("unclassified_share_line")
+            # a purchase of shares the lane's repurchase test does not name ("Purchase of CP Common Shares"
+            # under a custom tag): never evidence that no buyback line is printed, so no claim is made
+            out["share_buybacks_resolved"].append("unclassified_share_line")
+    return out
+
+
+def cf_line_classes(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[int, list[str]]]:
+    """concept -> filing_id -> the run 7 lane classes of the financing-section lines of that filing's primary
+    cash-flow statement (tag and label only; the lane's buyback_class / dividend_class, imported).
+    Verifier 2026-11-08 (VERIFY-CF-GAPS-2026-11-08): section headers (Kraft Heinz), rows of other pages (Erie's
+    related-party table), operating inflows ("Dividends received", Somnigroup) and supplemental non-cash items
+    (BXP "declared but not paid") are never lines of the concept. A filing whose financing section cannot be
+    located gets the marker `no_financing_section`: nothing is claimed. A buyback line counts only when the lane's
+    repurchase test hits it; an unnamed share purchase blocks any claim (`unclassified_share_line`)."""
+    from scrooner_pipeline.fsn_store.cf_detector import _lane  # noqa: PLC0415
+
+    lane = _lane()
+    rows = conn.execute(
+        """select l.filing_id, l.report, l.line, t.tag, coalesce(l.plabel, ''), t.custom, l.negating
+           from fsn.line l join fsn.tag t on t.id = l.tag_id
+           join fsn.filing f on f.id = l.filing_id
+           where f.company_id = %s and l.stmt = 'CF' and not l.inpth""",
+        (company_id,),
+    ).fetchall()
+    by_filing: dict[int, list[tuple]] = defaultdict(list)
+    for fid, rep, ln, tag, label, cu, ng in rows:
+        by_filing[fid].append((rep, ln, tag, label, bool(cu), bool(ng)))
+    out: dict[str, dict[int, list[str]]] = {
+        c: defaultdict(list) for c in ABSENT_LINE_CONCEPTS
+    }
+    for fid, face_rows in by_filing.items():
+        for c, classes in classify_filing(face_rows, lane).items():
+            out[c][fid].extend(classes)
     return out
 
 
@@ -302,8 +386,12 @@ def report_company(
     data = sel.load_company(conn, company_id)
     cells: list[dict[str, Any]] = []
     breaks: dict[str, list[str]] = {}
+    excluded = definitional_exclusions(conn, company_id)
     for concept, prints in sorted(data["prints"].items()):
         unit = "USD/shares" if "eps" in concept else "USD"
+        ex = excluded.get(concept, {})
+        if ex:  # a period one filing excludes by its label is never filled by a relabelled copy of the same tag
+            prints = [p for p in prints if (p.tag, p.ddate, p.qtrs) not in ex]
         cs = sel.select_concept(
             concept,
             prints,
@@ -319,6 +407,8 @@ def report_company(
             sel.load_period_rules(period_rules, company_id),
             instant=concept in INSTANT,
         )
+        if ex:
+            cs = cs + sel.excluded_period_cells(concept, cs, ex, data["filings"])
         cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
         s = sel._Series(
             [p for p in prints if p.uom == sel.FSN_UOM.get(unit, unit)], data["filings"]

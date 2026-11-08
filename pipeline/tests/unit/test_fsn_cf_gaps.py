@@ -204,3 +204,190 @@ def test_an_unnamed_share_purchase_line_blocks_the_absent_claim():
     assert not pilot.SHARE_PURCHASE_RX.search("Purchases of property, plant and equipment")
     d = date(2024, 12, 31)
     assert sel.absent_line_cell("share_buybacks_resolved", "FY", d, _data(), {1: ["unclassified_share_line"]}) is None
+
+
+# ---------------------------------------------------------------- 6. Verifier 2026-11-08 (VERIFY-CF-GAPS-2026-11-08)
+def _cf_col(rows, version="us-gaap/2020"):
+    return {(t, version): checks.Print(t, version, Decimal(v) * M, -5, None) for t, v in rows}
+
+
+CHANGE_INCL = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect"
+
+
+@pytest.mark.unit
+def test_a_separately_printed_discontinued_total_ties_the_column():
+    # Somnigroup 0001206264-21-000208, 6M 2020: 170.4 - 87.2 + 1.4 = 84.6; - 1.0 discontinued - 1.7 FX = 81.9
+    col = _cf_col(
+        [
+            ("NetCashProvidedByUsedInOperatingActivities", "170.4"),
+            ("NetCashProvidedByUsedInInvestingActivities", "-87.2"),
+            ("NetCashProvidedByUsedInFinancingActivities", "1.4"),
+            ("NetCashProvidedByUsedInDiscontinuedOperations", "-1.0"),
+            ("EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "-1.7"),
+            (CHANGE_INCL, "81.9"),
+        ]
+    )
+    c = {x["check_id"]: x for x in checks.check_column("CF", col, {}, {})}["cf_parts_eq_change"]
+    assert c["ok"] and c["detail"]["discontinued_included"] and c["detail"]["fx_included"]
+
+
+@pytest.mark.unit
+def test_two_statements_one_parent_pass_when_one_calc_group_ties():
+    # a co-registrant's own cash-flow statement brings a second calc group for the same parent (Cheniere FY2018)
+    v = "us-gaap/2020"
+    col = _cf_col([("P", "10"), ("A", "6"), ("B", "4"), ("C", "99")])
+    stmt_of = {(t, v): "CF" for t in "PABC"}
+    groups = {("P", v, 1): [("A", v, 1), ("B", v, 1)], ("P", v, 2): [("A", v, 1), ("C", v, 1)]}
+    got = [x for x in checks.check_column("CF", col, groups, stmt_of) if x["check_id"].startswith("calc:")]
+    assert len(got) == 1 and got[0]["ok"] and len(got[0]["detail"]["groups"]) == 2
+    groups1 = {("P", v, 2): [("A", v, 1), ("C", v, 1)]}  # one group that does not tie still fails
+    assert not [x for x in checks.check_column("CF", col, groups1, stmt_of) if x["check_id"].startswith("calc:")][0]["ok"]
+
+
+@pytest.mark.unit
+def test_a_merged_tree_with_profitloss_and_netincomeloss_ties_with_either():
+    # Brixmor 0001581068-15-000050: one group lists both (parent + operating partnership trees merged)
+    v = "us-gaap/2014"
+    col = _cf_col([("NetCashProvidedByUsedInOperatingActivities", "86.576"), ("NetIncomeLoss", "41.740"),
+                   ("ProfitLoss", "41.740"), ("DepreciationDepletionAndAmortization", "44.836")], v)
+    stmt_of = {k: "CF" for k in col}
+    groups = {("NetCashProvidedByUsedInOperatingActivities", v, 2): [
+        ("NetIncomeLoss", v, 1), ("ProfitLoss", v, 1), ("DepreciationDepletionAndAmortization", v, 1)]}
+    got = [x for x in checks.check_column("CF", col, groups, stmt_of) if x["check_id"].startswith("calc:")]
+    assert got[0]["ok"]
+
+
+def _lane():
+    return cd._lane()
+
+
+def _face(*rows, report=4):
+    """(report, line, tag, label, custom, negating) rows of a primary cash-flow statement, in printed order."""
+    return [(report, i + 1, t, lab, False, False) for i, (t, lab) in enumerate(rows)]
+
+
+OP, INV, FIN = (
+    ("NetCashProvidedByUsedInOperatingActivities", "Net cash provided by operating activities"),
+    ("NetCashProvidedByUsedInInvestingActivities", "Net cash used for investing activities"),
+    ("NetCashProvidedByUsedInFinancingActivities", "Net cash used for financing activities"),
+)
+
+
+@pytest.mark.unit
+def test_section_headers_are_never_lines_kraft_heinz():
+    from scrooner_pipeline.fsn_store import pilot
+
+    rows = _face(OP, INV, ("NetCashProvidedByUsedInFinancingActivitiesAbstract", "Cash Flows from Financing Activities:"),
+                 ("PaymentsForRepurchaseOfCommonStockAbstract", "Repurchases of common stock:"),
+                 ("RepaymentsOfLongTermDebt", "Repayments of long-term debt"), FIN)
+    got = pilot.classify_filing(rows, _lane())
+    assert got["share_buybacks_resolved"] == []
+    c = sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _data(), {1: got["share_buybacks_resolved"]})
+    assert c.reason_code == "line_not_presented_in_filing"
+
+
+@pytest.mark.unit
+def test_rows_of_another_page_are_never_lines_erie():
+    from scrooner_pipeline.fsn_store import pilot
+
+    face = _face(OP, INV, ("RepaymentsOfLongTermDebt", "Repayments of debt"), FIN)
+    other = _face(
+        ("RelatedPartyTransactionAmountsOfTransaction", "Purchase of treasury shares from related party"),
+        ("PaymentsRelatedToTaxWithholdingForShareBasedCompensation", "Shares withheld for taxes (related party)"),
+        report=9,
+    )
+    rows = face[:2] + other + face[2:]  # rows arrive unordered from the store: the other page sits inside the section
+    assert pilot.classify_filing(rows, _lane())["share_buybacks_resolved"] == []
+
+
+@pytest.mark.unit
+def test_operating_inflows_and_non_cash_items_are_never_dividend_lines():
+    from scrooner_pipeline.fsn_store import pilot
+
+    lane = _lane()
+    rows = _face(("ProceedsFromEquityMethodInvestmentDividendsOrDistributions", "Dividends received from unconsolidated affiliates"),
+                 OP, INV, ("RepaymentsOfLongTermDebt", "Repayments of debt"), FIN,
+                 ("DividendsPayableCurrentAndNoncurrent", "Dividends and distributions declared but not paid"))
+    assert pilot.classify_filing(rows, lane)["dividends_paid_resolved"] == []  # Somnigroup FY2018, BXP supplemental
+    assert lane.dividend_class("DividendsPayable", "Dividends and distributions declared but not paid") == "excluded_noncash"
+
+
+@pytest.mark.unit
+def test_dividends_and_distributions_is_a_combined_line_bxp():
+    from scrooner_pipeline.fsn_store import pilot
+
+    lane = _lane()
+    assert lane.dividend_class("PaymentsOfDividends", "Dividends and distributions") == "combined"
+    rows = _face(OP, INV, ("PaymentsOfDividends", "Dividends and distributions"), FIN)
+    classes = pilot.classify_filing(rows, lane)["dividends_paid_resolved"]
+    c = sel.absent_line_cell("dividends_paid_resolved", "FY", date(2024, 12, 31), _data(), {1: classes})
+    assert c.reason_code == "line_presented_combined_with_others"
+
+
+@pytest.mark.unit
+def test_no_claim_when_the_financing_section_cannot_be_located():
+    from scrooner_pipeline.fsn_store import pilot
+
+    got = pilot.classify_filing(_face(OP, ("RepaymentsOfLongTermDebt", "Repayments of debt")), _lane())
+    assert got["share_buybacks_resolved"] == ["no_financing_section"]
+    assert sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _data(), {1: got["share_buybacks_resolved"]}) is None
+
+
+@pytest.mark.unit
+def test_a_period_excluded_by_one_filing_is_never_filled_by_a_relabelled_copy():
+    # Brixmor: FY2015 10-K "Repurchase of common shares in conjunction with equity award plans" (excluded); the FY2017
+    # 10-K reprints FY2015 under the same tag as "Repurchase of common shares"
+    f = _data()["filings"]
+    ex = {("PaymentsForRepurchaseOfCommonStock", date(2024, 12, 31), 4): [1]}
+    got = {(c.ddate, c.qtrs): c for c in sel.excluded_period_cells("share_buybacks_resolved", [], ex, f)}
+    assert set(got) == {(date(2024, 12, 31), 4), (date(2024, 12, 31), 1)}
+    assert all(c.state == "not_presented" and c.reason_code == "only_excluded_lines_presented" for c in got.values())
+    kept = sel.Cell("share_buybacks_resolved", date(2024, 12, 31), 4, "defect", reason_code="latest_copy_fails_identity")
+    assert {(c.ddate, c.qtrs) for c in sel.excluded_period_cells("share_buybacks_resolved", [kept], ex, f)} == {(date(2024, 12, 31), 1)}
+
+
+@pytest.fixture
+def db(isolated_database_url):
+    import psycopg
+
+    c = psycopg.connect(isolated_database_url)
+    if c.execute("select count(*) from information_schema.tables where table_schema = 'fsn' and table_name = 'value'").fetchone()[0] != 1:
+        c.close()
+        pytest.skip("needs migration 0118")
+    yield c
+    c.close()
+
+
+@pytest.mark.integration
+def test_the_identity_reads_the_primary_registrant_only(db):
+    """Brixmor 10-Q 0001581068-15-000050 prints the operating partnership's block as a co-registrant (FSN coreg):
+    its numbers must never replace the parent's in the column (the identity ties on the parent's own block)."""
+    cid = db.execute("insert into core.company (cik, company_name) values ('0009999999', 'COREG TEST') returning id").fetchone()[0]
+    fid = db.execute(
+        "insert into fsn.filing (accession, company_id, cik, form, period, fsn_set) values "
+        "('0009999999-15-000050', %s, '0009999999', '10-Q', '2014-03-31', '2015q2') returning id", (cid,)).fetchone()[0]
+    parent = {"NetCashProvidedByUsedInOperatingActivities": ("86576", "86623"),
+              "NetCashProvidedByUsedInInvestingActivities": ("-39774", "-39771"),
+              "NetCashProvidedByUsedInFinancingActivities": ("-105021", "-104629"),
+              "CashAndCashEquivalentsPeriodIncreaseDecrease": ("-58219", "-57777")}
+    for i, (tag, (pv, opv)) in enumerate(parent.items()):
+        tid = db.execute("insert into fsn.tag (tag, version) values (%s, 'us-gaap/2014') returning id", (tag,)).fetchone()[0]
+        db.execute("insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s, 8, %s, 'CF', %s)", (fid, i + 1, tid))
+        for coreg, v in (("", pv), ("BrixmorOperatingPartnershipLP", opv)):
+            db.execute("insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, coreg, value, dcml) "
+                       "values (%s, %s, %s, '2014-03-31', 1, 'USD', 0, %s, %s, -3)", (fid, cid, tid, coreg, Decimal(v) * 1000))
+    data = checks.load_filing(db, fid)
+    col = data["columns"][("CF", date(2014, 3, 31), 1)]
+    assert col[("NetCashProvidedByUsedInOperatingActivities", "us-gaap/2014")].value == Decimal(86576000)
+    c = {x["check_id"]: x for x in checks.check_column("CF", col, data["groups"], data["stmt_of"])}["cf_parts_eq_change"]
+    assert c["ok"]
+    db.rollback()
+
+
+@pytest.mark.unit
+def test_the_evidence_is_the_filing_whose_own_period_it_is():
+    d = _data()
+    d["filings"][3] = sel.Filing(3, "0000000001-26-000003", datetime(2026, 5, 1), "10-Q", date(2026, 3, 31), 2026, "Q1")
+    d["face_cols"] = {(2, "CF", date(2025, 3, 31), 1), (3, "CF", date(2025, 3, 31), 1)}  # the 2026 10-Q re-prints it
+    c = sel.absent_line_cell("dividends_paid_resolved", "Q", date(2025, 3, 31), d, {})
+    assert c.filing_id == 2 and c.input_refs["accessions"] == ["0000000001-25-000002", "0000000001-26-000003"]

@@ -36,6 +36,9 @@ CF_PARTS = (
     "NetCashProvidedByUsedInInvestingActivities",
     "NetCashProvidedByUsedInFinancingActivities",
 )
+# a discontinued-operations cash-flow TOTAL printed beside the three section totals (never the per-section components,
+# which the section totals already contain)
+CF_DISC = ("NetCashProvidedByUsedInDiscontinuedOperations",)
 CF_FX = (
     "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
     "EffectOfExchangeRateOnCashAndCashEquivalents",
@@ -93,6 +96,8 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
             select t.tag, t.version, v.ddate, v.qtrs, v.value, v.dcml
             from fsn.value v join fsn.tag t on t.id = v.tag_id
             where v.filing_id = %s and v.dim_id = 0 and v.value is not null and v.uom = 'USD'
+              and v.coreg = '' and v.iprx = 0  -- the primary registrant only (select's prints): a co-registrant
+                                              -- block (Brixmor's operating partnership) must never mix in
             """,
             (filing_id,),
         )
@@ -149,7 +154,11 @@ def check_column(
 ) -> list[dict[str, Any]]:
     """Checks of one column: every calc parent with all children printed in this column, plus the identities."""
     out: list[dict[str, Any]] = []
-    # calc arcs: parent = Σ weight·child, when parent and every child are printed on this statement column
+    # calc arcs: parent = Σ weight·child, when parent and every child are printed on this statement column.
+    # A filing with two statements for one parent (a co-registrant's own cash-flow statement: Brixmor's operating
+    # partnership, Cheniere Partners) has one calc group per statement; the column's own registrant ties through
+    # one of them, so one check per parent passes when any fully valued group ties (Verifier 2026-11-08).
+    by_parent: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for (ptag, pver, grp), children in groups.items():
         parent = col.get((ptag, pver))
         if parent is None or len(children) < 2:
@@ -159,9 +168,21 @@ def check_column(
             continue
         if any(stmt_of.get((c, v)) != stmt for c, v, _ in children):
             continue
-        rhs = sum((t.value * w for t, w in terms), Decimal(0))
         tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])
-        out.append(
+        # a group that lists BOTH ProfitLoss and NetIncomeLoss (two statements' trees merged into one group: Brixmor
+        # 10-Q 0001581068-15-000050, parent + operating partnership) counts net income twice; it ties with either one
+        sums = [sum((t.value * w for t, w in terms), Decimal(0))]
+        tags_in = {c for c, _v, _w in children}
+        if {"ProfitLoss", "NetIncomeLoss"} <= tags_in:
+            sums = [
+                sum(
+                    (col[(c, v)].value * w for c, v, w in children if c != drop),
+                    Decimal(0),
+                )
+                for drop in ("ProfitLoss", "NetIncomeLoss")
+            ]
+        rhs = next((x for x in sums if abs(parent.value - x) <= tol), sums[0])
+        by_parent[(ptag, pver)].append(
             {
                 "check_id": f"calc:{ptag}:{grp}",
                 "ok": abs(parent.value - rhs) <= tol,
@@ -174,6 +195,16 @@ def check_column(
                 },
             }
         )
+    for (_ptag, _pver), results in by_parent.items():
+        if len(results) == 1:
+            out.append(results[0])
+            continue
+        best = next((r for r in results if r["ok"]), results[0])
+        best = {
+            **best,
+            "detail": {**best["detail"], "groups": [r["check_id"] for r in results]},
+        }
+        out.append(best)
     if stmt == "BS":
         for check_id, lhs_tags, rhs_tags in BS_IDENTITIES:
             lhs = [p for (t, _v), p in col.items() if t in lhs_tags]
@@ -207,10 +238,18 @@ def check_column(
                 forms.insert(
                     0, ("with_fx", base + fx[0].value, tol_no + tol_of([fx[0].dcml]))
                 )
+            # a separately printed discontinued-operations total (Somnigroup 6M 2020: 84.6 - 1.0 - 1.7 = 81.9):
+            # the column also ties with it added, never with a component counted twice
+            disc = [p for (t, _v), p in col.items() if t in CF_DISC]
+            if disc:
+                forms += [
+                    (name + "+disc", v + disc[0].value, tl + tol_of([disc[0].dcml]))
+                    for name, v, tl in list(forms)
+                ]
             form, rhs, tol = next(
                 (f for f in forms if abs(change[0].value - f[1]) <= f[2]), forms[0]
             )
-            with_fx = form == "with_fx"
+            with_fx = form.startswith("with_fx")
             out.append(
                 {
                     "check_id": "cf_parts_eq_change",
@@ -221,6 +260,7 @@ def check_column(
                     "detail": {
                         "change_tag": change[0].tag,
                         "fx_included": with_fx,
+                        "discontinued_included": form.endswith("+disc"),
                     },
                 }
             )

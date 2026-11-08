@@ -792,6 +792,43 @@ def build(
 RULE_ABSENT = "fsn.absent_line@1"
 
 
+def excluded_period_cells(
+    concept: str,
+    cells: list[Cell],
+    excluded: dict[tuple[str, date, int], list[int]],
+    filings: dict[int, Filing],
+) -> list[Cell]:
+    """not_presented `only_excluded_lines_presented` cells for the periods a filing excludes by its label
+    (pilot.definitional_exclusions): FY and Q4 for an annual column, the quarter for a 3-month or year-to-date
+    column. Never replaces a cell select already decided."""
+    have = {(c.ddate, c.qtrs) for c in cells}
+    targets: dict[tuple[date, int], set[int]] = defaultdict(set)
+    for (_tag, ddate, qtrs), fids in excluded.items():
+        for key in [(ddate, 4), (ddate, 1)] if qtrs == 4 else [(ddate, 1)]:
+            targets[key].update(fids)
+    out = []
+    for (ddate, qtrs), fid_set in sorted(targets.items()):
+        if (ddate, qtrs) in have:
+            continue
+        order = sorted(fid_set, key=lambda f: (filings[f].accepted, f))
+        out.append(
+            Cell(
+                concept,
+                ddate,
+                qtrs,
+                "not_presented",
+                filing_id=order[-1],
+                rule_id=RULE_ABSENT,
+                reason_code="only_excluded_lines_presented",
+                input_refs={
+                    "accessions": [filings[f].accession for f in order],
+                    "excluded_by_label": True,
+                },
+            )
+        )
+    return out
+
+
 def absent_line_cell(
     concept: str,
     grain: str,
@@ -828,7 +865,7 @@ def absent_line_cell(
     if set(fids) & data["mapped_filings"].get(concept, set()):
         return None
     classes = sorted({c for f in fids for c in line_classes.get(f, [])})
-    if "common" in classes or "unclassified_share_line" in classes:
+    if {"common", "unclassified_share_line", "no_financing_section"} & set(classes):
         return None  # a line exists that may be the concept: nothing is claimed
     if not classes:
         state, reason = "not_presented", "line_not_presented_in_filing"
@@ -840,7 +877,15 @@ def absent_line_cell(
         state, reason = "not_presented", "line_presented_combined_with_others"
     else:
         state, reason = "not_presented", "only_excluded_lines_presented"
-    latest = fids[-1]
+    # the evidence carrier is the filing whose own period is this date (it prints the column on its face); a later
+    # filing only re-prints it, and may print a longer column instead (Verifier 2026-11-08, Brixmor Q1 2025)
+    own = [
+        f
+        for f in fids
+        if data["filings"][f].period is not None
+        and abs((data["filings"][f].period - end).days) <= 10
+    ]
+    latest = (own or fids)[-1]
     ddate = next(d for f, d, _q in cols if f == latest)
     return Cell(
         concept,
