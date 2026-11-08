@@ -59,7 +59,7 @@ def test_a_discontinued_fx_component_is_never_the_total():
 # ---------------------------------------------------------------- 2. held YTD input
 def _filings():
     return {
-        i: sel.Filing(i, f"a{i}", datetime(2025, 3 * i + 1, 1), "10-Q", date(2025, 3 * i, 28), 2025, f"Q{i}")
+        i: sel.Filing(i, f"a{i}", datetime(2025, 3 * i + 1, 1), "10-Q", date(2025, 3 * i, 28), 2025, f"Q{i}", "1231")
         for i in (1, 2, 3)
     }
 
@@ -164,3 +164,31 @@ def test_structural_gates_leave_the_seed_decision_alone():
     # GPN FY2022 without its calc linkbase: the lane says hold_no_statement_cal; the store checks columns itself
     d = _decide("0001123360", "0001123360-23-000009", drop_cal=True)[cd.BUYBACKS]
     assert d["status"] == "seed_only" and "hold_no_statement_cal" in d["reasons"]
+
+
+# ---------------------------------------------------------------- 5. the write route accepts every new row
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "classes",
+    [[], ["perimeter_nci"], ["combined"], ["perimeter_partnership_distribution"], ["net"]],
+)
+def test_the_cell_loader_accepts_every_new_absent_line_row(classes):
+    """pilot-prod loads these rows through cell_loader.parse_row: a reason the frozen contract rejects (defect class,
+    owner, rule id) would drop the row at load time instead of reaching analytics.cell_blank_reason."""
+    from scrooner_pipeline.normalizer import cell_loader
+
+    c = sel.absent_line_cell("dividends_paid_resolved", "FY", date(2024, 12, 31), _data(), {1: classes})
+    row = sel.to_row(c, 1, _data()["filings"])
+    got = cell_loader.parse_row(1, row, {"dividends_paid_resolved"})
+    assert not isinstance(got, str), got
+
+
+@pytest.mark.unit
+def test_the_cell_loader_accepts_a_held_ytd_quarter_row():
+    from scrooner_pipeline.normalizer import cell_loader
+
+    n9 = date(2025, 9, 30)
+    prints = [_p(1, 1, date(2025, 3, 31), 1, 10), _p(2, 3, n9, 3, 31, ok=False)]
+    q3 = {(c.ddate, c.qtrs): c for c in sel.select_concept("dividends_paid_resolved", prints, _filings())}[(n9, 1)]
+    got = cell_loader.parse_row(1, sel.to_row(q3, 1, _filings()), {"dividends_paid_resolved"})
+    assert not isinstance(got, str), got

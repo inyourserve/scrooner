@@ -113,8 +113,8 @@ REASONS = {
     "note_value_not_positive": ("evidence_pending", "verifier"),
     "sole_debt_label_not_interest": ("composition", "standardization_lead"),
     "sign_inconsistent": ("filer_error", "verifier"),
-    "perimeter_line_unresolved": ("perimeter", "tag_mapper"),
-    "perimeter_partnership_distribution": ("perimeter", "standardization_lead"),
+    "perimeter_line_unresolved": ("composition", "tag_mapper"),
+    "perimeter_partnership_distribution": ("definition_pending", "standardization_lead"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
