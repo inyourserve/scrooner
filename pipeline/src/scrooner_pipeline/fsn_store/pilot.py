@@ -421,6 +421,7 @@ def report_company(
             instant=concept in INSTANT,
         )
         if ex:
+            cs = sel.explain_excluded_inputs(cs, ex)
             cs = cs + sel.excluded_period_cells(concept, cs, ex, data["filings"])
         cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
         s = sel._Series(

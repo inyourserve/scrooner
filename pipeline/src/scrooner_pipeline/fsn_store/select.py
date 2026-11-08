@@ -118,6 +118,7 @@ REASONS = {
         "definition_pending",
         "standardization_lead",
     ),
+    "ytd_input_only_excluded_other_vintage": ("period", "period_engineer"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -138,6 +139,7 @@ REASON_TEXT = {
     "line_presented_combined_with_others": "The filing prints this item only inside a line that combines it with other items, so it is not shown on its own.",
     "perimeter_line_unresolved": "The filing prints a net or unlabelled line for this item, so whether it is this item alone cannot be told from the statement.",
     "perimeter_partnership_distribution": "The filing prints distributions to partnership unitholders; whether they count as dividends paid is a definition still under review.",
+    "ytd_input_only_excluded_other_vintage": "The prior year-to-date filing prints only lines that are not this item, in a different filing from the year total, so the quarter is not computed on one basis.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -801,6 +803,40 @@ def build(
 
 
 RULE_ABSENT = "fsn.absent_line@1"
+
+
+def explain_excluded_inputs(
+    cells: list[Cell], excluded: dict[tuple[str, date, int], list[int]]
+) -> list[Cell]:
+    """A quarter blanked `no_prior_quarter_end` whose prior year-to-date period IS printed, but only as excluded lines
+    (pilot.definitional_exclusions), gets the true reason: the year total and that YTD are different filings, so 0 - 0
+    is not taken on one basis (Dhairya 2026-11-08, Brixmor Q4 2015 / Q4 2016 buybacks: FY 0 in the FY2017/FY2018
+    10-Ks, the 9M copies print only the equity-award line)."""
+    ex_periods = {(d, q) for (_t, d, q) in excluded}
+    out = []
+    for c in cells:
+        if (
+            c.qtrs == 1
+            and c.state == "defect"
+            and c.reason_code == "no_prior_quarter_end"
+        ):
+            prev = month_end(c.ddate, -3)
+            if any((prev, q) in ex_periods for q in (1, 2, 3)):
+                c = Cell(
+                    c.concept,
+                    c.ddate,
+                    c.qtrs,
+                    "defect",
+                    filing_id=c.filing_id,
+                    rule_id=RULE_ABSENT,
+                    reason_code="ytd_input_only_excluded_other_vintage",
+                    input_refs={
+                        **c.input_refs,
+                        "prior_ytd_excluded_by_label": prev.isoformat(),
+                    },
+                )
+        out.append(c)
+    return out
 
 
 def excluded_period_cells(

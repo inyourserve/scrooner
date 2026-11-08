@@ -467,3 +467,23 @@ def test_a_tax_withholding_line_without_repurchase_wording_is_an_excluded_line()
     assert classes == ["excluded"]
     c = sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _data(), {1: classes})
     assert c.reason_code == "only_excluded_lines_presented"
+
+
+@pytest.mark.unit
+def test_a_quarter_whose_prior_ytd_holds_only_excluded_lines_gets_the_true_reason():
+    """Brixmor Q4 2015 buybacks: FY 0 (FY2017 10-K), the 9M 2015 copy prints only the equity-award line (excluded)."""
+    from scrooner_pipeline.normalizer import cell_loader
+
+    fy, n9 = date(2025, 12, 31), date(2025, 9, 30)
+    f = _filings()
+    cells = sel.select_concept("share_buybacks_resolved", [_p(1, 3, fy, 4, 0)], f)
+    q4 = {(c.ddate, c.qtrs): c for c in cells}[(fy, 1)]
+    assert q4.reason_code == "no_prior_quarter_end"
+    ex = {("PaymentsForRepurchaseOfCommonStock", n9, 3): [2]}
+    got = {(c.ddate, c.qtrs): c for c in sel.explain_excluded_inputs(cells, ex)}
+    assert got[(fy, 1)].reason_code == "ytd_input_only_excluded_other_vintage" and got[(fy, 1)].value is None
+    assert got[(fy, 4)].state == "value" and got[(fy, 4)].value == 0
+    row = sel.to_row(got[(fy, 1)], 1, f)
+    assert not isinstance(cell_loader.parse_row(1, row, {"share_buybacks_resolved"}), str)
+    # without an exclusion the reason is unchanged
+    assert {(c.ddate, c.qtrs): c for c in sel.explain_excluded_inputs(cells, {})}[(fy, 1)].reason_code == "no_prior_quarter_end"
