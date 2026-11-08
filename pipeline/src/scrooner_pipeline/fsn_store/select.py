@@ -114,7 +114,10 @@ REASONS = {
     "sole_debt_label_not_interest": ("composition", "standardization_lead"),
     "sign_inconsistent": ("filer_error", "verifier"),
     "perimeter_line_unresolved": ("composition", "tag_mapper"),
-    "perimeter_partnership_distribution": ("definition_pending", "standardization_lead"),
+    "perimeter_partnership_distribution": (
+        "definition_pending",
+        "standardization_lead",
+    ),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -807,7 +810,8 @@ def absent_line_cell(
       a combined line                   not_presented  line_presented_combined_with_others
       partnership-unit distributions    defect         perimeter_partnership_distribution (a definition call)
       a net / unresolved line           defect         perimeter_line_unresolved
-      a common line (any tag)           None: a line exists but is not mapped, so nothing is claimed
+      a common line (any tag) or a      None: a line exists that may be the concept, so nothing is claimed
+      share purchase the lane's repurchase test does not name (unclassified_share_line)
     """
     cols = [
         (f, d, q)
@@ -824,8 +828,8 @@ def absent_line_cell(
     if set(fids) & data["mapped_filings"].get(concept, set()):
         return None
     classes = sorted({c for f in fids for c in line_classes.get(f, [])})
-    if "common" in classes:
-        return None
+    if "common" in classes or "unclassified_share_line" in classes:
+        return None  # a line exists that may be the concept: nothing is claimed
     if not classes:
         state, reason = "not_presented", "line_not_presented_in_filing"
     elif "perimeter_partnership_distribution" in classes:

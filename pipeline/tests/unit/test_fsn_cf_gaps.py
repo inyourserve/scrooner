@@ -192,3 +192,15 @@ def test_the_cell_loader_accepts_a_held_ytd_quarter_row():
     q3 = {(c.ddate, c.qtrs): c for c in sel.select_concept("dividends_paid_resolved", prints, _filings())}[(n9, 1)]
     got = cell_loader.parse_row(1, sel.to_row(q3, 1, _filings()), {"dividends_paid_resolved"})
     assert not isinstance(got, str), got
+
+
+@pytest.mark.unit
+def test_an_unnamed_share_purchase_line_blocks_the_absent_claim():
+    """"Purchase of CP Common Shares" under a custom tag misses the lane's repurchase test: it may be the buyback,
+    so no `line_not_presented_in_filing` is claimed (the key stays a gap); ESPP proceeds never block a claim."""
+    from scrooner_pipeline.fsn_store import pilot
+
+    assert pilot.SHARE_PURCHASE_RX.search("Purchase of CP Common Shares")
+    assert not pilot.SHARE_PURCHASE_RX.search("Purchases of property, plant and equipment")
+    d = date(2024, 12, 31)
+    assert sel.absent_line_cell("share_buybacks_resolved", "FY", d, _data(), {1: ["unclassified_share_line"]}) is None

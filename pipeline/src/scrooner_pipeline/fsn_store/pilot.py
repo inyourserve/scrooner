@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import csv
 import gzip
+import re
 from collections import Counter, defaultdict
 from datetime import date
 from decimal import Decimal
@@ -240,6 +241,7 @@ def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
 
 
 ABSENT_LINE_CONCEPTS = ("share_buybacks_resolved", "dividends_paid_resolved")
+SHARE_PURCHASE_RX = re.compile(r"(purchas|acqui)\w*\b.*\b(shares?|stock)\b", re.I)
 
 
 def cf_line_classes(
@@ -272,6 +274,12 @@ def cf_line_classes(
             b = lane.buyback_class(tag, label)
             if b:
                 out["share_buybacks_resolved"][fid].append(b)
+        elif SHARE_PURCHASE_RX.search(label) and not re.match(
+            r"\s*(proceeds|issuance|issue)\b", label, re.I
+        ):
+            # a purchase of shares the lane's repurchase test does not name ("Purchase of CP Common Shares" under a
+            # custom tag): never evidence that no buyback line is printed, so no absent-line claim is made
+            out["share_buybacks_resolved"][fid].append("unclassified_share_line")
     return out
 
 
