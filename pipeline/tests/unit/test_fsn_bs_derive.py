@@ -112,3 +112,47 @@ def test_derived_and_not_presented_rows_pass_the_cell_loader_contract():
         assert not isinstance(parsed, str), parsed
         assert parsed.state == c.state
     assert sel.REASON_TEXT[bd.REASON]
+
+
+KMB_FACE = [{"tag": t, "label": lab, "custom": t.startswith("Redeemable")} for t, lab in (
+    ("Assets", "TOTAL ASSETS"),
+    ("LiabilitiesCurrent", "Total Current Liabilities"),
+    ("LongTermDebtAndCapitalLeaseObligations", "Long-Term Debt"),
+    ("PensionAndOtherPostretirementDefinedBenefitPlansLiabilitiesNoncurrent", "Noncurrent Employee Benefits"),
+    ("DeferredIncomeTaxLiabilitiesNet", "Deferred Income Taxes"),
+    ("OtherLiabilitiesNoncurrent", "Other Liabilities"),
+    ("RedeemableCommonAndPreferredSecuritiesOfSubsidiaries", "Redeemable Preferred Securities of Subsidiaries"),
+    ("PreferredStockSharesIssued", "Preferred Stock, Shares Issued"),
+    ("StockholdersEquity", "Equity, Attributable to Parent, Total"),
+    ("MinorityInterest", "Noncontrolling Interests"),
+    ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest", "Total Stockholders' Equity"),
+    ("LiabilitiesAndStockholdersEquity", "TOTAL LIABILITIES AND STOCKHOLDERS' EQUITY"))]
+KMB_COL = {t: (D(v), i) for i, (t, v) in enumerate((
+    ("Assets", "17092000000"), ("LiabilitiesAndStockholdersEquity", "17092000000"),
+    ("LiabilitiesCurrent", "6878000000"), ("LongTermDebtAndCapitalLeaseObligations", "7161000000"),
+    ("PensionAndOtherPostretirementDefinedBenefitPlansLiabilitiesNoncurrent", "652000000"),
+    ("DeferredIncomeTaxLiabilitiesNet", "395000000"), ("OtherLiabilitiesNoncurrent", "796000000"),
+    ("RedeemableCommonAndPreferredSecuritiesOfSubsidiaries", "26000000"),
+    ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest", "1184000000")))}
+
+
+def test_redeemable_line_between_liabilities_and_equity_is_temporary_equity():
+    """Kimberly-Clark 10-Q 0000055785-24-000054, 2024-03-31 (Verifier VERIFY-BS-DERIVE-2026-11-08): "Redeemable
+    Preferred Securities of Subsidiaries" ($26M) sits after Other Liabilities and before equity. It is mezzanine, not
+    a liability: total liabilities 15,882, not 15,908, in both routes."""
+    arcs = {"LiabilitiesAndStockholdersEquity": [(t, 1) for t in (
+        "LiabilitiesCurrent", "DeferredIncomeTaxLiabilitiesNet",
+        "PensionAndOtherPostretirementDefinedBenefitPlansLiabilitiesNoncurrent", "OtherLiabilitiesNoncurrent",
+        "LongTermDebtAndCapitalLeaseObligations", "RedeemableCommonAndPreferredSecuritiesOfSubsidiaries",
+        "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest")]}
+    (value, _ids), rule, inputs = bd.derive_tl(KMB_FACE, arcs, KMB_COL)
+    assert rule == bd.RULE_CALC and value == D("15882000000")
+    assert [c for c, _w, _v in inputs["mezz"]] == ["RedeemableCommonAndPreferredSecuritiesOfSubsidiaries"]
+    (value, _ids), rule, _inputs = bd.derive_tl(KMB_FACE, {}, KMB_COL)
+    assert rule == bd.RULE_IDENTITY and value == D("15882000000")
+    # the same line printed AMONG the liabilities (another liability after it) stays a liability
+    among = KMB_FACE[:5] + [KMB_FACE[6], KMB_FACE[5]] + KMB_FACE[7:]
+    assert bd.derive_tl(among, arcs, KMB_COL)[0][0] == D("15908000000")
+    # "mandatorily redeemable" (ASC 480) is a liability wherever it is printed
+    mand = [dict(f, label="Mandatorily redeemable preferred stock") if f["tag"].startswith("Redeemable") else f for f in KMB_FACE]
+    assert bd.derive_tl(mand, arcs, KMB_COL)[0][0] == D("15908000000")

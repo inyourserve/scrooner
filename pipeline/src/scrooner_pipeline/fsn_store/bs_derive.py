@@ -59,6 +59,38 @@ def _classify():
     return bs_totals_detect.classify_line
 
 
+MEZZ_WORDS = re.compile(r"redeemable|temporary", re.IGNORECASE)
+LIABILITY_WORDS = re.compile(
+    r"mandatorily", re.IGNORECASE
+)  # ASC 480 mandatorily redeemable: a liability
+EQUITY_SEGS = ("equity_total", "equity_component", "nci")
+
+
+def segments(face: list[dict], classify) -> dict[str, str]:
+    """tag -> the BS lane's segment, with one positional override (Verifier, KMB 2024-03-31): a Redeemable* /
+    Temporary* line the lane classes `liab` that sits after the last other liability line and before the first equity
+    line (outside any printed total liabilities) is temporary equity, `mezz`; "mandatorily redeemable" stays a liability."""
+    seg = {f["tag"]: classify(f["tag"], f["label"]) for f in face}
+    order = [f for f in face if f["tag"] in seg]
+    first_eq = next(
+        (i for i, f in enumerate(order) if seg[f["tag"]] in EQUITY_SEGS), None
+    )
+    if first_eq is None:
+        return seg
+
+    def mezz_like(f):
+        text = f"{f['tag']} {f['label'] or ''}"
+        return bool(MEZZ_WORDS.search(text)) and not LIABILITY_WORDS.search(text)
+
+    i = first_eq - 1
+    while i >= 0 and (seg[order[i]["tag"]] != "liab" or mezz_like(order[i])):
+        f = order[i]
+        if seg[f["tag"]] == "liab":
+            seg[f["tag"]] = "mezz"
+        i -= 1
+    return seg
+
+
 def _unit(values) -> Decimal:
     unit = Decimal(1000000)
     for v in values:
@@ -82,12 +114,17 @@ def derive_tl(
     if le is None:
         return None, "no_printed_le_total", {}
     label = {f["tag"]: f["label"] for f in face}
+    face_seg = segments(face, classify)
+
+    def seg_of(c):
+        return face_seg.get(c) or classify(c, label.get(c, ""))
+
     if arcs.get(le):
         leaves: list[tuple[str, int]] = []
         stack = [(c, w) for c, w in arcs[le]]
         while stack:
             c, w = stack.pop(0)
-            seg = classify(c, label.get(c, ""))
+            seg = seg_of(c)
             if seg == "excluded_cap_total" and arcs.get(c):
                 stack = [(cc, w * ww) for cc, ww in arcs[c]] + stack
                 continue
@@ -96,7 +133,7 @@ def derive_tl(
         total = Decimal(0)
         blank: list[str] = []
         for c, w in leaves:
-            seg = classify(c, label.get(c, ""))
+            seg = seg_of(c)
             v = col.get(c)
             if v is None:
                 # a line printed blank in this column carries no fact: it counts as zero ONLY if the valued children
@@ -130,7 +167,7 @@ def derive_tl(
         return (value, ids), RULE_CALC, inputs
     # identity route: no calc arcs under L&E in this filing
     eq = next((t for t in EQUITY_INCL if t in tags and t in col), None)
-    nci_lines = [f["tag"] for f in face if classify(f["tag"], f["label"]) == "nci"]
+    nci_lines = [f["tag"] for f in face if face_seg[f["tag"]] == "nci"]
     if eq is None:
         if (
             nci_lines
@@ -139,7 +176,7 @@ def derive_tl(
         ):
             return None, "identity_equity_total_not_printed", {}
         eq = "StockholdersEquity"
-    mezz = [f["tag"] for f in face if classify(f["tag"], f["label"]) == "mezz"]
+    mezz = [f["tag"] for f in face if face_seg[f["tag"]] == "mezz"]
     if any(m not in col for m in mezz):
         return None, "identity_temporary_equity_not_valued", {}
     value = col[le][0] - col[eq][0] - sum((col[m][0] for m in mezz), Decimal(0))

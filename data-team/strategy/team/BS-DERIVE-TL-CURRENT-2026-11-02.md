@@ -122,6 +122,28 @@ I refused rather than guessed in every one of these.
 - The current-item columns that are still open (Chubb, Old Republic, AIG, UDR and others) have no current lines on the face. Most likely their BS filing check failed at that date, which excludes the column. I have not split this cause yet.
 - "No stored filing prints the date" is store coverage (the date is in the calendar, but no loaded filing prints it), not a mapping problem.
 
+## Verifier fix: a redeemable line before equity is temporary equity (2026-11-08)
+
+The Verifier ([`VERIFY-BS-DERIVE-2026-11-08.md`](https://github.com/inyourserve/scrooner/blob/verify/bs-derive-2026-11-08/data-team/strategy/team/VERIFY-BS-DERIVE-2026-11-08.md)) found 31 of 32 checked keys right, and the 9 unclassified reasons right. The one miss was Kimberly-Clark 2024-03-31: derived 15,908M against a face total of 15,882M. "Redeemable Preferred Securities of Subsidiaries" ($26M) is printed after Other Liabilities and before equity, but the calc route had counted it as a liability.
+
+**The fix** (`bs_derive.segments`, used by both the calc and identity routes):
+
+- A line counts as temporary equity (`mezz`) when it meets all of these:
+  - the lane classes it a liability;
+  - its tag or label says "redeemable" or "temporary";
+  - it is printed after the last other liability line and before the first equity line.
+- "Mandatorily redeemable" stays a liability (ASC 480).
+- The KMB shape is unit-tested in both routes, along with the line printed among the liabilities and the "mandatorily" case. Each part was mutation-checked.
+
+**Re-measured on all 380 companies:**
+
+- The number of gap keys freed or reasoned is unchanged.
+- 19 derived total-liabilities values change, all Kimberly-Clark, all from this one line: [`kmb_mezz_changed_keys.csv`](results/bs-derive-tl-current/kmb_mezz_changed_keys.csv), 2021-12-31 to 2026-06-30.
+- The difference is the redeemable line: $26M, $260M in the 2022 quarters, $210M in 2023, $37M in 2024–25, and $22M from 2025-12-31.
+- No other company's value changes.
+
+**Sample file:** it has 33 rows with 33 distinct keys; Con Edison 2014-12-31 appears once. AGNC is a mortgage REIT. Its stratum now reads `mortgage_reit`. The `equity_reit` label came from the cohort's SIC-6798 sector template, not from this lane.
+
 ## Spot checks against the filings
 
 | Company | Date | Route | Value | Filing check |
