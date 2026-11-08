@@ -22,7 +22,7 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 
 | Lane | Branch | Next |
 |---|---|---|
-| Balance sheet: derived total liabilities, unclassified-balance-sheet reason (~94% of those gap keys, 380 companies) | draft PR #6 (`work/bs/derive-tl-current`, rebased, CI green) | Verifier 2026-11-08 (verify/bs-derive-2026-11-08, 079ded8): 31/32 right; Kimberly-Clark 2024-03-31 counted mezzanine redeemable preferred as a liability: lane fixing, then re-draw; cohort dry run after the write |
+| Balance sheet: derived total liabilities, unclassified-balance-sheet reason (~94% of those gap keys, 380 companies) | draft PR #6 (`work/bs/derive-tl-current`, rebased, CI green) | Verifier PASS 2026-11-08 (verify/bs-derive-2026-11-08, 375e7f4): 33/33 sampled + 19/19 Kimberly-Clark mezzanine-fix keys right at head 5461439. Remaining: cohort dry run after the write, then ready for the founder |
 | Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | draft PR #4 (`work/cashflow/fsn-gaps-rebased`, CI green) | Verifier 2026-11-08: 0 wrong shown values, but wrong reasons/withdrawals (verify/cf-gaps-2026-11-08); fixed at 3e19657; re-draw partial (fd86752), waiting on a scratch store run for 62 cohort companies. Ruling (Dhairya): Brixmor FY/Q4 2015-16 buybacks serve the latest print's 0. Cohort dry run after the write; CAD filers CP/IMO open pending the currency ruling |
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
