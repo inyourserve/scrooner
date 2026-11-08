@@ -416,3 +416,54 @@ def test_a_two_block_page_reads_the_primary_registrants_block_only():
                  OP, INV, ("PaymentsForRepurchaseOfCommonStock", "Repurchase of common stock"), FIN)
     got = pilot.classify_filing(rows, _lane())
     assert got["share_buybacks_resolved"] == [] and got["dividends_paid_resolved"] == ["common"]
+
+
+@pytest.mark.unit
+def test_two_printed_zero_ytd_inputs_derive_a_zero_quarter_without_a_witness():
+    """Somnigroup Q2 2020 dividends: Q1 0 and 6M 0 in different filings with no basis witness. 0 - 0 = 0 on every
+    basis, so the quarter is derived 0; a non-zero pair without a witness stays a reasoned blank."""
+    q1, h1 = date(2025, 3, 31), date(2025, 6, 30)
+    zero = sel.select_concept("dividends_paid_resolved", [_p(1, 1, q1, 1, 0), _p(2, 2, h1, 2, 0)], _filings())
+    q2 = {(c.ddate, c.qtrs): c for c in zero}[(h1, 1)]
+    assert q2.state == "derived" and q2.value == 0 and q2.derivation["policy"] == "zero_inputs"
+    nz = sel.select_concept("dividends_paid_resolved", [_p(1, 1, q1, 1, 5), _p(2, 2, h1, 2, 9)], _filings())
+    assert {(c.ddate, c.qtrs): c for c in nz}[(h1, 1)].reason_code == "no_basis_witness"
+
+
+def _three():
+    d = _data()
+    d["filings"][3] = sel.Filing(3, "0000000001-26-000003", datetime(2026, 2, 1), "10-K", date(2025, 12, 31), 2025, "FY")
+    d["face_cols"] = {(1, "CF", date(2024, 12, 31), 4), (3, "CF", date(2024, 12, 31), 4)}  # the FY2025 10-K re-prints FY2024
+    return d
+
+
+@pytest.mark.unit
+def test_the_reason_is_read_from_the_cited_filing_not_a_later_copy():
+    """Sunoco FY2023 / Clearway Q4 2021: a later filing's unrelated line never changes the reason."""
+    c = sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _three(), {1: [], 3: ["excluded"]})
+    assert c.filing_id == 1 and c.reason_code == "line_not_presented_in_filing"
+    # but a possible line of the concept in ANY filing that prints the column still blocks the claim
+    assert sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _three(), {1: [], 3: ["common"]}) is None
+
+
+@pytest.mark.unit
+def test_the_original_is_cited_before_its_amendment():
+    d = _data()
+    d["filings"][4] = sel.Filing(4, "0000000001-25-000004", datetime(2025, 6, 1), "10-K/A", date(2024, 12, 31), 2024, "FY")
+    d["face_cols"] = {(1, "CF", date(2024, 12, 31), 4), (4, "CF", date(2024, 12, 31), 4)}
+    c = sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), d, {})
+    assert c.filing_id == 1
+
+
+@pytest.mark.unit
+def test_a_tax_withholding_line_without_repurchase_wording_is_an_excluded_line():
+    """Viasat 10-Q 0001193125-15-284965 (Verifier-checked): the only line is "Payments related to tax withholdings on
+    restricted stock unit releases" -> only_excluded_lines_presented, never "no line"."""
+    from scrooner_pipeline.fsn_store import pilot
+
+    rows = _face(OP, INV, ("PaymentsRelatedToTaxWithholdingForShareBasedCompensation",
+                           "Payments related to tax withholdings on restricted stock unit releases"), FIN)
+    classes = pilot.classify_filing(rows, _lane())["share_buybacks_resolved"]
+    assert classes == ["excluded"]
+    c = sel.absent_line_cell("share_buybacks_resolved", "FY", date(2024, 12, 31), _data(), {1: classes})
+    assert c.reason_code == "only_excluded_lines_presented"

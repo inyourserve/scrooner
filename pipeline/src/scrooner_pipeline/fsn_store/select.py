@@ -515,6 +515,17 @@ def _ytd_difference(
                     break
             if pair:
                 break
+    zero_pair = False
+    if (
+        pair is None
+        and prev.value == 0
+        and w.value == 0
+        and prev.checks_ok
+        and w.checks_ok
+    ):
+        # both winning year-to-date copies are printed zeros: 0 - 0 = 0 on every basis, so no basis witness is needed
+        # (Dhairya 2026-11-08, Somnigroup Q2/Q3 2020 dividends; flow derivation allowed, founder 2026-11-04)
+        pair, zero_pair = (prev, w), True
     if pair is None:
         return _blank(
             concept,
@@ -556,7 +567,7 @@ def _ytd_difference(
                 s.filings[b.filing_id].accession,
                 s.filings[a.filing_id].accession,
             ],
-            "policy": "same_basis",
+            "policy": "zero_inputs" if zero_pair else "same_basis",
             "winning_pair": pair == (prev, w),
         },
     )
@@ -864,9 +875,22 @@ def absent_line_cell(
     )
     if set(fids) & data["mapped_filings"].get(concept, set()):
         return None
-    classes = sorted({c for f in fids for c in line_classes.get(f, [])})
-    if {"common", "unclassified_share_line", "no_financing_section"} & set(classes):
-        return None  # a line exists that may be the concept: nothing is claimed
+    every = {c for f in fids for c in line_classes.get(f, [])}
+    if {"common", "unclassified_share_line", "no_financing_section"} & every:
+        return None  # a line in ANY filing that prints the column may be the concept: nothing is claimed
+    # the evidence carrier is the filing whose own period is this date (it prints the column on its face), an original
+    # before an amendment; a later filing only re-prints it and may print a longer column (Verifier 2026-11-08,
+    # Brixmor Q1 2025, Kraft Heinz 10-Q vs 10-Q/A). The reason is read from the carrier's own lines: another filing's
+    # unrelated line never changes it (Sunoco FY2023, Clearway Q4 2021)
+    own = [
+        f
+        for f in fids
+        if data["filings"][f].period is not None
+        and abs((data["filings"][f].period - end).days) <= 10
+    ]
+    pool = [f for f in own if not data["filings"][f].form.endswith("/A")] or own or fids
+    latest = pool[-1]
+    classes = sorted(line_classes.get(latest, []))
     if not classes:
         state, reason = "not_presented", "line_not_presented_in_filing"
     elif "perimeter_partnership_distribution" in classes:
@@ -877,15 +901,6 @@ def absent_line_cell(
         state, reason = "not_presented", "line_presented_combined_with_others"
     else:
         state, reason = "not_presented", "only_excluded_lines_presented"
-    # the evidence carrier is the filing whose own period is this date (it prints the column on its face); a later
-    # filing only re-prints it, and may print a longer column instead (Verifier 2026-11-08, Brixmor Q1 2025)
-    own = [
-        f
-        for f in fids
-        if data["filings"][f].period is not None
-        and abs((data["filings"][f].period - end).days) <= 10
-    ]
-    latest = (own or fids)[-1]
     ddate = next(d for f, d, _q in cols if f == latest)
     return Cell(
         concept,

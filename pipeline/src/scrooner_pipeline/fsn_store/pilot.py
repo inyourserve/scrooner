@@ -241,6 +241,9 @@ def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
 
 
 ABSENT_LINE_CONCEPTS = ("share_buybacks_resolved", "dividends_paid_resolved")
+WITHHOLD_SHARES_RX = re.compile(
+    r"\b(stock|shares?|units?|awards?|restricted|rsus?|vesting)\b", re.I
+)
 SHARE_PURCHASE_RX = re.compile(r"(purchas|acqui)\w*\b.*\b(shares?|stock)\b", re.I)
 
 
@@ -328,6 +331,13 @@ def classify_filing(face_rows: list[tuple], lane: Any) -> dict[str, list[str]]:
             b = lane.buyback_class(tag, label)
             if b:
                 out["share_buybacks_resolved"].append(b)
+        elif tag in lane.BUYBACK_TAGS_EXCLUDED or (
+            lane.WITHHOLD_RX.search(label) and WITHHOLD_SHARES_RX.search(label)
+        ):
+            # run 7's excluded buyback tags, or a tax-withholding payment on share awards that names no repurchase
+            # (Viasat 10-Q 0001193125-15-284965 "Payments related to tax withholdings on restricted stock unit
+            # releases"): a line that is NOT the concept, so the filing prints only excluded lines
+            out["share_buybacks_resolved"].append("excluded")
         elif SHARE_PURCHASE_RX.search(label) and not re.match(
             r"\s*(proceeds|issuance|issue)\b", label, re.I
         ):
