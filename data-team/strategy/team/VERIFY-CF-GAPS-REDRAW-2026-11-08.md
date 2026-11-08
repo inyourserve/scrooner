@@ -61,6 +61,43 @@ The expected state below is what the cash-flow face supports. Grading the store 
 2. **Brixmor FY / Q4 2015-16 buybacks:** the FY2017 and FY2018 10-Ks print "Repurchase(s) of common shares 0" with the equity-award line under the tax-withholding tag. Either serve 0 as the latest print, or get a ruling that an earlier exclusion overrides it. Either way, correct §7's stated cause.
 3. **Combined filings** (Dominion / Virginia Power; Ares' multi-block page): absent-line claims must read the primary registrant's block only.
 
+
+## Update: (b) graded against new_values.csv (d8d3bf2)
+
+`data-team/strategy/team/results/cf_gaps_2026-11-08/new_values.csv` has 67 rows: 40 new values, 2 withdrawn and 25 reason changes, for 4 companies. SEC requests for this update: 28 more.
+
+**17 of the 40 new values checked: 17 right, 0 wrong.** Derived quarters were checked as YTD minus the prior YTD, each from the accession the store cites as the latest copy.
+
+| key | claim | face | verdict |
+|---|---|---|---|
+| Reliance CFO Q3 2014 | derived 53.3M | 9M 162.8 (0001104659-15-074533 R6) − 6M 109.5 (0001104659-15-055210 R6) | RIGHT |
+| Reliance CFO Q4 2014 | derived 193.2M | FY 356.0 (0001558370-17-000994 R8) − 9M 162.8 | RIGHT |
+| Cheniere Partners CFO Q4 2015 | derived 6,695K | FY 5,748 (0001383650-16-000087 R7) − 9M (947) (0001383650-16-000137 R6) | RIGHT |
+| Cheniere Partners CFO FY2018 | 1,874M | 0001383650-21-000005 R7 | RIGHT |
+| Cheniere Partners CFO Q4 2018 | derived 610M | 1,874 − 9M 1,264 (0001383650-19-000038 R7) | RIGHT (also closes the pending item in (a)) |
+| Brixmor CFO Q1 2014 | 86,576K | 0001581068-15-000050 R8 (primary block) | RIGHT |
+| Brixmor CFO Q2 2014 | derived 132,064K | 218,640 − 86,576 | RIGHT |
+| Brixmor CFO Q3 2014 | derived 153,650K | 9M 372,290 (0001581068-15-000092 R8, primary block) − 218,640 | RIGHT |
+| Brixmor dividends Q1 2014 | 29,170K | 0001581068-15-000050 R8 | RIGHT |
+| Somnigroup CFO FY2020 | 654.7M | 0001206264-23-000060 R9 | RIGHT |
+| Somnigroup CFO Q1 2020 | 15.0M | 0001206264-21-000143 R6 | RIGHT |
+| Somnigroup CFO Q4 2021 | derived 125.6M | FY 723.1 (0001206264-24-000050 R9) − 9M 597.5 (0001206264-22-000182 R7). The two inputs carry different tags (…ContinuingOperations vs plain) for the same "from continuing operations" line | RIGHT |
+| Somnigroup buybacks FY2020 | 331.8M | 0001206264-23-000060 R9 "Treasury stock repurchased (331.8)" | RIGHT |
+| Somnigroup buybacks Q1 2020 | 199.3M | 0001206264-21-000143 R6 | RIGHT |
+| Somnigroup buybacks Q2 2020 | derived 0.2M | 6M 199.5 (0001206264-21-000208 R6) − 199.3 | RIGHT (also closes the pending item in (a)) |
+| Somnigroup buybacks Q3 2021 | derived 191.4M | 9M 565.8 (0001206264-22-000182 R7) − 6M 374.4 (0001206264-22-000169 R7) | RIGHT |
+| Somnigroup dividends Q1 2021 | 14.3M | 0001206264-22-000124 R6 | RIGHT |
+
+**Withdrawn (2): WRONG.** Brixmor buybacks FY2015 and FY2016 move from value 0 to not_presented / only_excluded_lines_presented, citing 0001581068-17-000005. That is not the latest copy. The latest copies (FY2017 10-K R8 for 2015, FY2018 10-K R8 for 2016) print "Repurchase(s) of common shares 0". Dhairya's ruling (2026-11-08): serve 0 from the latest print. Keep both at 0 and cite those accessions.
+
+**Reason changes (25):**
+- **Somnigroup dividends 2015–2019 → line_not_presented_in_filing (17): right.** It matches the FY2018 face read in full (no dividend payment in the financing section), and Somnigroup resumed dividends only in 2021.
+- **Somnigroup dividends Q2/Q3 2020 and Brixmor dividends Q2/Q3 2014 → no_basis_witness:** a defensible reason under rule 4. For Somnigroup 2020 both YTD inputs are 0 (Q1 0.0 and 6M 0.0 printed), so the hold is avoidable but harmless.
+- **Brixmor buybacks FY2014 / Q4 2014 → only_excluded_lines_presented:** right; FY2014 prints only the equity-award line (0).
+- **Brixmor Q4 2015 / Q4 2016:** must follow the FY ruling above.
+
+**(a) after this update:** 5 right (adding Cheniere Q4 2018 and Somnigroup Q2 2020 buybacks), 1 to change under the ruling (Brixmor FY/Q4 2015-16), 3 pending the store run (Kraft Heinz, Erie, BXP).
+
 ## Untested scope
 
 Everything marked pending above.
