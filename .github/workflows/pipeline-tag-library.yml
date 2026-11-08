@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # One queue for every heavy database workflow (2026-10-21). The Supabase database is
 # small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
@@ -29,7 +30,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-08: GitHub starts this schedule hours late, so it can land on an FSN production
+    # write in progress; wait for the write instead of running beside it.
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   tag-library:
+    needs: wait-for-fsn-write
     name: Rebuild company x tag, tag library, concept lineage
     runs-on: ubuntu-latest
     timeout-minutes: 180
