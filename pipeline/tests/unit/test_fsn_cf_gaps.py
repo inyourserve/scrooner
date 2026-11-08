@@ -391,3 +391,28 @@ def test_the_evidence_is_the_filing_whose_own_period_it_is():
     d["face_cols"] = {(2, "CF", date(2025, 3, 31), 1), (3, "CF", date(2025, 3, 31), 1)}  # the 2026 10-Q re-prints it
     c = sel.absent_line_cell("dividends_paid_resolved", "Q", date(2025, 3, 31), d, {})
     assert c.filing_id == 2 and c.input_refs["accessions"] == ["0000000001-25-000002", "0000000001-26-000003"]
+
+
+@pytest.mark.unit
+def test_a_latest_printed_zero_is_served_although_an_earlier_filing_excluded_the_period():
+    """Dhairya's ruling 2026-11-08: Brixmor's FY2017 10-K prints "Repurchase of common shares 0" for FY2015 under
+    PaymentsForRepurchaseOfCommonStock; the FY2015 10-K excluded its equity-award line. The 0 is served."""
+    fy = date(2024, 12, 31)
+    f = _filings()
+    prints = [sel.Print(1, 3, "PaymentsForRepurchaseOfCommonStock", fy, 4, "USD", Decimal(0), 0, "CF", True, True)]
+    cells = sel.select_concept("share_buybacks_resolved", prints, f)
+    ex = {("PaymentsForRepurchaseOfCommonStock", fy, 4): [1]}
+    got = {(c.ddate, c.qtrs): c for c in cells + sel.excluded_period_cells("share_buybacks_resolved", cells, ex, f)}
+    assert got[(fy, 4)].state == "value" and got[(fy, 4)].value == 0
+
+
+@pytest.mark.unit
+def test_a_two_block_page_reads_the_primary_registrants_block_only():
+    """Dominion / Virginia Power, Ares: the parent's block comes first; a line in the co-registrant's financing
+    section is not the parent's line."""
+    from scrooner_pipeline.fsn_store import pilot
+
+    rows = _face(OP, INV, ("PaymentsOfDividendsCommonStock", "Common dividend payments"), FIN,
+                 OP, INV, ("PaymentsForRepurchaseOfCommonStock", "Repurchase of common stock"), FIN)
+    got = pilot.classify_filing(rows, _lane())
+    assert got["share_buybacks_resolved"] == [] and got["dividends_paid_resolved"] == ["common"]

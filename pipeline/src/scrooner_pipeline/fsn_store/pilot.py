@@ -263,14 +263,14 @@ def financing_rows(face_rows: list[tuple], lane: Any) -> list[tuple[str, str]] |
     if not inv:
         return None
     fin = next(
-        (i for i in range(inv[-1] + 1, len(rows)) if rows[i][1] in lane.FIN_TOTALS),
+        (i for i in range(inv[0] + 1, len(rows)) if rows[i][1] in lane.FIN_TOTALS),
         None,
     )
     if fin is None:
         return None
     return [
         (t, lab)
-        for _ln, t, lab, _cu, _ng in rows[inv[-1] + 1 : fin]
+        for _ln, t, lab, _cu, _ng in rows[inv[0] + 1 : fin]
         if not t.endswith(SHAPE_TAG)
     ]
 
@@ -280,9 +280,11 @@ def definitional_exclusions(
 ) -> dict[str, dict[tuple[str, date, int], list[int]]]:
     """concept -> (tag, ddate, qtrs) -> filing ids whose cash-flow detector held that tag's line because every
     family line of the filing is excluded by definition (`excluded_only:*`: tax withholding, SBC-plan purchases,
-    NCI or preferred dividends). Verifier 2026-11-08: Brixmor's FY2015/FY2016 10-Ks label PaymentsForRepurchaseOf
-    CommonStock "Repurchase of common shares in conjunction with equity award plans" (excluded); its FY2017 10-K
-    reprints the same periods under the same tag as "Repurchase of common shares". The more specific label wins."""
+    NCI or preferred dividends). Used ONLY to give a reason to a key select leaves without a cell; it never removes
+    a print (the latest print wins). Brixmor: its FY2015/FY2016 10-Ks print only "Repurchase of common shares in
+    conjunction with equity award plans" (excluded); its FY2017/FY2018 10-Ks print a separate "Repurchase(s) of
+    common shares 0" under PaymentsForRepurchaseOfCommonStock (the equity-award amounts under the tax-withholding
+    tag), and that 0 is served (Dhairya's ruling 2026-11-08, VERIFY-CF-GAPS-REDRAW-2026-11-08)."""
     rows = conn.execute(
         """
         select lm.evidence->>'concept', t.tag, v.ddate, v.qtrs, lm.filing_id
@@ -390,8 +392,9 @@ def report_company(
     for concept, prints in sorted(data["prints"].items()):
         unit = "USD/shares" if "eps" in concept else "USD"
         ex = excluded.get(concept, {})
-        if ex:  # a period one filing excludes by its label is never filled by a relabelled copy of the same tag
-            prints = [p for p in prints if (p.tag, p.ddate, p.qtrs) not in ex]
+        # the latest print always wins (decision 02 rule 3): a line excluded by its label is never mapped, so it never
+        # prints; a period that some filing excludes only gets a reason where select leaves no cell (Dhairya's ruling
+        # 2026-11-08: Brixmor's FY2017/FY2018 10-Ks print "Repurchase(s) of common shares 0", served as 0)
         cs = sel.select_concept(
             concept,
             prints,
