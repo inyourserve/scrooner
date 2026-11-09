@@ -125,3 +125,29 @@ Applied to 3a and 3b. Hybrid cell = a `canonical_fact` row whose `rule_run_id` p
 - **With (a):** these keys become **classified defects** (`perimeter_line_unresolved`), not reasonless blanks, so they no longer block I11's `checks_clean`.
 - **The rest needs data:** a company-level OUT row with evidence (`data-team/47-fsn-store/template_company_outs*.csv`) must cite each company's accessions from the FSN store. This container has no database or bucket access, so I have not fabricated rows.
 - **Proposal:** whoever has production read runs a query over `fsn.line` / `fsn.tag` for the template's bank and insurer companies: every 10-K/10-Q primary IS prints `InterestIncomeExpenseNet` (or a "net interest" label) and no `InterestExpense*` line. The candidate rows, with their accessions, then go to Ritwik as `template_company_outs` (`APPROVE_OUT`). The classifier in `pilot.is_line_class` is the rule to reuse.
+
+## 10. Verifier FIX 2026-11-09 (VERIFY-TEMPLATES-AND-LADDER-2026-11-09, branch verify/templates-and-ladder-2026-11-09 @ 01d203d)
+
+### (1) Ladder: the six holes, closed
+Branch `work/certification-lead/promote`, commit `d632042d`, CI run 42664611855 green on every job. Each hole has its own test (27 tests, 13 on real Postgres 16), and every mutation of a fix fails a test.
+
+| Hole | Fix in `certification/promote.py` |
+|---|---|
+| 1. Scope: only the headline cells were checked | `verified` also needs the company's newest **all_cells** Verifier draw: at least 20 cells (ASSUMED number, for the approver to set), all `right` or `blank_right`. |
+| 2. A DISAGREE outside the headline did not block | A DISAGREE in the newest proof row of **any** data point blocks `reconciled`. |
+| 3. PROVEN did not prove the right concept | A proof counts only with a **face read**: face value (× scale) equal to the shown value, a recorded label, and a label that is not a segment line. Rejecting "net" lines for gross concepts stays with the proof engine; its label rules are its own. |
+| 4. PROVEN did not prove the latest print | A proof counts only if **no later accepted filing** of the company prints the shown tag at that column. FSN ddate is month-end rounded and qtrs is FY 4 / Q 1 / I 0 (mind `fsn-data-set-facts-…`). |
+| 5. Derived and note cells had no face to check | A derived cell counts only with `checks.derived`, `checks.inputs_proven` and a `checks.same_basis_witness` on its proof row. A note-sourced cell is read on its note page like a face. |
+| 6. A value change after verification kept the company verified | The all_cells draw records the company's **shown-cell hash** (canonical values and metric values; `scrooner-certify-promote --print-hash`). Any later change drops the company below `verified` until the Verifier draws again. |
+| Blanks: a false reason could be certified | `certified` also needs the newest **blanks** draw: at least min(10, reasoned cells) rows, all `blank_right`. |
+| The record must be the Verifier's | Migration 0122 (NOT applied) gains `draw_kind`, `cells_hash` and `face_label` (required for value verdicts), plus a **writer guard trigger**: rows are written only in a session that sets `scrooner.writer = 'verifier'`. |
+
+**Stated scope (as the Verifier asked):**
+- `certified` proves the headline cells by proof plus a filing check.
+- It covers every other shown cell by the invariant suite plus a seeded random draw. It does not prove each non-headline cell individually.
+- The proof engine (`work/engineering/cell-proof`) must populate `face_value`, `face_label`, `face_scale` and the derived-cell `checks` keys for proofs to count. Until it does, no cell passes `reconciled`.
+
+### (2) Sector-template seed
+Branch `work/certification-lead/template-seed-fixes`, commit `f84a3251`, CI run 42663197962: every blocking job green. The advisory npm audit fails on main as well.
+- **Fixed:** rows 1–5 and 8.
+- **Open, decisions needed:** row 6 (bank-like brokers) and row 7 (the COND company overlay). Details are in `TEMPLATES-BUILD-2026-11-01.md` §9 on that branch.
