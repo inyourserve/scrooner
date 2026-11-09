@@ -159,3 +159,121 @@ def pretax_detector(
             },
         )
     ]
+
+
+# ---------------------------------------------------------------- interest expense
+# Slot `interest` (cohort dry run 41708119011: 122 companies, 4,544 keys with no interest-expense line mapped in any
+# filing). The seed maps InterestExpense / ...Nonoperating / ...Operating / InterestAndDebtExpense. About a fifth of
+# the blocked companies print ONE gross face line labelled "Interest expense" under a debt-component tag the seed does
+# not list (Kinsale, RLI, Bausch & Lomb, Affirm: InterestExpenseDebt; AST SpaceMobile, Penske: InterestExpenseOther).
+# A component tag is the face's interest expense only when it is the face's ONLY interest-expense line: no second
+# interest-expense line (a bank's deposits + borrowings), no net interest line (interest_expense is gross; "Interest
+# expense, net" faces are a different concept, reason owned by the certification lead), no deposit line, and the label
+# names interest expense without "net", "income" or "other" items. InterestExpenseDebtExcludingAmortization is left
+# out: CubeSmart prints loan-procurement amortization as a separate line, so that line is not the total. No value tie exists for an addend, so the rule is
+# position-free but exclusive: one candidate on the face or nothing.
+INTEREST = "interest_expense_resolved"
+INTEREST_RULE = "is.interest_single_gross_face_line@1"
+GROSS_COMPONENT_TAGS = {
+    "InterestExpenseDebt",
+    "InterestExpenseBorrowings",
+    "InterestExpenseOther",
+    "InterestExpenseLongTermDebt",
+}
+NET_INTEREST_TAG = re.compile(
+    r"^Interest(Income|Revenue)Expense\w*Net$|^InterestIncomeExpenseNonoperatingNet$|^InterestExpenseNet$"
+)
+DEPOSIT_TAG = re.compile(
+    r"^InterestExpenseDeposits|^InterestExpenseDomesticDeposit|^InterestExpenseForeignDeposit"
+)
+IE_LABEL = re.compile(
+    r"^\s*(total\s+)?interest\s+(expense|and debt expense|on (debt|borrowings|long-term debt))\b",
+    re.I,
+)
+IE_LABEL_NOT = re.compile(
+    r"\bnet\b|income|other|capitaliz|related part|financ(e|ing) lease|per share|\bfloor ?plan\b",
+    re.I,
+)
+ANY_INTEREST_EXPENSE_LABEL = re.compile(
+    r"interest\s+(expense|and debt expense|cost)", re.I
+)
+
+
+def interest_slot(face: list[dict[str, Any]]) -> dict[str, Any]:
+    """{"status": "mapped"|"held", "gate", "line", "tag", "label"}"""
+    money = money_lines(face)
+    if any(NET_INTEREST_TAG.search(r["tag"]) for r in money):
+        return {"status": "held", "gate": "hold_interest_net_line_on_face"}
+    if any(DEPOSIT_TAG.search(r["tag"]) for r in money):
+        return {"status": "held", "gate": "hold_interest_deposit_split"}
+    mentions = [
+        r
+        for r in money
+        if ANY_INTEREST_EXPENSE_LABEL.search(r["label"])
+        and not BEFORE_TAX.search(r["label"])
+    ]
+    cands = [
+        r
+        for r in mentions
+        if not r["custom"]
+        and r["tag"] in GROSS_COMPONENT_TAGS
+        and IE_LABEL.search(r["label"])
+        and not IE_LABEL_NOT.search(r["label"])
+    ]
+    if not cands:
+        return {"status": "held", "gate": "hold_interest_no_candidate"}
+    c = cands[0]
+    out = {"line": c["line"], "tag": c["tag"], "label": c["label"]}
+    if len(mentions) != 1:
+        return {**out, "status": "held", "gate": "hold_interest_other_interest_lines"}
+    return {
+        **out,
+        "status": "mapped",
+        "gate": "I1_single_gross_face_line",
+        "rule_id": INTEREST_RULE,
+    }
+
+
+def interest_detector(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    """FORMATS-v1.1 detector: maps the single gross interest-expense face line of a filing whose seed mapped none."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (INTEREST,)
+        )
+        row = cur.fetchone()
+    if row is None:
+        return []
+    cid = row[0]
+    if any(d[3] == cid and d[4] in ("mapped", "combined") for d in decisions):
+        return []  # additive
+    rows, coreg = det.is_face_rows(conn, filing_id)
+    if not rows:
+        return []
+    rep, face = det._is_lane().primary_face(rows, coreg)
+    if not face:
+        return []
+    slot = interest_slot(face)
+    if slot["status"] != "mapped":
+        return []
+    seen = {(d[1], d[2]): d for d in decisions}.get((rep, slot["line"]))
+    if seen is None or seen[4] != "unmapped":
+        return []
+    return [
+        (
+            filing_id,
+            rep,
+            slot["line"],
+            cid,
+            "mapped",
+            slot["rule_id"],
+            None,
+            {
+                "detector": "is_structure.interest",
+                "tag": slot["tag"],
+                "gate": slot["gate"],
+                "label": slot["label"],
+            },
+        )
+    ]
