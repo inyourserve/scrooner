@@ -6,7 +6,7 @@ Card: [`../cards/net-income-and-shares.md`](../cards/net-income-and-shares.md). 
 
 ## 2. The 63 gap companies
 
-| Class | Companies | Pattern | Example (accession R line, FY value from `fsn.value`) |
+| Class | Companies | Pattern | Example (accession R line, FY value from `fsn.value`; **CAT and ES FILING-CHECKED 2026-11-09**: CAT R3 "Profit (loss)" 8,884 = 8,882 − (−2); ES R5 1,699,891 − 7,519 = 1,692,372K) |
 |---|---|---|---|
 | A. `NetIncomeLossAvailableToCommonStockholdersBasic` (NIACSB) is the parent bottom line, **no preferred-dividend or participating-securities line on the face** | **30** (20 also print `ProfitLoss` + an NCI line; 8 print NIACSB with an NCI line but no `ProfitLoss`; 2 others) | the filer tags its "Net income attributable to X" line with the available-to-common tag | Caterpillar 0000018230-26-000008 R3: l24 `ProfitLoss` "Profit of consolidated and affiliated companies" 8,882M; l25 NCI −2M; **l26 NIACSB "Profit (loss)" 8,884M** = 8,882 − (−2). Eversource 0001628280-26-008461 R5: l17 `ProfitLoss` 1,699.9M; l18 NCI 7.519M; l19 NIACSB "Net Income/(Loss) Attributable to Common Shareholders" 1,692.4M (= 1,699.9 − 7.5). CIKs: 18230 26172 37996 49600 51253 70318 72741 76334 740260 766704 920522 1001250 1001838 1020569 1108426 1109357 1289460 1298675 1324404 1415404 42888 352541 723531 750577 795403 891103 1075531 1823529 717605 831259 |
 | B. NIACSB **with** a preferred / participating line on the face | 11 | NIACSB is after preferred dividends: **not** NI to parent | CIKs 92230 720672 783325 885725 895417 912593 914208 1004980 1013871 1063761 1562401 |

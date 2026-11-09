@@ -14,4 +14,4 @@ Each builder question or claim I hand out: my answer, its evidence level, and wh
 | 8 | 2026-11-09 | release prep | Debt lane perimeter vs debt card | no conflict with dropping the seeds; seven double-count traps (CP inside ShortTermBorrowings, LongTermDebt incl. current, leases inside DebtCurrent/combined tags, bank FHLB, segment-only debt, face value, capitalization format) | FILING-CHECKED (card rows) | pending |
 | 9 | 2026-11-09 | (card) | 40 of 427 mapped interest lines are gross tags on a 'net' label | Verifier stratum | DATA-INFERRED | pending |
 
-Calibration: 0 of 9 confirmed yet (all new). SEC filing checks were not possible this run (no declared SEC_USER_AGENT in the cloud session).
+Calibration: filing checks 2026-11-09 confirm #3 (CAT, ES), #5 (GATX/Revvity exist, wording corrected: a combined-statement format, not an SEC error), #7 (GM, WMT, Welltower, AMD); 0 contradicted. Verifier confirmation still pending for all; earlier: 0 of 9 confirmed yet (all new). SEC filing checks were not possible this run (no declared SEC_USER_AGENT in the cloud session).

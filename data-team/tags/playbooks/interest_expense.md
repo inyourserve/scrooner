@@ -20,7 +20,7 @@ One class per company, first match wins in this order:
 
 | Class | Companies | What it is | Example (accession, R, line) |
 |---|---|---|---|
-| Net interest tag only (`InterestIncomeExpenseNonoperatingNet` 76, `InterestIncomeExpenseNet` 21 non-bank, `InterestRevenueExpenseNet`) | 98 | "Interest expense, net", "Financing costs, net", "Interest (income) expense, net". **Not gross interest expense.** | TJX 0000109198-26-000008 R3 l4 `InterestRevenueExpenseNet` "Interest (income) expense, net", stored **+121M** (net INCOME in FY2026: sign trap) |
+| Net interest tag only (`InterestIncomeExpenseNonoperatingNet` 76, `InterestIncomeExpenseNet` 21 non-bank, `InterestRevenueExpenseNet`) | 98 | "Interest expense, net", "Financing costs, net", "Interest (income) expense, net". **Not gross interest expense.** | TJX 0000109198-26-000008 R3 l4 `InterestRevenueExpenseNet` "Interest (income) expense, net", stored **+121M** (net INCOME in FY2026: sign trap; FILING-CHECKED R3 prints "Interest (income) expense, net (121)") |
 | Other interest wording on a non-interest tag | 30 | interest inside "interest and other", interest income lines, etc. | (mixed) |
 | No interest line on the IS face | 22 | interest only in the notes or inside "other income (expense), net" (AAPL 320193, MSFT 789019, GOOGL 1652044 among the 22) | MSFT 789019, AAPL 320193 |
 | Custom interest tag | 18 | e.g. `InterestExpenseNet` (custom), `InterestAndOtherFinancialCharges`, `FloorPlanInterestExpense`, `InterestExpenseNetOfAmountCapitalized` | CIKs 28917 31462 75362 85535 753308 874238 946581 1019849 1034054 1043277 1046257 1097149 1099590 1109357 1123360 1289490 1309108 1415404 |
@@ -65,3 +65,6 @@ So about 87 of the 205 should get a note-sourced cell (marked `source=note`) and
 - Stored sign: net tags are credit-signed (`InterestIncomeExpenseNet` -47,159K at ANDE prints 47,159; TJX `InterestRevenueExpenseNet` +121M is net income).
 - `InterestCostsIncurred` ≠ expense (before capitalisation). `InterestPaidNet` is cash paid (CF supplemental), not expense.
 - `InterestExpenseDebt` is a component wherever another interest-family tag is printed (the sole-debt rule in select).
+
+## 7. External rule that matches this playbook (DQC_0181, effective 2024-08-31)
+XBRL US DQC_0181 flags: InterestExpense/IEO as a calc descendant of `NonoperatingIncomeExpense` (should be IEN); InterestExpense/IEN under `InterestIncomeExpenseNet` (should be IEO); InterestExpense/IEN under `OperatingExpenses` (should be IEO). The same three tests can run on FSN `cal` to flag a filer whose interest tag contradicts its position (sources.md row 13).
