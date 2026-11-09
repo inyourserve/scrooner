@@ -54,3 +54,41 @@ Option 1 is **APPROVED by me as approver, with conditions**. Criterion 4 is chec
 - `0119_company_value_owner.sql`: keyed by company_id only. No writer exists in `pipeline/src`.
 - The pass counts (13/960 etc.) come from the release case (run 41708119011). I did not re-derive them.
 - No DB queries and no SEC requests were made.
+
+## Addendum, 2026-11-09 ~17:00 UTC: founder decision "No fallback. Everything is the hybrid (fcn + sec)"
+Relayed by Dhairya: the founder typed it in Dhairya's session at about 22:30 IST. I did not hear it directly. Per CLAUDE.md, the founder's own words in the approver's session are still needed to authorize the production write itself.
+
+I accept it as the direction.
+- C3 is withdrawn.
+- C2 becomes a report, not a hold.
+- C1 still applies, as atomicity: a listed data point is written in full for each cohort company, as values or as blanks with a reason.
+- C5, C6 and C8 stay. C4 changes; see N2.
+
+New conditions:
+- **N1. A hybrid blank is a defect, never a true absence.** `filing_not_in_store` and `hybrid_gap_unresolved` are written to `analytics.cell_blank_reason` (0100) as follows:
+  - `state = 'defect'`, never `not_presented` or `not_in_template`;
+  - `defect_class` / `owner`: `ingestion` / `data_engineer_l1` for `filing_not_in_store`;
+  - for `hybrid_gap_unresolved`, the class mapped from the pilot cause (`period` / `period_engineer`, `vocabulary` / `tag_mapper`, otherwise `unclassified` / `triage`);
+  - `reason_text` carries the pilot cause;
+  - `input_refs` carries the accession where one exists.
+
+  `reason_code` is free text, so no migration is needed. Test it: one case per cause maps to a valid (state, class, owner), and a row with state defect but no class or owner is refused.
+- **N2. C4 conflicts with "no fallback".** The restore stage puts the before-image back, and those are old-mapper values. Under this decision, a cell_proof DISAGREE cell is re-written as a blank:
+  - state defect, `defect_class` `identity`, owner `verifier`;
+  - `reason_code` `cell_proof_disagree`;
+  - cell_proof evidence in `input_refs`.
+
+  The whole-scope restore is kept only as an emergency rollback, which needs the founder's own words. That needs a small code change: a blank-the-DISAGREE-cells step after cell_proof. Until it exists, the founder must know that criterion 6 means restoring old values.
+- **N3. Debt, total liabilities and DPS (C6/C8).** "Everything is the hybrid" can be read to include them. The current hybrid's values for these are wrong:
+  - debt maps any custom current liability, for example accounts payable (release case §2);
+  - total liabilities gets false conflict blanks (§3a);
+  - DPS has no share-basis guard.
+
+  These values must never be served. If the founder wants no old rows at all, write these keys as blanks with a reason (state defect, `reason_code` `hybrid_rule_held`, with the rule id), never as hybrid values. Otherwise they stay unlisted and keep their old rows until fixed. This needs the founder's choice. My default until then: unlisted.
+- **N4. C2 flag at C7.** For each data point, report the previously valued cells and how many become blanks, with the reason breakdown. I flag to the founder any data point where:
+  - over 20% of previously valued cells become blanks;
+  - or over 1,000 cells become blanks;
+  - or any company in the top 100 loses all of its values for a data point.
+
+  This is a flag, not a hold. A pattern of blanks with an undiagnosed pilot cause blocks my clearance until it is classified.
+- **N5. Before-images are still taken and kept for every written company,** as a rollback record (not served).
