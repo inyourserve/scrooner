@@ -39,6 +39,9 @@ CF_PARTS = (
 # a discontinued-operations cash-flow TOTAL printed beside the three section totals (never the per-section components,
 # which the section totals already contain)
 CF_DISC = ("NetCashProvidedByUsedInDiscontinuedOperations",)
+# every exchange-rate-effect line (total, continuing, discontinued twin): counted only as calc children of the
+# net-change total, so a component is never taken as the total
+FX_FAMILY = ("EffectOfExchangeRateOnCash",)
 CF_FX = (
     "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
     "EffectOfExchangeRateOnCashAndCashEquivalents",
@@ -234,10 +237,28 @@ def check_column(
             base = sum((p.value for p in parts), Decimal(0))
             tol_no = tol_of([change[0].dcml, *(p.dcml for p in parts)])
             forms = [("without_fx", base, tol_no)]
-            if fx and "Excluding" not in change[0].tag:
-                forms.insert(
-                    0, ("with_fx", base + fx[0].value, tol_no + tol_of([fx[0].dcml]))
-                )
+            # FX = the filer's own composition when its calc tree has one: the signed sum of every exchange-rate line
+            # that is a calc child of the net-change total (FSN-expert P-1, 2026-11-09: RTX FY2022 prints the plain
+            # FX tag AND its discontinued-operations twin, both +1 children, so both count; CSCO prints only the
+            # twin, its one FX line, FY2025 R8: 14,193 + 1,733 + financing = 111, 111 - 43 = 68). Without such a
+            # calc child, the single printed total-FX line (CF_FX) as before.
+            fx_kids = [
+                (col[(c, cv)], w)
+                for (ptag, pver, _g), kids in groups.items()
+                if ptag == change[0].tag and pver == change[0].version
+                for c, cv, w in kids
+                if c.startswith(FX_FAMILY) and (c, cv) in col
+            ]
+            fx_kids = list(
+                {(p.tag, p.version): (p, w) for p, w in fx_kids}.values()
+            )  # once per line
+            if fx_kids:
+                fx_value = sum((p.value * w for p, w in fx_kids), Decimal(0))
+                fx_tol = tol_of([p.dcml for p, _w in fx_kids])
+            elif fx:
+                fx_value, fx_tol = fx[0].value, tol_of([fx[0].dcml])
+            if (fx_kids or fx) and "Excluding" not in change[0].tag:
+                forms.insert(0, ("with_fx", base + fx_value, tol_no + fx_tol))
             # a separately printed discontinued-operations total (Somnigroup 6M 2020: 84.6 - 1.0 - 1.7 = 81.9):
             # the column also ties with it added, never with a component counted twice
             disc = [p for (t, _v), p in col.items() if t in CF_DISC]

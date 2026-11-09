@@ -487,3 +487,37 @@ def test_a_quarter_whose_prior_ytd_holds_only_excluded_lines_gets_the_true_reaso
     assert not isinstance(cell_loader.parse_row(1, row, {"share_buybacks_resolved"}), str)
     # without an exclusion the reason is unchanged
     assert {(c.ddate, c.qtrs): c for c in sel.explain_excluded_inputs(cells, {})}[(fy, 1)].reason_code == "no_prior_quarter_end"
+
+
+TWIN = "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsDisposalGroupIncludingDiscontinuedOperations"
+PLAIN_FX = "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"
+
+
+def _fx_case(rows, fx_children):
+    v = "us-gaap/2025"
+    col = _cf_col(rows, v)
+    stmt_of = {k: "CF" for k in col}
+    groups = {(CHANGE_INCL, v, 1): [(t, v, 1) for t in ("NetCashProvidedByUsedInOperatingActivities",
+                                                        "NetCashProvidedByUsedInInvestingActivities",
+                                                        "NetCashProvidedByUsedInFinancingActivities", *fx_children)]}
+    return {x["check_id"]: x for x in checks.check_column("CF", col, groups, stmt_of)}["cf_parts_eq_change"]
+
+
+@pytest.mark.unit
+def test_the_discontinued_twin_is_the_fx_line_when_it_is_the_filers_only_calc_child_csco():
+    # CSCO FY2025 10-K 0000858877-25-000111 R8: 14,193 + 1,733 - 15,815 = 111; FX (twin tag) -43; change 68
+    rows = [("NetCashProvidedByUsedInOperatingActivities", "14193"), ("NetCashProvidedByUsedInInvestingActivities", "1733"),
+            ("NetCashProvidedByUsedInFinancingActivities", "-15815"), (TWIN, "-43"), (CHANGE_INCL, "68")]
+    c = _fx_case(rows, [TWIN])
+    assert c["ok"] and c["detail"]["fx_included"]
+    # the same twin without calc evidence is a component, never the total: the column does not tie
+    assert not _fx_case(rows, [])["ok"]
+
+
+@pytest.mark.unit
+def test_both_fx_calc_children_are_summed_rtx():
+    # RTX FY2022 shape: the plain FX tag and its twin are both +1 children of the net change
+    rows = [("NetCashProvidedByUsedInOperatingActivities", "7000"), ("NetCashProvidedByUsedInInvestingActivities", "-2000"),
+            ("NetCashProvidedByUsedInFinancingActivities", "-4000"), (PLAIN_FX, "-50"), (TWIN, "-10"), (CHANGE_INCL, "940")]
+    c = _fx_case(rows, [PLAIN_FX, TWIN])
+    assert c["ok"] and c["detail"]["fx_included"]
