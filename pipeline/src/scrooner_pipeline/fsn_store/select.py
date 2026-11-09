@@ -113,8 +113,23 @@ REASONS = {
     "note_value_not_positive": ("evidence_pending", "verifier"),
     "sole_debt_label_not_interest": ("composition", "standardization_lead"),
     "sign_inconsistent": ("filer_error", "verifier"),
+    # a pilot gap key written as a blank (founder 2026-11-09: no fallback, every key of a written pair is the
+    # hybrid's value or a visible reason): the filing is not in the store / the hybrid could not resolve it
+    "filing_not_in_store": ("ingestion", "data_engineer_l2"),
+    "hybrid_gap_unresolved": ("unclassified", "triage"),
+}
+# hybrid_gap_unresolved: (defect_class, owner) by the pilot's gap cause (input_refs.pilot_cause)
+GAP_CAUSE_CLASS = {
+    "no_mapped_line": ("vocabulary", "tag_mapper"),
+    "no_mapped_line_cond": ("vocabulary", "tag_mapper"),
+    "no_concept_rule": ("vocabulary", "tag_mapper"),
+    "quarter_not_printed_or_derivable": ("period", "period_engineer"),
+    "sector_row_definition_pending": ("definition_pending", "accountant"),
+    "no_face_print_for_period": ("unclassified", "triage"),
 }
 REASON_TEXT = {
+    "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
+    "hybrid_gap_unresolved": "The filing is stored, but this value could not be read from its statements yet; the cause is recorded with the cell.",
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
     "conflicting_values_in_filing": "The filing prints two different values for this line and period.",
     "mixed_vintage_inputs": "The quarter would subtract year-to-date values from filings with a restatement between them.",
@@ -630,6 +645,10 @@ def to_row(
         )
     if cell.state == "defect":
         cls, owner = REASONS[cell.reason_code or ""]
+        if cell.reason_code == "hybrid_gap_unresolved":
+            cls, owner = GAP_CAUSE_CLASS.get(
+                cell.input_refs.get("pilot_cause"), (cls, owner)
+            )
         row.update(
             reason_code=cell.reason_code,
             reason_text=REASON_TEXT[cell.reason_code or ""],

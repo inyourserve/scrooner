@@ -7,9 +7,10 @@ name: FSN store production write (cohort)
 #                       company_load) -> map fsn.line_map (the library) and fsn.filing_check
 #   stage select_write: (also runs load_map) -> select -> before-image of the shard's canonical_fact and
 #                       cell_blank_reason (uploaded BEFORE the write) -> done gate (ruling
-#                       RULING-DONE-GATE-C4-2026-11-09: criteria 1/2/5 per company, criterion 4 per (company,
-#                       data point), an empty pair never passes, C2 hold guard) -> `scrooner-cells load --apply`
-#                       for the done pairs only; a pair that fails keeps its current rows (design §7.6). The
+#                       RULING-DONE-GATE-C4-2026-11-09 with the founder's no-fallback decision 2026-11-09:
+#                       criteria 1/2/5 per company; every listed in-template pair of a passing company is written
+#                       whole, a gap key as a reasoned blank; C2 is a report, valued_to_blank.json) ->
+#                       `scrooner-cells load --apply` for the done pairs (design §7.6). The
 #                       cell_proof scope is out/written_companies.txt (every company with a written pair, C4).
 #                       dividends_per_share (C6), total debt and total liabilities (C8) stay out.
 #                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
@@ -166,7 +167,7 @@ jobs:
           path: out/before_image/
           if-no-files-found: error
           retention-days: 90
-      - name: Done gate (criteria 1/2/5 per company, 4 per (company, data point), C2 hold guard; read)
+      - name: Done gate (criteria 1/2/5 per company; pairs written whole, gaps as reasoned blanks; C2 report; read)
         if: inputs.stage == 'select_write'
         run: uv run --project pipeline scrooner-fsn done-gate --pilot-out out --data-points "$DATA_POINTS"
       - name: Write the done (company, data point) pairs to canonical_fact
@@ -202,7 +203,7 @@ jobs:
             out/done_companies.txt
             out/done_pairs.tsv
             out/written_companies.txt
-            out/hold_guard.json
+            out/valued_to_blank.json
             out/not_done.json
             out/missing_filings.json
             out/write-*.json

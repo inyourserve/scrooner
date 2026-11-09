@@ -448,14 +448,16 @@ def done_gate_cmd(
         ..., help="Comma-separated data points the write switches."
     ),
 ) -> None:
-    """Design §5 done criteria per (company, data point) (ruling RULING-DONE-GATE-C4-2026-11-09), read-only.
-    Writes into the output directory:
-      done_pairs.tsv         company_id, data_point: the pairs that may be written (C1 + C2)
-      done_companies.txt     companies whose every listed pair passes
+    """The done gate (founder 2026-11-09 "No fallback. Everything is the hybrid", on ruling
+    RULING-DONE-GATE-C4-2026-11-09), read-only. Every in-template pair of a company passing criteria 1/2/5 is
+    written whole (gap keys as reasoned blanks). Writes into the output directory:
+      done_pairs.tsv         company_id, data_point: the pairs to write
+      done_companies.txt     companies whose every listed pair is written
       written_companies.txt  companies with at least one pair to write: the cell_proof scope (C4)
-      not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}}
-      hold_guard.json        C2: held pairs and the valued->blank transitions per data point by reason class
-    The before-image (pilot-prod) is required: without it the hold guard cannot run, so nothing passes."""
+      not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}, ...}
+      valued_to_blank.json   C2 as a report: valued->blank transitions per data point by reason class, and the
+                             pairs whose new cells hold no value where the before-image had values
+    The before-image (pilot-prod) is required, so the C2 report is never skipped."""
     import gzip
 
     from scrooner_pipeline.fsn_store.pilot import (
@@ -491,14 +493,14 @@ def done_gate_cmd(
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
             cells.extend(json.loads(line) for line in fh if line.strip())
-    held, transitions = hold_guard(
+    emptied, transitions = hold_guard(
         cells,
         rows("canonical_fact"),
         {r["id"]: r["name"] for r in rows("canonical_concept")},
         {r["id"]: r for r in rows("period")},
         points,
     )
-    gate = done_gate(reports, gaps, missing, points, held)
+    gate = done_gate(reports, gaps, missing, points)
     pairs = done_pairs(gate)
     full = fully_done(gate)
     written = sorted({cid for cid, _dp in pairs})
@@ -513,19 +515,28 @@ def done_gate_cmd(
             "company": g["company"],
             "data_points": {dp: f for dp, f in g["data_points"].items() if f},
             "out_of_template": g["out_of_template"],
+            "gap_blanks": g["gap_blanks"],
         }
         for cid, g in gate.items()
         if g["company"] or any(g["data_points"].values())
     }
     (root / "not_done.json").write_text(json.dumps(not_done, indent=1))
-    (root / "hold_guard.json").write_text(
+    gap_blanks: dict[str, int] = {}
+    for g in gate.values():
+        for dp, n in g["gap_blanks"].items():
+            gap_blanks[dp] = gap_blanks.get(dp, 0) + n
+    (root / "valued_to_blank.json").write_text(
         json.dumps(
             {
-                "held": [
-                    {"company_id": c, "data_point": dp, "why": w}
-                    for (c, dp), w in sorted(held.items())
-                ],
+                # C2 as a report (founder 2026-11-09: no hold); the approver reviews it before dispatch
                 "valued_to_blank_by_data_point": transitions,
+                "pairs_with_no_new_value_but_old_values": [
+                    {"company_id": c, "data_point": dp, "why": w}
+                    for (c, dp), w in sorted(emptied.items())
+                ],
+                "gap_keys_written_as_blanks_by_data_point": dict(
+                    sorted(gap_blanks.items())
+                ),
             },
             indent=1,
         )
@@ -539,7 +550,10 @@ def done_gate_cmd(
     typer.echo(
         f"done gate: pairs passing per data point {json.dumps(dict(sorted(per_point.items())))}"
     )
-    typer.echo(f"done gate: {len(held)} pairs held by the C2 guard (hold_guard.json)")
+    typer.echo(
+        f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
+        f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
 
 
 @app.command("extract-sec")

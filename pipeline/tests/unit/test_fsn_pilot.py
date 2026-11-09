@@ -97,10 +97,12 @@ def test_done_gate_company_criteria_1_2_5_fail_every_pair_of_the_company():
         6: [],
         7: [],
     }
+    # no fallback (founder 2026-11-09): company 4's gap key does not hold its pair back, it is written as a blank
     assert pilot.done_pairs(got) == [
         (1, "revenue_sanity_resolved"),
+        (4, "revenue_sanity_resolved"),
         (6, "revenue_sanity_resolved"),
         (7, "revenue_sanity_resolved"),
     ]
-    assert got[4]["data_points"]["revenue_sanity_resolved"] == ["4_reasonless_keys:1"]
+    assert got[4]["gap_blanks"] == {"revenue_sanity_resolved": 1}
     assert got[3]["data_points"]["revenue_sanity_resolved"] == ["company:2_filings_not_stored:1"]

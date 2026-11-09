@@ -22,7 +22,7 @@ from typing import Any
 
 import psycopg
 
-from scrooner_pipeline.common.fsn_dates import fsn_end_matches
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
 from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.fsn_store import select as sel
 
@@ -177,6 +177,35 @@ def _match(rows: list[dict[str, Any]], grain: str, end: date) -> dict[str, Any] 
         if best is None or gap < best[0]:
             best = (gap, r)
     return best[1] if best else None
+
+
+RULE_GAP_BLANK = "fsn.hybrid_gap_blank@1"
+GRAIN_QTRS = {"FY": 4, "Q": 1, "I": 0}
+
+
+def gap_blank(
+    concept: str, grain: str, end: date, cause: str, filings: dict[int, Any]
+) -> "sel.Cell":
+    """A pilot gap key as a reasoned blank, so a written pair carries every expected key (founder 2026-11-09:
+    no fallback; a reasonless gap is written as a blank with a visible reason, never skipped).
+    filing_not_in_store when no stored filing's period is this period end (FSN's month-end rounding included);
+    else hybrid_gap_unresolved, with the pilot's cause in input_refs. The key's date is the FSN month-end form of the
+    true end, like every other cell (the loader binds it to the true core.period by fiscal label)."""
+    stored = any(
+        f.period is not None and fsn_end_matches(f.period, end)
+        for f in filings.values()
+    )
+    ends = sorted(nearest_month_ends(end))
+    ddate = end if end in ends else ends[-1]
+    return sel.Cell(
+        concept,
+        ddate,
+        GRAIN_QTRS[grain],
+        "defect",
+        rule_id=RULE_GAP_BLANK,
+        reason_code="hybrid_gap_unresolved" if stored else "filing_not_in_store",
+        input_refs={"pilot_cause": cause, "expected_end": end.isoformat()},
+    )
 
 
 def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
@@ -343,6 +372,9 @@ def report_company(
 
     keys = valued = reasoned = 0
     gaps: list[dict[str, Any]] = []
+    gap_rows: list[
+        dict[str, Any]
+    ] = []  # each gap key as a reasoned blank (no fallback: founder 2026-11-09)
     per_point: dict[str, dict[str, int]] = {}
     # SECTOR-TEMPLATES §4 step 2: a COND data point the company's statements do not print (no line
     # mapped, combined or excluded in any stored filing) is OUT of that company's template, with that
@@ -393,16 +425,20 @@ def report_company(
             else:
                 cause = "no_face_print_for_period"
             k[cause] += 1
+            blank = gap_blank(concept, grain, end, cause, data["filings"])
+            gap_rows.append(sel.to_row(blank, company_id, data["filings"]))
             gaps.append(
                 {
                     "data_point": concept,
                     "grain": grain,
                     "period_end": end.isoformat(),
                     "cause": cause,
+                    "written_as": blank.reason_code,
                 }
             )
         per_point[concept] = dict(k)
 
+    cells.extend(gap_rows)
     filings = data["filings"].values()
     latest = max(filings, key=lambda f: f.accepted) if filings else None
     combined = conn.execute(
@@ -531,21 +567,19 @@ def done_gate(
     gaps: list[dict[str, str]],
     missing_filings: dict[str, list[Any]],
     data_points: set[str],
-    held: dict[tuple[int, str], str] | None = None,
 ) -> dict[int, dict[str, Any]]:
-    """Design §5 done criteria, per (company, data point) for criterion 4 (ruling RULING-DONE-GATE-C4-2026-11-09,
-    conditions C1/C2): {company_id: {"company": [failed criteria 1/2/5], "data_points": {dp: [failed reasons]},
-    "out_of_template": [dp]}}.
+    """The done gate under the founder's no-fallback decision (2026-11-09: "No fallback. Everything is the hybrid"),
+    on Ritwik's per-pair ruling (RULING-DONE-GATE-C4-2026-11-09, C1 atomicity per (company, concept)):
+    {company_id: {"company": [failed criteria 1/2/5], "data_points": {dp: [reasons]}, "out_of_template": [dp],
+    "gap_blanks": {dp: n}}}.
 
-    A pair (company, dp) may be written only if (C1) (a) the company passes criteria 1, 2 and 5; (b) the pair has 0
-    reasonless gap keys; (c) the pair has at least one expected key with a cell (valued or reasoned): an empty pair
-    never passes; and (C2) it is not held by the hold guard (`held`, from `hold_guard`). Criterion 5 counts the
-    derived cells of the switched data points only. A data point outside the company's template (no expected
-    keys: a COND point not printed, a company OUT) is never written and is listed under "out_of_template"; it does
-    not fail the company. Criterion 3 holds by construction (select serves only passing columns); criterion 6 is
-    checked after the write on every written pair (C4), and a failing company is restored from its before-image."""
-    held = held or {}
-    reasonless: Counter[tuple[str, str]] = Counter(
+    Criteria 1, 2 and 5 stay per company: a structural failure writes nothing for that company (every pair carries
+    `company:<criterion>`). Otherwise EVERY data point of the list that is in the company's template is written,
+    all keys at once: values, reasoned blanks, and each pilot gap key as a reasoned blank (`gap_blank`), so no old
+    row of a written pair survives. Criterion 4 no longer holds a pair back; its gap keys are counted under
+    "gap_blanks". A pair with no expected key (nothing to write) and a data point outside the template are not
+    written and are listed. Criterion 5 counts the derived cells of the switched data points only."""
+    gap_keys: Counter[tuple[str, str]] = Counter(
         (str(g["company_id"]), g["data_point"])
         for g in gaps
         if g["data_point"] in data_points
@@ -570,28 +604,23 @@ def done_gate(
         per_point = (r.get("template_coverage") or {}).get("per_data_point") or {}
         points: dict[str, list[str]] = {}
         out_of_template: list[str] = []
+        blanks: dict[str, int] = {}
         for dp in sorted(data_points):
             if dp not in per_point:
                 out_of_template.append(dp)
                 continue
-            failed = [
-                f"company:{c}" for c in company
-            ]  # (a) a company failure fails every pair
-            n = reasonless[(str(cid), dp)]
+            failed = [f"company:{c}" for c in company]
+            if not per_point[dp].get("keys", 0):
+                failed.append("no_expected_keys")  # nothing to write
+            n = gap_keys[(str(cid), dp)]
             if n:
-                failed.append(f"4_reasonless_keys:{n}")  # (b)
-            k = per_point[dp]
-            if k.get("valued", 0) + k.get("reasoned", 0) == 0:
-                failed.append(
-                    f"c_no_expected_key_with_a_cell:{k.get('keys', 0)}"
-                )  # (c)
-            if (cid, dp) in held:
-                failed.append(f"C2_held:{held[(cid, dp)]}")
+                blanks[dp] = n
             points[dp] = failed
         out[cid] = {
             "company": company,
             "data_points": points,
             "out_of_template": out_of_template,
+            "gap_blanks": blanks,
         }
     return out
 
@@ -628,7 +657,8 @@ def hold_guard(
     periods: dict[str, dict[str, str]],
     data_points: set[str],
 ) -> tuple[dict[tuple[int, str], str], dict[str, dict[str, int]]]:
-    """C2: (held pairs, valued->blank transitions per data point by reason class).
+    """C2 as a REPORT (founder 2026-11-09: no hold): (pairs losing every value, valued->blank transitions per data
+    point by reason class).
 
     before: the before-image canonical_fact rows (company_id, canonical_concept_id, period_id, value);
     concept_names: canonical_concept id -> name; periods: core.period id -> its row (start_date, end_date,
