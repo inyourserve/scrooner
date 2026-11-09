@@ -33,6 +33,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # Own queue (not heavy-db-jobs): a multi-hour manual run there made GitHub replace the pending nightly
 # refresh with the sanity cron (refresh 41334234889 cancelled, 2026-11-01). The preflight checks
@@ -45,7 +46,22 @@ env:
   PILOT_CIKS: "0000789019,0000354950" # MSFT, HD
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-09: a manually dispatched heavy job must not start beside an FSN production write either
+    # (the write refuses to start beside it; this is the other direction).
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   companies:
+    needs: wait-for-fsn-write
     name: Companies with cells of the families
     runs-on: ubuntu-latest
     timeout-minutes: 5
