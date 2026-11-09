@@ -1,6 +1,8 @@
 name: FSN extract for predecessor CIKs (SEC -> fsn-notes/predecessors)
 
-# Manual only. The fsn-notes period extracts were cut to cohort CIKs, so a predecessor registrant's
+# Manual only. destination=cohort adds a NEW period set (e.g. 2026m10) for every cohort v1.1 CIK at the bucket's top
+# level, the layout of the existing cohort sets; a set already there is refused. destination=predecessors (default):
+# The fsn-notes period extracts were cut to cohort CIKs, so a predecessor registrant's
 # history (Exxon Mobil Corp 0000034088) is missing. Each job downloads SEC Financial Statement and Notes
 # zips (sec.gov only, declared User-Agent, one request per set, sets run one after another) and keeps
 # the given CIKs' filings byte for byte. `apply: true` uploads them to fsn-notes/predecessors/<set>/
@@ -16,12 +18,20 @@ on:
         description: "FSN sets, comma separated (empty = every set in the bucket)"
         default: ""
       apply:
-        description: "Upload to fsn-notes/predecessors/ (default false = extract and report only)"
+        description: "Upload to the bucket (default false = download, extract and report counts only)"
         type: boolean
         default: false
+      destination:
+        description: "predecessors: fsn-notes/predecessors/<set>/ for the CIKs above; cohort: a NEW set (sets required) for every cohort v1.1 CIK at fsn-notes/<set>/"
+        type: choice
+        options: [predecessors, cohort]
+        default: predecessors
 
 permissions:
   contents: read
+
+env:
+  COHORT_CSV: data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv
 
 concurrency:
   group: fsn-extract-predecessors
@@ -68,6 +78,7 @@ jobs:
       CIKS: ${{ inputs.ciks }}
       CHUNK: ${{ matrix.chunk }}
       APPLY: ${{ inputs.apply }}
+      DESTINATION: ${{ inputs.destination }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -78,4 +89,10 @@ jobs:
         run: |
           set -eu
           mode="--plan"; if [ "$APPLY" = "true" ]; then mode="--apply"; fi
-          uv run --project pipeline scrooner-fsn extract-sec --ciks "$CIKS" --sets "$CHUNK" $mode
+          if [ "$DESTINATION" = "cohort" ]; then
+            # a new period set for the whole cohort (the 2026-10-25 extracts stop at the set they had then)
+            uv run --project pipeline scrooner-fsn extract-sec --cohort-csv "$COHORT_CSV" --sets "$CHUNK" \
+              --destination cohort $mode
+          else
+            uv run --project pipeline scrooner-fsn extract-sec --ciks "$CIKS" --sets "$CHUNK" $mode
+          fi

@@ -239,6 +239,73 @@ def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
     return eras
 
 
+# a key's own filing: a stored 10-K/10-Q whose balance-sheet date is the key's period end within this many days
+# (52-53 week years, FSN month-end rounding; pilot._match uses the same 10 days)
+OWN_FILING_DAYS = 10
+
+
+def own_filing_stored(end: date, filing_periods: list[date]) -> bool:
+    return any(abs((p - end).days) <= OWN_FILING_DAYS for p in filing_periods)
+
+
+def newest_expected(calendar: Path, company_ids: set[int]) -> dict[int, date]:
+    """company_id -> the newest period end the calendar expects (any grain)."""
+    out: dict[int, date] = {}
+    with gzip.open(calendar, "rt") as fh:
+        for r in csv.DictReader(fh):
+            cid = int(r["company_id"])
+            if cid in company_ids:
+                e = date.fromisoformat(r["period_end"])
+                if e > out.get(cid, date.min):
+                    out[cid] = e
+    return out
+
+
+def store_coverage(
+    expected: dict[int, date], filing_periods: dict[int, list[date]]
+) -> dict[str, Any]:
+    """Does the store hold each company's newest expected filing? Run before a dry run or write: a company without it
+    gets reasonless keys (filing_not_in_store) for every data point of that period, and the gate blocks those pairs."""
+    missing = {
+        cid: e.isoformat()
+        for cid, e in sorted(expected.items())
+        if not own_filing_stored(e, filing_periods.get(cid, []))
+    }
+    by_end = Counter(missing.values())
+    return {
+        "companies": len(expected),
+        "newest_filing_missing": len(missing),
+        "missing_by_period_end": dict(sorted(by_end.items())),
+        "missing": missing,
+    }
+
+
+def gap_cause(
+    concept: str,
+    grain: str,
+    end: date,
+    sector: str,
+    rule_concepts: set[str],
+    mapped_points: set[str],
+    filing_periods: list[date],
+) -> str:
+    """Why an expected key has no cell. `filing_not_in_store` (the filing for that period end was never loaded: the
+    fsn-notes bucket stops at the last extracted SEC set) is told apart from a printed-but-not-derivable quarter, which
+    it used to be counted as. A cause, never a reason: the key stays a gap (no blank cell where production may hold a
+    value, approver conditions C1/C2)."""
+    if concept in DEFINITION_PENDING.get(sector, set()):
+        return "sector_row_definition_pending"
+    if concept not in rule_concepts:
+        return "no_concept_rule"
+    if not own_filing_stored(end, filing_periods):
+        return "filing_not_in_store"
+    if concept not in mapped_points:
+        return "no_mapped_line" + ("_cond" if concept in COND[sector] else "")
+    if grain == "Q" and concept not in INSTANT:
+        return "quarter_not_printed_or_derivable"
+    return "no_face_print_for_period"
+
+
 def report_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -356,6 +423,7 @@ def report_company(
         elif verdict == "APPROVE_OUT_FROM" and r.get("out_effective_after"):
             out_after[r["data_point"]] = date.fromisoformat(r["out_effective_after"])
     tmpl = [c for c in tmpl if c not in cond_out and c not in company_out]
+    filing_periods = sorted({f.period for f in data["filings"].values() if f.period})
     for concept in tmpl:
         k: Counter[str] = Counter()
         expected = calendar_keys(calendar, company_id, concept)
@@ -375,16 +443,15 @@ def report_company(
                 reasoned += 1
                 k["reasoned"] += 1
                 continue
-            if concept in DEFINITION_PENDING.get(sector, set()):
-                cause = "sector_row_definition_pending"
-            elif concept not in rule_concepts:
-                cause = "no_concept_rule"
-            elif concept not in mapped_points:
-                cause = "no_mapped_line" + ("_cond" if concept in COND[sector] else "")
-            elif grain == "Q" and concept not in INSTANT:
-                cause = "quarter_not_printed_or_derivable"
-            else:
-                cause = "no_face_print_for_period"
+            cause = gap_cause(
+                concept,
+                grain,
+                end,
+                sector,
+                rule_concepts,
+                mapped_points,
+                filing_periods,
+            )
             k[cause] += 1
             gaps.append(
                 {

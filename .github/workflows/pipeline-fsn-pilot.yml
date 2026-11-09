@@ -108,6 +108,8 @@ jobs:
         run: |
           mkdir -p pilot-out
           uv run --project pipeline scrooner-fsn load --companies companies --report pilot-out/load.json --predecessor "$PREDECESSORS"
+          # the store must hold each company's newest expected filing; warn and count (never fails)
+          uv run --project pipeline scrooner-fsn store-coverage --ciks "$CIKS" --out pilot-out/store_coverage.json || echo "::warning::store coverage check failed"
       - name: Seed concept rules (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}

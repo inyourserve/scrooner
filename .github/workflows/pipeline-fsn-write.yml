@@ -145,6 +145,8 @@ jobs:
         run: |
           mkdir -p out
           uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
+          # the store must hold each company's newest expected filing; warn and count (never fails)
+          uv run --project pipeline scrooner-fsn store-coverage --ciks "$CIKS" --out out/store_coverage.json || echo "::warning::store coverage check failed"
       - name: Map (fsn.line_map), checks (fsn.filing_check), select, report (production fsn.* writes)
         # interest-expense note values cleared by the Verifier draw 2026-11-03 (Ritwik); operating income
         # is never note-sourced (select.NOTE_TAGS)
@@ -213,6 +215,7 @@ jobs:
             out/gaps.csv
             out/library.csv
             out/load.json
+            out/store_coverage.json
             out/summary.md
             out/done_companies.txt
             out/not_done.json

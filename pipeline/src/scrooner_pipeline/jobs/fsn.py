@@ -367,6 +367,46 @@ def pilot_cmd(
     typer.echo("\n".join(lines))
 
 
+@app.command("store-coverage")
+def store_coverage_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated CIKs (loaded companies)."),
+    calendar: str = typer.Option(
+        "data-team/46-canonical-fact-v2/expected_periods_2026-10-31.csv.gz",
+        help="Expected-period calendar (CELL-FORMAT §2.3).",
+    ),
+    out: str = typer.Option("out/store_coverage.json", help="Report path."),
+) -> None:
+    """Read-only: does the store hold each company's newest expected filing (the calendar's latest period end)?
+    Warns and counts; never fails the run. Missing filings are the cause `filing_not_in_store` in the pilot gaps."""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import pilot
+
+    with get_connection() as conn:
+        ids = _ids(conn, ciks)
+        rows = conn.execute(
+            "select company_id, period from fsn.filing where company_id = any(%s) and period is not null",
+            (sorted(ids.values()),),
+        ).fetchall()
+    periods: dict[int, list] = {}
+    for cid, p in rows:
+        periods.setdefault(cid, []).append(p)
+    rep = pilot.store_coverage(
+        pilot.newest_expected(Path(calendar), set(ids.values())), periods
+    )
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(json.dumps(rep, indent=1))
+    n = rep["newest_filing_missing"]
+    typer.echo(
+        f"store coverage: {n} of {rep['companies']} companies lack their newest expected filing "
+        f"{json.dumps(rep['missing_by_period_end'])}"
+    )
+    if n:
+        typer.echo(
+            f"::warning::{n} companies lack their newest expected filing in the store (fsn-notes ends before it); "
+            "their keys for that period are filing_not_in_store gaps"
+        )
+
+
 @app.command("pilot-prod")
 def pilot_prod_cmd(
     pilot_out: str = typer.Option("pilot-out", help="The `pilot` output directory."),
@@ -464,17 +504,42 @@ def extract_sec_cmd(
     apply: bool = typer.Option(
         False,
         "--apply/--plan",
-        help="Upload to fsn-notes/predecessors/ (default: extract only).",
+        help="Upload to the bucket (default: extract and count only).",
+    ),
+    destination: str = typer.Option(
+        "predecessors",
+        help="predecessors: fsn-notes/predecessors/<set>/ (extra CIKs beside existing sets); cohort: a NEW set "
+        "at the top level fsn-notes/<set>/ (the shard lists sets from there).",
+    ),
+    cohort_csv: str = typer.Option(
+        "", help="Take the CIKs from this cohort CSV (column cik) instead of --ciks."
     ),
 ) -> None:
-    """SEC FSN sets -> the extra CIKs' rows, byte for byte, into fsn-notes/predecessors/<set>/.
-    One request per set to sec.gov with the declared User-Agent; run sets sequentially."""
+    """SEC FSN sets -> the given CIKs' rows (registrant filings), byte for byte, into the fsn-notes bucket.
+    One request per set to sec.gov with the declared User-Agent; run sets sequentially. A set SEC has not
+    published yet is reported (published 0) and nothing is written."""
     import time
 
     from scrooner_pipeline.common.config import settings
     from scrooner_pipeline.fsn_store import extract_sec, shard
 
+    if destination not in ("predecessors", "cohort"):
+        raise typer.BadParameter("destination is predecessors or cohort")
+    prefix = extract_sec.PREFIX if destination == "predecessors" else ""
     cik_set = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
+    if cohort_csv:
+        with open(cohort_csv) as fh:
+            cik_set |= {r["cik"].zfill(10) for r in csv.DictReader(fh)}
+    if destination == "cohort" and not sets:
+        raise typer.BadParameter(
+            "--destination cohort needs --sets (the new sets to add)"
+        )
+    if destination == "cohort" and set(s for s in sets.split(",") if s) & set(
+        shard.list_periods()
+    ):
+        raise typer.BadParameter(
+            "a cohort set already in the bucket is never overwritten"
+        )
     if not cik_set:
         from scrooner_pipeline.db.connection import get_connection
 
@@ -489,13 +554,14 @@ def extract_sec_cmd(
     for s_ in set_list:
         t0 = time.time()
         counts = extract_sec.run_set(
-            s_, cik_set, Path(work), settings.sec_user_agent, apply=apply
+            s_, cik_set, Path(work), settings.sec_user_agent, apply=apply, prefix=prefix
         )
         for k, v in counts.items():
             total[k] = total.get(k, 0) + v
         typer.echo(f"extract-sec {s_}: {json.dumps(counts)} in {time.time() - t0:.0f}s")
     typer.echo(
-        f"extract-sec total [{'apply' if apply else 'plan'}] {sorted(cik_set)}: {json.dumps(total)}"
+        f"extract-sec total [{'apply' if apply else 'plan'}] -> fsn-notes/{prefix}<set>/ "
+        f"{len(cik_set)} CIKs: {json.dumps(total)}"
     )
 
 

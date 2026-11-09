@@ -35,6 +35,10 @@ def sec_url(fsn_set: str) -> str:
     return f"{SEC_BASE}/{fsn_set}_notes.zip"
 
 
+class NotPublished(Exception):
+    """SEC has not published this FSN set (404 on its zip URL)."""
+
+
 def download_zip(fsn_set: str, dest: Path, user_agent: str) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(".part")
@@ -45,6 +49,8 @@ def download_zip(fsn_set: str, dest: Path, user_agent: str) -> Path:
         timeout=1800,
         follow_redirects=False,
     ) as resp:
+        if resp.status_code == 404:
+            raise NotPublished(fsn_set)
         resp.raise_for_status()
         with tmp.open("wb") as fh:
             for chunk in resp.iter_bytes(1 << 20):
@@ -132,10 +138,10 @@ def write_zst(rows: list[list[bytes]], path: Path) -> Path:
     return path
 
 
-def upload(fsn_set: str, table: str, path: Path) -> str:
+def upload(fsn_set: str, table: str, path: Path, prefix: str = PREFIX) -> str:
     base = os.environ["SUPABASE_URL"].rstrip("/") + "/storage/v1"
     key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-    obj = f"{PREFIX}{fsn_set}/{fsn_set}_{table}.tsv.zst"
+    obj = f"{prefix}{fsn_set}/{fsn_set}_{table}.tsv.zst"
     resp = httpx.post(
         f"{base}/object/fsn-notes/{obj}",
         headers={
@@ -151,11 +157,29 @@ def upload(fsn_set: str, table: str, path: Path) -> str:
     return obj
 
 
+# where a set's rows go: the predecessor folder beside the cohort sets (default), or "" for a NEW cohort set at the
+# bucket's top level (<set>/<set>_<table>.tsv.zst, the layout fsn_pilot.py / fsn_upload.py gave every cohort set):
+# fsn_store.shard lists sets from the top level only and reads predecessors/<set> only for a set listed there
+PREFIXES = (PREFIX, "")
+
+
 def run_set(
-    fsn_set: str, ciks: set[str], work: Path, user_agent: str, *, apply: bool
+    fsn_set: str,
+    ciks: set[str],
+    work: Path,
+    user_agent: str,
+    *,
+    apply: bool,
+    prefix: str = PREFIX,
 ) -> dict[str, int]:
-    """Download, filter, write (and with apply, upload) one set; the zip is deleted after use."""
-    zpath = download_zip(fsn_set, work / f"{fsn_set}.zip", user_agent)
+    """Download, filter, write (and with apply, upload) one set; the zip is deleted after use.
+    A set SEC has not published yet returns {"published": 0} and writes nothing."""
+    if prefix not in PREFIXES:
+        raise ValueError(f"prefix must be one of {PREFIXES}, not {prefix!r}")
+    try:
+        zpath = download_zip(fsn_set, work / f"{fsn_set}.zip", user_agent)
+    except NotPublished:
+        return {"published": 0}
     try:
         with zipfile.ZipFile(zpath) as zf:
             tables = filter_set(zf, ciks)
@@ -169,5 +193,5 @@ def run_set(
     for t, rows in tables.items():
         p = write_zst(rows, out / f"{fsn_set}_{t}.tsv.zst")
         if apply:
-            upload(fsn_set, t, p)
+            upload(fsn_set, t, p, prefix)
     return counts
