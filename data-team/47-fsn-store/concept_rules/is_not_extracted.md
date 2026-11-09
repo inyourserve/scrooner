@@ -10,8 +10,9 @@ They stay in the ported detector (is_detect.py --company); the seed carries only
 | revenue_sanity_resolved | hold_sibling_*  | revenue_siblings | REV_ANY / SIB_TAG_NOT / SIB_LABEL regexes |
 | cost_of_revenue_resolved | COR_EXCL_DA | cost_slot | printed cost line excluding D&A: hold_perimeter_excl_da (accountant) |
 | cost_of_revenue_resolved | G3_calc_sum / hold_sibling_custom | cost_slot | COR_LABEL regex siblings |
-| net_income_resolved | ProfitLoss | _net_income_slot | G1b only when the face prints no NCI or preferred line below it |
-| net_income_resolved | NetIncomeLossAvailableToCommonStockholdersBasic | available_to_common_bridge | G2b only when the face bridges ProfitLoss to it through NCI / subsidiary-preferred lines |
+| net_income_resolved | ProfitLoss | _net_income_slot | G1b only when the face prints no NCI or preferred line below it. **Ported 2026-11-09**: `fsn_store.detectors.net_income_detector` (imports the lane's net_income_slot; additive, only where the seed maps no net-income line) |
+| net_income_resolved | NetIncomeLossAvailableToCommonStockholdersBasic | available_to_common_bridge | G2b only when the face bridges ProfitLoss to it through NCI / subsidiary-preferred lines. **Ported 2026-11-09** (same detector), plus the per-column value tie ProfitLoss - bridge = it the lane's replay ran |
+| net_income_resolved | NetIncomeLossAvailableToCommonStockholdersBasic, IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest | (new, not a lane rule) `detectors.bottom_line` | **G2c, 2026-11-09, Verifier sample pending**: face prints neither NetIncomeLoss nor ProfitLoss, no NCI/preferred line on IS/CI; the last monetary line before the per-share block, labelled net income, ties pretax - tax (+ lines between, subtotals skipped) in every column |
 | net_income_resolved | G2_nci_identity | _net_income_slot | tie ProfitLoss - NCI_RX lines = NetIncomeLoss (a filing_check) |
 | all | shape_of: hold_sector_bank / insurer / bdc | shape_of | BANK, INSURER_RX, BDC face shapes hold every IS concept |
 | operating_income_resolved | hold_label_before_tax / hold_position_below_pretax | operating_slot | BEFORE_TAX_LABEL regex and position vs PRETAX_RX / tax line (a label only demotes) |
