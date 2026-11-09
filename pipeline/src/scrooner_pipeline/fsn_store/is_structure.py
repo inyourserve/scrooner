@@ -194,6 +194,15 @@ IE_LABEL_NOT = re.compile(
     r"\bnet\b|income|other|capitaliz|related part|financ(e|ing) lease|per share|\bfloor ?plan\b",
     re.I,
 )
+# a separately printed financing-cost amortization line (CubeSmart "Loan procurement amortization expense" under an
+# "Interest:" header) means the interest line is not the total: hold
+FINANCING_AMORTIZATION_TAG = re.compile(
+    r"^AmortizationOf(Financing|DebtDiscount|DeferredCharges|DebtIssuance)"
+)
+FINANCING_AMORTIZATION_LABEL = re.compile(
+    r"amortization of (deferred )?(loan|financing|debt)|(loan|debt|financing)\s+\w*\s*(procurement|issuance|cost)s? amortization|loan procurement",
+    re.I,
+)
 ANY_INTEREST_EXPENSE_LABEL = re.compile(
     r"interest\s+(expense|and debt expense|cost)", re.I
 )
@@ -224,6 +233,19 @@ def interest_slot(face: list[dict[str, Any]]) -> dict[str, Any]:
         return {"status": "held", "gate": "hold_interest_no_candidate"}
     c = cands[0]
     out = {"line": c["line"], "tag": c["tag"], "label": c["label"]}
+    if not re.search(r"amortiz", c["label"], re.I) and any(
+        r is not c
+        and (
+            FINANCING_AMORTIZATION_TAG.search(r["tag"])
+            or FINANCING_AMORTIZATION_LABEL.search(r["label"])
+        )
+        for r in money
+    ):
+        return {
+            **out,
+            "status": "held",
+            "gate": "hold_interest_financing_amortization_separate",
+        }
     if len(mentions) != 1:
         return {**out, "status": "held", "gate": "hold_interest_other_interest_lines"}
     return {

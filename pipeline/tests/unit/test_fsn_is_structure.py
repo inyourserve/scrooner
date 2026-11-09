@@ -266,3 +266,18 @@ def test_interest_slot_holds_a_custom_tag():
 def test_pretax_label_class(label, ok):
     face = [FACE[0], _row(2, "EarningsBeforeIncomeTaxes", label, True), *FACE[2:]]
     assert (is_structure.pretax_slot(face, VALS)["status"] == "mapped") is ok
+
+
+def test_interest_slot_holds_when_financing_cost_amortization_is_printed_separately():
+    """CubeSmart 2015: "Interest expense on loans" (InterestExpenseDebt) and "Loan procurement amortization expense"
+    under an "Interest:" header; the first is not the total interest expense"""
+    face = [*IE_FACE[:2], _row(3, "AmortizationOfFinancingCosts", "Loan procurement amortization expense"), *IE_FACE[2:]]
+    assert is_structure.interest_slot(face)["gate"] == "hold_interest_financing_amortization_separate"
+    face = [*IE_FACE[:2], _row(3, "OtherExpenses", "Amortization of deferred financing costs"), *IE_FACE[2:]]
+    assert is_structure.interest_slot(face)["status"] == "held"
+
+
+def test_interest_line_that_includes_the_amortization_still_maps():
+    """Crown Castle: "Interest expense and amortization of deferred financing costs" is itself the total"""
+    face = [IE_FACE[0], _row(2, "InterestExpenseDebt", "Interest expense and amortization of deferred financing costs"), *IE_FACE[2:]]
+    assert is_structure.interest_slot(face)["status"] == "mapped"
