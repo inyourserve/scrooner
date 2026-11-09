@@ -19,6 +19,10 @@ looks at the company's stored filings and says why no cell was made. One class p
   other_tag_on_face            the concept's mapped tag is absent from the covering filing; the face prints a line
                                with the concept's label under another tag (listed): a mapping coverage gap
   no_line_for_concept          neither the mapped tag nor a line with the concept's label is on the covering face
+  input_held_<reason>          (checked first, quarter keys) the store holds the FY input of the fourth quarter:
+                               its latest copy fails an identity check or
+                               conflicts in its filing (AT&T 2017 Q4: FY2017's latest copy, the FY2019 10-K, fails
+                               calc:NonoperatingIncomeExpense, so FY and Q4 are blank)
 
 The covering filing of a quarter key is the earliest original 10-Q whose period is within 15 days of the key
 (for the fourth quarter: the 10-K of that fiscal year); of a FY key, the earliest original 10-K. Amendments are
@@ -77,6 +81,8 @@ class Company:
     values: dict[tuple[int, str], dict[tuple[date, int], Any]] = field(default_factory=dict)
     # face columns of the income statement: (filing_id, ddate, qtrs)
     face: set[tuple[int, date, int]] = field(default_factory=set)
+    # the store's own blank cells: (concept, ddate, qtrs) -> reason
+    held: dict[tuple[str, date, int], str] = field(default_factory=dict)
 
 
 def month_end(d: date, months: int) -> date:
@@ -110,6 +116,11 @@ def concept_tags(co: Company, concept: str) -> set[str]:
 def classify(co: Company, concept: str, grain: str, end: date) -> tuple[str, str, int | None]:
     """(class, detail, covering filing id) of one gap key."""
     fid = covering(co, grain, end)
+    if grain == "Q":
+        for n in (4,):
+            for (c, d, q), why in co.held.items():
+                if c == concept and q == n and abs((d - end).days) <= 16:
+                    return f"input_held_{why}", f"{n}Q input at {d} held: {why}", fid
     if fid is None:
         return "no_covering_filing", "", None
     lines = co.lines.get(fid, [])
@@ -221,7 +232,17 @@ def load(conn: Any, company_id: int) -> Company:
         (company_id, list(sel.ANCHOR_TAGS["IS"])),
     )
     face = {(f, d, q) for f, s, d, q in sel.face_columns(_filing_objs(conn, company_id), cur.fetchall()) if s == "IS"}
-    return Company(filings, dict(lines), dict(values), face)
+    data = sel.load_company(conn, company_id)
+    held = {}
+    for concept, prints in data["prints"].items():
+        if concept not in IS_CONCEPTS:
+            continue
+        unit = "USD/shares" if "eps" in concept else "USD"
+        for c in sel.select_concept(concept, prints, data["filings"], members=data["members"],
+                                    unit=sel.FSN_UOM.get(unit, unit), derive=unit == "USD"):
+            if c.state == "defect" and c.qtrs == 4:  # select returns FY blanks; held 6M / 9M stay internal
+                held[(concept, c.ddate, c.qtrs)] = c.reason_code or "blank"
+    return Company(filings, dict(lines), dict(values), face, held)
 
 
 def main(url: str, gaps_path: str, out: str, ciks: str = "") -> None:

@@ -1,0 +1,481 @@
+{
+ "keys": 954,
+ "by_class": [
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 170,
+   "companies": 5
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 76,
+   "companies": 3
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 46,
+   "companies": 1
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 45,
+   "companies": 2
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 45,
+   "companies": 2
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 41,
+   "companies": 2
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 37,
+   "companies": 4
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 35,
+   "companies": 1
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "printed_other_statement",
+   "keys": 33,
+   "companies": 2
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 21,
+   "companies": 1
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 20,
+   "companies": 1
+  },
+  {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "gross_profit_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 1
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "FY",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 15,
+   "companies": 2
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 14,
+   "companies": 1
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 13,
+   "companies": 1
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "FY",
+   "class": "printed_other_statement",
+   "keys": 12,
+   "companies": 2
+  },
+  {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 11,
+   "companies": 4
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 11,
+   "companies": 2
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 11,
+   "companies": 2
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "FY",
+   "class": "no_line_for_concept",
+   "keys": 11,
+   "companies": 1
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 9,
+   "companies": 3
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "printed_other_statement",
+   "keys": 9,
+   "companies": 1
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 8,
+   "companies": 3
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "other_tag_on_face",
+   "keys": 8,
+   "companies": 2
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "FY",
+   "class": "no_line_for_concept",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "FY",
+   "class": "mapped_line_no_value_for_column",
+   "keys": 6,
+   "companies": 1
+  },
+  {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 5,
+   "companies": 5
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 5,
+   "companies": 1
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 4,
+   "companies": 4
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 4,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 4,
+   "companies": 3
+  },
+  {
+   "data_point": "income_tax_expense_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 4,
+   "companies": 2
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "printed_other_statement",
+   "keys": 4,
+   "companies": 2
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "FY",
+   "class": "printed_other_statement",
+   "keys": 4,
+   "companies": 1
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "printed_other_statement",
+   "keys": 3,
+   "companies": 1
+  },
+  {
+   "data_point": "cost_of_revenue_resolved",
+   "grain": "FY",
+   "class": "no_line_for_concept",
+   "keys": 3,
+   "companies": 1
+  },
+  {
+   "data_point": "gross_profit_resolved",
+   "grain": "Q",
+   "class": "no_covering_filing",
+   "keys": 2,
+   "companies": 2
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 2,
+   "companies": 2
+  },
+  {
+   "data_point": "interest_expense_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 2,
+   "companies": 2
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "FY",
+   "class": "no_line_for_concept",
+   "keys": 2,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "FY",
+   "class": "other_tag_on_face",
+   "keys": 2,
+   "companies": 1
+  },
+  {
+   "data_point": "operating_income_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 2,
+   "companies": 1
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 2,
+   "companies": 1
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 2,
+   "companies": 1
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "printed_not_face_column",
+   "keys": 1,
+   "companies": 1
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 1,
+   "companies": 1
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "no_line_for_concept",
+   "keys": 1,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "FY",
+   "class": "no_line_for_concept",
+   "keys": 1,
+   "companies": 1
+  },
+  {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "ytd_only_prior_present",
+   "keys": 1,
+   "companies": 1
+  },
+  {
+   "data_point": "income_before_tax_resolved",
+   "grain": "Q",
+   "class": "ytd_only_no_prior",
+   "keys": 1,
+   "companies": 1
+  }
+ ]
+}
