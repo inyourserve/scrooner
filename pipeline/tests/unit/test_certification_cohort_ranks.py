@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import re
 
 import pytest
 from typer.testing import CliRunner
@@ -56,9 +57,14 @@ def test_overlapping_ranges_are_deduplicated_and_beyond_cohort_refused():
         load_cohort_company_ids("990-1001")
 
 
+def _plain(text: str) -> str:
+    """CI renders typer help through rich with ANSI styling that splits option names."""
+    return re.sub(r"\x1b\[[0-9;]*m", "", text)
+
+
 @pytest.mark.unit
 def test_cli_accepts_cohort_ranks_and_still_requires_a_selection():
-    runner = CliRunner()
-    assert "--cohort-ranks" in runner.invoke(app, ["--help"]).output
+    runner = CliRunner(env={"NO_COLOR": "1", "TERM": "dumb", "COLUMNS": "200"})
+    assert "--cohort-ranks" in _plain(runner.invoke(app, ["--help"]).output)
     res = runner.invoke(app, [])
-    assert res.exit_code != 0 and "--cohort-ranks" in res.output
+    assert res.exit_code != 0 and "--cohort-ranks" in _plain(res.output)
