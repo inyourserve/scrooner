@@ -50,7 +50,7 @@ with gzip.open(out, "wt") as fo:
         if not fil:
             continue
         for r in rows(table(per, "pre")):
-            if r["adsh"] in fil and r["stmt"] == "BS":
+            if r["adsh"] in fil and r["stmt"] == "BS" and (r.get("inpth") or "0") == "0":  # parenthetical: never a face line
                 fil[r["adsh"]]["bs"].append({"report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"], "plabel": r["plabel"],
                                              "custom": not r["version"].startswith(STD)})
         for r in rows(table(per, "num")):

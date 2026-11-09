@@ -348,3 +348,83 @@ def test_pilot_serves_total_debt_from_the_lane_with_fsn_value_lineage(
         for g in rep["_gaps"]
         if g["data_point"] == "total_debt_resolved" and g["period_end"] == "2023-12-31"
     ]
+
+
+# ---------------------------------------------------------------- a parenthetical is never a balance-sheet line
+def _parenthetical_company(root: Path) -> Path:
+    """One 10-K: two face debt lines and MSFT's parenthetical 'Short-term investments, securities loaned'
+    (us-gaap:SecuritiesLoaned, inpth=1; FY2016 10-K 0001193125-16-662209 R6, Tag Expert 2026-11-09)."""
+    d = root / "0000000001"
+    d.mkdir(parents=True)
+    a = "0000000001-16-000001"
+    (d / "manifest.json").write_text('{"cik": "0000000001"}')
+    (d / "sub.tsv").write_text(
+        "fsn_set\tadsh\tcik\tform\tperiod\tfiled\taccepted\taciks\tfye\n"
+        f"2016q3\t{a}\t1\t10-K\t20160630\t20160801\t2016-08-01 16:00:00.0\t\t0630\n"
+    )
+    face = [
+        ("Assets", "Total assets"),
+        ("ShortTermBorrowings", "Short-term debt"),
+        ("LongTermDebtNoncurrent", "Long-term debt"),
+        ("Liabilities", "Total liabilities"),
+        ("LiabilitiesAndStockholdersEquity", "Total"),
+    ]
+    pre = "adsh\treport\tline\tstmt\tinpth\ttag\tversion\tprole\tplabel\tnegating\n"
+    pre += "".join(
+        f"{a}\t2\t{i}\tBS\t0\t{t}\tus-gaap/2016\tterseLabel\t{lab}\t0\n"
+        for i, (t, lab) in enumerate(face, 1)
+    )
+    pre += f"{a}\t3\t1\tBS\t1\tSecuritiesLoaned\tus-gaap/2016\tterseLabel\tShort-term investments, securities loaned\t0\n"
+    (d / "pre.tsv").write_text(pre)
+    vals = {
+        "Assets": 1000,
+        "ShortTermBorrowings": 100,
+        "LongTermDebtNoncurrent": 400,
+        "Liabilities": 600,
+        "LiabilitiesAndStockholdersEquity": 1000,
+        "SecuritiesLoaned": 204,
+    }
+    (d / "num.tsv").write_text(
+        "adsh\ttag\tversion\tddate\tqtrs\tuom\tdimh\tiprx\tvalue\tfootnote\tfootlen\tdimn\tcoreg\tdurp\tdatp\tdcml\n"
+        + "".join(
+            f"{a}\t{t}\tus-gaap/2016\t20160630\t0\tUSD\t0x00000000\t0\t{v}\t\t\t\t\t\t\t-6\n"
+            for t, v in vals.items()
+        )
+    )
+    (d / "cal.tsv").write_text(
+        "adsh\tgrp\tarc\tnegative\tptag\tpversion\tctag\tcversion\n"
+        + "".join(
+            f"{a}\t1\t{i}\t1\tLiabilities\tus-gaap/2016\t{t}\tus-gaap/2016\n"
+            for i, t in enumerate(("ShortTermBorrowings", "LongTermDebtNoncurrent"), 1)
+        )
+    )
+    return d
+
+
+def test_a_parenthetical_line_never_makes_a_debt_record_dirty(tmp_path):
+    d = _parenthetical_company(tmp_path / "companies")
+    rep = debt.run_lane(tmp_path / "companies", tmp_path / "work")
+    recs = [
+        json.loads(x) for x in (rep.parent / "records.jsonl").read_text().splitlines()
+    ]
+    assert recs and all(r["coverage_clean"] for r in recs), [
+        r["uncovered_candidates"] for r in recs
+    ]
+    assert not any(
+        c["verdict"] == "not_computable_uncovered_candidates"
+        for c in json.loads(rep.read_text())["cells"]
+    )
+    # the face lines are still read; only the parenthetical is gone
+    import sys
+
+    sys.path.insert(0, str(ROOT / "pipeline" / "scripts" / "slot_records"))
+    import fsn_company_bs as fc
+
+    (f,) = fc.instants(d, debt_only=True)
+    assert {r["tag"] for r in f["bs"]} == {
+        "Assets",
+        "ShortTermBorrowings",
+        "LongTermDebtNoncurrent",
+        "Liabilities",
+        "LiabilitiesAndStockholdersEquity",
+    }
