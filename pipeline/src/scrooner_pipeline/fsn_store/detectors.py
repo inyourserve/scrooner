@@ -760,4 +760,12 @@ def _pretax(
     return pretax_detector(conn, filing_id, decisions)
 
 
-DEFAULT = [capex_da_detector, net_income_detector, _pretax]
+def _interest(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    from scrooner_pipeline.fsn_store.is_structure import interest_detector  # noqa: PLC0415
+
+    return interest_detector(conn, filing_id, decisions)
+
+
+DEFAULT = [capex_da_detector, net_income_detector, _pretax, _interest]
