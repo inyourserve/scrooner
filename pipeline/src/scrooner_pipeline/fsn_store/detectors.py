@@ -452,4 +452,304 @@ def capex_da_detector(
     return out
 
 
-DEFAULT = [capex_da_detector]
+# ---------------------------------------------------------------- net income (income-statement lane)
+# The seed (concept_rules/is.jsonl) maps net income only from `NetIncomeLoss`. The IS lane's Verifier-passed slot rule
+# (is_detect.net_income_slot, imported, never retyped) also serves two other printed lines, listed in
+# is_not_extracted.md as "not expressible as a seed":
+#   G1b  `ProfitLoss` when nothing printed on the IS/CI face takes a share away (no noncontrolling-interest line, no
+#        preferred line): then the consolidated line is the parent's (ITW, Guidewire, Viatris);
+#   G2b  `NetIncomeLossAvailableToCommonStockholdersBasic` when the face bridges `ProfitLoss` straight to it through
+#        noncontrolling-interest lines only, with no parent preferred dividends before it (CAT, CF, Fox, Ball).
+# Cohort dry run 41708119011: 25 companies had no net-income line mapped in ANY stored filing (no_mapped_line,
+# 1,353 keys), most of them these two layouts. This detector is ADDITIVE: it acts only on a filing whose seed mapped
+# no net-income line, so no line the seed serves today changes. G2b also needs the value tie the lane's replay ran:
+# in every face column where all bridge lines print, ProfitLoss - NCI lines = the available-to-common line within
+# rounding; one failing column, or no column to check, holds the filing (nothing mapped).
+NI = "net_income_resolved"
+NI_RULE = {
+    "G1b_profit_loss_no_nci": "is.net_income_profit_loss_no_nci@1",
+    "G2b_available_to_common_bridge": "is.net_income_available_to_common_bridge@1",
+    "G2c_bottom_line_tie": "is.net_income_bottom_line_tie@1",
+}
+
+
+def _is_lane():
+    if str(LANE_DIR) not in sys.path:
+        sys.path.insert(0, str(LANE_DIR))
+    import is_detect as lane  # noqa: PLC0415  (the lane module, imported, never copied)
+
+    return lane
+
+
+def is_face_rows(
+    conn: psycopg.Connection, filing_id: int
+) -> tuple[list[dict[str, Any]], bool]:
+    """The lane's IS/CI face rows (fsn_is_pre.pre_record shape: parentheticals dropped) of one filing, and whether
+    the filing is a combined (co-registrant) filing, which makes the lane pick the face that prints EPS."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select coalesce(cardinality(aciks), 0) > 0 from fsn.filing where id = %s",
+            (filing_id,),
+        )
+        row = cur.fetchone()
+        if row is None:
+            return [], False
+        cur.execute(
+            """select l.stmt, l.report, l.line, t.tag, t.custom, coalesce(l.plabel, ''), l.negating
+               from fsn.line l join fsn.tag t on t.id = l.tag_id
+               where l.filing_id = %s and l.stmt in ('IS', 'CI') and not l.inpth""",
+            (filing_id,),
+        )
+        rows = [
+            {
+                "stmt": s,
+                "report": r,
+                "line": ln,
+                "tag": t,
+                "custom": bool(cu),
+                "label": lab,
+                "negating": bool(n),
+            }
+            for s, r, ln, t, cu, lab, n in cur.fetchall()
+        ]
+    rows.sort(key=lambda x: (x["report"], x["line"]))
+    return rows, bool(row[0])
+
+
+def face_values(
+    conn: psycopg.Connection, filing_id: int, tags: list[str]
+) -> dict[str, dict[str, tuple]]:
+    """{ddate|qtrs: {tag: (value, dcml)}}: undimensioned USD duration prints of `tags`, primary registrant"""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select t.tag, v.ddate, v.qtrs, v.value, v.dcml
+               from fsn.value v join fsn.tag t on t.id = v.tag_id
+               where v.filing_id = %s and v.dim_id = 0 and v.uom = 'USD' and v.qtrs > 0 and v.iprx = 0 and v.coreg = ''
+                 and v.value is not null and t.tag = any(%s)""",
+            (filing_id, tags),
+        )
+        out: dict[str, dict[str, tuple]] = defaultdict(dict)
+        for t, d, q, v, dc in cur.fetchall():
+            out[f"{d:%Y%m%d}|{q}"][t] = (Decimal(v), dc)
+    return dict(out)
+
+
+def bridge_tie(
+    slot: dict[str, Any], values: dict[str, dict[str, tuple]]
+) -> dict[str, Any]:
+    """G2b value tie per face column: ProfitLoss - sum(bridge lines) = available-to-common, within rounding.
+    {"ok": bool, "checked": [cols], "failed": [{col, lhs, rhs, tol}]}"""
+    from scrooner_pipeline.fsn_store.checks import tol_of  # noqa: PLC0415
+
+    atc, pl, bridge = slot["tag"], slot["tie"]["profit_loss"], slot["tie"]["nci"]
+    checked, failed = [], []
+    for col, vals in sorted(values.items()):
+        if atc not in vals or pl not in vals or any(b not in vals for b in bridge):
+            continue
+        lhs = vals[pl][0] - sum((vals[b][0] for b in bridge), Decimal(0))
+        rhs = vals[atc][0]
+        tol = tol_of([vals[pl][1], vals[atc][1], *(vals[b][1] for b in bridge)])
+        checked.append(col)
+        if abs(lhs - rhs) > tol:
+            failed.append(
+                {"col": col, "lhs": str(lhs), "rhs": str(rhs), "tol": str(tol)}
+            )
+    return {"ok": bool(checked) and not failed, "checked": checked, "failed": failed}
+
+
+# G2c (new in the store, not a lane rule; Verifier sample pending): the face's bottom line. Where the face prints
+# neither NetIncomeLoss nor ProfitLoss, no noncontrolling-interest line and no preferred line anywhere on IS/CI, the
+# lane finds no printed net-income line (Booking, Monster, Watts, Hexcel print "Net income" under the available-to-
+# common tag; AeroVironment under the continuing-operations-including-NCI tag). Then the last monetary line before
+# the per-share block is the parent's net income IF, in every face column, it equals pretax - tax plus each line
+# printed between the tax line and it (a line equal to the running total is a subtotal and is not added).
+BOTTOM_TAGS = {
+    "NetIncomeLossAvailableToCommonStockholdersBasic",
+    "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest",
+}
+NET_LABEL = re.compile(
+    r"\bnet (income|earnings|loss|\(loss\) income|income \(loss\)|\(loss\) earnings|earnings \(loss\))",
+    re.I,
+)
+_PER_SHARE = re.compile(
+    r"Per(Basic|Diluted|BasicAndDiluted)?Share|PerOutstanding|WeightedAverage|SharesOutstanding"
+)
+_PRETAX = re.compile(r"^IncomeLossFromContinuingOperationsBeforeIncomeTaxes")
+_DISCONTINUED = re.compile(r"DiscontinuedOperation")
+
+
+def bottom_line(
+    face: list[dict[str, Any]],
+    rows: list[dict[str, Any]],
+    values: dict[str, dict[str, tuple]],
+) -> dict[str, Any]:
+    """G2c on the lane's primary face. {"gate", "line", "tag", "label", "tie"}"""
+    from scrooner_pipeline.fsn_store.checks import tol_of  # noqa: PLC0415
+
+    lane = _is_lane()
+    every = [r for r in rows if r["stmt"] in ("IS", "CI")]
+    if any(r["tag"] in ("NetIncomeLoss", "ProfitLoss") for r in face):
+        return {"gate": "hold_bottom_line_standard_line_printed"}
+    # any line that takes a share of the income away from common holders of the parent disqualifies the face: a
+    # standard NCI tag, a custom tag or a label naming noncontrolling / minority interests, or anything preferred.
+    # (NCI_CUSTOM_RX is applied to custom tags only, as in the lane: standard pretax tags carry the word in their name)
+    if any(
+        (not r["custom"] and lane.NCI_RX.search(r["tag"]))
+        or (
+            r["custom"]
+            and lane.NCI_CUSTOM_RX.search(r["tag"])
+            and "Comprehensive" not in r["tag"]
+        )
+        or (lane.NCI_LABEL.search(r["label"]) and "Comprehensive" not in r["tag"])
+        or lane.PREFERRED_TAG.search(r["tag"])
+        or lane.PREFERRED_LABEL.search(r["label"])
+        for r in every
+    ):
+        return {"gate": "hold_bottom_line_nci_or_preferred"}
+    money = [
+        r
+        for r in face
+        if not r["tag"].endswith("Abstract") and not _PER_SHARE.search(r["tag"])
+    ]
+    i_tax = next((i for i, r in enumerate(money) if r["tag"] == lane.TAX), None)
+    i_pre = next((i for i, r in enumerate(money) if _PRETAX.search(r["tag"])), None)
+    if i_tax is None or i_pre is None or i_pre > i_tax:
+        return {"gate": "hold_bottom_line_no_pretax_and_tax"}
+    after = money[i_tax + 1 :]
+    # the bottom line: the last monetary line before the first per-share line of the face
+    first_ps = next((r["line"] for r in face if _PER_SHARE.search(r["tag"])), None)
+    if first_ps is None:
+        return {"gate": "hold_bottom_line_no_per_share_block"}
+    above = [r for r in after if r["line"] < first_ps]
+    if not above:
+        return {"gate": "hold_bottom_line_none"}
+    cand, between = above[-1], above[:-1]
+    out = {"line": cand["line"], "tag": cand["tag"], "label": cand["label"]}
+    if (
+        cand["tag"] not in BOTTOM_TAGS
+        or cand["custom"]
+        or not NET_LABEL.search(cand["label"])
+    ):
+        return {**out, "gate": "hold_bottom_line_not_a_net_income_line"}
+    if cand["tag"] != "NetIncomeLossAvailableToCommonStockholdersBasic" and any(
+        _DISCONTINUED.search(r["tag"]) for r in face
+    ):
+        return {**out, "gate": "hold_bottom_line_continuing_ops_with_discontinued"}
+    pre, tax = money[i_pre]["tag"], lane.TAX
+    checked, failed = [], []
+    for col, vals in sorted(values.items()):
+        if cand["tag"] not in vals:
+            continue
+        if pre not in vals or tax not in vals:
+            failed.append({"col": col, "missing": "pretax or tax"})
+            continue
+        running, used = vals[pre][0] - vals[tax][0], [vals[pre][1], vals[tax][1]]
+        for b in between:
+            if b["tag"] not in vals:
+                continue  # not printed in this column: adds nothing; the tie below must still hold
+            v, dc = vals[b["tag"]]
+            if abs(v - running) <= tol_of([*used, dc]):
+                continue  # a printed subtotal (Hexcel "Income before equity in earnings")
+            running += v
+            used.append(dc)
+        rhs, tol = vals[cand["tag"]][0], tol_of([*used, vals[cand["tag"]][1]])
+        checked.append(col)
+        if abs(running - rhs) > tol:
+            failed.append(
+                {"col": col, "lhs": str(running), "rhs": str(rhs), "tol": str(tol)}
+            )
+    tie = {"ok": bool(checked) and not failed, "checked": checked, "failed": failed}
+    if not tie["ok"]:
+        return {
+            **out,
+            "gate": "hold_bottom_line_tie_" + ("failed" if failed else "uncheckable"),
+            "tie": tie,
+        }
+    return {**out, "gate": "G2c_bottom_line_tie", "tie": tie}
+
+
+def decide_net_income(
+    rows: list[dict[str, Any]],
+    coregistrant: bool,
+    values: dict[str, dict[str, tuple]] | None,
+) -> dict[str, Any]:
+    """The lane's net-income slot for one filing's IS/CI rows, plus the G2b value tie, then G2c.
+    {"status": "mapped"|"held", "gate", "report", "line", "tag", ...}"""
+    lane = _is_lane()
+    rep, face = lane.primary_face(rows, coregistrant)
+    if not face:
+        return {"status": "held", "gate": "no_income_statement_face"}
+    slot = lane.net_income_slot(face, rows)
+    gate = slot.get("gate")
+    out = {
+        "gate": gate,
+        "report": rep,
+        "line": slot.get("line"),
+        "tag": slot.get("tag"),
+    }
+    if gate == "no_printed_net_income_line":
+        b = bottom_line(face, rows, values or {})
+        out = {**out, **b, "lane_gate": gate}
+        if b["gate"] == "G2c_bottom_line_tie":
+            return {**out, "status": "mapped", "rule_id": NI_RULE[b["gate"]]}
+        return {**out, "status": "held"}
+    if gate not in NI_RULE:
+        return {**out, "status": "held"}
+    if gate == "G2b_available_to_common_bridge":
+        tie = bridge_tie(slot, values or {})
+        out["tie"] = tie
+        if not tie["ok"]:
+            return {
+                **out,
+                "status": "held",
+                "gate": "hold_bridge_tie_"
+                + ("failed" if tie["failed"] else "uncheckable"),
+            }
+    return {**out, "status": "mapped", "rule_id": NI_RULE[gate]}
+
+
+def net_income_detector(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    """FORMATS-v1.1 detector: maps the lane's G1b / G2b net-income line of a filing whose seed mapped none."""
+    with conn.cursor() as cur:
+        cur.execute("select id from analytics.canonical_concept where name = %s", (NI,))
+        row = cur.fetchone()
+    if row is None:
+        return []
+    ni_id = row[0]
+    if any(d[3] == ni_id and d[4] in ("mapped", "combined") for d in decisions):
+        return []  # additive: the seed already serves this filing's net income
+    rows, coreg = is_face_rows(conn, filing_id)
+    if not rows:
+        return []
+    lane = _is_lane()
+    _, face = lane.primary_face(rows, coreg)
+    tags = sorted({r["tag"] for r in face})
+    dec = decide_net_income(rows, coreg, face_values(conn, filing_id, tags))
+    if dec["status"] != "mapped":
+        return []
+    current = {(d[1], d[2]): d for d in decisions}
+    seen = current.get((dec["report"], dec["line"]))
+    if seen is None or seen[4] != "unmapped":
+        return []  # only an unmapped IS line is ever mapped here (never a line another rule or detector owns)
+    return [
+        (
+            filing_id,
+            dec["report"],
+            dec["line"],
+            ni_id,
+            "mapped",
+            dec["rule_id"],
+            None,
+            {
+                "detector": "is_net_income",
+                "tag": dec["tag"],
+                "gate": dec["gate"],
+                "tie_columns": (dec.get("tie") or {}).get("checked"),
+            },
+        )
+    ]
+
+
+DEFAULT = [capex_da_detector, net_income_detector]
