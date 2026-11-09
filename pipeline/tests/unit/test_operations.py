@@ -180,3 +180,54 @@ def test_success_for_different_scope_does_not_hide_failure() -> None:
     )
 
     assert evaluate_alerts(snapshot) == ["recent_failed_run:12:incremental"]
+
+
+# 2026-11-06: the nightly refresh failed 11-02 to 11-05 on
+# row_count_anomaly:companyfacts:...:stored:214->0. Run 311 re-collected the
+# same companies as run 308 (the same SEC day indexed twice) and every one was
+# byte-identical, so storing 0 was correct; the old pair then re-alerted every
+# night because nothing newer shared its scope.
+COMPANYFACTS = {"job": "companyfacts", "params_key": "ciks=0000002098,0000002230|limit=None"}
+
+
+def test_a_drop_fully_explained_by_unchanged_skips_is_not_an_anomaly() -> None:
+    runs = (
+        run(311, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
+            stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 0, "not_in_archive": 18}),
+        run(308, started_at=NOW - timedelta(days=2), **COMPANYFACTS,
+            stats={"considered": 1051, "stored": 214, "unchanged_skipped": 837, "errors": 0, "not_in_archive": 18}),
+    )
+
+    assert row_count_anomalies(runs, now=NOW) == []
+
+
+def test_a_drop_with_errors_or_unaccounted_items_still_alerts() -> None:
+    previous = run(308, started_at=NOW - timedelta(days=2), **COMPANYFACTS,
+                   stats={"considered": 1051, "stored": 214, "unchanged_skipped": 837, "errors": 0})
+    broken = run(311, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
+                 stats={"considered": 1051, "stored": 0, "unchanged_skipped": 900, "errors": 151})
+    vanished = run(312, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
+                   stats={"considered": 1051, "stored": 0, "unchanged_skipped": 0, "errors": 0})
+
+    # Every item accounted for as unchanged, but the run also had errors: the
+    # errors == 0 guard must keep this alerting.
+    accounted_but_errored = run(313, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
+                                stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 5})
+
+    expected = [f"row_count_anomaly:companyfacts:{COMPANYFACTS['params_key']}:stored:214->0"]
+    assert row_count_anomalies((broken, previous), now=NOW) == expected
+    assert row_count_anomalies((vanished, previous), now=NOW) == expected
+    assert row_count_anomalies((accounted_but_errored, previous), now=NOW) == expected
+
+
+def test_a_pair_whose_newer_run_is_over_a_day_old_does_not_re_alert() -> None:
+    runs = (
+        run(4, started_at=NOW - timedelta(days=3), stats={"filings_inserted": 20}),
+        run(3, started_at=NOW - timedelta(days=4), stats={"filings_inserted": 100}),
+    )
+
+    assert row_count_anomalies(runs, now=NOW) == []
+    # The same pair is still reported when it is fresh.
+    assert row_count_anomalies(runs, now=NOW - timedelta(days=3)) == [
+        "row_count_anomaly:incremental:ciks=ALL|limit=None:filings_inserted:100->20"
+    ]

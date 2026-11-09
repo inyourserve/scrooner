@@ -982,6 +982,10 @@ def build_tag_library_cmd(
         None,
         help="Comma-separated subset of company_tags,library,lineage,leads (default: all).",
     ),
+    leads_budget_minutes: float = typer.Option(
+        40,
+        help="Wall-clock budget for scoring leads; concepts not reached keep their previous leads.",
+    ),
 ) -> None:
     """2026-09-27: the SEC Tag Library (migration 0077) -- every tag x every
     company (analytics.company_sec_tag), tag -> concepts/metrics
@@ -992,7 +996,12 @@ def build_tag_library_cmd(
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
     target_stages = {s.strip() for s in stages.split(",")} if stages else None
     with get_connection() as conn:
-        stats = build_tag_library(conn, target_ciks, target_stages)
+        stats = build_tag_library(
+            conn,
+            target_ciks,
+            target_stages,
+            leads_budget_seconds=leads_budget_minutes * 60,
+        )
     typer.echo(f"tag-library: {stats}")
 
 

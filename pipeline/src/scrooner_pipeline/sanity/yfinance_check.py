@@ -583,6 +583,24 @@ def _check_revenue_zero(
     return None  # not every company gets a row here -- this check only ever fires on the failure mode, not routinely
 
 
+def critical_finding_company_ids(conn: psycopg.Connection) -> list[int]:
+    """Companies with a current critical yfinance-check finding.
+
+    The nightly workflow runs `investigate` and the rendered-report parsers
+    AFTER `run`, and those steps rewrite revenue_sanity_resolved. A finding
+    they already resolved stays critical in data_sanity_check until the
+    company rotates back (FRHC, run 41343223897: checked 20:45, its revenue
+    rows rewritten at 20:49 by `investigate`, gate failed on a stale critical).
+    Re-checking these few companies just before the gate fixes that."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select distinct company_id from analytics.data_sanity_check"
+            " where severity = %s and external_source = 'yfinance' order by 1",
+            (SEVERITY_CRITICAL,),
+        )
+        return [r[0] for r in cur.fetchall()]
+
+
 def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
     stats = {
         "considered": len(company_ids),
