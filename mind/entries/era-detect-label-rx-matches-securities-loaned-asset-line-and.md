@@ -5,6 +5,7 @@ kind: gotcha
 tags: debt, era_detect, coverage
 paths: pipeline/scripts/slot_records/era_detect.py
 evidence: DATA-INFERRED
+status: active
 created: 2026-11-01
 verified: 2026-11-01
 ---
