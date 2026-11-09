@@ -106,16 +106,30 @@ In production `fsn.line_map` (loaded by run 42561798991, 893 companies), all `to
 
 ## 6. Also found
 
-- `shares_outstanding_resolved` in today's default is never emitted. The only seed is `CommonStockSharesOutstanding` on the BS, which is usually the parenthetical (`inpth`, excluded), and the pilot filters prints by uom `USD`. The 960-company dry run's reports mention it 0 times. It does no harm, but the list implies coverage that does not exist.
-- `dividends_per_share_resolved` is selected with unit `USD` and `derive=True` in `pilot.report_company` (only names containing "eps" are treated as per-share). Ruling 2026-11-04 item 2 allows a FY − 9M Q4 for DPS "on the same share basis". The YTD-difference route has no split guard, so the same-basis condition is not checked. Flag for the period engineer.
+- **`shares_outstanding_resolved` is never emitted, so it is removed from the default** (update 2026-11-09, Dhairya's job 4). There are two causes, both CODE-CHECKED and DB-CHECKED:
+  1. The only seed is `us-gaap:CommonStockSharesOutstanding` on the BS. At most filers that line is the balance-sheet parenthetical, which `mapping.map_filing` excludes (`inpth`). MSFT, company 140 and company 7 have 51 of 51 such lines excluded. The line is mapped only where it is a face line: 781 filings at 104 companies in production `fsn.line_map`.
+  2. Where it is mapped, `pilot.report_company` selects with unit USD (only names containing "eps" are per-share), so every `shares` print is filtered out.
+
+  The 960-company dry run's reports mention the point 0 times. Serving it needs a definition, not a code tweak: which count (BS-date shares from the parenthetical vs the cover-page `dei:EntityCommonStockSharesOutstanding`, mapper priority 2 per `cf_pershare_not_extracted.md`), how the split re-base (B2) applies, and whether parenthetical lines may map. That is for the founder or the Standardization Lead. The guard test now fails if the name is listed again.
+- **Dividends per share: split-basis scope (report only, Dhairya's job 5).**
+  - `pilot.report_company` selects DPS with unit `USD` and `derive=True`, so the store derives DPS quarters: route (a) note quarter, route (b) YTD difference under SAME_BASIS. Ruling 2026-11-04 item 2 allows FY − 9M for DPS "on the same share basis".
+  - Nothing checks the share basis directly. The only guard is indirect: a split usually makes a later filing re-print earlier DPS split-adjusted. That re-print is a break, and a break blocks the difference across it (`mixed_vintage_inputs`).
+  - The guard fails when no later filing re-prints an earlier DPS period between the two YTD filings.
+  - Scope: 131 of the loaded companies have 159 splits since 2014 (`analytics.company_stock_split` joined to `fsn.company_load`, read 2026-11-09). How many derived DPS cells span a split was not measured, because DPS is outside the pilot template, so the dry run has no per-point counts.
+  - Proposal for the period engineer: refuse a derived DPS quarter when a split with an effective date inside (YTD_(n−1) end, YTD_n end] exists, reason `split_between_inputs`. Also write DPS cells with unit `USD/shares` (today `to_row` labels them `USD`).
 
 ## 7. Proposed change (branch `work/release/family-release-case-2026-11-09`)
 
-- The workflow's default `data_points` adds `capex_resolved,depreciation_and_amortization_resolved`. The header comment explains why debt and BS stay out and how the done-gate coupling works.
+- The workflow's default `data_points` adds `capex_resolved,depreciation_and_amortization_resolved` and drops `shares_outstanding_resolved` (never emitted, §6). The header comment explains why debt and BS stay out and how the done-gate coupling works.
 - New `pipeline/tests/unit/test_fsn_write_data_points.py`:
   - every default name has a seed concept rule;
   - `total_debt_resolved` and `total_liabilities_resolved` stay out while the seed defect stands;
-  - capex and D&A are listed.
+  - capex and D&A are listed;
+  - no never-emitted name is listed (`shares_outstanding_resolved`).
 
   Mutation-checked: it fails on the old default (capex/D&A missing) and when `total_debt_resolved` or an unseeded name is added.
+- Follow-up branches (Dhairya's jobs, 2026-11-09):
+  - D&A combined reason: `work/fsn/da-combined-reason`;
+  - total-liabilities seeds dropped: `work/fsn/drop-liab-child-seeds`, lands after PR #6;
+  - debt port: in progress.
 - **Recommendation:** merge only with the approver's words. Given §1, dispatch with capex and D&A only after the D&A combined-reason fix (§4.1) and a fresh cohort dry run show the done set does not shrink unacceptably. Until then, dispatch with an explicit `data_points` input.

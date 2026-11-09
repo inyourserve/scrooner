@@ -16,6 +16,10 @@ RULES = ROOT / "data-team" / "47-fsn-store" / "concept_rules"
 # (FAMILY-RELEASE-CASE-2026-11-09 §2-3): the seed calc_position rules map ANY custom child of current
 # liabilities as total debt and any custom child of Liabilities as total liabilities.
 HELD = {"total_debt_resolved", "total_liabilities_resolved"}
+# Seeded but never emitted by the pilot (FAMILY-RELEASE-CASE-2026-11-09 §6): CommonStockSharesOutstanding is a
+# balance-sheet PARENTHETICAL line at most filers (mapping excludes inpth lines), and where it is a face line the
+# pilot selects USD prints only, so its "shares" prints are dropped. Listing it implied coverage that never existed.
+NEVER_EMITTED = {"shares_outstanding_resolved"}
 
 
 def default_data_points() -> list[str]:
@@ -52,6 +56,10 @@ def test_default_names_are_seeded_store_concepts():
 
 def test_held_families_stay_out_of_the_default():
     assert not HELD & set(default_data_points())
+
+
+def test_no_name_the_pilot_never_emits():
+    assert not NEVER_EMITTED & set(default_data_points())
 
 
 def test_capex_and_da_are_in_the_default():
