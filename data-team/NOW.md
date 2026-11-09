@@ -25,7 +25,7 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 | 1 | Top-100 FSN write (run 42649721096, code 1beb755, after PR #8's timeout fix), then cell_proof | manager |
 | 2 | Post-write Verifier draw: 200 cells / 100 companies, answer key built from filings in advance | Verifier ("Scrooner production cells verification") |
 | 3 | First certificates: what certifies a company, blockers, ranked plan (MSFT, HD, top 100) | Certification lead (was "Sector-template layer build") |
-| 4 | Release case for held families (balance sheet, debt, capex, D&A) to add to the write | Family release prep (was "Scrooner FSN tag expert setup") |
+| 4 | Release case for held families (balance sheet, debt, capex, D&A) to add to the write | New cloud session "Family release prep" (session_01GLmSE3yJhPu25eryM5Zsen); the FSN-expert session stays read-only by its user's brief |
 | 5 | Nightly refresh failure (normalize:facts, 7,000s budget), taken over from the unreachable CI/CD session; then rebase PR #4 | Cash-flow lane |
 | 6 | Rebase PR #6; take over and review PR #5 (write vs nightly guard) | Balance-sheet lane |
 | 7 | Full 1,000 write after tonight's refresh; then cohort dry runs for PR #4/#6 and a reload | manager |
