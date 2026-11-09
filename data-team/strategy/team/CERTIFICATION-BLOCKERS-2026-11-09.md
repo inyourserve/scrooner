@@ -84,3 +84,14 @@ None is merged; each needs a founder merge. 0122 needs the founder's typed words
 - Every other shown cell (SG&A, D&A, interest, tax, metrics and so on) is covered only by the I1–I11 invariant suite. A wrong value that passes every invariant can still be certified.
 - **The fix, if the review asks for it:** add the other served data points to the reconciled list (`HEADLINE_PROVED` in `certification/promote.py`; a one-line change plus tests), so every served cell must be PROVEN. Cost: every family needs `cell_proof` coverage first.
 - **A headline cell cannot be certified wrong** unless the proof position and the Verifier draw are both wrong about it.
+
+## 7. One source, the hybrid (founder direction 2026-11-09, relayed by Dhairya)
+Applied to 3a and 3b. Hybrid cell = a `canonical_fact` row whose `rule_run_id` points to an `fsn.*` rule run (the FSN write loads under `fsn.select@1`).
+
+| Step | Branch | SHA | CI | Change |
+|---|---|---|---|---|
+| 3a | `work/certification-lead/i11-template-reasons` | `d0385e0e` | 42658994548 green | For a concept the hybrid writes for the company (an fsn-written cell, or a writer blank reason), a missing cell is explained **only** by a `cell_blank_reason`; old-mapper `period_gap` and fact inference no longer count. Other concepts are unchanged, not extended. 10 tests; mutation check 3/3 caught. |
+| 3b | `work/certification-lead/promote` | `4c5561fc` | 42659375835 green (the frontend job flaked on attempt 1 and passed on the re-run; this commit touches `pipeline/` only) | **reconciled** also requires every served headline cell to be hybrid-written; an old-mapper cell blocks it (`reconciled:not_hybrid`). **certified** template coverage reads only hybrid outputs: an fsn-written cell by base name, a metric value, or a classified writer reason. `company_data_point_coverage` is no longer read. 16 tests (5 on real Postgres); mutation check 23/23 caught. |
+| 3c | `work/certification-lead/v11-cohort` | `1bbf083a` | 42657752304 green | unchanged |
+
+**Consequence:** no company can pass `reconciled` while any of its headline cells is still served from the old mapper. That includes the held families: total assets, equity, capex and debt (blocker 4).
