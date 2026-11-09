@@ -10,6 +10,7 @@ import typer
 
 from scrooner_pipeline.certification.promote import (
     MigrationNotAppliedError,
+    company_cells_hash,
     promote,
     render,
 )
@@ -32,6 +33,11 @@ def main(
         help="Dry run (default): decide and print, write nothing.",
     ),
     statement_timeout: int = typer.Option(15, help="Seconds, set before every query."),
+    print_hash: bool = typer.Option(
+        False,
+        "--print-hash",
+        help="Print each company's shown-cell hash (read-only) for the Verifier's all_cells draw, then stop.",
+    ),
 ) -> None:
     """Decide each company's highest rung and print why the next one does not hold."""
     if not ciks and not top1000_shard:
@@ -47,6 +53,14 @@ def main(
                 ids += resolve_company_ids(cur, ciks.split(","), statement_timeout)
             conn.rollback()
         ids = list(dict.fromkeys(ids))
+        if print_hash:
+            with conn.cursor() as cur:
+                for cid, h in sorted(
+                    company_cells_hash(cur, ids, statement_timeout).items()
+                ):
+                    typer.echo(f"{cid}\t{h}")
+            conn.rollback()
+            return
         typer.echo(
             f"mode: {'DRY RUN (nothing written)' if dry_run else 'APPLY'}; companies: {len(ids)}"
         )

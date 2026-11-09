@@ -25,6 +25,13 @@ create table if not exists analytics.verifier_check (
     accession          text check (accession ~ '^[0-9]{10}-[0-9]{2}-[0-9]{6}$'),
     locator            text,
     draw_id            text   not null check (btrim(draw_id) <> ''),
+    -- headline: the latest FY/Q headline cells; all_cells: a seeded random draw over every shown cell of the
+    -- company (Verifier FIX 2026-11-09 hole 1); blanks: a seeded draw over its reasoned blanks
+    draw_kind          text   not null check (draw_kind in ('headline', 'all_cells', 'blanks')),
+    -- all_cells: the company's shown-cell hash at draw time (scrooner-certify-promote --print-hash); any later
+    -- change to a shown cell or a metric makes it differ and the company drops below verified (hole 6)
+    cells_hash         text,
+    face_label         text,
     verifier_session   text   not null check (btrim(verifier_session) <> ''),
     report_path        text,
     note               text,
@@ -35,7 +42,9 @@ create table if not exists analytics.verifier_check (
     check (period_grain <> 'I' or period_start = period_end),
     -- a value verdict names what was shown and where in the filing it was checked
     check (verdict not in ('right', 'wrong')
-           or (shown_value is not null and accession is not null and coalesce(btrim(locator), '') <> '')),
+           or (shown_value is not null and accession is not null and coalesce(btrim(locator), '') <> ''
+               and coalesce(btrim(face_label), '') <> '')),
+    check (draw_kind <> 'all_cells' or coalesce(btrim(cells_hash), '') <> ''),
     check (verdict <> 'right' or filing_value is not null),
     check ((superseded_at is null) = (superseded_reason is null))
 );
@@ -48,3 +57,20 @@ create index if not exists idx_verifier_check_open_wrong
 
 comment on table analytics.verifier_check is
     'Verifier filing checks, one row per opened cell (0122, 2026-11-09). Read by scrooner-certify-promote for the verified rung.';
+
+-- The record is the Verifier's, not the builder's (Verifier FIX 2026-11-09): a row is written only in a session that
+-- declares itself the Verifier (set scrooner.writer = 'verifier'), the way 0119 reserves canonical_fact to fsn_cells.
+create or replace function analytics.verifier_check_writer_guard() returns trigger
+language plpgsql as $$
+begin
+    if coalesce(current_setting('scrooner.writer', true), '') <> 'verifier' then
+        raise exception 'analytics.verifier_check is written by the Verifier only (set scrooner.writer = ''verifier'')';
+    end if;
+    return new;
+end;
+$$;
+
+drop trigger if exists trg_verifier_check_writer_guard on analytics.verifier_check;
+create trigger trg_verifier_check_writer_guard
+    before insert or update on analytics.verifier_check
+    for each row execute function analytics.verifier_check_writer_guard();
