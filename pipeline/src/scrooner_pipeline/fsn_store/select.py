@@ -389,7 +389,16 @@ def select_concept(
         for (ddate, n), w in sorted(winners.items()):
             if n < 2 or ((ddate, 1) in cells and (ddate, 1) not in derived_blank):
                 continue
-            cell = _note_quarter(concept, ddate, n, w, notes, winners, members)
+            cell = _note_quarter(
+                concept,
+                ddate,
+                n,
+                w,
+                notes,
+                winners,
+                members,
+                s.latest_first((ddate, n)),
+            )
             if cell is None:
                 cell = _ytd_difference(
                     concept, ddate, n, w, s, winners, held, residual_guard
@@ -438,9 +447,22 @@ def _note_quarter(
     notes: dict[tuple[int, str, date], Print],
     winners: dict[tuple[date, int], Print],
     members: dict[tuple[int, str, date, int], set[Decimal]],
+    copies: list[Print] | None = None,
 ) -> Cell | None:
-    """Rule (a): the 3-month value the winning FY/YTD filing prints in a note, guarded."""
+    """Rule (a): the 3-month value the winning FY/YTD filing prints in a note, guarded. When the winning filing has
+    no such note, an older filing that prints the SAME year-to-date value (the same basis for the year) and the note
+    is used: a later 10-K repeating FY2015 as a comparative carries no 2015 quarterly note (Arrowhead Q4 2015: the
+    FY2015 10-K's note -24,745,554 is the printed quarter; FY - 9M = -24,743,136 is not)."""
     q = notes.get((w.filing_id, w.tag, ddate))
+    if q is None:
+        for c in copies or []:
+            if (
+                c.filing_id != w.filing_id
+                and _same(c, w)
+                and (alt := notes.get((c.filing_id, c.tag, ddate)))
+            ):
+                w, q = c, alt
+                break
     if q is None:
         return None
     if q.value in members.get((q.filing_id, q.tag, ddate, 1), set()):

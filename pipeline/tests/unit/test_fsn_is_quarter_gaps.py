@@ -228,3 +228,35 @@ def test_a_blank_from_a_9m_input_never_shuts_out_the_fy_route_to_the_quarter():
     # without the FY route the 9M input's blank reason stays
     only = {(c.ddate, c.qtrs): c for c in sel.select_concept("net_income_resolved", [prints[2]], f)}
     assert only[(end, 1)].state == "defect"
+
+
+@pytest.mark.unit
+def test_q4_is_the_older_10ks_printed_note_when_the_latest_fy_copy_has_no_note():
+    # Arrowhead 0000879407 FY2015 (Sept): the FY2015 10-K prints FY -91,940,882 and its quarterly note Q4
+    # -24,745,554; the FY2017 10-K repeats FY2015 (ProfitLoss, same value) with no 2015 note. FY - 9M would be
+    # -24,743,136; the printed quarter wins
+    from datetime import datetime
+
+    f = {
+        1: sel.Filing(1, "0001564590-15-006064", datetime(2015, 8, 1), "10-Q", date(2015, 6, 30), 2015, "Q3"),
+        2: sel.Filing(2, "0001564590-15-011489", datetime(2015, 12, 1), "10-K", date(2015, 9, 30), 2015, "FY"),
+        3: sel.Filing(3, "0001564590-17-024834", datetime(2017, 12, 1), "10-K", date(2017, 9, 30), 2017, "FY"),
+    }
+
+    def p(i, fid, tag, d, q, v, face):
+        return sel.Print(i, fid, tag, d, q, "USD", Decimal(v), 0, "IS", face)
+
+    fy = date(2015, 9, 30)
+    prints = [
+        p(1, 1, "NetIncomeLoss", date(2015, 6, 30), 3, -67197746, True),
+        p(2, 2, "NetIncomeLoss", fy, 4, -91940882, True),
+        p(3, 2, "NetIncomeLoss", fy, 1, -24745554, False),
+        p(4, 3, "ProfitLoss", fy, 4, -91940882, True),
+    ]
+    cells = {(c.ddate, c.qtrs): c for c in sel.select_concept("net_income_resolved", prints, f)}
+    q4 = cells[(fy, 1)]
+    assert (q4.value, q4.rule_id, q4.filing_id) == (Decimal(-24745554), sel.RULE_NOTE_Q, 2)
+    # an older copy with a DIFFERENT year value is another basis: its note is never used
+    prints[1] = p(2, 2, "NetIncomeLoss", fy, 4, -91000000, True)
+    cells = {(c.ddate, c.qtrs): c for c in sel.select_concept("net_income_resolved", prints, f)}
+    assert cells[(fy, 1)].rule_id != sel.RULE_NOTE_Q
