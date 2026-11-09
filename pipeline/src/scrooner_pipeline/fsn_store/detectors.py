@@ -752,4 +752,12 @@ def net_income_detector(
     ]
 
 
-DEFAULT = [capex_da_detector, net_income_detector]
+def _pretax(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    from scrooner_pipeline.fsn_store.is_structure import pretax_detector  # noqa: PLC0415  (imports this module)
+
+    return pretax_detector(conn, filing_id, decisions)
+
+
+DEFAULT = [capex_da_detector, net_income_detector, _pretax]
