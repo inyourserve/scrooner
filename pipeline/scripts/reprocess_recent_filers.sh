@@ -149,49 +149,33 @@ fi
 # companies). The backlog branch below still catches any filing a failed night skipped, and the
 # Form 15 check keeps the full LOOKBACK_DAYS window.
 FILER_LOOKBACK_DAYS="${FILER_LOOKBACK_DAYS:-4}"
+# The recent-filer branch is capped per night, newest filing first (2026-11-09): in 10-Q season the 4-day window held
+# 1,366-1,635 companies (6-8 Nov), normalize:facts was killed at its 1,800 s cap and the 7,000 s budget ran out before
+# the map stages every night from 11-02. ~10 s per company at 4 shards; 31 Oct ran 669 companies in ~7,000 s.
+# FILER_LIMIT=0 restores the uncapped selection. The query and its tests: scrooner_pipeline/common/reprocess_cohort.py
+# (tests/unit/test_reprocess_cohort.py). The counts go to stderr, so the log shows what was deferred.
 CIKS=$(LOOKBACK_DAYS="$FILER_LOOKBACK_DAYS" uv run python3 - <<'PY'
 import os
+import sys
+
 import psycopg
+
 from scrooner_pipeline.common.config import settings
-conn = psycopg.connect(settings.database_url)
-cur = conn.cursor()
-cur.execute(
-    """
-    select distinct d.cik
-    from raw.sec_filing_documents d
-    join core.company c on c.cik = d.cik
-    where d.filing_date >= current_date - make_interval(days => %s)
-      and c.status = 'active'
-      and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
-    union
-    -- Backlog (added 2026-09-27): a company whose latest 10-K/10-Q has
-    -- no core.fact rows yet, although a companyfacts payload fetched
-    -- after it is already in raw. The lookback above only sees the last
-    -- N days, so any cron outage longer than that lost filings for good:
-    -- 348 companies (Abbott, NextEra, S&P Global, Cintas' FY2026 10-K)
-    -- sat at Q1 2026 after the 09-15..09-26 outages. Capped per run so
-    -- a large backlog drains over a few days instead of blowing the
-    -- job timeout.
-    select cik from (
-      select lf.cik
-      from (
-        select distinct on (f.company_id) f.company_id, c.cik, f.id as filing_id, f.filing_date
-        from core.filing f
-        join core.company c on c.id = f.company_id
-        where c.status = 'active'
-          and f.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
-          and f.filing_date >= current_date - 150
-        order by f.company_id, f.filing_date desc
-      ) lf
-      where not exists (select 1 from core.fact x where x.filing_id = lf.filing_id)
-        and (select max(r.fetched_at)::date from raw.sec_companyfacts r where r.cik = lf.cik) > lf.filing_date
-      order by lf.filing_date desc
-      limit %s
-    ) backlog
-    """,
-    (int(os.environ["LOOKBACK_DAYS"]), int(os.environ.get("BACKLOG_LIMIT", "150"))),
+from scrooner_pipeline.common.reprocess_cohort import BACKLOG_LIMIT, FILER_LIMIT, reprocess_cohort
+
+with psycopg.connect(settings.database_url) as conn:
+    ciks, n = reprocess_cohort(
+        conn,
+        int(os.environ["LOOKBACK_DAYS"]),
+        int(os.environ.get("FILER_LIMIT", FILER_LIMIT)),
+        int(os.environ.get("BACKLOG_LIMIT", BACKLOG_LIMIT)),
+    )
+print(
+    f"reprocess_recent_filers: {n['recent_filers']} recent 10-K/10-Q filers, {n['recent_selected']} selected "
+    f"(newest first), {n['recent_deferred']} deferred to later nights; backlog {n['backlog']}; total {n['total']}",
+    file=sys.stderr,
 )
-print(','.join(r[0] for r in cur.fetchall()))
+print(",".join(ciks))
 PY
 )
 
