@@ -95,3 +95,33 @@ Applied to 3a and 3b. Hybrid cell = a `canonical_fact` row whose `rule_run_id` p
 | 3c | `work/certification-lead/v11-cohort` | `1bbf083a` | 42657752304 green | unchanged |
 
 **Consequence:** no company can pass `reconciled` while any of its headline cells is still served from the old mapper. That includes the held families: total assets, equity, capex and debt (blocker 4).
+
+## 8. Queue item (a): income-statement absent-line reasons
+**Branch:** `work/certification-lead/is-absent-lines`, commit `87cc6147`, CI run 42661893040 green on every job. It is built on PR #4 (`work/cashflow/fsn-gaps-rebased`), **which must land first**.
+
+**What changed:**
+- `select.absent_line_cell` takes a statement argument; the cash-flow default is unchanged.
+- The pilot report classifies each filing's primary income statement for revenue, cost of revenue, interest expense, net income and basic EPS. The primary statement is the lowest-numbered report that prints the net-income anchor. Classification uses tag and label only.
+
+**What it claims, per filing:**
+
+| What the filing prints | Result |
+|---|---|
+| No line of the concept's family | not_presented, `line_not_presented_in_filing` |
+| Only a "costs and expenses" total (for cost of revenue) | not_presented, `line_presented_combined_with_others` |
+| Net interest only | defect, `perimeter_line_unresolved` |
+| Per-unit EPS only (a partnership) | defect, `perimeter_line_unresolved` |
+| Any line that may be the concept, or no anchored statement | nothing claimed |
+
+**Safety:** it is applied only to keys that `select` left without a row, so it never blanks a served value (Ritwik C2). Net income can never be falsely claimed absent: its line is the statement's anchor, so without it the filing has no face column.
+
+**Tests:** 33, the PR #4 suite passes unchanged, and the mutation check caught 11/11.
+
+**Not done here:**
+1. The measured effect on the 1,271 cohort pairs. That needs a cohort dry run against the FSN store, which this container cannot reach.
+2. A Verifier draw on the new reasons.
+
+## 9. Queue item (b): IS no_mapped_line (interest expense at banks and insurers printing net interest only)
+- **With (a):** these keys become **classified defects** (`perimeter_line_unresolved`), not reasonless blanks, so they no longer block I11's `checks_clean`.
+- **The rest needs data:** a company-level OUT row with evidence (`data-team/47-fsn-store/template_company_outs*.csv`) must cite each company's accessions from the FSN store. This container has no database or bucket access, so I have not fabricated rows.
+- **Proposal:** whoever has production read runs a query over `fsn.line` / `fsn.tag` for the template's bank and insurer companies: every 10-K/10-Q primary IS prints `InterestIncomeExpenseNet` (or a "net interest" label) and no `InterestExpense*` line. The candidate rows, with their accessions, then go to Ritwik as `template_company_outs` (`APPROVE_OUT`). The classifier in `pilot.is_line_class` is the rule to reuse.
