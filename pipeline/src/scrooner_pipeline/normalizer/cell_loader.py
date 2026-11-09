@@ -47,6 +47,7 @@ from scrooner_pipeline.common.cell_store import (
     replace_rule_reasons,
     start_rule_run,
 )
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.normalizer.facts import normalize_payload
 
@@ -326,7 +327,9 @@ def bind_periods(
                 for p, e in by_label.get(
                     (r.fiscal_year, r.fiscal_period, r.period_type), []
                 )
-                if abs((e - r.fsn_end).days) <= BIND_DAYS
+                # same fiscal label and type; the FSN end is within BIND_DAYS of the period end or is the SEC's
+                # month-end rounding of a mid-month (52/53-week) end
+                if fsn_end_matches(r.fsn_end, e, BIND_DAYS)
             ]
             if cands:
                 pid = min(cands)[1]
