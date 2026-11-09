@@ -122,6 +122,22 @@ class GapRow:
 
 
 @dataclass(frozen=True)
+class BlankReasonRow:
+    """One analytics.cell_blank_reason row (0100): the writer's stated reason for a blank."""
+
+    reason_code: str
+    state: str  # evidenced_zero | undefined_by_math | history_horizon | not_presented | not_in_template | defect
+    defect_class: str | None
+
+    @property
+    def classified(self) -> bool:
+        """A stated reason explains the blank, except a defect nobody has classified."""
+        return not (
+            self.state == "defect" and self.defect_class in (None, "unclassified")
+        )
+
+
+@dataclass(frozen=True)
 class MetricCell:
     """One analytics.metric_value row of the history window (label FY or Q1..Q4)."""
 
@@ -212,6 +228,16 @@ class CompanyData:
         default_factory=dict
     )  # consumed concept name -> statement
     window_start: date = date(2015, 1, 1)
+    # Sector template (migration 0120, doc 02 ruling 2026-11-01): base data point
+    # names OUT of the company's current template. Such a cell is not expected, so
+    # it is never a missing cell. Empty when the company has no template rows.
+    template_out: frozenset[str] = frozenset()
+    # analytics.cell_blank_reason (latest basis, newest row per key), the reasons the
+    # FSN cell writer records: (base or metric name, kind, period end) -> BlankReasonRow.
+    # kind is 'FY' | 'Q' | 'Q4' | 'I' (a Q-grain row is stored under Q and Q4).
+    blank_reasons: dict[tuple[str, str, date], "BlankReasonRow"] = field(
+        default_factory=dict
+    )
 
     def cells_for(self, concept: str) -> list[Cell]:
         return [c for c in self.cells if c.concept == concept]

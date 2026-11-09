@@ -30,6 +30,13 @@ Mapper gap). Certification needs zero `unclassified`/`no_row_inputs_present`; cl
 findings for their owner until filled. All severities are `review` (a gap is
 not a wrong value).
 
+FSN era (2026-11-09): a data point OUT of the company's current sector template
+(analytics.company_data_point_template, 0120) is not a cell, so it is never
+expected. A missing cell with a reason row in analytics.cell_blank_reason (what the
+FSN cell writer records) is classified by that reason first, as
+`blank_reason:<reason_code>`; a `defect` row whose class is unclassified stays
+`unclassified`. Without either table's rows the behaviour is unchanged.
+
 One finding per (concept, kind, cause) lists the missing period ends, so a
 company with 40 missing cells for one reason is one row, not 40.
 """
@@ -261,6 +268,19 @@ def infer_cause(data: CompanyData, base: str, kind: str, end: date) -> str:
     return "no_mapped_tag" if loaded else "unclassified"
 
 
+def blank_reason_cause(
+    data: CompanyData, name: str, kind: str, end: date
+) -> str | None:
+    """Cause from the writer's own reason (analytics.cell_blank_reason), or None."""
+    for delta in range(-TOLERANCE_DAYS, TOLERANCE_DAYS + 1):
+        row = data.blank_reasons.get((name, kind, end + timedelta(days=delta)))
+        if row is not None:
+            return (
+                f"blank_reason:{row.reason_code}" if row.classified else "unclassified"
+            )
+    return None
+
+
 def _gap_cause(gaps: dict, base: str, kind: str, end: date) -> str | None:
     for delta in range(-TOLERANCE_DAYS, TOLERANCE_DAYS + 1):
         cause = gaps.get((base, kind, end + timedelta(days=delta)))
@@ -285,6 +305,8 @@ def history_matrix(data: CompanyData) -> dict:
     concepts: Counter = Counter()
     missing: dict[tuple[str, str, str], list[date]] = defaultdict(list)
     for base, statement in consumed.items():
+        if base in data.template_out:
+            continue  # not in the company's sector template: not a cell
         cells = by_base.get(base, [])
         for kind, end in sorted(expected):
             if kind not in _concept_kinds(statement):
@@ -294,8 +316,10 @@ def history_matrix(data: CompanyData) -> dict:
             if any(_matches(c, kind, end) for c in cells):
                 concepts[(year, kind, "present")] += 1
                 continue
-            cause = _gap_cause(gaps, base, kind, end) or infer_cause(
-                data, base, kind, end
+            cause = (
+                blank_reason_cause(data, base, kind, end)
+                or _gap_cause(gaps, base, kind, end)
+                or infer_cause(data, base, kind, end)
             )
             concepts[(year, kind, "missing")] += 1
             if cause == "unclassified":
@@ -320,6 +344,8 @@ def history_matrix(data: CompanyData) -> dict:
             lookup[(base, ckind)][e] = cause
     q4_ends = {e for k, e in expected if k == "Q4"}
     for name in sorted(set(data.metric_specs) | set(own_kinds)):
+        if name in data.template_out:
+            continue  # not in the company's sector template: not a cell
         spec = data.metric_specs.get(name)
         # Kinds actually written for any company of the chunk are authoritative
         # (ROE/ROA/ROIC are written with the TTM label only: a quarter label is
@@ -360,7 +386,24 @@ def history_matrix(data: CompanyData) -> dict:
                     continue
                 reason = next((m.reason for m in found if m.reason), None)
                 metrics[(year, kind, "missing")] += 1
-                if reason is not None:
+                writer_cause = (
+                    None
+                    if reason is not None
+                    else blank_reason_cause(data, name, kind, end)
+                    or (
+                        blank_reason_cause(data, name, "Q4", end)
+                        if kind == "Q"
+                        else None
+                    )
+                )
+                if writer_cause is not None:
+                    family = (
+                        "input_gap:unclassified"
+                        if writer_cause == "unclassified"
+                        else writer_cause
+                    )
+                    full_reasons[(name, kind)].add(family)
+                elif reason is not None:
                     family = reason_family(reason)
                     full_reasons[(name, kind)].add(reason)
                 else:

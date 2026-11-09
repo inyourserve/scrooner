@@ -22,6 +22,7 @@ from scrooner_pipeline.sanity.accounting_identity import IDENTITIES
 from .thresholds import SOURCE_BATCH
 from .model import (
     base_name,
+    BlankReasonRow,
     Cell,
     CompanyData,
     ComponentFact,
@@ -604,7 +605,83 @@ def load_chunk(
         d.bank_evidence_without_sic = has_evidence and not is_bank_sic(d.sic)
     if history:
         _load_history(cur, data, ids, registry, since, timeout_s)
+        load_template_and_reasons(cur, data, ids, as_of, timeout_s)
     return data
+
+
+TEMPLATE_CURRENT_SQL = """
+    with latest as (
+        select company_id, max(effective_from) as effective_from
+        from analytics.company_data_point_template
+        where company_id = any(%s) and effective_from <= %s
+        group by company_id
+    )
+    select t.company_id, t.data_point, t.in_template
+    from analytics.company_data_point_template t
+    join latest l on l.company_id = t.company_id and l.effective_from = t.effective_from
+"""
+
+BLANK_REASON_SQL = """
+    select distinct on (company_id, data_point_name, period_grain, period_end)
+           company_id, data_point_name, period_grain, period_end, reason_code, state, defect_class
+    from analytics.cell_blank_reason
+    where company_id = any(%s) and basis = 'latest' and period_end >= %s
+      and period_grain in ('FY', 'Q', 'I')
+    order by company_id, data_point_name, period_grain, period_end, created_at desc, id desc
+"""
+
+
+def template_out(rows) -> frozenset[str]:
+    """Base names OUT of a company's current template: every template row that maps
+    to the base (x and x_resolved, revenue_sanity_resolved -> revenue) says no. A base
+    with any row IN stays expected."""
+    by_base: dict[str, list[bool]] = defaultdict(list)
+    for dp, in_template in rows:
+        by_base[base_name(dp)].append(bool(in_template))
+    return frozenset(b for b, flags in by_base.items() if not any(flags))
+
+
+def load_template_and_reasons(cur, data, ids, as_of, timeout_s) -> None:
+    """I11 FSN-era inputs: the current sector template (0120) and the cell writer's
+    blank reasons (0100). Either table missing (an older database) leaves the
+    behaviour unchanged."""
+    found = execute(
+        cur,
+        # input tables, looked up in pg_class (to_regclass is reserved for the 0097
+        # output-table check, which a dry run never makes)
+        "select bool_or(c.relname = 'company_data_point_template'), "
+        "bool_or(c.relname = 'cell_blank_reason') "
+        "from pg_catalog.pg_class c join pg_catalog.pg_namespace n on n.oid = c.relnamespace "
+        "where n.nspname = 'analytics' "
+        "and c.relname in ('company_data_point_template', 'cell_blank_reason')",
+        (),
+        timeout_s,
+    )
+    present = (
+        (bool(found[0][0]), bool(found[0][1]))
+        if found and len(found[0]) == 2
+        else (False, False)
+    )
+    if present[0]:
+        rows: dict[int, list[tuple[str, bool]]] = defaultdict(list)
+        for cid, dp, flag in execute(
+            cur, TEMPLATE_CURRENT_SQL, (ids, as_of), timeout_s
+        ):
+            rows[cid].append((dp, flag))
+        for cid, r in rows.items():
+            if cid in data:
+                data[cid].template_out = template_out(r)
+    if present[1]:
+        floor = min((d.window_start for d in data.values()), default=HISTORY_FLOOR)
+        for cid, dp, grain, end, code, state, dclass in execute(
+            cur, BLANK_REASON_SQL, (ids, floor), timeout_s
+        ):
+            if cid not in data:
+                continue
+            row = BlankReasonRow(code, state, dclass)
+            name = base_name(dp)
+            for kind in ("Q", "Q4") if grain == "Q" else (grain,):
+                data[cid].blank_reasons[(name, kind, end)] = row
 
 
 PERIODIC_FILING_FORMS = (
