@@ -383,17 +383,24 @@ def pilot_prod_cmd(
     ids = [r["company_id"] for r in reports]
     with get_connection() as conn:
         conn.execute("set statement_timeout = '10min'")
-        for table, cols in (
-            ("analytics.canonical_fact", "*"),
-            ("analytics.cell_blank_reason", "*"),
-            ("analytics.slot_protected_cell", "*"),
+        for table, cols, where in (
+            ("analytics.canonical_fact", "*", "company_id = any(%s)"),
+            ("analytics.cell_blank_reason", "*", "company_id = any(%s)"),
+            ("analytics.slot_protected_cell", "*", "company_id = any(%s)"),
+            # the done gate's hold guard (ruling C2) reads concept names and period dates with the image
+            ("analytics.canonical_concept", "id, name", "%s::bigint[] is not null"),
+            (
+                "core.period",
+                "id, company_id, start_date, end_date, period_type, fiscal_year, fiscal_period",
+                "company_id = any(%s)",
+            ),
         ):
             path = root / "before_image" / f"{table.split('.')[1]}.csv.gz"
             path.parent.mkdir(parents=True, exist_ok=True)
             with (
                 gzip.open(path, "wb") as fh,
                 conn.cursor().copy(
-                    f"copy (select {cols} from {table} where company_id = any(%s) order by 1) to stdout with csv header",
+                    f"copy (select {cols} from {table} where {where} order by 1) to stdout with csv header",
                     (ids,),
                 ) as cp,
             ):
@@ -424,6 +431,14 @@ def pilot_prod_cmd(
     )
 
 
+# Data points the FSN write never switches until the approver clears them (ruling RULING-DONE-GATE-C4-2026-11-09)
+HELD_OUT = {
+    "dividends_per_share_resolved": "C6: the Q4 FY-9M route must check the same share basis first",
+    "total_debt_resolved": "C8: seed defect, release case §2/§3a",
+    "total_liabilities_resolved": "C8: seed defect, release case §2/§3a",
+}
+
+
 @app.command("done-gate")
 def done_gate_cmd(
     pilot_out: str = typer.Option(
@@ -433,22 +448,98 @@ def done_gate_cmd(
         ..., help="Comma-separated data points the write switches."
     ),
 ) -> None:
-    """Design §5 criteria 1-5 per company (read-only): writes done_companies.txt (company ids that may
-    switch) and not_done.json (company id -> failed criteria) into the output directory."""
-    from scrooner_pipeline.fsn_store.pilot import done_gate
+    """Design §5 done criteria per (company, data point) (ruling RULING-DONE-GATE-C4-2026-11-09), read-only.
+    Writes into the output directory:
+      done_pairs.tsv         company_id, data_point: the pairs that may be written (C1 + C2)
+      done_companies.txt     companies whose every listed pair passes
+      written_companies.txt  companies with at least one pair to write: the cell_proof scope (C4)
+      not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}}
+      hold_guard.json        C2: held pairs and the valued->blank transitions per data point by reason class
+    The before-image (pilot-prod) is required: without it the hold guard cannot run, so nothing passes."""
+    import gzip
+
+    from scrooner_pipeline.fsn_store.pilot import (
+        done_gate,
+        done_pairs,
+        fully_done,
+        hold_guard,
+    )
 
     root = Path(pilot_out)
+    points = {s for s in data_points.split(",") if s}
+    refused = sorted(points & set(HELD_OUT))
+    if refused:
+        raise typer.BadParameter(
+            "; ".join(f"{dp} stays out ({HELD_OUT[dp]})" for dp in refused)
+        )
     reports = json.loads((root / "report.json").read_text())
     gaps_path = root / "gaps.csv"
     gaps = list(csv.DictReader(gaps_path.open())) if gaps_path.exists() else []
     missing = json.loads((root / "missing_filings.json").read_text())
-    res = done_gate(reports, gaps, missing, {s for s in data_points.split(",") if s})
-    done = sorted(c for c, f in res.items() if not f)
-    (root / "done_companies.txt").write_text("".join(f"{c}\n" for c in done))
-    (root / "not_done.json").write_text(
-        json.dumps({c: f for c, f in res.items() if f}, indent=1)
+    image = root / "before_image"
+    for name in ("canonical_fact", "canonical_concept", "period"):
+        if not (image / f"{name}.csv.gz").exists():
+            raise typer.BadParameter(
+                f"{image}/{name}.csv.gz is missing: run pilot-prod first (C2 hold guard)"
+            )
+
+    def rows(name):
+        with gzip.open(image / f"{name}.csv.gz", "rt") as fh:
+            return list(csv.DictReader(fh))
+
+    cells = []
+    for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
+        with gzip.open(path, "rt") as fh:
+            cells.extend(json.loads(line) for line in fh if line.strip())
+    held, transitions = hold_guard(
+        cells,
+        rows("canonical_fact"),
+        {r["id"]: r["name"] for r in rows("canonical_concept")},
+        {r["id"]: r for r in rows("period")},
+        points,
     )
-    typer.echo(f"done gate: {len(done)} of {len(res)} companies may switch")
+    gate = done_gate(reports, gaps, missing, points, held)
+    pairs = done_pairs(gate)
+    full = fully_done(gate)
+    written = sorted({cid for cid, _dp in pairs})
+    listed = sum(len(g["data_points"]) for g in gate.values())
+    (root / "done_pairs.tsv").write_text(
+        "company_id\tdata_point\n" + "".join(f"{c}\t{dp}\n" for c, dp in pairs)
+    )
+    (root / "done_companies.txt").write_text("".join(f"{c}\n" for c in full))
+    (root / "written_companies.txt").write_text("".join(f"{c}\n" for c in written))
+    not_done = {
+        cid: {
+            "company": g["company"],
+            "data_points": {dp: f for dp, f in g["data_points"].items() if f},
+            "out_of_template": g["out_of_template"],
+        }
+        for cid, g in gate.items()
+        if g["company"] or any(g["data_points"].values())
+    }
+    (root / "not_done.json").write_text(json.dumps(not_done, indent=1))
+    (root / "hold_guard.json").write_text(
+        json.dumps(
+            {
+                "held": [
+                    {"company_id": c, "data_point": dp, "why": w}
+                    for (c, dp), w in sorted(held.items())
+                ],
+                "valued_to_blank_by_data_point": transitions,
+            },
+            indent=1,
+        )
+    )
+    per_point: dict[str, int] = {}
+    for _c, dp in pairs:
+        per_point[dp] = per_point.get(dp, 0) + 1
+    typer.echo(
+        f"done gate: {len(pairs)} pairs of {listed}; {len(full)} companies fully done"
+    )
+    typer.echo(
+        f"done gate: pairs passing per data point {json.dumps(dict(sorted(per_point.items())))}"
+    )
+    typer.echo(f"done gate: {len(held)} pairs held by the C2 guard (hold_guard.json)")
 
 
 @app.command("extract-sec")

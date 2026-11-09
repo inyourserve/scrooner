@@ -22,6 +22,7 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.fsn_store import select as sel
 
 FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
@@ -498,6 +499,15 @@ def report_company(
                 if r["state"] == "derived"
                 and (r.get("derivation") or {}).get("policy") != "same_basis"
             ),
+            # the same count per data point: the done gate counts only the data points a write switches
+            "5_derived_without_same_basis_by_point": dict(
+                Counter(
+                    r["data_point_name"]
+                    for r in cells
+                    if r["state"] == "derived"
+                    and (r.get("derivation") or {}).get("policy") != "same_basis"
+                )
+            ),
             "6_proof_disagree": "after the write: cell_proof runs on written cells",
         },
         "cell_states": dict(states),
@@ -507,33 +517,158 @@ def report_company(
     }
 
 
+VALUED_STATES = ("value", "derived")
+
+
 def done_gate(
     reports: list[dict[str, Any]],
     gaps: list[dict[str, str]],
     missing_filings: dict[str, list[Any]],
     data_points: set[str],
-) -> dict[int, list[str]]:
-    """Design §5 done criteria 1-5 per company, for the data points a write switches: {company_id: failed
-    criteria}; an empty list means the company may switch. Criterion 3 holds by construction (select serves
-    only passing columns; a failing latest copy is a reasoned blank). Criterion 6 (zero served cell_proof
-    DISAGREE) needs the written cells: checked after the write, and a failing company is restored from its
-    before-image (`scrooner-cells restore`), so it keeps its earlier rows (§7.6)."""
-    reasonless: Counter[str] = Counter(
-        str(g["company_id"]) for g in gaps if g["data_point"] in data_points
+    held: dict[tuple[int, str], str] | None = None,
+) -> dict[int, dict[str, Any]]:
+    """Design §5 done criteria, per (company, data point) for criterion 4 (ruling RULING-DONE-GATE-C4-2026-11-09,
+    conditions C1/C2): {company_id: {"company": [failed criteria 1/2/5], "data_points": {dp: [failed reasons]},
+    "out_of_template": [dp]}}.
+
+    A pair (company, dp) may be written only if (C1) (a) the company passes criteria 1, 2 and 5; (b) the pair has 0
+    reasonless gap keys; (c) the pair has at least one expected key with a cell (valued or reasoned): an empty pair
+    never passes; and (C2) it is not held by the hold guard (`held`, from `hold_guard`). Criterion 5 counts the
+    derived cells of the switched data points only. A data point outside the company's template (no expected
+    keys: a COND point not printed, a company OUT) is never written and is listed under "out_of_template"; it does
+    not fail the company. Criterion 3 holds by construction (select serves only passing columns); criterion 6 is
+    checked after the write on every written pair (C4), and a failing company is restored from its before-image."""
+    held = held or {}
+    reasonless: Counter[tuple[str, str]] = Counter(
+        (str(g["company_id"]), g["data_point"])
+        for g in gaps
+        if g["data_point"] in data_points
     )
-    out: dict[int, list[str]] = {}
+    out: dict[int, dict[str, Any]] = {}
     for r in reports:
         crit = r["done_criteria"]
-        failed = []
+        cid = r["company_id"]
+        company: list[str] = []
         if not crit.get("1_store_loaded"):
-            failed.append("1_store_not_loaded")
+            company.append("1_store_not_loaded")
         if missing_filings.get(r["cik"]):
-            failed.append(f"2_filings_not_stored:{len(missing_filings[r['cik']])}")
-        if reasonless[str(r["company_id"])]:
-            failed.append(f"4_reasonless_keys:{reasonless[str(r['company_id'])]}")
-        if crit.get("5_derived_without_same_basis"):
-            failed.append(
-                f"5_derived_without_same_basis:{crit['5_derived_without_same_basis']}"
-            )
-        out[r["company_id"]] = failed
+            company.append(f"2_filings_not_stored:{len(missing_filings[r['cik']])}")
+        by_point = crit.get("5_derived_without_same_basis_by_point")
+        derived = (
+            sum(n for dp, n in by_point.items() if dp in data_points)
+            if by_point is not None
+            else crit.get("5_derived_without_same_basis", 0)
+        )
+        if derived:
+            company.append(f"5_derived_without_same_basis:{derived}")
+        per_point = (r.get("template_coverage") or {}).get("per_data_point") or {}
+        points: dict[str, list[str]] = {}
+        out_of_template: list[str] = []
+        for dp in sorted(data_points):
+            if dp not in per_point:
+                out_of_template.append(dp)
+                continue
+            failed = [
+                f"company:{c}" for c in company
+            ]  # (a) a company failure fails every pair
+            n = reasonless[(str(cid), dp)]
+            if n:
+                failed.append(f"4_reasonless_keys:{n}")  # (b)
+            k = per_point[dp]
+            if k.get("valued", 0) + k.get("reasoned", 0) == 0:
+                failed.append(
+                    f"c_no_expected_key_with_a_cell:{k.get('keys', 0)}"
+                )  # (c)
+            if (cid, dp) in held:
+                failed.append(f"C2_held:{held[(cid, dp)]}")
+            points[dp] = failed
+        out[cid] = {
+            "company": company,
+            "data_points": points,
+            "out_of_template": out_of_template,
+        }
     return out
+
+
+def done_pairs(gate: dict[int, dict[str, Any]]) -> list[tuple[int, str]]:
+    """The (company_id, data point) pairs that may be written."""
+    return sorted(
+        (cid, dp)
+        for cid, g in gate.items()
+        for dp, failed in g["data_points"].items()
+        if not failed
+    )
+
+
+def fully_done(gate: dict[int, dict[str, Any]]) -> list[int]:
+    """Companies whose every listed (in-template) pair passes, with at least one such pair."""
+    return sorted(
+        cid
+        for cid, g in gate.items()
+        if g["data_points"] and not any(g["data_points"].values())
+    )
+
+
+def _grain(period_type: str, start: date, end: date) -> str:
+    if period_type == "instant":
+        return "I"
+    return "FY" if (end - start).days >= 300 else "Q"
+
+
+def hold_guard(
+    cells: list[dict[str, Any]],
+    before: list[dict[str, str]],
+    concept_names: dict[str, str],
+    periods: dict[str, dict[str, str]],
+    data_points: set[str],
+) -> tuple[dict[tuple[int, str], str], dict[str, dict[str, int]]]:
+    """C2: (held pairs, valued->blank transitions per data point by reason class).
+
+    before: the before-image canonical_fact rows (company_id, canonical_concept_id, period_id, value);
+    concept_names: canonical_concept id -> name; periods: core.period id -> its row (start_date, end_date,
+    period_type). A pair whose new cells hold 0 values while the before-image held valued rows for it is held
+    (likely a mapping miss, not a real absence). For every before-image valued key the new cell is matched by
+    grain and an end within 10 days; a blank new cell counts under its reason_code, a key with no new cell
+    under "no_new_cell" (the loader replaces the pair's rows, so that key would lose its value)."""
+    new_valued: Counter[tuple[int, str]] = Counter()
+    by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in cells:
+        if r["data_point_name"] not in data_points:
+            continue
+        key = (int(r["company_id"]), r["data_point_name"])
+        by_pair[key].append(r)
+        if r["state"] in VALUED_STATES:
+            new_valued[key] += 1
+    old_valued: Counter[tuple[int, str]] = Counter()
+    transitions: dict[str, Counter[str]] = defaultdict(Counter)
+    for b in before:
+        dp = concept_names.get(str(b["canonical_concept_id"]))
+        if dp not in data_points or b.get("value") in (None, ""):
+            continue
+        key = (int(b["company_id"]), dp)
+        old_valued[key] += 1
+        p = periods.get(str(b["period_id"]))
+        if p is None:
+            transitions[dp]["period_unknown"] += 1
+            continue
+        start, end = (
+            date.fromisoformat(p["start_date"]),
+            date.fromisoformat(p["end_date"]),
+        )
+        if (
+            end < HISTORY_FLOOR
+        ):  # the write does not reach keys before the history floor (CELL-FORMAT §2)
+            old_valued[key] -= 1
+            continue
+        grain = _grain(p["period_type"], start, end)
+        row = _match(by_pair.get(key, []), grain, end)
+        if row is None:
+            transitions[dp]["no_new_cell"] += 1
+        elif row["state"] not in VALUED_STATES:
+            transitions[dp][row.get("reason_code") or row["state"]] += 1
+    held = {
+        key: f"0_new_values_vs_{n}_before"
+        for key, n in old_valued.items()
+        if n and not new_valued[key]
+    }
+    return held, {dp: dict(c) for dp, c in transitions.items()}

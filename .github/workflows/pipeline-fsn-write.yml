@@ -6,9 +6,12 @@ name: FSN store production write (cohort)
 #   stage load_map:     shard from the bucket -> load fsn.* (filing, report, tag, dim, line, value, calc_arc,
 #                       company_load) -> map fsn.line_map (the library) and fsn.filing_check
 #   stage select_write: (also runs load_map) -> select -> before-image of the shard's canonical_fact and
-#                       cell_blank_reason (uploaded BEFORE the write) -> done gate (design §5 criteria 1-5 per
-#                       company) -> `scrooner-cells load --apply` for the passed data points of the companies
-#                       that passed; a company that fails keeps its current rows (design §7.6)
+#                       cell_blank_reason (uploaded BEFORE the write) -> done gate (ruling
+#                       RULING-DONE-GATE-C4-2026-11-09: criteria 1/2/5 per company, criterion 4 per (company,
+#                       data point), an empty pair never passes, C2 hold guard) -> `scrooner-cells load --apply`
+#                       for the done pairs only; a pair that fails keeps its current rows (design §7.6). The
+#                       cell_proof scope is out/written_companies.txt (every company with a written pair, C4).
+#                       dividends_per_share (C6), total debt and total liabilities (C8) stay out.
 #                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
 #                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
@@ -33,7 +36,7 @@ on:
         default: ""
       data_points:
         description: "Data points the cell write may touch (passed families)"
-        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved"
+        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,shares_outstanding_resolved"
       restore_run:
         description: "restore only: the select_write run id whose before-images to put back"
         default: ""
@@ -163,10 +166,10 @@ jobs:
           path: out/before_image/
           if-no-files-found: error
           retention-days: 90
-      - name: Done gate (design §5 criteria 1-5 per company, read)
+      - name: Done gate (criteria 1/2/5 per company, 4 per (company, data point), C2 hold guard; read)
         if: inputs.stage == 'select_write'
         run: uv run --project pipeline scrooner-fsn done-gate --pilot-out out --data-points "$DATA_POINTS"
-      - name: Write the passed data points of the done companies to canonical_fact
+      - name: Write the done (company, data point) pairs to canonical_fact
         if: inputs.stage == 'select_write'
         run: |
           set -u
@@ -176,25 +179,7 @@ jobs:
             fam=$(basename "$d")
             [ "$fam" = "unowned" ] && continue
             mkdir -p "out/write/$fam"
-            python3 - "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_companies.txt <<'EOF'
-          import gzip, json, sys
-          src, dst, allowed, done_path = sys.argv[1], sys.argv[2], set(sys.argv[3].split(",")), sys.argv[4]
-          done = {int(x) for x in open(done_path).read().split()}
-          rows = [json.loads(l) for l in gzip.open(src, "rt")]
-          keep = [
-              r for r in rows
-              if r["data_point_name"] in allowed and int(r["company_id"]) in done
-              # operating income is never note-sourced (Ritwik 2026-11-03); select never emits it, refuse it here too
-              and not (r["data_point_name"] == "operating_income_resolved" and (r.get("input_refs") or {}).get("source") == "note")
-          ]
-          with gzip.open(dst, "wt") as fh:
-              for r in keep:
-                  fh.write(json.dumps(r) + "\n")
-          json.dump({"family": src.split("/")[-2], "rule_id": "fsn.select@1", "rows": len(keep),
-                     "data_points": sorted({r["data_point_name"] for r in keep}), "period_floor": "2014-01-01"},
-                    open(dst.rsplit("/", 1)[0] + "/manifest.json", "w"))
-          print(f"{src}: {len(keep)} of {len(rows)} rows (passed data points, {len(done)} done companies)")
-          EOF
+            python3 pipeline/scripts/fsn_write_filter.py "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_pairs.tsv
             if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
             uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
               --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
@@ -215,6 +200,9 @@ jobs:
             out/load.json
             out/summary.md
             out/done_companies.txt
+            out/done_pairs.tsv
+            out/written_companies.txt
+            out/hold_guard.json
             out/not_done.json
             out/missing_filings.json
             out/write-*.json

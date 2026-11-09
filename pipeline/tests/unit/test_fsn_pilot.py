@@ -59,15 +59,16 @@ def test_calendar_keys_and_match_within_ten_days(tmp_path):
 
 
 @pytest.mark.unit
-def test_done_gate_switches_only_companies_meeting_criteria_1_to_5():
-    def rep(cid, cik, loaded=True, derived=0):
+def test_done_gate_company_criteria_1_2_5_fail_every_pair_of_the_company():
+    def rep(cid, cik, loaded=True, derived=None):
         return {
             "company_id": cid,
             "cik": cik,
             "done_criteria": {
                 "1_store_loaded": loaded,
-                "5_derived_without_same_basis": derived,
+                "5_derived_without_same_basis_by_point": derived or {},
             },
+            "template_coverage": {"per_data_point": {"revenue_sanity_resolved": {"keys": 4, "valued": 4}}},
         }
 
     reports = [
@@ -75,8 +76,10 @@ def test_done_gate_switches_only_companies_meeting_criteria_1_to_5():
         rep(2, "B", loaded=False),
         rep(3, "C"),
         rep(4, "D"),
-        rep(5, "E", derived=2),
+        rep(5, "E", derived={"revenue_sanity_resolved": 2}),
         rep(6, "F"),
+        # a derived cell of a data point the write does not switch does not stop the company (criterion 5 scope)
+        rep(7, "G", derived={"total_liabilities_resolved": 9}),
     ]
     gaps = [
         {"company_id": "4", "data_point": "revenue_sanity_resolved"},
@@ -85,11 +88,19 @@ def test_done_gate_switches_only_companies_meeting_criteria_1_to_5():
     ]
     missing = {"C": [{"accession": "x"}], "A": []}
     got = pilot.done_gate(reports, gaps, missing, {"revenue_sanity_resolved"})
-    assert got == {
+    assert {c: g["company"] for c, g in got.items()} == {
         1: [],
         2: ["1_store_not_loaded"],
         3: ["2_filings_not_stored:1"],
-        4: ["4_reasonless_keys:1"],
+        4: [],
         5: ["5_derived_without_same_basis:2"],
         6: [],
+        7: [],
     }
+    assert pilot.done_pairs(got) == [
+        (1, "revenue_sanity_resolved"),
+        (6, "revenue_sanity_resolved"),
+        (7, "revenue_sanity_resolved"),
+    ]
+    assert got[4]["data_points"]["revenue_sanity_resolved"] == ["4_reasonless_keys:1"]
+    assert got[3]["data_points"]["revenue_sanity_resolved"] == ["company:2_filings_not_stored:1"]
