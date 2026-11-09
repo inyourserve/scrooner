@@ -382,14 +382,23 @@ def select_concept(
                 )
     if derive:
         notes = _note_quarters(prints)
+        # a blank one year-to-date input gave (6M / 9M) never shuts out a longer input that does give the quarter
+        # (Rhythm 0001649904 Q4 2018: an equity-statement 9M ProfitLoss column ending 2018-12-31 left the quarter
+        # blank as no_prior_quarter_end before FY - 9M / the 10-K's quarterly note was tried)
+        derived_blank: set[tuple[date, int]] = set()
         for (ddate, n), w in sorted(winners.items()):
-            if n < 2 or (ddate, 1) in cells:
+            if n < 2 or ((ddate, 1) in cells and (ddate, 1) not in derived_blank):
                 continue
             cell = _note_quarter(concept, ddate, n, w, notes, winners, members)
             if cell is None:
                 cell = _ytd_difference(
                     concept, ddate, n, w, s, winners, held, residual_guard
                 )
+            if (ddate, 1) in derived_blank and cell.state not in ("value", "derived"):
+                continue  # keep the first blank's reason
+            derived_blank.discard((ddate, 1))
+            if cell.state not in ("value", "derived"):
+                derived_blank.add((ddate, 1))
             cells[(ddate, 1)] = cell
     return [cells[k] for k in sorted(cells)]
 

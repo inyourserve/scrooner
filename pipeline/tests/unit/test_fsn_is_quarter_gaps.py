@@ -204,3 +204,27 @@ def test_pnc_continuing_ops_bottom_line_makes_the_column_a_face_column(conn, tmp
     _, data = _store(conn, tmp_path, "0000713676", "0000713676-22-000047", face, vals, detectors.DEFAULT)
     rev = data["prints"]["revenue_sanity_resolved"]
     assert [(p.value, p.face) for p in rev] == [(Decimal(4692000000), True)]
+
+
+@pytest.mark.unit
+def test_a_blank_from_a_9m_input_never_shuts_out_the_fy_route_to_the_quarter():
+    # Rhythm 0001649904: FY2018 10-K (face FY, quarterly note Q4 -25,507); the 2019 Q1 10-Q's equity statement
+    # prints a 9M ProfitLoss column ending 2018-12-31 (-57,605) with no 6M column before it
+    from datetime import datetime
+
+    f = {
+        1: sel.Filing(1, "0001558370-19-001698", datetime(2019, 3, 1), "10-K", date(2018, 12, 31), 2018, "FY"),
+        2: sel.Filing(2, "0001558370-19-003924", datetime(2019, 5, 1), "10-Q", date(2019, 3, 31), 2019, "Q1"),
+    }
+    end = date(2018, 12, 31)
+
+    def p(i, fid, q, v, face):
+        return sel.Print(i, fid, "ProfitLoss", end, q, "USD", Decimal(v), -3, "IS", face)
+
+    prints = [p(1, 1, 4, -74064000, True), p(2, 1, 1, -25507000, False), p(3, 2, 3, -57605000, True)]
+    cells = {(c.ddate, c.qtrs): c for c in sel.select_concept("net_income_resolved", prints, f)}
+    q4 = cells[(end, 1)]
+    assert (q4.state, q4.value, q4.rule_id) == ("value", Decimal(-25507000), sel.RULE_NOTE_Q)
+    # without the FY route the 9M input's blank reason stays
+    only = {(c.ddate, c.qtrs): c for c in sel.select_concept("net_income_resolved", [prints[2]], f)}
+    assert only[(end, 1)].state == "defect"
