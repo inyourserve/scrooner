@@ -452,4 +452,14 @@ def capex_da_detector(
     return out
 
 
-DEFAULT = [capex_da_detector]
+def _is_net_income_detector(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    from scrooner_pipeline.fsn_store.is_detector import (
+        is_net_income_detector,
+    )  # an import cycle: is_detector imports LANE_DIR from here
+
+    return is_net_income_detector(conn, filing_id, decisions)
+
+
+DEFAULT = [capex_da_detector, _is_net_income_detector]

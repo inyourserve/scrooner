@@ -139,8 +139,9 @@ def classify(co: Company, concept: str, grain: str, end: date) -> tuple[str, str
                         if (fid, end, n) not in co.face:
                             return "ytd_only_input_not_face", f"{ln[3]} {n}Q={v[(end, n)]}", fid
                         prior = (month_end(end, -3), n - 1)
+                        tags = concept_tags(co, concept)
                         have = [(f2, t) for (f2, t), vv in co.values.items()
-                                if t in concept_tags(co, concept) and prior in vv and (f2, *prior) in co.face]
+                                if t in tags and prior in vv and (f2, *prior) in co.face]
                         if not have:
                             return "ytd_only_no_prior", f"{ln[3]} {n}Q={v[(end, n)]}; no face {n - 1}Q at {prior[0]}", fid
                         return "ytd_only_prior_present", f"{ln[3]} {n}Q; prior face in {len(have)} filing(s)", fid
@@ -164,6 +165,15 @@ def classify(co: Company, concept: str, grain: str, end: date) -> tuple[str, str
     if lab:
         return "other_tag_on_face", "; ".join(f"{ln[3]}:{ln[4][:50]}" for ln in lab[:4]), fid
     return "no_line_for_concept", "", fid
+
+
+def _filing_objs(conn: Any, company_id: int) -> dict[int, Any]:
+    from scrooner_pipeline.fsn_store import select as sel
+
+    rows = conn.execute(
+        "select id, accession, accepted, form, period, fy, fp, fye from fsn.filing where company_id = %s", (company_id,)
+    ).fetchall()
+    return {r[0]: sel.Filing(*r) for r in rows}
 
 
 def load(conn: Any, company_id: int) -> Company:
@@ -198,8 +208,19 @@ def load(conn: Any, company_id: int) -> Company:
     values: dict[tuple[int, str], dict] = defaultdict(dict)
     for fid, tag, d, q, v in cur.fetchall():
         values[(fid, tag)].setdefault((d, q), v)
-    data = sel.load_company(conn, company_id)
-    face = {(f, d, q) for f, s, d, q in data["face_cols"] if s == "IS"}
+    # the store's own face-column test (select.face_columns) on the anchor totals of the income statement
+    cur.execute(
+        """
+        select distinct v.filing_id, l.stmt, v.ddate, v.qtrs
+        from fsn.value v
+        join fsn.line l on l.filing_id = v.filing_id and l.tag_id = v.tag_id and not l.inpth
+        join fsn.tag t on t.id = v.tag_id and not t.custom
+        where v.company_id = %s and v.dim_id = 0 and v.iprx = 0 and v.coreg = ''
+          and v.value is not null and t.tag = any(%s)
+        """,
+        (company_id, list(sel.ANCHOR_TAGS["IS"])),
+    )
+    face = {(f, d, q) for f, s, d, q in sel.face_columns(_filing_objs(conn, company_id), cur.fetchall()) if s == "IS"}
     return Company(filings, dict(lines), dict(values), face)
 
 

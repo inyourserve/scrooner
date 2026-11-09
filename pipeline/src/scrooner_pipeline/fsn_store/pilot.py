@@ -161,13 +161,19 @@ def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, 
     return sorted(keys)
 
 
+# FSN rounds ddate to the NEAREST month end, so a 52/53-week period ending mid-month sits up to 16 days from it
+# (PepsiCo's 12-week Q2 ends 2015-06-13; FSN ddate 2015-05-31). Period ends are about 3 months apart, so 16 days
+# never reaches a neighbouring key. Was 10: every PEP Q2 key (and Q1 2016/2021/2022) was an unexplained gap.
+MATCH_DAYS = 16
+
+
 def _match(rows: list[dict[str, Any]], grain: str, end: date) -> dict[str, Any] | None:
     best = None
     for r in rows:
         if r["period_grain"] != grain:
             continue
         gap = abs((date.fromisoformat(r["fsn_end"]) - end).days)
-        if gap <= 10 and (best is None or gap < best[0]):
+        if gap <= MATCH_DAYS and (best is None or gap < best[0]):
             best = (gap, r)
     return best[1] if best else None
 

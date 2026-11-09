@@ -84,6 +84,9 @@ ANCHOR_TAGS = {
         "ProfitLoss",
         "NetIncomeLossAvailableToCommonStockholdersBasic",
         "IncomeLossFromContinuingOperations",
+        # PNC 10-Qs 2021-2023 print their bottom line under this tag (no ProfitLoss / NetIncomeLoss line on the
+        # face): without it no income-statement column of those filings counted as face (6 PNC quarters blank)
+        "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest",
     ),
     "BS": ("Assets", "LiabilitiesAndStockholdersEquity"),
     "CF": (
