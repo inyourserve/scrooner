@@ -121,7 +121,7 @@ def _seed(conn):
     one = lambda sql, p=(): conn.execute(sql, p).fetchone()[0]  # noqa: E731
     cid = one("insert into core.company (cik, company_name) values ('0000000555', 'PROMO') returning id")
     run = one("insert into analytics.rule_run (rule_id, rule_version, mode, flag_name, flag_state)"
-              " values ('fsn.cells@1', 1, 'apply', 'f', 'on') returning run_id")  # fmt: skip
+              " values ('fsn.select@1', 1, 'apply', 'f', 'on') returning run_id")  # fmt: skip
     periods = {
         "FY": one("insert into core.period (company_id, start_date, end_date, period_type)"
                   " values (%s, '2025-01-01', '2025-12-31', 'duration') returning id", (cid,)),  # fmt: skip
@@ -137,7 +137,8 @@ def _seed(conn):
                    " on conflict (name) do update set name = excluded.name returning id", (name,))  # fmt: skip
         for grain in pr._grains(name):
             conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value,"
-                         " source_fact_ids) values (%s, %s, %s, 100, '{}')", (cid, ccid, periods[grain]))  # fmt: skip
+                         " source_fact_ids, rule_run_id, family) values (%s, %s, %s, 100, '{}', %s, 'is')",
+                         (cid, ccid, periods[grain], run))  # fmt: skip
             start, end = span[grain]
             conn.execute(
                 "insert into analytics.cell_proof (company_id, data_point_name, period_grain, period_start, period_end,"
@@ -160,8 +161,9 @@ def _seed(conn):
             " 'general', 'sector_default', 'tv')", (cid, dp))  # fmt: skip
         conn.execute("insert into analytics.data_point_registry (data_point_name, data_point_type)"
                      " values (%s, 'concept') on conflict do nothing", (dp,))  # fmt: skip
+    # an old-pipeline summary saying revenue AND inventory have values: never read (one source)
     conn.execute("insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value)"
-                 " values (%s, 'revenue', true), (%s, 'inventory', false)", (cid, cid))  # fmt: skip
+                 " values (%s, 'revenue', true), (%s, 'inventory', true)", (cid, cid))  # fmt: skip
     conn.execute(
         "insert into analytics.cell_blank_reason (run_id, company_id, data_point_name, period_grain, period_start,"
         " period_end, state, rule_id, reason_code) values (%s, %s, 'inventory', 'I', '2026-09-30', '2026-09-30',"
@@ -272,4 +274,37 @@ def test_newest_proof_row_decides_a_served_cell(db):
     db.commit()
     (d,) = pr.promote(db, [cid], as_of=date(2026, 11, 9), now=NOW)
     assert (d.new_state, d.blockers) == ("checks_clean", ("reconciled:unproven:diluted_eps_resolved:1_of_2",))
+    db.rollback()
+
+
+@pytest.mark.integration
+def test_one_source_the_hybrid(db):
+    """Founder direction 2026-11-09: a served headline cell the hybrid did not write blocks
+    reconciled, and the old company_data_point_coverage summary never accounts a template cell."""
+    cid = _seed(db)
+    old = db.execute("insert into analytics.rule_run (rule_id, rule_version, mode, flag_name, flag_state)"
+                     " values ('cells.is_core@1', 1, 'apply', 'f', 'on') returning run_id").fetchone()[0]  # fmt: skip
+    db.execute("update analytics.canonical_fact set rule_run_id = %s where company_id = %s and canonical_concept_id ="
+               " (select id from analytics.canonical_concept where name = 'net_income_resolved')"
+               " and period_id = (select id from core.period where company_id = %s and end_date = '2025-12-31')",
+               (old, cid, cid))  # fmt: skip
+    db.commit()
+    (d,) = pr.promote(db, [cid], as_of=date(2026, 11, 9), now=NOW)
+    assert (d.new_state, d.blockers) == ("checks_clean", ("reconciled:not_hybrid:net_income_resolved:1_of_2",))
+    db.rollback()
+    db.execute("update analytics.canonical_fact set rule_run_id = (select run_id from analytics.rule_run"
+               " where rule_id = 'fsn.select@1') where company_id = %s", (cid,))  # fmt: skip
+    db.execute("delete from analytics.cell_blank_reason where company_id = %s", (cid,))
+    # an old-pipeline inventory value (non-fsn rule run) does not account the template cell either
+    inv = db.execute("insert into analytics.canonical_concept (name, statement, combination_mode)"
+                     " values ('inventory', 'balance_sheet', 'first_match') on conflict (name) do update"
+                     " set name = excluded.name returning id").fetchone()[0]  # fmt: skip
+    db.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value,"
+               " source_fact_ids, rule_run_id) select %s, %s, id, 7, '{}', %s from core.period"
+               " where company_id = %s and end_date = '2026-09-30' and start_date = end_date",
+               (cid, inv, old, cid))  # fmt: skip
+    db.commit()
+    (d,) = pr.promote(db, [cid], as_of=date(2026, 11, 9), now=NOW)
+    # inventory: coverage says has_value, but no hybrid cell and no writer reason -> unaccounted
+    assert (d.new_state, d.blockers) == ("verified", ("certified:template_cells_unaccounted:1_of_2",))
     db.rollback()

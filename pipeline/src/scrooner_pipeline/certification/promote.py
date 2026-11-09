@@ -15,7 +15,9 @@ out of `uncertified` (only the invariant suite does that) and never creates a ro
 
 Exact tests, per company (headline data points out of the company's sector template are not
 required):
-  reconciled  For each headline concept: at least one served canonical_fact cell in the window,
+  reconciled  For each headline concept: every served cell in the window was written by the
+              hybrid (FSN store: canonical_fact.rule_run_id -> an `fsn.*` rule run; founder
+              direction 2026-11-09, one source, the hybrid), at least one served cell exists,
               and EVERY served cell has a cell_proof row (same data point, period start and end,
               basis latest, newest row) that is PROVEN with shown_value equal to the value served
               now (a proof of an older value is stale). No cell_proof row of a headline concept
@@ -27,9 +29,10 @@ required):
               checked within MARKET_CAP_MAX_AGE_DAYS. The company has no open (not superseded)
               `wrong` or `blank_wrong` row.
   certified   The company has a current sector template (0120), and every in-template data point
-              has a value (analytics.company_data_point_coverage.has_value) or its newest blank
-              reason (analytics.cell_blank_reason, latest basis) is classified (not a defect of
-              class unclassified).
+              is valued by the hybrid (a served canonical_fact cell under an `fsn.*` rule run, by
+              base name; for a metric, a metric_value with a value) or its newest blank reason
+              (analytics.cell_blank_reason, latest basis) is classified (not a defect of class
+              unclassified). Old-pipeline summaries (company_data_point_coverage) are not read.
 """
 
 from __future__ import annotations
@@ -73,6 +76,8 @@ class Evidence:
     # concept -> (served cells, proven-and-current cells)
     served: dict[str, tuple[int, int]] = field(default_factory=dict)
     disagree: dict[str, int] = field(default_factory=dict)
+    # concept -> served cells written by the hybrid (canonical_fact under an fsn.* rule run)
+    hybrid: dict[str, int] = field(default_factory=dict)
     # (concept, grain) -> (period_end, shown_value) of the latest PROVEN cell
     latest: dict[tuple[str, str], tuple[date, Decimal]] = field(default_factory=dict)
     # verifier rows: (data_point, grain, period_end, verdict, shown_value, checked_at)
@@ -115,6 +120,9 @@ def _reconciled(ev: Evidence, concepts: list[str]) -> list[str]:
             blockers.append(f"reconciled:no_served_cell:{c}")
         elif proven < served:
             blockers.append(f"reconciled:unproven:{c}:{served - proven}_of_{served}")
+        old = served - ev.hybrid.get(c, served)
+        if old > 0:
+            blockers.append(f"reconciled:not_hybrid:{c}:{old}_of_{served}")
         if ev.disagree.get(c):
             blockers.append(f"reconciled:disagree:{c}:{ev.disagree[c]}")
     return blockers
@@ -205,10 +213,12 @@ TEMPLATE_SQL = """
 
 SERVED_SQL = """
     select cf.company_id, cc.name, count(*) as served,
-           count(*) filter (where pr.verdict = 'PROVEN' and pr.shown_value = cf.value) as proven
+           count(*) filter (where pr.verdict = 'PROVEN' and pr.shown_value = cf.value) as proven,
+           count(*) filter (where rr.rule_id like 'fsn.%%') as hybrid
     from analytics.canonical_fact cf
     join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
     join core.period p on p.id = cf.period_id
+    left join analytics.rule_run rr on rr.run_id = cf.rule_run_id
     left join lateral (
         select cp.verdict, cp.shown_value
         from analytics.cell_proof cp
@@ -252,26 +262,44 @@ CHECKS_SQL = """
     where company_id = any(%(ids)s) and superseded_at is null and basis = 'latest'
 """
 
-TEMPLATE_COVERAGE_SQL = """
+# The cell writer stores concept names (revenue_sanity_resolved, x_resolved); templates and
+# reasons may use either layer's name: compare on the base name (model.base_name in SQL).
+_BASE = (
+    "case when {c} = 'revenue_sanity_resolved' then 'revenue'"
+    " else regexp_replace({c}, '_resolved$', '') end"
+)
+
+TEMPLATE_COVERAGE_SQL = f"""
     with latest as (
         select company_id, max(effective_from) as effective_from
         from analytics.company_data_point_template
         where company_id = any(%(ids)s) and effective_from <= %(as_of)s
         group by company_id
     ), cells as (
-        select t.company_id, t.data_point
+        select t.company_id, t.data_point, {_BASE.format(c="t.data_point")} as base
         from analytics.company_data_point_template t
         join latest l on l.company_id = t.company_id and l.effective_from = t.effective_from
         where t.in_template
+    ), hybrid as (
+        select distinct cf.company_id, {_BASE.format(c="cc.name")} as base
+        from analytics.canonical_fact cf
+        join analytics.rule_run rr on rr.run_id = cf.rule_run_id and rr.rule_id like 'fsn.%%'
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        where cf.company_id = any(%(ids)s)
     )
     select c.company_id, count(*) as cells,
            count(*) filter (where exists (
-               select 1 from analytics.company_data_point_coverage cv
-               where cv.company_id = c.company_id and cv.data_point_name = c.data_point and cv.has_value
+               select 1 from hybrid h where h.company_id = c.company_id and h.base = c.base
+           ) or exists (
+               select 1 from analytics.metric_value mv
+               join analytics.metric_definition md on md.id = mv.metric_definition_id
+               where mv.company_id = c.company_id and md.metric_name = c.data_point
+                 and md.status = 'active' and mv.value is not null
            ) or (
                select not (b.state = 'defect' and coalesce(b.defect_class, 'unclassified') = 'unclassified')
                from analytics.cell_blank_reason b
-               where b.company_id = c.company_id and b.data_point_name = c.data_point and b.basis = 'latest'
+               where b.company_id = c.company_id and b.basis = 'latest'
+                 and {_BASE.format(c="b.data_point_name")} = c.base
                order by b.created_at desc, b.id desc
                limit 1
            )) as accounted
@@ -327,9 +355,10 @@ def load_evidence(
     for cid, dp, flag in _rows(cur, TEMPLATE_SQL, p, timeout_s):
         if cid in ev:
             ev[cid].template_rows.append((dp, flag))
-    for cid, name, served, proven in _rows(cur, SERVED_SQL, p, timeout_s):
+    for cid, name, served, proven, hybrid in _rows(cur, SERVED_SQL, p, timeout_s):
         if cid in ev:
             ev[cid].served[name] = (int(served), int(proven))
+            ev[cid].hybrid[name] = int(hybrid)
     for cid, name, n in _rows(cur, DISAGREE_SQL, p, timeout_s):
         if cid in ev:
             ev[cid].disagree[name] = int(n)
