@@ -18,6 +18,8 @@ FIXTURES = {
     "ITW": ROOT / "pipeline/tests/fixtures/fsn_is_net_income/0000049826",
     "AAPL": ROOT / "pipeline/tests/fixtures/fsn_is_net_income/0000320193",
     "FLS": ROOT / "pipeline/tests/fixtures/fsn_is_structure/0000030625",
+    "PGR": ROOT / "pipeline/tests/fixtures/fsn_is_structure/0000080661",
+    "DIS": ROOT / "pipeline/tests/fixtures/fsn_is_structure/0001744489",
 }
 PRETAX = is_structure.PRETAX
 
@@ -158,6 +160,94 @@ def test_pretax_slot_holds_a_face_without_a_tax_line():
     """most equity REITs print no income-tax line: an absence, not a mapping gap"""
     s = is_structure.pretax_slot([FACE[0], FACE[1], FACE[3]], VALS)
     assert s["status"] == "held" and s["gate"] == "hold_pretax_no_tax_line"
+
+
+# ---------------------------------------------------------------- interest expense
+INTEREST = is_structure.INTEREST
+
+
+def _lines(conn, fid, concept):
+    return conn.execute(
+        """select t.tag, lm.rule_id from fsn.line_map lm join fsn.line l using (filing_id, report, line)
+           join fsn.tag t on t.id = l.tag_id join analytics.canonical_concept c on c.id = lm.canonical_concept_id
+           where lm.filing_id = %s and c.name = %s and lm.status = 'mapped'""",
+        (fid, concept),
+    ).fetchall()
+
+
+@pytest.mark.integration
+def test_single_gross_interest_line_under_a_debt_component_tag_maps(store):
+    """Progressive FY2024 10-K prints one "Interest expense" line (279M) under InterestExpenseDebt"""
+    rs = mapping.load_rules(store)
+    fid = _fid(store, "PGR")
+    mapping.map_filing(store, fid, rs, detectors=detectors.DEFAULT[:3])
+    assert _lines(store, fid, INTEREST) == []
+    mapping.map_filing(store, fid, rs, detectors=detectors.DEFAULT)
+    assert _lines(store, fid, INTEREST) == [("InterestExpenseDebt", is_structure.INTEREST_RULE)]
+
+
+@pytest.mark.integration
+def test_net_interest_face_maps_no_interest_expense(store):
+    """Disney prints only "Interest expense, net" (InterestIncomeExpenseNonoperatingNet): a net line is not gross
+    interest expense, so nothing is mapped (its reason belongs to the certification lead)"""
+    fid = _fid(store, "DIS")
+    mapping.map_filing(store, fid, mapping.load_rules(store), detectors=detectors.DEFAULT)
+    assert _lines(store, fid, INTEREST) == []
+
+
+@pytest.mark.integration
+def test_seed_interest_line_untouched(store):
+    """ITW prints InterestExpenseNonoperating (the seed's tag); the detector adds nothing"""
+    rs = mapping.load_rules(store)
+    fid = _fid(store, "ITW")
+    mapping.map_filing(store, fid, rs, detectors=detectors.DEFAULT[:3])
+    before = _lines(store, fid, INTEREST)
+    mapping.map_filing(store, fid, rs, detectors=detectors.DEFAULT)
+    assert before == _lines(store, fid, INTEREST) and len(before) == 1 and before[0][0] == "InterestExpenseNonoperating"
+    iid = _one(store, "select id from analytics.canonical_concept where name = %s", (INTEREST,))
+    pgr = _fid(store, "PGR")
+    mapping.map_filing(store, pgr, rs, detectors=detectors.DEFAULT[:3])
+    decisions = store.execute(
+        "select filing_id, report, line, canonical_concept_id, status from fsn.line_map where filing_id = %s", (pgr,)
+    ).fetchall()
+    assert is_structure.interest_detector(store, pgr, decisions)  # control
+    assert is_structure.interest_detector(store, pgr, [*decisions, (pgr, 99, 1, iid, "mapped")]) == []
+
+
+IE_FACE = [
+    _row(1, "Revenues", "Revenues"),
+    _row(2, "InterestExpenseDebt", "Interest expense"),
+    _row(3, "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest", "Income before income taxes"),
+    _row(4, "IncomeTaxExpenseBenefit", "Income taxes"),
+]
+
+
+def test_interest_slot_maps_the_only_gross_line():
+    s = is_structure.interest_slot(IE_FACE)
+    assert s["status"] == "mapped" and s["line"] == 2
+
+
+def test_interest_slot_holds_two_interest_expense_lines():
+    """a bank-like split (or debt + other interest) has no single total line"""
+    face = [*IE_FACE, _row(5, "InterestExpenseOther", "Interest expense on other borrowings")]
+    assert is_structure.interest_slot(face)["status"] == "held"
+
+
+def test_interest_slot_holds_when_a_net_interest_line_is_printed():
+    face = [*IE_FACE, _row(5, "InterestIncomeExpenseNonoperatingNet", "Interest income, net")]
+    assert is_structure.interest_slot(face)["gate"] == "hold_interest_net_line_on_face"
+
+
+def test_interest_slot_holds_a_net_or_other_label():
+    """Cigna 'Interest expense and other', GE Vernova 'Interest and other financial charges - net'"""
+    face = [IE_FACE[0], _row(2, "InterestExpenseDebt", "Interest expense and other"), *IE_FACE[2:]]
+    assert is_structure.interest_slot(face)["status"] == "held"
+
+
+def test_interest_slot_holds_a_custom_tag():
+    """a company extension that reuses a standard local name is still the company's own element"""
+    face = [IE_FACE[0], _row(2, "InterestExpenseDebt", "Interest expense", custom=True), *IE_FACE[2:]]
+    assert is_structure.interest_slot(face)["status"] == "held"
 
 
 @pytest.mark.parametrize(

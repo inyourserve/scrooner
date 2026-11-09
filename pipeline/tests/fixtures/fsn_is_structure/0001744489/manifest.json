@@ -1,0 +1,35 @@
+{
+ "cik": "0001744489",
+ "company_id": null,
+ "fsn_sets": [
+  "2025q1"
+ ],
+ "periods_scanned": [
+  "2025q1"
+ ],
+ "accessions": [
+  "0001744489-25-000067"
+ ],
+ "row_counts": {
+  "sub": 1,
+  "pre": 188,
+  "num": 683,
+  "cal": 115,
+  "ren": 78,
+  "tag": 266,
+  "dim": 72
+ },
+ "file_sha256": {
+  "sub": "8f755daa980c93321cd846f418afd775b997c81511259709cec883306d0c9ce3",
+  "pre": "875d8b356f497c2f399c64ad0f0912f59545c9db9b02fefc8da6d64a53bab58f",
+  "num": "c44733d5ee3ad036ae4d036d17750f96a9c7ef5d1a1b7233affbff5302430c55",
+  "cal": "cc8dbb3c8b93728198bab8ffdcd7842066fb465bfc325956b54293f05ca81dbf",
+  "ren": "9e7df383b400a9e61a87dc57d67eed683f2539e5fc95cc1b104a1bc23a9e792e",
+  "tag": "b170048dc0e2284f9bed44b458a888dc867922564a52c6d5de4e84558a1d0075",
+  "dim": "20da0cabdf57314221ab6c8b09d4b6964fd8bdf7e856c0fa71c1fb2df2b7372b"
+ },
+ "input_sha256": "316cec6a59479ccd74abab6990cd2c186174984a9e2d155b7b8260835f77efcb",
+ "shard_commit": "local",
+ "created_at": "2026-11-09T17:06:12+00:00",
+ "bucket_manifest": null
+}
