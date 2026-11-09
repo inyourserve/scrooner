@@ -28,12 +28,14 @@ from scrooner_pipeline.fsn_store import detectors as det
 PRETAX = "income_before_tax_resolved"
 PRETAX_RULE = "is.pretax_above_tax_line_tie@1"
 TAX_TAG = "IncomeTaxExpenseBenefit"
-BEFORE_TAX = re.compile(
-    r"before (provision for |\(?provision\)? ?for |benefit from |\(benefit\) |)?(income )?tax|pre-?tax",
-    re.I,
-)
+# "before income taxes", "before provision for (benefit from) income taxes", "before income tax expense and equity in
+# earnings", "pre-tax earnings". A line naming discontinued operations, the noncontrolling SHARE ("attributable to
+# noncontrolling"), per-share amounts, comprehensive or deferred items is never the consolidated pre-tax line; "before
+# income taxes and noncontrolling interest" (HEICO, Choice) is.
+BEFORE_TAX = re.compile(r"\bbefore\b.{0,45}?\btax|pre-?tax", re.I)
 NOT_PRETAX = re.compile(
-    r"discontinued|non-?controlling|minority|per share|comprehensive", re.I
+    r"discontinued|attributable to (the )?(non-?controlling|minority)|per share|comprehensive|deferred",
+    re.I,
 )
 
 
