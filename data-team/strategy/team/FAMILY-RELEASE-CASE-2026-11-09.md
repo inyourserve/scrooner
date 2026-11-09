@@ -63,6 +63,29 @@ In production `fsn.line_map` (loaded by run 42561798991, 893 companies), all `to
 3. Gate: MSFT FY2014-FY2026 face series (FSN-expert §6.7: 22,645 / 35,292 / 53,461 / 86,194 / 76,240 / 72,178 / 63,327 / 58,146 / 49,781 / 47,237 / 51,630 / 43,151 / 40,294, plus note finance leases from FY2018), META 2022-12-31 = 10,610, AMZN 3/3, HD 2016-01-31 21,216 (latest print).
 4. The open ruling on `latest_copy_lacks_note_finance_lease` (META 2025-12-31 and 2022-12-31; Verifier's reading: avoidable hold) must be given before the note-lease path ships.
 
+### Gate of the debt-lane port (update 2026-11-09)
+
+Branch `work/fsn/debt-lane-port` 4c7c6e9: pilot dry run 42657441595, MSFT + META, scratch DB, plan off. Artifact `fsn-pilot`: 73 values, 19 reasoned blanks, 0 failed companies, CI 42657412582 green. DATA-INFERRED: compared with the FSN-expert face series and the Verifier values, not re-opened on sec.gov.
+
+**MSFT (FY ends 06-30).**
+
+| Fiscal years | Result |
+|---|---|
+| FY2017–FY2026 | Borrowings equal the FSN-expert face series, 10 of 10: 86,194 / 76,240 / 72,178 / 63,327 / 58,146 / 49,781 / 47,237 / **51,630** (CommercialPaper 6,693 included) / 43,151 / 40,294. |
+| FY2015, FY2016 | Held, `not_computable_uncovered_candidates`. The record era 2014-06-30..2017-12-31 is not coverage-clean: `SecuritiesLoaned` ("Short-term investments, securities loaned") is an unclassified BS line. This is a reasoned blank, not a wrong value. Classifying that line is a Tag Expert / Tag Mapper call. |
+| FY2014 | No cell. Cells start 2015-01-01 (invariant I11). |
+
+The served value adds note finance leases (founder 2026-11-04 item 5). FY2018 adds 4,301, which matches Verifier debt v3. The FY2017 figure (2,538) and FY2025–26 (46,172 / 66,594) are not yet Verifier-checked.
+
+**META.**
+- 2022-12-31 = **10,610** = 9,923 + 687, the Verifier's corrected value. The latest copy (0001326801-24-000012) prints the same debt lines. The lane takes the lease tags from the earlier copy (0001326801-23-000013), under the port's rule "fill from the earlier copy only when the debt lines are equal".
+- 2023–2025 year ends: 19,075 / 29,535 / 59,928. 2025-12-31 equals the Verifier's 58,744 + 1,184.
+- Holds: one `latest_copy_lacks_note_finance_lease` and seven `current_maturities_unverified`.
+
+**Two findings.**
+1. Nine META values are 0, debt-free 2016-12-31..2018-12-31, with no summed fact to cite. The cell loader demotes a value with no lineage to a lineage-defect blank, so these show as blanks, not 0. Needs a choice: cite the balance sheet's Liabilities line, or accept the blank.
+2. The earlier-copy lease fill decides META 2022-12-31. That is the case the Verifier asked the founder or Dhairya to rule on (§5 #3). The value matches the Verifier's reading, but the ruling is still open.
+
 ## 3. Balance sheet
 
 ### 3a. Total liabilities: not ready
