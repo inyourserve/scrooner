@@ -72,9 +72,12 @@ A blank cell in the store is right only if its reason agrees. A **value** where 
 1. Read `analytics.canonical_fact` and `analytics.cell_blank_reason` for the 200 keys (one connection, statement_timeout; period matched within ±10 days).
 2. **Value cells:** the store value must equal `expected` within half the printed rounding unit. For a mismatch, re-open the filing and decide: store wrong, key wrong (fix the key and say so), or a basis difference (e.g. the original vs the latest copy, recorded in `original` / `copies`).
 3. **Blank cells:** the state and reason must agree with `blank_reason_expected`. A store value there gets a hand check (note-sourced or wrong).
-4. **Shares outstanding (12 + CAT):** grade against the definition the store uses. The key records both the period-end balance-sheet parenthetical (`expected`) and the own filing's cover-page dei count with its date (`note`). Visa is multi-class.
+4. **Shares outstanding (12 + CAT):** RULE (mind `share-count-for-per-share-metrics-balance-sheet-date-only-co`): the balance-sheet-date count is the value; the cover count is only a cross-check; for multi-class companies (Visa), sum the classes. grade against the definition the store uses. The key records both the period-end balance-sheet parenthetical (`expected`) and the own filing's cover-page dei count with its date (`note`). Visa is multi-class.
 5. **cell_proof first:** compare its verdicts with this key. Cells where cell_proof says "proved" and the key disagrees are reported first.
 6. **Report:** N of N right, the wrong cells with accession and page, avoidable holds, and false holds. Gate: zero wrong shown values.
+
+## Rule updates (2026-11-09, from the shared memory)
+- **DPS:** the own-vintage copy wins (mind `dividends-per-share-own-vintage-copies-win-later-filings-rep`). Later filings repeat another year's rate on comparatives, so DPS `expected` is now the period's own filing, not the latest copy.
 
 ## Known limits of the key
 
