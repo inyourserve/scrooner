@@ -44,3 +44,16 @@ Step 3a: template- and reason-aware I11, on `work/certification-lead/i11-templat
 - `select count(*) from analytics.company_data_point_template` (expect 0)
 - `select count(*) from analytics.cell_proof where company_id in (<MSFT>, <HD>) group by status` (proof state after the write)
 - `select count(*) from analytics.slot_protected_cell where created_at > '2026-11-09 15:56'` (did run 42649721096 write)
+
+## 5. Update: step 3a done (blocker 3)
+Branch `work/certification-lead/i11-template-reasons`, commit `3792a3e0`; CI run 42653854475 green on every job (pipeline 2,387 passed, 0 failed). **Not merged: it needs a founder merge.**
+
+What changed in certify I11:
+- **Template:** a data point OUT of the company's current template (0120) is no longer an expected cell.
+- **Writer reasons:** a missing cell with a `cell_blank_reason` row (newest per key, latest basis, grains FY/Q/I) is classified as `blank_reason:<code>`. That reason is checked before `period_gap`.
+- **Still blocking:** a `defect` row whose class is unclassified, and a blank with no reason at all.
+- **No rows in either table:** the behaviour is unchanged.
+
+Tests: 9 (1 on real Postgres 16); 12/12 mutations caught; the 236 existing certification tests are unchanged and pass.
+
+**Next:** `certify promote` plus a Verifier record table, once the ladder ruling (blocker 2) lands. Until then this lane stays off production. It analyses the cell_proof and certify dry-run outputs once someone dispatches them after run 42649721096.
