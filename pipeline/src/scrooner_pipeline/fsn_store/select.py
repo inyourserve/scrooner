@@ -115,19 +115,21 @@ REASONS = {
     "sign_inconsistent": ("filer_error", "verifier"),
     # a pilot gap key written as a blank (founder 2026-11-09: no fallback, every key of a written pair is the
     # hybrid's value or a visible reason): the filing is not in the store / the hybrid could not resolve it
-    "filing_not_in_store": ("ingestion", "data_engineer_l2"),
+    "filing_not_in_store": ("ingestion", "data_engineer_l1"),
     "hybrid_gap_unresolved": ("unclassified", "triage"),
+    # ruling addendum N2: a written cell that cell_proof disagrees with is re-written as this blank
+    "cell_proof_disagree": ("identity", "verifier"),
 }
-# hybrid_gap_unresolved: (defect_class, owner) by the pilot's gap cause (input_refs.pilot_cause)
+# hybrid_gap_unresolved: (defect_class, owner) by the pilot's gap cause (input_refs.pilot_cause); ruling addendum N1
+# (Ritwik 2026-11-09): any other cause is unclassified / triage
 GAP_CAUSE_CLASS = {
     "no_mapped_line": ("vocabulary", "tag_mapper"),
     "no_mapped_line_cond": ("vocabulary", "tag_mapper"),
     "no_concept_rule": ("vocabulary", "tag_mapper"),
     "quarter_not_printed_or_derivable": ("period", "period_engineer"),
-    "sector_row_definition_pending": ("definition_pending", "accountant"),
-    "no_face_print_for_period": ("unclassified", "triage"),
 }
 REASON_TEXT = {
+    "cell_proof_disagree": "The independent proof of this cell against the filing disagrees with the stored value, so it is not shown until the disagreement is resolved.",
     "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
     "hybrid_gap_unresolved": "The filing is stored, but this value could not be read from its statements yet; the cause is recorded with the cell.",
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -649,9 +651,14 @@ def to_row(
             cls, owner = GAP_CAUSE_CLASS.get(
                 cell.input_refs.get("pilot_cause"), (cls, owner)
             )
+        text = REASON_TEXT[cell.reason_code or ""]
+        if cell.input_refs.get(
+            "pilot_cause"
+        ):  # N1: the reason text carries the pilot cause
+            text += f" Pilot cause: {cell.input_refs['pilot_cause']}."
         row.update(
             reason_code=cell.reason_code,
-            reason_text=REASON_TEXT[cell.reason_code or ""],
+            reason_text=text,
             defect_class=cls,
             owner=owner,
             root_cause_class=cls,

@@ -547,3 +547,209 @@ def test_report_company_writes_every_gap_key_as_a_reasoned_blank(conn, tmp_path)
         for g in gaps
         if date.fromisoformat(g["period_end"]) < date(2021, 1, 1)
     )
+
+
+@pytest.mark.unit
+def test_n1_each_pilot_cause_maps_to_a_valid_defect_and_a_defect_without_class_is_refused():
+    """Ruling addendum N1: state defect (never not_presented), filing_not_in_store -> ingestion /
+    data_engineer_l1, hybrid_gap_unresolved -> the class of its pilot cause (period / period_engineer,
+    vocabulary / tag_mapper, otherwise unclassified / triage), reason_text carries the cause, input_refs the
+    accession where one exists."""
+    from datetime import date
+
+    from scrooner_pipeline.common.cell_contract import validate_defect
+    from scrooner_pipeline.fsn_store import select as sel
+    from scrooner_pipeline.normalizer import cell_loader
+
+    filings = {7: _filing(7, date(2024, 6, 30))}
+    want = {
+        "no_mapped_line": ("vocabulary", "tag_mapper"),
+        "no_mapped_line_cond": ("vocabulary", "tag_mapper"),
+        "no_concept_rule": ("vocabulary", "tag_mapper"),
+        "quarter_not_printed_or_derivable": ("period", "period_engineer"),
+        "no_face_print_for_period": ("unclassified", "triage"),
+        "sector_row_definition_pending": ("unclassified", "triage"),
+    }
+    for cause, (cls, owner) in want.items():
+        row = sel.to_row(
+            pilot.gap_blank(REV, "Q", date(2024, 6, 30), cause, filings), 1, filings
+        )
+        assert (row["state"], row["defect_class"], row["owner"]) == (
+            "defect",
+            cls,
+            owner,
+        ), cause
+        validate_defect(
+            row["state"], row["defect_class"], row["owner"], row["root_cause_class"]
+        )
+        assert (
+            cause in row["reason_text"]
+            and row["input_refs"]["accession"]
+            == row["accession"]
+            == filings[7].accession
+        )
+    missing = sel.to_row(
+        pilot.gap_blank(REV, "Q", date(2024, 9, 30), "no_mapped_line", filings),
+        1,
+        filings,
+    )
+    assert (missing["reason_code"], missing["defect_class"], missing["owner"]) == (
+        "filing_not_in_store",
+        "ingestion",
+        "data_engineer_l1",
+    )
+    assert "accession" not in missing["input_refs"] and missing["accession"] is None
+    bare = json.loads(
+        json.dumps(
+            dict(missing, defect_class=None, owner=None, root_cause_class=None),
+            default=str,
+        )
+    )
+    assert cell_loader.parse_row(1, bare, {REV}) == "defect_fields_inconsistent"
+
+
+def _w(cid, dp, grain, end, value="10", state="value"):
+    return {
+        "company_id": cid,
+        "data_point_name": dp,
+        "period_grain": grain,
+        "fsn_end": end,
+        "state": state,
+        "value": value,
+        "unit": "USD",
+        "rule_id": "fsn.select_printed@1",
+        "source_value_ids": [1],
+    }
+
+
+@pytest.mark.unit
+def test_n2_a_disagree_cell_becomes_a_blank_and_its_pair_is_reloaded_whole():
+    """Ruling addendum N2: never the old value back. The DISAGREE key is a defect blank (identity / verifier,
+    cell_proof_disagree); every other row of the same pair is reloaded unchanged (the loader replaces a pair
+    whole); a pair without a DISAGREE is not touched; a DISAGREE matching no written cell is reported."""
+    from datetime import date
+
+    rows = [
+        _w(1, REV, "FY", "2023-12-31", "100"),
+        _w(
+            1, REV, "Q", "2015-07-31", "25539"
+        ),  # Kroger-style: the proof row has the true end 2015-08-15
+        _w(1, NI, "FY", "2023-12-31", "7"),
+        _w(2, REV, "FY", "2023-12-31", "9"),
+    ]
+    disagrees = [
+        {
+            "id": 41,
+            "company_id": 1,
+            "data_point_name": REV,
+            "period_grain": "Q",
+            "period_start": date(2015, 5, 24),
+            "period_end": date(2015, 8, 15),
+            "shown_value": 25539,
+            "position_value": 25540,
+            "reason_code": "position_differs",
+            "rule_id": "proof.cell_proof@1",
+        },
+        {
+            "id": 42,
+            "company_id": 3,
+            "data_point_name": REV,
+            "period_grain": "FY",
+            "period_start": date(2023, 1, 1),
+            "period_end": date(2023, 12, 31),
+            "shown_value": 1,
+            "position_value": 2,
+            "reason_code": "x",
+            "rule_id": "proof.cell_proof@1",
+        },
+    ]
+    out, unmatched = pilot.blank_disagreements(rows, disagrees)
+    assert [
+        (r["company_id"], r["data_point_name"], r["period_grain"]) for r in out
+    ] == [(1, REV, "FY"), (1, REV, "Q")]
+    fy, q = out
+    assert (
+        fy["state"] == "value" and fy["value"] == "100"
+    )  # the rest of the pair, unchanged
+    assert (
+        q["state"],
+        q["value"],
+        q["defect_class"],
+        q["owner"],
+        q["reason_code"],
+    ) == ("defect", None, "identity", "verifier", "cell_proof_disagree")
+    assert (
+        q["input_refs"]["cell_proof_id"] == 41
+        and q["input_refs"]["replaced_value"] == "25539"
+    )
+    assert [d["id"] for d in unmatched] == [42]
+
+
+@pytest.mark.integration
+def test_proof_blank_command_reads_cell_proof_and_writes_whole_pairs(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    import psycopg
+
+    from scrooner_pipeline.common.config import settings
+    from scrooner_pipeline.jobs import fsn as fsn_job
+    from scrooner_pipeline.normalizer import cell_loader
+
+    with psycopg.connect(isolated_database_url) as c:
+        cid = c.execute(
+            "insert into core.company (cik, company_name) values ('0000000001', 'A') returning id"
+        ).fetchone()[0]
+        c.execute(
+            """insert into analytics.cell_proof (company_id, data_point_name, period_grain, period_start, period_end,
+                   shown_value, position_value, verdict, reason_code, detector_version)
+               values (%s, %s, 'FY', '2023-01-01', '2023-12-31', 100, 90, 'DISAGREE', 'position_differs', 't'),
+                      (%s, %s, 'FY', '2022-01-01', '2022-12-31', 80, 80, 'UNCHECKED', null, 't')""",
+            (cid, REV, cid, REV),
+        )
+    monkeypatch.setattr(settings, "database_url", isolated_database_url)
+    w = tmp_path / "write" / "income"
+    w.mkdir(parents=True)
+    rows = [
+        dict(
+            _w(cid, REV, "FY", "2023-12-31", "100"),
+            fiscal_year=2023,
+            fiscal_period="FY",
+            period_type="duration",
+            period_start=None,
+            period_end=None,
+            evidence_level="DATA-INFERRED",
+            input_refs={},
+        ),
+        dict(
+            _w(cid, REV, "FY", "2022-12-31", "80"),
+            fiscal_year=2022,
+            fiscal_period="FY",
+            period_type="duration",
+            period_start=None,
+            period_end=None,
+            evidence_level="DATA-INFERRED",
+            input_refs={},
+        ),
+    ]
+    with gzip.open(w / "cells.jsonl.gz", "wt") as fh:
+        for r in rows:
+            fh.write(json.dumps(r) + "\n")
+    out = tmp_path / "proof_blank"
+    res = CliRunner().invoke(
+        fsn_job.app,
+        ["proof-blank", "--write-dir", str(tmp_path / "write"), "--out", str(out)],
+    )
+    assert res.exit_code == 0, res.output + repr(res.exception)
+    got = [
+        json.loads(line) for line in gzip.open(out / "income" / "cells.jsonl.gz", "rt")
+    ]
+    assert [(r["fsn_end"], r["state"]) for r in got] == [
+        ("2023-12-31", "defect"),
+        ("2022-12-31", "value"),
+    ]
+    assert json.loads((out / "summary.json").read_text())["families"]["income"] == {
+        "rows_reloaded": 2,
+        "cells_blanked": 1,
+    }
+    for r in got:  # both rows load
+        assert not isinstance(cell_loader.parse_row(1, r, {REV}), str)

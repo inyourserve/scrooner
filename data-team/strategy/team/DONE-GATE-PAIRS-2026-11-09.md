@@ -42,6 +42,27 @@ Dhairya relayed the founder's typed words from his session, about 22:30 IST: "No
   **Open:** if the old mapper holds values for such a pair, they survive, because nothing is written that would replace them. Removing them needs a pair delete, or `not_in_template` blanks at the before-image keys. Tell me which, and I'll build it.
 - The month-end match (branch `work/fsn/month-end-match`) is included here, so mid-month 52/53-week ends count as stored.
 
+### Ritwik's addendum N1–N5 (2026-11-09 ~17:00 UTC)
+
+- **N1 (built).** Both blanks are `state = 'defect'`.
+  - `filing_not_in_store` maps to `ingestion` / `data_engineer_l1`.
+  - `hybrid_gap_unresolved` takes the class of its pilot cause: `vocabulary` / `tag_mapper`, `period` / `period_engineer`, otherwise `unclassified` / `triage`.
+  - `reason_text` carries the pilot cause.
+  - `input_refs.accession`, and the row's `accession`, hold the latest stored filing that reports the period, when one exists.
+  - Tested: each cause maps to a valid (state, class, owner), and a defect row without a class or owner is refused (`defect_fields_inconsistent`).
+- **N2 (built, not wired into the workflow).** `pilot.blank_disagreements` and `scrooner-fsn proof-blank --write-dir out/write --out out/proof_blank` (read-only) turn each written cell that `analytics.cell_proof` DISAGREEs with into a defect blank:
+  - `identity` / `verifier`, `cell_proof_disagree`;
+  - the proof id, the shown and position values, and the replaced value go in `input_refs`.
+
+  The loader replaces a pair whole, so the output holds **every row of each pair that has a DISAGREE**, with only those keys replaced. Pairs without a DISAGREE are not reloaded. A DISAGREE that matches no written cell is counted in `summary.json`.
+
+  The shard artifact now includes `out/write/`, so the step can run from a select_write run. Loading the output is a production write (`scrooner-cells load ... --apply`) and needs the founder's words. The before-image restore stays as an emergency rollback only.
+
+  **Still to do:** a `proof_blank` workflow stage that downloads `out/write/` from the write run and runs the step.
+- **N3.** Debt, total liabilities and DPS stay unlisted (Ritwik's default); the gate refuses them. If the founder chooses blanks for them (`hybrid_rule_held`), that is a small change.
+- **N4.** The C7 flag thresholds can be read from `valued_to_blank.json`. The flag itself is the approver's step at C7.
+- **N5.** Before-images are still taken and uploaded for every company of the shard. That is a superset of the written companies.
+
 The original build of the ruling follows. The C1 rule (b)/(c) gating and the C2 hold it describes are replaced by the update above.
 
 ## What changed

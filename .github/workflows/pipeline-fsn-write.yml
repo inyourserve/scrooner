@@ -207,6 +207,7 @@ jobs:
             out/not_done.json
             out/missing_filings.json
             out/write-*.json
+            out/write/
           if-no-files-found: ignore
 
   restore:

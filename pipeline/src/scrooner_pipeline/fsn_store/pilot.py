@@ -191,20 +191,27 @@ def gap_blank(
     filing_not_in_store when no stored filing's period is this period end (FSN's month-end rounding included);
     else hybrid_gap_unresolved, with the pilot's cause in input_refs. The key's date is the FSN month-end form of the
     true end, like every other cell (the loader binds it to the true core.period by fiscal label)."""
-    stored = any(
-        f.period is not None and fsn_end_matches(f.period, end)
-        for f in filings.values()
+    stored = sorted(
+        (f.accepted, fid)
+        for fid, f in filings.items()
+        if f.period is not None and fsn_end_matches(f.period, end)
     )
     ends = sorted(nearest_month_ends(end))
     ddate = end if end in ends else ends[-1]
+    refs = {"pilot_cause": cause, "expected_end": end.isoformat()}
+    if (
+        stored
+    ):  # N1: the accession of the filing that reports the period (its latest copy)
+        refs["accession"] = filings[stored[-1][1]].accession
     return sel.Cell(
         concept,
         ddate,
         GRAIN_QTRS[grain],
         "defect",
+        filing_id=stored[-1][1] if stored else None,
         rule_id=RULE_GAP_BLANK,
         reason_code="hybrid_gap_unresolved" if stored else "filing_not_in_store",
-        input_refs={"pilot_cause": cause, "expected_end": end.isoformat()},
+        input_refs=refs,
     )
 
 
@@ -708,3 +715,84 @@ def hold_guard(
         if n and not new_valued[key]
     }
     return held, {dp: dict(c) for dp, c in transitions.items()}
+
+
+RULE_PROOF_BLANK = "fsn.cell_proof_blank@1"
+
+
+def blank_disagreements(
+    rows: list[dict[str, Any]], disagrees: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Ruling addendum N2 (no fallback): a written cell that cell_proof DISAGREEs with becomes a defect blank
+    (identity / verifier, reason cell_proof_disagree, the proof evidence in input_refs) instead of being restored
+    to its old value. Returns (rows to load, unmatched DISAGREE rows).
+
+    The loader replaces a written (company, data point) pair WHOLE, so the result holds EVERY row of each pair with
+    at least one DISAGREE key, with only those keys replaced; pairs without a DISAGREE are not reloaded. A DISAGREE
+    row matches a written cell by company, data point, grain and end (FSN month-end rounding included)."""
+    by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in rows:
+        by_pair[(int(r["company_id"]), r["data_point_name"])].append(r)
+    hits: dict[int, dict[str, Any]] = {}  # id(row) -> the DISAGREE it matched
+    unmatched = []
+    for d in disagrees:
+        pair = (int(d["company_id"]), d["data_point_name"])
+        end = (
+            d["period_end"]
+            if isinstance(d["period_end"], date)
+            else date.fromisoformat(str(d["period_end"]))
+        )
+        cands = [
+            r
+            for r in by_pair.get(pair, [])
+            if r["period_grain"] == d["period_grain"]
+            and fsn_end_matches(date.fromisoformat(r["fsn_end"]), end)
+        ]
+        if not cands:
+            unmatched.append(d)
+            continue
+        best = min(
+            cands, key=lambda r: abs((date.fromisoformat(r["fsn_end"]) - end).days)
+        )
+        hits[id(best)] = d
+    out = []
+    for pair, prs in sorted(by_pair.items()):
+        if not any(id(r) in hits for r in prs):
+            continue
+        for r in prs:
+            d = hits.get(id(r))
+            if d is None:
+                out.append(r)
+                continue
+            out.append(
+                dict(
+                    r,
+                    state="defect",
+                    value=None,
+                    unit=None,
+                    derivation=None,
+                    source_fact_ids=[],
+                    source_value_ids=[],
+                    rule_id=RULE_PROOF_BLANK,
+                    reason_code="cell_proof_disagree",
+                    reason_text=sel.REASON_TEXT["cell_proof_disagree"],
+                    defect_class="identity",
+                    owner="verifier",
+                    root_cause_class=None,
+                    input_refs={
+                        "cell_proof_id": d.get("id"),
+                        "proof_reason_code": d.get("reason_code"),
+                        "proof_rule_id": d.get("rule_id"),
+                        "shown_value": None
+                        if d.get("shown_value") is None
+                        else str(d["shown_value"]),
+                        "position_value": None
+                        if d.get("position_value") is None
+                        else str(d["position_value"]),
+                        "replaced_value": r.get("value"),
+                        "replaced_rule_id": r.get("rule_id"),
+                        "replaced_state": r.get("state"),
+                    },
+                )
+            )
+    return out, unmatched

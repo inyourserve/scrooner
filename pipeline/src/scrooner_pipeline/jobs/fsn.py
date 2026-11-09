@@ -6,6 +6,7 @@ import csv
 import json
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import typer
 
@@ -554,6 +555,82 @@ def done_gate_cmd(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
     )
+
+
+@app.command("proof-blank")
+def proof_blank_cmd(
+    write_dir: str = typer.Option(
+        "out/write",
+        help="The select_write run's written cells: <dir>/<family>/cells.jsonl.gz.",
+    ),
+    out: str = typer.Option("out/proof_blank", help="Output directory (same layout)."),
+) -> None:
+    """Ruling addendum N2 (no fallback), READ-ONLY on production: the written cells that analytics.cell_proof
+    DISAGREEs with become defect blanks (identity / verifier, cell_proof_disagree) instead of being restored to
+    old values. Writes <out>/<family>/cells.jsonl.gz holding every row of each pair with a DISAGREE (the loader
+    replaces a pair whole) and <out>/summary.json. Loading it is a production write: `scrooner-cells load ... --apply`
+    on the founder's words. The before-image restore stays an emergency rollback only."""
+    import gzip
+
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store.pilot import blank_disagreements
+
+    families: dict[str, list[dict]] = {}
+    for path in sorted(Path(write_dir).glob("*/cells.jsonl.gz")):
+        with gzip.open(path, "rt") as fh:
+            families[path.parent.name] = [
+                json.loads(line) for line in fh if line.strip()
+            ]
+    ids = sorted({int(r["company_id"]) for rows in families.values() for r in rows})
+    if not ids:
+        raise typer.BadParameter(f"no written cells under {write_dir}")
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '5min'")
+        cur = conn.execute(
+            """select id, company_id, data_point_name, period_grain, period_start, period_end, shown_value,
+                      position_value, reason_code, rule_id
+               from analytics.cell_proof where verdict = 'DISAGREE' and company_id = any(%s)""",
+            (ids,),
+        )
+        cols = [c.name for c in cur.description]
+        disagrees = [dict(zip(cols, r)) for r in cur.fetchall()]
+        conn.rollback()
+    root = Path(out)
+    summary: dict[str, Any] = {
+        "companies": len(ids),
+        "disagree_rows": len(disagrees),
+        "families": {},
+    }
+    matched_ids: set = set()
+    for fam, rows in sorted(families.items()):
+        points = {r["data_point_name"] for r in rows}
+        mine = [d for d in disagrees if d["data_point_name"] in points]
+        blanked, unmatched = blank_disagreements(rows, mine)
+        matched_ids |= {d["id"] for d in mine} - {d["id"] for d in unmatched}
+        if not blanked:
+            continue
+        d = root / fam
+        d.mkdir(parents=True, exist_ok=True)
+        with gzip.open(d / "cells.jsonl.gz", "wt") as fh:
+            for r in blanked:
+                fh.write(json.dumps(r, default=str) + "\n")
+        n = sum(1 for r in blanked if r.get("reason_code") == "cell_proof_disagree")
+        (d / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "family": fam,
+                    "rule_id": "fsn.cell_proof_blank@1",
+                    "rows": len(blanked),
+                    "blanked": n,
+                }
+            )
+        )
+        summary["families"][fam] = {"rows_reloaded": len(blanked), "cells_blanked": n}
+    unmatched_all = [d for d in disagrees if d["id"] not in matched_ids]
+    summary["disagree_not_in_written_cells"] = len(unmatched_all)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
+    typer.echo(f"proof-blank: {json.dumps(summary, default=str)}")
 
 
 @app.command("extract-sec")
