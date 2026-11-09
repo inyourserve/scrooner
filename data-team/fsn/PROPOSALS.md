@@ -2,7 +2,23 @@
 
 Advice only. Engineering builds, the approver signs. Each proposal names the companies and accessions that prove it. Status: OPEN until engineering answers.
 
-## P-1. Add the two missing FX tags to the cash-change identity (OPEN, high)
+## P-1. Add the two missing FX tags to the cash-change identity (PARTLY DONE in PR #4; one gap left)
+**Update 2026-11-09.** Branch work/cashflow/fsn-gaps-rebased (26063db) adds `…IncludingDisposalGroupAndDiscontinuedOperations` to `CF_FX`. It deliberately leaves out the twin `…DisposalGroupIncludingDiscontinuedOperations` "as a component".
+
+That holds at **RTX**, FY2022 10-K 0000101829-23-000009:
+- line 48 is the plain FX tag (continuing operations);
+- line 49 is the twin, FX on discontinued-operations cash;
+- both are calc children (+1) of the net change.
+
+It fails at **CSCO**, where the twin is the **only** FX line in 17 filings, 0000858877-22-000013 … 0000858877-26-000132. It is the calc child (+1) of `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect`, and the identity ties only with it (DI, FSN num):
+- FY2025: parts 111 + FX −43 = change 68;
+- FY2022: −1,183 − 180 = −1,363.
+
+Excluding it holds every CSCO cash-flow column.
+
+**Revised rule:** FX = the sum of every FX-family line (any of the six tags) that the filing prints on the CF and that is a calc child of the net-change total. Do not pick one tag from a list. That sums RTX's two lines and takes CSCO's one.
+
+**Original proposal (2026-11-02):**
 - **Where:** `pipeline/src/scrooner_pipeline/fsn_store/checks.py` `CF_FX` (origin/main b785ec5).
 - **Problem:** it holds only `EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents` and `EffectOfExchangeRateOnCashAndCashEquivalents`.
 - **Add:**

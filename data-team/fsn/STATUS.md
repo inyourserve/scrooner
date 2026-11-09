@@ -1,6 +1,6 @@
 # FSN expert: status
 
-Updated 2026-11-02.
+Updated 2026-11-09.
 
 ## Now
 - **Companies completed:** 1 of 1,000. MSFT (`companies/MSFT.md`). Pilot queue next: HD, AAPL, JPM, TRV, PLD, NEE, XOM, JNJ, WMT.
@@ -24,7 +24,7 @@ Updated 2026-11-02.
 - **Reference:** `FSN-GUIDE.md` (every file and column, the pitfalls on real rows, the verdicts on the seven team beliefs).
 
 ## Top 5 changes engineering should make now
-1. **P-1:** add the two `…DisposalGroup…` FX tags to `fsn_store/checks.py` `CF_FX`. MSFT's CFO, dividends and buybacks FY2020+ fail today, and 19 top-100 names use the tag.
+1. **P-1 (partly done in PR #4):** the CF identity must sum every FX line that is a calc child of the net change. PR #4 adds the IncludingDisposalGroup tag but excludes the DisposalGroupIncluding twin, which is CSCO's only FX line in 17 filings, so CSCO's cash flows would still fail.
 2. **P-4:** concept rules for capex, cash and total debt. The debt rule must include `CommercialPaper`; production MSFT debt is wrong for FY2016 (12,904 vs 53,461) and FY2024 (44,937 vs 51,630).
 3. **P-2:** drop a revenue/COR candidate that is a calc child of another candidate ("Product" lines).
 4. **P-3:** a custom calc-position slot takes one line only; "… and other" labels are `combined`.
