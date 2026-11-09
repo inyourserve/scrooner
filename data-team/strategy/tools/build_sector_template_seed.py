@@ -60,6 +60,11 @@ COMPANY_ASSIGNMENT = [
     ("CBC", "0002065601", "bank", "§8.5: Central Bancompany, bank holding company; no SIC in the master"),
     ("NLY", "0001043219", "reit_mortgage", "§1: mortgage REIT under SIC 6798 (by name, ASSUMED)"),
     ("AGNC", "0001423689", "reit_mortgage", "§1: mortgage REIT under SIC 6798 (by name, ASSUMED)"),
+    # Verifier FIX 2026-11-09 (VERIFY-TEMPLATES-AND-LADDER-2026-11-09, rows 1-3): SIC proposes, the face decides
+    ("EQH", "0001333986", "insurer", "Verifier 2026-11-09: premiums and policyholder benefits on the face, no current totals (0001333986-26-000012); SIC 6411"),
+    ("ACT", "0001823529", "insurer", "Verifier 2026-11-09: mortgage insurer, premiums and benefits on the face, no current totals (0001823529-26-000060); SIC 6411"),
+    ("INVH", "0001687229", "reit_equity", "Verifier 2026-11-09: real estate at cost and accumulated depreciation, no current totals (0001687229-26-000016); SIC 6510"),
+    ("TRNO", "0001476150", "reit_equity", "Verifier 2026-11-09: real estate at cost and accumulated depreciation, no current totals (0001476150-26-000011); SIC 6500"),
     ("MSTR", "0001050446", "general", "§1: crypto/AI miner under SIC 6199, corporate statements"),
     ("COIN", "0001679788", "general", "§1: crypto/AI miner under SIC 6199, corporate statements"),
     ("CRCL", "0001876042", "general", "§1: crypto/AI miner under SIC 6199, corporate statements"),
@@ -150,12 +155,13 @@ REP: dict[str, dict[str, str]] = {
 # company x data point). in_template yes; §8.2 wants the evidence accession as the reason:
 # not available offline, so the reason names the probe and the FSN step attaches it.
 OVERRIDE_EVIDENCE = "company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face"
+# Removed by the Verifier FIX 2026-11-09 (rows 4-5): MTB cost_of_revenue (its only cost-like line is "Other costs of
+# operations", OtherNoninterestExpense, 0000036270-26-000010 R5) and BNY accounts_receivable (only "Accrued interest
+# receivable", InterestReceivable, 0001390777-26-000033 R6): the bank defaults (OUT) stand.
 OVERRIDES = [
     ("JPM", "0000019617", "accounts_receivable", "§3: presented combined (2 lines); show under the company's own label (ruling item 3)"),
     ("BAC", "0000070858", "accounts_receivable", "§3: presented combined; show under the company's own label (ruling item 3)"),
-    ("BNY", "0001390777", "accounts_receivable", "§3: presented combined and separately"),
     ("BOKF", "0000875357", "accounts_receivable", "§3: presented"),
-    ("MTB", "0000036270", "cost_of_revenue", "§3: presented"),
     ("BPOP", "0000763901", "operating_expenses", "§3: presented"),
     ("C", "0000831001", "operating_expenses", "§3: presented"),
     ("STT", "0000093751", "operating_expenses", "§3: presented"),

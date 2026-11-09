@@ -21,7 +21,9 @@ GENERATOR = ROOT / "data-team/strategy/tools/build_sector_template_seed.py"
 CATALOG = ROOT / "data-team/strategy/data/cohort_cells.csv"
 
 CIK = {"ARCC": "0001287750", "BXSL": "0001736035", "CBC": "0002065601", "JPM": "0000019617",
-       "AXP": "0000004962", "MSTR": "0001050446", "NLY": "0001043219", "WY": "0000106535"}  # fmt: skip
+       "AXP": "0000004962", "MSTR": "0001050446", "NLY": "0001043219", "WY": "0000106535",
+       "EQH": "0001333986", "ACT": "0001823529", "INVH": "0001687229", "TRNO": "0001476150",
+       "MTB": "0000036270", "BNY": "0001390777"}  # fmt: skip
 
 
 def _generator():
@@ -83,8 +85,8 @@ def test_dry_run_plan_and_section_8_sum_check(plan):
     assert {r.data_point for r in rows} == catalog
     # §8.6: §1's sum check with ARCC, BXSL and CBC moved (712 + 60 pharma - 3 = 769)
     assert s["companies_per_template"] == {
-        "general": 769, "bank": 42, "lender": 7, "broker_am": 37, "insurer": 39,
-        "reit_equity": 51, "reit_mortgage": 2, "utility": 51, "bdc": 2,
+        "general": 765, "bank": 42, "lender": 7, "broker_am": 37, "insurer": 41,
+        "reit_equity": 53, "reit_mortgage": 2, "utility": 51, "bdc": 2,
     }  # fmt: skip
 
 
@@ -152,8 +154,8 @@ def test_section_3_company_overrides(plan):
     rows, by_cik = plan
     overrides = [r for r in rows if r.source == "company_override"]
     assert (
-        len(overrides) == 17
-    )  # the 19 line instances, one row per company x data point
+        len(overrides) == 15
+    )  # the 19 line instances, one row per company x data point, less MTB and BNY (Verifier 2026-11-09)
     assert all(r.in_template and r.reason for r in overrides)
     assert _cell(rows, by_cik[CIK["JPM"]], "accounts_receivable").in_template
     wy = by_cik[CIK["WY"]]
@@ -200,3 +202,30 @@ def test_whole_seed_validates_and_loads_under_0120(isolated_database_url, plan):
             "select count(*) from analytics.company_data_point_template where not in_template"
         ).fetchone()[0]
         assert n_out == sum(1 for r in rows if not r.in_template)
+
+
+@pytest.mark.unit
+def test_verifier_fixes_2026_11_09(plan):
+    """VERIFY-TEMPLATES-AND-LADDER-2026-11-09 rows 1-5: the face decides over SIC."""
+    rows, by_cik = plan
+    tmpl = {r.company_id: r.template for r in rows}
+    assert tmpl[by_cik[CIK["EQH"]]] == tmpl[by_cik[CIK["ACT"]]] == "insurer"
+    assert tmpl[by_cik[CIK["INVH"]]] == tmpl[by_cik[CIK["TRNO"]]] == "reit_equity"
+    mtb_cor = _cell(rows, by_cik[CIK["MTB"]], "cost_of_revenue")
+    bny_ar = _cell(rows, by_cik[CIK["BNY"]], "accounts_receivable")
+    assert (mtb_cor.in_template, mtb_cor.source) == (False, "sector_default")
+    assert (bny_ar.in_template, bny_ar.source) == (False, "sector_default")
+
+
+@pytest.mark.unit
+def test_cli_defaults_point_at_the_seed_inputs():
+    """Row 8: a bare `seed-sector-templates` reads the seeder input and cohort v1.1, not the analysis page."""
+    import inspect
+
+    from scrooner_pipeline.jobs.map import seed_sector_templates_cmd
+
+    params = inspect.signature(seed_sector_templates_cmd).parameters
+    assert str(params["templates"].default.default) == "data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md"
+    assert str(params["cohort"].default.default) == "data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv"
+    assert (ROOT / params["templates"].default.default).exists()
+    assert (ROOT / params["cohort"].default.default).exists()

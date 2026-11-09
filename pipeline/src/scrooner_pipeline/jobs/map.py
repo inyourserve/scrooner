@@ -674,11 +674,11 @@ def snapshot_coverage_cmd() -> None:
 @app.command("seed-sector-templates")
 def seed_sector_templates_cmd(
     templates: Path = typer.Option(
-        Path("data-team/strategy/SECTOR-TEMPLATES-2026-11-01.md"),
+        Path("data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md"),
         help="Templates file (sector defaults plus company overrides).",
     ),
     cohort: Path = typer.Option(
-        Path("doc/data-moat/team/top1000/shards.csv"),
+        Path("data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv"),
         help="Cohort file with company_id, cik, sic; excluded rows are skipped.",
     ),
     plan_out: Path = typer.Option(

@@ -266,3 +266,17 @@ uv run --project pipeline scrooner-map seed-sector-templates --templates data-te
 
 - **Lint:** ruff format clean, required lint clean, mypy clean on the changed modules, docs links pass.
 - **CI run 41317933298 on `311fa5e9`: green.** Pipeline 2,296 passed, 0 failed (the seed and template DB tests ran, none skipped); backend 92; migrations, docs and frontend pass. The only failure is the advisory npm audit, which is non-blocking and also fails on main.
+
+## 9. Verifier FIX 2026-11-09 applied (branch `work/certification-lead/template-seed-fixes`)
+Source: `VERIFY-TEMPLATES-AND-LADDER-2026-11-09.md` (branch `verify/templates-and-ladder-2026-11-09` @ 01d203d), FIX rows 1–5 and 8, as Dhairya asked.
+
+**Applied:**
+- **Rows 1–3:** company assignments. EQH and ACT → insurer; INVH and TRNO → reit_equity. Each reason cites the Verifier's accession.
+- **Rows 4–5:** the MTB `cost_of_revenue` and BNY `accounts_receivable` overrides are removed, so the bank defaults (OUT) stand. That leaves 15 override rows.
+- **Row 8:** `seed-sector-templates` now defaults to `SECTOR-TEMPLATES-SEED-2026-11-01.md` and `cohort_v1_1_sic_2026-11-01.csv`.
+- **New counts:** general 765, bank 42, lender 7, broker_am 37, insurer 41, reit_equity 53, reit_mortgage 2, utility 51, bdc 2.
+
+**Not applied, decisions needed:**
+- **Row 6:** GS, MS and SCHW (and LPLA's OI) behave bank-like. Either put them in a bank-like template, or add per-company OUT overrides for OI, COR and current totals.
+- **Row 7:** "IN COND" is applied as IN for the whole sector. The company overlay the approved §4 asks for needs per-company face evidence from the FSN store.
+- **Noted:** capex OUT-by-definition hides printed lines, and current totals for banks and insurers stay IN as approved. Both are accountant or approver calls.

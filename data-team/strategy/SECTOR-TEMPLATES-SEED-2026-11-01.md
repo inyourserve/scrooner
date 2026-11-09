@@ -64,6 +64,10 @@ effective_from: 2026-11-01
 | 0002065601 | bank | CBC: §8.5: Central Bancompany, bank holding company; no SIC in the master |
 | 0001043219 | reit_mortgage | NLY: §1: mortgage REIT under SIC 6798 (by name, ASSUMED) |
 | 0001423689 | reit_mortgage | AGNC: §1: mortgage REIT under SIC 6798 (by name, ASSUMED) |
+| 0001333986 | insurer | EQH: Verifier 2026-11-09: premiums and policyholder benefits on the face, no current totals (0001333986-26-000012); SIC 6411 |
+| 0001823529 | insurer | ACT: Verifier 2026-11-09: mortgage insurer, premiums and benefits on the face, no current totals (0001823529-26-000060); SIC 6411 |
+| 0001687229 | reit_equity | INVH: Verifier 2026-11-09: real estate at cost and accumulated depreciation, no current totals (0001687229-26-000016); SIC 6510 |
+| 0001476150 | reit_equity | TRNO: Verifier 2026-11-09: real estate at cost and accumulated depreciation, no current totals (0001476150-26-000011); SIC 6500 |
 | 0001050446 | general | MSTR: §1: crypto/AI miner under SIC 6199, corporate statements |
 | 0001679788 | general | COIN: §1: crypto/AI miner under SIC 6199, corporate statements |
 | 0001876042 | general | CRCL: §1: crypto/AI miner under SIC 6199, corporate statements |
@@ -1548,9 +1552,7 @@ effective_from: 2026-11-01
 |---|---|---|---|
 | 0000019617 | accounts_receivable | yes | JPM: §3: presented combined (2 lines); show under the company's own label (ruling item 3); company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000070858 | accounts_receivable | yes | BAC: §3: presented combined; show under the company's own label (ruling item 3); company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
-| 0001390777 | accounts_receivable | yes | BNY: §3: presented combined and separately; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000875357 | accounts_receivable | yes | BOKF: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
-| 0000036270 | cost_of_revenue | yes | MTB: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000763901 | operating_expenses | yes | BPOP: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000831001 | operating_expenses | yes | C: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000093751 | operating_expenses | yes | STT: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
