@@ -42,7 +42,7 @@ I cannot see the new verdicts. The face facts below are what any verdict must be
 | key | latest accepted face (accession, page) | finding |
 |---|---|---|
 | META 2025-12-31 | The 10-Q 0001628280-26-066773 R2 prints the 2025-12-31 column: long-term debt 58,744. It has no lease detail page. | This is the new `latest_copy_lacks_note_finance_lease` blank. The 10-K 0001628280-26-003942 R61 prints FinanceLeaseLiability 1,184 at that date, giving 58,744 + 1,184 = **59,928**. The 10-Q does not contradict the 10-K note; it only omits it. **My reading: avoidable hold.** Design §4 is about not swapping in an older value for a fact the latest copy prints; it should not blank a fact the latest copy simply does not repeat. This answers BS-PORT-FIXES §4 item 2. **Founder or Dhairya to rule.** |
-| META 2022-12-31 | 9,923 + FinanceLeaseLiability **690** (current 90, noncurrent 600) (0001326801-24-000012 R3, R64) = **10,613** | The first copy has 687 (129/558), 0001326801-23-000013 R65. The later 10-K recast the lease split. The correct value is 10,613, not 10,610 |
+| META 2022-12-31 | Face: long-term debt 9,923 in both copies (0001326801-24-000012 R3, 0001326801-23-000013 R3). Finance lease at 2022-12-31: **687** (current 129, noncurrent 558), printed only in the 2022 10-K (0001326801-23-000013 R65). In the 2023 10-K's R64, the 690 / 90 / 600 sit in the **Dec. 31, 2023** column; its Dec. 31, 2022 column is empty. | **Correct value 9,923 + 687 = 10,610.** CORRECTED 2026-11-02: the first version said 10,613 because my reader printed only non-empty cells and I put the 2023 value under 2022. Dhairya relayed the correction; I re-opened both R pages; Ritwik's Verifier also re-checked it. The latest copy lacks the 2022 lease note, so the port's rule gives `latest_copy_lacks_note_finance_lease`. That is the same pattern as META 2025-12-31, and the same ruling applies (my reading: avoidable hold, value 10,610). |
 | NI 2024-12-31 | 604.6 + 1,281.2 + 12,074.5 = **13,960.3** (0001111711-26-000027 R6), same as the first copy | Capitalization-format utility. If the new verdict is a hold, it is the equity-block guard (section 5), not a value problem |
 | DIS 2025-09-27 | The 10-Q 0001744489-26-000057 R4 prints 6,711 + 35,315 = **42,026**, same as the 10-K | Lease note not read. If the verdict is `latest_copy_lacks_note_finance_lease`, the same ruling as META 2025 applies |
 | ET 2022-12-31 | 2 + 48,260 = **48,262** in both copies (0001276187-24-000024 R2) | No value change. The verdict change must come from the record or face test. Not graded |
@@ -104,7 +104,7 @@ These fail safe: the builder says the identity tie then withholds the cell. So t
 
 ## Requests and disk
 
-265 sec.gov requests through the rate-limited reader (0.3 s spacing). Downloads were deleted at the end. No database reads or writes for this verdict; inputs came from git only.
+265 sec.gov requests through the rate-limited reader (0.3 s spacing). Downloads were deleted at the end. Correction on 2026-11-02 (META 2022-12-31): 2 more requests. No database reads or writes for this verdict; inputs came from git only.
 
 ## Untested scope
 
