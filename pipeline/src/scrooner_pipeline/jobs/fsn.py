@@ -521,7 +521,11 @@ def nightly_cmd(
     ciks: str = typer.Option("", help="Comma-separated CIKs instead of the cohort."),
     lookback_days: int = typer.Option(
         7,
-        help="Filings filed in the last N days and not yet in the store (a missed night is caught up).",
+        help="At least the last N days. The window reaches back to the day after the latest SEC FSN"
+        " set in the store, so filings since that set (the backfill) and deferred ones are caught up.",
+    ),
+    since: str = typer.Option(
+        "", help="YYYY-MM-DD: start of the window instead (a one-off backfill)."
     ),
     max_minutes: float = typer.Option(
         30.0, help="Wall-clock budget for fetching; the rest is deferred."
@@ -546,9 +550,13 @@ def nightly_cmd(
         cik_list = sorted({r["cik"].zfill(10) for r in csv.DictReader(path.open())})
     today = date.today()
     with get_connection() as conn:
-        cands = increment.candidates(
-            conn, cik_list, today - timedelta(days=lookback_days)
-        )
+        start = today - timedelta(days=lookback_days)
+        after_set = increment.since_last_set(conn)
+        if after_set is not None and after_set < start:
+            start = after_set
+        if since:
+            start = date.fromisoformat(since)
+        cands = increment.candidates(conn, cik_list, start)
     client = edgar_fetch.EdgarClient(os.environ.get("SEC_USER_AGENT", ""))
     fsn_set = f"{increment.EDGAR_SET_PREFIX}{today.isoformat()}"
     try:
@@ -563,6 +571,7 @@ def nightly_cmd(
     written = increment.write_dirs(Path(out), res.built, company_ids, fsn_set)
     summary = {
         "fsn_set": fsn_set,
+        "since": start.isoformat(),
         "candidates": len(cands),
         "built": sum(len(v) for v in res.built.values()),
         "companies": written,

@@ -36,6 +36,23 @@ Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by D
 - **Cover-only amendments** (Part III 10-K/A) load with cover rows only. They print no statement line, so they can never win a cell.
 - **Floor.** Candidates need `period_of_report >= 2014-01-01`. `pilot` already drops comparatives before the floor.
 
+## One writer for the cohort, and the backfill
+
+Founder direction, relayed by Dhairya on 2026-11-09: once the hybrid is live it is the only writer for the 1,000 cohort companies. The nightly path is:
+
+1. EDGAR filing index (`scrooner-incremental`);
+2. this per-filing converter;
+3. `load --increment`;
+4. map, checks and select;
+5. the gate;
+6. the protected write;
+7. the derived metrics (`map:calculate` through `map:calculate-dividend-streak` in `reprocess_recent_filers.sh`), recomputed from `canonical_fact` for every company.
+
+- **Old pipeline.** With the repository variable `HYBRID_ONLY_COHORT=on`, `reprocess_recent_filers.sh` stops passing the cohort's CIKs to the stages that write facts or canonical values: every `normalize:*` stage, `map:resolve-facts`, `map:split-rebase` and `map:resolve-concept-fallbacks`. The derived-metric stages still receive every CIK. It is off by default and is switched on together with `FSN_NIGHTLY_STAGE=write`, never before. The old pipeline is not otherwise changed or extended.
+- **To verify before switching on:** that each derived-metric stage reads only `canonical_fact` for a cohort company and nothing that the skipped normalizer stages would have refreshed.
+- **Backfill.** The nightly window is not just 7 days. It reaches back to the day after the latest SEC FSN set in the store (`increment.since_last_set`: '2026m10' → from 2026-11-01). EDGAR-built filings do not move that date. So the first run is the one-time backfill of every filing published since the last set (MEASURED stake, from the data chief: the latest 10-Q of 319 companies, about 2,570 company/data-point pairs). Every later night is a catch-up as well, and a deferred filing is never lost.
+- **Running the backfill.** A dispatched run can set `fsn_nightly_since` and raise `fsn_nightly_max_minutes`; the step timeout becomes 170 minutes. At about 5 s per filing, the measured 319 filings take about 27 minutes.
+
 ## Order, budget, isolation, later FSN set
 
 - **Order.** The step runs in `pipeline-refresh.yml` after `scrooner-incremental` (so `core.filing` is fresh) and before `reprocess_recent_filers.sh` (the old mapper). Once a pair is written, the 0113 `slot_protected_cell` guard and the 0119 owner guard stop the old mapper from overwriting it.
@@ -52,7 +69,7 @@ Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by D
   - One filing failing is reported, never raised.
   - `load.run` and `pilot` isolate each company.
   - The script always exits 0, and the step is `continue-on-error`.
-  - A filing that did not make it is still absent from `fsn.filing`, so the next night's 7-day lookback retries it.
+  - A filing that did not make it is still absent from `fsn.filing`, so the next night's window, which reaches back to the latest FSN set, retries it.
 - **When the FSN set arrives.**
   - EDGAR-built filings carry `fsn_set = 'edgar:<date>'` and a per-accession `src_sha256`.
   - The full company reload now deletes only FSN-set filings plus the accessions its directory carries. So the set's copy replaces the EDGAR copy by accession, and EDGAR copies the sets do not hold yet are kept.

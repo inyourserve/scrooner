@@ -23,7 +23,7 @@ import subprocess
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
 
@@ -62,6 +62,36 @@ class BuildResult:
     failed: list[dict[str, Any]] = field(default_factory=list)
     deferred: list[dict[str, Any]] = field(default_factory=list)
     requests_seconds: float = 0.0
+
+
+def set_end(fsn_set: str) -> date | None:
+    """Last day an FSN set covers: '2026m10' -> 2026-10-31, '2026q3' -> 2026-09-30."""
+    import re
+    from calendar import monthrange
+
+    m = re.fullmatch(r"(\d{4})m(\d{2})", fsn_set) or re.fullmatch(
+        r"(\d{4})q([1-4])", fsn_set
+    )
+    if not m:
+        return None
+    year, n = int(m.group(1)), int(m.group(2))
+    month = n if "m" in fsn_set else 3 * n
+    return date(year, month, monthrange(year, month)[1])
+
+
+def since_last_set(conn: Any) -> date | None:
+    """The day after the latest SEC FSN set the store holds (EDGAR-built filings excluded): every
+    periodic filing from then on is either built by this path or still missing (backfill)."""
+    conn.execute(f"set statement_timeout = '{STATEMENT_TIMEOUT}'")
+    sets = [
+        r[0]
+        for r in conn.execute(
+            "select distinct fsn_set from fsn.filing where fsn_set not like 'edgar:%'"
+        ).fetchall()
+    ]
+    conn.rollback()
+    ends = [e for e in (set_end(s) for s in sets) if e is not None]
+    return (max(ends) + timedelta(days=1)) if ends else None
 
 
 def candidates(conn: Any, ciks: list[str], since: date) -> list[Candidate]:

@@ -252,6 +252,33 @@ STAGES=(
   map:calculate-fcf-growth map:calculate-dividend-streak
   map:build-tag-library
 )
+# Hybrid as the only writer for the cohort (founder direction relayed by Dhairya 2026-11-09;
+# data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md). With HYBRID_ONLY_COHORT=on
+# the stages that write facts and canonical values (every normalize:* stage, map:resolve-facts,
+# map:split-rebase, map:resolve-concept-fallbacks) skip the cohort's CIKs; the derived-metric stages
+# (map:calculate onwards) still run for every company, recomputing from canonical_fact. Off by default.
+ALL_CIKS="$CIKS"
+WRITER_CIKS="$CIKS"
+if [ "${HYBRID_ONLY_COHORT:-off}" = on ]; then
+  COHORT_CSV="${HYBRID_COHORT_CSV:-data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv}"
+  [ -f "$COHORT_CSV" ] || COHORT_CSV="$SCRIPT_DIR/../../$COHORT_CSV"
+  if [ -f "$COHORT_CSV" ]; then
+    WRITER_CIKS=$(python3 -c '
+import csv, sys
+cohort = {r["cik"].zfill(10) for r in csv.DictReader(open(sys.argv[1]))}
+print(",".join(c for c in sys.argv[2].split(",") if c and c.zfill(10) not in cohort))' "$COHORT_CSV" "$CIKS")
+    echo "reprocess_recent_filers: HYBRID_ONLY_COHORT=on, writer stages skip $(( $(echo "$CIKS" | tr ',' '\n' | awk 'NF' | wc -l) - $(echo "$WRITER_CIKS" | tr ',' '\n' | awk 'NF' | wc -l) )) cohort companies"
+  else
+    echo "reprocess_recent_filers: HYBRID_ONLY_COHORT=on but no cohort CSV; writer stages skip every company" >&2
+    WRITER_CIKS=""
+  fi
+fi
+is_writer_stage() {
+  case "$1" in
+    normalize:*|map:resolve-facts|map:split-rebase|map:resolve-concept-fallbacks) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 SKIPPED=""
 for ((i = 0; i < ${#STAGES[@]}; i++)); do
   entry="${STAGES[$i]}"
@@ -287,8 +314,14 @@ for ((i = 0; i < ${#STAGES[@]}; i++)); do
     continue
   fi
   program="scrooner-$kind"
+  if is_writer_stage "$entry"; then CIKS="$WRITER_CIKS"; else CIKS="$ALL_CIKS"; fi
+  if [ -z "$CIKS" ]; then
+    echo "run_sharded: stage '$stage' took 0s (no non-cohort company)"
+    continue
+  fi
   run_sharded "$program" "$stage" || FAILED_STAGES="$FAILED_STAGES $kind:$stage"
 done
+CIKS="$ALL_CIKS"
 
 if [ -n "$FAILED_STAGES" ]; then
   echo "reprocess_recent_filers: FAILED stages:$FAILED_STAGES" >&2

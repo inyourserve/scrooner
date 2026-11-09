@@ -300,3 +300,31 @@ def test_candidates_are_new_periodic_filings_after_the_floor(conn, tmp_path):
     assert [
         c.accession for c in increment.candidates(conn, [CIK], date(2026, 10, 25))
     ] == ["0001326801-26-000002"]
+
+
+def test_set_end_names_the_last_day_a_set_covers():
+    assert increment.set_end("2026m10") == date(2026, 10, 31)
+    assert increment.set_end("2026m02") == date(2026, 2, 28)
+    assert increment.set_end("2025q4") == date(2025, 12, 31)
+    assert increment.set_end("edgar:2026-11-09") is None
+
+
+@pytest.mark.integration
+def test_window_reaches_back_to_the_day_after_the_latest_fsn_set(conn, tmp_path):
+    assert increment.since_last_set(conn) is None
+    cid = _one(
+        conn,
+        "insert into core.company (cik, company_name) values (%s, 'META TEST') returning id",
+        (CIK,),
+    )
+    conn.commit()
+    load.load_company(
+        conn, _company_dir(tmp_path / "hist", cik=CIK), loader_commit="c1"
+    )  # set 2026m07
+    conn.commit()
+    load.load_company(
+        conn, _increment_dir(tmp_path, cid), loader_commit="c1", increment=True
+    )
+    conn.commit()
+    # the EDGAR-built filing does not move the window; the SEC set does
+    assert increment.since_last_set(conn) == date(2026, 8, 1)

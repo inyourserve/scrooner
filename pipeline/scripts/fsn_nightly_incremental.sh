@@ -28,7 +28,12 @@ esac
 warn() { echo "::warning::fsn nightly: $*"; }
 mkdir -p "$OUT"
 
-if ! timeout 30m $FSN nightly --out "$OUT/companies" --report "$OUT/nightly.json" --max-minutes 25; then
+# the window reaches back to the day after the latest SEC FSN set in the store (the backfill), or
+# FSN_NIGHTLY_SINCE; FSN_NIGHTLY_MAX_MINUTES caps fetching and defers the rest to the next night
+MAX_MIN="${FSN_NIGHTLY_MAX_MINUTES:-25}"
+SINCE_ARGS=()
+[ -n "${FSN_NIGHTLY_SINCE:-}" ] && SINCE_ARGS=(--since "$FSN_NIGHTLY_SINCE")
+if ! timeout $((MAX_MIN + 5))m $FSN nightly --out "$OUT/companies" --report "$OUT/nightly.json" --max-minutes "$MAX_MIN" "${SINCE_ARGS[@]}"; then
   warn "build failed (see the step log); the old mapper runs as before"
   exit 0
 fi

@@ -6,6 +6,12 @@ on:
       fsn_nightly_stage:
         description: "FSN nightly incremental for this run: off, build, load or write (empty = the FSN_NIGHTLY_STAGE variable, else off)"
         default: ""
+      fsn_nightly_since:
+        description: "FSN nightly backfill: YYYY-MM-DD window start (empty = the day after the latest FSN set in the store)"
+        default: ""
+      fsn_nightly_max_minutes:
+        description: "FSN nightly fetch budget in minutes (empty = 25; a backfill run can raise it)"
+        default: ""
   schedule:
     # Non-top-of-hour scheduling reduces GitHub Actions congestion. The job
     # discovers the latest finalized SEC index, so weekends remain idempotent.
@@ -70,9 +76,12 @@ jobs:
       - name: FSN nightly incremental (flag, off by default)
         if: always()
         continue-on-error: true
-        timeout-minutes: 45
+        # 45 on the nightly; a dispatched backfill with its own fetch budget gets 170 (expressions have no arithmetic)
+        timeout-minutes: ${{ inputs.fsn_nightly_max_minutes && 170 || 45 }}
         env:
           FSN_NIGHTLY_STAGE: ${{ inputs.fsn_nightly_stage || vars.FSN_NIGHTLY_STAGE || 'off' }}
+          FSN_NIGHTLY_SINCE: ${{ inputs.fsn_nightly_since }}
+          FSN_NIGHTLY_MAX_MINUTES: ${{ inputs.fsn_nightly_max_minutes || '25' }}
         run: pipeline/scripts/fsn_nightly_incremental.sh
       - name: Keep the FSN nightly report
         if: always()
@@ -106,6 +115,11 @@ jobs:
         # REPROCESS_BUDGET_SECS (7000s = 117 min) normally ends the run first.
         timeout-minutes: 150
         if: always()
+        env:
+          # on: the old normalizer/mapper stop writing the cohort's facts and canonical values (the
+          # hybrid is their only writer); derived metrics still recompute for every company. Turn on
+          # together with FSN_NIGHTLY_STAGE=write, never before (founder's typed words).
+          HYBRID_ONLY_COHORT: ${{ vars.HYBRID_ONLY_COHORT || 'off' }}
         run: pipeline/scripts/reprocess_recent_filers.sh
 
   operational-gate:
