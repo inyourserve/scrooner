@@ -27,6 +27,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.cell_store import finish_rule_run, start_rule_run
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.fsn_store.company_dir import NO_DIM, read
 
 logger = structlog.get_logger()
@@ -503,7 +504,13 @@ def run(
                         if attempt == 1:
                             continue
                     else:
-                        current.rollback()
+                        # a connection that died unnoticed: safe_rollback reconnects instead of raising
+                        rolled = safe_rollback(current, stage="fsn_load", cik=d.name)
+                        if rolled is not current:
+                            if current is not conn:
+                                current.close()
+                            current = rolled
+                            out["reconnects"] += 1
                     logger.warning(
                         "fsn_load.company_failed", cik=d.name, error=repr(exc)[:200]
                     )

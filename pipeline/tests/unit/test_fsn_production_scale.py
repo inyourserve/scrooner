@@ -104,7 +104,9 @@ def test_load_without_a_reconnect_stops_with_the_original_error(conn, monkeypatc
         c.execute("select pg_terminate_backend(pg_backend_pid())")
 
     monkeypatch.setattr(load, "load_company", drop)
-    with pytest.raises(psycopg.OperationalError):
+    # the ORIGINAL error (the backend was terminated), not a second one from rollback() on the dead connection,
+    # which is what main raised: the operator sees why the company failed
+    with pytest.raises(psycopg.errors.AdminShutdown):
         load.run(conn, JPM.parent, ["0000019617"], git_commit="test")
 
 

@@ -36,6 +36,15 @@ That is enough to pass the pooler's statement timeout for every company: one fai
 3. **Pilot.** It has the same dead-connection handling: the company is recorded in `failed.json`, and the next one runs on a fresh connection.
 4. **Workflow.** The write step skips an empty `out/cells/*/` glob instead of crashing with `FileNotFoundError`.
 
+## Review fixes (PR #8)
+
+- **A shard that did nothing is red.** The new step `pipeline/scripts/fsn_shard_outcome.py` runs with `if: always()`:
+  - `::error::` and a failed job when the shard had companies but `out/report.json` has no company report;
+  - `::warning::` when `out/failed.json` lists companies, or `out/load.json` counts load errors.
+  - `out/failed.json` is now in the uploaded artifacts.
+- **Rollback on a live-looking connection** goes through `common/errors.safe_rollback`, in both the load loop and the pilot loop, as `pipeline/CLAUDE.md` asks. A connection that died unnoticed gives a fresh one instead of raising.
+- **The no-reconnect test is now a real guard.** It asserts the original `AdminShutdown` is raised, not the second error from `rollback()` that main raised. It fails on main's `load.py`.
+
 ## Tests
 
 `pipeline/tests/unit/test_fsn_production_scale.py` (DB-backed):
@@ -44,8 +53,9 @@ That is enough to pass the pooler's statement timeout for every company: one fai
 - `load.run` survives a backend killed mid-company. It reconnects, loads the company and finishes the rule_run.
 - Without `connect`, `load.run` stops with the original error.
 - `scrooner-fsn pilot` goes on after a killed backend and writes `failed.json`.
+- `test_fsn_shard_outcome.py`: an all-failed shard is red, a missing report is red, partial failures warn, a clean shard is quiet.
 
-Each test fails when its fix is removed. The full pipeline suite, run the way CI runs it (Postgres 16, every migration): 2,374 passed, 1 skipped (live SEC).
+Each test fails when its fix is removed. The full pipeline suite, run the way CI runs it (Postgres 16, every migration): 2,378 passed, 1 skipped (live SEC).
 
 ## Before the next run
 

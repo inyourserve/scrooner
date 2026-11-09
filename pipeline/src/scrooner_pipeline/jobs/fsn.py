@@ -202,19 +202,6 @@ def _ids(conn, ciks: str) -> dict[str, int]:
     )
 
 
-def _reconnect(dead):
-    """A fresh connection in place of one the pooler dropped (the dead one is closed, never reused)."""
-    import psycopg
-
-    from scrooner_pipeline.common.config import settings
-
-    try:
-        dead.close()
-    except Exception:  # noqa: BLE001  already gone
-        pass
-    return psycopg.connect(settings.database_url)
-
-
 @app.command("pilot")
 def pilot_cmd(
     ciks: str = typer.Option(..., help="Comma-separated pilot CIKs (already loaded)."),
@@ -245,6 +232,7 @@ def pilot_cmd(
     import gzip
 
     from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.common.errors import safe_rollback
     from scrooner_pipeline.fsn_store import checks, detectors, mapping, pilot
     from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
 
@@ -305,12 +293,9 @@ def pilot_cmd(
                         library_rows.append({"cik": cik, "company_id": cid, **e})
                     reports.append(rep)
                 except Exception as exc:  # noqa: BLE001  one company must not stop the shard
-                    if conn.closed or conn.broken:
-                        # the pooler dropped the connection: rollback() would raise and kill the shard
-                        # (FSN write run 42561798991); go on with the next company on a fresh connection
-                        conn = _reconnect(conn)
-                    else:
-                        conn.rollback()
+                    # a dropped connection: rollback() would raise and kill the shard (FSN write run
+                    # 42561798991); safe_rollback gives a fresh connection for the next company instead
+                    conn = safe_rollback(conn, stage="fsn_pilot", cik=cik)
                     failed.append(
                         {"cik": cik, "company_id": cid, "error": repr(exc)[:300]}
                     )
