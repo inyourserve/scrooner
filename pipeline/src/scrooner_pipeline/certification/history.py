@@ -30,12 +30,14 @@ Mapper gap). Certification needs zero `unclassified`/`no_row_inputs_present`; cl
 findings for their owner until filled. All severities are `review` (a gap is
 not a wrong value).
 
-FSN era (2026-11-09): a data point OUT of the company's current sector template
+FSN era (2026-11-09; founder direction: one source, the hybrid): a data point OUT of the company's current sector template
 (analytics.company_data_point_template, 0120) is not a cell, so it is never
 expected. A missing cell with a reason row in analytics.cell_blank_reason (what the
 FSN cell writer records) is classified by that reason first, as
 `blank_reason:<reason_code>`; a `defect` row whose class is unclassified stays
-`unclassified`. Without either table's rows the behaviour is unchanged.
+`unclassified`. For a concept the hybrid writes for the company, a missing cell without
+a writer reason is `unclassified`: period_gap and fact inference (old-mapper views)
+no longer explain it. Without hybrid rows the behaviour is unchanged.
 
 One finding per (concept, kind, cause) lists the missing period ends, so a
 company with 40 missing cells for one reason is one row, not 40.
@@ -316,11 +318,14 @@ def history_matrix(data: CompanyData) -> dict:
             if any(_matches(c, kind, end) for c in cells):
                 concepts[(year, kind, "present")] += 1
                 continue
-            cause = (
-                blank_reason_cause(data, base, kind, end)
-                or _gap_cause(gaps, base, kind, end)
-                or infer_cause(data, base, kind, end)
-            )
+            cause = blank_reason_cause(data, base, kind, end)
+            if cause is None:
+                cause = (
+                    "unclassified"  # the hybrid wrote this concept: only its reason counts
+                    if base in data.hybrid_concepts
+                    else _gap_cause(gaps, base, kind, end)
+                    or infer_cause(data, base, kind, end)
+                )
             concepts[(year, kind, "missing")] += 1
             if cause == "unclassified":
                 concepts[(year, kind, "unclassified")] += 1

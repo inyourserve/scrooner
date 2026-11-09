@@ -92,6 +92,18 @@ class TestTemplateAndWriterReasons:
             )
         assert rules(history.check(d)) == ["missing_cell:blank_reason:line_presented_combined_with_others"]
 
+    def test_hybrid_concept_is_explained_only_by_a_hybrid_reason(self):
+        """Founder direction 2026-11-09: one source, the hybrid. An old-mapper period_gap
+        cause no longer explains a missing cell of a concept the hybrid writes."""
+        d = company()
+        d.period_gaps = [GapRow("revenue_sanity_resolved", "Q4", e, "q4_not_derived") for e in Q4_ENDS]
+        assert rules(history.check(d)) == ["missing_cell:q4_not_derived"]  # not hybrid: unchanged
+        d.hybrid_concepts = frozenset({"revenue"})
+        f = history.check(d)
+        assert rules(f) == ["missing_cell:unclassified"] and company_state(f) == "uncertified"
+        d.blank_reasons = {("revenue", "Q4", e): BlankReasonRow("no_basis_witness", "defect", "period") for e in Q4_ENDS}
+        assert rules(history.check(d)) == ["missing_cell:blank_reason:no_basis_witness"]
+
     def test_metric_out_of_template_and_metric_writer_reason(self):
         d = company()
         d.blank_reasons = {("revenue", "Q4", e): BlankReasonRow("r", "not_presented", None) for e in Q4_ENDS}
@@ -157,6 +169,23 @@ def test_loader_reads_current_template_and_newest_writer_reason(isolated_databas
         put(runs[1], "total_assets", "I", q_end, q_end, "defect", "period", "inst", "2026-11-09")
         put(runs[1], "ebitda", "TTM", q_start, q_end, "defect", "period", "ttm_ignored", "2026-11-09")
 
+        # served cells: revenue under an fsn.* rule run (hybrid), net income under an old patch run
+        fsn_run, old_run = runs[1], None
+        cur.execute("insert into analytics.rule_run (rule_id, rule_version, mode, flag_name, flag_state)"
+                    " values ('cells.is_core@1', 1, 'apply', 'f', 'on') returning run_id")  # fmt: skip
+        old_run = cur.fetchone()[0]
+        cur.execute("update analytics.rule_run set rule_id = 'fsn.select@1' where run_id = %s", (fsn_run,))
+        cur.execute("insert into core.period (company_id, start_date, end_date, period_type)"
+                    " values (%s, '2024-01-01', '2024-12-31', 'duration') returning id", (cid,))  # fmt: skip
+        pid = cur.fetchone()[0]
+        for name, run in (("revenue_sanity_resolved", fsn_run), ("net_income_resolved", old_run)):
+            cur.execute("insert into analytics.canonical_concept (name, statement, combination_mode)"
+                        " values (%s, 'income_statement', 'first_match')"
+                        " on conflict (name) do update set name = excluded.name returning id", (name,))  # fmt: skip
+            cur.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value,"
+                        " source_fact_ids, rule_run_id, family) values (%s, %s, %s, 1, '{}', %s, 'is')",
+                        (cid, cur.fetchone()[0], pid, run))  # fmt: skip
+
         def load(as_of):
             d = CompanyData(company_id=cid, ticker="T", as_of=as_of)
             d.window_start = date(2015, 1, 1)
@@ -173,3 +202,6 @@ def test_loader_reads_current_template_and_newest_writer_reason(isolated_databas
         assert br[("revenue", "Q4", q_end)].classified is True
         assert br[("total_assets", "I", q_end)].reason_code == "inst"
         assert not any(k[0] == "ebitda" for k in br)  # TTM grain is not an I11 cell
+        # hybrid concepts: the fsn.* written revenue and the reasoned total_assets; not the
+        # old patch run's net income
+        assert after_v2.hybrid_concepts == {"revenue", "total_assets"}

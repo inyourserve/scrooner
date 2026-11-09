@@ -238,6 +238,11 @@ class CompanyData:
     blank_reasons: dict[tuple[str, str, date], "BlankReasonRow"] = field(
         default_factory=dict
     )
+    # Base names the hybrid (FSN store) writes for this company: a served canonical_fact
+    # cell under an `fsn.*` rule run, or a writer blank reason. For these, only the
+    # hybrid's own reasons explain a missing cell (founder direction 2026-11-09: one
+    # source, the hybrid); period_gap and fact inference describe the old mapper.
+    hybrid_concepts: frozenset[str] = frozenset()
 
     def cells_for(self, concept: str) -> list[Cell]:
         return [c for c in self.cells if c.concept == concept]

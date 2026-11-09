@@ -631,6 +631,15 @@ BLANK_REASON_SQL = """
 """
 
 
+HYBRID_CONCEPTS_SQL = """
+    select distinct cf.company_id, cc.name
+    from analytics.canonical_fact cf
+    join analytics.rule_run rr on rr.run_id = cf.rule_run_id
+    join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+    where cf.company_id = any(%s) and rr.rule_id like 'fsn.%%'
+"""
+
+
 def template_out(rows) -> frozenset[str]:
     """Base names OUT of a company's current template: every template row that maps
     to the base (x and x_resolved, revenue_sanity_resolved -> revenue) says no. A base
@@ -682,6 +691,13 @@ def load_template_and_reasons(cur, data, ids, as_of, timeout_s) -> None:
             name = base_name(dp)
             for kind in ("Q", "Q4") if grain == "Q" else (grain,):
                 data[cid].blank_reasons[(name, kind, end)] = row
+        hybrid: dict[int, set[str]] = defaultdict(set)
+        for cid, name in execute(cur, HYBRID_CONCEPTS_SQL, (ids,), timeout_s):
+            hybrid[cid].add(base_name(name))
+        for cid, d in data.items():
+            d.hybrid_concepts = frozenset(
+                hybrid.get(cid, set()) | {k[0] for k in d.blank_reasons}
+            )
 
 
 PERIODIC_FILING_FORMS = (
