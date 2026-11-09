@@ -15,7 +15,7 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 ## Scoreboard
 
 - Certified companies: 0 / 1,000.
-- 1,000-company FSN write (`pipeline-fsn-write.yml`, stage `select_write`, 16 shards, code_ref bc6ab31): founder approved 2026-11-08 ~17:49 UTC; scheduled for 2026-11-09 ~03:00 UTC, after the nightly refresh really ends (it starts 17:47-21:49 and ends as late as 01:34 UTC; PR #5). Earlier runs 41515572580 and 41708619888 stopped at the nightly-window preflight (nothing written).
+- 1,000-company FSN write: RUNNING since 2026-11-09 04:26 UTC, run 42561798991 (`select_write`, 16 shards, code_ref bc6ab31b46a76e46eedf791844272977c6f408dd). Founder approved 2026-11-08 ~17:49 UTC. Run 42559698212 (04:03) failed at checkout because `actions/checkout` cannot fetch a short SHA (it is read as a branch name); always pass the full 40-char SHA. Runs 41515572580 and 41708619888 stopped at the nightly-window preflight. Nothing was written by any failed run.
 - Latest full dry run (reported by the manager session 2026-11-06): 73.2% of template cells valued across 960 of 1,000 companies (top 100: 76.5%); one batch of 40 failed.
 
 ## In flight (no production writes)
