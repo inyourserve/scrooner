@@ -248,7 +248,10 @@ def report_company(
     company_outs: Path | None = None,
     note_sourced: Path | None = None,
     cleared_keys: Path | None = None,
+    debt_lane: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    """debt_lane: this company's cells of the debt lane's replay (fsn_store.debt.run_lane); total debt comes only
+    from there (a sum, never one mapped line). None leaves total debt to the seeds, which no longer map it."""
     cik, name, sic = conn.execute(
         "select cik, company_name, sic_code from core.company where id = %s",
         (company_id,),
@@ -324,6 +327,15 @@ def report_company(
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
+    if debt_lane is not None:
+        from scrooner_pipeline.fsn_store import debt
+
+        cells = [r for r in cells if r["data_point_name"] != debt.CONCEPT]
+        cells.extend(
+            sel.to_row(c, company_id, data["filings"])
+            for c in debt.debt_cells(conn, debt_lane, data["filings"])
+        )
+        rule_concepts = set(rule_concepts) | {debt.CONCEPT}
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]

@@ -236,6 +236,10 @@ def pilot_cmd(
         "data-team/47-fsn-store/note_cleared_keys.csv",
         help="Verifier-cleared note keys (stored value pinned) for signs held otherwise.",
     ),
+    debt_replay: str = typer.Option(
+        "",
+        help="The debt lane's replay report (scrooner-fsn debt-lane); total debt comes only from it. '' = none.",
+    ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
     Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
@@ -243,8 +247,10 @@ def pilot_cmd(
 
     from scrooner_pipeline.db.connection import get_connection
     from scrooner_pipeline.common.errors import safe_rollback
-    from scrooner_pipeline.fsn_store import checks, detectors, mapping, pilot
+    from scrooner_pipeline.fsn_store import checks, debt, detectors, mapping, pilot
     from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
+
+    debt_by_cik = debt.load_replay(Path(debt_replay)) if debt_replay else None
 
     root = Path(out)
     root.mkdir(parents=True, exist_ok=True)
@@ -283,6 +289,9 @@ def pilot_cmd(
                         Path(company_outs),
                         Path(note_sourced) if note_sourced else None,
                         Path(cleared_keys) if cleared_keys else None,
+                        debt_lane=debt_by_cik.get(int(cik), [])
+                        if debt_by_cik is not None
+                        else None,
                     )
                     rep["mapping"], rep["checks"] = m, c
                     rep["accessions"] = [
@@ -375,6 +384,24 @@ def pilot_cmd(
     ]
     (root / "summary.md").write_text("\n".join(lines) + "\n")
     typer.echo("\n".join(lines))
+
+
+@app.command("debt-lane")
+def debt_lane_cmd(
+    companies: str = typer.Option(
+        "companies", help="Root of companies/<cik>/ directories (the shard)."
+    ),
+    out: str = typer.Option(
+        "out/debt", help="Work directory; the report is <out>/replay.json."
+    ),
+) -> None:
+    """Total debt: the Verifier-passed debt lane (era_detect -> assemble_fsn -> replay_debt_fsn, company mode) over
+    the shard's company directories. No database, no network; pass <out>/replay.json to `pilot --debt-replay`."""
+    from scrooner_pipeline.fsn_store import debt
+
+    path = debt.run_lane(Path(companies), Path(out))
+    rep = json.loads(path.read_text())
+    typer.echo(f"debt lane: {len(rep['cells'])} cells {rep['summary']} -> {path}")
 
 
 @app.command("pilot-prod")

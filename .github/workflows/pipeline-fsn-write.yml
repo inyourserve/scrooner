@@ -148,7 +148,15 @@ jobs:
       - name: Map (fsn.line_map), checks (fsn.filing_check), select, report (production fsn.* writes)
         # interest-expense note values cleared by the Verifier draw 2026-11-03 (Ritwik); operating income
         # is never note-sourced (select.NOTE_TAGS)
-        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
+        run: |
+          # total debt: the Verifier-passed debt lane over the shard's company directories (no DB, no network);
+          # a lane failure leaves total debt to gaps, never to a guessed value
+          if uv run --project pipeline scrooner-fsn debt-lane --companies companies --out out/debt; then
+            uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out --debt-replay out/debt/replay.json
+          else
+            echo "::warning::debt lane failed; total debt is not served in this shard"
+            uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
+          fi
       - name: Before-image of canonical_fact and reasons (read)
         if: inputs.stage == 'select_write'
         run: |

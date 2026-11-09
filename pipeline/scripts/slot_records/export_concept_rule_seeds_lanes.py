@@ -331,8 +331,13 @@ for i, p in enumerate(bdm.consts["PARENTS"][3]):
     if not anchor:
         skip(bdm, bdm.consts["PARENTS"][2], f"PARENTS member {p}", "anchor tag has no canonical concept in the repo")
         continue
-    add("bs", "debt_member_parent", TD, "BS", "calc_position", 20 + i, bdm, "PARENTS + classify() default", "import",
-        position={"slot": borrow_slot, "anchor_concept": anchor, "relation": "child_of", "sign": 1})
+    # NOT a seed (FAMILY-RELEASE-CASE-2026-11-09 §2): the store's calc_position maps a matching custom line AS the
+    # concept and never tests the slot, so every custom child of current liabilities (accounts payable, accruals)
+    # became total debt; and select takes one line, while total debt is a sum. Total debt comes from the lane run
+    # whole (fsn_store.debt: era_detect -> assemble_fsn -> replay_debt_fsn), never from a seed.
+    skip(bdm, bdm.consts["PARENTS"][2], f"PARENTS member {p}: debt members ({borrow_slot}, child_of)",
+         "members of total debt, never the total: total debt is the lane's sum (fsn_store.debt runs replay_debt_fsn); "
+         "a calc_position seed mapped any custom current liability AS total_debt_resolved (FAMILY-RELEASE-CASE-2026-11-09 §2)")
 # founder ruling 2026-11-01 (BS port brief): total debt includes finance leases (face or note), a combined
 # debt+finance-lease line is part of total debt, operating leases stay combined (never in total debt).
 # classify() names the slots; a finance_lease or combined member is a total_debt member exactly like a
@@ -346,9 +351,9 @@ for k, slot in enumerate(s for s in ("finance_lease", "combined") if s in cls_re
         anchor = ALIAS["liabilities_total"] if p in bsd.consts["ANCHORS"][1]["liabilities_total"] else concept_of_tag(p)
         if not anchor:
             continue  # listed once above for the borrowing slot
-        add("bs", f"debt_{slot}_member", TD, "BS", "calc_position", 30 + 10 * k + i, bdm, f"classify() -> {slot!r} + PARENTS", "import",
-            position={"slot": slot, "anchor_concept": anchor, "relation": "child_of", "sign": 1})
-        ROWS["bs"][-1]["evidence"] = DEBT_LEASE_EVIDENCE
+        # NOT a seed either (see the borrowing slot above): the lane sums these members (DEBT_LEASE_EVIDENCE)
+        skip(bdm, bdm.consts["PARENTS"][2], f"PARENTS member {p}: debt members ({slot}, child_of)",
+             "summed by the debt lane (fsn_store.debt), never mapped as the total; " + DEBT_LEASE_EVIDENCE)
 assert "operating_lease" in cls_returns
 skip(bdm, bdm.func("classify").lineno, "classify() -> 'operating_lease': never a total_debt member (replay_debt_fsn.load_records drops the member)",
      "an exclusion; FORMATS-v1 calc_position has no negative slot. Founder 2026-11-01: operating leases stay combined")
