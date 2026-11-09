@@ -286,8 +286,13 @@ for i, p in enumerate(cal_parents):
     if not anchor:
         skip(bsa, bsa.assigns("cal_liab")[0].lineno, f"cal_liab parent {p}", "anchor tag has no canonical concept in the repo; calc_position needs anchor_concept")
         continue
-    add("bs", "liab_cal_child", ALIAS["total_liabilities"], "BS", "calc_position", 21 + i, bsa, "cal_liab", "ast",
-        position={"slot": liab_slot, "anchor_concept": anchor, "relation": "child_of", "sign": 1})
+    # NOT a seed (FAMILY-RELEASE-CASE-2026-11-09 §3a): cal_liab names the MEMBERS bs_assemble sums into the face
+    # liabilities; the store's calc_position maps a matching line AS the concept, so a member became a second
+    # "total" beside the printed Liabilities line (false conflicting_values_in_filing, 4,479 filings). The total
+    # is the printed Liabilities line (bs.anchors_liabilities_total) or the derived total (fsn_store.bs_derive).
+    skip(bsa, bsa.assigns("cal_liab")[0].lineno, f"cal_liab parent {p}: liability members (child_of)",
+         "members of the liabilities total, never the total: a calc_position seed would map each member AS "
+         "total_liabilities_resolved (FAMILY-RELEASE-CASE-2026-11-09 §3a)")
 
 # 5. classify_line literal/named tests -> not extracted (regex / exclude / no concept)
 for lineno, test, cls in if_returns(cl):

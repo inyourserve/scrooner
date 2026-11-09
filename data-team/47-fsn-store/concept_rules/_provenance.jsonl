@@ -8,8 +8,6 @@
 {"rule_id": "bs.equity_parent_tags@3", "source_file": "pipeline/scripts/slot_records/bs_assemble.py", "source_symbol": "EQUITY_PARENT_TAGS", "extraction": "ast", "bare_tag": "PartnersCapitalAttributableToParent"}
 {"rule_id": "bs.equity_parent_tags@4", "source_file": "pipeline/scripts/slot_records/bs_assemble.py", "source_symbol": "EQUITY_PARENT_TAGS", "extraction": "ast", "bare_tag": "LimitedLiabilityCompanyLlcMembersEquity"}
 {"rule_id": "bs.liab_zone_after_assets@1", "source_file": "pipeline/scripts/slot_records/bs_totals_detect.py", "source_symbol": "classify_line + zone_start (tags.index(ANCHORS assets_total)+1)", "extraction": "ast", "bare_tag": null}
-{"rule_id": "bs.liab_cal_child@1", "source_file": "pipeline/scripts/slot_records/bs_assemble.py", "source_symbol": "cal_liab", "extraction": "ast", "bare_tag": null}
-{"rule_id": "bs.liab_cal_child@2", "source_file": "pipeline/scripts/slot_records/bs_assemble.py", "source_symbol": "cal_liab", "extraction": "ast", "bare_tag": null}
 {"rule_id": "bs.debt_member_parent@1", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "PARENTS + classify() default", "extraction": "import", "bare_tag": null}
 {"rule_id": "bs.debt_member_parent@2", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "PARENTS + classify() default", "extraction": "import", "bare_tag": null}
 {"rule_id": "bs.debt_finance_lease_member@1", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "classify() -> 'finance_lease' + PARENTS", "extraction": "import", "bare_tag": null}
