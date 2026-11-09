@@ -13,8 +13,11 @@ name: FSN store production write (cohort)
 #                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
 #                       company with a served cell_proof DISAGREE after the write is restored)
-# Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
-# capex and D&A cells stay out until the release approver clears them (data_points input). Connections: at
+# Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Capex and D&A (the
+# Verifier-passed capex/D&A lane detector) are in the default; debt and balance-sheet cells stay out until the
+# release approver clears them (data_points input; FAMILY-RELEASE-CASE-2026-11-09: the debt and total-liabilities
+# seed rules mis-map custom lines). Every listed data point counts in the done gate's reasonless-key criterion,
+# so a family with held keys keeps a company's other families unwritten too. Connections: at
 # most 2 per shard, preflight at start and a re-check before every company (pause while client backends
 # exceed 60); never inside the nightly refresh window.
 on:
@@ -33,7 +36,7 @@ on:
         default: ""
       data_points:
         description: "Data points the cell write may touch (passed families)"
-        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved"
+        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved,capex_resolved,depreciation_and_amortization_resolved"
       restore_run:
         description: "restore only: the select_write run id whose before-images to put back"
         default: ""
