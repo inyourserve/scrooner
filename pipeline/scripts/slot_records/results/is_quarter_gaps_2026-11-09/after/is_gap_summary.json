@@ -205,23 +205,30 @@
    "companies": 5
   },
   {
-   "data_point": "revenue_sanity_resolved",
+   "data_point": "income_before_tax_resolved",
    "grain": "Q",
-   "class": "printed_not_face_column",
+   "class": "input_held_latest_copy_fails_identity",
    "keys": 5,
    "companies": 3
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "input_held_latest_copy_fails_identity",
+   "keys": 5,
+   "companies": 2
+  },
+  {
+   "data_point": "diluted_eps_resolved",
+   "grain": "Q",
+   "class": "input_held_latest_copy_fails_identity",
+   "keys": 5,
+   "companies": 2
   },
   {
    "data_point": "net_income_resolved",
    "grain": "Q",
    "class": "unmapped_line_ProfitLoss",
-   "keys": 5,
-   "companies": 1
-  },
-  {
-   "data_point": "net_income_resolved",
-   "grain": "Q",
-   "class": "mapped_line_no_value_for_column",
    "keys": 5,
    "companies": 1
   },
@@ -240,6 +247,13 @@
    "companies": 4
   },
   {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "input_held_latest_copy_fails_identity",
+   "keys": 4,
+   "companies": 2
+  },
+  {
    "data_point": "cost_of_revenue_resolved",
    "grain": "FY",
    "class": "other_tag_on_face",
@@ -247,23 +261,16 @@
    "companies": 1
   },
   {
-   "data_point": "income_before_tax_resolved",
+   "data_point": "operating_income_resolved",
    "grain": "Q",
-   "class": "ytd_only_prior_present",
-   "keys": 4,
-   "companies": 3
-  },
-  {
-   "data_point": "income_tax_expense_resolved",
-   "grain": "Q",
-   "class": "ytd_only_prior_present",
+   "class": "input_held_latest_copy_fails_identity",
    "keys": 4,
    "companies": 2
   },
   {
-   "data_point": "basic_eps_resolved",
+   "data_point": "income_tax_expense_resolved",
    "grain": "Q",
-   "class": "printed_other_statement",
+   "class": "input_held_latest_copy_fails_identity",
    "keys": 4,
    "companies": 2
   },
@@ -275,11 +282,18 @@
    "companies": 1
   },
   {
-   "data_point": "diluted_eps_resolved",
+   "data_point": "net_income_resolved",
    "grain": "Q",
-   "class": "printed_not_face_column",
+   "class": "input_held_latest_copy_fails_identity",
    "keys": 3,
    "companies": 2
+  },
+  {
+   "data_point": "basic_eps_resolved",
+   "grain": "Q",
+   "class": "printed_other_statement",
+   "keys": 3,
+   "companies": 1
   },
   {
    "data_point": "diluted_eps_resolved",
@@ -292,6 +306,13 @@
    "data_point": "cost_of_revenue_resolved",
    "grain": "FY",
    "class": "no_line_for_concept",
+   "keys": 3,
+   "companies": 1
+  },
+  {
+   "data_point": "net_income_resolved",
+   "grain": "Q",
+   "class": "mapped_line_no_value_for_column",
    "keys": 3,
    "companies": 1
   },
@@ -310,23 +331,16 @@
    "companies": 2
   },
   {
-   "data_point": "operating_income_resolved",
-   "grain": "Q",
-   "class": "printed_not_face_column",
-   "keys": 2,
-   "companies": 2
-  },
-  {
-   "data_point": "basic_eps_resolved",
-   "grain": "Q",
-   "class": "printed_not_face_column",
-   "keys": 2,
-   "companies": 2
-  },
-  {
    "data_point": "interest_expense_resolved",
    "grain": "Q",
-   "class": "ytd_only_prior_present",
+   "class": "input_held_latest_copy_fails_identity",
+   "keys": 2,
+   "companies": 2
+  },
+  {
+   "data_point": "revenue_sanity_resolved",
+   "grain": "Q",
+   "class": "input_held_conflicting_values_in_filing",
    "keys": 2,
    "companies": 2
   },
@@ -345,38 +359,10 @@
    "companies": 1
   },
   {
-   "data_point": "operating_income_resolved",
-   "grain": "Q",
-   "class": "ytd_only_prior_present",
-   "keys": 2,
-   "companies": 1
-  },
-  {
    "data_point": "net_income_resolved",
    "grain": "FY",
    "class": "mapped_line_no_value_for_column",
    "keys": 2,
-   "companies": 1
-  },
-  {
-   "data_point": "basic_eps_resolved",
-   "grain": "Q",
-   "class": "ytd_only_prior_present",
-   "keys": 2,
-   "companies": 1
-  },
-  {
-   "data_point": "diluted_eps_resolved",
-   "grain": "Q",
-   "class": "ytd_only_prior_present",
-   "keys": 2,
-   "companies": 1
-  },
-  {
-   "data_point": "net_income_resolved",
-   "grain": "Q",
-   "class": "printed_not_face_column",
-   "keys": 1,
    "companies": 1
   },
   {
@@ -404,20 +390,6 @@
    "data_point": "net_income_resolved",
    "grain": "FY",
    "class": "printed_other_statement",
-   "keys": 1,
-   "companies": 1
-  },
-  {
-   "data_point": "revenue_sanity_resolved",
-   "grain": "Q",
-   "class": "ytd_only_prior_present",
-   "keys": 1,
-   "companies": 1
-  },
-  {
-   "data_point": "income_before_tax_resolved",
-   "grain": "Q",
-   "class": "ytd_only_no_prior",
    "keys": 1,
    "companies": 1
   },

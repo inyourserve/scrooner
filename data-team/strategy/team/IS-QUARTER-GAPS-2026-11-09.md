@@ -61,13 +61,46 @@ columns. The one column problem was PepsiCo's date (below).
    gave no longer shuts out the FY route (FY − 9M or the 10-K's quarterly note). Rhythm Q4 2018 had lost its value
    once `ProfitLoss` was mapped (an equity-statement 9M column). A blank keeps its first reason; a printed or
    derived value is never changed.
+5. **Q4 from an older 10-K's printed note** (`select._note_quarter`), also found by the regression run: mapping
+   `ProfitLoss` / the bridge line made later 10-Ks (which repeat old years as comparatives, without their notes) the
+   FY winner, so Q4 fell back to FY − 9M (Arrowhead, Tesla moved by $1–2,419). The note of an older filing that
+   prints the same FY value is now used (the period-engineer rule: a printed quarter beats a derived one). See §4
+   for its wider effect.
 
-Tests: `pipeline/tests/unit/test_fsn_is_quarter_gaps.py` (11: 8 unit, 3 on the real schema). Each fix was reverted
-in a copy of the source and the suite failed (7 mutations). FSN/CF/BS/per-share suites: 749 passed.
+Tests: `pipeline/tests/unit/test_fsn_is_quarter_gaps.py` (12: 9 unit, 3 on the real schema). Each fix was reverted
+in a copy of the source and the suite failed (9 mutations). FSN/CF/BS/per-share suites: 750 passed.
 
 ## 4. Regression run, 67 companies (every cell of every concept)
 
-(running: the rerun with fix 4 is in progress; this section is filled when it finishes.)
+`main` (787cc667) vs this branch on the same scratch store, every cell of every concept, 67 companies. Full list:
+`pipeline/scripts/slot_records/results/is_quarter_gaps_2026-11-09/regression_67_companies_changes.csv.gz`.
+
+| change | cells | companies |
+|---|---|---|
+| new value (was a gap or a blank) | 494 (net income 340) | 50 |
+| value changed: Q4 is now the filer's PRINTED quarterly-note figure (fix 5) | 124 | 35 |
+| value changed: a later restated print wins (AT&T D&A Q2/Q3 2021, 5,761 → 4,429 and 5,619 → 4,457: the 2022 10-Qs recast 2021 to continuing operations after WarnerMedia) | 2 | 1 |
+| value lost | 1 | 1 |
+| derived → printed, same value | 848 | — |
+
+The lost value: NCLH FY2016 net income (633,085). Its latest copy is now the FY2018 10-K, whose FY2016 column fails
+the filer's own `calc:DirectOperatingCosts` (2,850,225 printed vs 1,894,875 from three children); the store holds
+the column (latest_copy_fails_identity), as it already does for every other line of that column. Same cause as
+AT&T 2017 below.
+
+The 124 printed-note changes come from **fix 5** (`select._note_quarter`): when the FY winner (the latest copy) is
+a later 10-K that repeats the year as a comparative and carries no quarterly note for it, the note of an older
+filing printing the SAME FY value is used. Most moves are the filer's rounding (FY − 9M vs the printed quarter:
+Amazon ±1M, Arrowhead $1–2,419). Some are basis corrections: Erie Q4 2014 revenue 1,589M → 337M and AT&T Q4 2021
+revenue 40,958M → 31,095M. In both the store serves the RECAST FY (Erie 1,407M after deconsolidating the
+Exchange; AT&T 134,038M continuing operations), but the quarter was derived from the ORIGINAL FY and 9M (the
+"other printed pairs" route of `_ytd_difference`), so Q1–Q4 did not add up to the FY shown beside them. These
+change shown numbers: **they need the Verifier before release** (sample from the CSV, `after_rule =
+fsn.select_note_quarter@1`).
+
+7 companies after all fixes: 954 → 606 gap keys; the remaining classes: other_tag_on_face 221,
+no_line_for_concept 146, mapped_line_no_value_for_column 81, the parent-NI common line held 50 (ELS),
+no_covering_filing 46, FY input held (latest copy fails identity) 32, printed on another statement 22.
 
 ## 5. What is left, and why (not a mapping bug)
 
