@@ -158,3 +158,21 @@ def test_pretax_slot_holds_a_face_without_a_tax_line():
     """most equity REITs print no income-tax line: an absence, not a mapping gap"""
     s = is_structure.pretax_slot([FACE[0], FACE[1], FACE[3]], VALS)
     assert s["status"] == "held" and s["gate"] == "hold_pretax_no_tax_line"
+
+
+@pytest.mark.parametrize(
+    "label, ok",
+    [
+        ("Income (loss) before provision for (benefit from) income taxes", True),  # Guidewire, Okta
+        ("Income before income taxes and noncontrolling interests", True),  # HEICO, Choice
+        ("Income before income taxes, equity in income of affiliates", True),
+        ("Pre-tax earnings", True),  # Lowe's, Goldman Sachs
+        ("Loss from discontinued operations before income taxes", False),
+        ("Net income attributable to noncontrolling interests before taxes", False),
+        ("Deferred income tax expense", False),
+        ("Income (Loss) from Continuing Operations", False),  # U-Haul: no before-tax wording, held
+    ],
+)
+def test_pretax_label_class(label, ok):
+    face = [FACE[0], _row(2, "EarningsBeforeIncomeTaxes", label, True), *FACE[2:]]
+    assert (is_structure.pretax_slot(face, VALS)["status"] == "mapped") is ok
