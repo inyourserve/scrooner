@@ -86,6 +86,43 @@ The served value adds note finance leases (founder 2026-11-04 item 5). FY2018 ad
 1. Nine META values are 0, debt-free 2016-12-31..2018-12-31, with no summed fact to cite. The cell loader demotes a value with no lineage to a lineage-defect blank, so these show as blanks, not 0. Needs a choice: cite the balance sheet's Liabilities line, or accept the blank.
 2. The earlier-copy lease fill decides META 2022-12-31. That is the case the Verifier asked the founder or Dhairya to rule on (§5 #3). The value matches the Verifier's reading, but the ruling is still open.
 
+### Tag Expert double-count traps (pilot dry run 42660156226)
+
+Same branch, 14 companies the Tag Expert named (HTZ, AX and GABC are not in the cohort). Result: 0 failed companies; 370 values and 273 reasoned holds:
+- `not_computable_uncovered_candidates` 94;
+- `face_admission_tie_pending` 76;
+- `not_computable_missing_member` 58;
+- `current_maturities_unverified` 36;
+- `debt_lease_member_unverified` 9.
+
+DATA-INFERRED: the lane's members and flags, not re-opened on sec.gov.
+
+| Trap | Companies | What the lane did | Verdict |
+|---|---|---|---|
+| a. Commercial paper inside the short-term line | DUK | Every DUK cell is held (`NotesPayable` member missing; uncovered candidates). No value, so nothing is counted twice. | Safe; no DUK debt is served |
+| b. Current maturities inside LongTermDebt | CSCO, TMO | Face members only: CSCO `DebtCurrent` + `LongTermDebtNoncurrent`; TMO `DebtCurrent` + `LongTermDebtAndCapitalLeaseObligations`. No note current portion added. The note LongTermDebt check only flags (CSCO +6,661M, TMO +265M). | Holds |
+| c. Combined debt-and-lease lines | PGR, TMO, CVX, NI/FE/AWK | PGR `DebtLongtermAndShorttermCombinedAmount` and TMO/NI/FE/AWK `LongTermDebtAndCapitalLeaseObligations*` are classed `combined`, so no note finance lease is added. CVX is served through 2018-09-30 with its face capital-lease line as a member, then held. | Holds |
+| c'. Note current portion and note lease added together | GOOG, AMZN | No face current side, so the lane adds the note current portion (`current_portion_from_note_unreconciled`) and the note `FinanceLeaseLiability` total. GOOG 2026-06-30: 100,164 + 1,999 + 2,590. If GOOG's current portion includes the current finance lease (mind: GOOG short-term debt includes the current capital lease), the current lease is counted twice. AMZN passed this check (Verifier 3/3), GOOG has not. | **Open: Verifier** |
+| d. Banks (FHLB advances) | EWBC, ZION | EWBC is held everywhere. **ZION is served through 2024-03-31 as `LongTermDebt` 544 + lease 4 = 548M.** That probably leaves out short-term borrowings and FHLB advances, so it is likely a partial total. | **Open: hold bank debt by sector template, or Verifier** |
+| e. Debt only by segment | CAT, APD | CAT is served through 2020-06-30 as the sum of six face lines by segment (Financial Products + ME&T), then held (`missing_member`). APD is served through 2023-03-31, then held. Never 0, never a partial blank-pass. | Holds; Verifier to confirm the segment sum is the consolidated total |
+| g. Utilities' capitalization format | NI, FE, AWK | `LongTermDebtAndCapitalLeaseObligations` is kept as a member. Where it can't be tied to a printed total the cell is held (`face_admission_tie_pending`). | Holds |
+
+**Proposed Verifier draw** (store value, accession):
+- GOOG 2026-06-30: 102,754M (0001652044-26-000071)
+- ZION 2024-03-31: 548M (0000109380-24-000108)
+- CAT 2020-06-30: 38,622M (0000018230-20-000214)
+- APD 2023-03-31: 9,140.9M (0000002969-23-000023)
+- CSCO 2026-07-31: 29,533M (0000858877-26-000132)
+- TMO 2026-06-30: 42,549M (0000097745-26-000144)
+- PGR 2026-06-30: 8,387M (0000080661-26-000308)
+- CVX 2018-09-30: 36,110M (0000093410-18-000035)
+- NI 2026-06-30: 17,403M (0001111711-26-000088)
+- FE 2026-06-30: 28,983M (0001031296-26-000123)
+- AWK 2026-06-30: 15,988M (0001410636-26-000120)
+- AMZN 2026-06-30: 145,675M (0001018724-26-000026)
+
+**Coverage.** These companies are hard cases by choice: DUK and EWBC get no debt value at all, and CVX, CAT and APD stop years ago. Debt must stay out of the write's default until the Verifier draw passes and the bank rule (trap d) is decided.
+
 ## 3. Balance sheet
 
 ### 3a. Total liabilities: not ready
