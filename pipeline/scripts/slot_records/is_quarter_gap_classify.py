@@ -127,9 +127,9 @@ def classify(co: Company, concept: str, grain: str, end: date) -> tuple[str, str
                     anchors = sorted({t for t in ANCHORS if (end, q) in co.values.get((fid, t), {})})
                     is_tags = sorted({x[3] for x in is_lines})
                     a_on_is = sorted(set(anchors) & set(is_tags))
-                    return ("printed_not_face_column",
-                            f"line {ln[3]} ({ln[2]}) prints {v[(end, q)]}; anchors with a value: {anchors or 'none'};"
-                            f" anchors on the IS face: {a_on_is or 'none'}", fid)
+                    detail = (f"line {ln[3]} ({ln[2]}) prints {v[(end, q)]}; anchors with a value: {anchors or 'none'};"
+                              f" anchors on the IS face: {a_on_is or 'none'}")
+                    return "printed_not_face_column", detail, fid
                 return "printed_face_not_selected", f"{ln[3]}={v[(end, q)]}", fid
         if grain == "Q":
             for n in (2, 3, 4):
@@ -159,7 +159,7 @@ def classify(co: Company, concept: str, grain: str, end: date) -> tuple[str, str
         if (end, q) in v:
             stmts = sorted({ln[2] for ln in lines if ln[3] == t})
             return "printed_other_statement", f"{t}={v[(end, q)]} on {','.join(stmts) or 'no line'}", fid
-    rx = re.compile(LABEL_RX[concept], re.I)
+    rx = re.compile(LABEL_RX[concept], re.IGNORECASE)
     lab = [ln for ln in is_lines if rx.search(ln[4] or "")]
     if lab:
         return "other_tag_on_face", "; ".join(f"{ln[3]}:{ln[4][:50]}" for ln in lab[:4]), fid
@@ -207,8 +207,9 @@ def main(url: str, gaps_path: str, out: str, ciks: str = "") -> None:
     import psycopg
 
     want = set(ciks.split(",")) if ciks else None
-    keys = [r for r in csv.DictReader(open(gaps_path))
-            if r["data_point"] in IS_CONCEPTS and r["grain"] in QTRS and (want is None or r["cik"] in want)]
+    with open(gaps_path, newline="") as fi:
+        keys = [r for r in csv.DictReader(fi)
+                    if r["data_point"] in IS_CONCEPTS and r["grain"] in QTRS and (want is None or r["cik"] in want)]
     by_co: dict[int, list[dict[str, str]]] = defaultdict(list)
     for r in keys:
         by_co[int(r["company_id"])].append(r)
