@@ -57,3 +57,30 @@ What changed in certify I11:
 Tests: 9 (1 on real Postgres 16); 12/12 mutations caught; the 236 existing certification tests are unchanged and pass.
 
 **Next:** `certify promote` plus a Verifier record table, once the ladder ruling (blocker 2) lands. Until then this lane stays off production. It analyses the cell_proof and certify dry-run outputs once someone dispatches them after run 42649721096.
+
+## 6. Status of every piece (2026-11-09, late)
+| Step | Branch | SHA | CI | What it is |
+|---|---|---|---|---|
+| 3a | `work/certification-lead/i11-template-reasons` | `3792a3e0` | 42653854475 green | I11 reads the sector template (0120) and `cell_blank_reason` |
+| 3b | `work/certification-lead/promote` | `3bc6c42a` | 42656798008 green (all jobs) | `scrooner-certify-promote` plus migration **0122 `analytics.verifier_check`** (claimed in doc 53, next free 0123; NOT applied) |
+| 3c | `work/certification-lead/v11-cohort` | `1bbf083a` | 42657752304 green | `scrooner-certify --cohort-ranks 1-100` over cohort v1.1; workflow input `cohort_ranks` |
+
+None is merged; each needs a founder merge. 0122 needs the founder's typed words to apply. The three branches are independent of each other: 3b carries its own template read, so it does not need 3a.
+
+### 3b: the exact tests (founder-approved wording; any change from the Verifier review gets applied here)
+- **reconciled.** For each headline concept in the company's template, at least one served `canonical_fact` cell since 2015. Every served cell has its newest `cell_proof` row (same data point, period start and end, basis latest) PROVEN, with `shown_value` equal to the value served now; a proof of an older value is stale. No headline `cell_proof` row is DISAGREE.
+  - Headline concepts: revenue_sanity_resolved, operating_income_resolved, net_income_resolved, diluted_eps_resolved, cfo_resolved, capex_resolved, total_assets_resolved, stockholders_equity_resolved, shares_outstanding_resolved, total_debt_resolved.
+  - market_cap has no filing line, so it is checked by the Verifier only.
+- **verified.** For each headline concept, its latest PROVEN cell per grain (flows FY and Q; instants I) has a `right` `verifier_check` row with the same grain and period end and the same shown value. market_cap needs a `right` row checked within 31 days (ASSUMED; confirm). There must be no open `wrong` or `blank_wrong` row.
+- **certified.** The company has a current template. Every in-template data point has `company_data_point_coverage.has_value`, or its newest blank reason is classified.
+- **The command:** promote decides the highest rung that holds and writes it, demoting as well as promoting. It never leaves `uncertified`, never creates a row, and writes only `company_certification`. Run it after `scrooner-certify`. Tests: 15 (4 on real Postgres 16); 16/16 mutations caught.
+
+### New blocker 11: the proof engine is not on main
+`scrooner-proof` (the only `cell_proof` writer) exists only on `work/engineering/cell-proof`, last commit 2026-11-01; `pipeline-cells-proof.yml` checks out that branch. **No `reconciled` is possible until a proof run writes `cell_proof` for the written companies.** A write needs the founder's words. Merging the engine or freezing a ref is engineering's call.
+
+### For the Verifier review ("can a wrong shown value be certified?")
+**Yes, for a non-headline cell.**
+- The `cell_proof` and Verifier rungs cover the 11 headline concepts only.
+- Every other shown cell (SG&A, D&A, interest, tax, metrics and so on) is covered only by the I1–I11 invariant suite. A wrong value that passes every invariant can still be certified.
+- **The fix, if the review asks for it:** add the other served data points to the reconciled list (`HEADLINE_PROVED` in `certification/promote.py`; a one-line change plus tests), so every served cell must be PROVEN. Cost: every family needs `cell_proof` coverage first.
+- **A headline cell cannot be certified wrong** unless the proof position and the Verifier draw are both wrong about it.
