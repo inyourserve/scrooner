@@ -144,13 +144,28 @@ def load_cmd(
     from scrooner_pipeline.db.connection import get_connection
     from scrooner_pipeline.fsn_store import load
 
-    with get_connection() as conn:
-        res = load.run(
-            conn,
-            Path(companies),
-            [c for c in ciks.split(",") if c] or None,
-            force=force,
-            predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
+    import psycopg
+
+    from scrooner_pipeline.common.config import settings
+
+    res = None
+    try:
+        with get_connection() as conn:
+            res = load.run(
+                conn,
+                Path(companies),
+                [c for c in ciks.split(",") if c] or None,
+                force=force,
+                predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
+                # a connection the pooler drops mid-run is replaced (load.run closes it);
+                # the shard goes on with the next company instead of dying in rollback()
+                connect=lambda: psycopg.connect(settings.database_url),
+            )
+    except psycopg.OperationalError:
+        if res is None:
+            raise
+        typer.echo(
+            "fsn load: the first connection was dropped by the pooler; the run completed on a new one"
         )
     if report:
         Path(report).write_text(json.dumps(res, indent=1, default=str))
@@ -185,6 +200,19 @@ def _ids(conn, ciks: str) -> dict[str, int]:
             "select cik, id from core.company where cik = any(%s)", (cik_list,)
         ).fetchall()
     )
+
+
+def _reconnect(dead):
+    """A fresh connection in place of one the pooler dropped (the dead one is closed, never reused)."""
+    import psycopg
+
+    from scrooner_pipeline.common.config import settings
+
+    try:
+        dead.close()
+    except Exception:  # noqa: BLE001  already gone
+        pass
+    return psycopg.connect(settings.database_url)
 
 
 @app.command("pilot")
@@ -227,58 +255,83 @@ def pilot_cmd(
     library_rows: list[dict] = []
     gap_rows: list[dict] = []
     failed: list[dict] = []
-    with get_connection() as conn:
-        rules = mapping.load_rules(conn)
-        rule_concepts = {
-            r[0]
-            for r in conn.execute(
-                "select distinct cc.name from fsn.concept_rule r join analytics.canonical_concept cc on cc.id = r.canonical_concept_id"
-            ).fetchall()
-        }
-        for cik, cid in sorted(_ids(conn, ciks).items()):
-            try:
-                # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
-                m = mapping.map_company(conn, cid, rules, detectors=detectors.DEFAULT)
-                c = checks.check_company(conn, cid)
-                conn.commit()
-                rep = pilot.report_company(
-                    conn,
-                    cid,
-                    Path(calendar),
-                    rule_concepts,
-                    Path(period_rules),
-                    Path(company_outs),
-                    Path(note_sourced) if note_sourced else None,
-                    Path(cleared_keys) if cleared_keys else None,
-                )
-                rep["mapping"], rep["checks"] = m, c
-                rep["accessions"] = [
-                    r[0]
-                    for r in conn.execute(
-                        "select accession from fsn.filing where company_id = %s order by accepted",
-                        (cid,),
-                    ).fetchall()
-                ]
-                for r in rep.pop("_cells"):
-                    if r["fsn_end"] < "2014-01-01":
-                        continue  # comparatives before the history floor (CELL-FORMAT §2)
-                    fam = OWNERSHIP.get(r["data_point_name"], "unowned")
-                    families.setdefault(fam, []).append(r)
-                for g in rep.pop("_gaps"):
-                    gap_rows.append({"cik": cik, "company_id": cid, **g})
-                for e in rep.pop("_library"):
-                    library_rows.append({"cik": cik, "company_id": cid, **e})
-                reports.append(rep)
-            except Exception as exc:  # noqa: BLE001  one company must not stop the shard
-                conn.rollback()
-                failed.append({"cik": cik, "company_id": cid, "error": repr(exc)[:300]})
-                typer.echo(f"pilot {cik}: FAILED {repr(exc)[:200]}")
-            else:  # only a company that succeeded has a report to print
-                typer.echo(
-                    f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
-                    f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
-                    f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
-                )
+    import psycopg
+
+    finished = False
+    try:
+        with get_connection() as outer:
+            conn = outer
+            rules = mapping.load_rules(conn)
+            rule_concepts = {
+                r[0]
+                for r in conn.execute(
+                    "select distinct cc.name from fsn.concept_rule r join analytics.canonical_concept cc on cc.id = r.canonical_concept_id"
+                ).fetchall()
+            }
+            for cik, cid in sorted(_ids(conn, ciks).items()):
+                try:
+                    # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
+                    m = mapping.map_company(
+                        conn, cid, rules, detectors=detectors.DEFAULT
+                    )
+                    c = checks.check_company(conn, cid)
+                    conn.commit()
+                    rep = pilot.report_company(
+                        conn,
+                        cid,
+                        Path(calendar),
+                        rule_concepts,
+                        Path(period_rules),
+                        Path(company_outs),
+                        Path(note_sourced) if note_sourced else None,
+                        Path(cleared_keys) if cleared_keys else None,
+                    )
+                    rep["mapping"], rep["checks"] = m, c
+                    rep["accessions"] = [
+                        r[0]
+                        for r in conn.execute(
+                            "select accession from fsn.filing where company_id = %s order by accepted",
+                            (cid,),
+                        ).fetchall()
+                    ]
+                    for r in rep.pop("_cells"):
+                        if r["fsn_end"] < "2014-01-01":
+                            continue  # comparatives before the history floor (CELL-FORMAT §2)
+                        fam = OWNERSHIP.get(r["data_point_name"], "unowned")
+                        families.setdefault(fam, []).append(r)
+                    for g in rep.pop("_gaps"):
+                        gap_rows.append({"cik": cik, "company_id": cid, **g})
+                    for e in rep.pop("_library"):
+                        library_rows.append({"cik": cik, "company_id": cid, **e})
+                    reports.append(rep)
+                except Exception as exc:  # noqa: BLE001  one company must not stop the shard
+                    if conn.closed or conn.broken:
+                        # the pooler dropped the connection: rollback() would raise and kill the shard
+                        # (FSN write run 42561798991); go on with the next company on a fresh connection
+                        conn = _reconnect(conn)
+                    else:
+                        conn.rollback()
+                    failed.append(
+                        {"cik": cik, "company_id": cid, "error": repr(exc)[:300]}
+                    )
+                    typer.echo(f"pilot {cik}: FAILED {repr(exc)[:200]}")
+                else:  # only a company that succeeded has a report to print
+                    typer.echo(
+                        f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
+                        f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
+                        f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
+                    )
+            if conn is not outer:
+                conn.close()
+            finished = True
+    except psycopg.OperationalError:
+        # the pooler dropped the FIRST connection while a replacement did the work: its exit commit fails after
+        # every company is done; the results below are complete, so only a failure before that is fatal
+        if not finished:
+            raise
+        typer.echo(
+            "pilot: the first connection was dropped by the pooler; results are complete"
+        )
     for fam, rows in families.items():
         d = root / "cells" / fam
         d.mkdir(parents=True, exist_ok=True)

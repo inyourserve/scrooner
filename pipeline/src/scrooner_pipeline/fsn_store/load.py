@@ -21,7 +21,7 @@ from collections import defaultdict
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import psycopg
 import structlog
@@ -439,8 +439,15 @@ def run(
     force: bool = False,
     git_commit: str | None = None,
     predecessors: dict[str, str] | None = None,
+    connect: Callable[[], psycopg.Connection] | None = None,
 ) -> dict[str, Any]:
-    """Load every (or the named) company directories; one rule_run for the batch."""
+    """Load every (or the named) company directories; one rule_run for the batch.
+
+    A company that fails is rolled back and skipped. If the failure LOST the connection (the pooler dropped it:
+    FSN write run 42561798991, shards 4/6/7), `connect` opens a fresh one and that company is tried once more;
+    without `connect` the run stops with the error instead of dying inside rollback(). Connections opened here
+    are closed here; the caller's `conn` is never closed. Each company is one transaction, so a retry repeats
+    nothing that was committed."""
     loader_commit = git_commit or _git_commit()
     dirs = sorted(
         d
@@ -462,28 +469,63 @@ def run(
         "value": 0,
         "line": 0,
     }
-    for d in dirs:
-        try:
-            r = load_company(
-                conn,
-                d,
-                loader_commit=loader_commit,
-                run_id=run_id,
-                force=force,
-                predecessors=predecessors,
-            )
-            conn.commit()
-        except Exception as exc:  # noqa: BLE001
-            conn.rollback()
-            logger.warning("fsn_load.company_failed", cik=d.name, error=repr(exc)[:200])
-            out["errors"] += 1
-            continue
-        if r.get("skipped"):
-            out["skipped"] += 1
-        else:
-            out["companies"] += 1
-            out["value"] += r.get("value", 0)
-            out["line"] += r.get("line", 0)
-    finish_rule_run(conn, run_id, out)
-    conn.commit()
+    out["reconnects"] = 0
+    current = conn
+    try:
+        for d in dirs:
+            r = None
+            for attempt in (1, 2):
+                try:
+                    r = load_company(
+                        current,
+                        d,
+                        loader_commit=loader_commit,
+                        run_id=run_id,
+                        force=force,
+                        predecessors=predecessors,
+                    )
+                    current.commit()
+                    break
+                except Exception as exc:  # noqa: BLE001
+                    if not _alive(current):
+                        if connect is None:
+                            raise
+                        if current is not conn:
+                            current.close()
+                        current = connect()
+                        out["reconnects"] += 1
+                        logger.warning(
+                            "fsn_load.reconnected",
+                            cik=d.name,
+                            attempt=attempt,
+                            error=repr(exc)[:200],
+                        )
+                        if attempt == 1:
+                            continue
+                    else:
+                        current.rollback()
+                    logger.warning(
+                        "fsn_load.company_failed", cik=d.name, error=repr(exc)[:200]
+                    )
+                    out["errors"] += 1
+                    r = None
+                    break
+            if r is None:
+                continue
+            if r.get("skipped"):
+                out["skipped"] += 1
+            else:
+                out["companies"] += 1
+                out["value"] += r.get("value", 0)
+                out["line"] += r.get("line", 0)
+        finish_rule_run(current, run_id, out)
+        current.commit()
+    finally:
+        if current is not conn:
+            current.close()
     return out
+
+
+def _alive(conn: psycopg.Connection) -> bool:
+    """False when the connection is gone (closed or broken), so rollback() itself would raise."""
+    return not (conn.closed or conn.broken)

@@ -171,6 +171,8 @@ jobs:
         run: |
           set -u
           for d in out/cells/*/; do
+            # no cells at all (every company failed): the unmatched glob must not crash the step
+            [ -f "$d/cells.jsonl.gz" ] || continue
             fam=$(basename "$d")
             [ "$fam" = "unowned" ] && continue
             mkdir -p "out/write/$fam"
