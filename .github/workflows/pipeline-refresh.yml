@@ -2,6 +2,10 @@ name: Pipeline freshness refresh
 
 on:
   workflow_dispatch:
+    inputs:
+      fsn_nightly_stage:
+        description: "FSN nightly incremental for this run: off, build, load or write (empty = the FSN_NIGHTLY_STAGE variable, else off)"
+        default: ""
   schedule:
     # Non-top-of-hour scheduling reduces GitHub Actions congestion. The job
     # discovers the latest finalized SEC index, so weekends remain idempotent.
@@ -58,6 +62,33 @@ jobs:
         run: uv sync --project pipeline --locked
       - name: Index latest finalized SEC filing day
         run: uv run --project pipeline scrooner-incremental
+      # FSN nightly incremental (data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md):
+      # the day's new 10-K/10-Q filings of the cohort, built from their own XBRL on EDGAR and run through
+      # the hybrid build, before the old mapper. Off unless the FSN_NIGHTLY_STAGE repository variable (or
+      # the dispatch input) says build / load / write; load and write are production writes and need the
+      # founder's typed words first. It never fails the night (continue-on-error, and the script exits 0).
+      - name: FSN nightly incremental (flag, off by default)
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 45
+        env:
+          FSN_NIGHTLY_STAGE: ${{ inputs.fsn_nightly_stage || vars.FSN_NIGHTLY_STAGE || 'off' }}
+        run: pipeline/scripts/fsn_nightly_incremental.sh
+      - name: Keep the FSN nightly report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsn-nightly-${{ github.run_id }}
+          path: |
+            out-fsn-nightly/nightly.json
+            out-fsn-nightly/load.json
+            out-fsn-nightly/pilot/report.json
+            out-fsn-nightly/pilot/failed.json
+            out-fsn-nightly/pilot/done_companies.txt
+            out-fsn-nightly/pilot/not_done.json
+            out-fsn-nightly/write-*.json
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Reprocess Normalizer + Mapper for recently-filed companies
         # Added 2026-09-09 -- closes a real, confirmed gap: scrooner-incremental
         # above only ever wrote new filing metadata/companyfacts/submissions

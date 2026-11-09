@@ -1,0 +1,889 @@
+{
+ "filings": {
+  "0000040545-26-000064": {
+   "cal": {
+    "fsn_arcs": 212,
+    "fsn_groups": 23,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 212,
+    "ours_groups": 23,
+    "pass": true
+   },
+   "cik": "40545",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 982,
+    "missing": 0,
+    "ours": 982,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 199,
+    "ours_rows": 199,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "GE"
+  },
+  "0000050863-26-000191": {
+   "cal": {
+    "fsn_arcs": 135,
+    "fsn_groups": 17,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 135,
+    "ours_groups": 17,
+    "pass": true
+   },
+   "cik": "50863",
+   "num": {
+    "column_diffs": {
+     "footnote": 2
+    },
+    "examples": {
+     "extra": [],
+     "footnote": [
+      [
+       "EarningsPerShareDiluted",
+       "us-gaap/2026",
+       "20250930",
+       "3",
+       "USD",
+       "0x00000000",
+       "0",
+       ""
+      ],
+      "",
+      "For the three months ended September 26, 2026 and three and nine months ended September 27, 2025, earnings per share attributable to Intel-diluted has been calculated by adjusting net income attributable to Intel for the gain of $120 million and loss of $2 million, respectively, related to the mark-to-market of that portion of the derivative liability that is attributable to 5 million and 342 thousand, respectively, contingent Escrowed Shares that were included in the weighted average shares of common stock"
+     ],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 771,
+    "missing": 0,
+    "ours": 771,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 197,
+    "ours_rows": 197,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 10,
+    "reports_exact": 10,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "INTC"
+  },
+  "0000051143-26-000095": {
+   "cal": {
+    "fsn_arcs": 209,
+    "fsn_groups": 24,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 209,
+    "ours_groups": 24,
+    "pass": true
+   },
+   "cik": "51143",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1044,
+    "missing": 0,
+    "ours": 1044,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 239,
+    "ours_rows": 239,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "IBM"
+  },
+  "0000070858-26-000548": {
+   "cal": {
+    "fsn_arcs": 312,
+    "fsn_groups": 30,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 312,
+    "ours_groups": 30,
+    "pass": true
+   },
+   "cik": "70858",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 2295,
+    "missing": 0,
+    "ours": 2295,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 263,
+    "ours_rows": 263,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "BAC"
+  },
+  "0000072971-26-000327": {
+   "cal": {
+    "fsn_arcs": 382,
+    "fsn_groups": 32,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 382,
+    "ours_groups": 32,
+    "pass": true
+   },
+   "cik": "72971",
+   "num": {
+    "column_diffs": {
+     "footnote": 2
+    },
+    "examples": {
+     "extra": [],
+     "footnote": [
+      [
+       "Assets",
+       "us-gaap/2026",
+       "20260930",
+       "0",
+       "USD",
+       "0x00000000",
+       "0",
+       ""
+      ],
+      "",
+      "Our consolidated assets at September 30, 2026, and December 31, 2025, include the following assets of certain variable interest entities (VIEs) that can only be used to settle the liabilities of those VIEs: Trading assets, $3.2 billion and $2.3 billion; Available-for-sale debt securities, $704 million and $0 million; Loans, $14.2 billion and $11.3 billion; All other assets, $269 million and $224 million; and Total assets, $18.4 billion and $13.8 billion, respectively."
+     ],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 2474,
+    "missing": 0,
+    "ours": 2474,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 267,
+    "ours_rows": 267,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "WFC"
+  },
+  "0000077476-26-000048": {
+   "cal": {
+    "fsn_arcs": 133,
+    "fsn_groups": 10,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 133,
+    "ours_groups": 10,
+    "pass": true
+   },
+   "cik": "77476",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 962,
+    "missing": 0,
+    "ours": 962,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 228,
+    "ours_rows": 217,
+    "pass_exact": false,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 5,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 26
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "PEP"
+  },
+  "0000200406-26-000197": {
+   "cal": {
+    "fsn_arcs": 127,
+    "fsn_groups": 11,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 127,
+    "ours_groups": 11,
+    "pass": true
+   },
+   "cik": "200406",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1440,
+    "missing": 0,
+    "ours": 1440,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 200,
+    "ours_rows": 200,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "JNJ"
+  },
+  "0000723125-26-000023": {
+   "cal": {
+    "fsn_arcs": 156,
+    "fsn_groups": 17,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 156,
+    "ours_groups": 17,
+    "pass": true
+   },
+   "cik": "723125",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 889,
+    "missing": 0,
+    "ours": 889,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 156,
+    "ours_rows": 156,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 6,
+    "reports_exact": 6,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "MU"
+  },
+  "0000732717-26-000372": {
+   "cal": {
+    "fsn_arcs": 144,
+    "fsn_groups": 13,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 144,
+    "ours_groups": 13,
+    "pass": true
+   },
+   "cik": "732717",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1047,
+    "missing": 0,
+    "ours": 1047,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 294,
+    "ours_rows": 293,
+    "pass_exact": false,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 8,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 1
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "T"
+  },
+  "0000753308-26-000081": {
+   "cal": {
+    "fsn_arcs": 153,
+    "fsn_groups": 10,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 153,
+    "ours_groups": 10,
+    "pass": true
+   },
+   "cik": "753308",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1264,
+    "missing": 0,
+    "ours": 1264,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 261,
+    "ours_rows": 261,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "NEE"
+  },
+  "0000896159-26-000021": {
+   "cal": {
+    "fsn_arcs": 183,
+    "fsn_groups": 14,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 183,
+    "ours_groups": 14,
+    "pass": true
+   },
+   "cik": "896159",
+   "num": {
+    "column_diffs": {
+     "footnote": 6
+    },
+    "examples": {
+     "extra": [],
+     "footnote": [
+      [
+       "LiabilityForFuturePolicyBenefitReinsuranceRecoverableAfterAllowance",
+       "us-gaap/2026",
+       "20260930",
+       "0",
+       "USD",
+       "0x00000000",
+       "1",
+       ""
+      ],
+      "",
+      "Net of valuation allowance for uncollectible reinsurance."
+     ],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1585,
+    "missing": 0,
+    "ours": 1585,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 241,
+    "ours_rows": 241,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "CB"
+  },
+  "0000909832-26-000093": {
+   "cal": {
+    "fsn_arcs": 139,
+    "fsn_groups": 15,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 139,
+    "ours_groups": 15,
+    "pass": true
+   },
+   "cik": "909832",
+   "num": {
+    "column_diffs": {
+     "footnote": 2
+    },
+    "examples": {
+     "extra": [],
+     "footnote": [
+      [
+       "LongTermDebtCurrent",
+       "us-gaap/2026",
+       "20250831",
+       "0",
+       "USD",
+       "0x00000000",
+       "1",
+       ""
+      ],
+      "",
+      "Net of unamortized debt discounts and issuance costs."
+     ],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 732,
+    "missing": 0,
+    "ours": 732,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 164,
+    "ours_rows": 164,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "COST"
+  },
+  "0001018724-26-000040": {
+   "cal": {
+    "fsn_arcs": 217,
+    "fsn_groups": 17,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 217,
+    "ours_groups": 17,
+    "pass": true
+   },
+   "cik": "1018724",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 938,
+    "missing": 0,
+    "ours": 938,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 165,
+    "ours_rows": 165,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "AMZN"
+  },
+  "0001193125-26-436133": {
+   "cal": {
+    "fsn_arcs": 163,
+    "fsn_groups": 22,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 163,
+    "ours_groups": 22,
+    "pass": true
+   },
+   "cik": "789019",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 643,
+    "missing": 0,
+    "ours": 643,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 165,
+    "ours_rows": 165,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "MSFT"
+  },
+  "0001467373-26-000049": {
+   "cal": {
+    "fsn_arcs": 237,
+    "fsn_groups": 32,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 237,
+    "ours_groups": 32,
+    "pass": true
+   },
+   "cik": "1467373",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1211,
+    "missing": 0,
+    "ours": 1211,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 223,
+    "ours_rows": 223,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 7,
+    "reports_exact": 7,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "ACN"
+  },
+  "0001628280-26-066773": {
+   "cal": {
+    "fsn_arcs": 108,
+    "fsn_groups": 14,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 108,
+    "ours_groups": 14,
+    "pass": true
+   },
+   "cik": "1326801",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 604,
+    "missing": 0,
+    "ours": 604,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 173,
+    "ours_rows": 173,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 8,
+    "reports_exact": 8,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "META"
+  },
+  "0001628280-26-066775": {
+   "cal": {
+    "fsn_arcs": 129,
+    "fsn_groups": 16,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 129,
+    "ours_groups": 16,
+    "pass": true
+   },
+   "cik": "1318605",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 767,
+    "missing": 0,
+    "ours": 767,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 200,
+    "ours_rows": 200,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 8,
+    "reports_exact": 8,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "TSLA"
+  },
+  "0001628280-26-067508": {
+   "cal": {
+    "fsn_arcs": 170,
+    "fsn_groups": 16,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 170,
+    "ours_groups": 16,
+    "pass": true
+   },
+   "cik": "12927",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 985,
+    "missing": 0,
+    "ours": 985,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 226,
+    "ours_rows": 226,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "BA"
+  },
+  "0001628280-26-067844": {
+   "cal": {
+    "fsn_arcs": 228,
+    "fsn_groups": 16,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 228,
+    "ours_groups": 16,
+    "pass": true
+   },
+   "cik": "21344",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1087,
+    "missing": 0,
+    "ours": 1087,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 174,
+    "ours_rows": 170,
+    "pass_exact": false,
+    "pass_items": true,
+    "reports": 6,
+    "reports_exact": 4,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 8
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "KO"
+  },
+  "0001652044-26-000084": {
+   "cal": {
+    "fsn_arcs": 210,
+    "fsn_groups": 29,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 210,
+    "ours_groups": 29,
+    "pass": true
+   },
+   "cik": "1652044",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1054,
+    "missing": 0,
+    "ours": 1054,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 226,
+    "ours_rows": 226,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "GOOG"
+  }
+ },
+ "fsn_set": "2026m10"
+}

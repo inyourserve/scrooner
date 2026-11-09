@@ -15,7 +15,7 @@ SHARDS_CSV = Path("doc/data-moat/team/top1000/shards.csv")
 
 @app.callback()
 def _root() -> None:
-    """Subcommands: shard, load, seed-rules, pilot, pilot-prod."""
+    """Subcommands: shard, load, seed-rules, pilot, pilot-prod, done-gate, extract-sec, nightly."""
 
 
 def _predecessors(spec: str) -> dict[str, str]:
@@ -139,6 +139,11 @@ def load_cmd(
         "",
         help="pred=succ CIK pairs: load the predecessor's filings under the successor.",
     ),
+    increment: bool = typer.Option(
+        False,
+        "--increment",
+        help="EDGAR-built directories (scrooner-fsn nightly): add or replace those accessions only.",
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -160,6 +165,7 @@ def load_cmd(
                 # a connection the pooler drops mid-run is replaced (load.run closes it);
                 # the shard goes on with the next company instead of dying in rollback()
                 connect=lambda: psycopg.connect(settings.database_url),
+                increment=increment,
             )
     except psycopg.OperationalError:
         if res is None:
@@ -501,3 +507,74 @@ def extract_sec_cmd(
 
 if __name__ == "__main__":
     app()
+
+
+NIGHTLY_COHORT = Path("data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv")
+
+
+@app.command("nightly")
+def nightly_cmd(
+    out: str = typer.Option(
+        "companies-nightly", help="Output root: companies/<cik>/ increments."
+    ),
+    cohort: str = typer.Option(str(NIGHTLY_COHORT), help="Cohort CSV (cik column)."),
+    ciks: str = typer.Option("", help="Comma-separated CIKs instead of the cohort."),
+    lookback_days: int = typer.Option(
+        7,
+        help="Filings filed in the last N days and not yet in the store (a missed night is caught up).",
+    ),
+    max_minutes: float = typer.Option(
+        30.0, help="Wall-clock budget for fetching; the rest is deferred."
+    ),
+    report: str = typer.Option("nightly-report.json", help="Run report (JSON)."),
+) -> None:
+    """New periodic filings -> EDGAR-built FSN rows -> increment directories (design note 2026-11-09).
+    Reads the database (one indexed query) and sec.gov (<= 4 req/s); writes local files only. Load them
+    with `scrooner-fsn load --increment`, then `pilot` / `done-gate` / the protected cell write."""
+    import os
+    from datetime import date, timedelta
+
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import edgar_fetch, increment
+
+    if ciks:
+        cik_list = [c.strip().zfill(10) for c in ciks.split(",") if c.strip()]
+    else:
+        path = Path(cohort)
+        if not path.exists():
+            path = Path(__file__).resolve().parents[4] / cohort
+        cik_list = sorted({r["cik"].zfill(10) for r in csv.DictReader(path.open())})
+    today = date.today()
+    with get_connection() as conn:
+        cands = increment.candidates(
+            conn, cik_list, today - timedelta(days=lookback_days)
+        )
+    client = edgar_fetch.EdgarClient(os.environ.get("SEC_USER_AGENT", ""))
+    fsn_set = f"{increment.EDGAR_SET_PREFIX}{today.isoformat()}"
+    try:
+        res = increment.build(
+            cands,
+            lambda c: edgar_fetch.fetch_filing(client, c.cik, c.accession, fsn_set),
+            max_seconds=max_minutes * 60,
+        )
+    finally:
+        client.close()
+    company_ids = {c.cik: c.company_id for c in cands}
+    written = increment.write_dirs(Path(out), res.built, company_ids, fsn_set)
+    summary = {
+        "fsn_set": fsn_set,
+        "candidates": len(cands),
+        "built": sum(len(v) for v in res.built.values()),
+        "companies": written,
+        "failed": res.failed,
+        "deferred": res.deferred,
+        "seconds": res.requests_seconds,
+        "filings": [c.__dict__ for c in cands],
+    }
+    Path(report).write_text(json.dumps(summary, indent=1))
+    Path(out).mkdir(parents=True, exist_ok=True)
+    (Path(out) / "ciks.txt").write_text(",".join(written))
+    typer.echo(
+        f"fsn nightly: {summary['candidates']} new filings, {summary['built']} built for {len(written)} companies,"
+        f" {len(res.failed)} failed, {len(res.deferred)} deferred ({res.requests_seconds}s)"
+    )
