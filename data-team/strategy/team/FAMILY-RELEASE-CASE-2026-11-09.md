@@ -86,6 +86,12 @@ The served value adds note finance leases (founder 2026-11-04 item 5). FY2018 ad
 1. Nine META values are 0, debt-free 2016-12-31..2018-12-31, with no summed fact to cite. The cell loader demotes a value with no lineage to a lineage-defect blank, so these show as blanks, not 0. Needs a choice: cite the balance sheet's Liabilities line, or accept the blank.
 2. The earlier-copy lease fill decides META 2022-12-31. That is the case the Verifier asked the founder or Dhairya to rule on (§5 #3). The value matches the Verifier's reading, but the ruling is still open.
 
+**MSFT FY2015–FY2016 released (update 17:49 UTC).**
+- The Tag Expert found the hold's cause (FILING-CHECKED, 0001193125-16-662209 R5/R6): `SecuritiesLoaned` is a balance-sheet parenthetical on an asset line, not debt.
+- The lane's face-row readers did not skip parenthetical (inpth) lines. Fix: `work/fsn/debt-lane-port` b22f896.
+- MSFT-only pilot dry run 42665907782 (CI 42665894904 green): 47 of 47 MSFT cells publishable. FY2015–FY2026 borrowings equal the FSN-expert face series **12 of 12**, adding 35,292 (FY2015) and 53,461 (FY2016). FY2017–FY2026 are unchanged.
+- The BS port gate's pinned diffs against report_v4 will now include these newly computable MSFT cells.
+
 ### Tag Expert double-count traps (pilot dry run 42660156226)
 
 Same branch, 14 companies the Tag Expert named (HTZ, AX and GABC are not in the cohort). Result: 0 failed companies; 370 values and 273 reasoned holds:
