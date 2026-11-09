@@ -379,6 +379,130 @@ def cf_line_classes(
     return out
 
 
+# Income-statement concepts with absent-line reasons (Dhairya 2026-11-09: whole eras where a filing prints no such
+# line; 1,271 cohort pairs, cohort run 41708119011). Classes come from the line tag and label only, never values:
+#   common    a line that is, or may be, the concept: nothing is claimed (any doubt lands here)
+#   combined  only a line that spans the concept and others (Costs and expenses with no cost-of-revenue line)
+#   net       only a net line (net interest income / interest expense, net): a perimeter defect, never a value
+#   unresolved a per-unit line of a partnership where the concept is per share: a perimeter defect
+IS_ABSENT_CONCEPTS = (
+    "revenue_sanity_resolved",
+    "cost_of_revenue_resolved",
+    "interest_expense_resolved",
+    "net_income_resolved",
+    "basic_eps_resolved",
+)
+IS_ANCHOR_TAGS = {
+    "NetIncomeLoss",
+    "ProfitLoss",
+    "NetIncomeLossAvailableToCommonStockholdersBasic",
+    "IncomeLossFromContinuingOperations",
+}
+_REVENUE_RX = re.compile(r"\b(revenues?|net sales|sales|turnover)\b", re.I)
+_COST_RX = re.compile(r"\bcosts?\b", re.I)
+_TOTAL_COSTS_RX = re.compile(r"^\s*(total\s+)?costs and expenses\s*$", re.I)
+_INTEREST_NET_TAGS = {
+    "InterestIncomeExpenseNet",
+    "InterestIncomeExpenseNonoperatingNet",
+    "InterestIncomeExpenseOperatingNet",
+    "InterestIncomeExpenseAfterProvisionForLoanLoss",
+}
+_INTEREST_NET_RX = re.compile(
+    r"net interest|interest\b.*,\s*net\b|interest (income|and other)", re.I
+)
+_NI_RX = re.compile(r"\bnet (income|loss|earnings)|\bprofit\b|\bearnings\b", re.I)
+_PER_SHARE_RX = re.compile(r"per (common |ordinary |class [a-z] )?share|\beps\b", re.I)
+_PER_UNIT_RX = re.compile(
+    r"per (limited partner(ship)? |common |ordinary )?units?\b", re.I
+)
+
+
+def is_line_class(concept: str, tag: str, label: str) -> str | None:
+    """The class of ONE income-statement line for a concept, or None (the line is not of the family)."""
+    if concept == "revenue_sanity_resolved":
+        if "Revenue" in tag or "Sales" in tag:
+            return None if tag.startswith("Cost") else "common"
+        if _REVENUE_RX.search(label) and not _COST_RX.search(label):
+            return "common"
+        return None
+    if concept == "cost_of_revenue_resolved":
+        if tag == "CostsAndExpenses" or _TOTAL_COSTS_RX.match(label):
+            return "combined"
+        if (
+            tag.startswith("CostOf")
+            or tag.startswith("CostDirect")
+            or _COST_RX.search(label)
+        ):
+            return "common"
+        return None
+    if concept == "interest_expense_resolved":
+        if tag.startswith("InterestExpense"):
+            return "common"
+        if tag in _INTEREST_NET_TAGS or _INTEREST_NET_RX.search(label):
+            return "net"
+        if "Interest" in tag or "interest" in label.lower():
+            return "common"
+        return None
+    if concept == "net_income_resolved":
+        if tag in IS_ANCHOR_TAGS or "NetIncome" in tag or _NI_RX.search(label):
+            return "common"
+        return None
+    if concept == "basic_eps_resolved":
+        if "PerShare" in tag or "EarningsPer" in tag or _PER_SHARE_RX.search(label):
+            return "common"
+        if (
+            "PerUnit" in tag
+            or "PerOutstandingLimitedPartnershipUnit" in tag
+            or _PER_UNIT_RX.search(label)
+        ):
+            return "unresolved"
+        return None
+    raise ValueError(concept)
+
+
+def classify_is_filing(face_rows: list[tuple]) -> dict[str, list[str]]:
+    """concept -> classes of ONE filing's primary income-statement lines (pure). face_rows are
+    (report, line, tag, label, custom, negating) of the filing's IS reports. The primary statement is the
+    lowest-numbered report that prints an anchor total (net income); with none, the filing gets the marker
+    `no_statement` and nothing is claimed. Parenthetical and shape rows (Abstract, Axis, ...) never count."""
+    reports = sorted({r[0] for r in face_rows if r[2] in IS_ANCHOR_TAGS})
+    if not reports:
+        return {c: ["no_statement"] for c in IS_ABSENT_CONCEPTS}
+    rows = sorted((r for r in face_rows if r[0] == reports[0]), key=lambda r: r[1])
+    out: dict[str, list[str]] = {c: [] for c in IS_ABSENT_CONCEPTS}
+    for _rep, _ln, tag, label, _cu, _ng in rows:
+        if tag.endswith(SHAPE_TAG):
+            continue
+        for c in IS_ABSENT_CONCEPTS:
+            cls = is_line_class(c, tag, label or "")
+            if cls:
+                out[c].append(cls)
+    return out
+
+
+def is_line_classes(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[int, list[str]]]:
+    """concept -> filing_id -> classes of that filing's primary income-statement lines (see classify_is_filing)."""
+    rows = conn.execute(
+        """select l.filing_id, l.report, l.line, t.tag, coalesce(l.plabel, ''), t.custom, l.negating
+           from fsn.line l join fsn.tag t on t.id = l.tag_id
+           join fsn.filing f on f.id = l.filing_id
+           where f.company_id = %s and l.stmt = 'IS' and not l.inpth""",
+        (company_id,),
+    ).fetchall()
+    by_filing: dict[int, list[tuple]] = defaultdict(list)
+    for fid, rep, ln, tag, label, cu, ng in rows:
+        by_filing[fid].append((rep, ln, tag, label, bool(cu), bool(ng)))
+    out: dict[str, dict[int, list[str]]] = {
+        c: defaultdict(list) for c in IS_ABSENT_CONCEPTS
+    }
+    for fid, face_rows in by_filing.items():
+        for c, classes in classify_is_filing(face_rows).items():
+            out[c][fid].extend(classes)
+    return out
+
+
 def report_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -472,7 +596,10 @@ def report_company(
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
-    line_classes = cf_line_classes(conn, company_id)
+    line_classes = {
+        **cf_line_classes(conn, company_id),
+        **is_line_classes(conn, company_id),
+    }
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]
@@ -518,7 +645,12 @@ def report_company(
             row = _match(by_point.get(concept, []), grain, end)
             if row is None and concept in line_classes and grain in ("FY", "Q"):
                 c = sel.absent_line_cell(
-                    concept, grain, end, data, line_classes[concept]
+                    concept,
+                    grain,
+                    end,
+                    data,
+                    line_classes[concept],
+                    stmt="IS" if concept in IS_ABSENT_CONCEPTS else "CF",
                 )
                 if c is not None:
                     row = sel.to_row(c, company_id, data["filings"])

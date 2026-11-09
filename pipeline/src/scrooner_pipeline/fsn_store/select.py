@@ -886,8 +886,11 @@ def absent_line_cell(
     end: date,
     data: dict[str, Any],
     line_classes: dict[int, list[str]],
+    stmt: str = "CF",
 ) -> Cell | None:
-    """An evidenced blank for a cash-flow key with no cell, or None (the key stays a gap).
+    """An evidenced blank for a cash-flow (or, with stmt="IS", income-statement) key with no cell, or None
+    (the key stays a gap). The income statement uses the same rules with its own face columns and line classes
+    (pilot.is_line_classes); a statement whose anchor total is not printed has no face column, so nothing is claimed.
 
     The filings that print the statement's cash-flow face column ending at `end` (FY: the annual column; Q: any
     duration column, a 10-Q prints year-to-date) are the evidence. When none of them maps a line to the concept,
@@ -904,7 +907,7 @@ def absent_line_cell(
     cols = [
         (f, d, q)
         for (f, st, d, q) in data["face_cols"]
-        if st == "CF"
+        if st == stmt
         and abs((d - end).days) <= 10
         and (q == 4 if grain == "FY" else q >= 1)
     ]
@@ -916,7 +919,12 @@ def absent_line_cell(
     if set(fids) & data["mapped_filings"].get(concept, set()):
         return None
     every = {c for f in fids for c in line_classes.get(f, [])}
-    if {"common", "unclassified_share_line", "no_financing_section"} & every:
+    if {
+        "common",
+        "unclassified_share_line",
+        "no_financing_section",
+        "no_statement",
+    } & every:
         return None  # a line in ANY filing that prints the column may be the concept: nothing is claimed
     # the evidence carrier is the filing whose own period is this date (it prints the column on its face), an original
     # before an amendment; a later filing only re-prints it and may print a longer column (Verifier 2026-11-08,
