@@ -15,10 +15,12 @@ from scrooner_pipeline.certification.loader import HISTORY_FLOOR, resolve_compan
 from scrooner_pipeline.certification.runner import (
     DEFAULT_TIMEOUT_S,
     MAX_CHUNK,
+    COHORT_V11_CSV,
     SHARDS_CSV,
     MigrationNotAppliedError,
     certify,
     dump_json,
+    load_cohort_company_ids,
     load_shard_company_ids,
     render_text,
 )
@@ -57,12 +59,18 @@ def run_cmd(
     ),
     json_out: Path = typer.Option(None, help="Write all findings to this JSON file."),
     shards_file: Path = typer.Option(SHARDS_CSV, help="shards.csv path."),
+    cohort_ranks: str = typer.Option(
+        "",
+        "--cohort-ranks",
+        help="Cohort v1.1 rank ranges (the FSN write's cohort), e.g. 1-100 or 1-10,981-1000.",
+    ),
+    cohort_file: Path = typer.Option(COHORT_V11_CSV, help="Cohort v1.1 csv path."),
 ) -> None:
     """Run invariants I1-I10 for the selected companies."""
     from datetime import date
 
-    if not ciks and not top1000_shard:
-        raise typer.BadParameter("give --ciks or --top1000-shard")
+    if not ciks and not top1000_shard and not cohort_ranks:
+        raise typer.BadParameter("give --ciks, --top1000-shard or --cohort-ranks")
     since_date = date.fromisoformat(since) if since else None
     conn = psycopg.connect(settings.database_url)
     try:
@@ -70,6 +78,11 @@ def run_cmd(
         ids: list[int] = []
         if top1000_shard:
             ids += load_shard_company_ids(top1000_shard, shards_file)
+        if cohort_ranks:
+            try:
+                ids += load_cohort_company_ids(cohort_ranks, cohort_file)
+            except ValueError as exc:
+                raise typer.BadParameter(str(exc)) from exc
         if ciks:
             with conn.cursor() as cur:
                 ids += resolve_company_ids(cur, ciks.split(","), statement_timeout)

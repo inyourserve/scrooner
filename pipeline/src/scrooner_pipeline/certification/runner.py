@@ -141,6 +141,46 @@ def load_shard_company_ids(shard: str, path: Path = SHARDS_CSV) -> list[int]:
     return out
 
 
+COHORT_V11_CSV = (
+    REPO_ROOT
+    / "data-team"
+    / "strategy"
+    / "data"
+    / "cohort_v1_1_proposal_2026-10-24.csv"
+)
+
+
+def parse_ranks(spec: str) -> list[tuple[int, int]]:
+    """'1-100', '1-10,501-510', '7' -> inclusive 1-based rank ranges."""
+    out: list[tuple[int, int]] = []
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        lo_s, _, hi_s = part.partition("-")
+        lo, hi = int(lo_s), int(hi_s or lo_s)
+        if lo < 1 or hi < lo:
+            raise ValueError(f"bad rank range {part!r}")
+        out.append((lo, hi))
+    if not out:
+        raise ValueError("no rank range given")
+    return out
+
+
+def load_cohort_company_ids(ranks: str, path: Path = COHORT_V11_CSV) -> list[int]:
+    """Company ids of cohort v1.1 (the FSN write's cohort, 1,000 companies, rank =
+    file order) for the given rank ranges, in rank order. shards.csv holds 986 of
+    them only: ranks 981-1000 (BRK-A, SO, SRE, ...) have no campaign shard."""
+    with open(path, newline="") as fh:
+        rows = [int(r["company_id"]) for r in csv.DictReader(fh)]
+    out: list[int] = []
+    for lo, hi in parse_ranks(ranks):
+        if hi > len(rows):
+            raise ValueError(f"rank {hi} beyond the cohort's {len(rows)} companies")
+        out += rows[lo - 1 : hi]
+    return list(dict.fromkeys(out))
+
+
 def tables_exist(cur) -> bool:
     cur.execute(
         "select to_regclass('analytics.certification_finding') is not null "

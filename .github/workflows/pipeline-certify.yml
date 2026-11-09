@@ -13,6 +13,9 @@ on:
       shards:
         description: 'Campaign shard ids, space separated (e.g. "S001 S002"), or "all" for every shard in doc/data-moat/team/top1000/shards.csv'
         default: "all"
+      cohort_ranks:
+        description: 'Instead of shards: cohort v1.1 rank ranges (the FSN write cohort), e.g. "1-100"; empty = use shards'
+        default: ""
       apply:
         description: "Write findings and certification states (default false = dry run)"
         type: boolean
@@ -40,6 +43,7 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
       SHARDS: ${{ inputs.shards }}
+      COHORT_RANKS: ${{ inputs.cohort_ranks }}
       APPLY: ${{ inputs.apply }}
       # Per-shard wall-clock cap (seconds) so one hung shard cannot burn the whole job cap.
       SHARD_TIMEOUT_SECS: "1800"
@@ -69,6 +73,18 @@ jobs:
           mode="--dry-run"
           if [ "$APPLY" = "true" ]; then mode="--apply"; fi
           mkdir -p certify-out
+          if [ -n "$COHORT_RANKS" ]; then
+            # one rank range per pass (e.g. "1-100" or "1-50,51-100"), same 30-minute cap each
+            for r in $(echo "$COHORT_RANKS" | tr ',' ' '); do
+              echo "::group::certify cohort ranks $r ($mode)"
+              if ! timeout "$SHARD_TIMEOUT_SECS" uv run --project pipeline scrooner-certify \
+                  --cohort-ranks "$r" $mode --summary-only --json-out "certify-out/ranks-$r.json"; then
+                echo "::error::ranks $r failed or hit the ${SHARD_TIMEOUT_SECS}s cap"; exit 1
+              fi
+              echo "::endgroup::"
+            done
+            exit 0
+          fi
           failed=""
           for s in $SHARDS; do
             echo "::group::certify $s ($mode)"
