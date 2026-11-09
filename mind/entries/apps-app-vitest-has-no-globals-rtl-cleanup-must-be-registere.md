@@ -5,6 +5,7 @@ kind: gotcha
 tags: ci, frontend, flaky
 paths: apps/app/vitest.setup.ts
 evidence: CODE-CHECKED
+status: active
 created: 2026-11-01
 verified: 2026-11-01
 ---

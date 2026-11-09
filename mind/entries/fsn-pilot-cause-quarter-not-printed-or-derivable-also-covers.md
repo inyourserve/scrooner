@@ -5,6 +5,7 @@ kind: gotcha
 tags: fsn, cohort, gaps, done-gate
 paths: pipeline/src/scrooner_pipeline/fsn_store/pilot.py
 evidence: DATA-INFERRED
+status: active
 source: cohort run 41708119011 gaps.csv; FSN-STORE-DESIGN-2026-11-01.md l.6 and l.170
 created: 2026-11-09
 verified: 2026-11-09
