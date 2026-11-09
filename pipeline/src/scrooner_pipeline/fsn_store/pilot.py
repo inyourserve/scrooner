@@ -22,6 +22,8 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
+
 from scrooner_pipeline.fsn_store import select as sel
 
 FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
@@ -162,12 +164,17 @@ def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, 
 
 
 def _match(rows: list[dict[str, Any]], grain: str, end: date) -> dict[str, Any] | None:
+    """The row of this grain whose FSN end stands for the true period end `end` (within 10 days, or the SEC's
+    month-end rounding of it: a mid-month 52/53-week end); the nearest wins."""
     best = None
     for r in rows:
         if r["period_grain"] != grain:
             continue
-        gap = abs((date.fromisoformat(r["fsn_end"]) - end).days)
-        if gap <= 10 and (best is None or gap < best[0]):
+        fsn_end = date.fromisoformat(r["fsn_end"])
+        if not fsn_end_matches(fsn_end, end):
+            continue
+        gap = abs((fsn_end - end).days)
+        if best is None or gap < best[0]:
             best = (gap, r)
     return best[1] if best else None
 
