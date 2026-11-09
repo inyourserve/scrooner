@@ -10,6 +10,8 @@ import json
 from datetime import date
 from pathlib import Path
 
+import pytest
+
 from scrooner_pipeline.fsn_store import mapping
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -131,3 +133,68 @@ def test_no_seed_maps_a_line_as_the_liabilities_total_by_position():
         and r["match_kind"] == "calc_position"
         and (r["position"] or {}).get("relation") == "child_of"
     ]
+
+
+# ---------------------------------------------------------------- a database seeded earlier loses the withdrawn rows
+RETIRED = RULES / "_retired.txt"
+
+
+def test_retired_ids_are_listed_and_no_seed_file_carries_one():
+    from scrooner_pipeline.fsn_store import rules
+
+    ids = set(rules.retired_ids(RETIRED))
+    assert {"bs.liab_cal_child@1", "bs.liab_cal_child@2"} <= ids
+    seeded = {
+        json.loads(x)["rule_id"]
+        for f in RULES.glob("*.jsonl")
+        if not f.name.startswith("_")
+        for x in f.open()
+        if x.strip()
+    }
+    assert not ids & seeded
+
+
+@pytest.mark.integration
+def test_seed_rules_retires_the_withdrawn_rows_of_an_earlier_seed(
+    isolated_database_url,
+):
+    """production's fsn.concept_rule was seeded with bs.liab_cal_child@1/@2; a later seed run replaces only the rule ids
+    its files carry, so without the retire step the store keeps mapping by them"""
+    import psycopg
+
+    from scrooner_pipeline.fsn_store import rules
+
+    with psycopg.connect(isolated_database_url) as c:
+        for n in (
+            "total_liabilities_resolved",
+            "total_assets_resolved",
+            "current_liabilities_resolved",
+        ):
+            c.execute(
+                "insert into analytics.canonical_concept (name, statement, combination_mode) values (%s, 'balance_sheet', "
+                "'first_match') on conflict (name) do nothing",
+                (n,),
+            )
+        tl = c.execute(
+            "select id from analytics.canonical_concept where name = 'total_liabilities_resolved'"
+        ).fetchone()[0]
+        c.execute(
+            "insert into fsn.concept_rule (canonical_concept_id, stmt, match_kind, position, priority, rule_id) values "
+            '(%s, \'BS\', \'calc_position\', \'{"slot": "liab", "anchor_concept": "total_liabilities_resolved", '
+            '"relation": "child_of", "sign": 1}\', 21, \'bs.liab_cal_child@1\')',
+            (tl,),
+        )
+        c.commit()
+        assert rules.retire(c, RETIRED, apply=False)["present"] == 1
+        assert rules.retire(c, RETIRED, apply=True)["deleted"] == 1
+        c.commit()
+        res = rules.seed(c, RULES / "bs.jsonl", apply=True)
+        assert not res["errors"], res["errors"]
+        c.commit()
+        left = {
+            r[0] for r in c.execute("select rule_id from fsn.concept_rule").fetchall()
+        }
+        assert (
+            "bs.liab_cal_child@1" not in left
+            and "bs.anchors_liabilities_total@1" in left
+        )

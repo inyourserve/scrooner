@@ -180,12 +180,22 @@ def seed_rules_cmd(
     apply: bool = typer.Option(
         False, "--apply/--plan", help="Write fsn.concept_rule (default: validate only)."
     ),
+    retired: str = typer.Option(
+        "data-team/47-fsn-store/concept_rules/_retired.txt",
+        help="Withdrawn rule ids, deleted from fsn.concept_rule first ('' = none).",
+    ),
 ) -> None:
-    """Validate and load concept_rule seeds; the whole file is refused on the first error."""
+    """Validate and load concept_rule seeds; the whole file is refused on the first error. Rule ids listed in the
+    retired file are deleted first (a seed run replaces only the rule ids its files carry)."""
     from scrooner_pipeline.db.connection import get_connection
     from scrooner_pipeline.fsn_store import rules
 
     with get_connection() as conn:
+        if retired:
+            res = rules.retire(conn, Path(retired), apply=apply)
+            typer.echo(
+                f"seed-rules retire {retired} [{'apply' if apply else 'plan'}]: {json.dumps(res)}"
+            )
         for f in files:
             res = rules.seed(conn, Path(f), apply=apply)
             typer.echo(

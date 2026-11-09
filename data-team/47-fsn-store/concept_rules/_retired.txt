@@ -1,0 +1,5 @@
+# Seed rule ids withdrawn from the concept_rules files. `scrooner-fsn seed-rules` deletes them from fsn.concept_rule
+# before seeding: a seed run only replaces the rule ids its files carry, so a database seeded earlier keeps a removed
+# row until it is retired here. One rule id per line; text after '#' is the reason.
+bs.liab_cal_child@1  # a member of total liabilities mapped AS the total (FAMILY-RELEASE-CASE-2026-11-09 §3a)
+bs.liab_cal_child@2  # same, members under current liabilities
