@@ -15,7 +15,7 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 ## Scoreboard
 
 - Certified companies: 0 / 1,000.
-- 1,000-company FSN write: RUNNING since 2026-11-09 04:26 UTC, run 42561798991 (`select_write`, 16 shards, code_ref bc6ab31b46a76e46eedf791844272977c6f408dd). Founder approved 2026-11-08 ~17:49 UTC. Run 42559698212 (04:03) failed at checkout because `actions/checkout` cannot fetch a short SHA (it is read as a branch name); always pass the full 40-char SHA. Runs 41515572580 and 41708619888 stopped at the nightly-window preflight. Nothing was written by any failed run.
+- 1,000-company FSN write: run 42561798991 (2026-11-09 04:26 UTC, founder-approved, full SHA bc6ab31b...) WROTE NOTHING to canonical_fact (analytics.slot_protected_cell: 0 rows since 04:00); cancelled ~08:05 UTC. Load into fsn.* worked (893 companies), but step 8 `scrooner-fsn pilot` against production failed every company with QueryCanceled (statement timeout, ~3 min each; shards 0 and 2: 47/47 and 59/59), so no cells, and step 12 crashed on the empty out/cells glob. Shards 4/6/7 died in Load on `connection is lost` (rollback on a dead connection kills the shard). Cohort dry runs use a scratch DB, so they never hit this. Root cause and fix assigned to the balance-sheet lane. Earlier: run 42559698212 failed at checkout (short SHA); always pass the full SHA.
 - Latest full dry run (reported by the manager session 2026-11-06): 73.2% of template cells valued across 960 of 1,000 companies (top 100: 76.5%); one batch of 40 failed.
 
 ## In flight (no production writes)
