@@ -1,0 +1,21 @@
+# Card family: capital expenditures and depreciation & amortization (written 2026-11-09 by the Tag Expert; first version from relays)
+
+Tags: `us-gaap:PaymentsToAcquirePropertyPlantAndEquipment`, `PaymentsToAcquireProductiveAssets`, `PaymentsForProceedsFromProductiveAssets`, `PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets`, `PaymentsToDevelopSoftware`, `PaymentsForSoftware`, `PaymentsToAcquireSoftware`; `DepreciationDepletionAndAmortization`, `DepreciationAndAmortization`, `Depreciation`, `AdjustmentForAmortization`, `AmortizationOfIntangibleAssets`, `OtherDepreciationAndAmortization`, `CapitalizedComputerSoftwareAmortization`, `DepreciationAmortizationAndAccretionNet`.
+FSN rules: capex `cf.capex_block_member@1-4` (calc position) + `cf.capex_nature_*`; D&A `cf.da_operating_member@1` (calc position) + `cf.da_is_anchor@1-2`. Both are HELD families (release 1 NO for capex; D&A YES 15/15), per data-team/47-fsn-store/concept_rules/cf.jsonl. All rows below: FILING-CHECKED by the named role, not re-opened by me, unless marked.
+
+## 1. Capex
+- **Understatement**: PaymentsToAcquirePPE understates capex by ≥10% at about 152 FY2025 10-K filers (Air Lease flight equipment) (Tag Expert R2 run).
+- `PaymentsToAcquireProductiveAssets` is Aptiv's "Capital expenditures" (489, 9M 2025, 0001521332-25-000051 R6); by FASB calc it can include software and intangibles. The old concept_mapping had it at p2 provisional (Tag Mapper live read), not unmapped.
+- Capitalized software on unmapped tags: `PaymentsToDevelopSoftware` (ArcBest 9,958K), `PaymentsForSoftware` (Skillz, SoundHound; DATA-INFERRED).
+- **Discontinued block**: AMD FY2025's (38) on `PaymentsForProceedsFromProductiveAssets` sits in the DISCONTINUED-operations investing block (divestiture 1,356 − 38 = 1,318), not beside continuing PP&E (Data Chief, correcting a Standardization Lead line; 0000002488-26-000018 R8). The calc-position rule must stay inside the continuing investing block.
+
+## 2. D&A
+- **FASB 2025 calc**: DDA = Depreciation + Depletion + AdjustmentForAmortization + OtherDepreciationAndAmortization; AdjustmentForAmortization includes financing-cost/discount, DAC, MSR and finance-lease ROU amortization (Gilead R8). So DDA can include non-operating amortization.
+- **`DepreciationAndAmortization` is often an IS SUB-line**: Kura IS G&A-level 448K vs CF DDA 14,046K; SBUX IS 1,684.7M vs CF DDA 1,771.5M; Comtech uses it for PP&E-only D&A on the CF (Data Verifier). The old "max of the two tags" fallback picked the larger (Data Chief, code read).
+- **Perimeter by filer**: AMD's main line "Depreciation and amortization" (556, 9M 2025) is `OtherDepreciationAndAmortization`, with intangible amortization 1,697 separate. AMD FY2025 `AdjustmentForAmortization` 2,254 = acquisition-intangible amortization in COGS 1,031 + opex 1,223, so it counts in D&A (total 3,004) (Data Chief). ArcBest tags a "Depreciation and amortization" row with `Depreciation`, intangibles separate. TXN prints `CapitalizedComputerSoftwareAmortization` 81M beside Depreciation 1,918M. BRO prints D&A as two IS lines (312M + 55M) with no total. **HD from FY2025**: DDA EXCLUDES intangible amortization (separate `AmortizationOfIntangibleAssets`); before FY2025 it was the single total (0000354950-25-000165 R7 vs -24-000152 R7). MSFT, GOOG, ABT, AMD, INTC, SWKS, SPGI file D&A only as Depreciation + AmortizationOfIntangibleAssets (DATA-INFERRED).
+- **Never D&A**: MA "Amortization of customer incentives" 1,830 beside D&A 897 (contract-cost amortization, 0001141391-25-000011 R8). MSFT's only CF D&A line is custom `msft:DepreciationAmortizationAndOther` ("Depreciation, amortization, and other") in every filing 2014-2026: combined, so a reason (`line_presented_combined_with_others`), never a value. KeyCorp `DepreciationAmortizationAndAccretionNet` "…, net" is held once it nets below intangible amortization (Data Engineer, DATA-INFERRED).
+- Combined D&A tags understate at about 162 FY2025 filers (AEO: IS vs CF differ) (R2 run).
+
+## 3. Verdicts
+- Capex: the calc-position rule inside the continuing investing block, plus nature tags; never a single tag.
+- D&A: D&A by composition (the CF operating block's D&A members, per AC-6), with a perimeter label; `DepreciationAndAmortization` alone is never total D&A.
