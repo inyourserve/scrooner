@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -459,6 +460,9 @@ def done_gate_cmd(
       not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}, ...}
       valued_to_blank.json   C2 as a report: valued->blank transitions per data point by reason class, and the
                              pairs whose new cells hold no value where the before-image had values
+    A before-image 6-month, 9-month or multi-year key with no printed TP cell (CELL-FORMAT v1.2) is added to its
+    family's cells file (out/cells/<family>/cells.jsonl.gz) as an exact-dated hybrid gap blank before the C2 check,
+    so the write carries a visible reason for it; a second run finds the blank and adds nothing.
     The before-image (pilot-prod) is required, so the C2 report is never skipped."""
     import gzip
 
@@ -468,7 +472,9 @@ def done_gate_cmd(
         fully_done,
         hold_guard,
         hold_valued_to_no_row,
+        ytd_gap_blanks,
     )
+    from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
 
     root = Path(pilot_out)
     points = {s for s in data_points.split(",") if s}
@@ -496,13 +502,39 @@ def done_gate_cmd(
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
             cells.extend(json.loads(line) for line in fh if line.strip())
-    emptied, transitions, no_row = hold_guard(
-        cells,
-        rows("canonical_fact"),
-        {r["id"]: r["name"] for r in rows("canonical_concept")},
-        {r["id"]: r for r in rows("period")},
-        points,
+    before = rows("canonical_fact")
+    names = {r["id"]: r["name"] for r in rows("canonical_concept")}
+    periods = {r["id"]: r for r in rows("period")}
+    # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed become reasoned TP blanks
+    ytd_rows, ytd_skipped = ytd_gap_blanks(
+        cells, before, names, periods, points, reports
     )
+    by_family: dict[str, list[dict]] = {}
+    for r in ytd_rows:
+        by_family.setdefault(OWNERSHIP.get(r["data_point_name"], "unowned"), []).append(
+            r
+        )
+    for fam, add in sorted(by_family.items()):
+        d = root / "cells" / fam
+        d.mkdir(parents=True, exist_ok=True)
+        path = d / "cells.jsonl.gz"
+        old = []
+        if path.exists():
+            with gzip.open(path, "rt") as fh:
+                old = [json.loads(line) for line in fh if line.strip()]
+        with gzip.open(path, "wt") as fh:
+            for r in old + add:
+                fh.write(json.dumps(r, default=str) + "\n")
+        manifest = d / "manifest.json"
+        if manifest.exists():
+            m = json.loads(manifest.read_text())
+            m["rows"] = len(old) + len(add)
+            m["data_points"] = sorted(
+                set(m.get("data_points") or []) | {r["data_point_name"] for r in add}
+            )
+            manifest.write_text(json.dumps(m))
+    cells.extend(ytd_rows)
+    emptied, transitions, no_row = hold_guard(cells, before, names, periods, points)
     gate = done_gate(reports, gaps, missing, points)
     # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
     no_row_by_pair = hold_valued_to_no_row(gate, no_row)
@@ -567,6 +599,11 @@ def done_gate_cmd(
                 "gap_keys_written_as_blanks_by_data_point": dict(
                     sorted(gap_blanks.items())
                 ),
+                # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed, added as TP blanks
+                "ytd_keys_written_as_blanks_by_data_point": dict(
+                    sorted(Counter(r["data_point_name"] for r in ytd_rows).items())
+                ),
+                "ytd_keys_not_blanked": ytd_skipped,
             },
             indent=1,
         )
@@ -583,6 +620,10 @@ def done_gate_cmd(
     typer.echo(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
+    typer.echo(
+        f"done gate: {len(ytd_rows)} before-image year-to-date keys with nothing printed added as TP blanks; "
+        f"{len(ytd_skipped)} not blanked (no stored filings in the report)"
     )
     typer.echo(
         f"done gate: {len(no_row)} before-image values would have no row; "

@@ -3,6 +3,7 @@ from the fsn-notes bucket into tests/fixtures/fsn_select/ (Teleflex, KO, AMZN, G
 
 from __future__ import annotations
 
+import dataclasses
 import json
 from datetime import date, datetime
 from decimal import Decimal
@@ -342,3 +343,136 @@ def test_note_path_never_takes_operating_income_and_holds_negative_interest():
     debt = [sel.NoteFact(3, 1, "InterestExpenseDebt", d, 4, Decimal("378000000"), -6)]
     c = sel.select_note_values("interest_expense_resolved", debt, f, taken=set(), sole_debt=True, label_verified=True)[0]
     assert c.input_refs["label_unverified"] is False
+
+
+# --- CELL-FORMAT v1.2: printed year-to-date columns are cells of grain TP (release approver 2026-11-10) ---------
+
+
+def _ytd_case():
+    """A calendar-year 10-Q filer, cash-flow line printed YTD only: Q1 (3 months), Q2 10-Q (6 months), Q3 10-Q
+    (9 months, which re-prints nothing earlier, so the 9-month print of a LATER restating filing is the winner)."""
+    f = {
+        1: sel.Filing(
+            1,
+            "0000000001-25-000001",
+            datetime(2025, 5, 1),
+            "10-Q",
+            date(2025, 3, 31),
+            2025,
+            "Q1",
+            "1231",
+        ),
+        2: sel.Filing(
+            2,
+            "0000000001-25-000002",
+            datetime(2025, 8, 1),
+            "10-Q",
+            date(2025, 6, 30),
+            2025,
+            "Q2",
+            "1231",
+        ),
+        3: sel.Filing(
+            3,
+            "0000000001-25-000003",
+            datetime(2025, 11, 1),
+            "10-Q",
+            date(2025, 9, 30),
+            2025,
+            "Q3",
+            "1231",
+        ),
+    }
+
+    def p(vid, fid, d, q, v):
+        return sel.Print(
+            vid,
+            fid,
+            "PaymentsForRepurchaseOfCommonStock",
+            d,
+            q,
+            "USD",
+            Decimal(v),
+            -6,
+            "CF",
+            True,
+        )
+
+    q1, h1, m9 = date(2025, 3, 31), date(2025, 6, 30), date(2025, 9, 30)
+    prints = [
+        p(1, 1, q1, 1, "100000000"),
+        p(2, 2, h1, 2, "250000000"),  # 6-month YTD on the Q2 face
+        p(3, 2, q1, 1, "100000000"),  # the Q2 10-Q re-prints Q1 (the basis witness)
+        p(4, 3, m9, 3, "420000000"),  # 9-month YTD on the Q3 face
+        p(5, 3, h1, 2, "250000000"),  # the Q3 10-Q re-prints the 6 months (witness)
+    ]
+    return f, prints, (q1, h1, m9)
+
+
+@pytest.mark.unit
+def test_printed_6_and_9_month_face_columns_become_tp_cells_with_qtrs_2_and_3():
+    f, prints, (q1, h1, m9) = _ytd_case()
+    cells = {
+        (c.ddate, c.qtrs): c
+        for c in sel.select_concept("share_buybacks_resolved", prints, f)
+    }
+    six, nine = cells[(h1, 2)], cells[(m9, 3)]
+    assert (six.grain, six.state, six.value, six.rule_id) == (
+        "TP",
+        "value",
+        Decimal("250000000"),
+        sel.RULE_PRINTED,
+    )
+    assert (nine.grain, nine.state, nine.value) == ("TP", "value", Decimal("420000000"))
+    # the latest accepted filing's print wins, exactly as for Q/FY: the 6-month value comes from the Q3 10-Q copy
+    assert six.filing_id == 3 and six.source_value_ids == [5] and six.derivation is None
+    for c, q in ((six, 2), (nine, 3)):
+        row = sel.to_row(c, 1, f)
+        assert (row["period_grain"], row["qtrs"], row["fiscal_period"]) == (
+            "TP",
+            q,
+            None,
+        )
+        assert row["period_start"] is None and row["fsn_end"] == c.ddate.isoformat()
+    # a TP column that fails a filing check is a reasoned blank, never an older copy
+    failing = [
+        dataclasses.replace(x, checks_ok=False) if x.value_id == 4 else x
+        for x in prints
+    ]
+    held = {
+        (c.ddate, c.qtrs): c
+        for c in sel.select_concept("share_buybacks_resolved", failing, f)
+    }
+    assert (held[(m9, 3)].grain, held[(m9, 3)].reason_code) == (
+        "TP",
+        "latest_copy_fails_identity",
+    )
+
+
+@pytest.mark.unit
+def test_a_ytd_print_is_never_turned_into_a_quarter_through_its_tp_cell(monkeypatch):
+    """The quarter derivation reads the store's prints (design §4); the new TP cells are output only. The Q cells
+    are the same with TP emission on and off (v1 behaviour), and their inputs are fsn.value prints."""
+    f, prints, (q1, h1, m9) = _ytd_case()
+    v12 = {
+        (c.ddate, c.qtrs): c
+        for c in sel.select_concept("share_buybacks_resolved", prints, f)
+    }
+    monkeypatch.setattr(sel, "CELL_QTRS", (0, 1, 4))
+    v1 = {
+        (c.ddate, c.qtrs): c
+        for c in sel.select_concept("share_buybacks_resolved", prints, f)
+    }
+    assert {k for k in v12 if k[1] in (2, 3)} == {(h1, 2), (m9, 3)} and not any(
+        k[1] in (2, 3) for k in v1
+    )
+    quarters = {k: c for k, c in v12.items() if k[1] == 1}
+    assert quarters == {k: c for k, c in v1.items() if k[1] == 1}
+    q2, q3 = quarters[(h1, 1)], quarters[(m9, 1)]
+    assert (q2.state, q2.value, q2.rule_id) == (
+        "derived",
+        Decimal("150000000"),
+        sel.RULE_YTD_DIFF,
+    )
+    assert (q3.state, q3.value) == ("derived", Decimal("170000000"))
+    assert q3.source_value_ids == [4, 5]  # the 9-month and 6-month PRINTS, never a cell

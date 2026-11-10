@@ -22,6 +22,10 @@ For one company and one canonical concept, every key (ddate, qtrs) gets one cell
   the latest earlier print of that period.
 * EPS and every per-share or share concept is never derived; instants are never derived.
   Revenue-like concepts carry the residual guard: derived Q >= 0 and |Q| <= |YTD_n|.
+* **Printed year-to-date columns** (CELL-FORMAT v1.2, release approver 2026-11-10): a 6-month or
+  9-month face column (qtrs 2/3, 10-Q forms) is a cell of grain TP under the same winner and check
+  rules as Q/FY. A TP cell is output only: never derived, and never an input of the quarter
+  derivation above, which keeps reading the store's prints.
 
 Value, accession and source_value_ids of a cell always come from the same fsn.value rows.
 """
@@ -91,6 +95,8 @@ ANCHOR_TAGS = {
         "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
     ),
 }
+# column lengths that become cells: instant, quarter, the printed 6/9-month YTD (grain TP, CELL-FORMAT v1.2), year
+CELL_QTRS = (0, 1, 2, 3, 4)
 # column lengths (qtrs) a form prints on its statement face
 FACE_QTRS = {
     "10-K": {0, 4},
@@ -256,10 +262,17 @@ class Cell:
     reason_code: str | None = None
     derivation: dict[str, Any] | None = None
     input_refs: dict[str, Any] = field(default_factory=dict)
+    # exact true dates, set only on a TP blank built from a before-image key (CELL-FORMAT v1.2); every other
+    # cell carries the FSN month-end ddate and is bound by the loader
+    start: date | None = None
+    end: date | None = None
 
     @property
     def grain(self) -> str:
-        return {0: "I", 1: "Q", 4: "FY"}[self.qtrs]
+        """I, Q, FY; TP for a printed 6- or 9-month year-to-date column (qtrs 2/3) or an exact-dated TP blank."""
+        if self.start is not None:
+            return "TP"
+        return {0: "I", 1: "Q", 4: "FY", 2: "TP", 3: "TP"}[self.qtrs]
 
 
 def month_end(d: date, months: int) -> date:
@@ -352,7 +365,7 @@ def select_concept(
         ddate, qtrs = key
         if any(not _same(top, p) for p in same_filing):
             held[key] = "conflicting_values_in_filing"
-            if qtrs in (0, 1, 4):
+            if qtrs in CELL_QTRS:
                 cells[key] = _blank(
                     concept,
                     key,
@@ -363,11 +376,11 @@ def select_concept(
             continue
         if not all(p.checks_ok for p in same_filing):
             held[key] = "latest_copy_fails_identity"
-            if qtrs in (0, 1, 4):
+            if qtrs in CELL_QTRS:
                 cells[key] = _blank(concept, key, "latest_copy_fails_identity", top, {})
             continue
         winners[key] = top
-        if qtrs in (0, 1, 4):
+        if qtrs in CELL_QTRS:
             cells[key] = Cell(
                 concept,
                 ddate,
@@ -612,15 +625,21 @@ def fiscal_label(
 def to_row(
     cell: Cell, company_id: int, filings: dict[int, Filing], *, unit: str = "USD"
 ) -> dict[str, Any]:
-    """The cell as a CELL-FORMAT v1.1 row, bound by fiscal label (the loader binds within 10 days)."""
+    """The cell as a CELL-FORMAT row, bound by fiscal label (the loader binds within 10 days). A TP row
+    (v1.2) carries no fiscal period: year-to-date periods have none in core.period, so the loader binds it by
+    its FSN end and duration class (qtrs), or by the exact dates an exact-dated TP blank carries."""
     fy, fp = fiscal_label(cell.ddate, cell.qtrs, filings.values())
     f = filings.get(cell.filing_id) if cell.filing_id else None
+    grain = cell.grain
+    if grain == "TP":
+        fp = None
     row: dict[str, Any] = {
         "company_id": company_id,
         "data_point_name": cell.concept,
-        "period_grain": cell.grain,
-        "period_start": None,
-        "period_end": None,
+        "period_grain": grain,
+        "qtrs": cell.qtrs,
+        "period_start": cell.start.isoformat() if cell.start else None,
+        "period_end": cell.end.isoformat() if cell.end else None,
         "fiscal_year": fy,
         "fiscal_period": fp,
         "period_type": "instant" if cell.qtrs == 0 else "duration",

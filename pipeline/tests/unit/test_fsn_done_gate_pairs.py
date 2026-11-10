@@ -274,14 +274,8 @@ def test_a_6_or_9_month_value_is_never_matched_by_the_quarter_ending_that_day():
         cells, before, CONCEPTS, periods, {REV}
     )
     assert held == {}
-    assert transitions == {
-        REV: {
-            "valued": 1,
-            "no_cell_grain_9M": 1,
-            "no_cell_grain_H1": 1,
-            "no_cell_grain_MULTI": 1,
-        }
-    }
+    # no TP cell for the 9-month, 6-month and 3-year keys (CELL-FORMAT v1.2): each is valued->no-row
+    assert transitions == {REV: {"valued": 1, "no_new_cell": 3}}
     assert sorted(k["period_id"] for k in no_row) == ["3y", "9m", "h1"]
     gate = {1: {"data_points": {REV: [], NI: []}}}
     assert pilot.hold_valued_to_no_row(gate, no_row) == {(1, REV): 3}
@@ -289,7 +283,193 @@ def test_a_6_or_9_month_value_is_never_matched_by_the_quarter_ending_that_day():
     assert pilot.done_pairs(gate) == [(1, NI)]
 
 
-def _out_dir(tmp_path, reports, cells, before, gaps=()):
+YTD_PERIODS = {
+    "q2": {"start_date": "2024-04-01", "end_date": "2024-06-30", "period_type": "duration"},
+    "h1": {"start_date": "2024-01-01", "end_date": "2024-06-30", "period_type": "duration"},
+    "9m": {"start_date": "2024-01-01", "end_date": "2024-09-30", "period_type": "duration"},
+    "3y": {"start_date": "2021-10-01", "end_date": "2024-09-30", "period_type": "duration"},
+}  # fmt: skip
+
+
+def _tp(cid, dp, end, qtrs, state="value", reason=None, start=None):
+    """A TP cell row the way select.to_row writes it: FSN end + qtrs, or exact dates for a before-image blank."""
+    return dict(
+        _cell(cid, dp, "TP", end, state, reason),
+        qtrs=qtrs,
+        period_start=start,
+        period_end=end if start else None,
+    )
+
+
+@pytest.mark.unit
+def test_hold_guard_counts_a_tp_written_ytd_key_as_valued_to_valued():
+    """CELL-FORMAT v1.2: a before-image 9-month (or 6-month) key is matched by the TP cell of its own class and end,
+    never by the quarter or the other YTD length ending that day; an exact-dated TP blank matches only its start."""
+    before = [
+        {"company_id": "1", "canonical_concept_id": "10", "period_id": p, "value": "9"}
+        for p in YTD_PERIODS
+    ]
+    cells = [
+        _cell(1, REV, "Q", "2024-06-30"),
+        _tp(1, REV, "2024-06-30", 2),
+        _tp(1, REV, "2024-09-30", 3),
+        # a multi-year blank at the same end but another start must not stand for the 3-year key
+        _tp(
+            1,
+            REV,
+            "2024-09-30",
+            9,
+            "defect",
+            "hybrid_gap_unresolved",
+            start="2022-07-01",
+        ),
+    ]
+    held, transitions, no_row = pilot.hold_guard(
+        cells, before, CONCEPTS, YTD_PERIODS, {REV}
+    )
+    assert held == {}
+    assert transitions == {REV: {"valued": 3, "no_new_cell": 1}}
+    assert [k["period_id"] for k in no_row] == ["3y"]
+    exact = _tp(
+        1, REV, "2024-09-30", 12, "defect", "hybrid_gap_unresolved", start="2021-10-01"
+    )
+    _held, transitions, no_row = pilot.hold_guard(
+        cells + [exact], before, CONCEPTS, YTD_PERIODS, {REV}
+    )
+    assert (
+        transitions == {REV: {"valued": 3, "hybrid_gap_unresolved": 1}} and no_row == []
+    )
+
+
+def _store_report(cid, missing=()):
+    return dict(
+        rep(cid, "A", {REV: FULL, NI: FULL}),
+        library={"missing": list(missing)},
+        store_filings=[
+            {"id": 7, "accession": "0000000001-24-000007", "accepted": "2024-08-01T12:00:00", "form": "10-Q",
+             "period": "2024-06-30", "fy": 2024, "fp": "Q2", "fye": "1231"},
+        ],
+    )  # fmt: skip
+
+
+@pytest.mark.unit
+def test_an_unprinted_ytd_key_becomes_a_hybrid_gap_defect_blank_with_exact_dates():
+    """CELL-FORMAT v1.2: a before-image 6-month / multi-year key with no TP cell is a defect blank under the gap_blank
+    conventions (N1): hybrid_gap_unresolved when the period's filing is stored (accession in input_refs), else
+    filing_not_in_store; class/owner by cause; exact dates; it passes the loader's row check."""
+    from scrooner_pipeline.normalizer import cell_loader
+
+    before = [
+        {"company_id": "1", "canonical_concept_id": cc, "period_id": p, "value": "9"}
+        for cc in ("10", "11")
+        for p in ("h1", "9m", "3y")
+    ]
+    cells = [
+        _tp(1, REV, "2024-09-30", 3)
+    ]  # revenue's 9 months is printed; nothing else is
+    rows, skipped = pilot.ytd_gap_blanks(
+        cells,
+        before,
+        CONCEPTS,
+        YTD_PERIODS,
+        {REV, NI},
+        [_store_report(1, missing=[NI])],
+    )
+    assert skipped == []
+    got = {(r["data_point_name"], r["period_start"], r["period_end"]): r for r in rows}
+    assert set(got) == {
+        (REV, "2024-01-01", "2024-06-30"),
+        (REV, "2021-10-01", "2024-09-30"),
+        (NI, "2024-01-01", "2024-06-30"),
+        (NI, "2024-01-01", "2024-09-30"),
+        (NI, "2021-10-01", "2024-09-30"),
+    }
+    h1 = got[(REV, "2024-01-01", "2024-06-30")]
+    assert (h1["period_grain"], h1["qtrs"], h1["state"], h1["reason_code"]) == (
+        "TP",
+        2,
+        "defect",
+        "hybrid_gap_unresolved",
+    )
+    assert (h1["defect_class"], h1["owner"]) == ("unclassified", "triage")
+    assert h1["input_refs"]["accession"] == h1["accession"] == "0000000001-24-000007"
+    assert (
+        h1["input_refs"]["pilot_cause"] == "no_face_print_for_period"
+        and h1["value"] is None
+    )
+    ni = got[(NI, "2024-01-01", "2024-06-30")]
+    assert (ni["defect_class"], ni["owner"]) == (
+        "vocabulary",
+        "tag_mapper",
+    )  # no mapped line
+    multi = got[(REV, "2021-10-01", "2024-09-30")]
+    assert (
+        multi["reason_code"] == "filing_not_in_store" and multi["qtrs"] >= 5
+    )  # no stored filing ends 2024-09-30
+    for r in rows:
+        parsed = cell_loader.parse_row(
+            1, json.loads(json.dumps(r, default=str)), {REV, NI}
+        )
+        assert not isinstance(parsed, str), (parsed, r)
+        assert parsed.exact_dates and parsed.key.period_grain == "TP"
+    # with the blanks the guard sees every YTD key as reasoned: nothing is valued->no-row
+    _held, transitions, no_row = pilot.hold_guard(
+        cells + rows, before, CONCEPTS, YTD_PERIODS, {REV, NI}
+    )
+    assert no_row == [] and transitions[REV] == {
+        "valued": 1,
+        "hybrid_gap_unresolved": 1,
+        "filing_not_in_store": 1,
+    }
+    # idempotent: a second pass finds the blanks and adds nothing; no stored filings in the report -> no blank
+    assert pilot.ytd_gap_blanks(
+        cells + rows, before, CONCEPTS, YTD_PERIODS, {REV, NI}, [_store_report(1)]
+    ) == ([], [])
+    none, skipped = pilot.ytd_gap_blanks(
+        cells, before, CONCEPTS, YTD_PERIODS, {REV}, [rep(1, "A", {REV: FULL})]
+    )
+    assert none == [] and {k["why"] for k in skipped} == {"no_store_filings_in_report"}
+
+
+@pytest.mark.unit
+def test_done_gate_command_writes_unprinted_ytd_keys_as_blanks_and_writes_the_pair(
+    tmp_path,
+):
+    from scrooner_pipeline.jobs import fsn as fsn_job
+
+    before = [
+        {"company_id": "1", "canonical_concept_id": "10", "period_id": p, "value": "9"}
+        for p in ("q2", "h1")
+    ]
+    cells = [_cell(1, REV, "Q", "2024-06-30"), _cell(1, NI, "Q", "2024-06-30")]
+    out = _out_dir(tmp_path, [_store_report(1)], cells, before, periods=YTD_PERIODS)
+    args = ["done-gate", "--pilot-out", str(out), "--data-points", f"{REV},{NI}"]
+    res = CliRunner().invoke(fsn_job.app, args)
+    assert res.exit_code == 0, res.output + repr(res.exception)
+    assert (
+        "1 before-image year-to-date keys with nothing printed added as TP blanks"
+        in res.output
+    )
+    assert "valued->no-row in written pairs: 0" in res.output
+    assert (out / "done_pairs.tsv").read_text().splitlines()[1:] == [
+        f"1\t{NI}",
+        f"1\t{REV}",
+    ]
+    with gzip.open(out / "cells" / "is_core" / "cells.jsonl.gz", "rt") as fh:
+        added = [json.loads(line) for line in fh]
+    assert [
+        (r["period_grain"], r["period_start"], r["period_end"], r["reason_code"])
+        for r in added
+    ] == [("TP", "2024-01-01", "2024-06-30", "hybrid_gap_unresolved")]
+    report = json.loads((out / "valued_to_blank.json").read_text())
+    assert report["ytd_keys_written_as_blanks_by_data_point"] == {REV: 1}
+    assert report["valued_to_no_row_by_pair"] == []
+    # a second run adds nothing
+    res = CliRunner().invoke(fsn_job.app, args)
+    assert "0 before-image year-to-date keys" in res.output
+
+
+def _out_dir(tmp_path, reports, cells, before, gaps=(), periods=None):
     out = tmp_path / "out"
     (out / "before_image").mkdir(parents=True)
     (out / "report.json").write_text(json.dumps(reports))
@@ -321,7 +501,7 @@ def _out_dir(tmp_path, reports, cells, before, gaps=()):
         ["id", "start_date", "end_date", "period_type"],
         [
             [k, v["start_date"], v["end_date"], v["period_type"]]
-            for k, v in PERIODS.items()
+            for k, v in (periods or PERIODS).items()
         ],
     )
     (out / "cells" / "income").mkdir(parents=True)
