@@ -345,6 +345,30 @@ def test_note_path_never_takes_operating_income_and_holds_negative_interest():
     assert c.input_refs["label_unverified"] is False
 
 
+@pytest.mark.unit
+def test_no_public_filing_for_period_is_a_history_horizon_blank_the_loader_accepts():
+    from scrooner_pipeline.normalizer import cell_loader as cl
+
+    assert "no_public_filing_for_period" not in sel.REASONS  # not a defect: no class, no owner
+    assert sel.REASON_TEXT["no_public_filing_for_period"]
+    cell = sel.Cell(
+        "revenue_resolved", date(2016, 3, 31), 1, "history_horizon",
+        rule_id="fsn.history_window@1", reason_code="no_public_filing_for_period",
+    )
+    row = sel.to_row(cell, 5779, {})
+    row.update(period_start="2016-01-01", period_end="2016-03-31", evidence_level="FILING-CHECKED")
+    got = cl.parse_row(1, row, {"revenue_resolved"})
+    assert isinstance(got, cl.CellRow) and got.reason_code == "no_public_filing_for_period"
+    assert got.state == "history_horizon" and got.value is None
+    # the loader refuses a blank without a reason code, as it does today
+    row["reason_code"] = None
+    assert cl.parse_row(1, row, {"revenue_resolved"}) == "blank_without_reason_code"
+    # the row builder refuses an unknown reason on a horizon blank
+    bad = sel.Cell("revenue_resolved", date(2016, 3, 31), 1, "history_horizon", reason_code="made_up")
+    with pytest.raises(ValueError):
+        sel.to_row(bad, 5779, {})
+
+
 # --- CELL-FORMAT v1.2: printed year-to-date columns are cells of grain TP (release approver 2026-11-10) ---------
 
 
