@@ -48,27 +48,28 @@ PERIODIC_FORMS = (
 
 def _periodic_copies(
     conn: psycopg.Connection, company_id: int, floor: date
-) -> dict[tuple[str, int], list[tuple[str, Decimal]]]:
+) -> dict[tuple[str, int], list[tuple[str, Decimal, str]]]:
     """(base canonical name, period_id) -> every periodic-form copy (accession,
-    value) of the cell in core.fact, authoritative or not: the resolver keeps
+    value, xbrl tag) of the cell in core.fact, authoritative or not: the resolver keeps
     one, the proof must see them all (restated copies that disagree are hidden,
     founder ruling)."""
-    out: dict[tuple[str, int], list[tuple[str, Decimal]]] = defaultdict(list)
+    out: dict[tuple[str, int], list[tuple[str, Decimal, str]]] = defaultdict(list)
     with conn.cursor() as cur:
         cur.execute(
             """
             select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
-                   fl.period_of_report
+                   fl.period_of_report, c.tag
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
+            join core.concept c on c.id = f.concept_id
             join analytics.concept_mapping cm on cm.concept_id = f.concept_id and cm.confidence <> 'rejected'
             join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
             where f.company_id = %s and not f.is_derived and fl.form = any(%s) and p.end_date >= %s
             """,
             (company_id, list(PERIODIC_FORMS), floor),
         )
-        for name, pid, acc, value, ptype, end, por in cur.fetchall():
+        for name, pid, acc, value, ptype, end, por, tag in cur.fetchall():
             # an instant copy counts only where the filing's balance sheet can print it (its own
             # date or the prior year end): older instants are cash-flow/equity opening balances,
             # and a filer that misdates one (HD 0000354950-19-000010 files the 2016-01-31 cash
@@ -79,8 +80,31 @@ def _periodic_copies(
                 and end < por - timedelta(days=375)
             ):
                 continue
-            out[(name, pid)].append((acc, Decimal(value)))
+            out[(name, pid)].append((acc, Decimal(value), tag))
     return out
+
+
+def matching_copies(
+    copies: list[tuple[str, Decimal, str]], tags: tuple[str, ...]
+) -> list[tuple[str, Decimal]]:
+    """Copies of the shown cell: facts under the cell's own XBRL tag(s). A fact
+    reported under another tag that maps to the same canonical name is not a copy
+    (MDT FY17 net income NetIncomeLoss 4,028 vs ProfitLoss 4,024, Release approver
+    ruling 2026-11-10). A cell with no source tag keeps the by-canonical-name
+    behaviour."""
+    if not tags:
+        return [(a, v) for a, v, _t in copies]
+    return [(a, v) for a, v, t in copies if t in tags]
+
+
+def disagreeing_copies(
+    copies: list[tuple[str, Decimal]], shown_value: Decimal, scale: int
+) -> list[tuple[str, str]]:
+    from scrooner_pipeline.common.presentation_scale import same_number
+
+    return sorted(
+        {(a, str(v)) for a, v in copies if not same_number(v, shown_value, scale)}
+    )
 
 
 def _base_name(name: str) -> str:
@@ -152,16 +176,8 @@ def load_shown(
         ]
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
-        from scrooner_pipeline.common.presentation_scale import same_number
-
-        copies = copies_by.get((_base_name(name), period_id), [])
-        disagreeing = sorted(
-            {
-                (acc, str(v))
-                for acc, v in copies
-                if not same_number(v, shown_value, scale)
-            }
-        )
+        copies = matching_copies(copies_by.get((_base_name(name), period_id), []), tags)
+        disagreeing = disagreeing_copies(copies, shown_value, scale)
         out.append(
             Shown(
                 company_id=company_id,

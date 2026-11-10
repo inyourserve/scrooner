@@ -434,6 +434,58 @@ def test_disagreeing_periodic_copies_make_the_cell_disagree_whichever_is_shown()
     assert "193468000000" in p.reason_text and "founder" in p.reason_text
 
 
+def _mdt_shown(copies):
+    # MDT FY17 case (NetIncomeLoss 4,028M vs ProfitLoss 4,024M) on the Apple-shaped fixture:
+    # same structure, shown tag NetIncomeLoss, ProfitLoss copy a little lower
+    from scrooner_pipeline.proof.shown import disagreeing_copies, matching_copies
+
+    v = Decimal("112010000000")
+    m = matching_copies(copies, ("NetIncomeLoss",))
+    d = disagreeing_copies(m, v, 6)
+    return pv.Shown(
+        3,
+        "net_income_resolved",
+        "FY",
+        FY_END,
+        FY_END,
+        v,
+        ("NetIncomeLoss",),
+        "0001613103-19-000028",
+        (1,),
+        False,
+        6,
+        copies_disagree=tuple(d) or None,
+        copies=len(m),
+    )
+
+
+@pytest.mark.unit
+def test_copy_under_another_tag_is_not_a_copy_mdt_profitloss():
+    q = _mdt_shown(
+        [
+            ("0001613103-19-000028", Decimal("112010000000"), "NetIncomeLoss"),
+            ("0001613103-17-000010", Decimal("112010000000"), "NetIncomeLoss"),
+            ("0001613103-19-000028", Decimal("111900000000"), "ProfitLoss"),
+        ]
+    )
+    assert q.copies == 2 and q.copies_disagree is None
+    p = pv.prove_cell(q, structure(), "2025q4")
+    assert p.verdict == pv.PROVEN, (p.verdict, p.reason_code)
+
+
+@pytest.mark.unit
+def test_same_tag_copy_with_a_different_value_still_disagrees():
+    q = _mdt_shown(
+        [
+            ("0001613103-19-000028", Decimal("112010000000"), "NetIncomeLoss"),
+            ("0001613103-20-000011", Decimal("111000000000"), "NetIncomeLoss"),
+        ]
+    )
+    assert q.copies_disagree
+    p = pv.prove_cell(q, structure(), "2025q4")
+    assert p.verdict == pv.DISAGREE and p.reason_code == "restated_copies_disagree"
+
+
 @pytest.mark.unit
 def test_components_sum_allows_sum_of_rounded_children_and_ignores_single_arc_groups():
     s = structure()
@@ -504,6 +556,19 @@ def test_every_position_source_the_engine_sets_is_allowed_by_migration_0114():
 
     src = Path(prove_mod.__file__).read_text()
     set_values = set(re.findall(r'position_source = "([a-z_]+)"', src))
-    mig = Path(__file__).resolve().parents[2] / "db" / "migrations" / "0114_cell_proof.sql"
-    allowed = set(re.findall(r"'([a-z_]+)'", re.search(r"position_source text check \(position_source in \(([^)]*)\)", mig.read_text()).group(1)))
+    mig = (
+        Path(__file__).resolve().parents[2]
+        / "db"
+        / "migrations"
+        / "0114_cell_proof.sql"
+    )
+    allowed = set(
+        re.findall(
+            r"'([a-z_]+)'",
+            re.search(
+                r"position_source text check \(position_source in \(([^)]*)\)",
+                mig.read_text(),
+            ).group(1),
+        )
+    )
     assert set_values and set_values <= allowed, set_values - allowed
