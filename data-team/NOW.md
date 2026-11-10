@@ -41,6 +41,7 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
 | FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| Certification lead: ladder + Verifier FIX (holes 1-6 closed), I11 hybrid/template-aware, v1.1 cohort ranks, IS absent-line reasons, template-seed FIX rows 1-5/8 | `work/certification-lead/{promote d632042d, i11-template-reasons d0385e0e, v11-cohort 1bbf083a, is-absent-lines 87cc6147, template-seed-fixes f84a3251}`, all CI green; 0122 (`verifier_check`) claimed, NOT applied | Verifier re-check of promote + seed fixes; then founder merges and the 0122 apply. Open: seed rows 6-7 (bank-like brokers, COND overlay), draw sizes (20/10 ASSUMED), proof engine must record face reads. Report: CERTIFICATION-BLOCKERS-2026-11-09.md §10 (branch work/certification-lead/blockers) |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
