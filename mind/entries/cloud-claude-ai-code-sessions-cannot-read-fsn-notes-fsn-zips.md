@@ -5,6 +5,7 @@ kind: gotcha
 tags: fsn, cloud, regression-gate, bucket
 paths: pipeline/scripts/slot_records/results/fsn_quarter_links.txt
 evidence: CODE-CHECKED
+status: active
 created: 2026-11-01
 verified: 2026-11-01
 ---

@@ -6,7 +6,8 @@ Use progressive disclosure. Do not read the repository's planning history by def
 
 1. Read `data-team/NOW.md` (current state, priorities, blockers).
 2. Run `python3 scripts/agent_context.py` for a compact live Git/task summary.
-3. Read only the source files named for the task below.
+3. Read only the source files named for the task below, plus your role doc (`data-team/10-` to `19-`).
+4. Before the task, `python3 mind/mind.py search "<topic>"` and `get` the hits (shared memory; verify against the source). After it, `add` each durable lesson and give `feedback <id> helped|wrong`.
 
 ## Route by task
 

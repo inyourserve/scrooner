@@ -5,6 +5,7 @@ kind: gotcha
 tags: dps, per-share, fsn, q4
 paths: pipeline/scripts/slot_records/fsn_company_pershare.py
 evidence: DATA-INFERRED
+status: active
 created: 2026-11-01
 verified: 2026-11-01
 ---

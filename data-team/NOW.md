@@ -18,6 +18,20 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 - 1,000-company FSN write: run 42561798991 (2026-11-09 04:26 UTC, founder-approved, full SHA bc6ab31b...) WROTE NOTHING to canonical_fact (analytics.slot_protected_cell: 0 rows since 04:00); cancelled ~08:05 UTC. Load into fsn.* worked (893 companies), but step 8 `scrooner-fsn pilot` against production failed every company with QueryCanceled (statement timeout, ~3 min each; shards 0 and 2: 47/47 and 59/59), so no cells, and step 12 crashed on the empty out/cells glob. Shards 4/6/7 died in Load on `connection is lost` (rollback on a dead connection kills the shard). Cohort dry runs use a scratch DB, so they never hit this. Root cause and fix assigned to the balance-sheet lane. Earlier: run 42559698212 failed at checkout (short SHA); always pass the full SHA.
 - Latest full dry run (reported by the manager session 2026-11-06): 73.2% of template cells valued across 960 of 1,000 companies (top 100: 76.5%); one batch of 40 failed.
 
+## Priorities and owners (manager session, 2026-11-09 ~16:05 UTC)
+
+| # | Priority | Owner (cloud session) |
+|---|---|---|
+| 1 | Top-100 FSN write (run 42649721096, code 1beb755, after PR #8's timeout fix), then cell_proof | manager |
+| 2 | Post-write Verifier draw: 200 cells / 100 companies, answer key built from filings in advance | Verifier ("Scrooner production cells verification") |
+| 3 | First certificates: what certifies a company, blockers, ranked plan (MSFT, HD, top 100) | Certification lead (was "Sector-template layer build") |
+| 4 | Release case for held families (balance sheet, debt, capex, D&A) to add to the write | New cloud session "Family release prep" (session_01GLmSE3yJhPu25eryM5Zsen); the FSN-expert session stays read-only by its user's brief |
+| 5 | Nightly refresh failure (normalize:facts, 7,000s budget), taken over from the unreachable CI/CD session; then rebase PR #4 | Cash-flow lane |
+| 6 | Rebase PR #6; take over and review PR #5 (write vs nightly guard) | Balance-sheet lane |
+| 7 | Full 1,000 write after tonight's refresh; then cohort dry runs for PR #4/#6 and a reload | manager |
+
+Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac sessions (Remote Control off).
+
 ## In flight (no production writes)
 
 | Lane | Branch | Next |
@@ -31,6 +45,13 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
 Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still failed, for a new reason: stage `normalize:facts` failed and the reprocess job ran past its 7,000s budget, so every map stage after calculate was skipped (growth, TTM, expanded metrics, piotroski, reconciliation, dividend streak, tag library). Not yet investigated: the CI/CD session (owner of PR #1/#5) can't be messaged from a cloud session; the founder needs to hand it over.
+
+## Founder decisions 2026-11-09 (~21:40 IST, in the manager session)
+
+- FSN-era certification ladder APPROVED, subject to a Verifier review (pending): checks_clean = I1-I11 pass, template- and reason-aware; reconciled = every headline cell PROVEN in cell_proof, none DISAGREE (replaces the FSDS reconciliation); verified = a recorded Verifier headline check; certified = all of these plus every template cell valued or reasoned. Source: CERTIFICATION-BLOCKERS-2026-11-09.md (branch work/certification-lead/blockers). Goes to doc 02 once the Verifier passes it.
+- Sector-template seed (branch work/data-engineer/sector-templates-seed) APPROVED to apply once the Verifier passes it.
+
+- FOUNDER APPROVAL 2026-11-09 ~22:10 IST (manager session): "Yes approved", in reply to: "I approve writing FSN values per (company, data point) on Ritwik's conditions C1-C8, and the top-100 and 1,000-company writes tonight once Ritwik clears the dry run." Ruling: branch review/ruling-done-gate-c4-2026-11-09. Every Ritwik condition stays binding (C7 cohort dry run first; Ritwik clears the C2 valued-to-blank table and the data_points list before each dispatch). The recorded founder decision of 2026-11-01 (doc 02, item 5) goes to doc 02 next.
 
 ## Waiting on the founder
 
