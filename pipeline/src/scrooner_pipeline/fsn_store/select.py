@@ -128,7 +128,12 @@ GAP_CAUSE_CLASS = {
     "no_concept_rule": ("vocabulary", "tag_mapper"),
     "quarter_not_printed_or_derivable": ("period", "period_engineer"),
 }
+# blank reason -> cell state, for blanks that are not defects (no defect class, no owner): the company has no
+# public filing for this period (its history window ends before it, or a wrong-entity window was excluded and no
+# comparative of the company's own later filings covers the key). Approver note 2026-11-10 (KDP, IBRX quarters).
+HORIZON_REASONS = {"no_public_filing_for_period": "history_horizon"}
 REASON_TEXT = {
+    "no_public_filing_for_period": "The company filed no public report for this period (it was not yet a reporting company in this form, or its earlier filings belong to another entity), so no value exists to show.",
     "cell_proof_disagree": "The independent proof of this cell against the filing disagrees with the stored value, so it is not shown until the disagreement is resolved.",
     "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
     "hybrid_gap_unresolved": "The filing is stored, but this value could not be read from its statements yet; the cause is recorded with the cell.",
@@ -247,7 +252,7 @@ class Cell:
     concept: str
     ddate: date
     qtrs: int
-    state: str  # value | derived | defect
+    state: str  # value | derived | defect | history_horizon | not_presented
     value: Decimal | None = None
     filing_id: int | None = None
     tag: str | None = None
@@ -641,6 +646,15 @@ def to_row(
         "input_refs": cell.input_refs,
     }
     if cell.state == "not_presented":
+        row.update(
+            reason_code=cell.reason_code,
+            reason_text=REASON_TEXT[cell.reason_code or ""],
+        )
+    if cell.state == "history_horizon":
+        if HORIZON_REASONS.get(cell.reason_code or "") != "history_horizon":
+            raise ValueError(
+                f"history_horizon needs a horizon reason, got {cell.reason_code!r}"
+            )
         row.update(
             reason_code=cell.reason_code,
             reason_text=REASON_TEXT[cell.reason_code or ""],
