@@ -3,6 +3,7 @@
 Updated 2026-11-09.
 
 ## Now
+- **2026-11-10: tag-card work handed to the Tag Expert session (HANDOVER.md). This session writes no more tag cards; company dossiers are paused pending its user.**
 - **Companies completed:** 1 of 1,000. MSFT (`companies/MSFT.md`). Pilot queue next: HD, AAPL, JPM, TRV, PLD, NEE, XOM, JNJ, WMT.
 - **Tags carded (per-tag cards this programme):** 8. They are listed in `../tags/CHANGELOG.md` 2026-11-02; the earlier family cards are in `../tags/cards/`.
 - **Open disagreements with our store:** 13, all MSFT.
