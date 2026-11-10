@@ -51,6 +51,7 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
 | FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| IS mapping by structure (mapping & derivation builder): net income G1b/G2b (lane rules ported) + G2c, pre-tax above the tax line, interest = single gross face line; additive detectors | `work/tag-expert/is-interest-structure` (stacked on `…/is-pretax-structure`, `…/is-net-income-detector`; CI green) | Full-history local store, 209 blocked companies: no_mapped_line NI 1,272→127, pre-tax 1,987→1,209, interest 4,566→3,618; 22 shown values change (select's latest-copy rule, Eversource G2b). Next: Verifier draw on `data-team/47-fsn-store/IS-STRUCTURE-VERIFIER-SAMPLE-2026-11-09.csv`, then include in the C7 dry run |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
