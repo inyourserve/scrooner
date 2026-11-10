@@ -29,7 +29,7 @@ from dataclasses import dataclass, field, replace
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from typing import Any
 
 import psycopg
@@ -325,6 +325,37 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
 # --------------------------------------------------------------------------
 # binding and resolving, per company
 # --------------------------------------------------------------------------
+def ytd_periods_by_class(
+    periods: Iterable[tuple[int, date, date, str]],
+) -> dict[str, list[tuple[int, date, date]]]:
+    """(id, start, end, period_type) rows -> {H1/9M/MULTI: [(id, start, end)]}: the YTD periods a TP row binds to."""
+    out: dict[str, list[tuple[int, date, date]]] = defaultdict(list)
+    for pid, s, e, t in periods:
+        cls = duration_class(t, s, e)
+        if cls in TP_CLASSES:
+            out[cls].append((pid, s, e))
+    return out
+
+
+def bind_tp(
+    by_ytd: dict[str, list[tuple[int, date, date]]], fsn_end: date, qtrs: int
+) -> tuple[int | None, str | None]:
+    """CELL-FORMAT v1.2: the period a TP row without exact dates binds to: the company's period of the qtrs class
+    whose true end the FSN end stands for, nearest end first. (period id, None), or (None, tp_period_ambiguous)
+    when two such periods sit at the same nearest end, or (None, period_unresolvable) when there is none. Shared
+    by the loader and the done gate's TP rejection count, so both say the same."""
+    cands = sorted(
+        (abs((e - fsn_end).days), s, p)
+        for p, s, e in by_ytd.get(TP_QTRS[qtrs], [])
+        if fsn_end_matches(fsn_end, e, BIND_DAYS)
+    )
+    if len(cands) > 1 and cands[0][0] == cands[1][0]:
+        return None, "tp_period_ambiguous"
+    if cands:
+        return cands[0][2], None
+    return None, "period_unresolvable"
+
+
 def bind_periods(
     conn: psycopg.Connection, company_id: int, rows: list[CellRow], *, create: bool
 ) -> tuple[list[CellRow], list[tuple[CellRow, str]], int]:
@@ -342,11 +373,7 @@ def bind_periods(
     by_label: dict[tuple, list[tuple[int, date]]] = defaultdict(list)
     for pid, _s, e, t, fy, fp in periods:
         by_label[(fy, fp, t)].append((pid, e))
-    by_ytd: dict[str, list[tuple[int, date, date]]] = defaultdict(list)
-    for pid, s, e, t, _fy, _fp in periods:
-        cls = duration_class(t, s, e)
-        if cls in TP_CLASSES:
-            by_ytd[cls].append((pid, s, e))
+    by_ytd = ytd_periods_by_class((pid, s, e, t) for pid, s, e, t, _fy, _fp in periods)
     bound, bad, created = [], [], 0
     for r in rows:
         pid = None
@@ -356,17 +383,13 @@ def bind_periods(
             # v1.2: the company's period of this duration class whose true end the FSN end stands for (nearest
             # end wins); two such periods at the nearest end with different starts is ambiguous, never guessed
             fsn_end, qtrs = r.fsn_end, r.qtrs
-            assert fsn_end is not None and qtrs in TP_QTRS  # parse_row requires both
-            ytd_cands = sorted(
-                (abs((e - fsn_end).days), s, p)
-                for p, s, e in by_ytd.get(TP_QTRS[qtrs], [])
-                if fsn_end_matches(fsn_end, e, BIND_DAYS)
-            )
-            if len(ytd_cands) > 1 and ytd_cands[0][0] == ytd_cands[1][0]:
-                bad.append((r, "tp_period_ambiguous"))
+            assert (
+                fsn_end is not None and qtrs is not None
+            )  # parse_row requires both (qtrs 2 or 3)
+            pid, why = bind_tp(by_ytd, fsn_end, qtrs)
+            if why == "tp_period_ambiguous":
+                bad.append((r, why))
                 continue
-            if ytd_cands:
-                pid = ytd_cands[0][2]
         # a YTD span (TP) never binds by a quarter's fiscal label
         elif (
             pid is None

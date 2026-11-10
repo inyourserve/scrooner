@@ -204,6 +204,8 @@ def _match(
 
 
 RULE_GAP_BLANK = "fsn.hybrid_gap_blank@1"
+# approver ruling 2026-11-10, item 1: a before-image multi-year key is not_in_template, never a defect
+RULE_GRAIN_OUTSIDE_TEMPLATE = "fsn.period_grain_outside_template@1"
 GRAIN_QTRS = {"FY": 4, "Q": 1, "I": 0, "H1": 2, "9M": 3}
 YTD_CLASSES = ("H1", "9M", "MULTI")
 
@@ -651,6 +653,11 @@ def report_company(
         },
         "cell_states": dict(states),
         # the stored filings, so the done gate can build N1 gap blanks for before-image YTD keys (CELL-FORMAT v1.2)
+        # the company's history windows (0121), so a done-gate YTD blank in an excluded window is a horizon blank
+        "history_windows": {
+            rel: [[f.isoformat(), t.isoformat()] for f, t in ws]
+            for rel, ws in hist.items()
+        },
         "store_filings": [
             {
                 "id": f.id,
@@ -772,6 +779,7 @@ def hold_guard(
     concept_names: dict[str, str],
     periods: dict[str, dict[str, str]],
     data_points: set[str],
+    not_in_template: list[dict[str, Any]] | None = None,
 ) -> tuple[
     dict[tuple[int, str], str],
     dict[str, dict[str, int]],
@@ -836,6 +844,13 @@ def hold_guard(
             )  # fmt: skip
         elif row["state"] not in VALUED_STATES:
             transitions[dp][row.get("reason_code") or row["state"]] += 1
+            if row["state"] == "not_in_template" and not_in_template is not None:
+                # approver ruling 2026-11-10, item 1: listed in its own C2 column
+                not_in_template.append(
+                    {"company_id": key[0], "data_point": dp, "period_id": b["period_id"], "grain": grain,
+                     "start": start.isoformat(), "end": end.isoformat(), "before_value": b["value"],
+                     "reason_code": row.get("reason_code")}
+                )  # fmt: skip
         else:
             transitions[dp]["valued"] += 1
     held = {
@@ -878,8 +893,10 @@ def ytd_gap_blanks(
     defect blank under the pilot.gap_blank conventions (N1): hybrid_gap_unresolved when a stored filing reports the
     period end (its accession in input_refs), else filing_not_in_store; the cause is no_mapped_line when the
     company's library has no line for the data point, else no_face_print_for_period. The blank carries the key's
-    exact dates. Returns (blank rows, skipped keys): a company whose report lacks its stored filings gets no blank
-    (its keys stay valued->no-row and the gate holds the pair)."""
+    exact dates. A multi-year key (class MULTI) is written as state not_in_template, reason
+    period_grain_outside_template, no class or owner (approver ruling 2026-11-10, item 1). Returns (blank rows,
+    skipped keys): a company whose report lacks its stored filings gets no blank (its keys stay valued->no-row and
+    the gate holds the pair)."""
     by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
     for r in cells:
         by_pair[(int(r["company_id"]), r["data_point_name"])].append(r)
@@ -918,9 +935,32 @@ def ytd_gap_blanks(
                  "why": "no_store_filings_in_report"}
             )  # fmt: skip
             continue
-        missing = set((report.get("library") or {}).get("missing") or [])
-        cause = "no_mapped_line" if dp in missing else "no_face_print_for_period"
-        blank = gap_blank(dp, grain, end, cause, filings, start=start)
+        if grain == "MULTI":
+            ends = sorted(nearest_month_ends(end))
+            blank = sel.Cell(
+                dp,
+                end if end in ends else ends[-1],
+                max(5, round(((end - start).days + 1) / 91.3)),
+                "not_in_template",
+                rule_id=RULE_GRAIN_OUTSIDE_TEMPLATE,
+                reason_code="period_grain_outside_template",
+                input_refs={
+                    "expected_start": start.isoformat(),
+                    "expected_end": end.isoformat(),
+                },
+                start=start,
+                end=end,
+            )
+        else:
+            missing = set((report.get("library") or {}).get("missing") or [])
+            cause = "no_mapped_line" if dp in missing else "no_face_print_for_period"
+            hw = report.get("history_windows")
+            windows = (
+                {rel: [(date.fromisoformat(f), date.fromisoformat(t)) for f, t in ws] for rel, ws in hw.items()}
+                if hw
+                else None
+            )  # fmt: skip
+            blank = gap_blank(dp, grain, end, cause, filings, windows, start=start)
         row = sel.to_row(blank, cid, filings)
         by_pair[(cid, dp)].append(row)
         out.append(row)

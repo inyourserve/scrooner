@@ -15,6 +15,15 @@ name: FSN store production write (cohort)
 #                       dividends_per_share (C6), total debt and total liabilities (C8) stay out.
 #                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
 #                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
+#   stage select_plan:  the whole select_write path against production (shard, load and map, pilot, pilot-prod
+#                       before-image, done gate, write filter), but `scrooner-cells load --plan`: every company's
+#                       transaction is rolled back, so it writes NO analytics.canonical_fact, cell_blank_reason or
+#                       slot_protected_cell row (the loader records one dry_run analytics.rule_run row per family
+#                       file). load/map still WRITE fsn.* (the store and the library: fsn.filing ... line_map,
+#                       filing_check) and the seed job writes fsn.concept_rule, exactly as load_map does, under the
+#                       founder's store-load approval. Uploads the C2 table (valued_to_no_row.tsv,
+#                       valued_to_blank.json), not_done.json, done_pairs.tsv, done_companies.txt, the plan reports
+#                       (write-*.json) and the before-image. Same window, headroom and shard rules; no CIK list.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
 #                       company with a served cell_proof DISAGREE after the write is restored)
 # Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
@@ -25,9 +34,9 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "load_map (fsn.* + library), select_write (also writes canonical_fact) or restore"
+        description: "load_map (fsn.* + library), select_plan (select_write rolled back: no canonical_fact write), select_write (also writes canonical_fact) or restore"
         type: choice
-        options: [load_map, select_write, restore]
+        options: [load_map, select_plan, select_write, restore]
         default: load_map
       shards:
         description: "Shards, 1..20 (each holds at most 2 production connections: budget 40)"
@@ -151,13 +160,13 @@ jobs:
         # is never note-sourced (select.NOTE_TAGS)
         run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
       - name: Before-image of canonical_fact and reasons (read)
-        if: inputs.stage == 'select_write'
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         run: |
           uv run --project pipeline scrooner-fsn pilot-prod --pilot-out out
           python3 -c "import json; print('\n'.join(str(r['company_id']) for r in json.load(open('out/report.json'))))" > out/before_image/companies.txt
           echo "$DATA_POINTS" > out/before_image/data_points.txt
       - name: Store the before-image before any write
-        if: inputs.stage == 'select_write'
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         uses: actions/upload-artifact@v4
         with:
           name: fsn-write-before-image-${{ matrix.shard.i }}
@@ -165,7 +174,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
       - name: Done gate (criteria 1/2/5 per company; pairs written whole, gaps as reasoned blanks; C2 report; read)
-        if: inputs.stage == 'select_write'
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         run: uv run --project pipeline scrooner-fsn done-gate --pilot-out out --data-points "$DATA_POINTS"
       - name: Write the done (company, data point) pairs to canonical_fact
         if: inputs.stage == 'select_write'
@@ -182,6 +191,21 @@ jobs:
             uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
               --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell write $fam failed"
+          done
+      - name: Plan the done (company, data point) pairs (select_plan; every company rolled back, nothing written)
+        if: inputs.stage == 'select_plan'
+        run: |
+          set -u
+          for d in out/cells/*/; do
+            [ -f "$d/cells.jsonl.gz" ] || continue
+            fam=$(basename "$d")
+            [ "$fam" = "unowned" ] && continue
+            mkdir -p "out/write/$fam"
+            python3 pipeline/scripts/fsn_write_filter.py "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_pairs.tsv
+            if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
+            uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --plan \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
+              --report "out/write-$fam.json" || echo "::warning::cell plan $fam failed"
           done
       - name: Shard outcome (red when the shard had companies and no company report; warn on failures)
         if: always()

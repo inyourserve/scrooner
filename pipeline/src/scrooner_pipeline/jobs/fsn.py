@@ -6,6 +6,7 @@ import csv
 import json
 import subprocess
 from collections import Counter
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -478,7 +479,11 @@ def done_gate_cmd(
         hold_valued_to_no_row,
         ytd_gap_blanks,
     )
-    from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
+    from scrooner_pipeline.normalizer.cell_loader import (
+        OWNERSHIP,
+        bind_tp,
+        ytd_periods_by_class,
+    )
 
     root = Path(pilot_out)
     points = {s for s in data_points.split(",") if s}
@@ -538,7 +543,54 @@ def done_gate_cmd(
             )
             manifest.write_text(json.dumps(m))
     cells.extend(ytd_rows)
-    emptied, transitions, no_row = hold_guard(cells, before, names, periods, points)
+    not_in_template: list[dict] = []
+    emptied, transitions, no_row = hold_guard(
+        cells, before, names, periods, points, not_in_template
+    )
+    # approver ruling 2026-11-10, item 3: a TP print the loader will reject (no YTD period of its class at its end,
+    # or two at the same nearest end) is not written and gets no reason row; count it per company with the share
+    # of the company's TP prints, by the loader's own binding rule (bind_tp) over the before-image core.period
+    by_company_periods: dict[int, list] = {}
+    for pid, p in periods.items():
+        if p.get("company_id"):
+            by_company_periods.setdefault(int(p["company_id"]), []).append(
+                (
+                    pid,
+                    date.fromisoformat(p["start_date"]),
+                    date.fromisoformat(p["end_date"]),
+                    p["period_type"],
+                )
+            )
+    ytd_by_company = {
+        c: ytd_periods_by_class(ps) for c, ps in by_company_periods.items()
+    }
+    tp_stats: dict[int, Counter] = {}
+    for r in cells:
+        if (
+            r.get("period_grain") != "TP"
+            or r["data_point_name"] not in points
+            or r.get("period_start")
+            or r.get("qtrs") not in (2, 3)
+        ):
+            continue
+        cid = int(r["company_id"])
+        st = tp_stats.setdefault(cid, Counter())
+        st["tp_prints"] += 1
+        _pid, why = bind_tp(
+            ytd_by_company.get(cid, {}), date.fromisoformat(r["fsn_end"]), r["qtrs"]
+        )
+        if why:
+            st[why] += 1
+            st["rejected"] += 1
+    tp_rejected_by_company = {
+        str(c): {
+            **dict(st),
+            "share": round(st["rejected"] / st["tp_prints"], 6),
+        }
+        for c, st in sorted(tp_stats.items())
+    }
+    tp_total = sum(st["tp_prints"] for st in tp_stats.values())
+    tp_rej = sum(st["rejected"] for st in tp_stats.values())
     gate = done_gate(reports, gaps, missing, points)
     # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
     no_row_by_pair = hold_valued_to_no_row(gate, no_row)
@@ -608,6 +660,22 @@ def done_gate_cmd(
                     sorted(Counter(r["data_point_name"] for r in ytd_rows).items())
                 ),
                 "ytd_keys_not_blanked": ytd_skipped,
+                # approver ruling 2026-11-10, item 1: before-image multi-year keys written as not_in_template
+                "valued_to_not_in_template_by_data_point": dict(
+                    sorted(Counter(k["data_point"] for k in not_in_template).items())
+                ),
+                "valued_to_not_in_template_by_pair": [
+                    {"company_id": c, "data_point": dp, "keys": n}
+                    for (c, dp), n in sorted(
+                        Counter(
+                            (k["company_id"], k["data_point"]) for k in not_in_template
+                        ).items()
+                    )
+                ],
+                "valued_to_not_in_template_keys": not_in_template,
+                # item 3: TP prints the loader will reject (ambiguous or no YTD period), per company and in total
+                "tp_rejected_by_company": tp_rejected_by_company,
+                "tp_rejected_share": round(tp_rej / tp_total, 6) if tp_total else 0.0,
             },
             indent=1,
         )
@@ -624,6 +692,11 @@ def done_gate_cmd(
     typer.echo(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
+    over = sum(1 for v in tp_rejected_by_company.values() if v["share"] > 0.005)
+    typer.echo(
+        f"done gate: TP prints the loader will reject: {tp_rej} of {tp_total}; "
+        f"{over} companies above 0.5%; {len(not_in_template)} multi-year keys written as not_in_template"
     )
     typer.echo(
         f"done gate: {len(ytd_rows)} before-image year-to-date keys with nothing printed added as TP blanks; "

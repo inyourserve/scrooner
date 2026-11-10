@@ -134,11 +134,18 @@ GAP_CAUSE_CLASS = {
     "no_concept_rule": ("vocabulary", "tag_mapper"),
     "quarter_not_printed_or_derivable": ("period", "period_engineer"),
 }
+# CELL-FORMAT v1.2 (approver ruling 2026-11-10, item 2): a TP gap key of a MAPPED data point with nothing printed
+# on the face is the period engineer's; the same cause on a Q/FY/I key keeps the N1 class (unclassified / triage)
+GAP_CAUSE_CLASS_TP = {"no_face_print_for_period": ("period", "period_engineer")}
+# blank reason -> cell state for a key outside the template's grains (ruling item 1): a before-image multi-year
+# key is written as not_in_template, never as a defect (no class, no owner)
+NOT_IN_TEMPLATE_REASONS = {"period_grain_outside_template": "not_in_template"}
 # blank reason -> cell state, for blanks that are not defects (no defect class, no owner): the company has no
 # public filing for this period (its history window ends before it, or a wrong-entity window was excluded and no
 # comparative of the company's own later filings covers the key). Approver note 2026-11-10 (KDP, IBRX quarters).
 HORIZON_REASONS = {"no_public_filing_for_period": "history_horizon"}
 REASON_TEXT = {
+    "period_grain_outside_template": "period grain outside template: multi-year",
     "no_public_filing_for_period": "The company filed no public report for this period (it was not yet a reporting company in this form, or its earlier filings belong to another entity), so no value exists to show.",
     "cell_proof_disagree": "The independent proof of this cell against the filing disagrees with the stored value, so it is not shown until the disagreement is resolved.",
     "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
@@ -678,12 +685,25 @@ def to_row(
             reason_code=cell.reason_code,
             reason_text=REASON_TEXT[cell.reason_code or ""],
         )
+    if cell.state == "not_in_template":
+        if NOT_IN_TEMPLATE_REASONS.get(cell.reason_code or "") != "not_in_template":
+            raise ValueError(
+                f"not_in_template needs a template reason, got {cell.reason_code!r}"
+            )
+        row.update(
+            reason_code=cell.reason_code,
+            reason_text=REASON_TEXT[cell.reason_code or ""],
+        )
     if cell.state == "defect":
         cls, owner = REASONS[cell.reason_code or ""]
         if cell.reason_code == "hybrid_gap_unresolved":
-            cls, owner = GAP_CAUSE_CLASS.get(
-                str(cell.input_refs.get("pilot_cause")), (cls, owner)
+            cause = str(cell.input_refs.get("pilot_cause"))
+            classes = (
+                {**GAP_CAUSE_CLASS, **GAP_CAUSE_CLASS_TP}
+                if grain == "TP"
+                else GAP_CAUSE_CLASS
             )
+            cls, owner = classes.get(cause, (cls, owner))
         text = REASON_TEXT[cell.reason_code or ""]
         if cell.input_refs.get(
             "pilot_cause"
