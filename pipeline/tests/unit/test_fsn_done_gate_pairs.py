@@ -402,6 +402,14 @@ def test_an_unprinted_ytd_key_becomes_a_hybrid_gap_defect_blank_with_exact_dates
         "vocabulary",
         "tag_mapper",
     )  # no mapped line
+    # the v1 grains keep their column length: an instant gap is qtrs 0 (CI 42783704321 caught qtrs 0 read as "none")
+    from datetime import date
+
+    inst = pilot.gap_blank(
+        "total_assets_resolved", "I", date(2024, 6, 30), "no_face_print_for_period",
+        {7: _filing(7, date(2024, 6, 30))},
+    )  # fmt: skip
+    assert (inst.qtrs, inst.grain, inst.start) == (0, "I", None)
     multi = got[(REV, "2021-10-01", "2024-09-30")]
     assert (
         multi["reason_code"] == "filing_not_in_store" and multi["qtrs"] >= 5

@@ -237,11 +237,14 @@ def gap_blank(
         stored
     ):  # N1: the accession of the filing that reports the period (its latest copy)
         refs["accession"] = filings[stored[-1][1]].accession
-    ytd = grain in YTD_CLASSES
-    if ytd:
-        refs["expected_start"] = start.isoformat()
-    # a multi-year key: its length in quarters (at least 5, so it never reads as a year)
-    qtrs = GRAIN_QTRS.get(grain) or max(5, round(((end - start).days + 1) / 91.3))
+    ytd_start = start if grain in YTD_CLASSES else None
+    if ytd_start is not None:
+        refs["expected_start"] = ytd_start.isoformat()
+    if grain in GRAIN_QTRS:
+        qtrs = GRAIN_QTRS[grain]
+    else:  # a multi-year key: its length in quarters (at least 5, so it never reads as a year)
+        assert ytd_start is not None
+        qtrs = max(5, round(((end - ytd_start).days + 1) / 91.3))
     return sel.Cell(
         concept,
         ddate,
@@ -251,8 +254,8 @@ def gap_blank(
         rule_id=RULE_GAP_BLANK,
         reason_code="hybrid_gap_unresolved" if stored else "filing_not_in_store",
         input_refs=refs,
-        start=start if ytd else None,
-        end=end if ytd else None,
+        start=ytd_start,
+        end=end if ytd_start is not None else None,
     )
 
 
@@ -859,17 +862,17 @@ def ytd_gap_blanks(
         ):
             continue
         seen.add((cid, dp, start, end))
-        rep = by_company.get(cid)
+        report = by_company.get(cid)
         if cid not in filings_of:
-            filings_of[cid] = _store_filings(rep) if rep else None
+            filings_of[cid] = _store_filings(report) if report else None
         filings = filings_of[cid]
-        if filings is None:
+        if report is None or filings is None:
             skipped.append(
                 {"company_id": cid, "data_point": dp, "start": start.isoformat(), "end": end.isoformat(),
                  "why": "no_store_filings_in_report"}
             )  # fmt: skip
             continue
-        missing = set((rep.get("library") or {}).get("missing") or [])
+        missing = set((report.get("library") or {}).get("missing") or [])
         cause = "no_mapped_line" if dp in missing else "no_face_print_for_period"
         blank = gap_blank(dp, grain, end, cause, filings, start=start)
         row = sel.to_row(blank, cid, filings)

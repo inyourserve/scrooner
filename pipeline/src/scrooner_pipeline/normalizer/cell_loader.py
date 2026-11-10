@@ -355,16 +355,18 @@ def bind_periods(
         if pid is None and r.key.period_grain == "TP" and not r.exact_dates:
             # v1.2: the company's period of this duration class whose true end the FSN end stands for (nearest
             # end wins); two such periods at the nearest end with different starts is ambiguous, never guessed
-            cands = sorted(
-                (abs((e - r.fsn_end).days), s, p)
-                for p, s, e in by_ytd.get(TP_QTRS[r.qtrs], [])
-                if fsn_end_matches(r.fsn_end, e, BIND_DAYS)
+            fsn_end, qtrs = r.fsn_end, r.qtrs
+            assert fsn_end is not None and qtrs in TP_QTRS  # parse_row requires both
+            ytd_cands = sorted(
+                (abs((e - fsn_end).days), s, p)
+                for p, s, e in by_ytd.get(TP_QTRS[qtrs], [])
+                if fsn_end_matches(fsn_end, e, BIND_DAYS)
             )
-            if len(cands) > 1 and cands[0][0] == cands[1][0]:
+            if len(ytd_cands) > 1 and ytd_cands[0][0] == ytd_cands[1][0]:
                 bad.append((r, "tp_period_ambiguous"))
                 continue
-            if cands:
-                pid = cands[0][2]
+            if ytd_cands:
+                pid = ytd_cands[0][2]
         # a YTD span (TP) never binds by a quarter's fiscal label
         elif (
             pid is None
