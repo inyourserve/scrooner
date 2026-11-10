@@ -106,3 +106,21 @@ def test_done_gate_company_criteria_1_2_5_fail_every_pair_of_the_company():
     ]
     assert got[4]["gap_blanks"] == {"revenue_sanity_resolved": 1}
     assert got[3]["data_points"]["revenue_sanity_resolved"] == ["company:2_filings_not_stored:1"]
+
+
+@pytest.mark.unit
+def test_gap_blank_inside_an_exclude_window_is_no_public_filing_for_period():
+    from datetime import date as d
+
+    from scrooner_pipeline.fsn_store import pilot as pl
+
+    kdp = {"exclude": [(d(2013, 1, 1), d(2018, 6, 30))], "predecessor": [(d(2013, 1, 1), d(2015, 12, 31))]}
+    ibx = {"exclude": [(d(2014, 1, 1), d(2020, 12, 31))], "predecessor": []}
+    got = pl.gap_blank("revenue_resolved", "Q", d(2017, 3, 31), "x", {}, kdp)
+    assert (got.state, got.reason_code) == ("history_horizon", "no_public_filing_for_period")
+    got = pl.gap_blank("revenue_resolved", "Q", d(2018, 3, 31), "x", {}, ibx)
+    assert got.reason_code == "no_public_filing_for_period"
+    # a predecessor covers 2014-2015 for KDP; outside the exclude window and with no window: unchanged
+    assert pl.gap_blank("revenue_resolved", "Q", d(2015, 3, 31), "x", {}, kdp).reason_code == "filing_not_in_store"
+    assert pl.gap_blank("revenue_resolved", "Q", d(2018, 9, 30), "x", {}, kdp).reason_code == "filing_not_in_store"
+    assert pl.gap_blank("revenue_resolved", "Q", d(2017, 3, 31), "x", {}).reason_code == "filing_not_in_store"

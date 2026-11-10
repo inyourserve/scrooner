@@ -183,8 +183,44 @@ RULE_GAP_BLANK = "fsn.hybrid_gap_blank@1"
 GRAIN_QTRS = {"FY": 4, "Q": 1, "I": 0}
 
 
+def history_windows(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, list[tuple[date, date]]]:
+    """The company's core.company_history_source windows: {'exclude': [...], 'predecessor': [...]} (migration 0121;
+    the same rows shard/_db_history reads)."""
+    out: dict[str, list[tuple[date, date]]] = {"exclude": [], "predecessor": []}
+    if (
+        conn.execute("select to_regclass('core.company_history_source')").fetchone()[0]
+        is None
+    ):
+        return out
+    for rel, f, t in conn.execute(
+        "select relation, valid_from, valid_to from core.company_history_source where company_id = %s",
+        (company_id,),
+    ).fetchall():
+        out[rel].append((f, t))
+    return out
+
+
+def in_no_filing_window(
+    ddate: date, windows: dict[str, list[tuple[date, date]]] | None
+) -> bool:
+    """True when the key's FSN month-end falls in an exclude window of the company's own CIK and no predecessor
+    window covers it: the company has no public filing for the period (wrong-entity history was excluded)."""
+    if not windows:
+        return False
+    return any(f <= ddate <= t for f, t in windows["exclude"]) and not any(
+        f <= ddate <= t for f, t in windows["predecessor"]
+    )
+
+
 def gap_blank(
-    concept: str, grain: str, end: date, cause: str, filings: dict[int, Any]
+    concept: str,
+    grain: str,
+    end: date,
+    cause: str,
+    filings: dict[int, Any],
+    windows: dict[str, list[tuple[date, date]]] | None = None,
 ) -> "sel.Cell":
     """A pilot gap key as a reasoned blank, so a written pair carries every expected key (founder 2026-11-09:
     no fallback; a reasonless gap is written as a blank with a visible reason, never skipped).
@@ -203,6 +239,17 @@ def gap_blank(
         stored
     ):  # N1: the accession of the filing that reports the period (its latest copy)
         refs["accession"] = filings[stored[-1][1]].accession
+    if not stored and in_no_filing_window(ddate, windows):
+        # approver note 2026-11-10: a key inside an excluded wrong-entity window with no filing of the company's own
+        return sel.Cell(
+            concept,
+            ddate,
+            GRAIN_QTRS[grain],
+            "history_horizon",
+            rule_id=RULE_GAP_BLANK,
+            reason_code="no_public_filing_for_period",
+            input_refs=refs,
+        )
     return sel.Cell(
         concept,
         ddate,
@@ -297,6 +344,7 @@ def report_company(
         (company_id,),
     ).fetchone()
     sector = sector_of(sic)
+    hist = history_windows(conn, company_id)
     tmpl = template(sector)
     data = sel.load_company(conn, company_id)
     cells: list[dict[str, Any]] = []
@@ -432,7 +480,7 @@ def report_company(
             else:
                 cause = "no_face_print_for_period"
             k[cause] += 1
-            blank = gap_blank(concept, grain, end, cause, data["filings"])
+            blank = gap_blank(concept, grain, end, cause, data["filings"], hist)
             gap_rows.append(sel.to_row(blank, company_id, data["filings"]))
             gaps.append(
                 {

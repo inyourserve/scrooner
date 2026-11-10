@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-spec = importlib.util.spec_from_file_location("apply_t1", ROOT / "data-team/42-release-applies-2026-11-10/apply_history_tranche1.py")
+spec = importlib.util.spec_from_file_location("apply_t1", ROOT / "data-team/42-release-applies-2026-11-10/apply_history_2026_11_10.py")
 ap = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ap)
 SRC = list(csv.DictReader(open(ROOT / "data-team/47-fsn-store/company_history_sources.csv")))
@@ -17,9 +17,9 @@ PER = list(csv.DictReader(open(ROOT / "data-team/47-fsn-store/company_history_pe
 
 
 @pytest.mark.unit
-def test_sources_csv_is_valid_and_holds_40_plus_12():
+def test_sources_csv_is_valid_and_holds_40_plus_26():
     new = {ap.key_of(r) for r in SRC[40:]}
-    assert len(new) == 12 and ap.validate_sources(SRC, None, new) == []
+    assert len(new) == 26 and ap.validate_sources(SRC, None, new) == []
     assert len(SRC) == ap.EXPECTED_AFTER
     assert {r["company_id"] for r in SRC if r["source_cik"] == "0000909954"} == {"5779"}
 

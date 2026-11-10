@@ -1,25 +1,22 @@
-"""History tranche 1: 12 approved rows into core.company_history_source (live 40 -> 52), then core.period rows
+"""History tranches 1 and 1b: 26 approved rows into core.company_history_source (live 40 -> 66), then core.period rows
 for the two companies that gain a predecessor (MDT <- 0000064670, KDP <- 0000909954). NO DDL: the table and its
 overlap trigger exist (migration 0121). Approved by the independent Verifier (FILING-CHECKED) and release approver
 Ritwik 2026-11-10; window ends are FSN month-ends (fsn.filing.period).
 RUN ONLY AFTER THE FOUNDER'S TYPED GO-AHEAD.
 
 Usage (from the repo root, DATABASE_URL set to the dev database):
-    DATABASE_URL=... python3 data-team/42-release-applies-2026-11-10/apply_history_tranche1.py \
+    DATABASE_URL=... python3 data-team/42-release-applies-2026-11-10/apply_history_2026_11_10.py \
         data-team/47-fsn-store/company_history_sources.csv data-team/47-fsn-store/company_history_periods.csv <before-image dir>
     add --check to validate the CSVs and the live table and write nothing.
 
 Steps: (1) validate CSVs, refuse unless the live table holds exactly 40 rows and every one of them is in the CSV
-(the CSV's other 12 are the new rows); (2) one transaction inserts the 12, post-checks count 52, trigger enabled,
+(the CSV's other 26 are the new rows); (2) one transaction inserts the 26, post-checks count 66, trigger enabled,
 an overlap probe refused; (3) per company with a new predecessor: before-image of its core.period rows, then one
 transaction inserting the periods CSV rows (existing rows win), created ids logged to <dir>/created_period_ids.txt.
 
 Rollback: delete from core.period where id in (the ids in created_period_ids.txt);
           delete from core.company_history_source where (company_id, source_cik, valid_from) in
-          ((3639,'0000064670','2014-01-01'),(3639,'0001613103','2014-01-01'),(5779,'0001418135','2013-01-01'),
-           (5779,'0000909954','2013-01-01'),(1938,'0000924805','2013-01-01'),(4744,'0001701605','2014-01-01'),
-           (5306,'0001748790','2014-01-01'),(4814,'0001705696','2014-01-01'),(2323,'0001818874','2014-01-01'),
-           (4398,'0001674101','2014-01-01'),(2370,'0001819994','2014-01-01'),(5018,'0001326110','2014-01-01'));
+          ((3639,'0000064670','2014-01-01'),(3639,'0001613103','2014-01-01'),(5779,'0001418135','2013-01-01'),(5779,'0000909954','2013-01-01'),(1938,'0000924805','2013-01-01'),(4744,'0001701605','2014-01-01'),(5306,'0001748790','2014-01-01'),(4814,'0001705696','2014-01-01'),(2323,'0001818874','2014-01-01'),(4398,'0001674101','2014-01-01'),(2370,'0001819994','2014-01-01'),(5018,'0001326110','2014-01-01'),(2059,'0001801368','2014-01-01'),(2475,'0001824920','2014-01-01'),(2528,'0001828108','2014-01-01'),(2706,'0001837240','2014-01-01'),(4225,'0001658566','2014-01-01'),(4706,'0001698990','2014-01-01'),(5544,'0001773751','2014-01-01'),(4530,'0001681459','2014-01-01'),(4066,'0002005951','2014-01-01'),(4491,'0002042694','2014-01-01'),(5037,'0001723128','2014-01-01'),(3133,'0001859392','2014-01-01'),(3937,'0001637207','2014-01-01'),(5429,'0001758730','2014-01-01'));
           (the table must be back to 40 rows.)
 """
 
@@ -33,8 +30,8 @@ import time
 from datetime import date
 
 EXPECTED_LIVE = 40
-EXPECTED_NEW = 12
-EXPECTED_AFTER = 52
+EXPECTED_NEW = 26
+EXPECTED_AFTER = 66
 HISTORY_FLOOR = date(2014, 1, 1)  # core.period storage floor (common/history_floor.py)
 
 
@@ -110,6 +107,10 @@ def validate_periods(rows: list[dict], company_ids: set[int]) -> list[str]:
     return problems
 
 
+class _ProbeInserted(Exception):
+    pass
+
+
 def key_of(r: dict) -> tuple[int, str, str]:
     return int(r["company_id"]), r["source_cik"], r["valid_from"]
 
@@ -145,7 +146,7 @@ def main() -> None:
         if check_only:
             return
         conn.commit()
-        with conn.transaction():
+        with conn.transaction():  # ONE transaction: insert, post-checks and the overlap probe; any failure rolls back all
             conn.execute("set local lock_timeout = '5s'")
             conn.execute("set local statement_timeout = '5min'")
             with conn.cursor() as cur:
@@ -155,27 +156,28 @@ def main() -> None:
                        values (%s, %s, %s, %s, %s, %s, %s, %s)""",
                     [(int(r["company_id"]), r["source_cik"], r["relation"], r["source_name"], r["valid_from"], r["valid_to"], r["reason"], r["evidence"] or None) for r in new],
                 )
-        print(f"INSERTED {len(new)} rows at {time.strftime('%H:%M:%S', time.gmtime())} UTC")
-        n = conn.execute("select count(*) from core.company_history_source").fetchone()[0]
-        trg = conn.execute("select tgenabled from pg_trigger where tgname = 'trg_company_history_source_no_overlap'").fetchone()
-        refused = False
-        try:
-            with conn.transaction():
-                conn.execute(
-                    """insert into core.company_history_source (company_id, source_cik, relation, source_name, valid_from, valid_to, reason)
-                       select company_id, '0000000001', 'predecessor', 'overlap probe', valid_from, valid_to, 'probe'
-                       from core.company_history_source where relation = 'predecessor' limit 1"""
-                )
-                raise RuntimeError("probe inserted")
-        except psycopg.errors.RaiseException:
-            refused = True
-        except RuntimeError:
+            n = conn.execute("select count(*) from core.company_history_source").fetchone()[0]
+            trg = conn.execute("select tgenabled from pg_trigger where tgname = 'trg_company_history_source_no_overlap'").fetchone()
+            if n != EXPECTED_AFTER or not trg or trg[0] != "O":
+                raise SystemExit(f"POST-CHECK FAIL (rolled back): rows {n}, trigger {trg}")
+            # the overlap probe: a savepoint that is ALWAYS rolled back; the trigger must refuse it
             refused = False
-        print(f"rows {n}; overlap trigger enabled {trg}; overlap refused {refused}")
-        ok = n == EXPECTED_AFTER and trg and trg[0] == "O" and refused
-        print("POST-CHECK (sources)", "PASS" if ok else "FAIL")
-        if not ok:
-            sys.exit(1)
+            try:
+                with conn.transaction():
+                    conn.execute(
+                        """insert into core.company_history_source (company_id, source_cik, relation, source_name, valid_from, valid_to, reason)
+                           select company_id, '0000000001', 'predecessor', 'overlap probe', valid_from, valid_to, 'probe'
+                           from core.company_history_source where relation = 'predecessor' limit 1"""
+                    )
+                    raise _ProbeInserted()
+            except psycopg.errors.RaiseException:
+                refused = True
+            except _ProbeInserted:
+                refused = False
+            if not refused:
+                raise SystemExit("POST-CHECK FAIL (rolled back): the overlap trigger did not refuse the probe")
+        print(f"INSERTED {len(new)} rows; rows {n}; overlap trigger enabled {trg}; overlap refused {refused}; committed at {time.strftime('%H:%M:%S', time.gmtime())} UTC")
+        print("POST-CHECK (sources) PASS")
 
         by_company: dict[int, list[dict]] = {}
         for r in periods:
