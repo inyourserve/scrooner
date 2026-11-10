@@ -36,7 +36,7 @@ The hybrid FSN-structure plus company-API build replaces old values in `analytic
 | 2 | Post-write Verifier draw: 200 cells / 100 companies, answer key built from filings in advance | Verifier ("Scrooner production cells verification") |
 | 3 | First certificates: what certifies a company, blockers, ranked plan (MSFT, HD, top 100) | Certification lead (was "Sector-template layer build") |
 | 4 | Release case for held families (balance sheet, debt, capex, D&A) to add to the write | New cloud session "Family release prep" (session_01GLmSE3yJhPu25eryM5Zsen); the FSN-expert session stays read-only by its user's brief |
-| 5 | Nightly refresh failure (normalize:facts, 7,000s budget), taken over from the unreachable CI/CD session; then rebase PR #4 | Cash-flow lane |
+| 5 | PR #4 rebased + CSCO FX fix (done, `work/cashflow/fsn-gaps-rebased` d8a0e3ed, CI green); income-statement missing quarters (`work/income-statement/quarter-gap-classify` 7f281510, CI green; report `data-team/strategy/team/IS-QUARTER-GAPS-2026-11-09.md`) | Cash-flow lane |
 | 6 | Rebase PR #6; take over and review PR #5 (write vs nightly guard) | Balance-sheet lane |
 | 7 | Full 1,000 write after tonight's refresh; then cohort dry runs for PR #4/#6 and a reload | manager |
 
@@ -51,10 +51,11 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
 | FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| Income statement: missing quarters while FY served (MA, PNC, EXC, PEP, T, ELS, OSK) | `work/income-statement/quarter-gap-classify` (7f281510, CI green) | Net-income detector (lane G1b/G2b), 52/53-week key match, PNC anchor, two Q4-derivation fixes: 7 companies 954 to 606 gap keys; 67 companies +494 values, 124 Q4s now the printed note (Erie/AT&T basis fixes). Needs a Verifier draw before any PR; remaining blanks need reasons after PR #4 merges |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
-Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still failed, for a new reason: stage `normalize:facts` failed and the reprocess job ran past its 7,000s budget, so every map stage after calculate was skipped (growth, TTM, expanded metrics, piotroski, reconciliation, dividend streak, tag library). Not yet investigated: the CI/CD session (owner of PR #1/#5) can't be messaged from a cloud session; the founder needs to hand it over.
+Nightly refresh (run 42507618224): cause found by the cash-flow lane 2026-11-09: the 10-Q-season reprocess cohort (1,366-1,635 companies) exceeds the ~650/night capacity, so `normalize:facts` hits its 1,800s cap and the 7,000s budget skips every map stage. DROPPED on founder direction (relayed by the cloud manager 2026-11-09): the old normalizer/mapper get no fixes; branch `work/pipeline/refresh-cohort-cap` is superseded, do not merge. Requirement for the nightly incremental session: derived metrics (growth, TTM, margins, ratios, P/E) recompute from canonical_fact after hybrid writes.
 
 ## Founder decisions 2026-11-09 (~21:40 IST, in the manager session)
 
