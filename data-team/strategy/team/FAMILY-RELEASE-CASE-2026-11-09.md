@@ -127,6 +127,14 @@ DATA-INFERRED: the lane's members and flags, not re-opened on sec.gov.
 - AWK 2026-06-30: 15,988M (0001410636-26-000120)
 - AMZN 2026-06-30: 145,675M (0001018724-26-000026)
 
+**Update 2026-11-10 (Tag Expert answers).**
+- **GOOG resolved: 102,754 is right.**
+  - The only face member is `LongTermDebtNoncurrent` 98,165. The lane's "borrowings" 100,164 already includes the note current portion 1,999, and the note finance leases add 2,590.
+  - The current portion is debt only, and GOOG keeps its finance lease in accrued and other liabilities (debt.md §8), so nothing is counted twice.
+  - The table row above misnamed 100,164 as "LTD noncurrent".
+- **Banks are held.** ZION's 548M left out "Federal funds and other short-term borrowings" 3,104M. Until the Standardization Lead rules a bank perimeter, every total-debt key of a `bank` company is the reasoned blank `bank_debt_perimeter_pending` (class definition_pending, owner standardization_lead). `work/fsn/debt-lane-port` dd26e96.
+- Debt now waits on the Verifier draw: the 11 non-bank cells listed above.
+
 **Coverage.** These companies are hard cases by choice: DUK and EWBC get no debt value at all, and CVX, CAT and APD stop years ago. Debt must stay out of the write's default until the Verifier draw passes and the bank rule (trap d) is decided.
 
 ## 3. Balance sheet
