@@ -231,3 +231,23 @@ def test_a_pair_whose_newer_run_is_over_a_day_old_does_not_re_alert() -> None:
     assert row_count_anomalies(runs, now=NOW - timedelta(days=3)) == [
         "row_count_anomaly:incremental:ciks=ALL|limit=None:filings_inserted:100->20"
     ]
+
+
+def test_normalizer_backlog_measures_ingest_time_not_the_filing_date() -> None:
+    # 2026-11-10: max(filing_date) read as midnight made a normal weekend look like a 4-day
+    # backlog once the gate ran after midnight UTC (run 42712874321).
+    from scrooner_pipeline.operations import FRESHNESS_TARGETS
+
+    target = next(t for t in FRESHNESS_TARGETS if t.source == "normalizer_backlog")
+    assert target.timestamp_sql == "select max(created_at) from core.filing"
+    assert target.maximum_age == timedelta(days=5)
+    # Friday's filings ingested Saturday 18:03 UTC, gate on Tuesday 00:53 UTC: fresh.
+    reading = FreshnessReading(
+        source="normalizer_backlog",
+        latest_at=datetime(2026, 11, 7, 18, 3, tzinfo=timezone.utc),
+        row_count=1,
+        maximum_age=target.maximum_age,
+    )
+    assert reading.state(datetime(2026, 11, 10, 0, 53, tzinfo=timezone.utc)) == "fresh"
+    # A normalizer that has ingested nothing for 6 days is stale.
+    assert reading.state(datetime(2026, 11, 13, 19, 0, tzinfo=timezone.utc)) != "fresh"
