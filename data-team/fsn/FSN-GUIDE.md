@@ -103,6 +103,7 @@ The no-dimension key is **`0x00000000`**. **SPEC WRONG**: the spec says "0" (MEA
 - **iprx > 0 rows are duplicates at lower precision**, mostly the same number repeated in a note.
   - 7,533 dimn=0 key groups have more than one iprx in 2025q3; **195 of them differ in value**, 152 on statement tags.
   - In every one we read, iprx 0 has the finer `dcml`: CAT `TreasuryStockSharesAcquired` 4,578,023 (dcml INF) vs 4,600,000 (dcml −5); ADI `CommercialPaper` 547,738,000 (−3) vs 547,700,000 (−5) (MEASURED).
+  - Same at MSFT: `CommercialPaper` 2024-06-30 is 6,693M at iprx 0 (dcml −6) and 6,700M at iprx 1 (dcml −8, the note's "$6.7 billion"), in all five filings that print it (0000950170-24-087843 … -25-100235). Found by the Tag Expert 2026-11-10.
   - **Keep iprx 0.**
 - **coreg is set only when the fact's single dimension is the LegalEntity axis.**
   - Every coreg row in 2025q3 has dimn = 1 and segments `LegalEntity=…` (1,016 of 1,016). NEE example: `Assets` 20250630 101,805M, dimn 1, coreg `FloridaPowerLightCompany`.
