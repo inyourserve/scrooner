@@ -19,3 +19,7 @@ FSN rules: capex `cf.capex_block_member@1-4` (calc position) + `cf.capex_nature_
 ## 3. Verdicts
 - Capex: the calc-position rule inside the continuing investing block, plus nature tags; never a single tag.
 - D&A: D&A by composition (the CF operating block's D&A members, per AC-6), with a perimeter label; `DepreciationAndAmortization` alone is never total D&A.
+
+## 4. Folded in from the FSN-expert per-tag cards (2026-11-10)
+- `PaymentsToAcquirePropertyPlantAndEquipment`: on the CF face for 94 top-100 names (4,074 lines); labels "Capital expenditures" 812, "Purchases of property and equipment" 705, "Additions to property, plant and equipment" 366. Stored positive, printed in parentheses. MSFT's only capex line in all 54 filings ("Additions to property and equipment": FY2026 115,948M, FY2025 64,551M; Q2 FY2026 10-Q 0001193125-26-027207 R6 prints 29,876 for the quarter, FILING-CHECKED by them). Not total capex where other capex lines exist (Air Lease, §1).
+- MSFT `msft:DepreciationAmortizationAndOther` was RECAST in the FY2026 filings: FY2025 34,153M → 29,433M (the difference moved to `msft:GainLossOnInvestmentsAndDerivativeInstruments`) (10-K 0001193125-26-323660; FILING-CHECKED by them). It confirms it is combined, never D&A.
