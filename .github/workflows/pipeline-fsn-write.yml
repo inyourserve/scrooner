@@ -37,7 +37,7 @@ on:
         default: ""
       data_points:
         description: "Data points the cell write may touch (passed families)"
-        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,shares_outstanding_resolved"
+        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved"
       restore_run:
         description: "restore only: the select_write run id whose before-images to put back"
         default: ""
@@ -204,6 +204,7 @@ jobs:
             out/done_pairs.tsv
             out/written_companies.txt
             out/valued_to_blank.json
+            out/valued_to_no_row.tsv
             out/not_done.json
             out/missing_filings.json
             out/write-*.json

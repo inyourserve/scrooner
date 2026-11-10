@@ -238,14 +238,55 @@ def test_c2_report_lists_pairs_losing_every_value_and_transitions_by_reason():
             reason="balance_sheet_not_filed",
         ),
     ]
-    held, transitions = pilot.hold_guard(cells, before, CONCEPTS, PERIODS, {REV, NI})
+    held, transitions, no_row = pilot.hold_guard(
+        cells, before, CONCEPTS, PERIODS, {REV, NI}
+    )
     assert held == {
         (1, NI): "0_new_values_vs_1_before"
     }  # revenue keeps one value: not held
     assert transitions == {
-        REV: {"not_filed_separately": 1, "no_new_cell": 1},
+        REV: {"valued": 1, "not_filed_separately": 1, "no_new_cell": 1},
         NI: {"balance_sheet_not_filed": 1},
     }
+    assert [(k["company_id"], k["data_point"], k["end"], k["why"]) for k in no_row] == [
+        (1, REV, "2024-06-30", "no_new_cell")
+    ]
+
+
+@pytest.mark.unit
+def test_a_6_or_9_month_value_is_never_matched_by_the_quarter_ending_that_day():
+    # MDT 2026-11-09: the old 9-month and 6-month rows were deleted while the gate counted them as kept
+    periods = {
+        "q3": {"start_date": "2024-07-01", "end_date": "2024-09-30", "period_type": "duration"},
+        "9m": {"start_date": "2024-01-01", "end_date": "2024-09-30", "period_type": "duration"},
+        "h1": {"start_date": "2024-01-01", "end_date": "2024-06-30", "period_type": "duration"},
+        "3y": {"start_date": "2021-01-01", "end_date": "2023-12-31", "period_type": "duration"},
+    }  # fmt: skip
+    before = [
+        {"company_id": "1", "canonical_concept_id": "10", "period_id": p, "value": "9"}
+        for p in periods
+    ]
+    cells = [
+        _cell(1, REV, "Q", "2024-09-30"),
+        _cell(1, REV, "Q", "2024-06-30"),
+    ]
+    held, transitions, no_row = pilot.hold_guard(
+        cells, before, CONCEPTS, periods, {REV}
+    )
+    assert held == {}
+    assert transitions == {
+        REV: {
+            "valued": 1,
+            "no_cell_grain_9M": 1,
+            "no_cell_grain_H1": 1,
+            "no_cell_grain_MULTI": 1,
+        }
+    }
+    assert sorted(k["period_id"] for k in no_row) == ["3y", "9m", "h1"]
+    gate = {1: {"data_points": {REV: [], NI: []}}}
+    assert pilot.hold_valued_to_no_row(gate, no_row) == {(1, REV): 3}
+    assert gate[1]["data_points"] == {REV: ["C2_valued_to_no_row:3"], NI: []}
+    assert pilot.done_pairs(gate) == [(1, NI)]
 
 
 def _out_dir(tmp_path, reports, cells, before, gaps=()):
@@ -319,17 +360,18 @@ def test_done_gate_command_writes_pairs_proof_scope_and_the_c2_report(tmp_path):
         ["done-gate", "--pilot-out", str(out), "--data-points", f"{REV},{NI}"],
     )
     assert res.exit_code == 0, res.output + repr(res.exception)
-    # company 1 and 2: both pairs (no hold, founder 2026-11-09); company 3: criterion 1 fails, nothing written
-    assert "4 pairs of 6; 2 companies fully done" in res.output
+    # company 1: both pairs; company 2: net income would drop its FY 2023 value with no row (C2, Ritwik
+    # 2026-11-10), so that pair is held and revenue alone is written; company 3: criterion 1 fails
+    assert "3 pairs of 6; 1 companies fully done" in res.output
+    assert "valued->no-row in written pairs: 0" in res.output
     pairs = (out / "done_pairs.tsv").read_text().splitlines()
     assert pairs == [
         "company_id\tdata_point",
         f"1\t{NI}",
         f"1\t{REV}",
-        f"2\t{NI}",
         f"2\t{REV}",
     ]
-    assert (out / "done_companies.txt").read_text().split() == ["1", "2"]
+    assert (out / "done_companies.txt").read_text().split() == ["1"]
     assert (out / "written_companies.txt").read_text().split() == [
         "1",
         "2",
@@ -340,8 +382,15 @@ def test_done_gate_command_writes_pairs_proof_scope_and_the_c2_report(tmp_path):
         {"company_id": 2, "data_point": NI, "why": "0_new_values_vs_1_before"}
     ]
     assert report["valued_to_blank_by_data_point"] == {NI: {"no_new_cell": 1}}
+    assert report["valued_to_no_row_by_pair"] == [
+        {"company_id": 2, "data_point": NI, "keys": 1}
+    ]
+    assert report["valued_to_no_row_in_written_pairs"] == 0
+    rows = (out / "valued_to_no_row.tsv").read_text().splitlines()
+    assert rows[1].split("\t")[:4] == ["2", NI, "1", "FY"]
     not_done = json.loads((out / "not_done.json").read_text())
-    assert set(not_done) == {"3"}
+    assert set(not_done) == {"2", "3"}
+    assert not_done["2"]["data_points"] == {NI: ["C2_valued_to_no_row:1"]}
 
 
 @pytest.mark.unit
@@ -355,6 +404,7 @@ def test_done_gate_command_refuses_held_out_points_and_a_missing_before_image(tm
         "dividends_per_share_resolved",
         "total_debt_resolved",
         "total_liabilities_resolved",
+        "shares_outstanding_resolved",
     ):
         res = CliRunner().invoke(
             fsn_job.app,

@@ -437,6 +437,7 @@ HELD_OUT = {
     "dividends_per_share_resolved": "C6: the Q4 FY-9M route must check the same share basis first",
     "total_debt_resolved": "C8: seed defect, release case §2/§3a",
     "total_liabilities_resolved": "C8: seed defect, release case §2/§3a",
+    "shares_outstanding_resolved": "R2 (Ritwik 2026-11-10): not in the template, so the gate cannot cover it",
 }
 
 
@@ -466,6 +467,7 @@ def done_gate_cmd(
         done_pairs,
         fully_done,
         hold_guard,
+        hold_valued_to_no_row,
     )
 
     root = Path(pilot_out)
@@ -494,7 +496,7 @@ def done_gate_cmd(
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
             cells.extend(json.loads(line) for line in fh if line.strip())
-    emptied, transitions = hold_guard(
+    emptied, transitions, no_row = hold_guard(
         cells,
         rows("canonical_fact"),
         {r["id"]: r["name"] for r in rows("canonical_concept")},
@@ -502,7 +504,28 @@ def done_gate_cmd(
         points,
     )
     gate = done_gate(reports, gaps, missing, points)
+    # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
+    no_row_by_pair = hold_valued_to_no_row(gate, no_row)
+    with (root / "valued_to_no_row.tsv").open("w") as fh:
+        cols = [
+            "company_id",
+            "data_point",
+            "period_id",
+            "grain",
+            "start",
+            "end",
+            "before_value",
+            "why",
+        ]
+        fh.write("\t".join(cols) + "\n")
+        for k in no_row:
+            fh.write("\t".join("" if k[c] is None else str(k[c]) for c in cols) + "\n")
     pairs = done_pairs(gate)
+    written_no_row = sum(no_row_by_pair.get(p, 0) for p in pairs)
+    if (
+        written_no_row
+    ):  # cannot happen (the pairs were held above); refuse rather than write
+        raise RuntimeError(f"{written_no_row} valued->no-row keys in done pairs")
     full = fully_done(gate)
     written = sorted({cid for cid, _dp in pairs})
     listed = sum(len(g["data_points"]) for g in gate.values())
@@ -531,6 +554,12 @@ def done_gate_cmd(
             {
                 # C2 as a report (founder 2026-11-09: no hold); the approver reviews it before dispatch
                 "valued_to_blank_by_data_point": transitions,
+                # must be 0 in every written pair (Ritwik 2026-11-10); the keys are in valued_to_no_row.tsv
+                "valued_to_no_row_by_pair": [
+                    {"company_id": c, "data_point": dp, "keys": n}
+                    for (c, dp), n in sorted(no_row_by_pair.items())
+                ],
+                "valued_to_no_row_in_written_pairs": written_no_row,
                 "pairs_with_no_new_value_but_old_values": [
                     {"company_id": c, "data_point": dp, "why": w}
                     for (c, dp), w in sorted(emptied.items())
@@ -554,6 +583,10 @@ def done_gate_cmd(
     typer.echo(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
+    typer.echo(
+        f"done gate: {len(no_row)} before-image values would have no row; "
+        f"{len(no_row_by_pair)} pairs held for it; valued->no-row in written pairs: {written_no_row}"
     )
 
 

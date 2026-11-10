@@ -546,3 +546,53 @@ def test_protected_write_survives_a_non_slot_writer_update_which_is_logged(
         )
         == 1000
     )
+
+
+@pytest.mark.integration
+def test_a_blank_bound_by_fiscal_label_is_stored_on_its_true_period(conn, tmp_path):
+    # MDT 2026-11-09: every Q reason was stored as (fsn_end, fsn_end), so none sat on its quarter (R3)
+    cid, pid, fact, ccid, cash_id = _seed(conn)
+    path = _write(
+        tmp_path,
+        [
+            _row(
+                company_id=cid,
+                period_start=None,
+                period_end=None,
+                fiscal_year=2024,
+                fiscal_period="Q1",
+                period_type="duration",
+                fsn_end="2024-03-31",
+                state="not_presented",
+                value=None,
+                unit=None,
+                accession=None,
+                tag=None,
+                reason_code="not_filed_separately",
+                reason_text="no separate Q1 column",
+                evidence_level="DATA-INFERRED",
+            ),
+            # a valued key so the family is loaded (a family with no valued cell is rejected)
+            _row(
+                company_id=cid,
+                period_start="2023-10-01",
+                period_end="2023-12-31",
+                fiscal_year=2023,
+                fiscal_period="Q4",
+            ),
+        ],
+    )
+    cl.load(conn, "capex_da_cash_debt", [path], apply=True)
+    got = conn.execute(
+        "select period_grain, period_start, period_end from analytics.cell_blank_reason where company_id = %s and reason_code = 'not_filed_separately'",
+        (cid,),
+    ).fetchall()
+    assert got == [("Q", date(2024, 1, 1), date(2024, 4, 2))]
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.cell_blank_reason where company_id = %s and period_grain <> 'I' and period_start = period_end",
+            (cid,),
+        )
+        == 0
+    )

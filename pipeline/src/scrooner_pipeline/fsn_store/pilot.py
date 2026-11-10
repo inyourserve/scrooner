@@ -652,9 +652,24 @@ def fully_done(gate: dict[int, dict[str, Any]]) -> list[int]:
 
 
 def _grain(period_type: str, start: date, end: date) -> str:
+    """The duration class of a stored period: I, Q (about 3 months), H1 (6-month YTD), 9M (9-month YTD), FY, or
+    MULTI (longer than a year). Only Q, FY and I exist as cells (CELL-FORMAT v1); a 6/9-month row must never be
+    counted as matched by the Q cell that ends on the same day (MDT 2026-11-09: 170 YTD values deleted unseen)."""
     if period_type == "instant":
         return "I"
-    return "FY" if (end - start).days >= 300 else "Q"
+    days = (end - start).days + 1
+    if days <= 120:
+        return "Q"
+    if days <= 220:
+        return "H1"
+    if days <= 300:
+        return "9M"
+    if days <= 400:
+        return "FY"
+    return "MULTI"
+
+
+CELL_GRAINS = ("Q", "FY", "I")
 
 
 def hold_guard(
@@ -663,16 +678,21 @@ def hold_guard(
     concept_names: dict[str, str],
     periods: dict[str, dict[str, str]],
     data_points: set[str],
-) -> tuple[dict[tuple[int, str], str], dict[str, dict[str, int]]]:
-    """C2 as a REPORT (founder 2026-11-09: no hold): (pairs losing every value, valued->blank transitions per data
-    point by reason class).
+) -> tuple[
+    dict[tuple[int, str], str],
+    dict[str, dict[str, int]],
+    list[dict[str, Any]],
+]:
+    """C2 (Ritwik 2026-11-10): the expected keys of a written pair are its calendar keys AND every key the
+    before-image held a value for. Returns (pairs losing every value, valued->X transitions per data point,
+    the valued->no-row keys).
 
     before: the before-image canonical_fact rows (company_id, canonical_concept_id, period_id, value);
     concept_names: canonical_concept id -> name; periods: core.period id -> its row (start_date, end_date,
-    period_type). A pair whose new cells hold 0 values while the before-image held valued rows for it is held
-    (likely a mapping miss, not a real absence). For every before-image valued key the new cell is matched by
-    grain and an end within 10 days; a blank new cell counts under its reason_code, a key with no new cell
-    under "no_new_cell" (the loader replaces the pair's rows, so that key would lose its value)."""
+    period_type). For every before-image valued key the new cell is matched by duration class and an end within
+    10 days. A blank new cell counts under its reason_code. A key with no new cell, or a 6-month, 9-month or
+    multi-year key (no cell grain can hold it), is valued->no-row: the loader replaces the pair's rows whole, so
+    that value would vanish with no cell and no reason. Every such key is listed; the gate holds its pair."""
     new_valued: Counter[tuple[int, str]] = Counter()
     by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
     for r in cells:
@@ -684,15 +704,20 @@ def hold_guard(
             new_valued[key] += 1
     old_valued: Counter[tuple[int, str]] = Counter()
     transitions: dict[str, Counter[str]] = defaultdict(Counter)
+    no_row: list[dict[str, Any]] = []
     for b in before:
         dp = concept_names.get(str(b["canonical_concept_id"]))
         if dp not in data_points or b.get("value") in (None, ""):
             continue
         key = (int(b["company_id"]), dp)
-        old_valued[key] += 1
         p = periods.get(str(b["period_id"]))
         if p is None:
+            old_valued[key] += 1
             transitions[dp]["period_unknown"] += 1
+            no_row.append(
+                {"company_id": key[0], "data_point": dp, "period_id": b["period_id"],
+                 "grain": None, "start": None, "end": None, "before_value": b["value"], "why": "period_unknown"}
+            )  # fmt: skip
             continue
         start, end = (
             date.fromisoformat(p["start_date"]),
@@ -701,20 +726,41 @@ def hold_guard(
         if (
             end < HISTORY_FLOOR
         ):  # the write does not reach keys before the history floor (CELL-FORMAT §2)
-            old_valued[key] -= 1
             continue
+        old_valued[key] += 1
         grain = _grain(p["period_type"], start, end)
-        row = _match(by_pair.get(key, []), grain, end)
+        row = _match(by_pair.get(key, []), grain, end) if grain in CELL_GRAINS else None
         if row is None:
-            transitions[dp]["no_new_cell"] += 1
+            why = "no_new_cell" if grain in CELL_GRAINS else f"no_cell_grain_{grain}"
+            transitions[dp][why] += 1
+            no_row.append(
+                {"company_id": key[0], "data_point": dp, "period_id": b["period_id"], "grain": grain,
+                 "start": start.isoformat(), "end": end.isoformat(), "before_value": b["value"], "why": why}
+            )  # fmt: skip
         elif row["state"] not in VALUED_STATES:
             transitions[dp][row.get("reason_code") or row["state"]] += 1
+        else:
+            transitions[dp]["valued"] += 1
     held = {
         key: f"0_new_values_vs_{n}_before"
         for key, n in old_valued.items()
         if n and not new_valued[key]
     }
-    return held, {dp: dict(c) for dp, c in transitions.items()}
+    return held, {dp: dict(c) for dp, c in transitions.items()}, no_row
+
+
+def hold_valued_to_no_row(
+    gate: dict[int, dict[str, Any]], no_row: list[dict[str, Any]]
+) -> dict[tuple[int, str], int]:
+    """Hold every pair with a valued->no-row key (it must be 0 for a written pair); returns the count per pair."""
+    counts: Counter[tuple[int, str]] = Counter(
+        (int(k["company_id"]), k["data_point"]) for k in no_row
+    )
+    for (cid, dp), n in counts.items():
+        g = gate.get(cid)
+        if g is not None and dp in g["data_points"]:
+            g["data_points"][dp].append(f"C2_valued_to_no_row:{n}")
+    return dict(counts)
 
 
 RULE_PROOF_BLANK = "fsn.cell_proof_blank@1"
