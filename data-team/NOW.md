@@ -41,6 +41,7 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
 | FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| FSN nightly incremental: per-filing EDGAR XBRL to FSN rows, `load --increment`, refresh step and `HYBRID_ONLY_COHORT` cohort skip, both flags off | `work/fsn-nightly-incremental` (CI green); design `data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md` | Equivalence with the 2026m10 set: 20/20 top-100 filings, 22,774 values exact. The first run backfills every filing since the latest FSN set. Next: a `build`-stage dispatch to measure the backfill; `load`/`write` need the founder's typed words; the 0113 guard is untouched |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 

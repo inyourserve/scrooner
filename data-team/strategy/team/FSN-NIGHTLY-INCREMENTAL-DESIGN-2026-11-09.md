@@ -53,6 +53,8 @@ Founder direction, relayed by Dhairya on 2026-11-09: once the hybrid is live it 
 - **Backfill.** The nightly window is not just 7 days. It reaches back to the day after the latest SEC FSN set in the store (`increment.since_last_set`: '2026m10' → from 2026-11-01). EDGAR-built filings do not move that date. So the first run is the one-time backfill of every filing published since the last set (MEASURED stake, from the data chief: the latest 10-Q of 319 companies, about 2,570 company/data-point pairs). Every later night is a catch-up as well, and a deferred filing is never lost.
 - **Running the backfill.** A dispatched run can set `fsn_nightly_since` and raise `fsn_nightly_max_minutes`; the step timeout becomes 170 minutes. At about 5 s per filing, the measured 319 filings take about 27 minutes.
 
+**Protection guard (0113) stays as it is.** This path writes canonical_fact only through `scrooner-cells load --protect`. No new code sets `scrooner.slot_writer` or `scrooner.writer`, or touches `analytics.slot_protected_cell` (grep-checked on 2026-11-10). The old mapper's attempts on written cells keep being skipped and logged in `analytics.slot_protected_write_skipped`. Per Dhairya, 2026-11-10: MDT is the only company written so far, and its 241 skips show the guard working. With `HYBRID_ONLY_COHORT=on` the old mapper stops attempting those writes at all.
+
 ## Order, budget, isolation, later FSN set
 
 - **Order.** The step runs in `pipeline-refresh.yml` after `scrooner-incremental` (so `core.filing` is fresh) and before `reprocess_recent_filers.sh` (the old mapper). Once a pair is written, the 0113 `slot_protected_cell` guard and the 0119 owner guard stop the old mapper from overwriting it.
