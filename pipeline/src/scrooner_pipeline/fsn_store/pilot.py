@@ -938,10 +938,11 @@ def blank_disagreements(
         if not any(id(r) in hits for r in prs):
             continue
         for r in prs:
-            d = hits.get(id(r))
-            if d is None:
+            hit = hits.get(id(r))
+            if hit is None:
                 out.append(r)
                 continue
+            d = hit
             out.append(
                 dict(
                     r,

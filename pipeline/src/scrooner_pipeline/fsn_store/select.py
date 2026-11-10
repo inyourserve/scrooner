@@ -668,7 +668,7 @@ def to_row(
         cls, owner = REASONS[cell.reason_code or ""]
         if cell.reason_code == "hybrid_gap_unresolved":
             cls, owner = GAP_CAUSE_CLASS.get(
-                cell.input_refs.get("pilot_cause"), (cls, owner)
+                str(cell.input_refs.get("pilot_cause")), (cls, owner)
             )
         text = REASON_TEXT[cell.reason_code or ""]
         if cell.input_refs.get(

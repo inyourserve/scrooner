@@ -498,7 +498,7 @@ def done_gate_cmd(
         with gzip.open(image / f"{name}.csv.gz", "rt") as fh:
             return list(csv.DictReader(fh))
 
-    cells = []
+    cells: list[dict] = []
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
             cells.extend(json.loads(line) for line in fh if line.strip())
