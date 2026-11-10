@@ -5,6 +5,7 @@ kind: gotcha
 tags: ci, github-actions, fsn-write
 paths: .github/workflows/pipeline-fsn-write.yml
 evidence: CODE-CHECKED
+status: active
 created: 2026-11-09
 verified: 2026-11-09
 ---
