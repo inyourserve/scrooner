@@ -140,6 +140,9 @@ def load_cmd(
         "",
         help="pred=succ CIK pairs: load the predecessor's filings under the successor.",
     ),
+    input_sha: str = typer.Option(
+        "", help="sha256 of the dispatched CIK list, recorded in the rule_run stats."
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -161,6 +164,7 @@ def load_cmd(
                 # a connection the pooler drops mid-run is replaced (load.run closes it);
                 # the shard goes on with the next company instead of dying in rollback()
                 connect=lambda: psycopg.connect(settings.database_url),
+                input_sha=input_sha or None,
             )
     except psycopg.OperationalError:
         if res is None:
