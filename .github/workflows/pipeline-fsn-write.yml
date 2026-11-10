@@ -203,7 +203,7 @@ jobs:
             mkdir -p "out/write/$fam"
             python3 pipeline/scripts/fsn_write_filter.py "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_pairs.tsv
             if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
-            uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
+            uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --plan \
               --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell plan $fam failed"
           done
