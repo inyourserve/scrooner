@@ -2,7 +2,17 @@
 
 Compact orientation only. Generated evidence and the task board win if this file becomes stale.
 
-Updated: 2026-11-08 UTC (Dhairya, manager session `session_01GLmSDyzegqZw4JqC91z7XH`).
+Updated: 2026-11-10 ~08:00 UTC (Dhairya, Mac manager session; sync pass at founder's request "come at one level field, sync everything, make everything latest"). Earlier update 2026-11-08 by the cloud manager session `session_01GLmSDyzegqZw4JqC91z7XH`.
+
+## Live state 2026-11-10 (read from production, not recalled)
+
+- Certified 0 / 1,000. cell_proof: 75.9% PROVEN over 997 companies (last proof run predates the FSN writes).
+- FSN store loaded: 902 companies (fsn.company_load), 41,794 filings, 3,816,038 library rows (fsn.line_map). XOM history included via 0121.
+- canonical_fact written from the FSN store: ONE company, MDT (3639), 779 protected cells, top-100 run 42649721096 (2026-11-09 16:18 UTC). Every other company failed the per-company done gate (9-231 reasonless keys and 1-3 filings not stored each). The nightly tried to overwrite MDT 241 times; every attempt was skipped and logged, so the protection works.
+- Open on MDT (Ritwik, binding C4/N2 and C6): cell_proof over MDT's written pairs (any served DISAGREE re-written as a blank defect); its dividends_per_share cells need a Verifier check against the filings or a hold.
+- Next: the per-pair done gate (branch work/fsn/done-gate-pairs, not on main), then the C7 cohort dry run with Ritwik's C2 table, then the next write.
+- Next.js 16.4.4 is on main (the security advisory is closed). Code lands on main only; no Vercel steps (founder 2026-11-03).
+- One manager: Mac session "Dhairya" and cloud manager session_01GLmSDyzegqZw4JqC91z7XH both act as Dhairya. Both read and update THIS file first; whoever acts records it here.
 
 ## Product objective
 
