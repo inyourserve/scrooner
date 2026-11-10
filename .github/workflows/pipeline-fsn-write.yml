@@ -184,6 +184,8 @@ jobs:
         run: |
           set -u
           for d in out/cells/*/; do
+            # no cells at all (every company failed): the unmatched glob must not crash the step
+            [ -f "$d/cells.jsonl.gz" ] || continue
             fam=$(basename "$d")
             [ "$fam" = "unowned" ] && continue
             mkdir -p "out/write/$fam"
@@ -211,12 +213,16 @@ jobs:
               --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell write $fam failed"
           done
+      - name: Shard outcome (red when the shard had companies and no company report; warn on failures)
+        if: always()
+        run: python3 pipeline/scripts/fsn_shard_outcome.py out "$CIKS"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: fsn-write-shard-${{ matrix.shard.i }}
           path: |
             out/report.json
+            out/failed.json
             out/gaps.csv
             out/library.csv
             out/load.json

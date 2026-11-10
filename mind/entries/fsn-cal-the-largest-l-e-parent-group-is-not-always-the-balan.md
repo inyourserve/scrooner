@@ -5,6 +5,7 @@ kind: gotcha
 tags: fsn, cal, balance-sheet, bs_assemble
 paths: pipeline/scripts/slot_records/common.py
 evidence: DATA-INFERRED
+status: active
 created: 2026-11-01
 verified: 2026-11-01
 ---

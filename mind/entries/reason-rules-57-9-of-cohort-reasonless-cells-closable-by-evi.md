@@ -5,6 +5,7 @@ kind: lesson
 tags: reason, blank, top1000, coverage
 paths: pipeline/src/scrooner_pipeline/reasons/rules.py, data-team/strategy/reason-rules/dryrun-2026-10-24/dry_run_output.txt
 evidence: DATA-INFERRED
+status: active
 created: 2026-10-24
 verified: 2026-10-24
 ---

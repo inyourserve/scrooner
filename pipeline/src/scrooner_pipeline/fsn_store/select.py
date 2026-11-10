@@ -643,6 +643,17 @@ def to_row(
 # --- the database side ----------------------------------------------------------------------
 
 
+# Every value (members and co-registrant copies included, so no dim_id filter) of the mapped tags of ONE company.
+# filing_id leads the (filing_id, tag_id, ...) unique key: without `filing_id = any(...)` this read cannot use the
+# partial series index (dim_id = 0) and walked EVERY company's rows for the mapped tags; once fsn.value held ~900
+# companies it hit the pooler's statement timeout for every company (FSN write run 42561798991, 2026-11-09).
+MEMBER_VALUES_SQL = """
+    select id, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id, coreg
+    from fsn.value
+    where company_id = %s and filing_id = any(%s) and tag_id = any(%s) and iprx = 0 and value is not null
+"""
+
+
 def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     """Filings, per-concept prints and member values of one stored company (five indexed reads)."""
     with conn.cursor() as cur:
@@ -678,14 +689,7 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
         )
         anchor_cols = face_columns(filings, cur.fetchall())
         tag_ids = sorted({r[2] for r in mapped})
-        cur.execute(
-            """
-            select id, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id, coreg
-            from fsn.value
-            where company_id = %s and tag_id = any(%s) and iprx = 0 and value is not null
-            """,
-            (company_id, tag_ids),
-        )
+        cur.execute(MEMBER_VALUES_SQL, (company_id, sorted(filings), tag_ids))
         values = cur.fetchall()
         cur.execute(
             """

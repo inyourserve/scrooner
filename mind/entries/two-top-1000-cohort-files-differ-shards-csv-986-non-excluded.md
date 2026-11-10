@@ -5,7 +5,10 @@ kind: gotcha
 tags: cohort, top1000, sector-templates
 paths: doc/data-moat/team/top1000/shards.csv, data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv, pipeline/src/scrooner_pipeline/mapper/sector_templates.py
 evidence: CODE-CHECKED
+status: active
 created: 2026-11-01
-verified: 2026-11-01
+verified: 2026-11-09
 ---
 Checked 2026-11-01 by set comparison on company_id. shards.csv (FSN tooling, scrooner-fsn _cohort) has 986 rows with excluded empty and carries sic; ARCC, CBC and BXSL have no sic there. cohort_v1_1_proposal_2026-10-24.csv (used by the Sector Analyst's SECTOR-TEMPLATES proposal) has 1,000 rows and no sic column. 980 are shared, 20 only in v1.1 and 6 only in shards. Say which cohort a count is on before comparing numbers. seed-sector-templates takes either file via --cohort and reads core.company.sic_code when the sic column is missing.
+
+[2026-11-09] Curator 2026-11-09: both files exist; v1.1 csv has 1,000 data rows; shards.csv has 1,014 rows, 986 only after dropping rows with a non-empty excluded column (not re-counted).
