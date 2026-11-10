@@ -6,7 +6,7 @@ For the founder and Ritwik (release approver). Proposal only: no code, data or d
 
 | Who | Decision | Answer |
 |---|---|---|
-| Founder | Approve migration NNNN (allow `EQ` in `fsn.concept_rule.stmt`). Number to be claimed in doc 53 before the file is written. Typed approval needed. | yes / no |
+| Founder | Approve migration **0122** (allow `EQ` in `fsn.concept_rule.stmt`; claimed in doc 53). Typed approval needed. | yes / no |
 | Ritwik | After the dry run and the Verifier draw pass, DPS rejoins the FSN write. | later |
 
 Nothing in this proposal changes a displayed value until both answers are yes.
@@ -43,16 +43,17 @@ All three only know `BS`, `IS` and `CF`:
 
 ## Proposed change
 
-1. **Migration NNNN** (number to be claimed in doc 53; the next free number there is above 0121): allow `'EQ'` in `fsn.concept_rule.stmt`. One constraint change; no data rewritten.
+1. **Migration 0122** (claimed in doc 53, 2026-11-10): allow `'EQ'` in `fsn.concept_rule.stmt`. One constraint change; no data rewritten.
 2. **Two new rules** in `data-team/47-fsn-store/concept_rules/per_share.jsonl`: `per_share.dps_tag@3` (CommonStockDividendsPerShareDeclared) and `@4` (CommonStockDividendsPerShareCashPaid), statement `EQ`, ranked below the income statement rules `@1`/`@2`.
 3. **mapping.py** maps per-share concepts on equity-statement lines.
 4. **select.py**: `ANCHOR_TAGS["EQ"]` = NetIncomeLoss, ProfitLoss, StockholdersEquity, StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest. The income statement print wins over the equity statement for the same period. If both print in one filing and disagree, the cell gets the existing reason `conflicting_values_in_filing`, not a value.
 5. **Periods come from the company's template**, not only from prints, so every period with no print shows a visible reason instead of silently ending.
-6. **Q4 DPS** stays the founder-allowed subtraction (full year minus Q1 to Q3), now also from equity-statement face prints.
+6. **Q4 DPS** stays the founder-allowed subtraction (full year minus nine months), now also from equity-statement face prints, **only when the full year and all three quarters sit on one share basis**: no split or reverse split between the nine-month and full-year balance dates, checked with the share-basis engine. Otherwise Q4 is a blank with a reason. This is the founder's condition of 2026-11-04, and the reason DPS is held today (C6).
+7. **DPS joins the sector templates** as a conditional (`COND`) data point for dividend payers, through the template seed. Today DPS sits outside every template, so the done gate and the rule that every previously valued period must keep a value or a reason never covered it; that is how MDT's DPS went unchecked in the 2026-11-09 write (R2).
 
 ## Proof before anything is shown
 
-1. Dry run on the about 181 at-risk companies: count new values, new reasons and any conflict with existing values. No writes.
+1. Dry run on the about 181 at-risk companies **and all 225 equity-statement printers**, so conflicts between the income statement and the equity statement are counted: new values, new reasons and any conflict with existing values. No writes.
 2. A Verifier draw against the original filings (MDT included).
 3. Only then does Ritwik decide whether DPS rejoins the FSN write.
 
