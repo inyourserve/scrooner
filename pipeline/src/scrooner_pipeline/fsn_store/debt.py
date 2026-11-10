@@ -84,6 +84,20 @@ HOLDS: dict[str, tuple[str, str, str]] = {
         "The balance sheet has no current portion of debt, and the notes do not confirm whether one exists.",
     ),
 }
+# sectors whose total-debt perimeter is not defined yet: every key is a reasoned blank, never a partial sum.
+# Banks (Tag Expert 2026-11-09, debt.md): ZION's lane total 548M left out "Federal funds and other short-term
+# borrowings" 3,104M; EWBC stored 35.6M vs 3,035.6M (FHLB advances); AX, GABC, WFC, BAC, BNY perimeter errors.
+# Deposits are never debt; FHLB advances, fed funds / repos and other borrowings await the Standardization Lead.
+SECTOR_HOLDS: dict[str, str] = {"bank": "bank_debt_perimeter_pending"}
+RULE_SECTOR_HOLD = "fsn.debt_sector_hold@1"
+HOLDS["bank_debt_perimeter_pending"] = (
+    "definition_pending",
+    "standardization_lead",
+    (
+        "Total debt for banks is not shown until the bank definition is decided (FHLB advances, fed funds and repos, "
+        "other borrowings); deposits are never debt."
+    ),
+)
 for _code, (_cls, _owner, _text) in HOLDS.items():
     sel.REASONS.setdefault(_code, (_cls, _owner))
     sel.REASON_TEXT.setdefault(_code, _text)
@@ -178,9 +192,27 @@ def debt_cells(
     conn: psycopg.Connection | None,
     lane: list[dict[str, Any]],
     filings: dict[int, sel.Filing],
+    sector: str = "general",
 ) -> list[sel.Cell]:
     """The lane's cells of one company as store cells. A lane cell whose accession is not stored for the company is
-    skipped (the store cannot cite it)."""
+    skipped (the store cannot cite it). In a sector of SECTOR_HOLDS every key is that sector's reasoned blank."""
+    if sector in SECTOR_HOLDS:
+        reason = SECTOR_HOLDS[sector]
+        by_acc = {f.accession: f.id for f in filings.values()}
+        return [
+            sel.Cell(
+                CONCEPT,
+                date.fromisoformat(c["period_end"]),
+                0,
+                "defect",
+                filing_id=by_acc[c["accession"]],
+                rule_id=RULE_SECTOR_HOLD,
+                reason_code=reason,
+                input_refs={"sector": sector, "lane_verdict": c["verdict"]},
+            )
+            for c in lane
+            if c["accession"] in by_acc
+        ]
     by_acc = {f.accession: f.id for f in filings.values()}
     out: list[sel.Cell] = []
     for c in lane:

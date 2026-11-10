@@ -428,3 +428,24 @@ def test_a_parenthetical_line_never_makes_a_debt_record_dirty(tmp_path):
         "Liabilities",
         "LiabilitiesAndStockholdersEquity",
     }
+
+
+def test_banks_get_a_reasoned_blank_never_a_partial_debt_total(lane):
+    """Tag Expert 2026-11-09: ZION's lane total (548M) left out 3,104M of fed funds and other short-term borrowings;
+    until a bank perimeter is ruled, every bank key is a reasoned blank (the AMZN lane cells stand in for a bank's)"""
+    filings = _filings(lane)
+    general = debt.debt_cells(None, lane, filings)
+    bank = debt.debt_cells(None, lane, filings, "bank")
+    assert any(c.state == "value" for c in general)
+    assert len(bank) == len(general) and {c.state for c in bank} == {"defect"}
+    assert {c.reason_code for c in bank} == {"bank_debt_perimeter_pending"} and all(
+        c.value is None for c in bank
+    )
+    row = sel.to_row(bank[0], 1, filings)
+    assert (
+        row["defect_class"] in cell_contract.DEFECT_CLASSES
+        and row["owner"] in cell_contract.OWNERS
+    )
+    assert (
+        debt.debt_cells(None, lane, filings, "insurer") == general
+    )  # other sectors unchanged

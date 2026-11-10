@@ -333,7 +333,7 @@ def report_company(
         cells = [r for r in cells if r["data_point_name"] != debt.CONCEPT]
         cells.extend(
             sel.to_row(c, company_id, data["filings"])
-            for c in debt.debt_cells(conn, debt_lane, data["filings"])
+            for c in debt.debt_cells(conn, debt_lane, data["filings"], sector)
         )
         rule_concepts = set(rule_concepts) | {debt.CONCEPT}
     lib = library(conn, company_id)
