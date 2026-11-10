@@ -12,6 +12,7 @@ Updated: 2026-11-10 ~08:00 UTC (Dhairya, Mac manager session; sync pass at found
 - Open on MDT (Ritwik, binding C4/N2 and C6): cell_proof over MDT's written pairs (any served DISAGREE re-written as a blank defect); its dividends_per_share cells need a Verifier check against the filings or a hold.
 - Next: the per-pair done gate (branch work/fsn/done-gate-pairs, not on main), then the C7 cohort dry run with Ritwik's C2 table, then the next write.
 - Next.js 16.4.4 is on main (the security advisory is closed). Code lands on main only; no Vercel steps (founder 2026-11-03).
+- Verifier (cloud, 2026-11-10): ladder review = FIX (6 routes to a certified wrong value) and sector-template seed = FIX (EQH/ACT insurer, INVH/TRNO REIT, MTB COR + BNY AR overrides wrong, bank-like brokers GS/MS/SCHW, COND written as IN, CLI defaults; apply step idempotent/reversible): verify/templates-and-ladder-2026-11-09 01d203d. Both founder approvals stay conditional until the re-check passes. Post-write 200-cell / 100-company answer key ready (verify/postwrite-top100-2026-11-09 2405175; DPS own-vintage, shares = balance-sheet-date count); runs after the next write. MDT DPS check is the Mac Verifier's, not duplicated here.
 - One manager: Mac session "Dhairya" and cloud manager session_01GLmSDyzegqZw4JqC91z7XH both act as Dhairya. Both read and update THIS file first; whoever acts records it here.
 
 ## Product objective
