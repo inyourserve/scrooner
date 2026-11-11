@@ -73,6 +73,20 @@
 | PaymentsOfOrdinaryDividends | dividends paid | safe dividends_paid fallback (FASB calc child of PaymentsOfDividends; same perimeter wording incl. preferred/NCI) | FILING-CHECKED (PFE 0000078003-25-000150 R8) 2026-10-24; JNJ, WWD, WTS, ZTS via FSDS | not mapped; 176 active companies |
 | DepreciationAmortizationAndAccretionNet | D&A (financials) | cash-flow D&A line of banks/insurers (JPM, C, AIG, ALL, AJG); includes accretion, so a perimeter flag | FILING-CHECKED (JPM 0001628280-25-048859 R8) 2026-10-24 | no calc relationship in FASB 2026 |
 | Depreciation + AdjustmentForAmortization / AmortizationOfIntangibleAssets | D&A composition | sum of FASB calc children of DepreciationDepletionAndAmortization when no total is on the CF face | FILING-CHECKED (NUE 0001193125-25-276207 R6: 910 + 191) 2026-10-24 | 66 of 126 D&A residue companies; debt-cost amortization excluded |
+| PaymentsForRepurchaseOfCommonStock | buybacks | safe common buyback line on the CF face, with a duration filter and the withholding/preferred exclusions | FILING-CHECKED (Verifier 20/20 + 6/6) | cards/shareholder-returns.md (2026-11-09) |
+| PaymentsForRepurchaseOfEquity | buybacks | never single-tag; per-filing calc check (coexists with the common tag in 13 of 16 latest 10-Ks) | DATA-INFERRED (fsn.*) | playbooks/share_buybacks.md |
+| PaymentsOfCapitalDistribution | dividends paid | never single-tag; mixed perimeter (common REIT distributions, Up-C member/NCI, parent) | DATA-INFERRED (fsn.*) | playbooks/dividends_paid.md |
+| CommonStockDividendsPerShareDeclared / CashPaid | DPS | per company basis only; FY = sum of filed quarters guard; quarterly rate on annual contexts (V, NVDA, LEA, WTRG) | FILING-CHECKED (relays) | cards/shareholder-returns.md §3 |
+| NetIncomeLossAvailableToCommonStockholdersBasic | net income | candidate NI-to-parent ONLY with no NetIncomeLoss, no preferred/participating line, and ProfitLoss − NCI = it (30 latest 10-Ks) | DATA-INFERRED (FSN rows, CAT, ES) | playbooks/net_income.md; not approved |
+| NetCashProvidedByUsedInOperatingActivitiesContinuingOperations | CFO | only when no total CFO line is printed; else a component (16 latest 10-Ks print both, differing) | DATA-INFERRED (fsn.*) | cards/shareholder-returns.md §4 |
+| CommonStockSharesOutstanding | shares | the BS-date count; usually in the BS PARENTHETICAL (407 of 632 latest 10-Ks), which the FSN mapper excludes; the EQ column can be the ISSUED count (PKOH) | DATA-INFERRED (fsn.*) + FILING-CHECKED relays | playbooks/shares_outstanding.md |
+| CommercialPaper | debt (short-term) | face debt component; can be the only "Short-term debt" line (MSFT FY2024); never add on top of its calc parent; note copies can be rounded (6,700 vs face 6,693): take the finest dcml | FILING-CHECKED (MSFT 0000950170-24-087843 R4, FSN expert 2026-11-02, re-checked by me 2026-11-10) | debt.md §9 |
+| SalesRevenueGoodsNet | revenue | component ("Product") when a calc child of another revenue candidate; never a second total | DATA-INFERRED (MSFT FY2016-FY2018, FSN expert) | revenue.md §8 |
+| IncomeLossFromContinuingOperationsBeforeIncomeTaxes… (the pretax pair) | pretax | either, per filing; filers switch with no change in what is printed (MSFT Q2 FY2022) | FILING-CHECKED (FSN expert) | operating-income.md §8 |
+| EffectOfExchangeRate… (4 siblings incl. IncludingDisposalGroup… and DisposalGroupIncluding…) | CF FX | one FX slot = the signed sum of every FX-family calc child of the net change | DATA-INFERRED (19 top-100 names) + CSCO FILING-CHECKED (cash-flow lane) | shareholder-returns.md §6 |
+| InterestExpenseNonoperating | interest | face gross interest 2024+ (42 top-100 names); "- net" label 13 lines; MSFT note-only from Q1 FY2025 | DATA-INFERRED (FSN expert) | interest.md §8 |
+| FinanceLeaseLiability | lease | note total, on no top-100 face; a separate labelled component of debt incl. leases | DATA-INFERRED (MSFT) | debt.md §9 |
+| PaymentsToAcquirePropertyPlantAndEquipment | capex | main capex line (94 top-100 names); not total capex where other capex lines exist | FILING-CHECKED (MSFT Q2 FY2026, FSN expert) | capex-and-da.md §4 |
 | 28 cash-flow statement tags (CFO/CFI/CFF totals, buybacks, SBC, capex, D&A, working-capital changes, debt flows, supplemental paid lines) | cash flow | per tag in `library/fsn-cash-flow.csv`: map 11 (label checks on buybacks, SBC, D&A, AR, AP), excluded 17 (no catalogue concept) | FILING-CHECKED 28 of 28 (23 filings + 3 companyconcept sign checks) 2026-11-11; cards/fsn-cash-flow.md | signs per element direction; UN rows = co-registrants; LRCX/XOM disagreements with Mac library |
 | Assets / AssetsCurrent | BS asset totals | map total_assets_resolved / current_assets_resolved; current assets absent at 175 unclassified BS (never derived) | FILING-CHECKED 2026-11-11; cards/fsn-balance-sheet-assets.md | label can be shifted (HLI, TRU): trust tag |
 | Goodwill / IntangibleAssetsNetIncludingGoodwill | BS assets | map goodwill; combined where the label adds intangibles (SAIA, POWL) | FILING-CHECKED 2026-11-11 | XOM: not presented (in other assets) |
@@ -88,3 +102,10 @@
 | CommonStockSharesOutstanding | shares | map shares_outstanding_resolved, BS/parenthetical date, dedupe EQ rows | FILING-CHECKED 2026-11-11 | PGR prints none |
 | LongTermDebtCurrent / LongTermDebtNoncurrent | debt | total_debt_resolved components (+1) | FILING-CHECKED | Mac library excludes them (D1) |
 | OperatingLeaseLiability(Current/Noncurrent), OtherLiabilities*, AccruedLiabilitiesCurrent, DeferredIncomeTaxLiabilitiesNet, AccountsPayableCurrent | BS liabilities | excluded / not debt; AP maps to accounts_payable | FILING-CHECKED 2026-11-11 | DTL era: DeferredTaxLiabilitiesNoncurrent before FY2019 |
+
+## Reconcile 2026-11-11 (Tag Expert)
+| Topic | Where | Status |
+|---|---|---|
+| Conflicts between the four FSN cards and the family cards (sign, UN, derived instants, CCRC, receivables, nonoperating, buybacks, D&A, PP&E ROU, shares) | decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md | 16 resolved, 2 ruling questions, 3 need a filing read |
+| Sector face shapes | cards/sector-faces.md | relay, mixed evidence |
+| Ritwik rulings (cloud 32 calls; ranks 1-50) | decisions/TAG-EXPERT-ANSWERS-RITWIK-*.md | partly CORRECTED by the reconcile |
