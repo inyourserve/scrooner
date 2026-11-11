@@ -42,6 +42,10 @@ from pathlib import Path
 from typing import Any
 
 import psycopg
+from scrooner_pipeline.fsn_store.stmt_effective import (
+    effective_stmt_sql,
+    no_statement_amendment_sql,
+)
 
 from scrooner_pipeline.fsn_store.checks import tol_of
 
@@ -733,17 +737,23 @@ MEMBER_VALUES_SQL = """
 """
 
 
+def load_filings(cur: psycopg.Cursor, company_id: int) -> dict[int, Filing]:
+    """The expected filings of a stored company: amendments that print no statement are left out."""
+    cur.execute(
+        "select id, accession, accepted, form, period, fy, fp, fye from fsn.filing f "
+        f"where company_id = %s and not {no_statement_amendment_sql('f')}",
+        (company_id,),
+    )
+    return {r[0]: Filing(*r) for r in cur.fetchall()}
+
+
 def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     """Filings, per-concept prints and member values of one stored company (five indexed reads)."""
     with conn.cursor() as cur:
+        filings = load_filings(cur, company_id)
         cur.execute(
-            "select id, accession, accepted, form, period, fy, fp, fye from fsn.filing where company_id = %s",
-            (company_id,),
-        )
-        filings = {r[0]: Filing(*r) for r in cur.fetchall()}
-        cur.execute(
-            """
-            select lm.filing_id, l.stmt, l.tag_id, t.tag, cc.name
+            f"""
+            select lm.filing_id, {effective_stmt_sql("l")}, l.tag_id, t.tag, cc.name
             from fsn.line_map lm
             join fsn.line l using (filing_id, report, line)
             join fsn.tag t on t.id = l.tag_id
@@ -756,8 +766,8 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
         mapped = cur.fetchall()
         anchors = [t for ts in ANCHOR_TAGS.values() for t in ts]
         cur.execute(
-            """
-            select distinct v.filing_id, l.stmt, v.ddate, v.qtrs
+            f"""
+            select distinct v.filing_id, {effective_stmt_sql("l")}, v.ddate, v.qtrs
             from fsn.value v
             join fsn.line l on l.filing_id = v.filing_id and l.tag_id = v.tag_id and not l.inpth
             join fsn.tag t on t.id = v.tag_id and not t.custom
