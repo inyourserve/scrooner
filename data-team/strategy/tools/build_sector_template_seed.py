@@ -38,7 +38,8 @@ DATA = ROOT / "data-team/strategy/data"
 SEED_MD = ROOT / "data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md"
 COHORT_OUT = DATA / "cohort_v1_1_sic_2026-11-01.csv"
 
-TEMPLATE_VERSION = "tv1-2026.11.01-approved"
+# tv1.1 (2026-11-11): the Verifier FIX rows 1-5 and 8, the insurer D&A ruling and the COND revenue lines below
+TEMPLATE_VERSION = "tv1.1-2026.11.11"
 EFFECTIVE_FROM = "2026-11-01"
 
 # §1 SIC rules (SIC proposes; sparse codes become one-code ranges). Everything not
@@ -239,6 +240,31 @@ def with_dependents(
     return out
 
 
+# COND lines (Mac Ritwik's full coverage test 2026-11-11): in only for a company that has that business. OUT by
+# default in every template; IN by company override where the company files a value under the concept's tags
+# (data/cohort_cells.csv, the company_data_point_coverage snapshot of 2026-10-31: DATA-INFERRED; the FSN company step,
+# SECTOR-TEMPLATES §4 step 2, confirms it from the statements).
+COND_LINES = {
+    "collaborative_arrangement_revenue": "collaborative-arrangement revenue (a collaboration business)",
+    "net_lease_revenue": "net lease revenue (a lessor business)",
+}
+COND_DEFAULT = "COND (Ritwik coverage test 2026-11-11): in only for a company with {what}; OUT by default"
+COND_IN = (
+    "COND IN: the company files a value for {what} (cohort_cells.csv, coverage snapshot 2026-10-31, "
+    "DATA-INFERRED; the FSN company step confirms)"
+)
+
+
+def cond_overrides(cohort: list[dict]) -> list[tuple[str, str, str]]:
+    """(ticker, cik, data point) for every cohort company with a value for a COND line, in cohort order."""
+    valued = {
+        (r["company_id"], r["data_point_name"])
+        for r in csv.DictReader((DATA / "cohort_cells.csv").open())
+        if r["data_point_name"] in COND_LINES and r["has_value"] == "t"
+    }
+    return [(r["ticker"], r["cik"], dp) for r in cohort for dp in COND_LINES if (r["company_id"], dp) in valued]
+
+
 def build() -> tuple[str, str]:
     catalog, deps = load_catalog()
     cat = set(catalog)
@@ -293,6 +319,8 @@ def build() -> tuple[str, str]:
         for dp in catalog:
             if dp in out:
                 md.append(f"| {t} | {dp} | no | {out[dp]} |")
+            elif dp in COND_LINES:
+                md.append(f"| {t} | {dp} | no | {COND_DEFAULT.format(what=COND_LINES[dp])} |")
             elif dp == "bdc_total_investment_income" and t != "bdc":
                 md.append(f"| {t} | {dp} | no | {NOT_SECTOR} |")
             else:
@@ -303,6 +331,8 @@ def build() -> tuple[str, str]:
     md += [f"| {cik} | {dp} | no | {tk}: insurer D&A ruling 2026-11-11, the cash-flow statement prints {why} "
            f"({acc} {page}) |"
            for tk, cik, acc, page, why in DA_OUT for dp in DA_POINTS]  # fmt: skip
+    md += [f"| {cik} | {dp} | yes | {tk}: {COND_IN.format(what=COND_LINES[dp])} |"
+           for tk, cik, dp in cond_overrides(cohort)]  # fmt: skip
     return "\n".join(md) + "\n", "\n".join(cohort_lines) + "\n"
 
 

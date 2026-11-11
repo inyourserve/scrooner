@@ -314,3 +314,14 @@ With this, CB shows no D&A blank.
 - On `work/certification-lead/template-seed-fixes`; 3/3 mutations caught.
 - Needs the Verifier's re-check, together with rows 1–5 and 8 (section 9), before it is applied.
 - **Process note:** two early probe requests (one CB 10-K search and one submissions JSON) went out with a hand-typed User-Agent before I switched to the declared one. Every evidence read used `SEC_USER_AGENT`.
+
+## 11. COND revenue lines and seed version tv1.1 (2026-11-11, from Mac Ritwik's full coverage test)
+**What changed:** `collaborative_arrangement_revenue` and `net_lease_revenue` are now **COND**. They are OUT by default in every template, and IN by company override only where the company files a value for them.
+- Net lease revenue: 125 cohort companies.
+- Collaborative-arrangement revenue: 4 (PFE, LMT, AUR, MDT).
+
+**Evidence:** `data/cohort_cells.csv`, the coverage snapshot of 2026-10-31. It is data-inferred; the FSN company step (§4 step 2) confirms each company from its statements.
+
+**Seed version:** now `tv1.1-2026.11.11`; `effective_from` stays 2026-11-01, because nothing has been applied. A future apply needs `--confirm-version tv1.1-2026.11.11`.
+
+**tv1.1 contains:** the Verifier FIX rows 1–5 and 8 (§9), the insurer D&A ruling (§10) and these COND lines.

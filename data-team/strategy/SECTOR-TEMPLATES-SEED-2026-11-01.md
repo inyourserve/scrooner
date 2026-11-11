@@ -6,7 +6,7 @@ Cohort: `data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv` (v1.1, 1,000 co
 Read by `scrooner-map seed-sector-templates --templates <this file> --cohort <that file>`.
 Every data point of the 163-item catalog not listed as `no` for a template is `yes`.
 
-template_version: tv1-2026.11.01-approved
+template_version: tv1.1-2026.11.11
 effective_from: 2026-11-01
 
 ## Sector assignment
@@ -105,7 +105,7 @@ effective_from: 2026-11-01
 | general | cf_inventory_change | yes |  |
 | general | cfo | yes |  |
 | general | cfo_resolved | yes |  |
-| general | collaborative_arrangement_revenue | yes |  |
+| general | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | general | comprehensive_income | yes |  |
 | general | cost_of_revenue | yes |  |
 | general | cost_of_revenue_resolved | yes |  |
@@ -187,7 +187,7 @@ effective_from: 2026-11-01
 | general | net_income_growth_yoy | yes |  |
 | general | net_income_resolved | yes |  |
 | general | net_interest_income | yes |  |
-| general | net_lease_revenue | yes |  |
+| general | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | general | net_margin | yes |  |
 | general | ocf_to_net_income | yes |  |
 | general | operating_expenses | yes |  |
@@ -268,7 +268,7 @@ effective_from: 2026-11-01
 | bank | cf_inventory_change | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | bank | cfo | yes |  |
 | bank | cfo_resolved | yes |  |
-| bank | collaborative_arrangement_revenue | yes |  |
+| bank | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | bank | comprehensive_income | yes |  |
 | bank | cost_of_revenue | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | bank | cost_of_revenue_resolved | no | OUT (A, §3 E1 line evidence, approved §8.1) |
@@ -350,7 +350,7 @@ effective_from: 2026-11-01
 | bank | net_income_growth_yoy | yes |  |
 | bank | net_income_resolved | yes |  |
 | bank | net_interest_income | yes |  |
-| bank | net_lease_revenue | yes |  |
+| bank | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | bank | net_margin | yes |  |
 | bank | ocf_to_net_income | yes |  |
 | bank | operating_expenses | no | OUT (A, §3 E1 line evidence, approved §8.1) |
@@ -431,7 +431,7 @@ effective_from: 2026-11-01
 | lender | cf_inventory_change | no | OUT (inherited bank-like default, approved as default only §8.7) |
 | lender | cfo | yes |  |
 | lender | cfo_resolved | yes |  |
-| lender | collaborative_arrangement_revenue | yes |  |
+| lender | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | lender | comprehensive_income | yes |  |
 | lender | cost_of_revenue | no | OUT (inherited bank-like default, approved as default only §8.7) |
 | lender | cost_of_revenue_resolved | no | OUT (inherited bank-like default, approved as default only §8.7) |
@@ -513,7 +513,7 @@ effective_from: 2026-11-01
 | lender | net_income_growth_yoy | yes |  |
 | lender | net_income_resolved | yes |  |
 | lender | net_interest_income | yes |  |
-| lender | net_lease_revenue | yes |  |
+| lender | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | lender | net_margin | yes |  |
 | lender | ocf_to_net_income | yes |  |
 | lender | operating_expenses | no | OUT (inherited bank-like default, approved as default only §8.7) |
@@ -594,7 +594,7 @@ effective_from: 2026-11-01
 | broker_am | cf_inventory_change | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | broker_am | cfo | yes |  |
 | broker_am | cfo_resolved | yes |  |
-| broker_am | collaborative_arrangement_revenue | yes |  |
+| broker_am | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | broker_am | comprehensive_income | yes |  |
 | broker_am | cost_of_revenue | yes |  |
 | broker_am | cost_of_revenue_resolved | yes |  |
@@ -676,7 +676,7 @@ effective_from: 2026-11-01
 | broker_am | net_income_growth_yoy | yes |  |
 | broker_am | net_income_resolved | yes |  |
 | broker_am | net_interest_income | yes |  |
-| broker_am | net_lease_revenue | yes |  |
+| broker_am | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | broker_am | net_margin | yes |  |
 | broker_am | ocf_to_net_income | yes |  |
 | broker_am | operating_expenses | yes |  |
@@ -757,7 +757,7 @@ effective_from: 2026-11-01
 | insurer | cf_inventory_change | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | insurer | cfo | yes |  |
 | insurer | cfo_resolved | yes |  |
-| insurer | collaborative_arrangement_revenue | yes |  |
+| insurer | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | insurer | comprehensive_income | yes |  |
 | insurer | cost_of_revenue | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | insurer | cost_of_revenue_resolved | no | OUT (A, §3 E1 line evidence, approved §8.1) |
@@ -839,7 +839,7 @@ effective_from: 2026-11-01
 | insurer | net_income_growth_yoy | yes |  |
 | insurer | net_income_resolved | yes |  |
 | insurer | net_interest_income | yes |  |
-| insurer | net_lease_revenue | yes |  |
+| insurer | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | insurer | net_margin | yes |  |
 | insurer | ocf_to_net_income | yes |  |
 | insurer | operating_expenses | yes |  |
@@ -920,7 +920,7 @@ effective_from: 2026-11-01
 | reit_equity | cf_inventory_change | no | OUT (A, §3 E1 line evidence, approved §8.1) |
 | reit_equity | cfo | yes |  |
 | reit_equity | cfo_resolved | yes |  |
-| reit_equity | collaborative_arrangement_revenue | yes |  |
+| reit_equity | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | reit_equity | comprehensive_income | yes |  |
 | reit_equity | cost_of_revenue | yes |  |
 | reit_equity | cost_of_revenue_resolved | yes |  |
@@ -1002,7 +1002,7 @@ effective_from: 2026-11-01
 | reit_equity | net_income_growth_yoy | yes |  |
 | reit_equity | net_income_resolved | yes |  |
 | reit_equity | net_interest_income | yes |  |
-| reit_equity | net_lease_revenue | yes |  |
+| reit_equity | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | reit_equity | net_margin | yes |  |
 | reit_equity | ocf_to_net_income | yes |  |
 | reit_equity | operating_expenses | yes |  |
@@ -1083,7 +1083,7 @@ effective_from: 2026-11-01
 | reit_mortgage | cf_inventory_change | no | OUT (inherited bank-like default, approved as default only §8.7) |
 | reit_mortgage | cfo | yes |  |
 | reit_mortgage | cfo_resolved | yes |  |
-| reit_mortgage | collaborative_arrangement_revenue | yes |  |
+| reit_mortgage | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | reit_mortgage | comprehensive_income | yes |  |
 | reit_mortgage | cost_of_revenue | no | OUT (inherited bank-like default, approved as default only §8.7) |
 | reit_mortgage | cost_of_revenue_resolved | no | OUT (inherited bank-like default, approved as default only §8.7) |
@@ -1165,7 +1165,7 @@ effective_from: 2026-11-01
 | reit_mortgage | net_income_growth_yoy | yes |  |
 | reit_mortgage | net_income_resolved | yes |  |
 | reit_mortgage | net_interest_income | yes |  |
-| reit_mortgage | net_lease_revenue | yes |  |
+| reit_mortgage | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | reit_mortgage | net_margin | yes |  |
 | reit_mortgage | ocf_to_net_income | yes |  |
 | reit_mortgage | operating_expenses | yes |  |
@@ -1246,7 +1246,7 @@ effective_from: 2026-11-01
 | utility | cf_inventory_change | yes |  |
 | utility | cfo | yes |  |
 | utility | cfo_resolved | yes |  |
-| utility | collaborative_arrangement_revenue | yes |  |
+| utility | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | utility | comprehensive_income | yes |  |
 | utility | cost_of_revenue | yes |  |
 | utility | cost_of_revenue_resolved | yes |  |
@@ -1328,7 +1328,7 @@ effective_from: 2026-11-01
 | utility | net_income_growth_yoy | yes |  |
 | utility | net_income_resolved | yes |  |
 | utility | net_interest_income | yes |  |
-| utility | net_lease_revenue | yes |  |
+| utility | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | utility | net_margin | yes |  |
 | utility | ocf_to_net_income | yes |  |
 | utility | operating_expenses | yes |  |
@@ -1409,7 +1409,7 @@ effective_from: 2026-11-01
 | bdc | cf_inventory_change | no | OUT by definition (bdc, §8.4): not applicable to an ASC 946 investment company |
 | bdc | cfo | yes |  |
 | bdc | cfo_resolved | yes |  |
-| bdc | collaborative_arrangement_revenue | yes |  |
+| bdc | collaborative_arrangement_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with collaborative-arrangement revenue (a collaboration business); OUT by default |
 | bdc | comprehensive_income | yes |  |
 | bdc | cost_of_revenue | no | OUT by definition (bdc, §8.4): not applicable to an ASC 946 investment company |
 | bdc | cost_of_revenue_resolved | no | OUT by definition (bdc, §8.4): not applicable to an ASC 946 investment company |
@@ -1491,7 +1491,7 @@ effective_from: 2026-11-01
 | bdc | net_income_growth_yoy | yes |  |
 | bdc | net_income_resolved | yes |  |
 | bdc | net_interest_income | yes |  |
-| bdc | net_lease_revenue | yes |  |
+| bdc | net_lease_revenue | no | COND (Ritwik coverage test 2026-11-11): in only for a company with net lease revenue (a lessor business); OUT by default |
 | bdc | net_margin | yes |  |
 | bdc | ocf_to_net_income | yes |  |
 | bdc | operating_expenses | yes |  |
@@ -1585,3 +1585,132 @@ effective_from: 2026-11-01
 | 0000059558 | depreciation_and_amortization_resolved | no | LNC: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0000059558-26-000016 R7.htm) |
 | 0001823529 | depreciation_and_amortization | no | ACT: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment, deferred-cost and intangible amortization (0001823529-26-000060 R8.htm) |
 | 0001823529 | depreciation_and_amortization_resolved | no | ACT: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment, deferred-cost and intangible amortization (0001823529-26-000060 R8.htm) |
+| 0000019617 | net_lease_revenue | yes | JPM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000858877 | net_lease_revenue | yes | CSCO: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000070858 | net_lease_revenue | yes | BAC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000018230 | net_lease_revenue | yes | CAT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000040545 | net_lease_revenue | yes | GE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001571996 | net_lease_revenue | yes | DELL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000072971 | net_lease_revenue | yes | WFC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000051143 | net_lease_revenue | yes | IBM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001744489 | net_lease_revenue | yes | DIS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000078003 | collaborative_arrangement_revenue | yes | PFE: COND IN: the company files a value for collaborative-arrangement revenue (a collaboration business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000766704 | net_lease_revenue | yes | WELL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000012927 | net_lease_revenue | yes | BA: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001035267 | net_lease_revenue | yes | ISRG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001543151 | net_lease_revenue | yes | UBER: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001510295 | net_lease_revenue | yes | MPC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000936468 | collaborative_arrangement_revenue | yes | LMT: COND IN: the company files a value for collaborative-arrangement revenue (a collaboration business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001613103 | collaborative_arrangement_revenue | yes | MDT: COND IN: the company files a value for collaborative-arrangement revenue (a collaboration business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001868275 | net_lease_revenue | yes | CEG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000713676 | net_lease_revenue | yes | PNC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001053507 | net_lease_revenue | yes | AMT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000066740 | net_lease_revenue | yes | MMM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000031462 | net_lease_revenue | yes | ECL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001061219 | net_lease_revenue | yes | EPD: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001506307 | net_lease_revenue | yes | KMI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001645590 | net_lease_revenue | yes | HPE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001063761 | net_lease_revenue | yes | SPG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001099219 | net_lease_revenue | yes | MET: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001664703 | net_lease_revenue | yes | BE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001297996 | net_lease_revenue | yes | DLR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001552000 | net_lease_revenue | yes | MPLX: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001601046 | net_lease_revenue | yes | KEYS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000093751 | net_lease_revenue | yes | STT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000035527 | net_lease_revenue | yes | FITB: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000740260 | net_lease_revenue | yes | VTR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001690820 | net_lease_revenue | yes | CVNA: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000788784 | net_lease_revenue | yes | PEG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000943819 | net_lease_revenue | yes | RMD: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001020569 | net_lease_revenue | yes | IRM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000036270 | net_lease_revenue | yes | MTB: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0002083785 | net_lease_revenue | yes | SUNB: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001681459 | net_lease_revenue | yes | FTI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000936340 | net_lease_revenue | yes | DTE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000759944 | net_lease_revenue | yes | CFG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001130310 | net_lease_revenue | yes | CNP: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000922224 | net_lease_revenue | yes | PPL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001618756 | net_lease_revenue | yes | QSR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001705696 | net_lease_revenue | yes | VICI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000900075 | net_lease_revenue | yes | CPRT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000798354 | net_lease_revenue | yes | FISV: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001415404 | net_lease_revenue | yes | ECHO: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000798941 | net_lease_revenue | yes | FCNCA: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001524472 | net_lease_revenue | yes | XYL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001281761 | net_lease_revenue | yes | RF: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000906107 | net_lease_revenue | yes | VMRK: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001013871 | net_lease_revenue | yes | NRG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000091576 | net_lease_revenue | yes | KEY: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001034054 | net_lease_revenue | yes | SBAC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000108312 | net_lease_revenue | yes | WWD: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001792580 | net_lease_revenue | yes | OVV: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001070423 | net_lease_revenue | yes | PAA: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001666700 | net_lease_revenue | yes | DD: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000920522 | net_lease_revenue | yes | ESS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001468174 | net_lease_revenue | yes | H: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001687229 | net_lease_revenue | yes | INVH: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001324948 | net_lease_revenue | yes | RBC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001336920 | net_lease_revenue | yes | LDOS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000879101 | net_lease_revenue | yes | KIM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001025378 | net_lease_revenue | yes | WPC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001964738 | net_lease_revenue | yes | SOLV: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000093556 | net_lease_revenue | yes | SWK: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000888491 | net_lease_revenue | yes | OHI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000910606 | net_lease_revenue | yes | REG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001057352 | net_lease_revenue | yes | CSGP: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000765880 | net_lease_revenue | yes | DOC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000010456 | net_lease_revenue | yes | BAX: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001842022 | net_lease_revenue | yes | DTM: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000895417 | net_lease_revenue | yes | ELS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001632970 | net_lease_revenue | yes | AHR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000040729 | net_lease_revenue | yes | ALLY: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001575965 | net_lease_revenue | yes | GLPI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001562401 | net_lease_revenue | yes | AMH: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000074208 | net_lease_revenue | yes | UDR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000089089 | net_lease_revenue | yes | SCI: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000720672 | net_lease_revenue | yes | SF: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000874761 | net_lease_revenue | yes | AES: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000049600 | net_lease_revenue | yes | EGP: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0002041610 | net_lease_revenue | yes | PSKY: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001097149 | net_lease_revenue | yes | ALGN: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001125376 | net_lease_revenue | yes | ENSG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000096223 | net_lease_revenue | yes | JEF: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000906345 | net_lease_revenue | yes | CPT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001828108 | collaborative_arrangement_revenue | yes | AUR: COND IN: the company files a value for collaborative-arrangement revenue (a collaboration business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001015328 | net_lease_revenue | yes | WTFC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001037540 | net_lease_revenue | yes | BXP: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000109380 | net_lease_revenue | yes | ZION: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000034903 | net_lease_revenue | yes | FRT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000085961 | net_lease_revenue | yes | R: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000851205 | net_lease_revenue | yes | CGNX: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000751978 | net_lease_revenue | yes | VICR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001298675 | net_lease_revenue | yes | CUBE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001611052 | net_lease_revenue | yes | PCOR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001590717 | net_lease_revenue | yes | CTRE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001581068 | net_lease_revenue | yes | BRX: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000917251 | net_lease_revenue | yes | ADC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001571283 | net_lease_revenue | yes | REXR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000751364 | net_lease_revenue | yes | NNN: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000022356 | net_lease_revenue | yes | CBSH: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001174922 | net_lease_revenue | yes | WYNN: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000921825 | net_lease_revenue | yes | FR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0002001184 | net_lease_revenue | yes | PACS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001038074 | net_lease_revenue | yes | SLAB: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001035443 | net_lease_revenue | yes | ARE: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001476150 | net_lease_revenue | yes | TRNO: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001513761 | net_lease_revenue | yes | NCLH: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001479094 | net_lease_revenue | yes | STAG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000277509 | net_lease_revenue | yes | FSS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000912242 | net_lease_revenue | yes | MAC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001288469 | net_lease_revenue | yes | MXL: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001567683 | net_lease_revenue | yes | CWEN: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000899689 | net_lease_revenue | yes | VNO: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001360604 | net_lease_revenue | yes | HR: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000040211 | net_lease_revenue | yes | GATX: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001130464 | net_lease_revenue | yes | BKH: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001083301 | net_lease_revenue | yes | WULF: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0000052827 | net_lease_revenue | yes | RYN: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001728951 | net_lease_revenue | yes | EPRT: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0002015845 | net_lease_revenue | yes | ECG: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001571123 | net_lease_revenue | yes | SAIC: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |
+| 0001516513 | net_lease_revenue | yes | DOCS: COND IN: the company files a value for net lease revenue (a lessor business) (cohort_cells.csv, coverage snapshot 2026-10-31, DATA-INFERRED; the FSN company step confirms) |

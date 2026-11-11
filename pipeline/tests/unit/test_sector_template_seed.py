@@ -144,15 +144,29 @@ def test_category_c_out_for_banks_and_defaults_full_for_general(plan):
     assert not dep.in_template and "requires fcf" in dep.reason
     assert _cell(rows, jpm, "quick_ratio").in_template  # inventory is optional for it
     general_out = {
-        r.data_point for r in rows if r.template == "general" and not r.in_template
+        r.data_point
+        for r in rows
+        if r.template == "general"
+        and not r.in_template
+        and r.source == "sector_default"
     }
-    assert general_out == {"bdc_total_investment_income"}
+    assert general_out == {
+        "bdc_total_investment_income",
+        "collaborative_arrangement_revenue",
+        "net_lease_revenue",
+    }
 
 
 @pytest.mark.unit
 def test_section_3_company_overrides(plan):
     rows, by_cik = plan
-    overrides = [r for r in rows if r.source == "company_override" and r.in_template]
+    overrides = [
+        r
+        for r in rows
+        if r.source == "company_override"
+        and r.in_template
+        and "COND IN" not in r.reason
+    ]
     assert (
         len(overrides) == 15
     )  # the 19 line instances, one row per company x data point, less MTB and BNY (Verifier 2026-11-09)
@@ -304,3 +318,42 @@ def test_insurer_da_evidence_file_backs_every_override():
         )  # no depreciation line printed
     printing = [t for t, r in ev.items() if "depreciat" in r["da_lines"].lower()]
     assert len(printing) == 31 and "CB" not in printing
+
+
+@pytest.mark.unit
+def test_cond_revenue_lines_2026_11_11(plan):
+    """Ritwik's coverage test: collaborative-arrangement and net-lease revenue are COND, OUT by default in every
+    template and IN only for a company that files a value for them (4 and 125 cohort companies)."""
+    import csv as _csv
+
+    rows, by_cik = plan
+    for dp in ("collaborative_arrangement_revenue", "net_lease_revenue"):
+        defaults = {
+            r.in_template
+            for r in rows
+            if r.data_point == dp and r.source == "sector_default"
+        }
+        assert defaults == {False}
+    valued = {
+        (r["company_id"], r["data_point_name"])
+        for r in _csv.DictReader(
+            (ROOT / "data-team/strategy/data/cohort_cells.csv").open()
+        )
+        if r["has_value"] == "t"
+        and r["data_point_name"]
+        in ("collaborative_arrangement_revenue", "net_lease_revenue")
+    }
+    got = {(str(r.company_id), r.data_point) for r in rows
+           if r.data_point in ("collaborative_arrangement_revenue", "net_lease_revenue") and r.in_template}  # fmt: skip
+    assert got == valued and len(got) == 129
+    pfe = next(
+        r
+        for r in rows
+        if r.data_point == "collaborative_arrangement_revenue" and r.in_template
+    )
+    assert pfe.source == "company_override" and "COND IN" in pfe.reason
+
+
+@pytest.mark.unit
+def test_template_version_is_tv1_1():
+    assert "template_version: tv1.1-2026.11.11" in SEED.read_text()
