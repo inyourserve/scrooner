@@ -63,7 +63,8 @@ def test_old_map_errors_are_excluded(tmp_path):
 
 def test_alternate_tags_for_one_concept_never_overlap_in_era(tmp_path):
     rows = [{"stmt": "BS", "tag": "AccountsReceivableNetCurrent", "filings": "40"},
-            {"stmt": "BS", "tag": "ReceivablesNetCurrent", "filings": "5", "era_from": "2020-01-31", "era_to": "2021-12-31"}]
+            {"stmt": "BS", "tag": "ReceivablesNetCurrent", "filings": "5", "era_from": "2020-01-31", "era_to": "2021-12-31",
+             "evidence_plabel": "Accounts receivable, net"}]
     got = _run(tmp_path, rows, catalog=("accounts_receivable",))
     assert got[("BS", "AccountsReceivableNetCurrent")]["decision"] == "concept"
     assert got[("BS", "ReceivablesNetCurrent")]["reason_class"] == "alternate_tag_overlapping"
@@ -86,7 +87,8 @@ def test_profitloss_is_net_income_only_outside_the_netincomeloss_and_nci_eras_an
     pl = [r for r in pls if r["decision"] == "concept"]
     assert pl and pl[0]["era_from"] == "2020-11-01" and pl[0]["era_to"] == "2026-07-31"
     cut = [r for r in pls if r["decision"] == "excluded"]
-    assert cut and cut[0]["reason_class"] == "ni_incl_nci" and cut[0]["era_to"] == "2020-10-31"
+    # ruling (3): 2019-08..2020-10 is ProfitLoss - NCI (a component sum); only the NetIncomeLoss era keeps the reason row
+    assert cut and cut[0]["reason_class"] == "ni_incl_nci" and cut[0]["era_to"] == "2019-07-31"
 
 
 def test_income_before_tax_is_found_by_calc_position_not_by_label(tmp_path):
@@ -147,3 +149,9 @@ def test_ni_is_profitloss_minus_nci_only_after_netincomeloss_stops_and_while_the
                   if r["parent_concept"] == "net_income_resolved")
     assert comp == [("NetIncomeLossAttributableToNoncontrollingInterest", "-1", "2019-08-01", "2020-10-31"),
                     ("ProfitLoss", "1", "2019-08-01", "2020-10-31")]
+
+
+def test_receivables_net_current_under_a_non_plain_label_is_combined(tmp_path):
+    got = _run(tmp_path, [{"stmt": "BS", "tag": "ReceivablesNetCurrent", "evidence_plabel": "Notes and accounts receivable, net"}],
+               catalog=("accounts_receivable",))
+    assert got[("BS", "ReceivablesNetCurrent")]["decision"] == "combined"
