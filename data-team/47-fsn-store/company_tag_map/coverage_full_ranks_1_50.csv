@@ -2179,7 +2179,7 @@ company_id,ticker,template,data_point,status
 5203,ORCL,general,cfo,sourced
 5203,ORCL,general,collaborative_arrangement_revenue,template seed: should be COND
 5203,ORCL,general,comprehensive_income,sourced
-5203,ORCL,general,cost_of_revenue,sourced
+5203,ORCL,general,cost_of_revenue,excluded with point reason (component_of_unprinted_total)
 5203,ORCL,general,current_assets,sourced
 5203,ORCL,general,current_liabilities,sourced
 5203,ORCL,general,depreciation_and_amortization,template-OUT candidate (Verifier draw)

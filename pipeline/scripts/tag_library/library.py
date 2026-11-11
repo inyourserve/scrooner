@@ -81,6 +81,7 @@ COMBINED_CO = {  # (ticker, stmt, custom tag) -> (spanned concepts, evidence)
     ("MSFT", "CF", "DepreciationAmortizationAndOther"): (["depreciation_and_amortization", "other_noncash"], "MSFT CF line 'Depreciation, amortization, and other' (custom tag): D&A plus other non-cash items"),
 }
 NOT_CO = {
+    ("ORCL", "IS", "CostOfServices"): ("component_of_unprinted_total", "ORCL 'Services' is one cost line beside cloud/license, hardware and other costs; no cost-of-revenue total is printed (template-OUT candidate)"),
     ("UNH", "IS", "SellingGeneralAndAdministrativeExpense"): ("not_sga_broad_operating_costs", "UNH 'Operating costs' is broad operating cost, not SG&A (income-statement card)"),
     ("UNH", "IS", "CostOfGoodsSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
     ("UNH", "IS", "CostOfGoodsAndServicesSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
@@ -397,6 +398,15 @@ for cid, rs in by_co.items():
         else:
             due.update(decision="concept", canonical_concept="cash_and_equivalents_resolved", reason_class="",
                        reason="bank cash: the BS line equals the CF ending cash line (BS card)", decided_by="library")
+    # product + service cost lines printed side by side with no cost-of-revenue total: a printed component sum (D3, TMO)
+    COR_TOTALS = ("CostOfRevenue", "CostOfGoodsAndServicesSold")
+    prod, serv = idx.get(("IS", "CostOfGoodsSold")), idx.get(("IS", "CostOfServices"))
+    if prod and serv and shares_filing(prod, serv) and serv.get("decided_by") != "company_override":
+        tot = [idx[("IS", t)] for t in COR_TOTALS if ("IS", t) in idx and idx[("IS", t)].get("decision") == "concept"]
+        if not any(shares_filing(prod, t) for t in tot):
+            for x in (prod, serv):
+                x.update(decision="component", canonical_concept="", parent_concept="cost_of_revenue_resolved", combine_sign="1", reason_class="",
+                         reason="product and service costs printed side by side with no cost-of-revenue total: a printed component sum (ruling D3)", decided_by="library")
     extra = list(pending_extra)
     opex_total = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "OperatingExpenses" and r.get("decision") == "concept"]
     gp = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "GrossProfit"]
@@ -411,6 +421,12 @@ for cid, rs in by_co.items():
                          reason_class="", reason="no operating-expenses total printed: operating expenses = the expense lines between gross profit and operating income (mapper: GP - sum = OI must tie per filing, else hold)",
                          decided_by="library_opex_parts")
                 extra.append(e)
+    eb = idx.get(("IS", "EarningsPerShareBasicAndDiluted"))
+    if eb and eb.get("decision") == "concept":
+        other = "basic_eps_resolved" if eb["canonical_concept"] == "diluted_eps_resolved" else "diluted_eps_resolved"
+        e = dict(eb)
+        e.update(canonical_concept=other, reason="one printed EPS line serves basic AND diluted (row per concept)")
+        extra.append(e)
     wb = idx.get(("IS", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"))
     if wb and wb.get("decision") == "concept":
         e = dict(wb)

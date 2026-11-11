@@ -222,10 +222,19 @@ def build_note(ident, rows, exc, trows, version):
           "Rows are the statement-line data points the library maps. Derived metrics (ratios, growth, per-share) are computed from these and are not mapped here.", "",
           "| data point | status | tag(s) and era | statement and printed label | sign | evidence (accession, report, line) | rule or ruling |",
           "|---|---|---|---|---|---|---|"]
-    undecided, era_holes = [], []
+    undecided, era_holes, pending = [], [], []
     for dp in LINE_DATA_POINTS + extra_dps:
         rs = sorted(table.get(dp, []), key=lambda x: x[2])
         if not rs:
+            cov = COVERAGE.get((ident.get("ticker") or "", dp))
+            if cov and cov != "GAP":
+                L.append(f"| {dp} | {esc(cov)} | none | none | n/a | coverage_full (tag library) | see status |")
+                if "candidate" in cov:
+                    pending.append((dp, cov))
+                continue
+            if COVERAGE and not cov:
+                L.append(f"| {dp} | not in the approved template (tv1) | n/a | n/a | n/a | coverage_full | none |")
+                continue
             if dp in t_out:
                 L.append(f"| {dp} | not in template | n/a | n/a | n/a | n/a | {esc(t_out[dp])} |")
             else:
@@ -261,6 +270,8 @@ def build_note(ident, rows, exc, trows, version):
     n0 = len(L)
     for dp in undecided:
         L.append(f"- UNDECIDED data point `{dp}`: template says IN, no row in the tag map or the exceptions.")
+    for dp, cov in pending:
+        L.append(f"- PENDING VERIFIER `{dp}`: {cov}; a filing-checked draw decides note-sourced value or template OUT.")
     for dp, h in era_holes:
         L.append(f"- ERA not covered for `{dp}`: {h}. Needs a source row or a not-presented reason.")
     for r in review:
@@ -278,6 +289,17 @@ def build_note(ident, rows, exc, trows, version):
           "- Verifier sample result: pending",
           "- every blank reasoned: pending", ""]
     return "\n".join(L)
+
+
+COVERAGE = {}  # (ticker, data_point) -> status from coverage_full (tag library); empty when not given
+
+
+def load_coverage(path):
+    """coverage_full CSV (company_id,ticker,template,data_point,status): the per-point status, in preference to the
+    built-in sector default, so a held, reasoned or candidate point is never listed as undecided."""
+    COVERAGE.clear()
+    for r in read_csv(path):
+        COVERAGE[(r["ticker"], r["data_point"])] = r["status"]
 
 
 def generate(tag_map, identity, out_dir, exceptions=None, std_tags=None, templates=None, tickers=None):
@@ -313,7 +335,10 @@ if __name__ == "__main__":
     ap.add_argument("--std-tags")
     ap.add_argument("--templates")
     ap.add_argument("--tickers")
+    ap.add_argument("--coverage", help="coverage_full CSV from the tag library; preferred over the sector default")
     a = ap.parse_args()
+    if a.coverage:
+        load_coverage(a.coverage)
     w = generate(a.tag_map, a.identity, a.out, a.exceptions, a.std_tags, a.templates,
                  set(a.tickers.split(",")) if a.tickers else None)
     print(f"wrote {len(w)} notes to {a.out}")
