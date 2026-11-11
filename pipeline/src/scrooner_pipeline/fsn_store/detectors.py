@@ -396,12 +396,15 @@ def capex_da_detector(
                     )
                 )
             elif dec["status"] == "held" and tag in dec.get("combined", []):
+                # the concept rides on the combined row (FORMATS-v1 rule 3: the concept the line would otherwise be
+                # mistaken for), so the pilot serves `line_presented_combined_with_others`, not a reasonless gap.
+                # select reads status 'mapped' only: a combined row never yields a value
                 out.append(
                     (
                         filing_id,
                         report,
                         line,
-                        None,
+                        cid[concept],
                         "combined",
                         RULE["held"],
                         None,

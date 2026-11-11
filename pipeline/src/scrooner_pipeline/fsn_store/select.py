@@ -76,6 +76,8 @@ INTEREST_FAMILY = (
 )
 RULE_YTD_DIFF = "fsn.select_ytd_difference@1"
 RULE_BLANK = "fsn.select_blank@1"
+RULE_COMBINED = "fsn.select_combined_line@1"
+REASON_COMBINED = "line_presented_combined_with_others"
 
 # the statement's anchor total: a column is on the face only where one of these is printed
 ANCHOR_TAGS = {
@@ -150,6 +152,7 @@ REASON_TEXT = {
     "note_value_not_positive": "The note prints zero or a negative figure, which is not a gross amount for this line.",
     "sole_debt_label_not_interest": "The only interest line the filing prints is not labelled as interest expense, so it is not taken as the total.",
     "sign_inconsistent": "The filing stores this expense with a negative sign; it is shown only after the sign is checked against the printed page.",
+    "line_presented_combined_with_others": "The statement prints this figure only inside a line that combines it with other items, so it is not shown on its own.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -433,6 +436,49 @@ def _blank(
     )
 
 
+def combined_line_cells(
+    concept: str,
+    prints: list[Print],
+    filings: dict[int, Filing],
+    taken: set[tuple[date, int]],
+) -> list[Cell]:
+    """Reasoned blanks for the keys a COMBINED line covers (FORMATS-v1 rule 3; MSFT "Depreciation, amortization,
+    and other"): every face print of the line gives its instant, its full year, and the quarter ending at its
+    date (a year-to-date or annual column holds that quarter too). A key that already has a cell keeps it; the
+    carrier is the latest accepted filing printing the line at that date. Never a value."""
+    best: dict[tuple[date, int], Print] = {}
+    for p in prints:
+        if not p.face:
+            continue
+        keys = (
+            [(p.ddate, 0)]
+            if p.qtrs == 0
+            else [(p.ddate, 1)] + ([(p.ddate, 4)] if p.qtrs == 4 else [])
+        )
+        for k in keys:
+            cur = best.get(k)
+            if (
+                cur is None
+                or filings[p.filing_id].accepted > filings[cur.filing_id].accepted
+            ):
+                best[k] = p
+    return [
+        Cell(
+            concept,
+            k[0],
+            k[1],
+            "not_presented",
+            filing_id=p.filing_id,
+            tag=p.tag,
+            rule_id=RULE_COMBINED,
+            reason_code=REASON_COMBINED,
+            input_refs={"combined_tag": p.tag, "value_id": p.value_id, "qtrs": p.qtrs},
+        )
+        for k, p in sorted(best.items())
+        if k not in taken
+    ]
+
+
 def _note_quarters(prints: list[Print]) -> dict[tuple[int, str, date], Print]:
     """Non-face 3-month prints by (filing, tag, ddate): the quarterly-data note of a filing."""
     return {
@@ -704,17 +750,19 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
         filings = {r[0]: Filing(*r) for r in cur.fetchall()}
         cur.execute(
             """
-            select lm.filing_id, l.stmt, l.tag_id, t.tag, cc.name
+            select lm.filing_id, l.stmt, l.tag_id, t.tag, cc.name, lm.status
             from fsn.line_map lm
             join fsn.line l using (filing_id, report, line)
             join fsn.tag t on t.id = l.tag_id
             join analytics.canonical_concept cc on cc.id = lm.canonical_concept_id
             join fsn.filing f on f.id = lm.filing_id
-            where f.company_id = %s and lm.status = 'mapped' and not l.inpth
+            where f.company_id = %s and lm.status in ('mapped', 'combined') and not l.inpth
             """,
             (company_id,),
         )
-        mapped = cur.fetchall()
+        rows = cur.fetchall()
+        mapped = [r[:5] for r in rows if r[5] == "mapped"]
+        combined = [r[:5] for r in rows if r[5] == "combined"]
         anchors = [t for ts in ANCHOR_TAGS.values() for t in ts]
         cur.execute(
             """
@@ -728,7 +776,7 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
             (company_id, anchors),
         )
         anchor_cols = face_columns(filings, cur.fetchall())
-        tag_ids = sorted({r[2] for r in mapped})
+        tag_ids = sorted({r[2] for r in mapped} | {r[2] for r in combined})
         cur.execute(MEMBER_VALUES_SQL, (company_id, sorted(filings), tag_ids))
         values = cur.fetchall()
         cur.execute(
@@ -740,7 +788,11 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
             (company_id,),
         )
         failed = set(cur.fetchall())
-    return build(filings, mapped, anchor_cols, values, failed)
+    data = build(filings, mapped, anchor_cols, values, failed)
+    data["combined_prints"] = build(filings, combined, anchor_cols, values, failed)[
+        "prints"
+    ]
+    return data
 
 
 def face_columns(

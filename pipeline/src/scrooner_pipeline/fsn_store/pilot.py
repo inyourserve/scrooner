@@ -415,6 +415,18 @@ def report_company(
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
+    # a key whose figure the statement prints only inside a combined line: a reason, never a value
+    for concept, cprints in sorted(data.get("combined_prints", {}).items()):
+        taken = {
+            (
+                date.fromisoformat(r["fsn_end"]),
+                {"FY": 4, "Q": 1, "I": 0}[r["period_grain"]],
+            )
+            for r in cells
+            if r["data_point_name"] == concept
+        }
+        got = sel.combined_line_cells(concept, cprints, data["filings"], taken)
+        cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]
