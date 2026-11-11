@@ -51,6 +51,7 @@ RULE_LIBRARY = "tagmap.library@1"
 RULE_COMPANY = "tagmap.company@1"
 FLOOR = date(2014, 1, 1)
 SEED_STMTS = ("IS", "BS", "CF", "CI")
+QUERY_STMTS = SEED_STMTS + ("UN",)  # UN is fetched, then relabelled to its effective statement or dropped
 STD_TAXONOMIES = ("us-gaap", "srt", "dei", "ifrs-full")
 DECISION_MAP = {"map": "concept", "concept": "concept", "exclude": "excluded", "excluded": "excluded",
                 "component": "component", "combined": "combined"}
@@ -454,6 +455,42 @@ def relabel_ci(rows: list[tuple]) -> list[tuple]:
     return [(*r[:3], "IS", *r[4:]) if r[3] == "CI" and r[5] not in has_is else r for r in rows]
 
 
+UN_ANCHORS = {
+    "CF": ("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"),
+    "BS": ("Assets", "LiabilitiesAndStockholdersEquity"),
+    "IS": ("NetIncomeLoss", "ProfitLoss", "Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
+           "EarningsPerShareBasic", "EarningsPerShareDiluted", "IncomeLossFromContinuingOperations"),
+}
+
+
+def relabel_un(rows: list[tuple]) -> list[tuple]:
+    """FSN stmt 'UN' = a statement report the loader could not classify. It is dropped when a value on any of its
+    lines carries a co-registrant / LegalEntityAxis member (row[19], e.g. DUK subsidiaries); otherwise it is the real
+    entity's statement and is relabelled to its effective role (IS/BS/CF) from anchor tags, but only where the filing
+    has no classified report of that role (Revvity's only IS is UN). First report (lowest number) wins per role."""
+    by_rep: dict[tuple, list[tuple]] = defaultdict(list)
+    has_stmt: dict[int, set[str]] = defaultdict(set)
+    for r in rows:
+        if r[3] == "UN":
+            by_rep[(r[FID], r[12])].append(r)
+        else:
+            has_stmt[r[FID]].add(r[3])
+    role: dict[tuple, str] = {}
+    taken: set[tuple] = set()
+    for (fid, rep), rs in sorted(by_rep.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        anchors = {t for fam in UN_ANCHORS.values() for t in fam}
+        if not any(is_nondim(r) for r in rs if r[2] in anchors):
+            continue  # every anchor value carries a co-registrant member: a subsidiary's statement, never the parent
+        tags = {r[2] for r in rs}
+        for st in ("IS", "BS", "CF"):  # one anchor family per report; the first family that matches wins
+            if tags & set(UN_ANCHORS[st]) and st not in has_stmt[fid] and (fid, st) not in taken:
+                role[(fid, rep)] = st
+                taken.add((fid, st))
+                break
+    return [(*r[:3], role[(r[FID], r[12])], *r[4:]) if r[3] == "UN" and (r[FID], r[12]) in role else r
+            for r in rows if r[3] != "UN" or (r[FID], r[12]) in role]
+
+
 def build_eras(appear: dict[date, object], annual_periods: list[date]) -> list[tuple[date, date | None, object]]:
     """appear: period -> payload. Returns [(era_from, era_to, payload of the era's last filing)].
     Eras split only where the tag is absent from an annual (10-K) filing strictly between two appearances
@@ -495,12 +532,14 @@ with fl as (
       from fsn.line l join fsn.filing f2 on f2.id = l.filing_id
      where f2.company_id = any(%s) and f2.period >= %s
     window w as (partition by l.filing_id, l.report order by l.line)),
-nd as (select distinct v.filing_id, v.tag_id from fsn.value v
-        where v.dim_id = 0 and v.filing_id in (select id from fsn.filing where company_id = any(%s) and period >= %s))
+nd as (select v.filing_id, v.tag_id, bool_or(v.dim_id = 0 and v.coreg = '') as nondim, bool_or(v.coreg <> '') as coreg
+         from fsn.value v
+        where v.filing_id in (select id from fsn.filing where company_id = any(%s) and period >= %s)
+        group by 1, 2)
 select distinct on (f.company_id, split_part(t.version, '/', 1), t.custom, t.tag, l.stmt, f.id)
        f.company_id, case when t.custom then 'custom' else split_part(t.version, '/', 1) end as taxonomy,
        t.tag, l.stmt, t.abstract, f.id, f.accession, f.period, f.form, f.amendment, f.fy, f.accepted,
-       l.report, l.line, l.plabel, t.id as tag_id, (nd.tag_id is not null) as nondim, l.prev_label, l.next_label
+       l.report, l.line, l.plabel, t.id as tag_id, coalesce(nd.nondim, false) as nondim, l.prev_label, l.next_label, coalesce(nd.coreg, false) as coreg
   from fl l
   join fsn.filing f on f.id = l.filing_id
   join fsn.tag t on t.id = l.tag_id
@@ -544,7 +583,7 @@ def load_sources(patterns: list[str]) -> tuple[list[dict], list[str]]:
 
 def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, stats):
     """rows: appearance tuples of one company. Returns (csv rows, key info)."""
-    rows = relabel_ci(rows)  # amendments without any IS/BS/CF/CI line have no rows at all, so they never count
+    rows = relabel_un(relabel_ci(rows))  # CI-as-IS first, then UN to its effective role; amendments without any IS/BS/CF/CI line have no rows at all, so they never count
     annual = [r[7] for r in rows if r[8] == "10-K" and not r[9]]
     groups: dict[tuple, dict[date, tuple]] = defaultdict(dict)
     fy23: dict[tuple, bool] = defaultdict(bool)
@@ -621,7 +660,7 @@ def cmd_seed(args) -> None:
             for cid, t in conn.execute(TEMPLATE_SQL, (batch,)).fetchall():
                 tmpl[cid].add(t)
             by_co: dict[int, list] = defaultdict(list)
-            for r in conn.execute(APPEAR_SQL, (batch, FLOOR, batch, FLOOR, list(SEED_STMTS))).fetchall():
+            for r in conn.execute(APPEAR_SQL, (batch, FLOOR, batch, FLOOR, list(QUERY_STMTS))).fetchall():
                 by_co[r[0]].append(r)
             for cid, rows in by_co.items():
                 csv_rows, keyinfo = seed_company_rows(cid, cohort[cid], rows, tmpl[cid], index, valid, conn, stats)

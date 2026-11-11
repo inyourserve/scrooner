@@ -266,3 +266,34 @@ def test_tag_card_shape_precedence_and_free_text():
     co_ = m.parse_source("companies-x.csv", [co(1, "BS", "Assets", "map", "assets_x")])
     idx = m.build_index(lo + ents + co_)
     assert [x["source"] for x in idx[("Assets", "BS")]] == ["companies-x.csv", "tag-card", "std-tags-rank-1.csv"]
+
+
+def un(fid, rep, tag, coreg=False, stmt="UN"):
+    return ap(fid, stmt, tag, date(2025, 12, 31)) [:2] + (tag,) + (stmt,) + ap(fid, stmt, tag, date(2025, 12, 31))[4:12] + (rep,) \
+        + ap(fid, stmt, tag, date(2025, 12, 31))[13:] + (not coreg, "", "", coreg)
+
+
+def test_un_statement_effective_role_and_coregistrant_drop():
+    rows = [un(1, 4, "NetIncomeLoss"), un(1, 4, "Revenues"),               # real entity IS (Revvity): kept as IS
+            un(2, 9, "NetIncomeLoss", coreg=True),                          # subsidiary column: dropped
+            un(3, 5, "Assets"), un(3, 2, "NetIncomeLoss", stmt="IS"),       # BS role free; IS already classified
+            un(3, 7, "NetIncomeLoss")]                                      # second NI-like UN report: dropped
+    out = m.relabel_un(rows)
+    assert sorted((r[FID_], r[2], r[3]) for r in out) == [(1, "NetIncomeLoss", "IS"), (1, "Revenues", "IS"),
+                                                          (3, "Assets", "BS"), (3, "NetIncomeLoss", "IS")]
+
+
+FID_ = 5
+
+
+def test_pld_shaped_coregistrant_lines_never_become_parent_rows():
+    # PLD prints the operating partnership's statements in the same filing: its own-only tag has coreg values only
+    key_parent, key_sub = ("us-gaap", "Revenues", "IS"), ("us-gaap", "LimitedPartnersCapitalAccountUnitsOutstanding", "IS")
+    lib = [("fsn-x.csv", [{"tag": "us-gaap:Revenues", "home_stmt": "IS", "decision": "map", "concept key": "revenue",
+                           "evidence": "e"}, {"tag": "us-gaap:LimitedPartnersCapitalAccountUnitsOutstanding",
+                                               "home_stmt": "IS", "decision": "map", "concept key": "units", "evidence": "e"}])]
+    groups = {key_parent: {p: ap2(i, "IS", "Revenues", p, "x") for i, p in enumerate(P)},
+              key_sub: {p: ap2(i, "IS", "LimitedPartnersCapitalAccountUnitsOutstanding", p, "x", nondim=False)
+                        for i, p in enumerate(P)}}
+    out = expand(lib, groups)
+    assert len(out[key_parent]["rows"]) == 1 and out[key_sub]["rows"] == []
