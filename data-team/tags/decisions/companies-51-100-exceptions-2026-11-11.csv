@@ -38,7 +38,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4227,SNDK,IS,us-gaap:IncomeLossFromEquityMethodInvestments,exclude,dividends_paid,,,9,label-regex false hit
 4227,SNDK,CF,,not_presented,dividends_paid,,,9,no dividends
 1358,VZ,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,1912,2609,28,'capital expenditures (including capitalized software)'; founder 2026-11-04 item 3: capex includes capitalized software
-1358,VZ,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,review,stockholders_equity,1312,2609,52,VZ prints only 'total equity' incl. NCI; no parent-equity face line; instants are never derived. Tag Expert / Standardization: serve total equity or reason?
+1358,VZ,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,not_presented,stockholders_equity,1312,2609,52,"FSN-checked 0000732712-26-000007 BS lines 42-43: 'Noncontrolling interests' (MinorityInterest) then 'Total equity'; no parent-equity face line. Parent equity = total minus NCI is a derived instant (never derived): blank with reason, unless the equity statement's parent column is accepted as a source (Tag Expert)"
 1358,VZ,BS,,not_presented,total_liabilities,,,52,no total liabilities line
 1358,VZ,CF,,not_presented,share_buybacks,,,35,no repurchase line in 35 filings
 76,ABT,BS,,not_presented,total_liabilities,,,51,no total liabilities line
@@ -66,15 +66,15 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 683,MCD,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,map,income_before_tax,1312,2606,51,custom pretax line 'income before provision for income taxes'
 683,MCD,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 683,MCD,IS,,not_presented,gross_profit,,,51,no gross profit line
-4630,TMUS,IS,us-gaap:InterestExpenseDebt,review,interest_expense,1912,2112,9,TMUS prints 'interest expense' and 'interest expense to affiliates' (InterestExpenseRelatedParty): total interest expense is their sum — combine?
-4630,TMUS,IS,us-gaap:InterestExpenseRelatedParty,review,interest_expense,1912,2112,9,second component (affiliates)
+4630,TMUS,IS,us-gaap:InterestExpenseDebt,component,interest_expense,1912,2112,9,"FSN-checked 0001283699-22-000018 IS lines 22-24: 'Interest expense' (InterestExpenseDebt), 'Interest expense to affiliates' (InterestExpenseRelatedParty), 'Interest income'. interest_expense = line 22 + line 23 (component sum)"
+4630,TMUS,IS,us-gaap:InterestExpenseRelatedParty,component,interest_expense,1912,2112,9,"FSN-checked 0001283699-22-000018 IS lines 22-24: 'Interest expense' (InterestExpenseDebt), 'Interest expense to affiliates' (InterestExpenseRelatedParty), 'Interest income'. interest_expense = line 22 + line 23 (component sum)"
 4630,TMUS,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2203,2609,19,"'interest expense, net' from 2022: net of interest income"
 4630,TMUS,IS,us-gaap:IncomeLossAttributableToParent,map,income_before_tax,2103,2103,1,"us-gaap standard label 'Income (Loss) Attributable to Parent, before Tax' (checked fsn.tag.tlabel): a pretax line; FSN plabel 'income (loss) before income taxes'. Library candidate (lower priority than the two std pretax tags)"
 4630,TMUS,BS,,not_presented,total_liabilities,,,53,no total liabilities line
 1030,PFE,CF,c:DepreciationDepletionAndAmortizationIncludingDiscontinuedOperationDepreciationandAmortization,map,d_and_a,1409,2303,35,"CF 'depreciation and amortization' (custom, includes discontinued operations, as the CF line does)"
 1030,PFE,CF,c:DepreciationDepletionAndAmortizationincludingdiscontinuedoperations,map,d_and_a,1312,1406,3,earlier custom twin
 1030,PFE,IS,,not_presented,interest_expense;operating_income;gross_profit,,,51,PFE IS has no interest expense line (in other income/deductions) and no operating income
-2124,SCCO,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2609,52,"'net income attributable to SCC' (after NCI) is tagged AvailableToCommonStockholdersBasic; SCCO has no preferred stock so it equals NI attributable to parent — Tag Expert to confirm"
+2124,SCCO,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2609,52,'net income attributable to SCC' (after NCI) is tagged AvailableToCommonStockholdersBasic; SCCO has no preferred stock so it equals NI attributable to parent — Tag Expert to confirm
 2124,SCCO,IS,us-gaap:ProfitLoss,exclude,net_income,1312,2609,52,includes NCI
 2124,SCCO,IS,us-gaap:EarningsPerShareBasicAndDiluted,map,basic_eps,1312,2109,32,basic and diluted on one line
 2124,SCCO,IS,us-gaap:RevenueMineralSales,map,revenue,1312,1712,17,'net sales' tagged RevenueMineralSales
@@ -82,15 +82,15 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2124,SCCO,IS,us-gaap:InterestCostsIncurred,review,interest_expense,1312,2609,52,"face 'interest expense' tagged InterestCostsIncurred (gross, before the separate 'capitalized interest' line): gross or net of capitalized?"
 2124,SCCO,IS,c:CurrentAndRoyaltyTaxes,review,income_tax_expense,1712,2609,27,"tax shown as 'current income taxes and royalty taxes' plus 'deferred income taxes'; total income tax = sum, but royalty taxes are included — Tag Expert"
 2124,SCCO,BS,,not_presented,total_liabilities,,,56,no total liabilities line
-1400,NEE,CF,c:CapitalExpendituresOfPublicUtility,review,capex,1312,2512,33,"NEE's CF lists capex by segment (FPL, independent power, nuclear fuel, other); capex = sum of the segment lines; Tag Expert to list the components per era"
+1400,NEE,CF,c:CapitalExpendituresOfPublicUtility,review,capex,1312,2512,33,"FSN-checked 0000753308-26-000015 CF lines 28-32: capex of FPL (28), 'Capital expenditures' (29), 'Independent power and other investments of NEER' (30, includes investments), nuclear fuel purchases (31), other capex (32). Capex = 28+29+32 for sure; 30 and 31 need a definition call (Standardization Lead)"
 1400,NEE,CF,c:CapitalExpendituresOfFPL,review,capex,2203,2609,19,segment component
 1400,NEE,CF,c:OtherCapitalExpenditures,review,capex,1312,2512,36,segment component
 1400,NEE,CF,us-gaap:CapitalExpendituresIncurredButNotYetPaid,exclude,capex,1312,2609,51,non-cash supplemental disclosure
 1400,NEE,IS,c:InterestExpenseAggregateExpenses,map,interest_expense,1312,2609,51,face 'interest expense' (custom)
 1400,NEE,BS,us-gaap:CommonStockholdersEquity,map,stockholders_equity,1312,1312,1,'total common shareholders equity'
 1400,NEE,IS,,not_presented,cost_of_revenue;gross_profit,,,51,utility IS by nature
-1421,WELL,CF,,review,capex,,,52,"REIT: no PP&E line; capex candidates 'capital improvements to existing properties' vs 'acquisitions of real property' — Tag Expert (REIT capex = capital improvements per founder TI ruling?)"
-1421,WELL,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,review,net_income,1312,2609,52,"WELL prints net income (ProfitLoss, incl NCI) and 'attributable to common stockholders' (after preferred); no NetIncomeLoss line; which is net_income?"
+1421,WELL,CF,,review,capex,,,52,REIT: no PP&E line; capex candidates 'capital improvements to existing properties' vs 'acquisitions of real property' — Tag Expert (REIT capex = capital improvements per founder TI ruling?)
+1421,WELL,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2609,52,"FSN-checked 0000766704-26-000010 IS lines 23-25: net income (ProfitLoss), less NCI, 'attributable to common stockholders'. Equals NI attributable to parent only where the IS has no preferred-dividend line: map in those filings; filings with a preferred-dividend line need review"
 1421,WELL,IS,us-gaap:InterestExpenseDebt,map,interest_expense,1312,2409,44,face 'interest expense'
 1421,WELL,IS,us-gaap:InterestExpenseBorrowings,review,interest_expense,2412,2609,8,'contractual interest expense' from 2024-12 (other interest lines beside it?)
 1421,WELL,CF,us-gaap:OtherDepreciationAndAmortization,map,d_and_a,2003,2609,27,CF 'depreciation and amortization'
@@ -103,19 +103,19 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1190,DHR,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,review,cash,2012,2609,24,"BS 'cash and equivalents' tagged with the restricted-cash total (same pattern as GILD): Tag Expert, is restricted cash included?"
 1190,DHR,CF,c:StockRedeemedThroughDistributionOfABusinessDuringPeriodValue,exclude,share_buybacks,1509,1609,3,share exchange in a split-off: excluded by founder ruling (share swaps)
 1190,DHR,BS,,not_presented,total_liabilities,,,52,no total liabilities line
-1359,T,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,review,stockholders_equity,1312,2609,54,"T prints 'total stockholders equity' incl. NCI only (plus 'stockholders equity attributable to AT&T'?): check the face for a parent line under another tag"
-1359,T,IS,us-gaap:OtherCostOfServices,review,cost_of_revenue,1509,1806,12,"'other cost of revenues (excl D&A)' is one of T's cost lines beside 'cost of equipment sales': cost of revenue = sum?"
+1359,T,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,not_presented,stockholders_equity,1312,2609,54,FSN-checked 0000732717-26-000120 BS lines 48-49: NCI then 'Total stockholders equity' incl NCI; no parent line. Same rule as VZ
+1359,T,IS,us-gaap:OtherCostOfServices,review,cost_of_revenue,1509,1806,12,'other cost of revenues (excl D&A)' is one of T's cost lines beside 'cost of equipment sales': cost of revenue = sum?
 1359,T,IS,us-gaap:OtherCostOfOperatingRevenue,review,cost_of_revenue,1812,1906,4,as above
-1359,T,IS,us-gaap:IncomeLossFromContinuingOperations,map,net_income,1612,1612,1,"'net income attributable to AT&T' tagged continuing-ops attributable; one filing"
+1359,T,IS,us-gaap:IncomeLossFromContinuingOperations,map,net_income,1612,1612,1,'net income attributable to AT&T' tagged continuing-ops attributable; one filing
 1359,T,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1612,1612,1,one filing
 1359,T,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,1612,1612,1,one filing
 1359,T,BS,,not_presented,total_liabilities,,,54,no total liabilities line
-1204,SCHW,CF,c:DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets,review,d_and_a,2009,2606,24,"CF 'depreciation and amortization' excludes intangible amortization, shown on its own line: D&A = sum of the two?"
+1204,SCHW,CF,c:DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets,component,d_and_a,2009,2606,24,FSN-checked 0000316709-26-000009 CF lines 5-6: 'Depreciation and amortization' (excl. intangibles) + 'Amortization of acquired intangible assets'; D&A = sum; premium amortization on securities (line 8) excluded
 1204,SCHW,CF,c:PaymentsForRepurchaseOfCommonStockAndNonvotingCommonStock,map,share_buybacks,2506,2509,2,repurchases of common and nonvoting common stock (both are own common shares)
 1204,SCHW,CF,c:NoncashTransactionCommonStockRepurchased,exclude,share_buybacks,2506,2509,2,non-cash: settled after period end
 1204,SCHW,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,broker/bank income statement
 1204,SCHW,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified
-2852,ETN,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,1912,10,"'net income attributable to Eaton ordinary shareholders'; no preferred — equals NI attributable to parent"
+2852,ETN,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,1912,10,'net income attributable to Eaton ordinary shareholders'; no preferred — equals NI attributable to parent
 2852,ETN,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2406,43,'interest expense - net'
 2852,ETN,IS,,not_presented,operating_income;gross_profit,,,51,no operating income line
 2852,ETN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
@@ -129,23 +129,23 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 5480,NOW,IS,us-gaap:NonoperatingIncomeExpense,combined,interest_expense,1312,1509,8,'interest and other expense net'
 5480,NOW,CF,,not_presented,dividends_paid,,,52,NOW pays no dividends
 3886,STX,CF,us-gaap:RepaymentsOfLongTermDebt,exclude,share_buybacks,2409,2503,3,debt repurchase is not a share buyback (label-regex false hit)
-3886,STX,IS,,not_presented,gross_profit,,,52,"no gross profit line (STX prints cost of revenue and operating expenses) — check"
+3886,STX,IS,,not_presented,gross_profit,,,52,no gross profit line (STX prints cost of revenue and operating expenses) — check
 2787,UBER,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1903,2606,30,"'cost of revenue, exclusive of D&A shown separately' is UBER's cost of revenue line (D&A excluded as presented)"
 2787,UBER,CF,c:DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense,map,d_and_a,2412,2606,7,CF 'depreciation and amortization' (custom)
-2787,UBER,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1903,1912,4,"'repurchase of outstanding shares' tagged PaymentsForRepurchaseOfEquity (pre-IPO repurchases?)"
+2787,UBER,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1903,1912,4,'repurchase of outstanding shares' tagged PaymentsForRepurchaseOfEquity (pre-IPO repurchases?)
 2787,UBER,CF,c:RepurchaseofStockSubjectToPutOption,exclude,share_buybacks,1912,2012,2,repurchase of a subsidiary's shares (Yandex put): excluded by founder ruling
 2787,UBER,CF,,not_presented,dividends_paid,,,30,UBER pays no dividends
 5943,ACN,CF,c:DepreciationAmortizationAndOther,combined,d_and_a,2008,2608,25,"'depreciation, amortization and other' is combined (MSFT pattern): line_presented_combined_with_others"
 5943,ACN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 1813,CB,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,review,cash,2309,2609,13,"'cash, including restricted cash $143' — cash line includes restricted cash; insurer template"
-1813,CB,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1809,2209,13,"face line labelled 'interest expense' but tagged InterestIncomeExpenseNet (insurer prints interest expense as a separate expense line); sign check needed"
+1813,CB,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1809,2209,13,face line labelled 'interest expense' but tagged InterestIncomeExpenseNet (insurer prints interest expense as a separate expense line); sign check needed
 1813,CB,IS,us-gaap:IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,exclude,income_before_tax,1312,1512,3,label-regex false hit (after-tax line)
 1813,CB,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity,1312,1603,10,'total shareholders equity'; no NCI then
-1813,CB,IS,,review,revenue;net_income;income_tax_expense;eps,,,14,"14 filings miss revenue, NI, tax and EPS: a different IS layout or a statement-role issue (stmt not IS?); Tag Expert to open one"
+1813,CB,IS,,store_scope,revenue;net_income;income_tax_expense;eps,,,14,FSN-checked: 14 CB 10-Qs 2014-2017 (e.g. 0000896159-14-000007) present 'Statements of Operations and Comprehensive Income' as one report that FSN tags stmt=CI (47 lines; IS has 4-12). EPS/NI/revenue lines are only under CI. Mapper/extraction must read IS lines from a combined IS+CI report (Engineering)
 1813,CB,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,52,insurer
 1813,CB,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified insurer balance sheet
-1813,CB,CF,,review,capex;d_and_a,,,52,"insurer CF has no PP&E or D&A line in any filing: insurer template OUT or a note value?"
-2376,MPC,IS,us-gaap:RefiningAndMarketingRevenue,map,revenue,1312,1803,18,"'sales and other operating revenues' (refiner); total revenues and other income (custom) includes other income"
+1813,CB,CF,,review,capex;d_and_a,,,52,insurer CF has no PP&E or D&A line in any filing: insurer template OUT or a note value?
+2376,MPC,IS,us-gaap:RefiningAndMarketingRevenue,map,revenue,1312,1803,18,'sales and other operating revenues' (refiner); total revenues and other income (custom) includes other income
 2376,MPC,IS,c:RevenuesAndOtherIncome,exclude,revenue,1312,1803,18,includes other income
 2376,MPC,IS,us-gaap:RefiningAndMarketingCosts,map,cost_of_revenue,1312,1803,18,'cost of revenues (excludes items below)'
 2376,MPC,CF,us-gaap:PaymentsForRepurchaseOfOtherEquity,exclude,share_buybacks,2103,2103,1,repurchase of noncontrolling interests
@@ -154,7 +154,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2529,VLO,IS,us-gaap:RefiningAndMarketingCosts,map,cost_of_revenue,1312,1706,15,'cost of sales'
 2529,VLO,BS,,not_presented,total_liabilities,,,52,no total liabilities line
 1975,LMT,CF,c:DepreciationAndAmortizationIncludingDiscontinuedOperations,map,d_and_a,1612,2509,37,CF 'depreciation and amortization' (custom incl. discontinued)
-1700,VRTX,IS,us-gaap:InterestIncomeExpenseNet,review,interest_expense,1403,2403,34,"face line labelled 'interest expense' tagged InterestIncomeExpenseNet: gross interest expense line with a net tag (VRTX also prints 'interest income' separately) — map with sign check"
+1700,VRTX,IS,us-gaap:InterestIncomeExpenseNet,review,interest_expense,1403,2403,34,face line labelled 'interest expense' tagged InterestIncomeExpenseNet: gross interest expense line with a net tag (VRTX also prints 'interest income' separately) — map with sign check
 1700,VRTX,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1312,1812,6,'interest expense net'
 1700,VRTX,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity,1903,2112,8,'total shareholders equity'; no NCI then
 1700,VRTX,CF,,not_presented,dividends_paid,,,51,no dividends
@@ -171,26 +171,33 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1413,MO,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2403,42,'interest and other debt expense net'
 1413,MO,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2406,2609,10,as above
 1413,MO,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,review,stockholders_equity,2203,2209,3,'total stockholders equity (deficit)' incl NCI in 3 filings
-1413,MO,ALL,,review,all,,,7,"7 filings miss every data point: statements not classified IS/BS/CF in the store (stmt UN?) — store issue, not a tag issue"
+1413,MO,ALL,,exclude_filing,all,,,7,FSN-checked: the 7 are MO's annual 10-K/As (0000764180-20-000055 ... -26-000077) with 0 IS/BS/CF lines: amendments without financial statements; not part of any data point's expected filings
 4077,NEM,IS,us-gaap:RevenueMineralSales,map,revenue,1312,1712,17,'sales'
-4077,NEM,IS,us-gaap:MineralExtractionProcessingAndMarketingCosts,map,cost_of_revenue,1312,1503,6,"'costs applicable to sales' (excl. D&A shown separately)"
+4077,NEM,IS,us-gaap:MineralExtractionProcessingAndMarketingCosts,map,cost_of_revenue,1312,1503,6,'costs applicable to sales' (excl. D&A shown separately)
 4077,NEM,IS,c:CostsOfMineralExtractionProcessingExcludingExploration,map,cost_of_revenue,1506,1712,11,'costs applicable to sales' (custom)
-4077,NEM,IS,,review,cost_of_revenue,1803,2609,36,"from 2018 no candidate: find NEM's 'costs applicable to sales' tag in later filings"
+4077,NEM,IS,,resolved,cost_of_revenue,1803,2609,36,superseded by the CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization row
 4077,NEM,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1312,2609,52,'interest expense net'
 4077,NEM,IS,,not_presented,operating_income;gross_profit,,,53,no operating income line
 4447,FTNT,IS,,not_presented,interest_expense,1312,2103,30,no interest expense before the 2021 notes
 4447,FTNT,CF,,not_presented,dividends_paid,,,52,no dividends
 215,BMY,IS,,not_presented,interest_expense;operating_income;gross_profit,,,52,BMY IS has no interest expense line (inside other (income)/expense net) and no operating income
 1948,COF,BS,us-gaap:CashAndDueFromBanks,map,cash,1312,2606,51,bank: cash and due from banks
-1948,COF,IS,,review,revenue,1312,2606,50,"bank: 'total net revenue' (net interest income + non-interest income) has no std revenue tag; Tag Expert to name COF's tag"
+1948,COF,IS,us-gaap:InterestIncomeExpenseNet + us-gaap:NoninterestIncome,component,revenue,1312,2606,50,"FSN-checked 0000927628-26-000024: COF IS prints total interest income (5), total interest expense (11), total non-interest income (20); no 'total net revenue' line. Bank revenue = net interest income + non-interest income (component sum; bank template)"
 1948,COF,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,bank
 1948,COF,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
-3155,BKNG,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2606,46,"face 'net income' tagged AvailableToCommonStockholdersBasic; BKNG has no preferred stock"
-3155,BKNG,IS,us-gaap:ProfitLoss,review,net_income,1312,1512,9,"'net income' incl. a small redeemable NCI (2013-2015): parent NI is the line after 'less: NCI'"
-3155,BKNG,CF,us-gaap:DepreciationNonproduction,review,d_and_a,1312,1812,21,"CF prints 'depreciation' and 'amortization' on separate lines: D&A = sum (combine)"
+3155,BKNG,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2606,46,face 'net income' tagged AvailableToCommonStockholdersBasic; BKNG has no preferred stock
+3155,BKNG,IS,us-gaap:ProfitLoss,review,net_income,1312,1512,9,'net income' incl. a small redeemable NCI (2013-2015): parent NI is the line after 'less: NCI'
+3155,BKNG,CF,us-gaap:DepreciationNonproduction,component,d_and_a,1312,1812,21,FSN-checked 0001075531-19-000009 CF lines 4-5: 'Depreciation' + 'Amortization' (AmortizationOfIntangibleAssets); D&A = sum of the two; debt-cost amortization lines 10-11 excluded
 3155,BKNG,IS,c:IncomeLossFromContinuingOperationsBeforeEquityMethodInvestmentsIncomeTaxesExtraordinaryItems,map,income_before_tax,1403,1409,3,'earnings before income taxes' (custom)
 3155,BKNG,CF,,not_presented,dividends_paid,1312,2412,41,BKNG began dividends in 2024
-1025,PH,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1712,2606,26,"'net income attributable to common shareholders'; no preferred stock"
+1025,PH,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1712,2606,26,'net income attributable to common shareholders'; no preferred stock
 1025,PH,IS,us-gaap:ProfitLoss,exclude,net_income,1712,2606,28,includes NCI
 1025,PH,IS,,not_presented,operating_income,,,51,no operating income line
 3639,MDT,IS,,not_presented,gross_profit,,,46,no gross profit line
+4077,NEM,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1803,2609,36,FSN-checked 0001164727-26-000010 IS line 3 'Costs applicable to sales' (D&A on its own line 4)
+3155,BKNG,CF,us-gaap:AmortizationOfIntangibleAssets,component,d_and_a,1312,1812,21,second D&A component (see DepreciationNonproduction row)
+1204,SCHW,CF,us-gaap:AmortizationOfIntangibleAssets,component,d_and_a,2009,2606,24,second D&A component
+2124,SCCO,ALL,,exclude_filing,all,1912,2212,4,"10-K/As with 0 IS/BS/CF lines (0001104659-20-053164, 0001558370-22-002995, -22-002999, 0001558370-23-002434)"
+4077,NEM,ALL,,exclude_filing,all,2112,2112,1,10-K/A 0001164727-22-000028 with 0 statement lines
+4630,TMUS,ALL,,exclude_filing,all,2006,2006,1,10-Q/A 0001193125-20-214220 with 0 statement lines
+5261,DIS,ALL,,exclude_filing,all,2209,2309,2,10-K/As 0001193125-23-014219 and 0001744489-24-000064 with 0 statement lines
