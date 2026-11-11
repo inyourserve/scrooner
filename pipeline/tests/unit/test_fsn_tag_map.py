@@ -126,3 +126,35 @@ def test_contract_fields_vocabulary():
                                       ("ProductOrServiceDomain", True), ("Revenues", False), ("MemberUnitsIssued", False)])
 def test_presentation_only_names(tag, out):
     assert bool(tag_map.PRESENTATION_ONLY.search(tag)) is out
+
+
+LIB = {
+    ("IS", "NetIncomeLoss"): {"stmt": "IS", "tag": "NetIncomeLoss", "decision": "component", "concept": "",
+                              "parent_concept": "revenue_sanity_resolved", "reason_class": "", "caveat": ""},
+    ("CF", "NetCashProvidedByUsedInInvestingActivities"): {
+        "stmt": "CF", "tag": "NetCashProvidedByUsedInInvestingActivities", "decision": "excluded", "concept": "",
+        "parent_concept": "", "reason_class": "section_total", "caveat": ""},
+}
+
+
+@pytest.mark.integration
+def test_library_decides_what_structure_left_open_and_reports_disagreements(store):
+    """the library row decides a line the rules left open (Apple's investing total: excluded, section_total); a
+    library row that contradicts the company's own structure (a fabricated 'NetIncomeLoss is a component of
+    revenue') never overrides the rule and is reported"""
+    dis: list = []
+    rows, _ = tag_map.company_tag_map(store, _cid(store, "0000320193"), library=LIB, disagreements=dis)
+    out = [{**r, **{k: r.get(k) for k in tag_map.COLUMNS}} for r in rows]
+    inv = _by(out, "CF", "NetCashProvidedByUsedInInvestingActivities")
+    assert inv and all(r["decided_by"] == "library" and r["decision"] == "excluded" for r in inv)
+    assert all(r["reason_class"] == "section_total" for r in inv)
+    ni = _by(out, "IS", "NetIncomeLoss")
+    assert ni and ni[0]["decided_by"] == "rule" and ni[0]["canonical_concept"] == "net_income_resolved"
+    assert any(d["tag"] == "NetIncomeLoss" and d["library_decision"] == "component" for d in dis)
+
+
+def test_load_library_absent_file_is_empty(tmp_path):
+    assert tag_map.load_library(tmp_path / "missing.csv") == {}
+    p = tmp_path / "lib.csv"
+    p.write_text("stmt,tag,decision,concept,parent_concept,reason_class,caveat\nBS,Assets,map,total_assets_resolved,,,\n")
+    assert tag_map.load_library(p)[("BS", "Assets")]["concept"] == "total_assets_resolved"

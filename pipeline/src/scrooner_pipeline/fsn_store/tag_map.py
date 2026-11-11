@@ -166,12 +166,60 @@ def calc_ancestor(
     return None
 
 
+def load_library(path: Path | None) -> dict[tuple[str, str], dict[str, str]]:
+    """the Tag Expert's standard-tag library, {(stmt, tag): row}; an absent file is an empty library"""
+    if path is None or not Path(path).exists():
+        return {}
+    with Path(path).open(newline="") as fh:
+        return {
+            (r["stmt"], r["tag"]): r for r in csv.DictReader(fh) if r.get("decision")
+        }
+
+
+def apply_library(rec: dict[str, Any], lib: dict[str, str]) -> None:
+    caveat = lib.get("caveat") or None
+    if lib["decision"] == "map":
+        rec.update(
+            disposition="mapped",
+            concept=lib["concept"],
+            decided_by="library",
+            reason=caveat,
+        )
+    elif lib["decision"] == "component":
+        rec.update(
+            disposition="combined",
+            combine_role="component_of",
+            concept=lib["parent_concept"],
+            sign=1,
+            decided_by="library",
+            reason=caveat,
+        )
+    elif lib["decision"] == "excluded":
+        rec.update(
+            disposition="excluded",
+            decided_by="library",
+            reason=lib.get("reason_class") or caveat or "library_excluded",
+        )
+
+
+def library_agrees(rec: dict[str, Any], lib: dict[str, str]) -> bool:
+    if lib["decision"] == "map":
+        return rec["disposition"] == "mapped" and rec["concept"] == lib["concept"]
+    if lib["decision"] == "component":
+        return (
+            rec["disposition"] == "combined" and rec["concept"] == lib["parent_concept"]
+        )
+    return rec["disposition"] == "excluded"
+
+
 def filing_decisions(
     conn: psycopg.Connection,
     filing_id: int,
     rules: dict[str, Any],
     detectors: list[Callable] | None,
     concept_names: dict[int, str],
+    library: dict[tuple[str, str], dict[str, str]] | None = None,
+    disagreements: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """one decision per statement line of one filing (see the module docstring)"""
     lines = _lines(conn, filing_id)
@@ -263,7 +311,45 @@ def filing_decisions(
             held = ev.get("held") or ev.get("demoted_from")
             rec["reason"] = f"held by {d[5]}" + (f": {held}" if held else "")
         out.append(rec)
+    held = lambda rec: (rec["reason"] or "").startswith("held by")  # noqa: E731  a detector refused it
     arcs = _arcs(conn, filing_id) if any(r["disposition"] is None for r in out) else {}
+    # the Tag Expert's standard-tag library (data-team/tags/library/standard-tag-library.csv): one decision per
+    # (stmt, standard tag). Company structure decided above wins; a library row that disagrees with it is reported.
+    for rec in out:
+        lib = (
+            (library or {}).get((rec["stmt"], rec["tag"]))
+            if not rec["custom"]
+            else None
+        )
+        if not lib:
+            continue
+        if rec["disposition"] is not None:
+            if (
+                rec["decided_by"] == "rule"
+                and disagreements is not None
+                and not library_agrees(rec, lib)
+            ):
+                disagreements.append(
+                    {
+                        "stmt": rec["stmt"],
+                        "tag": rec["tag"],
+                        "rule_id": rec["rule_id"],
+                        "rule_disposition": rec["disposition"],
+                        "rule_concept": rec["concept"],
+                        "library_decision": lib["decision"],
+                        "library_concept": lib.get("concept")
+                        or lib.get("parent_concept"),
+                        "report": rec["report"],
+                        "line": rec["line"],
+                        "plabel": rec["plabel"],
+                    }
+                )
+            continue
+        if held(rec):
+            continue
+        apply_library(rec, lib)
+        if rec["disposition"] == "mapped":
+            mapped.setdefault((rec["stmt"], rec["tag"]), rec["concept"])
     # the same tag printed as a CONCEPT on another statement of this filing (NetIncomeLoss on IS and on EQ / CI;
     # StockholdersEquity on BS and EQ; cash on BS and CF): the same fact, so the same concept. A tag mapped to two
     # different concepts on different statements is ambiguous and decides nothing.
@@ -271,7 +357,6 @@ def filing_decisions(
     for rec in out:
         if rec["disposition"] == "mapped":
             concept_of_tag[rec["tag"]].add((rec["concept"], rec["stmt"]))
-    held = lambda rec: (rec["reason"] or "").startswith("held by")  # noqa: E731  a detector refused it
     for rec in out:
         if rec["disposition"] is not None or held(rec):
             continue
@@ -325,6 +410,8 @@ def company_tag_map(
     company_id: int,
     rules: dict[str, Any] | None = None,
     detectors: list[Callable] | None = None,
+    library: dict[tuple[str, str], dict[str, str]] | None = None,
+    disagreements: list[dict[str, Any]] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """(rows in the company_tag_map contract, residue rows) for one company"""
     from scrooner_pipeline.fsn_store import detectors as det  # noqa: PLC0415  (imports the lane modules)
@@ -346,7 +433,9 @@ def company_tag_map(
     )
     for i, (fid, acc, form, period) in enumerate(filings):
         seen: dict[tuple[str, str, str], dict[str, Any]] = {}
-        for rec in filing_decisions(conn, fid, rules, detectors, names):
+        for rec in filing_decisions(
+            conn, fid, rules, detectors, names, library, disagreements
+        ):
             key = (rec["stmt"], taxonomy_of(rec["version"], rec["custom"]), rec["tag"])
             rec = {**rec, "accession": acc, "period": period}
             cur = seen.get(key)
@@ -462,7 +551,11 @@ def contract_fields(rec: dict[str, Any]) -> dict[str, Any]:
             decision="component",
             parent_concept=rec["concept"],
             combine_sign=rec["sign"],
-            reason_class="calc_ancestor" if by_calc else "calc_position_rule",
+            reason_class="calc_ancestor"
+            if by_calc
+            else (
+                "library" if rec["decided_by"] == "library" else "calc_position_rule"
+            ),
             evidence_cal_parent=path[1] if len(path) > 1 else None,
         )
     elif disp == "combined":
@@ -475,7 +568,7 @@ def contract_fields(rec: dict[str, Any]) -> dict[str, Any]:
         out.update(
             decision="excluded",
             reason_class=rec["reason"]
-            if rec["decided_by"] == "structural"
+            if rec["decided_by"] in ("structural", "library")
             else "rule_excluded",
         )
     return out

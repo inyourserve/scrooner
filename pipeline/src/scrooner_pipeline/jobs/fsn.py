@@ -791,13 +791,19 @@ def tag_map_cmd(
     ),
     out: str = typer.Option("tag-map-out", help="Output directory."),
     timeout_s: int = typer.Option(15, help="statement_timeout per query, seconds."),
+    library: str = typer.Option(
+        "data-team/tags/library/standard-tag-library.csv",
+        help="The Tag Expert's standard-tag library (stmt, tag -> map/component/excluded); absent file = none.",
+    ),
 ) -> None:
     """Per-company tag map from the store, READ-ONLY (founder 2026-11-11: FSN for learning which tag is what, SEC
     companyfacts for the values). Decisions are made in memory with the committed rules and detectors
     (fsn_store.tag_map); nothing is written to fsn.* or analytics.*. Writes into the output directory:
       company_tag_map.csv  the analytics.company_tag_map rows (Engineering's migration 0123 columns)
       residue.csv          statement tags with no decision yet (the library queue: Ritwik, the Tag Expert)
-      companies.csv        company_id, cik, tags, open_tags, complete, rows by decided_by"""
+      companies.csv        company_id, cik, tags, open_tags, complete, rows by decided_by
+      library_disagreements.csv  lines where the company's structure (rules) and the library decide differently,
+                           for the Tag Expert"""
     from scrooner_pipeline.db.connection import get_connection
     from scrooner_pipeline.fsn_store import mapping, tag_map
 
@@ -818,8 +824,15 @@ def tag_map_cmd(
             )
         )
         rules = mapping.load_rules(conn)
+        lib = tag_map.load_library(Path(library) if library else None)
+        typer.echo(f"library rows: {len(lib)}")
+        disagreements: list[dict[str, Any]] = []
         for cik, cid in sorted(ids.items()):
-            rows, residue = tag_map.company_tag_map(conn, cid, rules)
+            dis: list[dict[str, Any]] = []
+            rows, residue = tag_map.company_tag_map(
+                conn, cid, rules, library=lib, disagreements=dis
+            )
+            disagreements.extend({"company_id": cid, "cik": cik, **d} for d in dis)
             conn.rollback()  # read-only: end the snapshot before the next company
             st = tag_map.company_status(rows, residue)
             all_rows.extend(rows)
@@ -836,6 +849,10 @@ def tag_map_cmd(
             )
     n = tag_map.write_csv(all_rows, root / "company_tag_map.csv", tag_map.COLUMNS)
     tag_map.write_csv(all_residue, root / "residue.csv", tag_map.RESIDUE_COLUMNS)
+    if disagreements:
+        tag_map.write_csv(
+            disagreements, root / "library_disagreements.csv", list(disagreements[0])
+        )
     cols = sorted(
         {k for s in summary for k in s}, key=lambda k: (not k[0:1].isalpha(), k)
     )

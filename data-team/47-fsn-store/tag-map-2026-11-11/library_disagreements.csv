@@ -1,0 +1,1023 @@
+company_id,cik,stmt,tag,rule_id,rule_disposition,rule_concept,library_decision,library_concept,report,line,plabel
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+215,0000014272,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Net product sales
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,24,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,24,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,27,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,43,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,25,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,26,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,27,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,27,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,27,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,26,Profit (loss)
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+251,0000018230,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,26,Profit
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,3,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,5,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,4,NET OPERATING REVENUES
+279,0000021344,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,4,NET OPERATING REVENUES
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,8,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,8,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,9,Sales of services
+608,0000040545,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,10,Sales of goods
+608,0000040545,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,11,Sales of services
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,11,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,12,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,8,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,8,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,17,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,18,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,17,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,18,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,13,"Depreciation and amortization of property, plant and equipment (Note 7)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,14,Amortization of intangible assets (Note 8)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 7)
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 7)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,5,"Depreciation and amortization of property, plant and equipment (Note 6)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,5,"Depreciation and amortization of property, plant and equipment (Note 6)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,5,"Depreciation and amortization of property, plant and equipment (Note 6)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+608,0000040545,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,5,5,"Depreciation and amortization of property, plant and equipment (Note 6)"
+608,0000040545,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,6,Amortization of intangible assets (Note 7)
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,24,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,24,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+644,0000051143,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,23,Net income
+666,0000059478,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income (loss)
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,10,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,10,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,10,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,10,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,10,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,11,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,11,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1010,0000072971,CF,DepreciationAmortizationAndAccretionNet,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and accretion"
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,11,Net Income Attributable to Common Shareholders
+1025,0000076334,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,8,Net income
+1025,0000076334,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,8,Net income
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,10,Net income attributable to common shareholders
+1025,0000076334,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,10,Net income attributable to common shareholders
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1030,0000078003,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Revenues
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,25,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,21,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,21,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,22,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,22,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,17,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,17,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,17,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,18,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,19,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,17,Interest expense
+1043,0000080661,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,17,Interest expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,14,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,14,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,14,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,14,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1086,0000093410,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,2,13,Interest and debt expense
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,19,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,19,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,20,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,20,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,19,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,21,Net Income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,5,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,5,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,5,24,Net income attributable to Thermo Fisher Scientific Inc.
+1105,0000097745,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income attributable to Thermo Fisher Scientific Inc.
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,13,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,6,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,6,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,8,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,8,10,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1117,0000100885,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,7,4,Depreciation
+1158,0000109198,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,11,Net income
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Sales to customers
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Sales to customers
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1164,0000200406,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,1,Sales to customers (Note 9)
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1182,0000310158,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,1,Sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1196,0000315189,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,2,2,Net sales
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,3,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1207,0000318154,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Products
+1354,0000731766,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net earnings
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1354,0000731766,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,3,Products
+1354,0000731766,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Services
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,8,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,12,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,12,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,10,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,16,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,16,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,16,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,4,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,4,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,15,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,30,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,4,10,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,10,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,10,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,InterestExpenseDebt,is.interest_single_gross_face_line@1,mapped,interest_expense_resolved,component,interest_expense_resolved,3,10,Interest expense
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,24,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1421,0000766704,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,3,25,Net income (loss) attributable to common stockholders
+1813,0000896159,IS,IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,is.pretax_above_tax_line_tie@1,mapped,income_before_tax_resolved,component,net_income_resolved,4,21,Income before income tax
+1813,0000896159,IS,IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,is.pretax_above_tax_line_tie@1,mapped,income_before_tax_resolved,component,net_income_resolved,4,21,Income before income tax
+1813,0000896159,IS,IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,is.pretax_above_tax_line_tie@1,mapped,income_before_tax_resolved,component,net_income_resolved,4,23,Income before income tax
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,22,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,21,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,20,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2124,0001001838,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,19,Net income attributable to SCC
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,11,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment, including internal-use software and website development, and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation of property and equipment and other amortization, including capitalized content costs"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,3,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,3,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,3,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,3,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,3,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+2328,0001018724,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,2,5,"Depreciation and amortization of property and equipment and capitalized content costs, operating lease assets, and other"
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income applicable to common stockholders
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income applicable to common stockholders
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income applicable to common stockholders
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income applicable to common stockholders
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income applicable to common stockholders
+3155,0001075531,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income applicable to common stockholders
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,27,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,27,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,27,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net (loss) income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,29,Net income (loss)
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,29,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net loss
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net (loss) income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,5,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net loss
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income (loss)
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,5,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income (loss)
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,5,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,23,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,5,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,5,25,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3155,0001075531,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,4,24,Net income
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Total revenues
+3569,0001108524,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,3,4,Total revenues
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,15,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,15,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,15,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,18,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,19,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,20,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,20,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,3,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,16,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,3,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,3,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,3,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,3,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+3932,0001141391,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,2,17,Net Income
+4447,0001262039,IS,SalesRevenueGoodsNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,4,Product
+4447,0001262039,IS,SalesRevenueServicesNet,is.revenue_total@1,mapped,revenue_sanity_resolved,component,revenue_sanity_resolved,4,5,Services
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net loss attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net loss attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net loss attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net (loss) income attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net loss attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net loss attributable to common stockholders
+4945,0001318605,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,4,29,Net loss attributable to common stockholders
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,30,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,32,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,32,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,31,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,32,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,5,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,5,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,25,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,5,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,5,26,Net income
+5718,0001403161,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,6,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and asset impairments"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+5943,0001467373,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+2726,0001535527,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,22,Net loss attributable to Class A and Class B common stockholders
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,14,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,14,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net earnings
+2848,0001551152,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_bottom_line_tie@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net earnings
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,15,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,11,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,16,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,12,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net income attributable to Eaton ordinary shareholders
+2852,0001551182,IS,NetIncomeLossAvailableToCommonStockholdersBasic,is.net_income_available_to_common_bridge@1,mapped,net_income_resolved,component,net_income_resolved,2,13,Net income attributable to Eaton ordinary shareholders
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,6,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,9,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,8,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+3418,0001596532,CF,DepreciationDepletionAndAmortization,cf.capex_da_held@1,combined,,map,depreciation_and_amortization_resolved,7,4,"Depreciation, amortization and other"
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,8,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,10,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+9,0001652044,CF,Depreciation,cf.da_single_line@1,mapped,depreciation_and_amortization_resolved,component,depreciation_and_amortization_resolved,9,4,Depreciation of property and equipment
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income (loss)
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,28,Net income (loss)
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,5,27,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+5116,0001730168,IS,ProfitLoss,is.net_income_profit_loss_no_nci@1,mapped,net_income_resolved,component,net_income_resolved,4,26,Net income
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,4,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 5)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 7)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 5)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 7)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,6,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
+4015,0001996810,CF,Depreciation,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,4,"Depreciation and amortization of property, plant, and equipment (Note 6)"
+4015,0001996810,CF,AmortizationOfIntangibleAssets,cf.capex_da_held@1,combined,,component,depreciation_and_amortization_resolved,5,5,Amortization of intangible assets (Note 8)
