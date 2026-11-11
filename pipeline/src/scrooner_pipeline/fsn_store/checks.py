@@ -16,6 +16,7 @@ from decimal import Decimal
 from typing import Any, Iterable
 
 import psycopg
+from scrooner_pipeline.fsn_store.stmt_effective import effective_stmt_sql
 
 STATEMENTS = ("BS", "IS", "CF")
 # identities by standard tag (us-gaap), checked when every term is printed in the column
@@ -72,11 +73,14 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
     with conn.cursor() as cur:
         cur.execute(
             """
-            select l.stmt, l.line, t.tag, t.version, l.inpth
-            from fsn.line l join fsn.tag t on t.id = l.tag_id
-            where l.filing_id = %s and l.stmt in ('BS', 'IS', 'CF')
-            order by l.stmt, l.report, l.line
-            """,
+            select es, line, tag, version, inpth from (
+                select %s as es, l.report, l.line, t.tag, t.version, l.inpth
+                from fsn.line l join fsn.tag t on t.id = l.tag_id
+                where l.filing_id = %%s
+            ) x where es in ('BS', 'IS', 'CF')
+            order by es, report, line
+            """
+            % effective_stmt_sql("l"),
             (filing_id,),
         )
         lines = cur.fetchall()
