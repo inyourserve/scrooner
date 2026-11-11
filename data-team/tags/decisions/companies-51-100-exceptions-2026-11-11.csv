@@ -56,8 +56,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4056,COP,IS,,not_presented,operating_income;gross_profit,,,52,COP IS has no operating income subtotal
 4123,BLK,IS,us-gaap:RevenuesExcludingInterestAndDividends,map,revenue,1403,1803,17,'total revenue' top line tagged RevenuesExcludingInterestAndDividends
 4123,BLK,IS,us-gaap:InvestmentAdvisoryFees,exclude,revenue,1403,1803,17,component of total revenue
-4123,BLK,CF,c:DividendsOrSubcoDistributionsPaid,definition_call,dividends_paid,2509,2606,4,"FSN-checked 0001193125-26-071966 CF line 35 'Dividends/Subco distributions paid' 3,347M; line 37 'Shares/Subco Units repurchased' 1,951M. Subco units (GIP deal) are a subsidiary's units; the face gives no split. See card note"
-4123,BLK,CF,c:SharesOrSubcoUnitRepurchased,definition_call,share_buybacks,2509,2606,4,see DividendsOrSubcoDistributionsPaid row
+4123,BLK,CF,c:DividendsOrSubcoDistributionsPaid,combined,dividends_paid,2509,2606,4,"Dhairya 2026-11-11: dividends/buybacks that include Subco units = combined, a blank with reason, unless the equity note gives the common-only amounts (then map those, with evidence). 0001193125-26-071966 CF lines 35/37"
+4123,BLK,CF,c:SharesOrSubcoUnitRepurchased,combined,share_buybacks,2509,2606,4,"Dhairya 2026-11-11: dividends/buybacks that include Subco units = combined, a blank with reason, unless the equity note gives the common-only amounts (then map those, with evidence). 0001193125-26-071966 CF lines 35/37"
 4123,BLK,IS,,not_in_template,cost_of_revenue;gross_profit,,,50,asset manager income statement
 4123,BLK,BS,,not_in_template,current_assets;current_liabilities,,,50,unclassified balance sheet
 1196,DE,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified balance sheet (equipment operations + financial services)
@@ -79,7 +79,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2124,SCCO,IS,us-gaap:EarningsPerShareBasicAndDiluted,map,basic_eps,1312,2109,32,basic and diluted on one line
 2124,SCCO,IS,us-gaap:RevenueMineralSales,map,revenue,1312,1712,17,'net sales' tagged RevenueMineralSales
 2124,SCCO,IS,c:RevenueFromContractWithCustomerExcludingAssessedTax,map,revenue,1803,1803,1,custom-namespace copy of the std tag
-2124,SCCO,IS,us-gaap:InterestCostsIncurred,definition_call,interest_expense,1312,2609,52,"FSN-checked 0001104659-26-021492 IS lines 9-10: 'Interest expense' 416.7M (InterestCostsIncurred), then 'Capitalized interest' 47.4M (InterestCostsCapitalizedAdjustment, a reduction). See card note"
+2124,SCCO,IS,us-gaap:InterestCostsIncurred - us-gaap:InterestCostsCapitalizedAdjustment,component,interest_expense,1312,2609,52,Dhairya 2026-11-11: interest_expense = expensed amount = face 'Interest expense' 416.7M minus face 'Capitalized interest' 47.4M = 369.3M (0001104659-26-021492 IS lines 9-10); the meaning of us-gaap InterestExpense. Same rule for any filer that prints capitalized interest as a face reduction
 2124,SCCO,IS,c:CurrentAndRoyaltyTaxes,component,income_tax_expense,1712,2609,27,"FSN-checked 0001104659-26-021492 IS lines 14-15: 'Income taxes (including royalty taxes, see Note 7)' 2,504.1M + 'Deferred income taxes' -33.9M; SCCO classifies the Mexican royalty as income tax (label cites Note 7). income_tax_expense = line 14 + line 15, as printed"
 2124,SCCO,BS,,not_presented,total_liabilities,,,56,no total liabilities line
 1400,NEE,CF,c:CapitalExpendituresOfPublicUtility,component,capex,1312,2512,33,"NEE capex = 'Capital expenditures of FPL' + 'Capital expenditures' + 'Other capital expenditures' (0000753308-26-000015 CF lines 28, 29, 32); doc 02 line 114 (founder 2026-11-04 item 3)"
@@ -137,7 +137,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2787,UBER,CF,,not_presented,dividends_paid,,,30,UBER pays no dividends
 5943,ACN,CF,c:DepreciationAmortizationAndOther,combined,d_and_a,2008,2608,25,"'depreciation, amortization and other' is combined (MSFT pattern): line_presented_combined_with_others"
 5943,ACN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
-1813,CB,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,definition_call,cash,2309,2609,13,"FSN-checked 0000896159-26-000005: BS line 9 'Cash, including restricted cash $198 and $261' 2,470M; restricted cash also shown at line 5 (198M). See card note"
+1813,CB,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,map,cash,2309,2609,13,"Dhairya 2026-11-11: the face line as printed, labelled 'includes restricted cash' (0000896159-26-000005 BS line 9, 2,470M); no derived instant"
 1813,CB,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1809,2209,13,face line labelled 'interest expense' but tagged InterestIncomeExpenseNet (insurer prints interest expense as a separate expense line); sign check needed
 1813,CB,IS,us-gaap:IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,exclude,income_before_tax,1312,1512,3,label-regex false hit (after-tax line)
 1813,CB,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity,1312,1603,10,'total shareholders equity'; no NCI then
