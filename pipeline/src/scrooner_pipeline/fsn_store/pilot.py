@@ -967,18 +967,11 @@ def ytd_gap_blanks(
     return out, skipped
 
 
-def hold_valued_to_no_row(
-    gate: dict[int, dict[str, Any]], no_row: list[dict[str, Any]]
-) -> dict[tuple[int, str], int]:
-    """Hold every pair with a valued->no-row key (it must be 0 for a written pair); returns the count per pair."""
-    counts: Counter[tuple[int, str]] = Counter(
-        (int(k["company_id"]), k["data_point"]) for k in no_row
-    )
-    for (cid, dp), n in counts.items():
-        g = gate.get(cid)
-        if g is not None and dp in g["data_points"]:
-            g["data_points"][dp].append(f"C2_valued_to_no_row:{n}")
-    return dict(counts)
+def count_valued_to_no_row(no_row: list[dict[str, Any]]) -> dict[tuple[int, str], int]:
+    """The valued->no-row keys per pair, as a REPORT (the old-vs-new diff). Founder 2026-11-11, "move to the new
+    system": the gate no longer holds a pair for an old canonical_fact key the new build does not carry; it holds
+    a pair only for a reasonless template key (criterion 4 / N1)."""
+    return dict(Counter((int(k["company_id"]), k["data_point"]) for k in no_row))
 
 
 RULE_PROOF_BLANK = "fsn.cell_proof_blank@1"

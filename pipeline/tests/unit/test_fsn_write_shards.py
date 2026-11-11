@@ -71,7 +71,7 @@ def test_a_cik_outside_the_cohort_or_a_list_with_another_stage_fails():
     res, out = _run("load_map", "4", "", f"{inside},0000000001")
     assert res.returncode == 1 and "outside cohort v1.1: 0000000001" in res.stderr
     assert "shards" not in out
-    for stage in ("select_write", "select_plan", "restore"):
+    for stage in ("select_write", "select_plan", "proof_blank", "restore"):
         res, out = _run(stage, "4", "", inside)
         assert res.returncode == 1 and "only with stage load_map" in res.stderr
         assert "shards" not in out
