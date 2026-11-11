@@ -24,6 +24,11 @@ name: FSN store production write (cohort)
 #                       founder's store-load approval. Uploads the C2 table (valued_to_no_row.tsv,
 #                       valued_to_blank.json), not_done.json, done_pairs.tsv, done_companies.txt, the plan reports
 #                       (write-*.json) and the before-image. Same window, headroom and shard rules; no CIK list.
+#   stage proof_blank:  (N2, no fallback) from the select_write run proof_run: per shard, `scrooner-fsn proof-blank`
+#                       (read-only) turns each written cell that analytics.cell_proof DISAGREEs with into a defect
+#                       blank (whole pairs); prints the summary; plan by default, `--apply` only with apply=true,
+#                       after a before-image of the affected companies (fsn-proofblank-before-image-<i>, restore
+#                       format) is uploaded. Same shards/limit inputs as the write run; no CIK list.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
 #                       company with a served cell_proof DISAGREE after the write is restored)
 # Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
@@ -34,9 +39,9 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "load_map (fsn.* + library), select_plan (select_write rolled back: no canonical_fact write), select_write (also writes canonical_fact) or restore"
+        description: "load_map (fsn.* + library), select_plan (select_write rolled back: no canonical_fact write), select_write (also writes canonical_fact), proof_blank (N2: re-write cell_proof DISAGREEs as defect blanks) or restore"
         type: choice
-        options: [load_map, select_plan, select_write, restore]
+        options: [load_map, select_plan, select_write, proof_blank, restore]
         default: load_map
       shards:
         description: "Shards, 1..20 (each holds at most 2 production connections: budget 40)"
@@ -50,6 +55,13 @@ on:
       data_points:
         description: "Data points the cell write may touch (passed families)"
         default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved"
+      proof_run:
+        description: "proof_blank only: the select_write run id whose out/write cells are checked (same shards and limit)"
+        default: ""
+      apply:
+        description: "proof_blank only: true = load the defect blanks (--apply, production write); false = --plan"
+        type: boolean
+        default: false
       restore_run:
         description: "restore only: the select_write run id whose before-images to put back"
         default: ""
@@ -114,13 +126,13 @@ jobs:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
       - name: Seed concept rules (production fsn.concept_rule)
-        if: inputs.stage != 'restore'
+        if: inputs.stage != 'restore' && inputs.stage != 'proof_blank'
         run: uv run --project pipeline scrooner-fsn seed-rules $(ls data-team/47-fsn-store/concept_rules/*.jsonl | grep -v _provenance) --apply
 
   write:
     name: write shard ${{ matrix.shard.i }}
     needs: seed
-    if: inputs.stage != 'restore'
+    if: inputs.stage != 'restore' && inputs.stage != 'proof_blank'
     runs-on: ubuntu-latest
     timeout-minutes: 340
     strategy:
@@ -230,6 +242,95 @@ jobs:
             out/missing_filings.json
             out/write-*.json
             out/write/
+          if-no-files-found: ignore
+
+  proof_blank:
+    name: proof_blank shard ${{ matrix.shard.i }}
+    needs: seed
+    if: inputs.stage == 'proof_blank'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: ${{ fromJSON(needs.seed.outputs.shards) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      SHARD: ${{ matrix.shard.i }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Download the write run's shard artifact (out/write/)
+        uses: actions/download-artifact@v4
+        with:
+          name: fsn-write-shard-${{ matrix.shard.i }}
+          path: written
+          run-id: ${{ inputs.proof_run }}
+          github-token: ${{ github.token }}
+      - name: Proof-blank (read-only on production), DISAGREEs of written cells become defect blanks, whole pairs
+        run: |
+          set -eu
+          [ -d written/write ] || { echo "::warning::shard $SHARD wrote no cells (no out/write): nothing to check"; exit 0; }
+          uv run --project pipeline scrooner-fsn proof-blank --write-dir written/write --out out/proof_blank | tee out/proof_blank.log
+          python3 - <<'PY'
+          import json
+          s = json.load(open("out/proof_blank/summary.json"))
+          print("pairs re-written (rows reloaded, cells blanked) per family:", json.dumps(s["families"]))
+          print("DISAGREE rows on the written companies:", s["disagree_rows"])
+          print("DISAGREEs matching no written cell:", s["disagree_not_in_written_cells"])
+          PY
+      - name: Before-image of the affected companies (read-only export, restore format)
+        run: |
+          set -eu
+          mkdir -p out
+          uv run --project pipeline python pipeline/scripts/proof_blank_before_image.py out/proof_blank out/before_image
+      - name: Store the before-image before any load
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsn-proofblank-before-image-${{ matrix.shard.i }}
+          path: out/before_image/
+          if-no-files-found: ignore
+          retention-days: 90
+      - name: Plan the defect blanks (every company rolled back, nothing written)
+        if: ${{ !inputs.apply }}
+        run: |
+          set -u
+          for d in out/proof_blank/*/; do
+            [ -f "$d/cells.jsonl.gz" ] || continue
+            fam=$(basename "$d")
+            uv run --project pipeline scrooner-cells load "$d/cells.jsonl.gz" --family "$fam" --plan --protect \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min \
+              --report "out/proof_blank-$fam.json" || echo "::warning::proof_blank plan $fam failed"
+          done
+      - name: Load the defect blanks (PRODUCTION WRITE, only with apply=true)
+        if: ${{ inputs.apply }}
+        run: |
+          set -u
+          for d in out/proof_blank/*/; do
+            [ -f "$d/cells.jsonl.gz" ] || continue
+            fam=$(basename "$d")
+            uv run --project pipeline scrooner-cells load "$d/cells.jsonl.gz" --family "$fam" --apply --protect \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min \
+              --report "out/proof_blank-$fam.json" || echo "::warning::proof_blank load $fam failed"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fsn-proofblank-shard-${{ matrix.shard.i }}
+          path: |
+            out/proof_blank/
+            out/proof_blank.log
+            out/proof_blank-*.json
           if-no-files-found: ignore
 
   restore:
