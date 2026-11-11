@@ -120,3 +120,9 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - One line, different tags by form: CSCO, ABBV, LIN tag CFO as `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations` in some 10-Qs/10-Ks: map per filing (company_tag_map is per filing era, not per company).
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 12. Dhairya ruling (b) and Ritwik (cloud) notes 10, 22, 23 (2026-11-11)
+- NI = ProfitLoss − NCI only on the same IS face, NCI printed as the deduction, no `NetIncomeLoss` printed (ruling (b)); PNC 6,997 − 61 = 6,936M (0000713676-26-000020 IS l34-35). Never for equity.
+- "Attributable to common" (NIACSB) = net income only with no preferred stock: yes at CVS, BE, WELL, ETN, BKNG, PH, SCCO, CAT; NOT at OXY (preferred from 2019), BSX (2020-23 convertible preferred), PNC.
+- UNH 10-Q 0000731766-26-000197 prints NetIncomeLoss (l25): the UNH company note's ProfitLoss mapping is wrong.
+- MSI 2018-12: basic and diluted EPS tags swapped (map by label, flag). VRTX "Interest expense" on `InterestIncomeExpenseNet` −44.1M (0000875320-24-000062 l18): map with sign −1; company_tag_map needs a sign column.

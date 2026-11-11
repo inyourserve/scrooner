@@ -9,3 +9,7 @@ These are not tag meanings but they decide whether ANY tag's value belongs to th
 6. Utility co-registrant blocks: several registrants' statements in one R page (PEG R5); FSN `coreg` marks only a sole LegalEntity axis (FSN-GUIDE).
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## Ritwik (cloud) notes 16, 21, 29 (2026-11-11)
+- Co-registrant statements inside one filing (PLD/Prologis L.P., SPG/Simon L.P., DUK + six utilities, CMCSA/NBCUniversal to 2019, URI/United Rentals (North America)): take coreg = '' only, for every data point. A UN statement is excluded only when its column carries a co-registrant/LegalEntityAxis member (Dhairya accepted 2026-11-11).
+- Pre-merger SPAC filings under the same CIK (VRT 2018-19, GS Acquisition Holdings): outside the history window. 10-K/As with 0 IS/BS/CF lines (MO, SCCO, NEM, TMUS, DIS): not expected filings. CB 2014-17 IS lines sit in a stmt=CI report (14 10-Qs).

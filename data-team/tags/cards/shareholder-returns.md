@@ -61,3 +61,8 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 - `IncomeLossFromEquityMethodInvestments` is an IS line at 39 names and a CF adjustment at some; the CF twin `…NetOfDividendsOrDistributions` (T, KO) nets dividends received.
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 10. Ritwik (cloud) card notes 15, 19, 23, 26, 30 (DATA-INFERRED)
+- Combined (blank with reason): AXP "Repurchase of … common shares and other" with preferred redemptions (0000004962-22-000008 l28, 30); BLK 2025+ Subco exchangeable-unit lines (0001193125-26-071966 l35, 37; mapped only from the equity note's common-only amount); SPG/TRGP "dividends to common and preferred"; KMI "shares and warrants"; SPG LP-unit + treasury; BX "net settlement of vested … and repurchase".
+- Filer tag errors (map by label and position, flag): CME 2025-26 Class A repurchase tagged `PaymentsForProceedsFromDerivativeInstrumentFinancingActivities`; KMI, AON buybacks tagged `ProceedsFromRepurchaseOfEquity` (sign check).
+- MLPs: EPS = per common unit (EPD, ET, KKR to 2018); distributions to common unitholders = the dividend line (ET open).

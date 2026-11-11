@@ -123,3 +123,7 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - MS, WFC: revenue = `RevenuesNetOfInterestExpense` ("Net revenues" / "Total revenue").
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 11. Ritwik (cloud) card notes 2, 3, 11 (DATA-INFERRED)
+- Revenue = the face top line as printed (Dhairya 2026-11-11): the total wins over components (IBM KLAC VZ GILD DIS BMY FTNT ISRG NOW LMT VRTX PFE SCHW WELL TMUS), except a "total" that adds non-revenue items: COP "Total Revenues and Other Income" → revenue is the line above (0001193125-20-039954 IS l2). MPC prints excluding-excise first (l2): take l2. ACN to FY2018 includes reimbursements.
+- COF: no total net revenue line: bank revenue = NII + noninterest income (bank template; ruling (a)).

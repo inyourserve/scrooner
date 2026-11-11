@@ -78,3 +78,6 @@ Findings:
 - Custom or variant cash tags in the standard position: GE 2015-2017 `CashAndEquivalentsExcludingAssetsHeldForSale`; CVX "…ExcludingTimeDeposits" (2019-2022 and 2024+); MS pre-2020 `CashAndDueFromBanks` (bank-style cash line).
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## Reconcile 2026-11-11 (final)
+- BS `CashCashEquivalentsRestrictedCash…` = cash when it is the sole cash line with no restricted wording (GILD 7,564M, DHR 4,615M, FITB 4,374M); a label naming restricted cash is served as printed, labelled "includes restricted cash" (CB 0000896159-26-000005 BS l9; Dhairya). Bank cash = the BS line(s) equal to CF ending cash; `CashAndDueFromBanks` beside interest-bearing deposits is a component (PNC). LITE: cash tagged `CashAndCashEquivalentsFairValueDisclosure` (filer error; map by label, flag).

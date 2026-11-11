@@ -108,3 +108,10 @@ Relayed lessons (FILING-CHECKED by the named role; not re-opened by me):
 - **Rule**: identify pretax income by structure, not tag: the line that is the +1 calc sibling of the income-tax line under one parent (parent = net income / ProfitLoss), with a pretax label. A ProfitLoss-family NI rule must exclude a line that has a tax line beneath it.
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 10. Ritwik (cloud) card notes 1, 20, 23, 28 (2026-11-11; DATA-INFERRED)
+- Both "…before Tax" concepts are PRETAX by standard label: `IncomeLossAttributableToParent` (MRVL, COP 2022-24, TMUS 2021) and `IncomeLossIncludingPortionAttributableToNoncontrollingInterest` (MCK 0000927653-26-000069 IS l11; PSX 0001534701-26-000006 IS l18; PG). Map income_before_tax below the two standard pretax tags.
+- After-tax continuing-ops tags on a face "income before income taxes" line: EQIX, GLW, ORCL, Chubb/ACE 2014-15: map by label and position, flag.
+- Insurer "Income from operations before income tax expense" (ALL) is pretax, not operating income.
+- Cost of revenue = the line directly above Gross profit as printed (LMT 0001193125-16-476010 l13; later 0001628280-26-004195 l13, not the same-label subtotal at l10); a CostOfRevenue "total costs and expenses" with no gross-profit line is not cost of revenue (BA incl. Boeing Capital interest); no total cost line = sum of lines under the cost heading (VZ, TMUS, T, DIS 2014-18; ruling (a)).
+- Not interest expense: MET "interest credited to policyholder account balances"; HPE financing interest inside cost of sales; HOOD "net interest revenues".
