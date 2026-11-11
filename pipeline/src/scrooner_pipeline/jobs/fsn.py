@@ -476,7 +476,7 @@ def done_gate_cmd(
         done_pairs,
         fully_done,
         hold_guard,
-        hold_valued_to_no_row,
+        count_valued_to_no_row,
         ytd_gap_blanks,
     )
     from scrooner_pipeline.normalizer.cell_loader import (
@@ -592,8 +592,8 @@ def done_gate_cmd(
     tp_total = sum(st["tp_prints"] for st in tp_stats.values())
     tp_rej = sum(st["rejected"] for st in tp_stats.values())
     gate = done_gate(reports, gaps, missing, points)
-    # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
-    no_row_by_pair = hold_valued_to_no_row(gate, no_row)
+    # C2 is the old-vs-new diff, a report (founder 2026-11-11 "move to the new system"; approver's C2 amendment)
+    no_row_by_pair = count_valued_to_no_row(no_row)
     with (root / "valued_to_no_row.tsv").open("w") as fh:
         cols = [
             "company_id",
@@ -610,10 +610,6 @@ def done_gate_cmd(
             fh.write("\t".join("" if k[c] is None else str(k[c]) for c in cols) + "\n")
     pairs = done_pairs(gate)
     written_no_row = sum(no_row_by_pair.get(p, 0) for p in pairs)
-    if (
-        written_no_row
-    ):  # cannot happen (the pairs were held above); refuse rather than write
-        raise RuntimeError(f"{written_no_row} valued->no-row keys in done pairs")
     full = fully_done(gate)
     written = sorted({cid for cid, _dp in pairs})
     listed = sum(len(g["data_points"]) for g in gate.values())
@@ -704,7 +700,7 @@ def done_gate_cmd(
     )
     typer.echo(
         f"done gate: {len(no_row)} before-image values would have no row; "
-        f"{len(no_row_by_pair)} pairs held for it; valued->no-row in written pairs: {written_no_row}"
+        f"{len(no_row_by_pair)} pairs carry such keys (diff report, not a hold); valued->no-row in written pairs: {written_no_row}"
     )
 
 
