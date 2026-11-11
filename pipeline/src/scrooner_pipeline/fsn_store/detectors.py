@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 import psycopg
+from scrooner_pipeline.fsn_store.stmt_effective import effective_stmt_sql
 
 LANE_DIR = Path(__file__).resolve().parents[3] / "scripts" / "slot_records"
 DA_EMIT = {
@@ -239,9 +240,9 @@ def filing_object(conn: psycopg.Connection, filing_id: int) -> dict[str, Any] | 
             return None
         acc, cik, form, period, filed, fy, fp, fsn_set = row
         cur.execute(
-            """select l.stmt, l.report, l.line, t.tag, coalesce(l.plabel, ''), l.negating, t.custom, l.inpth
+            f"""select {effective_stmt_sql("l")}, l.report, l.line, t.tag, coalesce(l.plabel, ''), l.negating, t.custom, l.inpth
                from fsn.line l join fsn.tag t on t.id = l.tag_id
-               where l.filing_id = %s and l.stmt in ('CF', 'IS')""",
+               where l.filing_id = %s and {effective_stmt_sql("l")} in ('CF', 'IS')""",
             (filing_id,),
         )
         face = [
