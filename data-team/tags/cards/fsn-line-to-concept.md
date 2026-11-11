@@ -58,3 +58,18 @@ NetIncomeLoss, EarningsPerShareBasic/Diluted, IncomeTaxExpenseBenefit, Assets, L
 | IncomeLossFromEquityMethodInvestments | 22 | a component |
 
 Custom extension lines: map only by structure (statement position, calc parent, label), never by name (the xbrl-structure skill). Ask me per line.
+
+## M. Known misuse in the old concept_mapping (Ritwik relay, ranks 1-50, 2026-11-11; full rows: work/tag-library/ranks-1-50 data-team/47-fsn-store/company_tag_map/ranks_1_50.csv)
+| Tag | Wrongly mapped as | What it is |
+|---|---|---|
+| LiabilitiesAndStockholdersEquity | total_assets | L&E total (equal in value, but a different line: never a source for assets) |
+| CashCashEquivalentsRestrictedCash… | cash | includes restricted cash (cash only with a flag when it is the only cash line: GILD/DHR rule) |
+| StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest | parent equity | includes NCI (parent = total − MinorityInterest when both printed) |
+| ProfitLoss | net income | includes NCI; NI only with no NetIncomeLoss and no NCI line |
+| NetIncomeLossAvailableToCommonStockholdersBasic | net income | after preferred dividends |
+| CostsAndExpenses | opex | includes cost of revenue |
+| InterestIncomeExpenseNet, InterestIncomeExpenseNonoperatingNet | other income | net interest |
+| InterestExpenseDebt | gross interest | debt-only component (gross only under the sole-debt rule) |
+| InterestAndDividendIncomeOperating | revenue | bank interest income |
+| GeneralAndAdministrativeExpense | SG&A | G&A only; SG&A = S&M + G&A when S&M is separate |
+Combined lines (reason `line_presented_combined_with_others`): AccountsPayableAndAccruedLiabilitiesCurrent and variants; CF IncreaseDecreaseIn…AndOther… lines.
