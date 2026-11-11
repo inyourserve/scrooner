@@ -7,7 +7,9 @@
 -- in markdown reports, which no code can read.
 -- A verdict that a later fix makes obsolete is closed by setting superseded_at and
 -- superseded_reason once; rows are never deleted.
--- Written 2026-11-09 (work/certification-lead/promote); NOT applied; applying it needs the
+-- Written 2026-11-09 (work/certification-lead/promote) as 0122; renumbered 0124 on 2026-11-11 (doc 53: 0122 and 0123
+-- are claimed on main). HELD in migrations/pending/ until files 0122 and 0123 exist (scripts/check_migrations.py
+-- requires a contiguous sequence); then move it up to pipeline/db/migrations/. NOT applied; applying it needs the
 -- founder's typed words.
 create table if not exists analytics.verifier_check (
     id                 bigint generated always as identity primary key,
@@ -56,7 +58,7 @@ create index if not exists idx_verifier_check_open_wrong
     where verdict in ('wrong', 'blank_wrong') and superseded_at is null;
 
 comment on table analytics.verifier_check is
-    'Verifier filing checks, one row per opened cell (0122, 2026-11-09). Read by scrooner-certify-promote for the verified rung.';
+    'Verifier filing checks, one row per opened cell (0124, 2026-11-09). Read by scrooner-certify-promote for the verified rung.';
 
 -- The record is the Verifier's, not the builder's (Verifier FIX 2026-11-09): a row is written only in a session that
 -- declares itself the Verifier (set scrooner.writer = 'verifier'), the way 0119 reserves canonical_fact to fsn_cells.

@@ -6,7 +6,7 @@ blank weaknesses):
   checks_clean  I1-I11 clean: written by `scrooner-certify` (unchanged)
   reconciled    every served headline cell hybrid-written and PROVEN with a face read on the latest print,
                 and no DISAGREE on any cell of the company
-  verified      Verifier records (analytics.verifier_check, 0122, written by the Verifier only): the
+  verified      Verifier records (analytics.verifier_check, 0124, written by the Verifier only): the
                 headline cells' latest FY + Q, and a seeded draw over ALL shown cells whose hash still
                 matches the cells served now
   certified     all of the above, every template cell valued or reasoned, and a Verifier blank draw
@@ -536,7 +536,7 @@ def promote(
         with conn.cursor() as cur:
             if apply and not verifier_table_exists(cur):
                 raise MigrationNotAppliedError(
-                    "analytics.verifier_check does not exist: apply migration 0122 first"
+                    "analytics.verifier_check does not exist: apply migration 0124 first"
                 )
             evidence = load_evidence(cur, chunk, as_of, timeout_s)
         got = [decide(evidence[cid], now) for cid in chunk if cid in evidence]
