@@ -34,7 +34,7 @@ name: FSN store production write (cohort)
 # Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
 # capex and D&A cells stay out until the release approver clears them (data_points input). Connections: at
 # most 2 per shard, preflight at start and a re-check before every company (pause while client backends
-# exceed 60); never inside the nightly refresh window.
+# exceed 60); never while a heavy nightly job runs or is queued (live check), never 17:00-02:00 UTC.
 on:
   workflow_dispatch:
     inputs:
@@ -110,11 +110,24 @@ jobs:
       - name: Shard plan (before any database connection; a CIK list must be in cohort v1.1 and needs load_map)
         id: s
         run: python3 pipeline/scripts/fsn_write_shards.py "$COHORT_CSV" "$STAGE" "$SHARDS" "$LIMIT" "$CIKS_LIST" >> "$GITHUB_OUTPUT"
-      - name: Outside the nightly window, connection headroom
+      - uses: actions/checkout@v4
+        with:
+          path: .guard
+          sparse-checkout: scripts/ci
+      # Live check (2026-11-08): GitHub starts the scheduled heavy jobs hours late (refresh
+      # scheduled 12:23 UTC, observed 17:47-21:49 UTC starts, ends up to 01:34 UTC), so ask
+      # GitHub what is running instead of trusting the clock. The scheduled heavy jobs in
+      # turn wait while a write is in progress (heavy_job_guard.sh wait-for-write).
+      - name: No heavy database job running or queued
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .guard/scripts/ci/heavy_job_guard.sh refuse-if-heavy
+      - name: Outside the observed nightly window, connection headroom
         run: |
           set -eu
           now=$(date -u +%H%M)
-          if [ "$now" -ge 1800 ] && [ "$now" -lt 2130 ]; then echo "::error::inside the 18:00-21:30 UTC nightly window"; exit 1; fi
+          # Backstop for a heavy job about to start: observed nightly starts 17:47-21:49 UTC.
+          if [ "$now" -ge 1700 ] || [ "$now" -lt 0200 ]; then echo "::error::inside the 17:00-02:00 UTC nightly window"; exit 1; fi
           case "$SHARDS" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
           if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 20 ]; then echo "::error::shards must be 1..20"; exit 1; fi
           used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")

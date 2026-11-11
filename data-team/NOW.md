@@ -51,11 +51,11 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | draft PR #4 (`work/cashflow/fsn-gaps-rebased`, CI green). Ruling (Dhairya): a printed 0 in the latest copy is served as 0 | Verifier PASS 2026-11-08 (verify/cf-gaps-redraw-2026-11-08, 4c64d769) at d1a0050: 0 wrong shown values, 21/21 new values, 15/15 cohort absent-line claims; scratch store on 60 cohort companies: CF gaps 6,272 to 283. Brixmor Q4 2015/16 buyback reason follow-up done (26063db). Remaining: cohort dry run after the write; CAD filers CP/IMO open pending the currency ruling |
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
-| FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| FSN write vs nightly jobs: live two-way guard; nightly reprocess selects only filers with work left; normalizer_backlog from ingest time | PR #5 (CI/CD session, CI green before the 11-10 additions) | review (balance-sheet lane), founder to merge before tonight's refresh |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
-Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still failed, for a new reason: stage `normalize:facts` failed and the reprocess job ran past its 7,000s budget, so every map stage after calculate was skipped (growth, TTM, expanded metrics, piotroski, reconciliation, dividend streak, tag library). Not yet investigated: the CI/CD session (owner of PR #1/#5) can't be messaged from a cloud session; the founder needs to hand it over.
+Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712874321 (11-09) did NOT fail in normalize:facts (rc 0); it ran out of the 7,000s budget (7,074s) with 1,017 companies, ~73% of which already had their filing's facts (the 4-day window is in calendar days, so Monday re-ran the Thu/Fri filers done Fri-Sun). Fix: select a filer only if its filing's facts are missing or arrived in the last 48h (live: 155 now vs 403 in-window filings; ~300 vs 1,017 on 11-09). Its gate alert normalizer_backlog was a weekend artifact (max filing_date read as midnight); now measured from core.filing.created_at, 5-day limit. Run 42507618224 (11-08) had the same cause: 1,414 companies, normalize:facts killed at its 1,800s stage cap (not an error of its own), budget out at 7,212s.
 
 ## Founder decisions 2026-11-09 (~21:40 IST, in the manager session)
 
@@ -63,6 +63,17 @@ Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still f
 - Sector-template seed (branch work/data-engineer/sector-templates-seed) APPROVED to apply once the Verifier passes it.
 
 - FOUNDER APPROVAL 2026-11-09 ~22:10 IST (manager session): "Yes approved", in reply to: "I approve writing FSN values per (company, data point) on Ritwik's conditions C1-C8, and the top-100 and 1,000-company writes tonight once Ritwik clears the dry run." Ruling: branch review/ruling-done-gate-c4-2026-11-09. Every Ritwik condition stays binding (C7 cohort dry run first; Ritwik clears the C2 valued-to-blank table and the data_points list before each dispatch). The recorded founder decision of 2026-11-01 (doc 02, item 5) goes to doc 02 next.
+
+## Founder decision 2026-11-11: move to the new system (typed in Dhairya's session, relayed to Ritwik)
+Founder's words: "Why we are working on new systems? Because old was not reliable. So why you are so focused to preserve old things? Move to new. Use just old learning not the system."
+Approver amendments (Ritwik, Mac session), binding for both Ritwik sessions:
+- **C2 amended.** Old canonical_fact values no longer gate a write. "valued→no-row vs the before-image" becomes a diff report (`valued_to_blank.json`), kept for learning. No pair is held because of old values. G2(c) (C2-held pairs keep old rows) is dropped.
+- **Kept, judged on the new system alone.** The gate is criterion 4 / N1: every template key gets a filing-traceable new value or an evidenced reason, with zero reasonless keys. Template keys come from the calendar (and v1.2 TP for printed year-to-date), not from the old table. Why this is kept: the MDT loss (252 keys) was a new-system coverage hole, not an old-value question.
+- **C4 / restore dropped.** No restore to old values. A served cell_proof DISAGREE is re-written as a defect blank (N2). Rollback of a write = re-run the new system. The before-image is still taken, as an audit record only.
+- **G2(a)/(b):** reason rows are keyed on the template calendar, not on before-image keys.
+- **Unchanged:** criteria 1, 2 (filings stored) and 5; N1; N2; the Verifier draw against the filings; EPS never derived; C6 (DPS) and C8 (debt, total liabilities) holds until proven; C5 (company_value_owner empty).
+- **Nightly:** the old normalize/map path stops writing for the 1,000 once the new nightly lands. No further per-cell protection work.
+- **Top-100 C7:** cleared on these criteria once the select_plan output shows them. Not yet received (2026-11-11).
 
 ## Waiting on the founder
 
