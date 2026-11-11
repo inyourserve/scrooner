@@ -21,6 +21,8 @@ from collections import Counter, defaultdict
 from datetime import date
 from pathlib import Path
 
+from typing import Any
+
 import psycopg
 
 DEFAULT_RULE_ID = "company_tag_map.library@1"
@@ -83,7 +85,7 @@ def normalize(
     warnings: list[str] | None = None,
 ) -> dict:
     """One validated row as insert parameters; raises ValueError with the reason."""
-    n = {c: r.get(c) for c in COLUMNS}
+    n: dict[str, Any] = {c: r.get(c) for c in COLUMNS}
     if n["company_id"] is None:
         cik = str(n["cik"] or "").zfill(10)
         if cik not in company_by_cik:
@@ -182,7 +184,7 @@ def check_overlaps(rows: list[dict]) -> list[str]:
                         f"overlapping eras for {key}: {a['era_from']}..{a['era_to']} vs {b['era_from']}..{b['era_to']}"
                     )
     # two 'concept' rows of one (company, stmt, concept) never overlap, even under different tags
-    by_concept = defaultdict(list)
+    by_concept: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
         if r["decision"] == "concept":
             by_concept[(r["company_id"], r["stmt"], r["canonical_concept_id"])].append(

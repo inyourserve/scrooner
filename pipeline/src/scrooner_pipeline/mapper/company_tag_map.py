@@ -44,6 +44,8 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 
+from typing import Any
+
 import psycopg
 import structlog
 
@@ -133,15 +135,34 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
             (company_id,),
         )
         return [
-            MapRow(*r[:12], tuple(r[12]) if r[12] else None, r[13], r[14], r[15])
+            MapRow(
+                taxonomy=r[0],
+                tag=r[1],
+                stmt=r[2],
+                decision=r[3],
+                canonical_concept_id=r[4],
+                parent_concept_id=r[5],
+                sign=r[6],
+                era_from=r[7],
+                era_to=r[8],
+                evidence_cal_parent=r[9],
+                reason=r[10],
+                rule_id=r[11],
+                components=tuple(r[12]) if r[12] else None,
+                evidence_plabel=r[13],
+                serve_note=r[14],
+                map_id=r[15],
+            )
             for r in cur.fetchall()
         ]
 
 
-def _load_facts(conn: psycopg.Connection, company_id: int, tags: set[tuple[str, str]]):
+def _load_facts(
+    conn: psycopg.Connection, company_id: int, tags: set[tuple[str | None, str | None]]
+):
     """(taxonomy, tag) -> period_id -> Fact of the latest authoritative filing. Authoritative only:
     is_authoritative=false is a hard filter."""
-    out: dict[tuple[str, str], dict[int, Fact]] = defaultdict(dict)
+    out: dict[tuple[str | None, str | None], dict[int, Fact]] = defaultdict(dict)
     if not tags:
         return out
     with conn.cursor() as cur:
@@ -166,7 +187,7 @@ def _load_facts(conn: psycopg.Connection, company_id: int, tags: set[tuple[str, 
             order by c.taxonomy, c.tag, f.period_id,
                      fl.filing_date desc nulls last, f.filing_id desc, f.id desc
             """,
-            (company_id, sorted({t for _, t in tags})),
+            (company_id, sorted({t for _, t in tags if t is not None})),
         )
         for (
             taxonomy,
@@ -265,9 +286,9 @@ def _check_components(
     filing_arcs = arcs.get(acc, set())
     if not filing_arcs:
         return "no_calc_evidence"
-    tags = [r.tag for r, _ in comps]
+    tags = [str(r.tag) for r, _ in comps]
     for r, _ in comps:  # rule 3: no member may be an ancestor of another member
-        if _descendants(filing_arcs, r.tag) & (set(tags) - {r.tag}):
+        if _descendants(filing_arcs, str(r.tag)) & (set(tags) - {r.tag}):
             return "ancestor_in_component_set"
     # evidence_cal_parent may list several parents ('A;B', the line's calc parents): the components must share
     # one parent, and each must be a DIRECT child of it in this filing's arcs (rule 2)
@@ -296,16 +317,17 @@ def _grain(start: date, end: date, ptype: str) -> str | None:
 
 def build_cells(
     rows: list[MapRow],
-    facts: dict[tuple[str, str], dict[int, Fact]],
+    facts: dict[tuple[str | None, str | None], dict[int, Fact]],
     concept_info: dict[int, tuple[str, str]],
     arcs: dict[str, set[tuple[str, str]]] | None = None,
-    dcml: dict[tuple[str, str, date], int] | None = None,
+    dcml: dict[tuple[str, str | None, date], int] | None = None,
     periods: dict[int, tuple[date, date, str]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement)."""
     arcs = arcs or {}
     dcml = dcml or {}
-    stats = {
+    periods = periods or {}
+    stats: dict[str, Any] = {
         "stmt_mismatch_rows": 0,
         "conflict_cells": 0,
         "derived_eps_skipped": 0,
@@ -599,7 +621,7 @@ def resolve_for_company(
     """Rebuild this company's canonical_fact rows from its tag map. Deletes every concept resolve() manages
     (plus every concept the map targets), so no value of the old path survives for a tag-map company."""
     rows = _load_rows(conn, company_id)
-    used = {
+    used: set[tuple[str | None, str | None]] = {
         (r.taxonomy, r.tag)
         for r in rows
         if r.tag is not None and r.decision != "excluded"
