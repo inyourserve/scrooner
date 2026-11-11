@@ -33,18 +33,22 @@ POLL_SECONDS="${HEAVY_GUARD_POLL_SECONDS:-60}"
 
 active_runs() {
   # Prints one line per active run of workflow $1: "<id> <status> <url>".
+  # Exits non-zero if any gh call fails (set -e in a command substitution is not enough).
   local workflow=$1 status
   for status in "${ACTIVE_STATUSES[@]}"; do
     gh run list --repo "$GITHUB_REPOSITORY" --workflow "$workflow" --status "$status" \
       --limit 20 --json databaseId,status,url \
-      --jq '.[] | "\(.databaseId) \(.status) \(.url)"'
+      --jq '.[] | "\(.databaseId) \(.status) \(.url)"' || return 1
   done
 }
 
 refuse_if_heavy() {
   local workflow found=0 runs
   for workflow in "${HEAVY_WORKFLOWS[@]}"; do
-    runs=$(active_runs "$workflow")
+    if ! runs=$(active_runs "$workflow"); then
+      echo "::error::could not list $workflow runs; refusing (a heavy job may be running)"
+      exit 1
+    fi
     if [ -n "$runs" ]; then
       found=1
       while read -r line; do
@@ -60,20 +64,29 @@ refuse_if_heavy() {
 }
 
 wait_for_write() {
-  local max_minutes=${1:-330} waited=0 runs
+  # Fails CLOSED: a GitHub API error is "unknown", never "no write" (it waits and asks again).
+  # Bounded: after max_minutes of wall-clock time it exits 1, so a hung write fails the
+  # nightly job instead of blocking it forever (the write's own jobs time out at 340 min).
+  local max_minutes=${1:-330} start=$SECONDS listing runs waited state
   while :; do
-    runs=$(active_runs "$WRITE_WORKFLOW" | grep -E ' in_progress ' || true)
-    if [ -z "$runs" ]; then
-      echo "no FSN production write in progress"
-      return 0
+    waited=$((SECONDS - start))
+    if listing=$(active_runs "$WRITE_WORKFLOW"); then
+      runs=$(grep -E ' in_progress ' <<<"$listing" || true)
+      if [ -z "$runs" ]; then
+        echo "no FSN production write in progress"
+        return 0
+      fi
+      state="in progress: $runs"
+    else
+      state="unknown (the GitHub API call failed)"
+      echo "::warning::could not list $WRITE_WORKFLOW runs; treating a write as possibly in progress"
     fi
-    if [ $((waited / 60)) -ge "$max_minutes" ]; then
-      echo "::error::an FSN production write is still in progress after ${max_minutes} minutes: $runs"
+    if [ "$waited" -ge $((max_minutes * 60)) ]; then
+      echo "::error::after ${max_minutes} minutes an FSN production write is still $state"
       exit 1
     fi
-    echo "waiting for the FSN production write to finish (${waited}s so far): $runs"
+    echo "waiting for the FSN production write (${waited}s so far); write $state"
     sleep "$POLL_SECONDS"
-    waited=$((waited + POLL_SECONDS))
   done
 }
 

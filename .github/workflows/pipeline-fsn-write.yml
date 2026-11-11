@@ -85,6 +85,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.code_ref }}
+      - name: Shard plan (before any database connection; a CIK list must be in cohort v1.1 and needs load_map)
+        id: s
+        run: python3 pipeline/scripts/fsn_write_shards.py "$COHORT_CSV" "$STAGE" "$SHARDS" "$LIMIT" "$CIKS_LIST" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
           path: .guard
           sparse-checkout: scripts/ci
       # Live check (2026-11-08): GitHub starts the scheduled heavy jobs hours late (refresh
@@ -95,12 +101,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: .guard/scripts/ci/heavy_job_guard.sh refuse-if-heavy
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.code_ref }}
-      - name: Shard plan (before any database connection; a CIK list must be in cohort v1.1 and needs load_map)
-        id: s
-        run: python3 pipeline/scripts/fsn_write_shards.py "$COHORT_CSV" "$STAGE" "$SHARDS" "$LIMIT" "$CIKS_LIST" >> "$GITHUB_OUTPUT"
       - name: Outside the observed nightly window, connection headroom
         run: |
           set -eu
