@@ -26,8 +26,8 @@ TIERS = {
     ("BS", "inventory"): ["InventoryNet"],
     ("CF", "cash_paid_for_interest"): ["InterestPaidNet", "InterestPaid"],
     ("CF", "cash_paid_for_income_taxes"): ["IncomeTaxesPaidNet", "IncomeTaxesPaid"],
-    ("IS", "weighted_average_shares_basic"): ["WeightedAverageNumberOfSharesOutstandingBasic", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"],
-    ("IS", "weighted_average_shares_diluted"): ["WeightedAverageNumberOfDilutedSharesOutstanding"],
+    ("IS", "weighted_basic_shares"): ["WeightedAverageNumberOfSharesOutstandingBasic", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"],
+    ("IS", "weighted_diluted_shares"): ["WeightedAverageNumberOfDilutedSharesOutstanding"],
     ("IS", "basic_eps_resolved"): ["EarningsPerShareBasic", "IncomeLossFromContinuingOperationsPerBasicShare"],
     ("IS", "diluted_eps_resolved"): ["EarningsPerShareDiluted", "IncomeLossFromContinuingOperationsPerDilutedShare"],
     ("IS", "revenue_sanity_resolved"): ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax",
@@ -414,7 +414,7 @@ for cid, rs in by_co.items():
     wb = idx.get(("IS", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"))
     if wb and wb.get("decision") == "concept":
         e = dict(wb)
-        e.update(canonical_concept="weighted_average_shares_diluted", reason="one printed weighted-share line serves basic AND diluted (Tag Expert (c))")
+        e.update(canonical_concept="weighted_diluted_shares", reason="one printed weighted-share line serves basic AND diluted (Tag Expert (c))")
         extra.append(e)
     rs.extend(extra)
     out_rows.extend(rs)
