@@ -137,3 +137,5 @@ The FSN-era total-debt rule is the release-prep lane (era_detect → assemble_fs
 - Combined debt-and-lease members (PGR DebtLongtermAndShorttermCombinedAmount; TMO NI FE AWK APD LTDACLO and …Current) get no note lease on top; DebtCurrent is "combined" only with evidence. Note-vs-face LongTermDebt differences are flags (CSCO +6,661M, TMO +265M, AMZN −771M).
 - Segment-only debt: CAT through 2020-06-30 = six custom segment face lines (Financial Products / ME&T, due within and after one year, short-term borrowings) = 38,622M, then held; APD through 2023-03-31 with `NotesPayableRelatedPartiesNoncurrent` as a member. Open: does CAT's segment sum equal its consolidated total (inter-segment elimination)? DUK: every key held (NotesPayable missing member). Banks held (`bank_debt_perimeter_pending`).
 - AMZN face "Long-term lease liabilities" combines operating and finance leases; finance part from the note (Verifier).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

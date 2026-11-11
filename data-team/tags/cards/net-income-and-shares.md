@@ -118,3 +118,5 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - AVGO: `ProfitLoss` = net income after its NCI ended in 2020 (fits the rule: no NetIncomeLoss, no NCI line).
 - `EarningsPerShareBasicAndDiluted` serves both basic and diluted EPS (loss years: PANW, TSLA, CRWD).
 - One line, different tags by form: CSCO, ABBV, LIN tag CFO as `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations` in some 10-Qs/10-Ks: map per filing (company_tag_map is per filing era, not per company).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

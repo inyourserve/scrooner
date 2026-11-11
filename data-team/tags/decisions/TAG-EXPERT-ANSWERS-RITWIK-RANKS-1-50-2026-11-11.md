@@ -1,3 +1,4 @@
+# CORRECTED 2026-11-11: rulings (a) class sum and (d) withdrawn; see decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
 # Tag Expert answers: Ritwik (ranks 1-50, work/tag-library/ranks-1-50) open calls (a)-(f), 2026-11-11
 Sources: library/standard-tag-library.csv rows (evidence column) and the cards named. A store re-count was not possible today: fsn.line has no tag_id index, so a tag-filtered count times out at 15 s. Counts below are the library's top-100 counts.
 Proposals for a new catalog concept go to the standardization lead; the Tag Expert never approves a mapping.

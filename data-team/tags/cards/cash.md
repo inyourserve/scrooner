@@ -76,3 +76,5 @@ Findings:
 
 ## Ranks 1-50 relay (Ritwik relay 2026-11-11, work/tag-library/ranks-1-50 aea0cf4 data-team/47-fsn-store/company_tag_map/ranks_1_50.csv (evidence_adsh + label per row); DATA-INFERRED, not yet filing-checked by the Verifier)
 - Custom or variant cash tags in the standard position: GE 2015-2017 `CashAndEquivalentsExcludingAssetsHeldForSale`; CVX "…ExcludingTimeDeposits" (2019-2022 and 2024+); MS pre-2020 `CashAndDueFromBanks` (bank-style cash line).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

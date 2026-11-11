@@ -59,3 +59,5 @@ Playbooks with FSN-store counts: [`../playbooks/share_buybacks.md`](../playbooks
 - Acquisitions: `PaymentsToAcquireBusinessesNetOfCashAcquired` (96 names); `PaymentsToAcquireBusinessesAndInterestInAffiliates` (18; PEP, UTX) includes investments; `…Gross` at 5. Asset sales: `ProceedsFromSaleOfPropertyPlantAndEquipment` (43) vs `ProceedsFromSaleOfProductiveAssets` (18; may include businesses; MCD prints both).
 - Debt flows: `ProceedsFromIssuanceOfDebt` can be the calc PARENT of `…SeniorLongTermDebt`/`…LongTermDebt`/`…CommercialPaper`: never sum a parent with its children. "Repayments of short-term debt, net" is the label on `ProceedsFromRepaymentsOfCommercialPaper` 21 times.
 - `IncomeLossFromEquityMethodInvestments` is an IS line at 39 names and a CF adjustment at some; the CF twin `…NetOfDividendsOrDistributions` (T, KO) nets dividends received.
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

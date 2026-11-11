@@ -102,3 +102,10 @@
 | CommonStockSharesOutstanding | shares | map shares_outstanding_resolved, BS/parenthetical date, dedupe EQ rows | FILING-CHECKED 2026-11-11 | PGR prints none |
 | LongTermDebtCurrent / LongTermDebtNoncurrent | debt | total_debt_resolved components (+1) | FILING-CHECKED | Mac library excludes them (D1) |
 | OperatingLeaseLiability(Current/Noncurrent), OtherLiabilities*, AccruedLiabilitiesCurrent, DeferredIncomeTaxLiabilitiesNet, AccountsPayableCurrent | BS liabilities | excluded / not debt; AP maps to accounts_payable | FILING-CHECKED 2026-11-11 | DTL era: DeferredTaxLiabilitiesNoncurrent before FY2019 |
+
+## Reconcile 2026-11-11 (Tag Expert)
+| Topic | Where | Status |
+|---|---|---|
+| Conflicts between the four FSN cards and the family cards (sign, UN, derived instants, CCRC, receivables, nonoperating, buybacks, D&A, PP&E ROU, shares) | decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md | 16 resolved, 2 ruling questions, 3 need a filing read |
+| Sector face shapes | cards/sector-faces.md | relay, mixed evidence |
+| Ritwik rulings (cloud 32 calls; ranks 1-50) | decisions/TAG-EXPERT-ANSWERS-RITWIK-*.md | partly CORRECTED by the reconcile |

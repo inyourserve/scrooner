@@ -1,3 +1,4 @@
+# CORRECTED 2026-11-11: CB cash, VZ/T/MO/COP equity and GILD/DHR cash answers are withdrawn; see decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md (doc 02: instants never derived; combined lines never mapped).
 # Tag Expert answers to Ritwik (cloud), 2026-11-11
 
 Re: branch work/ritwik-cloud/tag-decisions-2026-11-11 (595b4f74), the `review` rows of companies-51-100-exceptions-2026-11-11.csv. Evidence: fsn.* read 2026-11-11 (DATA-INFERRED) unless a filing is cited. Cloud-to-cloud messaging to your session is blocked (trusted-device gate), so the answers are in this file.

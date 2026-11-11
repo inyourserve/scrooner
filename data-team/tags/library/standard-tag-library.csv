@@ -21,14 +21,14 @@ BS,LiabilitiesCurrent,map,current_liabilities_resolved,,,,,4192,86,explicit
 BS,AssetsCurrent,map,current_assets_resolved,,,co-registrant blocks (PEG R5: three rows): scope to the registrant,balance-sheet-equity-inventory-other.md §2,4192,86,explicit
 IS,WeightedAverageNumberOfDilutedSharesOutstanding,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,4030,85,explicit
 IS,WeightedAverageNumberOfSharesOutstandingBasic,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,3992,85,explicit
-CF,PaymentsForRepurchaseOfCommonStock,map,share_buybacks_resolved,,,duration filter (AZO cumulative); printed 0 is a value (Brixmor),shareholder-returns.md §1,3909,86,explicit
+CF,PaymentsForRepurchaseOfCommonStock,map,share_buybacks_resolved,,,"duration filter (AZO cumulative); printed 0 is a value (Brixmor); label adding excise tax or withholding = COMBINED, never buybacks (founder 2026-11-04 item 4; LRCX 0000707549-25-000014 R6 l17; 33 excise / 55 withholding labels)",shareholder-returns.md §1; fsn-cash-flow.md,3909,86,explicit
 BS,OtherAssetsNoncurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,3879,81,pattern
 CF,CashAndCashEquivalentsAtCarryingValue,excluded,,,identity_check_line,opening/closing cash and net change: identity lines,,3864,82,explicit
 BS,CommonStockValue,component,,stockholders_equity_resolved,equity_component,,,3829,78,explicit
 BS,OtherLiabilitiesNoncurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,3777,78,pattern
 CF,ShareBasedCompensation,map,sbc,,,,,3696,75,explicit
 CF,PaymentsToAcquirePropertyPlantAndEquipment,map,capex_resolved,,,main capex line (94 top-100 names); not total where other capex lines exist (Air Lease),capex-and-da.md §1/§4,3560,74,explicit
-BS,Liabilities,map,total_liabilities_resolved,,,derive L = LSE − equity incl. NCI − temporary equity when not printed,balance-sheet-equity-inventory-other.md §1,3545,74,explicit
+BS,Liabilities,map,total_liabilities_resolved,,,"not printed at 217 of 999 latest 10-Ks: not_presented, NEVER derived (doc 02 2026-11-01 item 4); can be LESS than total liabilities (LW, WFRD, PCAR members): must be the L&E calc child",fsn-balance-sheet-liabilities-equity.md,3545,74,explicit
 CF,ProceedsFromPaymentsForOtherFinancingActivities,excluded,,,component_no_concept,cash-flow component without a concept,,3510,77,pattern
 IS,OperatingIncomeLoss,map,operating_income_resolved,,,face line only; never note-sourced (segment totals ELV SLB IP; WPC pretax misuse); banks PEBO/BANR mis-tag pretax,operating-income.md §7,3454,71,explicit
 CF,PaymentsForProceedsFromOtherInvestingActivities,excluded,,,component_no_concept,cash-flow component without a concept,,3431,77,pattern
@@ -42,7 +42,7 @@ CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDe
 IS,SellingGeneralAndAdministrativeExpense,map,sga_expense,,,G&A and S&M printed separately are components: sum by calc,fsn-line-to-concept.md §A,2887,58,explicit
 BS,IntangibleAssetsNetExcludingGoodwill,excluded,,,component_no_concept,,,2847,59,explicit
 CI,OtherComprehensiveIncomeLossNetOfTax,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,2847,65,pattern
-BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,component,,stockholders_equity_resolved,nci_component,"total equity incl. NCI; the only total at UNH, AT&T, HAS: parent = it − MinorityInterest only when both printed",balance-sheet-equity-inventory-other.md §1,2839,59,explicit
+BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity_resolved,,,only when NO parent equity line and NO NCI line printed (JNJ AVGO V QCOM); NCI printed + no parent line = not_presented (never total − NCI: instants never derived),fsn-balance-sheet-liabilities-equity.md,2839,59,explicit
 CF,IncreaseDecreaseInInventories,map,cf_inventory_change,,,,,2651,61,explicit
 BS,MinorityInterest,component,,,nci_component,NCI / redeemable NCI (mezzanine variants: Common/FairValue/Other),balance-sheet-equity-inventory-other.md §1,2605,55,explicit
 CF,DeferredIncomeTaxExpenseBenefit,excluded,,,component_no_concept,operating adjustment without a concept,,2552,58,pattern
@@ -63,7 +63,7 @@ BS,LongTermDebtNoncurrent,component,,total_debt_resolved,component_no_concept,"d
 EQ,OtherComprehensiveIncomeLossNetOfTax,excluded,,,movement_line,equity roll-forward line,,2231,63,pattern
 CF,ProceedsFromIssuanceOfLongTermDebt,excluded,,,component_no_concept,cash-flow component without a concept,,2223,55,pattern
 CI,OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,2209,47,pattern
-CF,DepreciationDepletionAndAmortization,map,depreciation_and_amortization_resolved,,,"DDA can include financing-cost/DAC amortization (FASB calc); KEY ""…, net"" held",capex-and-da.md §2,2190,47,explicit
+CF,DepreciationDepletionAndAmortization,map,depreciation_and_amortization_resolved,,,"label adding impairment/accretion/nuclear fuel = COMBINED (XOM 0000034088-26-000045 R7; HPQ 0000047217-26-000051 R6; DUK R8; 32 cos); utilities with nuclear fuel: IS D&A per Verifier (capex-and-da.md §5); KEY ""…, net"" held","capex-and-da.md §2,§5; fsn-cash-flow.md",2190,47,explicit
 CI,ProfitLoss,excluded,,,identity_check_line,CI start line: IS is the source,,2189,48,pattern
 EQ,CommonStockSharesOutstanding,component,,shares_outstanding_resolved,per_share_detail,EQ share column can be ISSUED (PKOH); use the period-end row only,net-income-and-shares.md §7,2186,42,pattern
 CF,IncreaseDecreaseInAccountsPayable,map,cf_ap_change,,,,,2146,47,explicit
@@ -92,7 +92,7 @@ IS,GrossProfit,map,gross_profit_resolved,,,,,1691,36,explicit
 IS,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,map,income_before_tax_resolved,,,pair: filers switch with no change (MSFT Q2 FY2022); if both printed they differ by equity-method income,operating-income.md §8,1679,51,explicit
 BS,AccruedLiabilitiesCurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,1660,34,pattern
 BS,AdditionalPaidInCapital,component,,stockholders_equity_resolved,equity_component,,,1644,37,explicit
-IS,NonoperatingIncomeExpense,map,other_income_expense_net,,,"NonoperatingIncomeExpense can CONTAIN interest (DLH, ODFL calc); ""Interest and other"" = combined",operating-income.md §7,1631,35,explicit
+IS,NonoperatingIncomeExpense,combined,,,line_presented_combined_with_others,usually the nonoperating TOTAL incl. interest (AMZN 0001018724-26-000004 R4; GPC 0000040987-26-000003 R5; DLH): map other_income_expense_net only when its calc has no interest/other-perimeter child; OtherNonoperatingIncomeExpense wins when printed,fsn-income-statement.md; operating-income.md §7,1631,35,explicit
 EQ,StockIssuedDuringPeriodValueShareBasedCompensation,excluded,,,movement_line,equity roll-forward line,,1534,42,pattern
 CF,IncreaseDecreaseInOtherOperatingCapitalNet,excluded,,,movement_line,working-capital change without a concept,,1531,35,pattern
 CI,OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,1527,39,pattern
@@ -189,7 +189,7 @@ BS,AccountsPayableAndAccruedLiabilitiesCurrent,excluded,,,combined_perimeter,AP 
 CF,RepaymentsOfDebt,excluded,,,component_no_concept,cash-flow component without a concept,,618,17,pattern
 CF,IncreaseDecreaseInDeferredRevenue,excluded,,,movement_line,working-capital change without a concept,,611,24,pattern
 CF,IncomeTaxesPaid,excluded,,,supplemental,"InterestPaid is cash, not expense",interest.md §6,607,28,explicit
-BS,ReceivablesNetCurrent,map,accounts_receivable,,,wider perimeter (other/notes receivables): flag,,591,13,explicit
+BS,ReceivablesNetCurrent,combined,,,line_presented_combined_with_others,"label adding notes/other/premiums = combined (XOM R5 44,562M; MRSH; AMZN R6); plain ""Accounts receivable, net"" label = accounts_receivable; never with AccountsReceivableNetCurrent (its calc parent)",fsn-balance-sheet-assets.md,591,13,explicit
 CF,DeferredIncomeTaxesAndTaxCredits,excluded,,,component_no_concept,operating adjustment without a concept,,570,18,pattern
 IS,IncomeLossFromDiscontinuedOperationsNetOfTax,excluded,,,subtotal_not_in_catalog,"IncomeLossAttributableToParent is mis-tagged ""before income taxes"" at 12 gap filers: check label",operating-income.md §7,552,20,explicit
 CF,IncreaseDecreaseInAccruedLiabilitiesAndOtherOperatingLiabilities,excluded,,,movement_line,working-capital change without a concept,,551,14,pattern
@@ -321,7 +321,7 @@ CF,IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollin
 CF,PaymentsForProceedsFromInvestments,excluded,,,component_no_concept,cash-flow component without a concept,,262,8,pattern
 IS,RestructuringSettlementAndImpairmentProvisions,excluded,,,component_no_concept,income-statement component without a concept,,261,7,pattern
 CF,IncreaseDecreaseInPensionAndPostretirementObligations,excluded,,,movement_line,working-capital change without a concept,,261,7,pattern
-BS,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,excluded,,,identity_check_line,incl. restricted cash: not cash_and_equivalents,cash.md,260,10,explicit
+BS,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,map,cash_and_equivalents_resolved,,,"only when it is the sole cash line and the label names no restricted cash (FITB 0000035527-26-000202 R2 4,374M); a label naming restricted cash = combined",fsn-balance-sheet-assets.md; cash.md,260,10,explicit
 BS,DefinedBenefitPensionPlanLiabilitiesNoncurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,259,7,pattern
 BS,NotesAndLoansReceivableNetCurrent,component,,,component_no_concept,bank net loans: post-CECL tag preferred,bank-loans-and-allowance.md,259,8,explicit
 CF,PensionContributions,excluded,,,component_no_concept,operating adjustment without a concept,,258,6,pattern
@@ -444,3 +444,6 @@ IS,LossContingencyLossInPeriod,excluded,,,component_no_concept,income-statement 
 IS,IncrementalCommonSharesAttributableToShareBasedPaymentArrangements,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,72,2,explicit
 IS,BusinessDevelopment,excluded,,,component_no_concept,income-statement component without a concept,,71,2,pattern
 IS,IncomeLossAttributableToParent,map,income_before_tax_resolved,,,"standard label ""Income (Loss) Attributable to Parent, before Tax"": face pretax line at MRVL COP TMUS; priority below the two pretax tags; label check ""before … tax""; excludes NCI share",Ritwik (cloud) 2026-11-11 (fsn.tag tlabel); MRVL 0001058057-19-000024 R4 l14,70,4,explicit
+BS,CommonStockSharesOutstanding,map,shares_outstanding_resolved,,,BS parenthetical (inpth=1; 407 of 632 latest 10-Ks); never the dei cover count (PGR prints none: not_presented); EQ rows period-end only,fsn-balance-sheet-liabilities-equity.md; net-income-and-shares.md §7,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
+BS,IntangibleAssetsNetIncludingGoodwill,combined,,,line_presented_combined_with_others,"includes goodwill (POWL R3, CB, TJX); never read goodwill or intangibles from it",fsn-balance-sheet-assets.md,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
+BS,PublicUtilitiesPropertyPlantAndEquipmentNet,map,ppe_net_resolved,,,utility face PP&E net,fsn-balance-sheet-assets.md,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards

@@ -7,3 +7,5 @@ These are not tag meanings but they decide whether ANY tag's value belongs to th
 4. **Reverse mergers**: KDP's own CIK 2015-2018 Q2 is Dr Pepper Snapple (the legal acquirer), while later comparatives reprint Keurig/Maple (2017-Q3: 1,140 vs DPS 1,740). The same pattern as Tyco/JCI, and COLB/Umpqua (interest.md §7).
 5. **Predecessor CIK carries the history**: Medtronic plc's 10-Q reprints the quarter to 2014-10-24 with Medtronic, Inc.'s own values (4,366 / 828); the predecessor CIK (64670) holds the earlier series.
 6. Utility co-registrant blocks: several registrants' statements in one R page (PEG R5); FSN `coreg` marks only a sole LegalEntity axis (FSN-GUIDE).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

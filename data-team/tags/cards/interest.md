@@ -134,3 +134,5 @@ Relayed lessons processed this run (FILING-CHECKED by the named role unless mark
 - Exelon: `InterestExpenseBorrowings` "Interest expense, net" + `InterestExpenseOther` / `InterestExpenseRelatedParty` "to affiliates": no seeded total; TMUS 2019-21 `InterestExpenseDebt` + `InterestExpenseRelatedParty`: interest expense = sum of the gross face lines (flag summed_components).
 - SCCO latest 10-K 0001104659-26-021492: "Interest expense" on `InterestCostsIncurred` 416.7M, then "Capitalized interest" 47.4M (`InterestCostsCapitalizedAdjustment`): interest expense = 369.3M (incurred − capitalised).
 - VRTX 2014-2024: plain "Interest expense" on `InterestIncomeExpenseNet` beside a separate interest-income line: gross expense with a misused net tag; serve abs(value) only under that condition. From 2024 VRTX uses `InterestExpenseNonoperating` (13.3M, latest 10-K 0000875320-26-000056).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.

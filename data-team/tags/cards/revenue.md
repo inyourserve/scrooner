@@ -121,3 +121,5 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - TSLA: `RevenueFromContractWithCustomerExcludingAssessedTax` is a calc CHILD of `Revenues` until 2023, then the top line: the same tag changes role across eras.
 - XOM pre-2018: custom `xom:SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes` is the revenue line (custom tag in a standard position).
 - MS, WFC: revenue = `RevenuesNetOfInterestExpense` ("Net revenues" / "Total revenue").
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
