@@ -112,3 +112,6 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 
 ## 8. Folded in from the FSN-expert per-tag cards (2026-11-10)
 - **`SalesRevenueGoodsNet` is usually a COMPONENT** ("Product" 181, "Product sales" 83, "Products" 76, "Sales" 60 labels; 39 top-100 names, 2009-2019): MSFT FY2016 10-K 0001193125-16-662209 … Q3 FY2018 prints "Product" (`SalesRevenueGoodsNet`) + custom "Service and other" = "Total revenue" (`SalesRevenueNet`), calc weight +1 each. The FSN pilot (run 41490670432) treated it as a second total, so MSFT FY2014-FY2017 were blanked `conflicting_values_in_filing` (FY2014 72,948 vs 86,833). It is the pre-606 twin of the 33-company RCFC-component finding in §7. **One rule covers both: a revenue candidate that is a calc child of another revenue candidate in the same filing is a component, never the total** (FSN-expert PROPOSALS P-2). At a goods-only company labelled "Sales" it can be the total; only the calc tree tells.
+
+## 9. Relays 2026-11-11
+- AT&T 10-Q 0000732717-26-000297 R2 l11-12: `CostOfGoodsAndServicesSold` labelled "Equipment" carries only a member value; with "Other cost of revenues" there is no total cost line: cost of revenue = sum of the cost lines (excluding D&A perimeter) (cash-flow lane I6; Ritwik cloud).

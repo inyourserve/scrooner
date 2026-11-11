@@ -443,4 +443,4 @@ IS,Communication,excluded,,,component_no_concept,income-statement component with
 IS,LossContingencyLossInPeriod,excluded,,,component_no_concept,income-statement component without a concept,,72,3,pattern
 IS,IncrementalCommonSharesAttributableToShareBasedPaymentArrangements,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,72,2,explicit
 IS,BusinessDevelopment,excluded,,,component_no_concept,income-statement component without a concept,,71,2,pattern
-IS,IncomeLossAttributableToParent,excluded,,,subtotal_not_in_catalog,"IncomeLossAttributableToParent is mis-tagged ""before income taxes"" at 12 gap filers: check label",operating-income.md §7,70,4,explicit
+IS,IncomeLossAttributableToParent,map,income_before_tax_resolved,,,"standard label ""Income (Loss) Attributable to Parent, before Tax"": face pretax line at MRVL COP TMUS; priority below the two pretax tags; label check ""before … tax""; excludes NCI share",Ritwik (cloud) 2026-11-11 (fsn.tag tlabel); MRVL 0001058057-19-000024 R4 l14,70,4,explicit
