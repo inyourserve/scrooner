@@ -34,7 +34,8 @@ TIERS = {
                                          "RevenuesNetOfInterestExpense", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes", "SalesRevenueNet"],
     ("IS", "income_before_tax_resolved"): ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                             "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
-                                            "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"],
+                                            "IncomeLossFromContinuingOperationsBeforeIncomeTaxes",
+                                            "IncomeLossIncludingPortionAttributableToNoncontrollingInterest"],  # '...before Tax' (PG, MCK, PSX)
     ("CF", "capex_resolved"): ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
     ("BS", "goodwill"): ["Goodwill"],
     ("BS", "ppe_net_resolved"): ["PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"],
