@@ -784,6 +784,71 @@ def proof_blank_cmd(
     typer.echo(f"proof-blank: {json.dumps(summary, default=str)}")
 
 
+@app.command("tag-map")
+def tag_map_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company with a stored filing."
+    ),
+    out: str = typer.Option("tag-map-out", help="Output directory."),
+    timeout_s: int = typer.Option(15, help="statement_timeout per query, seconds."),
+) -> None:
+    """Per-company tag map from the store, READ-ONLY (founder 2026-11-11: FSN for learning which tag is what, SEC
+    companyfacts for the values). Decisions are made in memory with the committed rules and detectors
+    (fsn_store.tag_map); nothing is written to fsn.* or analytics.*. Writes into the output directory:
+      company_tag_map.csv  the analytics.company_tag_map rows (Engineering's migration 0123 columns)
+      residue.csv          statement tags with no decision yet (the library queue: Ritwik, the Tag Expert)
+      companies.csv        company_id, cik, tags, open_tags, complete, rows by decided_by"""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import mapping, tag_map
+
+    root = Path(out)
+    root.mkdir(parents=True, exist_ok=True)
+    all_rows: list[dict[str, Any]] = []
+    all_residue: list[dict[str, Any]] = []
+    summary: list[dict[str, Any]] = []
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{int(timeout_s)}s'")
+        ids = (
+            _ids(conn, ciks)
+            if ciks
+            else dict(
+                conn.execute(
+                    "select distinct c.cik, c.id from fsn.filing f join core.company c on c.id = f.company_id"
+                ).fetchall()
+            )
+        )
+        rules = mapping.load_rules(conn)
+        for cik, cid in sorted(ids.items()):
+            rows, residue = tag_map.company_tag_map(conn, cid, rules)
+            conn.rollback()  # read-only: end the snapshot before the next company
+            st = tag_map.company_status(rows, residue)
+            all_rows.extend(rows)
+            all_residue.extend(residue)
+            summary.append(
+                {
+                    "company_id": cid,
+                    "cik": cik,
+                    "tags": st["tags"],
+                    "open_tags": st["open_tags"],
+                    "complete": st["complete"],
+                    **{f"rows_{k}": v for k, v in sorted(st["decided_by"].items())},
+                }
+            )
+    n = tag_map.write_csv(all_rows, root / "company_tag_map.csv", tag_map.COLUMNS)
+    tag_map.write_csv(all_residue, root / "residue.csv", tag_map.RESIDUE_COLUMNS)
+    cols = sorted(
+        {k for s in summary for k in s}, key=lambda k: (not k[0:1].isalpha(), k)
+    )
+    head = ["company_id", "cik", "tags", "open_tags", "complete"]
+    tag_map.write_csv(
+        summary, root / "companies.csv", head + [c for c in cols if c not in head]
+    )
+    done = sum(1 for s in summary if s["complete"])
+    typer.echo(
+        f"tag map: {len(summary)} companies, {n} rows, residue {len(all_residue)} tag eras, complete {done}"
+    )
+
+
 @app.command("extract-sec")
 def extract_sec_cmd(
     ciks: str = typer.Option(

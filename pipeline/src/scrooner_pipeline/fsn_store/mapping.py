@@ -123,6 +123,7 @@ def map_filing(
     *,
     write: bool = True,
     detectors: list[Detector] | None = None,
+    collect: list[tuple] | None = None,
 ) -> dict[str, int]:
     with conn.cursor() as cur:
         cur.execute("select period from fsn.filing where id = %s", (filing_id,))
@@ -276,6 +277,10 @@ def map_filing(
         if overrides:
             out = [overrides.get((r[1], r[2]), r) for r in out]
             counts["detector_overrides"] += len(overrides)
+    if (
+        collect is not None
+    ):  # the decisions without a store write (fsn_store.tag_map decides in memory)
+        collect.extend(out)
     if write:
         with conn.cursor() as cur:
             cur.execute("delete from fsn.line_map where filing_id = %s", (filing_id,))
