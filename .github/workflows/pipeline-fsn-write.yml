@@ -215,7 +215,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
+      # the pipeline's Settings require all four, as in the other jobs (restore run 42966152108 failed without them)
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
       RESTORE_IDS: ${{ inputs.restore_company_ids }}
     steps:
       - uses: actions/checkout@v4
