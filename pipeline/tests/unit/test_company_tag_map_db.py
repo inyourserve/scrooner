@@ -228,3 +228,20 @@ def test_history_source_predecessor_window_is_read_and_exclude_window_is_not(iso
         assert resolve(conn, {"0000000601"})["errored"] == 0
         got = dict(conn.execute("select period_id, value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", (succ, x["rev"])).fetchall())
         assert got == {sper["in"]: Decimal("100")}  # predecessor window read onto the successor's period; exclude window never sourced
+
+
+@pytest.mark.integration
+def test_two_units_two_values_same_tag_period_filing_is_a_blank_and_the_key_allows_it(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000000701", True)
+        fact("Revenues", "in", "new", "100")
+        u2 = _one(conn, "insert into core.unit (unit_name) values ('USDseg') returning id")
+        # unique (company, concept, unit, period, filing): a second unit may carry a second value
+        conn.execute("insert into core.fact (company_id, concept_id, unit_id, period_id, filing_id, value, raw_object_id) values (%s,%s,%s,%s,%s,%s,%s)", (co, x["tags"]["Revenues"], u2, per["in"], fil["new"], Decimal("40"), x["raw"]))
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-01-01','t','tm.r@1')", (co, x["rev"]))
+        conn.commit()
+        assert resolve(conn, {"0000000701"})["errored"] == 0
+        assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == 0
+        assert _one(conn, "select reason_code from analytics.cell_blank_reason where company_id = %s and data_point_name = 'tm_rev' and period_end = '2018-12-31'", co) == "conflicting_values_in_filing"

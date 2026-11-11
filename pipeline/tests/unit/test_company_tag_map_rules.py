@@ -365,3 +365,11 @@ def test_seeder_holds_note_sourced_and_template_out_rows_as_verifier_sample_fail
 
     assert held_by_verifier({"decided_by": "note_sourced"}) and held_by_verifier({"reason_class": "template_out"})
     assert not held_by_verifier({"decided_by": "structure", "reason_class": "detail_of_printed_total"})
+
+
+def test_two_distinct_values_for_one_tag_and_period_in_the_latest_filing_is_a_blank_not_a_pick():
+    row = MapRow("us-gaap", "Revenues", "IS", "concept", OPEX, None, 1, ERA, None)
+    amb = Fact(Decimal("10"), 1, END, False, 10, "A-10", None, ambiguous=True)  # PCAR: total row and a segment row
+    cells, stats = build_cells([row], {("us-gaap", "Revenues"): {7: amb}}, INFO, {}, {}, {7: (date(2020, 1, 1), END, "duration")})
+    assert cells == [] and stats["held"][0]["reason"] == "conflicting_values_in_filing"
+    assert [b["reason_code"] for b in stats["blanks"]] == ["conflicting_values_in_filing"]

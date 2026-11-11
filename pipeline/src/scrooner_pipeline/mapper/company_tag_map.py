@@ -105,6 +105,7 @@ class Fact:
     filing_id: int
     accession: str
     filed: date | None = None
+    ambiguous: bool = False  # two distinct values (other units) for this tag and period in the latest filing
 
 
 def enabled(environ=None) -> bool:
@@ -170,48 +171,56 @@ def _load_facts(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select distinct on (c.taxonomy, c.tag, f.period_id)
-                   c.taxonomy, c.tag, f.period_id, f.value, f.id, p.end_date, f.is_derived,
-                   f.filing_id, fl.accession_number, fl.filing_date
-            from core.fact f
-            join core.concept c on c.id = f.concept_id
-            join core.period p on p.id = f.period_id
-            join core.filing fl on fl.id = f.filing_id
-            where f.company_id = %s and f.is_authoritative
-              -- a filing in which THIS company is only a co-registrant (or quarantined) carries the filer's
-              -- statements, not its own: never a source (core.filing_registrant, rule
-              -- entity.shared_accession_primary_filer@1)
-              and not exists (
-                  select 1 from core.filing_registrant r
-                  where r.accession_number = fl.accession_number and r.company_id = f.company_id
-                    and r.role in ('co_registrant', 'quarantined'))
-              -- the company's OWN filings inside an 'exclude' window belong to another entity (core.company_history_source)
-              and not exists (
-                  select 1 from core.company_history_source h
-                  where h.company_id = f.company_id and h.relation = 'exclude'
-                    and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to)
-              and c.tag = any(%s)
-            order by c.taxonomy, c.tag, f.period_id,
-                     fl.filing_date desc nulls last, f.filing_id desc, f.id desc
+            select taxonomy, tag, period_id, value, id, end_date, is_derived, filing_id, accession_number, filing_date
+            from (
+                select c.taxonomy, c.tag, f.period_id, f.value, f.id, p.end_date, f.is_derived, f.filing_id,
+                       fl.accession_number, fl.filing_date,
+                       rank() over (partition by c.taxonomy, c.tag, f.period_id
+                                    order by fl.filing_date desc nulls last, f.filing_id desc) as rk
+                from core.fact f
+                join core.concept c on c.id = f.concept_id
+                join core.period p on p.id = f.period_id
+                join core.filing fl on fl.id = f.filing_id
+                where f.company_id = %s and f.is_authoritative
+                  -- a filing in which THIS company is only a co-registrant (or quarantined) carries the filer's
+                  -- statements, not its own: never a source (core.filing_registrant, rule
+                  -- entity.shared_accession_primary_filer@1)
+                  and not exists (
+                      select 1 from core.filing_registrant r
+                      where r.accession_number = fl.accession_number and r.company_id = f.company_id
+                        and r.role in ('co_registrant', 'quarantined'))
+                  -- the company's OWN filings inside an 'exclude' window belong to another entity
+                  and not exists (
+                      select 1 from core.company_history_source h
+                      where h.company_id = f.company_id and h.relation = 'exclude'
+                        and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to)
+                  and c.tag = any(%s)
+            ) t
+            where rk = 1
+            order by taxonomy, tag, period_id, id desc
             """,
             (company_id, sorted({t for _, t in tags if t is not None})),
         )
-        for (
-            taxonomy,
-            tag,
-            period_id,
-            value,
-            fact_id,
-            end,
-            derived,
-            filing_id,
-            acc,
-            filed,
-        ) in cur.fetchall():
-            if (taxonomy, tag) in tags:
-                out[(taxonomy, tag)][period_id] = Fact(
-                    Decimal(value), fact_id, end, derived, filing_id, acc, filed
-                )
+        rows = cur.fetchall()
+    # core.fact is unique per (company, tag, unit, period, filing): two values for one tag and period in the
+    # latest filing can only come from two units. Never pick one: mark the fact ambiguous (blank downstream).
+    grouped: dict[tuple, list[tuple]] = defaultdict(list)
+    for r in rows:
+        grouped[(r[0], r[1], r[2])].append(r)
+    for (taxonomy, tag, period_id), rs in grouped.items():
+        if (taxonomy, tag) not in tags:
+            continue
+        first = rs[0]
+        out[(taxonomy, tag)][period_id] = Fact(
+            Decimal(first[3]),
+            first[4],
+            first[5],
+            first[6],
+            first[7],
+            first[8],
+            first[9],
+            ambiguous=len({Decimal(x[3]) for x in rs}) > 1,
+        )
     _merge_predecessor_facts(conn, company_id, tags, out)
     return out
 
@@ -341,6 +350,8 @@ def _check_components(
     comps: list[tuple[MapRow, Fact]], arcs: dict[str, set[tuple[str, str]]]
 ) -> str | None:
     """Reason code if the component set must not be summed (rules 2 and 3), else None."""
+    if any(f.ambiguous for _, f in comps):
+        return "ambiguous_values_in_filing"
     if len({f.filing_id for _, f in comps}) != 1:
         return "components_from_different_filings"
     acc = comps[0][1].accession
@@ -446,7 +457,9 @@ def build_cells(
             # tag order. Two listed tags printing different values in that same latest filing: reasoned blank.
             newest = max((f.filed or date.min, f.filing_id) for _, f in d)
             d = [(r, f) for r, f in d if (f.filed or date.min, f.filing_id) == newest]
-            if len({f.value * _sign(r) for r, f in d}) > 1:
+            if len({f.value * _sign(r) for r, f in d}) > 1 or any(
+                f.ambiguous for _, f in d
+            ):
                 stats["conflict_cells"] += 1
                 hold(key, "conflicting_values_in_filing")
                 conflicts.add(key)
