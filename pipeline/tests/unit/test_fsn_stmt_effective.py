@@ -67,7 +67,11 @@ def test_separate_is_and_ci_keep_ci(conn):
     r = _filing(
         conn,
         "a2",
-        [(4, "IS", "NetIncomeLoss"), (6, "CI", "NetIncomeLoss"), (6, "CI", "ComprehensiveIncomeNetOfTax")],
+        [
+            (4, "IS", "NetIncomeLoss"),
+            (6, "CI", "NetIncomeLoss"),
+            (6, "CI", "ComprehensiveIncomeNetOfTax"),
+        ],
     )
     assert r[(6, "ComprehensiveIncomeNetOfTax")] == "CI"
     assert r[(4, "NetIncomeLoss")] == "IS"
@@ -88,11 +92,11 @@ def test_ci_without_net_income_and_true_un_stay(conn):
     assert r[(8, "Assets")] == "UN"
 
 
-def _filing_row(conn, acc, form, amendment, stmts):
+def _filing_row(conn, cid, acc, form, amendment, stmts):
     fid = conn.execute(
         "insert into fsn.filing (accession, cik, form, fsn_set, amendment, company_id) "
-        "values (%s, '1', %s, 's', %s, 77) returning id",
-        (acc, form, amendment),
+        "values (%s, '1', %s, 's', %s, %s) returning id",
+        (acc, form, amendment, cid),
     ).fetchone()[0]
     tid = conn.execute(
         "insert into fsn.tag (tag, version) values ('Assets', 'v') on conflict (tag, version) "
@@ -108,13 +112,19 @@ def _filing_row(conn, acc, form, amendment, stmts):
 def test_amendments_without_statements_are_not_expected_filings(conn):
     from scrooner_pipeline.fsn_store.select import load_filings
 
-    conn.execute("insert into core.company (id) values (77)")
-    _filing_row(conn, "k1", "10-K", False, ["BS"])
-    _filing_row(conn, "k1a", "10-K/A", True, [])  # Part III only
-    _filing_row(conn, "k2a", "10-K/A", True, ["UN", "CP"])  # still no statement
-    _filing_row(conn, "q1a", "10-Q/A", True, ["CI"])  # a restated income statement
-    _filing_row(conn, "q2a", "10-Q/A", True, ["BS"])
-    _filing_row(conn, "q3", "10-Q", False, [])  # an original is never dropped here
+    # core.company.id is GENERATED ALWAYS: let the database assign it
+    cid = conn.execute(
+        "insert into core.company (cik, company_name) values ('0000000077', 'AMENDMENT TEST') returning id"
+    ).fetchone()[0]
+    _filing_row(conn, cid, "k1", "10-K", False, ["BS"])
+    _filing_row(conn, cid, "k1a", "10-K/A", True, [])  # Part III only
+    _filing_row(conn, cid, "k2a", "10-K/A", True, ["UN", "CP"])  # still no statement
+    _filing_row(conn, cid, "q1a", "10-Q/A", True, ["CI"])  # a restated income statement
+    _filing_row(conn, cid, "q2a", "10-Q/A", True, ["BS"])
+    _filing_row(conn, cid, "q3", "10-Q", False, [])  # an original is never dropped here
     with conn.cursor() as cur:
-        got = {f.accession.decode() if isinstance(f.accession, bytes) else f.accession for f in load_filings(cur, 77).values()}
+        got = {
+            f.accession.decode() if isinstance(f.accession, bytes) else f.accession
+            for f in load_filings(cur, cid).values()
+        }
     assert got == {"k1", "q1a", "q2a", "q3"}
