@@ -14,6 +14,14 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - Core work = the library and the mapper. Live 2026-11-11: fsn.concept_rule = 62 rules / 24 concepts; fsn.line_map = 3.20M of 4.12M statement lines UNMAPPED (78%). Ritwik (Mac, scrooner-3d) leads, reading FSN company by company with the Tag Expert: top-100 ranks 1-50 Mac Ritwik, 51-100 cloud Ritwik. Every IS/BS/CF/equity line is mapped, combined or excluded with a reason, by filing structure. The Mapping builder turns those decisions into tested rules. Metric: unmapped statement lines in the top 100, down to 0.
 - One direction, one manager (Dhairya). Everything else stops. Assignments: Engineering = top-100 dry run on the new gate, then write; CF/BS/sector-template/family-prep sessions = fix Engineering's ranked gate-failure causes; Verifier = clearances plus the 200-cell answer key; CI = keep main green.
 
+## The hybrid, exactly (founder, 2026-11-11): "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING."
+
+- FSN = learning only: per company, which tag is which line (statement, position, label, cal tree, era). Not the value source.
+- SEC company API (companyfacts, in core.fact / analytics.company_sec_tag) = the value source.
+- The old mapper (analytics.concept_mapping, 90 global tag rules, plus company_tag_preference, 430 overrides on 382 companies) is replaced for the 1,000 by analytics.company_tag_map (company x tag -> concept, era, evidence adsh/report/line), learned from FSN. The mapper selects SEC facts only through that map: no global fallback.
+- Owners: Engineering, end to end (migration, mapper change, writes). Mapping builder: the FSN-to-map extraction. Ritwik x2 plus the Tag Expert: the tags the extraction can't decide. Verifier: clears writes against filings.
+- Metrics: companies with a complete tag map, and companies written.
+
 ## Live numbers 2026-11-11 ~07:30 UTC
 
 - Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).
