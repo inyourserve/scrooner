@@ -2,17 +2,22 @@
 
 Compact orientation only. Generated evidence and the task board win if this file becomes stale.
 
-Updated: 2026-11-10 ~08:00 UTC (Dhairya, Mac manager session; sync pass at founder's request "come at one level field, sync everything, make everything latest"). Earlier update 2026-11-08 by the cloud manager session `session_01GLmSDyzegqZw4JqC91z7XH`.
+Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager session stood down 2026-11-11).
 
-## Live state 2026-11-10 (read from production, not recalled)
+## Methodology changed entirely (founder, 2026-11-11, typed in Dhairya's session)
 
-- Certified 0 / 1,000. cell_proof: 75.9% PROVEN over 997 companies (last proof run predates the FSN writes).
-- FSN store loaded: 902 companies (fsn.company_load), 41,794 filings, 3,816,038 library rows (fsn.line_map). XOM history included via 0121.
-- canonical_fact written from the FSN store: ONE company, MDT (3639), 779 protected cells, top-100 run 42649721096 (2026-11-09 16:18 UTC). Every other company failed the per-company done gate (9-231 reasonless keys and 1-3 filings not stored each). The nightly tried to overwrite MDT 241 times; every attempt was skipped and logged, so the protection works.
-- Open on MDT (Ritwik, binding C4/N2 and C6): cell_proof over MDT's written pairs (any served DISAGREE re-written as a blank defect); its dividends_per_share cells need a Verifier check against the filings or a hold.
-- Next: the per-pair done gate (branch work/fsn/done-gate-pairs, not on main), then the C7 cohort dry run with Ritwik's C2 table, then the next write.
-- Next.js 16.4.4 is on main (the security advisory is closed). Code lands on main only; no Vercel steps (founder 2026-11-03).
-- One manager: Mac session "Dhairya" and cloud manager session_01GLmSDyzegqZw4JqC91z7XH both act as Dhairya. Both read and update THIS file first; whoever acts records it here.
+"Move to new. Use just old learning not the system." / "Fuck the old data." / "We have changed our methodology entirely."
+
+- The old canonical_fact values and the old normalize/map system are learning only. They never gate a write, are never restored, and get no more protection work. C2, G2(c), G3 and before-image key coverage are diff reports, not holds. This supersedes the MDT restore and the old-value parts of C1-C8/N1-N5/G1-G4.
+- A write passes on the new system alone, judged against the SEC filing: every template cell has a filing-traceable value or an evidenced reason; no served cell_proof DISAGREE; EPS never derived; DPS and debt held where not proven. The Verifier ("Scrooner production cells verification") clears writes. Write each company that passes; don't wait for a full cohort.
+- The nightly moves to the new path (branch work/fsn-nightly-incremental: per-filing EDGAR XBRL into FSN rows, 20/20 exact against 2026m10). The old path stops writing each company as it moves over.
+- Core work = the library and the mapper. Live 2026-11-11: fsn.concept_rule = 62 rules / 24 concepts; fsn.line_map = 3.20M of 4.12M statement lines UNMAPPED (78%). Ritwik (Mac, scrooner-3d) leads, reading FSN company by company with the Tag Expert: top-100 ranks 1-50 Mac Ritwik, 51-100 cloud Ritwik. Every IS/BS/CF/equity line is mapped, combined or excluded with a reason, by filing structure. The Mapping builder turns those decisions into tested rules. Metric: unmapped statement lines in the top 100, down to 0.
+- One direction, one manager (Dhairya). Everything else stops. Assignments: Engineering = top-100 dry run on the new gate, then write; CF/BS/sector-template/family-prep sessions = fix Engineering's ranked gate-failure causes; Verifier = clearances plus the 200-cell answer key; CI = keep main green.
+
+## Live numbers 2026-11-11 ~07:30 UTC
+
+- Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).
+- Next.js 16.4.4 is on main. Code lands on main only; no Vercel steps (founder 2026-11-03).
 
 ## Product objective
 
@@ -50,12 +55,11 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | draft PR #4 (`work/cashflow/fsn-gaps-rebased`, CI green). Ruling (Dhairya): a printed 0 in the latest copy is served as 0 | Verifier PASS 2026-11-08 (verify/cf-gaps-redraw-2026-11-08, 4c64d769) at d1a0050: 0 wrong shown values, 21/21 new values, 15/15 cohort absent-line claims; scratch store on 60 cohort companies: CF gaps 6,272 to 283. Brixmor Q4 2015/16 buyback reason follow-up done (26063db). Remaining: cohort dry run after the write; CAD filers CP/IMO open pending the currency ruling |
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
-| Tag Expert (cloud): playbooks for the 15 write data points, inbox 0, findings ranked by cells at stake | `docs/tag-expert-playbooks`; summary `data-team/fsn/TAG-EXPERT-FINDINGS-2026-11-10.md` | Top items unfixed in production 2026-11-10: revenue 33 / CFO 16 companies blanked by two mapped lines per key; shares 17 and DPS 63 mapped (parenthetical/EQ unread); 271 of 903 loaded companies have no line_map. FSN-written: MDT only (779 cells). MDT DPS: written cells FY2014-FY2018 right (FY = sum of quarters; filing-checked), but FY2019-FY2026 is a SILENT gap (DPS moved to the EQ parenthetical, unread by the mapper) |
-| FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
+| FSN write vs nightly jobs: live two-way guard; nightly reprocess selects only filers with work left; normalizer_backlog from ingest time | PR #5 (CI/CD session, CI green before the 11-10 additions) | review (balance-sheet lane), founder to merge before tonight's refresh |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
-Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still failed, for a new reason: stage `normalize:facts` failed and the reprocess job ran past its 7,000s budget, so every map stage after calculate was skipped (growth, TTM, expanded metrics, piotroski, reconciliation, dividend streak, tag library). Not yet investigated: the CI/CD session (owner of PR #1/#5) can't be messaged from a cloud session; the founder needs to hand it over.
+Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712874321 (11-09) did NOT fail in normalize:facts (rc 0); it ran out of the 7,000s budget (7,074s) with 1,017 companies, ~73% of which already had their filing's facts (the 4-day window is in calendar days, so Monday re-ran the Thu/Fri filers done Fri-Sun). Fix: select a filer only if its filing's facts are missing or arrived in the last 48h (live: 155 now vs 403 in-window filings; ~300 vs 1,017 on 11-09). Its gate alert normalizer_backlog was a weekend artifact (max filing_date read as midnight); now measured from core.filing.created_at, 5-day limit. Run 42507618224 (11-08) had the same cause: 1,414 companies, normalize:facts killed at its 1,800s stage cap (not an error of its own), budget out at 7,212s.
 
 ## Founder decisions 2026-11-09 (~21:40 IST, in the manager session)
 

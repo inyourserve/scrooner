@@ -106,6 +106,7 @@ def main() -> None:
     cache.mkdir(parents=True, exist_ok=True)
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
     from scrooner_pipeline.common.config import settings
+    from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 
     import psycopg
 
@@ -122,7 +123,8 @@ def main() -> None:
         filings, fye = submissions(s["source_cik"], cache, settings.sec_user_agent)
         # a predecessor without fiscalYearEnd on EDGAR (Exelon Generation) follows its successor's
         fye = fye or company_fye.get(s["company_id"])
-        lo, hi = date.fromisoformat(s["valid_from"]), date.fromisoformat(s["valid_to"])
+        # core keeps periods ending on or after the storage floor (common/history_floor.py): a window may start earlier
+        lo, hi = max(date.fromisoformat(s["valid_from"]), HISTORY_FLOOR), date.fromisoformat(s["valid_to"])
         rows.extend({**r, "source_cik": s["source_cik"]} for r in rows_for(s["company_id"], filings, fye, lo, hi))
     seen, uniq = set(), []
     for r in rows:

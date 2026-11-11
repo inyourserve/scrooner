@@ -163,6 +163,24 @@ cur.execute(
     where d.filing_date >= current_date - make_interval(days => %s)
       and c.status = 'active'
       and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
+      -- Only filings with work left (2026-11-10). The window is counted in calendar days, so a
+      -- Monday night re-selected every Thursday/Friday filer the Friday-Sunday runs had already
+      -- done: run 42712874321 took 1,017 companies, of which about 73% already had their
+      -- filing's facts, and ran out of its 7,000s budget (7,074s), skipping six map stages.
+      -- Selected: the filing's facts are not in core.fact yet (companyfacts lags the index by a
+      -- day or two), or they arrived in the last 48 hours, so a night that skipped stages for a
+      -- company is retried once.
+      and (
+        not exists (
+          select 1 from core.filing f join core.fact x on x.filing_id = f.id
+          where f.accession_number = d.accession_number
+        )
+        or exists (
+          select 1 from core.filing f join core.fact x on x.filing_id = f.id
+          where f.accession_number = d.accession_number
+            and x.created_at >= now() - make_interval(hours => %s)
+        )
+      )
     union
     -- Backlog (added 2026-09-27): a company whose latest 10-K/10-Q has
     -- no core.fact rows yet, although a companyfacts payload fetched
@@ -189,7 +207,11 @@ cur.execute(
       limit %s
     ) backlog
     """,
-    (int(os.environ["LOOKBACK_DAYS"]), int(os.environ.get("BACKLOG_LIMIT", "150"))),
+    (
+        int(os.environ["LOOKBACK_DAYS"]),
+        int(os.environ.get("FACTS_RETRY_HOURS", "48")),
+        int(os.environ.get("BACKLOG_LIMIT", "150")),
+    ),
 )
 print(','.join(r[0] for r in cur.fetchall()))
 PY
@@ -214,7 +236,7 @@ if [ -z "$CIKS" ]; then
 fi
 
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
-echo "reprocess_recent_filers: ${N} companies (filed in the last ${FILER_LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
+echo "reprocess_recent_filers: ${N} companies (a 10-K/10-Q filed in the last ${FILER_LOOKBACK_DAYS} days whose facts are missing or arrived in the last ${FACTS_RETRY_HOURS:-48}h, or latest 10-K/10-Q not yet normalized)"
 
 SHARDS="${REPROCESS_SHARDS:-4}"
 echo "reprocess_recent_filers: running each stage across up to ${SHARDS} parallel shards"

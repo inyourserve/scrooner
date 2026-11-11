@@ -15,13 +15,16 @@ from __future__ import annotations
 import csv
 import gzip
 from collections import Counter, defaultdict
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common.cell_contract import TP_QTRS, duration_class
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
+from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.fsn_store import select as sel
 
 FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
@@ -161,15 +164,146 @@ def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, 
     return sorted(keys)
 
 
-def _match(rows: list[dict[str, Any]], grain: str, end: date) -> dict[str, Any] | None:
+def _row_class(r: dict[str, Any]) -> str | None:
+    """The duration class of a cell row: its grain, or for a TP row (CELL-FORMAT v1.2) H1/9M/MULTI from its exact
+    dates when it has them, else from its column length (qtrs 2 = H1, 3 = 9M)."""
+    if r["period_grain"] != "TP":
+        return r["period_grain"]
+    if r.get("period_start") and r.get("period_end"):
+        return duration_class(
+            "duration",
+            date.fromisoformat(str(r["period_start"])),
+            date.fromisoformat(str(r["period_end"])),
+        )
+    return TP_QTRS.get(r.get("qtrs"))
+
+
+def _match(
+    rows: list[dict[str, Any]], grain: str, end: date, start: date | None = None
+) -> dict[str, Any] | None:
+    """The row of this duration class whose FSN end stands for the true period end `end` (within 10 days, or the
+    SEC's month-end rounding of it: a mid-month 52/53-week end); the nearest wins. A row with exact dates (a TP
+    blank of a before-image key) matches only its own start, when `start` is given."""
     best = None
     for r in rows:
-        if r["period_grain"] != grain:
+        if _row_class(r) != grain:
             continue
-        gap = abs((date.fromisoformat(r["fsn_end"]) - end).days)
-        if gap <= 10 and (best is None or gap < best[0]):
+        if (
+            start is not None
+            and r.get("period_start")
+            and date.fromisoformat(str(r["period_start"])) != start
+        ):
+            continue
+        fsn_end = date.fromisoformat(r["fsn_end"])
+        if not fsn_end_matches(fsn_end, end):
+            continue
+        gap = abs((fsn_end - end).days)
+        if best is None or gap < best[0]:
             best = (gap, r)
     return best[1] if best else None
+
+
+RULE_GAP_BLANK = "fsn.hybrid_gap_blank@1"
+# approver ruling 2026-11-10, item 1: a before-image multi-year key is not_in_template, never a defect
+RULE_GRAIN_OUTSIDE_TEMPLATE = "fsn.period_grain_outside_template@1"
+GRAIN_QTRS = {"FY": 4, "Q": 1, "I": 0, "H1": 2, "9M": 3}
+YTD_CLASSES = ("H1", "9M", "MULTI")
+
+
+def history_windows(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, list[tuple[date, date]]]:
+    """The company's core.company_history_source windows: {'exclude': [...], 'predecessor': [...]} (migration 0121;
+    the same rows shard/_db_history reads)."""
+    out: dict[str, list[tuple[date, date]]] = {"exclude": [], "predecessor": []}
+    if (
+        conn.execute("select to_regclass('core.company_history_source')").fetchone()[0]
+        is None
+    ):
+        return out
+    for rel, f, t in conn.execute(
+        "select relation, valid_from, valid_to from core.company_history_source where company_id = %s",
+        (company_id,),
+    ).fetchall():
+        out[rel].append((f, t))
+    return out
+
+
+def in_no_filing_window(
+    ddate: date, windows: dict[str, list[tuple[date, date]]] | None
+) -> bool:
+    """True when the key's FSN month-end falls in an exclude window of the company's own CIK and no predecessor
+    window covers it: the company has no public filing for the period (wrong-entity history was excluded)."""
+    if not windows:
+        return False
+    return any(f <= ddate <= t for f, t in windows["exclude"]) and not any(
+        f <= ddate <= t for f, t in windows["predecessor"]
+    )
+
+
+def gap_blank(
+    concept: str,
+    grain: str,
+    end: date,
+    cause: str,
+    filings: dict[int, Any],
+    windows: dict[str, list[tuple[date, date]]] | None = None,
+    start: date | None = None,
+) -> "sel.Cell":
+    """A pilot gap key as a reasoned blank, so a written pair carries every expected key (founder 2026-11-09:
+    no fallback; a reasonless gap is written as a blank with a visible reason, never skipped).
+    filing_not_in_store when no stored filing's period is this period end (FSN's month-end rounding included);
+    else hybrid_gap_unresolved, with the pilot's cause in input_refs. The key's date is the FSN month-end form of the
+    true end, like every other cell (the loader binds it to the true core.period by fiscal label).
+    grain H1/9M/MULTI (CELL-FORMAT v1.2): a year-to-date or multi-year key with nothing printed; `start` is then
+    required and the cell is a TP blank carrying the key's exact dates (a YTD period has no fiscal label)."""
+    if grain in YTD_CLASSES and start is None:
+        raise ValueError(f"a {grain} gap blank needs the key's exact start date")
+    stored = sorted(
+        (f.accepted, fid)
+        for fid, f in filings.items()
+        if f.period is not None and fsn_end_matches(f.period, end)
+    )
+    ends = sorted(nearest_month_ends(end))
+    ddate = end if end in ends else ends[-1]
+    refs = {"pilot_cause": cause, "expected_end": end.isoformat()}
+    if (
+        stored
+    ):  # N1: the accession of the filing that reports the period (its latest copy)
+        refs["accession"] = filings[stored[-1][1]].accession
+    ytd_start = start if grain in YTD_CLASSES else None
+    if ytd_start is not None:
+        refs["expected_start"] = ytd_start.isoformat()
+    if grain in GRAIN_QTRS:
+        qtrs = GRAIN_QTRS[grain]
+    else:  # a multi-year key: its length in quarters (at least 5, so it never reads as a year)
+        assert ytd_start is not None
+        qtrs = max(5, round(((end - ytd_start).days + 1) / 91.3))
+    if not stored and in_no_filing_window(ddate, windows):
+        # approver note 2026-11-10: a key inside an excluded wrong-entity window with no filing of the company's own
+        return sel.Cell(
+            concept,
+            ddate,
+            qtrs,
+            "history_horizon",
+            rule_id=RULE_GAP_BLANK,
+            reason_code="no_public_filing_for_period",
+            input_refs=refs,
+            start=ytd_start,
+            end=end if ytd_start is not None else None,
+        )
+    return sel.Cell(
+        concept,
+        ddate,
+        qtrs,
+        "defect",
+        filing_id=stored[-1][1] if stored else None,
+        rule_id=RULE_GAP_BLANK,
+        reason_code="hybrid_gap_unresolved" if stored else "filing_not_in_store",
+        input_refs=refs,
+        start=ytd_start,
+        end=end if ytd_start is not None else None,
+    )
 
 
 def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
@@ -254,6 +388,7 @@ def report_company(
         (company_id,),
     ).fetchone()
     sector = sector_of(sic)
+    hist = history_windows(conn, company_id)
     tmpl = template(sector)
     data = sel.load_company(conn, company_id)
     cells: list[dict[str, Any]] = []
@@ -307,7 +442,7 @@ def report_company(
         taken = {
             (
                 date.fromisoformat(r["fsn_end"]),
-                {"FY": 4, "Q": 1, "I": 0}[r["period_grain"]],
+                r["qtrs"],
             )
             for r in cells
             if r["data_point_name"] == concept
@@ -336,6 +471,9 @@ def report_company(
 
     keys = valued = reasoned = 0
     gaps: list[dict[str, Any]] = []
+    gap_rows: list[
+        dict[str, Any]
+    ] = []  # each gap key as a reasoned blank (no fallback: founder 2026-11-09)
     per_point: dict[str, dict[str, int]] = {}
     # SECTOR-TEMPLATES §4 step 2: a COND data point the company's statements do not print (no line
     # mapped, combined or excluded in any stored filing) is OUT of that company's template, with that
@@ -386,16 +524,20 @@ def report_company(
             else:
                 cause = "no_face_print_for_period"
             k[cause] += 1
+            blank = gap_blank(concept, grain, end, cause, data["filings"], hist)
+            gap_rows.append(sel.to_row(blank, company_id, data["filings"]))
             gaps.append(
                 {
                     "data_point": concept,
                     "grain": grain,
                     "period_end": end.isoformat(),
                     "cause": cause,
+                    "written_as": blank.reason_code,
                 }
             )
         per_point[concept] = dict(k)
 
+    cells.extend(gap_rows)
     filings = data["filings"].values()
     latest = max(filings, key=lambda f: f.accepted) if filings else None
     combined = conn.execute(
@@ -498,13 +640,44 @@ def report_company(
                 if r["state"] == "derived"
                 and (r.get("derivation") or {}).get("policy") != "same_basis"
             ),
+            # the same count per data point: the done gate counts only the data points a write switches
+            "5_derived_without_same_basis_by_point": dict(
+                Counter(
+                    r["data_point_name"]
+                    for r in cells
+                    if r["state"] == "derived"
+                    and (r.get("derivation") or {}).get("policy") != "same_basis"
+                )
+            ),
             "6_proof_disagree": "after the write: cell_proof runs on written cells",
         },
         "cell_states": dict(states),
+        # the stored filings, so the done gate can build N1 gap blanks for before-image YTD keys (CELL-FORMAT v1.2)
+        # the company's history windows (0121), so a done-gate YTD blank in an excluded window is a horizon blank
+        "history_windows": {
+            rel: [[f.isoformat(), t.isoformat()] for f, t in ws]
+            for rel, ws in hist.items()
+        },
+        "store_filings": [
+            {
+                "id": f.id,
+                "accession": f.accession,
+                "accepted": f.accepted.isoformat(),
+                "form": f.form,
+                "period": f.period.isoformat() if f.period else None,
+                "fy": f.fy,
+                "fp": f.fp,
+                "fye": f.fye,
+            }
+            for f in data["filings"].values()
+        ],
         "_cells": cells,
         "_gaps": gaps,
         "_library": lib,
     }
+
+
+VALUED_STATES = ("value", "derived")
 
 
 def done_gate(
@@ -512,28 +685,379 @@ def done_gate(
     gaps: list[dict[str, str]],
     missing_filings: dict[str, list[Any]],
     data_points: set[str],
-) -> dict[int, list[str]]:
-    """Design §5 done criteria 1-5 per company, for the data points a write switches: {company_id: failed
-    criteria}; an empty list means the company may switch. Criterion 3 holds by construction (select serves
-    only passing columns; a failing latest copy is a reasoned blank). Criterion 6 (zero served cell_proof
-    DISAGREE) needs the written cells: checked after the write, and a failing company is restored from its
-    before-image (`scrooner-cells restore`), so it keeps its earlier rows (§7.6)."""
-    reasonless: Counter[str] = Counter(
-        str(g["company_id"]) for g in gaps if g["data_point"] in data_points
+) -> dict[int, dict[str, Any]]:
+    """The done gate under the founder's no-fallback decision (2026-11-09: "No fallback. Everything is the hybrid"),
+    on Ritwik's per-pair ruling (RULING-DONE-GATE-C4-2026-11-09, C1 atomicity per (company, concept)):
+    {company_id: {"company": [failed criteria 1/2/5], "data_points": {dp: [reasons]}, "out_of_template": [dp],
+    "gap_blanks": {dp: n}}}.
+
+    Criteria 1, 2 and 5 stay per company: a structural failure writes nothing for that company (every pair carries
+    `company:<criterion>`). Otherwise EVERY data point of the list that is in the company's template is written,
+    all keys at once: values, reasoned blanks, and each pilot gap key as a reasoned blank (`gap_blank`), so no old
+    row of a written pair survives. Criterion 4 no longer holds a pair back; its gap keys are counted under
+    "gap_blanks". A pair with no expected key (nothing to write) and a data point outside the template are not
+    written and are listed. Criterion 5 counts the derived cells of the switched data points only."""
+    gap_keys: Counter[tuple[str, str]] = Counter(
+        (str(g["company_id"]), g["data_point"])
+        for g in gaps
+        if g["data_point"] in data_points
     )
-    out: dict[int, list[str]] = {}
+    out: dict[int, dict[str, Any]] = {}
     for r in reports:
         crit = r["done_criteria"]
-        failed = []
+        cid = r["company_id"]
+        company: list[str] = []
         if not crit.get("1_store_loaded"):
-            failed.append("1_store_not_loaded")
+            company.append("1_store_not_loaded")
         if missing_filings.get(r["cik"]):
-            failed.append(f"2_filings_not_stored:{len(missing_filings[r['cik']])}")
-        if reasonless[str(r["company_id"])]:
-            failed.append(f"4_reasonless_keys:{reasonless[str(r['company_id'])]}")
-        if crit.get("5_derived_without_same_basis"):
-            failed.append(
-                f"5_derived_without_same_basis:{crit['5_derived_without_same_basis']}"
-            )
-        out[r["company_id"]] = failed
+            company.append(f"2_filings_not_stored:{len(missing_filings[r['cik']])}")
+        by_point = crit.get("5_derived_without_same_basis_by_point")
+        derived = (
+            sum(n for dp, n in by_point.items() if dp in data_points)
+            if by_point is not None
+            else crit.get("5_derived_without_same_basis", 0)
+        )
+        if derived:
+            company.append(f"5_derived_without_same_basis:{derived}")
+        per_point = (r.get("template_coverage") or {}).get("per_data_point") or {}
+        points: dict[str, list[str]] = {}
+        out_of_template: list[str] = []
+        blanks: dict[str, int] = {}
+        for dp in sorted(data_points):
+            if dp not in per_point:
+                out_of_template.append(dp)
+                continue
+            failed = [f"company:{c}" for c in company]
+            if not per_point[dp].get("keys", 0):
+                failed.append("no_expected_keys")  # nothing to write
+            n = gap_keys[(str(cid), dp)]
+            if n:
+                blanks[dp] = n
+            points[dp] = failed
+        out[cid] = {
+            "company": company,
+            "data_points": points,
+            "out_of_template": out_of_template,
+            "gap_blanks": blanks,
+        }
     return out
+
+
+def done_pairs(gate: dict[int, dict[str, Any]]) -> list[tuple[int, str]]:
+    """The (company_id, data point) pairs that may be written."""
+    return sorted(
+        (cid, dp)
+        for cid, g in gate.items()
+        for dp, failed in g["data_points"].items()
+        if not failed
+    )
+
+
+def fully_done(gate: dict[int, dict[str, Any]]) -> list[int]:
+    """Companies whose every listed (in-template) pair passes, with at least one such pair."""
+    return sorted(
+        cid
+        for cid, g in gate.items()
+        if g["data_points"] and not any(g["data_points"].values())
+    )
+
+
+def _grain(period_type: str, start: date, end: date) -> str:
+    """The duration class of a stored period: I, Q (about 3 months), H1 (6-month YTD), 9M (9-month YTD), FY, or
+    MULTI (longer than a year). A 6/9-month row must never be counted as matched by the Q cell that ends on the
+    same day (MDT 2026-11-09: 170 YTD values deleted unseen); since CELL-FORMAT v1.2 it is matched by a TP cell of
+    its own class."""
+    return duration_class(period_type, start, end)
+
+
+CELL_GRAINS = ("Q", "FY", "I", "H1", "9M", "MULTI")
+
+
+def hold_guard(
+    cells: list[dict[str, Any]],
+    before: list[dict[str, str]],
+    concept_names: dict[str, str],
+    periods: dict[str, dict[str, str]],
+    data_points: set[str],
+    not_in_template: list[dict[str, Any]] | None = None,
+) -> tuple[
+    dict[tuple[int, str], str],
+    dict[str, dict[str, int]],
+    list[dict[str, Any]],
+]:
+    """C2 (Ritwik 2026-11-10): the expected keys of a written pair are its calendar keys AND every key the
+    before-image held a value for. Returns (pairs losing every value, valued->X transitions per data point,
+    the valued->no-row keys).
+
+    before: the before-image canonical_fact rows (company_id, canonical_concept_id, period_id, value);
+    concept_names: canonical_concept id -> name; periods: core.period id -> its row (start_date, end_date,
+    period_type). For every before-image valued key the new cell is matched by duration class and an end within
+    10 days: a 6-month, 9-month or multi-year key by a TP cell of its class (CELL-FORMAT v1.2; an exact-dated TP
+    blank only at its own start). A blank new cell counts under its reason_code. A key with no new cell is
+    valued->no-row: the loader replaces the pair's rows whole, so that value would vanish with no cell and no
+    reason. Every such key is listed; the gate holds its pair."""
+    new_valued: Counter[tuple[int, str]] = Counter()
+    by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in cells:
+        if r["data_point_name"] not in data_points:
+            continue
+        key = (int(r["company_id"]), r["data_point_name"])
+        by_pair[key].append(r)
+        if r["state"] in VALUED_STATES:
+            new_valued[key] += 1
+    old_valued: Counter[tuple[int, str]] = Counter()
+    transitions: dict[str, Counter[str]] = defaultdict(Counter)
+    no_row: list[dict[str, Any]] = []
+    for b in before:
+        dp = concept_names.get(str(b["canonical_concept_id"]))
+        if dp not in data_points or b.get("value") in (None, ""):
+            continue
+        key = (int(b["company_id"]), dp)
+        p = periods.get(str(b["period_id"]))
+        if p is None:
+            old_valued[key] += 1
+            transitions[dp]["period_unknown"] += 1
+            no_row.append(
+                {"company_id": key[0], "data_point": dp, "period_id": b["period_id"],
+                 "grain": None, "start": None, "end": None, "before_value": b["value"], "why": "period_unknown"}
+            )  # fmt: skip
+            continue
+        start, end = (
+            date.fromisoformat(p["start_date"]),
+            date.fromisoformat(p["end_date"]),
+        )
+        if (
+            end < HISTORY_FLOOR
+        ):  # the write does not reach keys before the history floor (CELL-FORMAT §2)
+            continue
+        old_valued[key] += 1
+        grain = _grain(p["period_type"], start, end)
+        row = _match(
+            by_pair.get(key, []), grain, end, start if grain in YTD_CLASSES else None
+        )
+        if row is None:
+            why = "no_new_cell"
+            transitions[dp][why] += 1
+            no_row.append(
+                {"company_id": key[0], "data_point": dp, "period_id": b["period_id"], "grain": grain,
+                 "start": start.isoformat(), "end": end.isoformat(), "before_value": b["value"], "why": why}
+            )  # fmt: skip
+        elif row["state"] not in VALUED_STATES:
+            transitions[dp][row.get("reason_code") or row["state"]] += 1
+            if row["state"] == "not_in_template" and not_in_template is not None:
+                # approver ruling 2026-11-10, item 1: listed in its own C2 column
+                not_in_template.append(
+                    {"company_id": key[0], "data_point": dp, "period_id": b["period_id"], "grain": grain,
+                     "start": start.isoformat(), "end": end.isoformat(), "before_value": b["value"],
+                     "reason_code": row.get("reason_code")}
+                )  # fmt: skip
+        else:
+            transitions[dp]["valued"] += 1
+    held = {
+        key: f"0_new_values_vs_{n}_before"
+        for key, n in old_valued.items()
+        if n and not new_valued[key]
+    }
+    return held, {dp: dict(c) for dp, c in transitions.items()}, no_row
+
+
+def _store_filings(report: dict[str, Any]) -> dict[int, sel.Filing] | None:
+    rows = report.get("store_filings")
+    if rows is None:
+        return None
+    return {
+        int(f["id"]): sel.Filing(
+            int(f["id"]),
+            f["accession"],
+            datetime.fromisoformat(f["accepted"]),
+            f["form"],
+            date.fromisoformat(f["period"]) if f.get("period") else None,
+            f.get("fy"),
+            f.get("fp"),
+            f.get("fye"),
+        )
+        for f in rows
+    }
+
+
+def ytd_gap_blanks(
+    cells: list[dict[str, Any]],
+    before: list[dict[str, str]],
+    concept_names: dict[str, str],
+    periods: dict[str, dict[str, str]],
+    data_points: set[str],
+    reports: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """CELL-FORMAT v1.2 (release approver 2026-11-10): a before-image valued key of a 6-month, 9-month or multi-year
+    period (no calendar row expects one) with no TP cell, because nothing is printed on the face for it, becomes a
+    defect blank under the pilot.gap_blank conventions (N1): hybrid_gap_unresolved when a stored filing reports the
+    period end (its accession in input_refs), else filing_not_in_store; the cause is no_mapped_line when the
+    company's library has no line for the data point, else no_face_print_for_period. The blank carries the key's
+    exact dates. A multi-year key (class MULTI) is written as state not_in_template, reason
+    period_grain_outside_template, no class or owner (approver ruling 2026-11-10, item 1). Returns (blank rows,
+    skipped keys): a company whose report lacks its stored filings gets no blank (its keys stay valued->no-row and
+    the gate holds the pair)."""
+    by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in cells:
+        by_pair[(int(r["company_id"]), r["data_point_name"])].append(r)
+    by_company = {int(r["company_id"]): r for r in reports}
+    out: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    seen: set[tuple[int, str, date, date]] = set()
+    filings_of: dict[int, dict[int, sel.Filing] | None] = {}
+    for b in before:
+        dp = concept_names.get(str(b["canonical_concept_id"]))
+        if dp not in data_points or b.get("value") in (None, ""):
+            continue
+        p = periods.get(str(b["period_id"]))
+        if p is None:
+            continue
+        start, end = (
+            date.fromisoformat(p["start_date"]),
+            date.fromisoformat(p["end_date"]),
+        )
+        grain = _grain(p["period_type"], start, end)
+        cid = int(b["company_id"])
+        if end < HISTORY_FLOOR or grain not in YTD_CLASSES:
+            continue
+        if (cid, dp, start, end) in seen or _match(
+            by_pair.get((cid, dp), []), grain, end, start
+        ):
+            continue
+        seen.add((cid, dp, start, end))
+        report = by_company.get(cid)
+        if cid not in filings_of:
+            filings_of[cid] = _store_filings(report) if report else None
+        filings = filings_of[cid]
+        if report is None or filings is None:
+            skipped.append(
+                {"company_id": cid, "data_point": dp, "start": start.isoformat(), "end": end.isoformat(),
+                 "why": "no_store_filings_in_report"}
+            )  # fmt: skip
+            continue
+        if grain == "MULTI":
+            ends = sorted(nearest_month_ends(end))
+            blank = sel.Cell(
+                dp,
+                end if end in ends else ends[-1],
+                max(5, round(((end - start).days + 1) / 91.3)),
+                "not_in_template",
+                rule_id=RULE_GRAIN_OUTSIDE_TEMPLATE,
+                reason_code="period_grain_outside_template",
+                input_refs={
+                    "expected_start": start.isoformat(),
+                    "expected_end": end.isoformat(),
+                },
+                start=start,
+                end=end,
+            )
+        else:
+            missing = set((report.get("library") or {}).get("missing") or [])
+            cause = "no_mapped_line" if dp in missing else "no_face_print_for_period"
+            hw = report.get("history_windows")
+            windows = (
+                {rel: [(date.fromisoformat(f), date.fromisoformat(t)) for f, t in ws] for rel, ws in hw.items()}
+                if hw
+                else None
+            )  # fmt: skip
+            blank = gap_blank(dp, grain, end, cause, filings, windows, start=start)
+        row = sel.to_row(blank, cid, filings)
+        by_pair[(cid, dp)].append(row)
+        out.append(row)
+    return out, skipped
+
+
+def hold_valued_to_no_row(
+    gate: dict[int, dict[str, Any]], no_row: list[dict[str, Any]]
+) -> dict[tuple[int, str], int]:
+    """Hold every pair with a valued->no-row key (it must be 0 for a written pair); returns the count per pair."""
+    counts: Counter[tuple[int, str]] = Counter(
+        (int(k["company_id"]), k["data_point"]) for k in no_row
+    )
+    for (cid, dp), n in counts.items():
+        g = gate.get(cid)
+        if g is not None and dp in g["data_points"]:
+            g["data_points"][dp].append(f"C2_valued_to_no_row:{n}")
+    return dict(counts)
+
+
+RULE_PROOF_BLANK = "fsn.cell_proof_blank@1"
+
+
+def blank_disagreements(
+    rows: list[dict[str, Any]], disagrees: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Ruling addendum N2 (no fallback): a written cell that cell_proof DISAGREEs with becomes a defect blank
+    (identity / verifier, reason cell_proof_disagree, the proof evidence in input_refs) instead of being restored
+    to its old value. Returns (rows to load, unmatched DISAGREE rows).
+
+    The loader replaces a written (company, data point) pair WHOLE, so the result holds EVERY row of each pair with
+    at least one DISAGREE key, with only those keys replaced; pairs without a DISAGREE are not reloaded. A DISAGREE
+    row matches a written cell by company, data point, grain and end (FSN month-end rounding included)."""
+    by_pair: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in rows:
+        by_pair[(int(r["company_id"]), r["data_point_name"])].append(r)
+    hits: dict[int, dict[str, Any]] = {}  # id(row) -> the DISAGREE it matched
+    unmatched = []
+    for d in disagrees:
+        pair = (int(d["company_id"]), d["data_point_name"])
+        end = (
+            d["period_end"]
+            if isinstance(d["period_end"], date)
+            else date.fromisoformat(str(d["period_end"]))
+        )
+        cands = [
+            r
+            for r in by_pair.get(pair, [])
+            if r["period_grain"] == d["period_grain"]
+            and fsn_end_matches(date.fromisoformat(r["fsn_end"]), end)
+        ]
+        if not cands:
+            unmatched.append(d)
+            continue
+        best = min(
+            cands, key=lambda r: abs((date.fromisoformat(r["fsn_end"]) - end).days)
+        )
+        hits[id(best)] = d
+    out = []
+    for pair, prs in sorted(by_pair.items()):
+        if not any(id(r) in hits for r in prs):
+            continue
+        for r in prs:
+            hit = hits.get(id(r))
+            if hit is None:
+                out.append(r)
+                continue
+            d = hit
+            out.append(
+                dict(
+                    r,
+                    state="defect",
+                    value=None,
+                    unit=None,
+                    derivation=None,
+                    source_fact_ids=[],
+                    source_value_ids=[],
+                    rule_id=RULE_PROOF_BLANK,
+                    reason_code="cell_proof_disagree",
+                    reason_text=sel.REASON_TEXT["cell_proof_disagree"],
+                    defect_class="identity",
+                    owner="verifier",
+                    root_cause_class=None,
+                    input_refs={
+                        "cell_proof_id": d.get("id"),
+                        "proof_reason_code": d.get("reason_code"),
+                        "proof_rule_id": d.get("rule_id"),
+                        "shown_value": None
+                        if d.get("shown_value") is None
+                        else str(d["shown_value"]),
+                        "position_value": None
+                        if d.get("position_value") is None
+                        else str(d["position_value"]),
+                        "replaced_value": r.get("value"),
+                        "replaced_rule_id": r.get("rule_id"),
+                        "replaced_state": r.get("state"),
+                    },
+                )
+            )
+    return out, unmatched

@@ -85,6 +85,30 @@ DEFAULT_OWNER_BY_CLASS = {
 PERIOD_GRAINS = frozenset({"FY", "Q", "TTM", "I", "TP"})
 BASES = frozenset({"latest", "as_filed"})
 
+# CELL-FORMAT v1.2 (release approver 2026-11-10): grain TP holds a PRINTED year-to-date duration: 6 months
+# (qtrs 2, class H1) or 9 months (qtrs 3, class 9M); a printed multi-year period is TP too (class MULTI).
+TP_QTRS = {2: "H1", 3: "9M"}
+TP_CLASSES = frozenset({"H1", "9M", "MULTI"})
+
+
+def duration_class(period_type: str, start: date, end: date) -> str:
+    """The duration class of a period by its true dates: I, Q (about 3 months), H1 (6-month YTD), 9M (9-month
+    YTD), FY, or MULTI (longer than a year). A 52/53-week quarter is 84-98 days, a 6-month YTD 175-190, a 9-month
+    YTD 266-280, a year 357-371; the bounds sit between those."""
+    if period_type == "instant":
+        return "I"
+    days = (end - start).days + 1
+    if days <= 120:
+        return "Q"
+    if days <= 220:
+        return "H1"
+    if days <= 300:
+        return "9M"
+    if days <= 400:
+        return "FY"
+    return "MULTI"
+
+
 EVIDENCE_KINDS = frozenset(
     {
         "filing_check",
