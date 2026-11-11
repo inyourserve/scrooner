@@ -830,7 +830,7 @@ company_id,ticker,template,data_point,status
 1123,RTX,general,total_debt_split,held C8
 1123,RTX,general,total_liabilities,sourced
 1134,WMT,general,accounts_payable,sourced
-1134,WMT,general,accounts_receivable,sourced
+1134,WMT,general,accounts_receivable,combined (reasoned blank)
 1134,WMT,general,amortization_of_intangibles,template-OUT candidate (Verifier draw)
 1134,WMT,general,basic_eps,sourced
 1134,WMT,general,capex,sourced
@@ -1118,7 +1118,7 @@ company_id,ticker,template,data_point,status
 1263,LRCX,general,total_debt_split,held C8
 1263,LRCX,general,total_liabilities,sourced
 1321,MU,general,accounts_payable,combined (reasoned blank)
-1321,MU,general,accounts_receivable,sourced
+1321,MU,general,accounts_receivable,combined (reasoned blank)
 1321,MU,general,amortization_of_intangibles,note-sourced candidate (Verifier draw)
 1321,MU,general,basic_eps,sourced
 1321,MU,general,capex,sourced
@@ -1350,7 +1350,7 @@ company_id,ticker,template,data_point,status
 1807,MS,broker_am,total_debt_split,held C8
 1807,MS,broker_am,total_liabilities,sourced
 1857,COST,general,accounts_payable,sourced
-1857,COST,general,accounts_receivable,sourced
+1857,COST,general,accounts_receivable,combined (reasoned blank)
 1857,COST,general,amortization_of_intangibles,template-OUT candidate (Verifier draw)
 1857,COST,general,basic_eps,sourced
 1857,COST,general,capex,sourced
@@ -1830,7 +1830,7 @@ company_id,ticker,template,data_point,status
 3932,MA,general,total_debt_split,held C8
 3932,MA,general,total_liabilities,sourced
 4015,GEV,general,accounts_payable,combined (reasoned blank)
-4015,GEV,general,accounts_receivable,sourced
+4015,GEV,general,accounts_receivable,combined (reasoned blank)
 4015,GEV,general,amortization_of_intangibles,sourced
 4015,GEV,general,basic_eps,sourced
 4015,GEV,general,capex,sourced
@@ -2179,7 +2179,7 @@ company_id,ticker,template,data_point,status
 5203,ORCL,general,cfo,sourced
 5203,ORCL,general,collaborative_arrangement_revenue,template seed: should be COND
 5203,ORCL,general,comprehensive_income,sourced
-5203,ORCL,general,cost_of_revenue,sourced
+5203,ORCL,general,cost_of_revenue,excluded with point reason (component_of_unprinted_total)
 5203,ORCL,general,current_assets,sourced
 5203,ORCL,general,current_liabilities,sourced
 5203,ORCL,general,depreciation_and_amortization,template-OUT candidate (Verifier draw)
