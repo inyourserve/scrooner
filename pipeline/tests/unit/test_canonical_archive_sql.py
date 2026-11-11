@@ -117,7 +117,12 @@ def test_split_rebase_replace_is_idempotent_and_fully_reversible(conn):
             basis_version="b1",
             schema="rtest",
         )
-    assert first == {"unchanged": 1, "replaced": 1, "inserted": 1}
+    assert first == {
+        "unchanged": 1,
+        "replaced": 1,
+        "inserted": 1,
+        "skipped_protected": 0,
+    }
     with conn.cursor() as cur:
         second = ca.replace_rows(
             cur,
@@ -127,7 +132,12 @@ def test_split_rebase_replace_is_idempotent_and_fully_reversible(conn):
             basis_version="b1",
             schema="rtest",
         )
-    assert second == {"unchanged": 3, "replaced": 0, "inserted": 0}  # idempotent
+    assert second == {
+        "unchanged": 3,
+        "replaced": 0,
+        "inserted": 0,
+        "skipped_protected": 0,
+    }  # idempotent
     actions = sorted(
         r[0]
         for r in conn.execute(

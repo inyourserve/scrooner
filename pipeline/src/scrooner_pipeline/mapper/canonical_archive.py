@@ -79,8 +79,11 @@ def replace_rows(
     """Make canonical_fact hold exactly `rows` at their keys. A key whose
     stored value and sources already match is untouched (idempotent: a second
     run changes nothing). A differing stored row is archived ('replaced')
-    then overwritten; a missing key is inserted and logged ('inserted')."""
-    stats = {"unchanged": 0, "replaced": 0, "inserted": 0}
+    then overwritten; a missing key is inserted and logged ('inserted').
+    The archive rows and the counts follow the ACTUAL result: a row a guard
+    trigger skipped (protected slot cell) is not archived and is counted in
+    stats['skipped_protected']."""
+    stats = {"unchanged": 0, "replaced": 0, "inserted": 0, "skipped_protected": 0}
     if not rows:
         return stats
     keys = [(r.company_id, r.canonical_concept_id, r.period_id) for r in rows]
@@ -113,30 +116,40 @@ def replace_rows(
             to_replace.append((hit[0], row))
     params = {"reason": reason_code, "run": run_id, "basis": basis_version}
     if to_replace:
-        ids = [cid for cid, _ in to_replace]
+        # ONE statement: update, and archive a 'replaced' row only for the ids the
+        # update really changed. A guard trigger that returns NULL (the
+        # analytics.slot_protected_cell guard, migrations 0113/0115) skips the row,
+        # so it is absent from the update's RETURNING and is neither archived nor
+        # counted. The final select reads canonical_fact at the statement
+        # snapshot, i.e. the values from BEFORE the update.
+        payload = json.dumps(
+            [
+                {"id": cid, "v": str(r.value), "s": list(r.source_fact_ids)}
+                for cid, r in to_replace
+            ]
+        )
         cur.execute(
             f"""
+            with src as (
+                select * from jsonb_to_recordset(%(rows)s::jsonb)
+                    as t(id bigint, v numeric, s bigint[])
+            ), upd as (
+                update {schema}.canonical_fact cf
+                set value = src.v, source_fact_ids = src.s, resolved_at = now()
+                from src where cf.id = src.id
+                returning cf.id
+            )
             insert into {schema}.{ARCHIVE_TABLE}
                 (action, canonical_fact_id, company_id, canonical_concept_id, period_id,
                  value, source_fact_ids, resolved_at, reason_code, run_id, basis_version)
-            select 'replaced', id, company_id, canonical_concept_id, period_id,
-                   value, source_fact_ids, resolved_at, %(reason)s, %(run)s, %(basis)s
-            from {schema}.canonical_fact where id = any(%(ids)s::bigint[])
+            select 'replaced', cf.id, cf.company_id, cf.canonical_concept_id, cf.period_id,
+                   cf.value, cf.source_fact_ids, cf.resolved_at, %(reason)s, %(run)s, %(basis)s
+            from {schema}.canonical_fact cf join upd on upd.id = cf.id
             """,
-            {**params, "ids": ids},
+            {**params, "rows": payload},
         )
-        cur.executemany(
-            f"""
-            update {schema}.canonical_fact
-            set value = %(value)s, source_fact_ids = %(sources)s, resolved_at = now()
-            where id = %(id)s
-            """,
-            [
-                {"id": cid, "value": r.value, "sources": list(r.source_fact_ids)}
-                for cid, r in to_replace
-            ],
-        )
-        stats["replaced"] = len(to_replace)
+        stats["replaced"] = cur.rowcount
+        stats["skipped_protected"] += len(to_replace) - cur.rowcount
     if to_insert:
         # One statement: insert the batch and log each new key as 'inserted'.
         # Rows travel as JSON because source_fact_ids arrays are ragged.
@@ -172,7 +185,10 @@ def replace_rows(
             """,
             {**params, "rows": payload},
         )
-        stats["inserted"] = len(to_insert)
+        # RETURNING lists only rows the insert really made (a guard trigger that
+        # returns NULL yields none), and the archive follows it.
+        stats["inserted"] = cur.rowcount
+        stats["skipped_protected"] += len(to_insert) - cur.rowcount
     return stats
 
 

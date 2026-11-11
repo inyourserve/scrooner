@@ -23,7 +23,7 @@ import hashlib
 import json
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -47,6 +47,7 @@ from scrooner_pipeline.common.cell_store import (
     replace_rule_reasons,
     start_rule_run,
 )
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.normalizer.facts import normalize_payload
 
@@ -304,7 +305,9 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
 def bind_periods(
     conn: psycopg.Connection, company_id: int, rows: list[CellRow], *, create: bool
 ) -> tuple[list[CellRow], list[tuple[CellRow, str]], int]:
-    """Set period_id on every row it can; return (bound, [(row, why)], periods_created)."""
+    """Set period_id on every row it can, and its key to that period's true dates (a row bound by fiscal label
+    carries the FSN month-end as both start and end until here; a blank reason is stored under its key, so it
+    must sit on the real quarter or year); return (bound, [(row, why)], periods_created)."""
     with conn.cursor() as cur:
         cur.execute(
             "select id, start_date, end_date, period_type, fiscal_year, fiscal_period from core.period where company_id = %s",
@@ -312,6 +315,7 @@ def bind_periods(
         )
         periods = cur.fetchall()
     exact = {(s, e, t): pid for pid, s, e, t, _fy, _fp in periods}
+    dates = {pid: (s, e) for pid, s, e, _t, _fy, _fp in periods}
     by_label: dict[tuple, list[tuple[int, date]]] = defaultdict(list)
     for pid, _s, e, t, fy, fp in periods:
         by_label[(fy, fp, t)].append((pid, e))
@@ -326,7 +330,9 @@ def bind_periods(
                 for p, e in by_label.get(
                     (r.fiscal_year, r.fiscal_period, r.period_type), []
                 )
-                if abs((e - r.fsn_end).days) <= BIND_DAYS
+                # same fiscal label and type; the FSN end is within BIND_DAYS of the period end or is the SEC's
+                # month-end rounding of a mid-month (52/53-week) end
+                if fsn_end_matches(r.fsn_end, e, BIND_DAYS)
             ]
             if cands:
                 pid = min(cands)[1]
@@ -350,11 +356,15 @@ def bind_periods(
                 )
                 pid = cur.fetchone()[0]
             exact[(r.key.period_start, r.key.period_end, r.period_type)] = pid
+            dates[pid] = (r.key.period_start, r.key.period_end)
             created += 1
         if pid is None:
             bad.append((r, "period_unresolvable"))
             continue
         r.period_id = pid
+        start, end = dates[pid]
+        if (r.key.period_start, r.key.period_end) != (start, end):
+            r.key = replace(r.key, period_start=start, period_end=end)
         bound.append(r)
     return bound, bad, created
 

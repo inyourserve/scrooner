@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0122.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0123.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -75,6 +75,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0119 | scrooner-8a (engineering) | company-wise FSN statement store, second migration (same design) | file on main; **APPLIED in production 2026-11-01 13:01 UTC by scrooner-87 on the founder's typed go-ahead in that session; post-check PASS (11 fsn tables, source_value_ids not null default '{}', owner guard inert with 0 owners, canonical_fact 13,890,751 rows unchanged); log and rollback SQL in data-team/42-release-applies-2026-11-01/** |
 | 0120 | data engineer (sector templates, work/data-engineer/sector-templates) | `analytics.company_data_point_template` (company_id, data_point, in_template, reason, effective_from + template, source, template_version): per-company sector template, doc 02 ruling 2026-11-01; coverage = valued / template cells | file on main (7e44f83); **APPLIED in production 2026-11-01 14:37:33 UTC by scrooner-87 on the founder's typed go-ahead in that session; post-check PASS (9 columns, 0 rows); log in data-team/42-release-applies-2026-11-01/** |
 | 0121 | scrooner-87 (engineering) | `core.company_history_source` (predecessor CIK windows and wrong-entity exclusions per company: XOM, 31 more, 6 exclusions; Dhairya rulings 2026-11-01), read by the FSN store shard | file on main (8d7f249); **APPLIED in production 2026-11-02 17:18:53 UTC by the founder (scrooner-87's staged files); post-check PASS (40 rows: 34 predecessor, 6 exclude; overlap guard refuses); 1,214 core.period rows created for 32 companies; log, before-images and rollback ids in data-team/42-release-applies-2026-11-01/0121/** |
+| 0122 | scrooner-87 (engineering) | `fsn.concept_rule.stmt` accepts `EQ` (dividends per share printed on the equity statement; proposal data-team/strategy/team/DPS-EQUITY-STATEMENT-PROPOSAL-2026-11-10.md) | claimed 2026-11-10; no file yet; needs the founder's typed approval |
 
 ## scrooner-98 queue (lane A)
 

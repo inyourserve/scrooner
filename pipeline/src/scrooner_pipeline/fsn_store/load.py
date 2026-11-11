@@ -441,8 +441,10 @@ def run(
     git_commit: str | None = None,
     predecessors: dict[str, str] | None = None,
     connect: Callable[[], psycopg.Connection] | None = None,
+    input_sha: str | None = None,
 ) -> dict[str, Any]:
-    """Load every (or the named) company directories; one rule_run for the batch.
+    """Load every (or the named) company directories; one rule_run for the batch. input_sha: the sha256 of the
+    dispatched CIK list (pipeline-fsn-write.yml `ciks`), recorded in the run's stats.
 
     A company that fails is rolled back and skipped. If the failure LOST the connection (the pooler dropped it:
     FSN write run 42561798991, shards 4/6/7), `connect` opens a fresh one and that company is tried once more;
@@ -470,6 +472,8 @@ def run(
         "value": 0,
         "line": 0,
     }
+    if input_sha:
+        out["input_ciks_sha256"] = input_sha
     out["reconnects"] = 0
     current = conn
     try:

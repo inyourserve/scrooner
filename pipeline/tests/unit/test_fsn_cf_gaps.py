@@ -521,3 +521,27 @@ def test_both_fx_calc_children_are_summed_rtx():
             ("NetCashProvidedByUsedInFinancingActivities", "-4000"), (PLAIN_FX, "-50"), (TWIN, "-10"), (CHANGE_INCL, "940")]
     c = _fx_case(rows, [PLAIN_FX, TWIN])
     assert c["ok"] and c["detail"]["fx_included"]
+
+
+@pytest.mark.unit
+def test_zero_inputs_quarter_never_fails_done_criterion_5():
+    # a printed-zero YTD pair derives a 0 quarter (policy zero_inputs, Dhairya 2026-11-08); before, criterion 5
+    # counted every policy but same_basis and one such cell blocked the whole company from the write
+    from scrooner_pipeline.fsn_store import pilot
+
+    cells = [
+        {"data_point_name": "dividends_paid_resolved", "state": "derived", "derivation": {"policy": "zero_inputs"}},
+        {"data_point_name": "cfo_resolved", "state": "derived", "derivation": {"policy": "same_basis"}},
+        {"data_point_name": "cfo_resolved", "state": "value", "derivation": None},
+    ]
+    assert pilot.unapproved_derivations(cells) == {}
+    cells.append({"data_point_name": "cfo_resolved", "state": "derived", "derivation": {"policy": "other"}})
+    cells.append({"data_point_name": "cfo_resolved", "state": "derived", "derivation": None})
+    assert pilot.unapproved_derivations(cells) == {"cfo_resolved": 2}
+    rep = {
+        "company_id": 1, "cik": "0000000001",
+        "done_criteria": {"1_store_loaded": True, "5_derived_without_same_basis_by_point": pilot.unapproved_derivations(cells[:3])},
+        "template_coverage": {"per_data_point": {"dividends_paid_resolved": {"keys": 4}}},
+    }
+    gate = pilot.done_gate([rep], [], {}, {"dividends_paid_resolved"})
+    assert gate[1]["company"] == [] and pilot.done_pairs(gate) == [(1, "dividends_paid_resolved")]
