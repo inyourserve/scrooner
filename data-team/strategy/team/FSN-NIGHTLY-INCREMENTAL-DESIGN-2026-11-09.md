@@ -16,13 +16,13 @@ Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by D
 
 ## Equivalence with FSN
 
-`pipeline/scripts/fsn_xbrl_equivalence.py` compares, on the shard view, 20 top-100 filings of the SEC set 2026m10 (17 10-Qs and 3 10-Ks: GOOG, MSFT, AMZN, META, TSLA, MU, JNJ, INTC, COST, KO, BAC, GE, WFC, IBM, PEP, NEE+FPL, T, BA, ACN, CB). Criteria are in `fsn_store/xbrl_equivalence.py`. Result (`pipeline/scripts/results/fsn_xbrl_equivalence/summary.md`): **20 of 20 pass.**
+`pipeline/scripts/fsn_xbrl_equivalence.py` compares, on the shard view, 23 filings against the SEC sets that hold them. There are 20 top-100 filings from 2026m10 (17 10-Qs and 3 10-Ks: GOOG, MSFT, AMZN, META, TSLA, MU, JNJ, INTC, COST, KO, BAC, GE, WFC, IBM, PEP, NEE+FPL as co-registrant, T, BA, ACN, CB). Added on 2026-11-11 for Ritwik's review, every cohort amendment that carries statements in 2026m05..m10: BE 10-Q/A (2026m07) and DASH 10-K/A (2026m05). Also added is the one cover-only amendment, TECH 10-K/A (2026m10). Criteria are in `fsn_store/xbrl_equivalence.py`. Result (`pipeline/scripts/results/fsn_xbrl_equivalence/summary.md`): **23 of 23 pass.**
 
-- **num:** 22,774 rows. 0 missing, 0 extra, 0 value or dcml differences on the keys (tag, version, ddate, qtrs, uom, dimh, iprx, coreg).
-- **pre:** 155 statement and cover reports. 150 match row for row, and every fact-carrying line matches in all 155. 35 structural rows differ (abstracts, axes or members on KO, PEP, T), which carry no values.
-- **cal:** 3,747 arcs. The groups and their (parent, child, weight) are identical.
+- **num:** 24,912 rows. 0 missing, 0 extra, 0 value or dcml differences on the keys (tag, version, ddate, qtrs, uom, dimh, iprx, coreg).
+- **pre:** 172 statement and cover reports. 167 match row for row, and every fact-carrying line matches in all 172. 35 structural rows differ (abstracts, axes or members on KO, PEP, T), which carry no values.
+- **cal:** 4,174 arcs. The groups and their (parent, child, weight) are identical.
 - **sub:** cik, form, period, fy, fp, fye, filed, accepted and aciks are identical.
-- **Statement typing:** across all 1,014 10-K/10-Q filings in 2026m10, 99.1% of 7,401 statement reports get the same type, and 977 filings are right on every report (`stmt_classifier_2026m10.txt`).
+- **Statement typing:** across all 1,014 10-K/10-Q filings in 2026m10, 99.3% of 7,385 statement reports get the same type, and 993 filings are right on every report (`stmt_classifier_2026m10.txt`).
 - **Not reproduced, and not used downstream:**
   - SEC's cal group and arc numbering, which follows no order the linkbase has. It only enters `filing_check.check_id`, per filing.
   - Which of two identical duplicate facts carries a footnote (12 rows).

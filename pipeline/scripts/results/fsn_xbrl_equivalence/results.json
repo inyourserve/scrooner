@@ -70,11 +70,11 @@
        "3",
        "USD",
        "0x00000000",
-       "0",
+       "1",
        ""
       ],
-      "",
-      "For the three months ended September 26, 2026 and three and nine months ended September 27, 2025, earnings per share attributable to Intel-diluted has been calculated by adjusting net income attributable to Intel for the gain of $120 million and loss of $2 million, respectively, related to the mark-to-market of that portion of the derivative liability that is attributable to 5 million and 342 thousand, respectively, contingent Escrowed Shares that were included in the weighted average shares of common stock"
+      "For the three months ended September 26, 2026 and three and nine months ended September 27, 2025, earnings per share attributable to Intel-diluted has been calculated by adjusting net income attributable to Intel for the gain of $120 million and loss of $2 million, respectively, related to the mark-to-market of that portion of the derivative liability that is attributable to 5 million and 342 thousand, respectively, contingent Escrowed Shares that were included in the weighted average shares of common stock",
+      ""
      ],
      "missing": []
     },
@@ -215,11 +215,11 @@
        "0",
        "USD",
        "0x00000000",
-       "1",
+       "0",
        ""
       ],
-      "Our consolidated assets at September 30, 2026, and December 31, 2025, include the following assets of certain variable interest entities (VIEs) that can only be used to settle the liabilities of those VIEs: Trading assets, $3.2 billion and $2.3 billion; Available-for-sale debt securities, $704 million and $0 million; Loans, $14.2 billion and $11.3 billion; All other assets, $269 million and $224 million; and Total assets, $18.4 billion and $13.8 billion, respectively.",
-      ""
+      "",
+      "Our consolidated assets at September 30, 2026, and December 31, 2025, include the following assets of certain variable interest entities (VIEs) that can only be used to settle the liabilities of those VIEs: Trading assets, $3.2 billion and $2.3 billion; Available-for-sale debt securities, $704 million and $0 million; Loans, $14.2 billion and $11.3 billion; All other assets, $269 million and $224 million; and Total assets, $18.4 billion and $13.8 billion, respectively."
      ],
      "missing": []
     },
@@ -483,17 +483,17 @@
      "extra": [],
      "footnote": [
       [
-       "ReinsuranceRecoverablesOnPaidAndUnpaidLosses",
+       "LiabilityForFuturePolicyBenefitReinsuranceRecoverableAfterAllowance",
        "us-gaap/2026",
        "20260930",
        "0",
        "USD",
        "0x00000000",
-       "1",
+       "0",
        ""
       ],
-      "",
-      "Net of valuation allowance for uncollectible reinsurance."
+      "Net of valuation allowance for uncollectible reinsurance.",
+      ""
      ],
      "missing": []
     },
@@ -648,42 +648,17 @@
     "ours": 2,
     "pass": true
    },
-   "pass": false,
+   "pass": true,
    "pre": {
-    "examples": [
-     {
-      "fsn": [],
-      "ours": [
-       [
-        "CP",
-        "0",
-        "EntityPublicFloat",
-        "dei/2025",
-        "label",
-        "Entity Public Float",
-        "0"
-       ],
-       [
-        "CP",
-        "0",
-        "EntityCommonStockSharesOutstanding",
-        "dei/2025",
-        "label",
-        "Entity Common Stock, Shares Outstanding",
-        "0"
-       ]
-      ],
-      "report": "1"
-     }
-    ],
+    "examples": [],
     "fsn_rows": 0,
-    "ours_rows": 34,
-    "pass_exact": false,
-    "pass_items": false,
-    "reports": 1,
+    "ours_rows": 0,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 0,
     "reports_exact": 0,
-    "reports_item_diffs": 1,
-    "structural_row_diffs": 66
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
    },
    "sub": {
     "diff": {},
@@ -798,7 +773,7 @@
      "extra": [],
      "footnote": [
       [
-       "OtherLiabilitiesCurrent",
+       "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization",
        "us-gaap/2026",
        "20251231",
        "0",
@@ -807,7 +782,7 @@
        "1",
        ""
       ],
-      "We have a variable interest entity related to a joint venture in the Republic of Korea (see Note 11Related Party Transactions in this Quarterly Report on Form 10-Q), which represents a portion of the consolidated balances recorded within these financial statement line items. | Including amounts from related parties of $2.5 million and $0.04 million as of June 30, 2026, and December 31, 2025, respectively.",
+      "We have a variable interest entity related to a joint venture in the Republic of Korea (see Note 11Related Party Transactions in this Quarterly Report on Form 10-Q), which represents a portion of the consolidated balances recorded within these financial statement line items.",
       ""
      ],
      "missing": []
