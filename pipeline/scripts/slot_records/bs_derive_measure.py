@@ -67,7 +67,11 @@ for d in dirs:
         "insert into core.company (id, cik, company_name, sic_code) overriding system value values (%s, %s, %s, %s) returning id",
         (prod_id[cik], cik, f"MEASURE {cik}", prof.get("sic"))).fetchone()[0]
     conn.commit()
-    load.load_company(conn, Path(d), loader_commit="bs_derive_measure")
+    # predecessor registrants' filings in the directory belong to this company (FSN_PREDECESSORS="pred=succ,...")
+    preds = dict(p.split("=", 1) for p in (os.environ.get("FSN_PREDECESSORS") or "").split(",") if "=" in p)
+    load.load_company(
+        conn, Path(d), loader_commit="bs_derive_measure", predecessors={k.zfill(10): v.zfill(10) for k, v in preds.items()}
+    )
     conn.commit()
     mapping.map_company(conn, cid, rule_set)
     checks.check_company(conn, cid)

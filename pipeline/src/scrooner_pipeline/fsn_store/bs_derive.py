@@ -48,6 +48,8 @@ EQUITY_INCL = (
 )
 CURRENT_LABEL = re.compile(r"total current (assets|liabilities)", re.I)
 REASON = "unclassified_balance_sheet"
+REASON_TL = "total_liabilities_not_printed"
+RULE_TL_NOT_PRINTED = "fsn.total_liabilities_not_printed@1"
 REASON_TEXT = "The balance sheet is not split into current and non-current sections, so no current total is printed."
 
 
@@ -290,6 +292,46 @@ def bs_arcs(
     return out
 
 
+def tl_cell(
+    dd, fid: int, accession: str, res, rule: str, inputs: dict
+) -> "sel.Cell | None":
+    """The total-liabilities cell of one face column: the derived value (calc route or identity route), or, when
+    neither route can confirm the total (ruling, Dhairya 2026-11-11: a sum of printed face lines only where the
+    calc tree or the section confirms completeness), not_presented with the reason the derivation stopped. None
+    when the face prints its own total (that cell comes from select)."""
+    if res is None:
+        if rule == "printed_total_liabilities":
+            return None
+        return sel.Cell(
+            TL,
+            dd,
+            0,
+            "not_presented",
+            filing_id=fid,
+            rule_id=RULE_TL_NOT_PRINTED,
+            reason_code=REASON_TL,
+            input_refs={"accession": accession, "not_derived": rule},
+        )
+    value, ids = res
+    return sel.Cell(
+        TL,
+        dd,
+        0,
+        "derived",
+        value=value,
+        filing_id=fid,
+        source_value_ids=ids,
+        rule_id=rule,
+        derivation={
+            "formula": "sum of the L&E calc children classed liability"
+            if rule == RULE_CALC
+            else "L&E - total equity incl. NCI - temporary equity",
+            "accession": accession,
+            "inputs": inputs,
+        },
+    )
+
+
 def rows(
     conn: psycopg.Connection, company_id: int, have: set[tuple[str, Any]]
 ) -> tuple[list[dict], dict]:
@@ -322,27 +364,9 @@ def rows(
             )
             if res is None:
                 misses[rule] += 1
-            else:
-                value, ids = res
-                out.append(
-                    sel.Cell(
-                        TL,
-                        dd,
-                        0,
-                        "derived",
-                        value=value,
-                        filing_id=fid,
-                        source_value_ids=ids,
-                        rule_id=rule,
-                        derivation={
-                            "formula": "sum of the L&E calc children classed liability"
-                            if rule == RULE_CALC
-                            else "L&E - total equity incl. NCI - temporary equity",
-                            "accession": d["filings"][fid].accession,
-                            "inputs": inputs,
-                        },
-                    )
-                )
+            cell = tl_cell(dd, fid, d["filings"][fid].accession, res, rule, inputs)
+            if cell is not None:
+                out.append(cell)
         if unclassified(face) and fid in d["current_elsewhere"]:
             misses["current_total_in_another_statement"] += 1
         if current_reason(face, fid in d["current_elsewhere"]):

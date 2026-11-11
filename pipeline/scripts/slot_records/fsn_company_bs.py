@@ -23,7 +23,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-from fsn_company import company_cik, company_dir_list, table  # noqa: F401  (re-exported for the CLIs)
+from fsn_company import company_cik, own_ciks, company_dir_list, table  # noqa: F401  (re-exported for the CLIs)
 
 # fsds_debt_pre.FORMS == fsn_company_instants.FORMS (the cohort extracts' form filter)
 FORMS = {"10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"}
@@ -38,10 +38,12 @@ def own_subs(d):
     """{adsh: sub row} for this company's own periodic filings, first fsn_set wins
     (an accession re-published in a later set is the same filing)."""
     cik = company_cik(d)
+    own = own_ciks(d)
     subs = {}
     for r in table(d, "sub"):
-        if r["cik"].zfill(10) == cik and r["form"] in FORMS:
-            subs.setdefault(r["adsh"], r)
+        if r["cik"].zfill(10) in own and r["form"] in FORMS:
+            # a predecessor's filing is this company's history: report it under the company's CIK
+            subs.setdefault(r["adsh"], dict(r, cik=cik))
     return subs
 
 

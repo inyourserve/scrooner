@@ -48,6 +48,22 @@ def company_cik(d):
     return Path(d).name.zfill(10)
 
 
+def own_ciks(d):
+    """This company's CIK plus its predecessor registrants' (FSN_PREDECESSORS="pred=succ,..."; the store's
+    core.company_history_source aliases). A company directory written by fsn_store.shard holds a predecessor's
+    filings under the predecessor's sub.cik; without this they were skipped, and with them the history before a
+    reorganisation (MDT, LIN, AVGO, MRVL, XOM, DIS, BLK) is read. Other filers' rows (co-registrants) stay out."""
+    import os
+
+    cik = company_cik(d)
+    preds = {}
+    for pair in (os.environ.get("FSN_PREDECESSORS") or "").split(","):
+        if "=" in pair:
+            p, s = pair.split("=", 1)
+            preds[p.strip().zfill(10)] = s.strip().zfill(10)
+    return {cik} | {p for p, s in preds.items() if s == cik}
+
+
 def company_dir_list(arg):
     """a company directory, a parent directory of them, or @file of paths."""
     if arg.startswith("@"):
@@ -59,11 +75,11 @@ def company_dir_list(arg):
 
 
 def read_is_inputs(d):
-    cik = company_cik(d)
+    own, cik = own_ciks(d), company_cik(d)
     subs, aciks = {}, set()
     for r in table(d, "sub"):
-        if r["cik"].zfill(10) == cik and r["form"] in FORMS:
-            subs[r["adsh"]] = sub_record(r)
+        if r["cik"].zfill(10) in own and r["form"] in FORMS:
+            subs[r["adsh"]] = sub_record(dict(r, cik=cik))  # a predecessor's filing under the company's CIK
             if (r.get("aciks") or "").strip():
                 aciks.add(r["adsh"])
     rows = defaultdict(list)

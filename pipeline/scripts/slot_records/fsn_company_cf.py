@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import common  # noqa: E402
 from cf_family_replay import CASH_CHANGE_RX, OP_CONT, OP_TOTAL, primary_face  # noqa: E402
-from fsn_company import company_cik, table  # noqa: E402
+from fsn_company import company_cik, own_ciks, table  # noqa: E402
 
 FORMS = {"10-K", "10-Q", "10-K/A", "10-Q/A", "10-KT", "10-QT"}  # cf_face_rows.FORMS
 STD = ("us-gaap", "srt", "dei", "ifrs")  # cf_face_rows.STD
@@ -28,10 +28,11 @@ NO_DIM = "0x00000000"  # cf_num_rows.NO_DIM
 def read_cf_inputs(d):
     d = Path(d)
     cik = company_cik(d)
+    own = own_ciks(d)
     subs = {}
     for r in table(d, "sub"):
-        if r["cik"].zfill(10) == cik and r["form"] in FORMS and r["adsh"] not in subs:
-            subs[r["adsh"]] = r
+        if r["cik"].zfill(10) in own and r["form"] in FORMS and r["adsh"] not in subs:
+            subs[r["adsh"]] = dict(r, cik=cik)  # a predecessor's filing under the company's CIK
     filings, face, face_tags = {}, defaultdict(list), defaultdict(set)
     for r in table(d, "pre"):
         s = subs.get(r["adsh"])

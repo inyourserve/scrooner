@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "per_share"))
 sys.path.insert(0, str(HERE.parents[1] / "src"))
-from fsn_company import company_cik, company_dir_list, table  # noqa: E402
+from fsn_company import company_cik, own_ciks, company_dir_list, table  # noqa: E402
 from pershare_fsn_rules import FORMS, select, swapped_copies  # noqa: E402
 from scrooner_pipeline.corporate_actions import share_basis as sb  # noqa: E402
 from scrooner_pipeline.mapper import concepts as mc  # noqa: E402
@@ -69,9 +69,10 @@ def months_back(dd, n):
 
 def read_copies(d):
     cik = company_cik(d)
+    own = own_ciks(d)
     subs = {}
     for r in table(d, "sub"):
-        if r["cik"].zfill(10) == cik and r["form"] in FORMS and r["adsh"] not in subs:
+        if r["cik"].zfill(10) in own and r["form"] in FORMS and r["adsh"] not in subs:
             subs[r["adsh"]] = (cik, r["form"], r["filed"])
     seg = {r["dimhash"]: r["segments"] for r in table(d, "dim")}
     want = {t for ts in TAGS.values() for t in ts}
