@@ -132,3 +132,18 @@ def test_committed_ranks_1_50_map_has_a_decision_and_a_reason_for_every_row():
     assert not [r for r in rows if r["decision"] not in ("concept", "component", "combined", "excluded")]
     assert not [r for r in rows if r["decision"] == "excluded" and not (r["reason_class"] and r["reason"])]
     assert not [r for r in rows if r["decision"] == "combined" and r["canonical_concept"]]
+
+
+def test_ni_is_profitloss_minus_nci_only_after_netincomeloss_stops_and_while_the_nci_line_is_printed(tmp_path):
+    # ruling (3) 2026-11-11, AVGO pattern
+    rows = [{"stmt": "IS", "tag": "NetIncomeLoss", "era_from": "2015-01-31", "era_to": "2019-07-31", "filing_ids": "1;2",
+             "decision": "concept", "canonical_concept": "net_income_resolved", "decided_by": "rule"},
+            {"stmt": "IS", "tag": "NetIncomeLossAttributableToNoncontrollingInterest", "era_from": "2016-04-30", "era_to": "2020-10-31", "filing_ids": "2;3"},
+            {"stmt": "IS", "tag": "ProfitLoss", "era_from": "2016-04-30", "era_to": "2026-07-31", "filing_ids": "2;3;4"}]
+    out = tmp_path / "y"
+    out.mkdir()
+    _run(out, rows, catalog=("net_income_resolved",))
+    comp = sorted((r["tag"], r["combine_sign"], r["era_from"], r["era_to"]) for r in csv.DictReader(open(out / "out.csv"))
+                  if r["parent_concept"] == "net_income_resolved")
+    assert comp == [("NetIncomeLossAttributableToNoncontrollingInterest", "-1", "2019-08-01", "2020-10-31"),
+                    ("ProfitLoss", "1", "2019-08-01", "2020-10-31")]

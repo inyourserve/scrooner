@@ -124,9 +124,9 @@ ASK_DEFAULT = {  # Tag Expert questions: a decision now, re-decided on the rulin
     "CommonStockSharesIssued": ("share_terms_parenthetical", "BS issued-share count, not outstanding (Tag Expert ruling (a) 2026-11-11)"),
 }
 FLAG = {  # Tag Expert rulings 2026-11-11 (docs/tag-expert-playbooks 08ab3ed7): visible flags carried in the reason
-    ("BS", "ReceivablesNetCurrent"): "flag wider_perimeter_non_trade (sole receivables line)",
+    ("BS", "ReceivablesNetCurrent"): "plain 'accounts receivable, net' label only (Tag Expert correction (d))",
     ("BS", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"): "flag includes_finance_lease_rou",
-    ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: sum and flag summed_classes",
+    ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: per class, NEVER summed (an instant is never derived; Tag Expert correction 2026-11-11)",
 }
 
 prio = {}
@@ -353,7 +353,7 @@ for cid, rs in by_co.items():
                      decided_by="residue_rule")
     for r in rs:
         if r["stmt"] == "UN" and r.get("decision") == "excluded" and r.get("reason_class") == "cover_or_parenthetical":
-            r.update(reason_class="co_registrant_statement", reason="FSN stmt UN: a co-registrant subsidiary's own statement (e.g. DUK Carolinas), never the group's (cash-flow card D4)")
+            r.update(reason_class="co_registrant_statement", reason="FSN stmt UN: excluded because the company's own IS/BS/CF cover these points; a co-registrant statement where the column carries a LegalEntityAxis member (D4; Revvity/PLNT are UN and the real entity)")
     # D3: where IS and CF both print D&A in one filing, the CF line wins
     cf_da = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved"]
     for r in rs:
@@ -372,7 +372,9 @@ for cid, rs in by_co.items():
                          reason_class="line_presented_combined_with_others", reason="D&A line includes impairment, accretion or nuclear fuel (label); no pure D&A line printed; cash-flow card D2", decided_by="library")
     for r in rs:
         lab = r.get("evidence_plabel") or ""
-        if r.get("decision") == "concept" and r["canonical_concept"] == "accounts_receivable" and re.search(r"(?i)\band other\b|notes and", lab):
+        plain_ar = re.fullmatch(r"(?i)\s*(trade )?accounts receivable(s)?(,? net)?(,? less allowance[^|]*|,? net of allowance[^|]*)?\s*", lab or "")
+        if r.get("decision") == "concept" and r["canonical_concept"] == "accounts_receivable" and (re.search(r"(?i)\band other\b|notes and", lab)
+                or (r["tag"] == "ReceivablesNetCurrent" and not plain_ar)):
             r.update(decision="combined", canonical_concept="", components="accounts_receivable;other_receivables",
                      reason_class="line_presented_combined_with_others", reason="receivables line includes other or notes receivable (label); shown as the company line (BS card)", decided_by="library")
         if r.get("decision") == "concept" and r["canonical_concept"] == "interest_expense_resolved" and re.search(r"(?i)\bnet\b", lab):
@@ -407,6 +409,26 @@ for cid, rs in by_co.items():
             for x in (prod, serv):
                 x.update(decision="component", canonical_concept="", parent_concept="cost_of_revenue_resolved", combine_sign="1", reason_class="",
                          reason="product and service costs printed side by side with no cost-of-revenue total: a printed component sum (ruling D3)", decided_by="library")
+    # ruling (3) 2026-11-11: NI = ProfitLoss - NCI only where both are printed on the IS face, the NCI line is the printed
+    # deduction, and no NI-attributable line exists in that era (AVGO 2019-08..2020-10): a duration component sum (D3)
+    nci = next((idx[("IS", t)] for t in NCI_TAGS if ("IS", t) in idx), None)
+    nil = idx.get(("IS", "NetIncomeLoss"))
+    for cut in list(pending_extra):
+        if cut["tag"] == "ProfitLoss" and cut["reason_class"] == "ni_incl_nci" and nci and overlap(cut, nci):
+            a = max(cut["era_from"], nci["era_from"], day_after(nil["era_to"]) if nil else "0000-00-00")
+            b = min(cut["era_to"], nci["era_to"])
+            if a > b:
+                continue
+            if cut["era_from"] < a:  # the part where NetIncomeLoss is printed keeps its reason
+                cut["era_to"] = day_before(a)
+            else:
+                pending_extra.remove(cut)
+            for x, sign in ((cut, "1"), (nci, "-1")):
+                e = dict(x)
+                e.update(decision="component", canonical_concept="", parent_concept="net_income_resolved", combine_sign=sign, era_from=a, era_to=b,
+                         reason_class="", reason="NI attributable = ProfitLoss - NCI, both printed on the IS face, no NI-attributable line in this era (ruling 3, 2026-11-11)",
+                         decided_by="library")
+                pending_extra.append(e)
     extra = list(pending_extra)
     opex_total = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "OperatingExpenses" and r.get("decision") == "concept"]
     gp = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "GrossProfit"]
