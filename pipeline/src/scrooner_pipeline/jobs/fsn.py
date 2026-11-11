@@ -463,6 +463,8 @@ def done_gate_cmd(
       not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}, ...}
       valued_to_blank.json   C2 as a report: valued->blank transitions per data point by reason class, and the
                              pairs whose new cells hold no value where the before-image had values
+      no_fallback.json       G2: pairs written as not_in_template / hybrid_gap_unresolved reason rows at their
+                             before-image keys, and pairs that keep old rows (YTD keys); out/cells is rewritten
     The before-image (pilot-prod) is required, so the C2 report is never skipped."""
     import gzip
 
@@ -472,7 +474,9 @@ def done_gate_cmd(
         fully_done,
         hold_guard,
         hold_valued_to_no_row,
+        no_fallback_rows,
     )
+    from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
 
     root = Path(pilot_out)
     points = {s for s in data_points.split(",") if s}
@@ -496,18 +500,60 @@ def done_gate_cmd(
         with gzip.open(image / f"{name}.csv.gz", "rt") as fh:
             return list(csv.DictReader(fh))
 
-    cells: list[dict] = []
+    by_file: dict[Path, list[dict]] = {}
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
-            cells.extend(json.loads(line) for line in fh if line.strip())
-    emptied, transitions, no_row = hold_guard(
-        cells,
-        rows("canonical_fact"),
-        {r["id"]: r["name"] for r in rows("canonical_concept")},
-        {r["id"]: r for r in rows("period")},
-        points,
-    )
+            by_file[path] = [json.loads(line) for line in fh if line.strip()]
+    cells: list[dict] = [r for rs in by_file.values() for r in rs]
+    before = rows("canonical_fact")
+    names = {r["id"]: r["name"] for r in rows("canonical_concept")}
+    periods = {r["id"]: r for r in rows("period")}
     gate = done_gate(reports, gaps, missing, points)
+    # G2 (Ritwik 2026-11-10, no fallback): out-of-template / no-expected-key pairs with old values are written as
+    # reason rows at their before-image keys; the out-of-template pairs' own select rows are dropped (whole pair)
+    g2_rows, g2_pairs, g2_held = no_fallback_rows(
+        gate, before, names, periods, points, cells
+    )
+    g2_case_a = {(c, dp) for c, dp in g2_pairs if any(
+        r["company_id"] == c and r["data_point_name"] == dp and r["input_refs"]["g2_case"] == "a" for r in g2_rows
+    )}  # fmt: skip
+    if (
+        g2_rows or g2_case_a
+    ):  # the write step reads out/cells/<family>/cells.jsonl.gz: rewrite in place
+        for path in list(by_file):
+            by_file[path] = [
+                r
+                for r in by_file[path]
+                if (int(r["company_id"]), r["data_point_name"]) not in g2_case_a
+            ]
+        for r in g2_rows:  # a reason row goes to its data point's family file
+            path = (
+                root
+                / "cells"
+                / OWNERSHIP.get(r["data_point_name"], "unowned")
+                / "cells.jsonl.gz"
+            )
+            by_file.setdefault(path, []).append(r)
+        for path, file_rows in by_file.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with gzip.open(path, "wt") as fh:
+                for r in file_rows:
+                    fh.write(json.dumps(r, default=str) + "\n")
+    cells = [r for rs in by_file.values() for r in rs]
+    (root / "no_fallback.json").write_text(
+        json.dumps(
+            {
+                "rows": len(g2_rows),
+                "pairs_written_as_reasons": [
+                    {"company_id": c, "data_point": dp} for c, dp in g2_pairs
+                ],
+                # G2(c)/G3: pairs keeping old rows because a key has no v1 cell grain (YTD) or no known period
+                "pairs_held_keeping_old_rows": g2_held,
+            },
+            indent=1,
+        )
+    )
+    emptied, transitions, no_row = hold_guard(cells, before, names, periods, points)
     # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
     no_row_by_pair = hold_valued_to_no_row(gate, no_row)
     with (root / "valued_to_no_row.tsv").open("w") as fh:
@@ -587,6 +633,10 @@ def done_gate_cmd(
     typer.echo(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
+    typer.echo(
+        f"done gate: G2 {len(g2_pairs)} pairs written as reason rows ({len(g2_rows)} rows); "
+        f"{len(g2_held)} pairs keep old rows (no v1 cell grain; no_fallback.json)"
     )
     typer.echo(
         f"done gate: {len(no_row)} before-image values would have no row; "

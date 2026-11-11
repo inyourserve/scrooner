@@ -811,6 +811,130 @@ def hold_valued_to_no_row(
     return dict(counts)
 
 
+RULE_NO_FALLBACK = "fsn.no_fallback_reason@1"
+NOT_IN_TEMPLATE_TEXT = "This data point is not part of the company's sector template, so no value is shown for it."
+
+
+def no_fallback_rows(
+    gate: dict[int, dict[str, Any]],
+    before: list[dict[str, str]],
+    concept_names: dict[str, str],
+    periods: dict[str, dict[str, str]],
+    data_points: set[str],
+    cells: list[dict[str, Any]] | None = None,
+) -> tuple[list[dict[str, Any]], list[tuple[int, str]], list[dict[str, Any]]]:
+    """Ritwik G2 (REVIEW-DONE-GATE-PAIRS-2026-11-10) under the founder's "No fallback": a listed pair the gate does
+    not write must not keep old-mapper values silently. For a company passing criteria 1/2/5:
+      (a) an out-of-template pair with old valued rows gets a `not_in_template` reason row at every before-image key;
+      (b) an in-template `no_expected_keys` pair with old valued rows gets a `hybrid_gap_unresolved` defect blank
+          (pilot cause `no_calendar_key`: unclassified / triage) at every before-image key;
+    so the loader replaces the pair and no old value survives. Case (a) replaces the WHOLE pair: the caller drops
+    the pair's select rows (a data point outside the template shows no value). Case (b) adds a row only at a
+    before-image key no select row of the pair already covers (`cells`). A pair with a before-image key no v1 cell can hold
+    (6-month, 9-month or multi-year YTD, or an unknown period) is held instead (G3: never dropped unseen).
+
+    The gate is updated in place: each covered pair joins `data_points` with no failure (it is written); a held
+    `no_expected_keys` pair carries `G2_no_cell_grain:<n>`. Returns (rows, covered pairs, held pairs). Rows carry the
+    before-image period's own start and end, so the loader binds them to that core.period exactly."""
+    old: dict[tuple[int, str], list[tuple[dict[str, str], dict[str, str] | None]]] = (
+        defaultdict(list)
+    )
+    for b in before:
+        dp = concept_names.get(str(b["canonical_concept_id"]))
+        if dp in data_points and b.get("value") not in (None, ""):
+            old[(int(b["company_id"]), dp)].append(
+                (b, periods.get(str(b["period_id"])))
+            )
+    existing: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in cells or []:
+        existing[(int(r["company_id"]), r["data_point_name"])].append(r)
+    rows: list[dict[str, Any]] = []
+    covered: list[tuple[int, str]] = []
+    held: list[dict[str, Any]] = []
+    for cid, g in sorted(gate.items()):
+        if g["company"]:
+            continue  # nothing is written for a company failing criteria 1/2/5
+        targets = [(dp, "a") for dp in g["out_of_template"] if dp in data_points] + [
+            (dp, "b")
+            for dp, failed in g["data_points"].items()
+            if failed == ["no_expected_keys"]
+        ]
+        for dp, case in sorted(targets):
+            keys = []
+            bad = 0
+            for b, p in old.get((cid, dp), []):
+                if p is None:
+                    bad += 1
+                    continue
+                start, end = (
+                    date.fromisoformat(p["start_date"]),
+                    date.fromisoformat(p["end_date"]),
+                )
+                if end < HISTORY_FLOOR:
+                    continue
+                grain = _grain(p["period_type"], start, end)
+                if grain not in CELL_GRAINS:
+                    bad += 1
+                    continue
+                if (
+                    case == "b"
+                    and _match(existing.get((cid, dp), []), grain, end) is not None
+                ):
+                    continue  # select already writes this key
+                keys.append((b, p, grain, start, end))
+            if bad:
+                held.append(
+                    {
+                        "company_id": cid,
+                        "data_point": dp,
+                        "case": case,
+                        "no_cell_grain_keys": bad,
+                    }
+                )
+                if case == "b":
+                    g["data_points"][dp].append(f"G2_no_cell_grain:{bad}")
+                continue
+            if not keys:
+                continue  # no old value to replace: nothing survives, nothing to write
+            for b, p, grain, start, end in keys:
+                ends = sorted(nearest_month_ends(end))
+                row: dict[str, Any] = {
+                    "company_id": cid,
+                    "data_point_name": dp,
+                    "period_grain": grain,
+                    "period_start": start.isoformat(),
+                    "period_end": end.isoformat(),
+                    "fiscal_year": None,
+                    "fiscal_period": None,
+                    "period_type": p["period_type"],
+                    "fsn_end": (end if end in ends else ends[-1]).isoformat(),
+                    "basis": "latest",
+                    "value": None,
+                    "unit": None,
+                    "source_fact_ids": [],
+                    "source_value_ids": [],
+                    "accession": None,
+                    "tag": None,
+                    "derivation": None,
+                    "rule_id": RULE_NO_FALLBACK,
+                    "evidence_level": "DATA-INFERRED",
+                    "input_refs": {"g2_case": case, "before_period_id": b["period_id"]},
+                }
+                if case == "a":
+                    row.update(state="not_in_template", reason_code="not_in_template",
+                               reason_text=NOT_IN_TEMPLATE_TEXT)  # fmt: skip
+                else:
+                    cls, owner = sel.REASONS["hybrid_gap_unresolved"]
+                    row["input_refs"]["pilot_cause"] = "no_calendar_key"
+                    row.update(state="defect", reason_code="hybrid_gap_unresolved",
+                               reason_text=sel.REASON_TEXT["hybrid_gap_unresolved"] + " Pilot cause: no_calendar_key.",
+                               defect_class=cls, owner=owner, root_cause_class=cls)  # fmt: skip
+                rows.append(row)
+            g["data_points"][dp] = []
+            covered.append((cid, dp))
+    return rows, covered, held
+
+
 RULE_PROOF_BLANK = "fsn.cell_proof_blank@1"
 
 
