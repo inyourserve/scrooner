@@ -152,11 +152,11 @@ def test_category_c_out_for_banks_and_defaults_full_for_general(plan):
 @pytest.mark.unit
 def test_section_3_company_overrides(plan):
     rows, by_cik = plan
-    overrides = [r for r in rows if r.source == "company_override"]
+    overrides = [r for r in rows if r.source == "company_override" and r.in_template]
     assert (
         len(overrides) == 15
     )  # the 19 line instances, one row per company x data point, less MTB and BNY (Verifier 2026-11-09)
-    assert all(r.in_template and r.reason for r in overrides)
+    assert all(r.reason for r in overrides)
     assert _cell(rows, by_cik[CIK["JPM"]], "accounts_receivable").in_template
     wy = by_cik[CIK["WY"]]
     assert _cell(rows, wy, "gross_profit").source == "company_override"
@@ -225,7 +225,82 @@ def test_cli_defaults_point_at_the_seed_inputs():
     from scrooner_pipeline.jobs.map import seed_sector_templates_cmd
 
     params = inspect.signature(seed_sector_templates_cmd).parameters
-    assert str(params["templates"].default.default) == "data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md"
-    assert str(params["cohort"].default.default) == "data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv"
+    assert (
+        str(params["templates"].default.default)
+        == "data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md"
+    )
+    assert (
+        str(params["cohort"].default.default)
+        == "data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv"
+    )
     assert (ROOT / params["templates"].default.default).exists()
     assert (ROOT / params["cohort"].default.default).exists()
+
+
+INSURER_DA_OUT = {"CB": "0000896159", "AFL": "0000004977", "ACGL": "0000947484", "EG": "0001095073",
+                  "GL": "0000320335", "ORI": "0000074260", "JXN": "0001822993", "VOYA": "0001535929",
+                  "LNC": "0000059558", "ACT": "0001823529"}  # fmt: skip
+
+
+@pytest.mark.unit
+def test_insurer_da_ruling_2026_11_11(plan):
+    """CB prints no capex and no D&A line: capex is OUT for every insurer (approved C); D&A stays IN the insurer
+    template (31 of 41 print a depreciation-type line) and is OUT, with the accession and cash-flow page, for the
+    10 insurers whose latest 10-K prints none."""
+    rows, by_cik = plan
+    out = [r for r in rows if r.source == "company_override" and not r.in_template]
+    assert (
+        len(out) == 20
+    )  # 10 companies x (depreciation_and_amortization, its _resolved layer)
+    for t, cik in INSURER_DA_OUT.items():
+        cid = by_cik[cik]
+        for dp in (
+            "depreciation_and_amortization",
+            "depreciation_and_amortization_resolved",
+        ):
+            cell = _cell(rows, cid, dp)
+            assert (
+                not cell.in_template
+                and "insurer D&A ruling 2026-11-11" in cell.reason
+                and ".htm" in cell.reason
+            ), t
+        assert not _cell(rows, cid, "capex").in_template  # sector default, unchanged
+        assert _cell(rows, cid, "capex").source == "sector_default"
+    # a printing insurer keeps D&A in its template (Travelers prints "Depreciation and amortization")
+    trv = next(
+        r.company_id
+        for r in rows
+        if r.template == "insurer"
+        and r.company_id not in {by_cik[c] for c in INSURER_DA_OUT.values()}
+    )
+    assert _cell(rows, trv, "depreciation_and_amortization").in_template
+    assert {
+        r.template
+        for r in rows
+        if r.company_id in {by_cik[c] for c in INSURER_DA_OUT.values()}
+    } == {"insurer"}
+
+
+@pytest.mark.unit
+def test_insurer_da_evidence_file_backs_every_override():
+    import csv as _csv
+
+    ev = {
+        r["ticker"]: r
+        for r in _csv.DictReader(
+            (
+                ROOT
+                / "data-team/strategy/data/insurer_cf_da_capex_lines_2026-11-11.csv"
+            ).open()
+        )
+    }
+    assert len(ev) == 41
+    for t, cik in INSURER_DA_OUT.items():
+        assert (
+            ev[t]["cik"] == cik and ev[t]["accession"] and ev[t]["page"].startswith("R")
+        )
+        assert (
+            "depreciat" not in ev[t]["da_lines"].lower()
+        )  # no depreciation line printed
+    printing = [t for t, r in ev.items() if "depreciat" in r["da_lines"].lower()]
+    assert len(printing) == 31 and "CB" not in printing

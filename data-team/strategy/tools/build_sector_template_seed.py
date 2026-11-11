@@ -158,6 +158,25 @@ OVERRIDE_EVIDENCE = "company_filing_line_evidence (latest 10-K/10-Q) shows the l
 # Removed by the Verifier FIX 2026-11-09 (rows 4-5): MTB cost_of_revenue (its only cost-like line is "Other costs of
 # operations", OtherNoninterestExpense, 0000036270-26-000010 R5) and BNY accounts_receivable (only "Accrued interest
 # receivable", InterestReceivable, 0001390777-26-000033 R6): the bank defaults (OUT) stand.
+# Insurer D&A ruling 2026-11-11 (Dhairya asked: CB prints no capex and no D&A line). Measured on the latest 10-K
+# cash-flow statement of all 41 insurer-template companies (data/insurer_cf_da_capex_lines_2026-11-11.csv, read from
+# sec.gov with the declared SEC_USER_AGENT): 31 print a depreciation-type line, so D&A stays IN the insurer template;
+# these 10 print none, so D&A is OUT for them (company override, evidence = accession and cash-flow R page). Capex is
+# already OUT for every insurer (category C, approved §8.2).
+DA_OUT = [
+    ("CB", "0000896159", "0000896159-26-000005", "R8.htm", "only investment accretion and purchased-intangible amortization"),
+    ("AFL", "0000004977", "0001628280-26-011402", "R10.htm", "only deferred policy acquisition cost amortization"),
+    ("ACGL", "0000947484", "0000947484-26-000017", "R8.htm", "only intangible-asset amortization"),
+    ("EG", "0001095073", "0001095073-26-000006", "R8.htm", "only bond premium amortization"),
+    ("GL", "0000320335", "0000320335-26-000090", "R10.htm", "only deferred acquisition cost amortization"),
+    ("ORI", "0000074260", "0000074260-26-000008", "R8.htm", "no depreciation or amortization line"),
+    ("JXN", "0001822993", "0001822993-26-000022", "R9.htm", "only investment premium/discount amortization"),
+    ("VOYA", "0001535929", "0001535929-26-000043", "R8.htm", "no depreciation or amortization line"),
+    ("LNC", "0000059558", "0000059558-26-000016", "R7.htm", "no depreciation or amortization line"),
+    ("ACT", "0001823529", "0001823529-26-000060", "R8.htm", "only investment, deferred-cost and intangible amortization"),
+]
+DA_POINTS = ("depreciation_and_amortization", "depreciation_and_amortization_resolved")
+
 OVERRIDES = [
     ("JPM", "0000019617", "accounts_receivable", "§3: presented combined (2 lines); show under the company's own label (ruling item 3)"),
     ("BAC", "0000070858", "accounts_receivable", "§3: presented combined; show under the company's own label (ruling item 3)"),
@@ -235,7 +254,7 @@ def build() -> tuple[str, str]:
     for r in cohort:
         cohort_lines.append(f"{r['company_id']},{r['cik']},{r['ticker']},{_sic(ga[r['company_id']]['sic_cohort_sec'])}")
     by_ticker = {r["ticker"]: r["cik"] for r in cohort}
-    for t, cik, *_ in COMPANY_ASSIGNMENT + [(o[0], o[1]) for o in OVERRIDES]:
+    for t, cik, *_ in COMPANY_ASSIGNMENT + [(o[0], o[1]) for o in OVERRIDES] + [(o[0], o[1]) for o in DA_OUT]:
         if by_ticker.get(t) != cik:
             sys.exit(f"{t}: cik {cik} != cohort {by_ticker.get(t)}")
 
@@ -281,6 +300,9 @@ def build() -> tuple[str, str]:
     md += ["", "## Company overrides", "| cik | data_point | in_template | reason |", "|---|---|---|---|"]
     md += [f"| {cik} | {dp} | yes | {tk}: {why}; {OVERRIDE_EVIDENCE}; accession attached by the FSN company step |"
            for tk, cik, dp, why in OVERRIDES]  # fmt: skip
+    md += [f"| {cik} | {dp} | no | {tk}: insurer D&A ruling 2026-11-11, the cash-flow statement prints {why} "
+           f"({acc} {page}) |"
+           for tk, cik, acc, page, why in DA_OUT for dp in DA_POINTS]  # fmt: skip
     return "\n".join(md) + "\n", "\n".join(cohort_lines) + "\n"
 
 

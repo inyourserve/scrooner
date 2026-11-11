@@ -1565,3 +1565,23 @@ effective_from: 2026-11-01
 | 0001067983 | cost_of_revenue | yes | BRK-A: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0000913760 | inventory | yes | SNEX: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
 | 0001783879 | research_and_development | yes | HOOD: §3: presented; company_filing_line_evidence (latest 10-K/10-Q) shows the line on the face; accession attached by the FSN company step |
+| 0000896159 | depreciation_and_amortization | no | CB: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment accretion and purchased-intangible amortization (0000896159-26-000005 R8.htm) |
+| 0000896159 | depreciation_and_amortization_resolved | no | CB: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment accretion and purchased-intangible amortization (0000896159-26-000005 R8.htm) |
+| 0000004977 | depreciation_and_amortization | no | AFL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only deferred policy acquisition cost amortization (0001628280-26-011402 R10.htm) |
+| 0000004977 | depreciation_and_amortization_resolved | no | AFL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only deferred policy acquisition cost amortization (0001628280-26-011402 R10.htm) |
+| 0000947484 | depreciation_and_amortization | no | ACGL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only intangible-asset amortization (0000947484-26-000017 R8.htm) |
+| 0000947484 | depreciation_and_amortization_resolved | no | ACGL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only intangible-asset amortization (0000947484-26-000017 R8.htm) |
+| 0001095073 | depreciation_and_amortization | no | EG: insurer D&A ruling 2026-11-11, the cash-flow statement prints only bond premium amortization (0001095073-26-000006 R8.htm) |
+| 0001095073 | depreciation_and_amortization_resolved | no | EG: insurer D&A ruling 2026-11-11, the cash-flow statement prints only bond premium amortization (0001095073-26-000006 R8.htm) |
+| 0000320335 | depreciation_and_amortization | no | GL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only deferred acquisition cost amortization (0000320335-26-000090 R10.htm) |
+| 0000320335 | depreciation_and_amortization_resolved | no | GL: insurer D&A ruling 2026-11-11, the cash-flow statement prints only deferred acquisition cost amortization (0000320335-26-000090 R10.htm) |
+| 0000074260 | depreciation_and_amortization | no | ORI: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0000074260-26-000008 R8.htm) |
+| 0000074260 | depreciation_and_amortization_resolved | no | ORI: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0000074260-26-000008 R8.htm) |
+| 0001822993 | depreciation_and_amortization | no | JXN: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment premium/discount amortization (0001822993-26-000022 R9.htm) |
+| 0001822993 | depreciation_and_amortization_resolved | no | JXN: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment premium/discount amortization (0001822993-26-000022 R9.htm) |
+| 0001535929 | depreciation_and_amortization | no | VOYA: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0001535929-26-000043 R8.htm) |
+| 0001535929 | depreciation_and_amortization_resolved | no | VOYA: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0001535929-26-000043 R8.htm) |
+| 0000059558 | depreciation_and_amortization | no | LNC: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0000059558-26-000016 R7.htm) |
+| 0000059558 | depreciation_and_amortization_resolved | no | LNC: insurer D&A ruling 2026-11-11, the cash-flow statement prints no depreciation or amortization line (0000059558-26-000016 R7.htm) |
+| 0001823529 | depreciation_and_amortization | no | ACT: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment, deferred-cost and intangible amortization (0001823529-26-000060 R8.htm) |
+| 0001823529 | depreciation_and_amortization_resolved | no | ACT: insurer D&A ruling 2026-11-11, the cash-flow statement prints only investment, deferred-cost and intangible amortization (0001823529-26-000060 R8.htm) |

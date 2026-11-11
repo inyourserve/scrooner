@@ -280,3 +280,37 @@ Source: `VERIFY-TEMPLATES-AND-LADDER-2026-11-09.md` (branch `verify/templates-an
 - **Row 6:** GS, MS and SCHW (and LPLA's OI) behave bank-like. Either put them in a bank-like template, or add per-company OUT overrides for OI, COR and current totals.
 - **Row 7:** "IN COND" is applied as IN for the whole sector. The company overlay the approved §4 asks for needs per-company face evidence from the FSN store.
 - **Noted:** capex OUT-by-definition hides printed lines, and current totals for banks and insurers stay IN as approved. Both are accountant or approver calls.
+
+## 10. Insurer capex and D&A ruling (2026-11-11, asked by Dhairya after cloud Ritwik's 83bc4988: CB prints neither)
+**Evidence:** `data-team/strategy/data/insurer_cf_da_capex_lines_2026-11-11.csv`. For each of the 41 insurer-template companies I read the cash-flow statement (R page) of its latest 10-K on sec.gov, using the declared `SEC_USER_AGENT`, at no more than 3 requests per second. The file lists every depreciation, amortization and capex-like line label it prints.
+
+**Capex: no change.** It is already OUT for every insurer (category C, approved §8.2), so CB shows no capex blank. Noted: 18 of the 41 insurers do print a capex line, for example PGR, ALL, HIG, L, CNA, MKL, FNF and BRK-A. The approved ruling hides those lines, as the Verifier noted on 2026-11-09.
+
+**D&A: stays IN the insurer template.**
+- **31 of 41 print a depreciation-type line**, for example TRV "Depreciation and amortization", PGR "Depreciation", AIG "Depreciation and other amortization", and EQH "Amortization and depreciation".
+- ALL, CINF, WRB and RNR print it combined with other items. Under ruling item 3 those show under their own label.
+- An OUT for the whole sector would hide a line most insurers print.
+
+**D&A: OUT for 10 companies** (company override, `in_template = no`, with the accession and page in the reason):
+
+| Company | What its cash-flow statement prints instead |
+|---|---|
+| CB | only investment accretion and purchased-intangible amortization |
+| AFL | only deferred acquisition cost amortization |
+| ACGL | only intangible amortization |
+| EG | only bond-premium amortization |
+| GL | only deferred acquisition cost amortization |
+| ORI | no depreciation or amortization line |
+| JXN | only investment amortization |
+| VOYA | no depreciation or amortization line |
+| LNC | no depreciation or amortization line |
+| ACT | only investment, deferred-cost and intangible amortization |
+
+With this, CB shows no D&A blank.
+
+**Open for the Standardization Lead:** amortization of purchased intangibles alone (CB, ACGL) is treated as "no D&A line". Whether intangible amortization by itself counts as D&A is a definition call.
+
+**Branch and verification:**
+- On `work/certification-lead/template-seed-fixes`; 3/3 mutations caught.
+- Needs the Verifier's re-check, together with rows 1–5 and 8 (section 9), before it is applied.
+- **Process note:** two early probe requests (one CB 10-K search and one submissions JSON) went out with a hand-typed User-Agent before I switched to the declared one. Every evidence read used `SEC_USER_AGENT`.
