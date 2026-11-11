@@ -19,9 +19,15 @@ class Route(NamedTuple):
     company_id: int
     valid_from: date
     valid_to: date
+    # the same company's 'exclude' windows (relation 'exclude'); an exclude always wins
+    excludes: tuple[tuple[date, date], ...] = ()
 
     def contains(self, d: date | None) -> bool:
-        return d is not None and self.valid_from <= d <= self.valid_to
+        """Strictly inside the predecessor window and outside every exclude window.
+        No period date means not inside (never fall back to a filing date)."""
+        if d is None or not (self.valid_from <= d <= self.valid_to):
+            return False
+        return not any(f <= d <= t for f, t in self.excludes)
 
 
 def _table_exists(conn: psycopg.Connection) -> bool:
@@ -46,4 +52,12 @@ def predecessor_routes(conn: psycopg.Connection, cik: str) -> list[Route]:
            where source_cik = %s and relation = 'predecessor' order by valid_from""",
         (cik,),
     ).fetchall()
-    return [Route(*r) for r in rows]
+    out = []
+    for company_id, f, t in rows:
+        ex = conn.execute(
+            """select valid_from, valid_to from core.company_history_source
+               where company_id = %s and relation = 'exclude' order by valid_from""",
+            (company_id,),
+        ).fetchall()
+        out.append(Route(company_id, f, t, tuple((a, b) for a, b in ex)))
+    return out

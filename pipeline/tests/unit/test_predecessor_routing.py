@@ -49,7 +49,7 @@ class _Conn:
         return _Cur(self.rows)
 
     def execute(self, sql, params=None):
-        return _Res([("acc-old", 77)] if "core.filing" in sql else [])
+        return _Res([("acc-old", 77, date(2025, 12, 31))] if "core.filing" in sql else [])
 
     def commit(self):
         pass
@@ -103,3 +103,9 @@ def test_collector_cik_selection(monkeypatch):
     assert _with_predecessors(None, False, False) is None
     assert _with_predecessors({"0000000001"}, True, False) == {"0000000001", "0000034088"}
     assert _with_predecessors({"0000000001"}, False, True) == {"0000034088"}
+
+
+def test_exclude_window_wins_and_no_period_is_outside():
+    r = Route(1, date(2014, 1, 1), date(2020, 12, 31), ((date(2016, 1, 1), date(2016, 12, 31)),))
+    assert r.contains(date(2015, 6, 30)) and not r.contains(date(2016, 6, 30))
+    assert not r.contains(None)

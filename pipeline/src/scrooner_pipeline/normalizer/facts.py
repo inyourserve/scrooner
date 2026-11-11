@@ -219,16 +219,23 @@ def normalize_payload(
     payload by normalize_facts_for_cik, and by the B9 instance fallback with a
     payload built from the filing's own XBRL (FSN set or instance) for a
     periodic filing the companyfacts API never carried (2026-10-31)."""
-    filing_by_accn = _load_filing_lookup(conn, company_id)
+    filing_by_accn = {} if window is not None else _load_filing_lookup(conn, company_id)
     if window is not None:
-        # A source CIK that is also its own core.company owns its filings (one owner per accession).
-        filing_by_accn.update(
-            conn.execute(
-                "select f.accession_number, f.id from core.filing f join core.company c "
-                "on c.id = f.company_id where c.cik = %s",
-                (cik,),
+        # Only filings that came from THIS source CIK (raw_submission_id -> raw.sec_submissions.cik,
+        # or the source's own core.company) and whose period is inside the window and outside the
+        # excludes. The successor's own filings are never matched: they carry their own accessions.
+        filing_by_accn = {
+            accn: fid
+            for accn, fid, period in conn.execute(
+                """select f.accession_number, f.id, f.period_of_report
+                   from core.filing f
+                   left join raw.sec_submissions s on s.id = f.raw_submission_id
+                   where s.cik = %s
+                      or f.company_id in (select id from core.company where cik = %s)""",
+                (cik, cik),
             ).fetchall()
-        )
+            if window.contains(period)
+        }
     period_by_key = _load_period_lookup(conn, company_id)
     unit_by_name = _load_unit_lookup(conn)
 

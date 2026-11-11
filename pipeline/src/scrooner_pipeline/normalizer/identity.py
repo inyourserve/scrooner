@@ -367,7 +367,7 @@ def normalize_identity_for_cik(
         in_window = [
             f
             for f in identity["filings"]
-            if r.contains(f["period_of_report"] or f["filing_date"])
+            if r.contains(f["period_of_report"])  # strictly the period; no filing-date fallback
         ]
         routed += upsert_filings(
             conn, r.company_id, in_window, identity["raw_submission_id_by_filing"]
