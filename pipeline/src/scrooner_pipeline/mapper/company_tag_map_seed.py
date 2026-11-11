@@ -191,6 +191,10 @@ def check_overlaps(rows: list[dict]) -> list[str]:
                     ca = a["canonical_concept_id"] or a["parent_concept_id"]
                     cb = b["canonical_concept_id"] or b["parent_concept_id"]
                     same = ca == cb
+                    if a["decision"] == "excluded" and b["decision"] == "excluded":
+                        same = (
+                            False  # excluded rows never feed anything: they may overlap
+                        )
                 if same and clash(a, b):
                     errors.append(
                         f"overlapping eras for {key}: {a['era_from']}..{a['era_to']} vs {b['era_from']}..{b['era_to']}"

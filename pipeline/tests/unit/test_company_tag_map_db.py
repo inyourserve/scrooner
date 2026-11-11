@@ -115,10 +115,10 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         conn.commit()
         bad("concept", x["rev"], None, "2017-12-31", None)        # overlapping era, same tag and stmt
         conn.execute(base, (co, "concept", x["rev"], None, "2018-01-01", None))  # adjacent era is fine
-        # one tag feeds a second concept in the same era; an excluded row clashes with any row of the tag
+        # one tag feeds a second concept in the same era; excluded rows overlap freely
         conn.execute(base, (co, "concept", x["opex"], None, "2018-01-01", None))
         conn.commit()
-        # an excluded detail row (no concept) may coexist with a component row of the same tag; two excluded clash
+        # an excluded detail row (no concept) may coexist with a component row of the same tag; two excluded rows may overlap
         comp = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, parent_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','T','IS','component',%s,'2018-01-01','t','tm.r@1')"
         comp = comp.replace("'T'", "'T2'")
         conn.execute(comp, (co, x["rev"]))
@@ -126,9 +126,8 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         base2 = base.replace("'T'", "'T2'")
         conn.execute(base2, (co, "excluded", None, "detail", "2018-01-01", None))
         conn.commit()
-        with pytest.raises(psycopg.errors.Error):  # two excluded rows of one tag still clash
-            conn.execute(base2, (co, "excluded", None, "again", "2019-01-01", None))
-        conn.rollback()
+        conn.execute(base2, (co, "excluded", None, "again", "2019-01-01", None))  # excluded rows may overlap each other
+        conn.commit()
         with pytest.raises(psycopg.errors.Error):  # another tag, same concept, overlapping era: refused
             conn.execute(base.replace("'T'", "'T3'"), (co, "concept", x["rev"], None, "2019-01-01", None))
         conn.rollback()
@@ -143,7 +142,7 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         )
         dry = seed(conn, csv_path)
         assert dry["rows"] == 2 and dry["errors"] == [] and not dry["applied"]
-        assert _one(conn, "select count(*) from analytics.company_tag_map") == 7  # dry run wrote nothing
+        assert _one(conn, "select count(*) from analytics.company_tag_map") == 8  # dry run wrote nothing
         done = seed(conn, csv_path, apply=True)
         assert done["applied"] and _one(conn, "select count(*) from analytics.company_tag_map") == 2
         assert _one(conn, "select count(*) from analytics.company_tag_map where tag = 'T'") == 0  # replaced

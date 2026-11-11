@@ -30,7 +30,7 @@
 -- must not overlap; and two 'concept' rows of one (company, stmt, concept) never overlap, even under different
 -- tags (the library cuts eras so a concept has one tag per period). One tag may feed two concepts (EarningsPerShareBasicAndDiluted: basic and diluted EPS) and
 -- one concept may list several tags in consecutive eras (10-Q vs 10-K tags); an 'excluded' detail row (no
--- concept) may coexist with a component row of the same tag (two excluded rows still clash). The mapper takes the latest filing's value among a concept's tags. (trigger; btree_gist is not assumed).
+-- concept) may coexist with a component row of the same tag (excluded rows may overlap each other). The mapper takes the latest filing's value among a concept's tags. (trigger; btree_gist is not assumed).
 -- NOT applied: needs the founder's typed words.
 create table if not exists analytics.company_tag_map (
     id                    bigint generated always as identity primary key,
@@ -84,6 +84,7 @@ begin
         select 1 from analytics.company_tag_map m
         where m.company_id = new.company_id and m.stmt = new.stmt
           and m.id is distinct from new.id
+          and not (m.decision = 'excluded' and new.decision = 'excluded')  -- excluded rows never feed anything
           and (case when new.tag is null
                    then m.tag is null and m.canonical_concept_id = new.canonical_concept_id
                    else m.taxonomy = new.taxonomy and m.tag = new.tag
