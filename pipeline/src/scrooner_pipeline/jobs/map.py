@@ -162,6 +162,46 @@ def resolve_facts_cmd(
     typer.echo(f"resolve-facts: {stats}")
 
 
+@app.command("seed-company-tag-map")
+def seed_company_tag_map_cmd(
+    path: Path = typer.Argument(
+        ..., help="CSV or JSONL of analytics.company_tag_map rows."
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Write (one transaction per company, replacing its rows). Default: dry run.",
+    ),
+) -> None:
+    """Load a company's FSN-learned tag map (migration 0122). Dry run by default: validates every row
+    against the table's constraints and prints counts, writes nothing."""
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed as seed_tag_map
+
+    with get_connection() as conn:
+        stats = seed_tag_map(conn, path, apply=apply)
+    typer.echo(
+        f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
+        f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"
+    )
+    for cik, c in sorted(stats["completeness"].items()):
+        typer.echo(
+            f"  {cik}: statement tags decided {c['decided']}/{c['statement_tags']} "
+            f"(undecided {c['undecided']}) {c['by_decision']}"
+        )
+    for (company_id, concept, winner, alt), n in sorted(
+        stats.get("winner_tag_gaps", {}).items()
+    ):
+        typer.echo(
+            f"  winner-tag gap: company {company_id} {concept} {winner}: {n} period(s) only under {alt}"
+        )
+    for w in stats["warnings"]:
+        typer.echo(f"  warning: {w}")
+    for e in stats["errors"][:50]:
+        typer.echo(f"  error: {e}")
+    if stats["errors"]:
+        raise typer.Exit(1)
+
+
 @app.command("split-rebase")
 def split_rebase_cmd(
     ciks: str = typer.Option(

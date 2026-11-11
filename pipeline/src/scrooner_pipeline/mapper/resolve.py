@@ -29,6 +29,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper import company_tag_map
 
 logger = structlog.get_logger()
 
@@ -211,7 +212,27 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
         company_id_by_cik = dict(cur.fetchall())
 
+    # Rule company_tag_map.select@1 (off by default): a company with analytics.company_tag_map rows is resolved
+    # ONLY through its map (mapper/company_tag_map.py); every other company keeps the path below untouched.
+    tag_map_ids: set[int] = set()
+    concept_info: dict[int, tuple[str, str]] = {}
+    if company_tag_map.enabled():
+        tag_map_ids = company_tag_map.load_tag_map_company_ids(
+            conn, set(company_id_by_cik.values())
+        )
+        concept_info = company_tag_map.load_concept_info(conn)
+
+    tag_map_run: str | None = None
+    if tag_map_ids:
+        from scrooner_pipeline.common import cell_store as cs
+
+        tag_map_run = cs.start_rule_run(
+            conn, company_tag_map.RULE_ID, "apply", "on", sorted(ciks)
+        )
+        conn.commit()
+
     totals = {
+        "tag_map_companies": 0,
         "considered": 0,
         "ok": 0,
         "no_company": 0,
@@ -226,9 +247,16 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = resolve_for_company(
-                conn, company_id, mapping_index, managed_concept_ids
-            )
+            if company_id in tag_map_ids:
+                stats = company_tag_map.resolve_for_company(
+                    conn, company_id, managed_concept_ids, concept_info, tag_map_run
+                )
+                totals["tag_map_companies"] += 1
+                stats.setdefault("unresolved_concepts", 0)
+            else:
+                stats = resolve_for_company(
+                    conn, company_id, mapping_index, managed_concept_ids
+                )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "resolve", exc)
@@ -238,5 +266,10 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         totals["resolved"] += stats["resolved"]
         totals["unresolved_concepts"] += stats["unresolved_concepts"]
 
+    if tag_map_run:
+        from scrooner_pipeline.common import cell_store as cs
+
+        cs.finish_rule_run(conn, tag_map_run, dict(totals))
+        conn.commit()
     logger.info("resolve.done", **totals)
     return totals
