@@ -62,13 +62,13 @@ def test_tag_map_company_uses_only_the_map_and_control_keeps_the_old_path(isolat
         # a non-authoritative copy (other unit) must never be used
         u2 = _one(conn, "insert into core.unit (unit_name) values ('USDx') returning id")
         conn.execute("insert into core.fact (company_id, concept_id, unit_id, period_id, filing_id, value, is_authoritative, raw_object_id) values (%s,%s,%s,%s,%s,%s,false,%s)", (co, x["tags"]["Revenues"], u2, per["in"], fil["new"], Decimal("999"), x["raw"]))
-        calc = _one(conn, "insert into fsn.filing (accession, cik, form, fsn_set) values (%s,'0000000101','10-K','t') returning id", "0000000101-new")
+        calc = _one(conn, "insert into fsn.filing (accession, cik, form, fsn_set) values (%s,'0000000101','10-K','tm.r@1') returning id", "0000000101-new")
         pt, ca, cb = (_one(conn, "insert into fsn.tag (tag, version) values (%s,'2018') returning id", t) for t in ("OperatingExpenses", "OpA", "OpB"))
         for c in (ca, cb):
             conn.execute("insert into fsn.calc_arc (filing_id, grp, arc, parent_tag_id, child_tag_id, weight) values (%s,1,%s,%s,%s,1)", (calc, c, pt, c))
-        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, combine_sign, reason_class, era_from, era_to, evidence_cal_parent, decided_by, rule_id) values (%s,'us-gaap',%s,'IS',%s,%s,%s,%s,%s,%s,%s,%s,'t','t@1')"
-        conn.execute(ins, (co, "Revenues", "concept", x["rev"], None, None, None, "2015-01-01", "2019-12-31", None))
-        conn.execute(ins, (co, "SalesRevenueNet", "excluded", x["rev"], None, None, "wrong_concept", "2015-01-01", None, None))
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign, reason_class, era_from, era_to, evidence_cal_parent, decided_by, rule_id) values (%s,'us-gaap',%s,'IS',%s,%s,%s,%s,%s,%s,%s,%s,'t','tm.r@1')"
+        conn.execute(ins, (co, "Revenues", "concept", x["rev"], None, 1, None, "2015-01-01", "2019-12-31", None))
+        conn.execute(ins, (co, "SalesRevenueNet", "excluded", x["rev"], None, 1, "wrong_concept", "2015-01-01", None, None))
         for t in ("OpA", "OpB"):
             conn.execute(ins, (co, t, "component", None, x["opex"], 1, None, "2015-01-01", None, "OperatingExpenses"))
         # control: no map rows, same global rules
@@ -98,7 +98,7 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         x = _seed(conn)
         co, *_ = x["company"]("0000000201", True)
         conn.commit()
-        base = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, reason, era_from, era_to, decided_by, rule_id) values (%s,'us-gaap','T','IS',%s,%s,%s,%s,%s,'t','r@1')"
+        base = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, reason, era_from, era_to, decided_by, rule_id) values (%s,'us-gaap','T','IS',%s,%s,%s,%s,%s,'t','tm.r@1')"
 
         def bad(*args):
             with pytest.raises(psycopg.errors.Error):
@@ -106,6 +106,9 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
             conn.rollback()
 
         bad("concept", None, None, "2015-01-01", None)            # concept needs a concept
+        bad("combined", x["rev"], None, "2015-01-01", None)       # combined needs the spanned concept names
+        names = {r[0] for r in conn.execute("select name from analytics.canonical_concept")}
+        assert {"weighted_average_shares_basic", "weighted_average_shares_diluted", "cash_paid_for_interest", "cash_paid_for_income_taxes"} <= names
         bad("excluded", None, None, "2015-01-01", None)           # excluded needs a reason
         bad("concept", x["rev"], None, "2016-01-01", "2015-01-01")  # era_from > era_to
         conn.execute(base, (co, "concept", x["rev"], None, "2015-01-01", "2017-12-31"))
@@ -116,8 +119,8 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         csv_path = tmp_path / "m.csv"
         csv_path.write_text(
             "cik,taxonomy,tag,stmt,decision,canonical_concept,era_from,decided_by,rule_id,reason\n"
-            "0000000201,us-gaap,Revenues,IS,concept,tm_rev,2015-01-01,t,r@1,\n"
-            "0000000201,us-gaap,Other,IS,excluded,,2015-01-01,t,r@1,not a revenue line\n"
+            "0000000201,us-gaap,Revenues,IS,concept,tm_rev,2015-01-01,t,tm.r@1,\n"
+            "0000000201,us-gaap,Other,IS,excluded,,2015-01-01,t,tm.r@1,not a revenue line\n"
         )
         dry = seed(conn, csv_path)
         assert dry["rows"] == 2 and dry["errors"] == [] and not dry["applied"]
@@ -125,5 +128,29 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         done = seed(conn, csv_path, apply=True)
         assert done["applied"] and _one(conn, "select count(*) from analytics.company_tag_map") == 2
         assert _one(conn, "select count(*) from analytics.company_tag_map where tag = 'T'") == 0  # replaced
-        csv_path.write_text(csv_path.read_text() + "0000000201,us-gaap,Bad,IS,excluded,,2015-01-01,t,r@1,\n")
+        csv_path.write_text(csv_path.read_text() + "0000000201,us-gaap,Bad,IS,excluded,,2015-01-01,t,tm.r@1,\n")
         assert seed(conn, csv_path, apply=True)["errors"]  # a bad row blocks the whole file
+
+
+@pytest.mark.integration
+def test_tagless_not_presented_writes_blank_reason_and_printed_value_wins(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        gp = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_gp','income_statement','first_match') returning id")
+        co, per, fil, fact = x["company"]("0000000301", True)
+        fact("Revenues", "in", "new", "110")
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, reason, era_from, decided_by, rule_id) values (%s,%s,%s,'IS',%s,%s,%s,'2015-01-01','t','tm.r@1')"
+        conn.execute(ins, (co, "us-gaap", "Revenues", "concept", x["rev"], None))
+        conn.execute(ins, (co, None, None, "not_presented", gp, "no gross profit line on the face"))
+        conn.execute(ins, (co, None, None, "not_in_template", x["rev"], "wrongly claimed"))
+        conn.commit()
+        stats = resolve(conn, {"0000000301"})
+        assert stats["errored"] == 0
+        blanks = conn.execute("select data_point_name, state, reason_text, rule_id, period_end from analytics.cell_blank_reason where company_id = %s", (co,)).fetchall()
+        gp_ends = {b[4].isoformat() for b in blanks if b[0] == "tm_gp"}
+        assert gp_ends == {"2018-12-31", "2020-12-31"}
+        assert {(b[1], b[2], b[3]) for b in blanks if b[0] == "tm_gp"} == {("not_presented", "no gross profit line on the face", "tm.r@1")}
+        # tm_rev is printed for 2018: no blank there (value wins); the unprinted 2020 period is a blank
+        assert {b[4].isoformat() for b in blanks if b[0] == "tm_rev"} == {"2020-12-31"}
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == Decimal("110")

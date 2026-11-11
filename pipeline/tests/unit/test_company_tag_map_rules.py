@@ -78,3 +78,103 @@ def test_printed_total_must_tie_to_same_filing_components_or_is_held():
     assert [c["value"] for c in cells] == [Decimal("100")] and stats["held"] == []
     cells, stats = run(rows, facts("50"), arcs)  # 90 != 100
     assert cells == [] and stats["held"][0]["reason"] == "printed_total_does_not_tie_to_components"
+
+
+def blank_row(state="not_presented", concept=OPEX, era_to=None):
+    return MapRow(None, None, "IS", state, concept, None, None, ERA, era_to, None, "no such line", "tm.not_presented@1")
+
+
+PERIODS = {
+    7: (date(2020, 1, 1), END, "duration"),          # FY
+    8: (date(2020, 10, 1), date(2020, 12, 31), "duration"),  # Q
+    9: (date(2020, 1, 1), date(2020, 6, 30), "duration"),    # half year: no grain, no blank
+    10: (date(2014, 1, 1), date(2014, 12, 31), "duration"),  # before the era
+}
+
+
+def test_tagless_not_presented_row_becomes_reasoned_blanks_per_period_in_era():
+    cells, stats = build_cells([blank_row("not_in_template")], {}, INFO, {}, {}, PERIODS)
+    assert cells == []
+    got = {(b["period_id"], b["grain"], b["state"], b["reason"], b["rule_id"]) for b in stats["blanks"]}
+    assert got == {
+        (7, "FY", "not_in_template", "no such line", "tm.not_presented@1"),
+        (8, "Q", "not_in_template", "no such line", "tm.not_presented@1"),
+    }
+
+
+def test_a_printed_concept_value_beats_the_not_presented_row_and_the_clash_is_reported():
+    rows = [blank_row(), concept_row("OperatingExpenses")]
+    facts = {("us-gaap", "OperatingExpenses"): {7: fact("30", 1)}}
+    cells, stats = build_cells(rows, facts, INFO, {}, {}, PERIODS)
+    assert [(c["period_id"], c["value"]) for c in cells] == [(7, Decimal("30"))]
+    assert [b["period_id"] for b in stats["blanks"]] == [8]  # only the period with no value is blank
+    assert stats["blank_conflicts"] == [{"canonical_concept_id": OPEX, "period_id": 7, "state": "not_presented"}]
+
+
+def combined_row(canonical=None):
+    return MapRow(
+        "us-gaap", "AccountsPayableAndAccruedLiabilitiesCurrent", "BS", "combined", canonical, None, None, ERA, None,
+        None, "line spans two concepts", "tm.combined@1", ("accounts_payable", "tm_accrued"), "Accounts payable and accrued liabilities",
+    )
+
+
+def test_combined_row_never_feeds_a_concept_only_a_reasoned_blank_per_spanned_concept():
+    info = {**INFO, 3: ("accounts_payable", "balance_sheet")}
+    periods = {7: (END, END, "instant")}
+    facts = {("us-gaap", "AccountsPayableAndAccruedLiabilitiesCurrent"): {7: fact("500", 1)}}
+    for canonical in (None, 3):  # even with canonical_concept set the line feeds nothing
+        cells, stats = build_cells([combined_row(canonical)], facts, info, {}, {}, periods)
+        assert cells == []
+        got = {(b["concept_name"], b["state"], b["reason"], b["rule_id"]) for b in stats["blanks"]}
+        assert got == {
+            ("accounts_payable", "not_presented", "printed only combined with tm_accrued on BS line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
+            ("tm_accrued", "not_presented", "printed only combined with accounts_payable on BS line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
+        }
+
+
+def test_combined_blank_yields_to_a_separately_printed_concept_value():
+    info = {**INFO, 3: ("accounts_payable", "balance_sheet")}
+    periods = {7: (END, END, "instant")}
+    rows = [combined_row(), MapRow("us-gaap", "AccountsPayableCurrent", "BS", "concept", 3, None, None, ERA, None)]
+    facts = {
+        ("us-gaap", "AccountsPayableAndAccruedLiabilitiesCurrent"): {7: fact("500", 1)},
+        ("us-gaap", "AccountsPayableCurrent"): {7: fact("300", 2)},
+    }
+    cells, stats = build_cells(rows, facts, info, {}, {}, periods)
+    assert [(c["canonical_concept_id"], c["value"]) for c in cells] == [(3, Decimal("300"))]
+    assert [b["concept_name"] for b in stats["blanks"]] == ["tm_accrued"]
+
+
+def test_calc_parent_list_of_the_library_files_is_accepted():
+    rows = [comp_row("OpA", parent="Foo;OperatingExpenses;Bar"), comp_row("OpB", parent="OperatingExpenses;Baz")]
+    facts = {("us-gaap", "OpA"): {7: fact("5", 2)}, ("us-gaap", "OpB"): {7: fact("6", 3)}}
+    arcs = {"A-10": {("OperatingExpenses", "OpA"), ("OperatingExpenses", "OpB")}}
+    cells, _ = run(rows, facts, arcs)
+    assert [c["value"] for c in cells] == [Decimal("11")]
+
+
+def test_sign_minus_one_on_a_concept_row_and_a_plus_minus_component_pair():
+    neg = MapRow("us-gaap", "InterestNet", "IS", "concept", OPEX, None, -1, ERA, None, serve_note="gross shown net")
+    cells, _ = run([neg], {("us-gaap", "InterestNet"): {7: fact("40", 1)}})
+    assert [(c["value"], c["serve_note"]) for c in cells] == [(Decimal("-40"), "gross shown net")]
+    rows = [comp_row("Incurred", parent="InterestExpense", sign=1), comp_row("Capitalized", parent="InterestExpense", sign=-1)]
+    facts = {("us-gaap", "Incurred"): {7: fact("50", 2)}, ("us-gaap", "Capitalized"): {7: fact("8", 3)}}
+    arcs = {"A-10": {("InterestExpense", "Incurred"), ("InterestExpense", "Capitalized")}}
+    cells, _ = run(rows, facts, arcs)
+    assert [c["value"] for c in cells] == [Decimal("42")]
+    # the printed total (with its sign) must tie to the signed components
+    printed = MapRow("us-gaap", "InterestExpense", "IS", "concept", OPEX, None, 1, ERA, None)
+    facts[("us-gaap", "InterestExpense")] = {7: fact("42", 4)}
+    cells, stats = run(rows + [printed], facts, arcs)
+    assert [c["value"] for c in cells] == [Decimal("42")] and stats["held"] == []
+    facts[("us-gaap", "InterestExpense")] = {7: fact("58", 4)}  # 50 + 8: the sign was ignored somewhere
+    cells, stats = run(rows + [printed], facts, arcs)
+    assert cells == [] and stats["held"][0]["reason"] == "printed_total_does_not_tie_to_components"
+
+
+def test_combined_cash_flow_line_gives_reasoned_blanks_for_duration_periods():
+    info = {5: ("share_buybacks", "cash_flow"), 6: ("dividends_paid", "cash_flow")}
+    row = MapRow("us-gaap", "PaymentsForDividendsAndRepurchases", "CF", "combined", None, None, 1, ERA, None, None, "one line", "tm.combined@1", ("share_buybacks", "dividends_paid"), "Dividends and repurchases")
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    cells, stats = build_cells([row], {("us-gaap", "PaymentsForDividendsAndRepurchases"): {7: fact("9", 1)}}, info, {}, {}, periods)
+    assert cells == [] and {(b["concept_name"], b["grain"]) for b in stats["blanks"]} == {("share_buybacks", "FY"), ("dividends_paid", "FY")}

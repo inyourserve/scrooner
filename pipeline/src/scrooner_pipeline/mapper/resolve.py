@@ -222,6 +222,15 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
         concept_info = company_tag_map.load_concept_info(conn)
 
+    tag_map_run: str | None = None
+    if tag_map_ids:
+        from scrooner_pipeline.common import cell_store as cs
+
+        tag_map_run = cs.start_rule_run(
+            conn, company_tag_map.RULE_ID, "apply", "on", sorted(ciks)
+        )
+        conn.commit()
+
     totals = {
         "tag_map_companies": 0,
         "considered": 0,
@@ -240,7 +249,7 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         try:
             if company_id in tag_map_ids:
                 stats = company_tag_map.resolve_for_company(
-                    conn, company_id, managed_concept_ids, concept_info
+                    conn, company_id, managed_concept_ids, concept_info, tag_map_run
                 )
                 totals["tag_map_companies"] += 1
                 stats.setdefault("unresolved_concepts", 0)
@@ -257,5 +266,10 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         totals["resolved"] += stats["resolved"]
         totals["unresolved_concepts"] += stats["unresolved_concepts"]
 
+    if tag_map_run:
+        from scrooner_pipeline.common import cell_store as cs
+
+        cs.finish_rule_run(conn, tag_map_run, dict(totals))
+        conn.commit()
     logger.info("resolve.done", **totals)
     return totals

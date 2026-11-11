@@ -179,7 +179,19 @@ def seed_company_tag_map_cmd(
 
     with get_connection() as conn:
         stats = seed_tag_map(conn, path, apply=apply)
-    typer.echo(f"seed-company-tag-map: {stats}")
+    typer.echo(
+        f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
+        f"undecided_skipped={stats['undecided_skipped']} applied={stats['applied']}"
+    )
+    for cik, c in sorted(stats["completeness"].items()):
+        typer.echo(
+            f"  {cik}: statement tags decided {c['decided']}/{c['statement_tags']} "
+            f"(undecided {c['undecided']}) {c['by_decision']}"
+        )
+    for w in stats["warnings"]:
+        typer.echo(f"  warning: {w}")
+    for e in stats["errors"][:50]:
+        typer.echo(f"  error: {e}")
     if stats["errors"]:
         raise typer.Exit(1)
 
