@@ -36,3 +36,16 @@ Every Tag Expert run adds an entry: what was added, what was CORRECTED (and what
   - Found: `interest_expense` blanks recent periods for IEN filers (CL, AVY FILING-CHECKED; 1,542 companies DATA-INFERRED). The residue face test classified 527 cells as combined or broader lines (AP 244, AR 174, amortization 109), 66 D&A composition cases, 185 other-income component lines, and 11 dividend fills.
   - Calibration: 15 of 15 R-files matched FSDS (tag and label); FSDS cumulative 43/43; edgartools cumulative 3 agree / 9 disagree.
   - Process slip: the first FASB request sent a User-Agent containing the user's email address instead of SEC_USER_AGENT. Routine change: read SEC_USER_AGENT from `pipeline/.env` before the first request to any host, and never type a UA by hand.
+
+## 2026-11-11 (Tag Expert): FSN balance-sheet asset tags
+- Added `cards/fsn-balance-sheet-assets.md` and `library/fsn-balance-sheet-assets.csv` (15 asset tags + 4 siblings + the presentation-element rule; 20 decisions, all FILING-CHECKED; 30 R pages and 3 documents opened).
+- Refined (not reversed) `cash.md`: bank "cash and due from banks" is cash only where it equals the cash-flow ending cash (FITB) and a component elsewhere (PNC, EWBC).
+- Method change: an FSN plabel that names another line is a label-linkbase error in 7 of 8 checked cases; label checks now need the document or the calc/position before demoting a line.
+- Not run: feedback-inbox processing and sources.md scoring (task was a targeted build, not maintenance).
+
+## 2026-11-11 (Tag Expert): cards/fsn-income-statement.md + library/fsn-income-statement.csv
+- Added: 22 IS/per-share/tax tags decided from FSN (top-1,000, FY2015+) plus 18 R pages opened (19 SEC requests). Disagreements with the Mac (aea0cf4) and cloud (83bc4988) libraries listed in the card.
+- Corrected: none of the earlier cards contradicted. Confirmed: InterestExpenseNonoperating exists only in us-gaap 2024+ schema versions.
+- Routine change: check an FSN pre line against the R page's undimensioned row before trusting it as a value source (HST member-only COGS).
+- 2026-11-11 (Tag Expert, FSN liabilities and equity group): ADDED `cards/fsn-balance-sheet-liabilities-equity.md` and `library/fsn-balance-sheet-liabilities-equity.csv` (33 tags: 32 FILING-CHECKED, 1 DATA-INFERRED). 14 balance-sheet R pages opened (AAPL, JPM, CVX, PGR, PLD, MCK, MET, DHI, PCAR, LH, MUR, LW, WFRD, Wisconsin Electric Power). INDEX rows added; 3 ledger cases. No card contradicted. The Disagreements section lists D1-D9 against the Mac Ritwik and cloud Ritwik libraries.
+  - Routine change: a label-tag mismatch now gets a value check before any demotion (LH and MUR showed the label can be the wrong part).
