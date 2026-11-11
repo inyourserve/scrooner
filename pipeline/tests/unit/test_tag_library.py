@@ -167,3 +167,13 @@ def test_committed_map_has_no_two_concept_rows_overlapping_for_one_company_state
         g[(r["company_id"], r["stmt"], r["canonical_concept"])].append((r["era_from"], r["era_to"], r["tag"]))
     clashes = [(k, a, b) for k, v in g.items() for a, b in zip(sorted(v), sorted(v)[1:]) if b[0] <= a[1]]
     assert not clashes, clashes[:5]
+
+
+def test_cf_d_and_a_wins_over_is_only_while_it_is_pure(tmp_path):
+    # D3 refined 2026-11-11 (DUK pattern): a combined CF line (impairment) leaves the pure IS line served
+    rows = [{"stmt": "IS", "tag": "DepreciationAndAmortization", "filing_ids": "1;2", "decision": "concept",
+             "canonical_concept": "depreciation_and_amortization_resolved", "decided_by": "rule", "evidence_plabel": "Depreciation and amortization"},
+            {"stmt": "CF", "tag": "DepreciationDepletionAndAmortization", "filing_ids": "1;2", "evidence_plabel": "Depreciation, amortization and impairment"}]
+    got = _run(tmp_path, rows, catalog=("depreciation_and_amortization_resolved",))
+    assert got[("CF", "DepreciationDepletionAndAmortization")]["decision"] == "combined"
+    assert got[("IS", "DepreciationAndAmortization")]["decision"] == "concept"
