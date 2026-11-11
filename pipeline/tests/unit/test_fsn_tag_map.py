@@ -158,3 +158,35 @@ def test_load_library_absent_file_is_empty(tmp_path):
     p = tmp_path / "lib.csv"
     p.write_text("stmt,tag,decision,concept,parent_concept,reason_class,caveat\nBS,Assets,map,total_assets_resolved,,,\n")
     assert tag_map.load_library(p)[("BS", "Assets")]["concept"] == "total_assets_resolved"
+
+
+def test_parenthetical_share_count_is_the_fact_but_other_parentheticals_stay_excluded():
+    """Tag Expert 2026-11-11: CommonStockSharesOutstanding in the BS parenthetical (and DPS in the EQ parenthetical)
+    is the statement fact; any other parenthetical row, and the cover page, stays excluded"""
+    rows = [
+        {"stmt": "BS", "report": 3, "line": 40, "plabel": "Common stock, shares outstanding", "tag": "CommonStockSharesOutstanding",
+         "version": "us-gaap/2024", "custom": False, "abstract": False, "inpth": True},
+        {"stmt": "BS", "report": 3, "line": 41, "plabel": "Allowance for doubtful accounts", "tag": "AllowanceForDoubtfulAccountsReceivableCurrent",
+         "version": "us-gaap/2024", "custom": False, "abstract": False, "inpth": True},
+        {"stmt": "CP", "report": 1, "line": 9, "plabel": "Shares outstanding", "tag": "CommonStockSharesOutstanding",
+         "version": "us-gaap/2024", "custom": False, "abstract": False, "inpth": False},
+    ]
+
+    class Conn:  # filing_decisions only reads lines (patched) and calls map_filing (patched)
+        pass
+
+    import scrooner_pipeline.fsn_store.tag_map as tm
+
+    orig_lines, orig_map, orig_arcs = tm._lines, tm.mapping.map_filing, tm._arcs
+    tm._lines = lambda conn, fid: [dict(r) for r in rows]
+    tm.mapping.map_filing = lambda *a, **k: {}
+    tm._arcs = lambda conn, fid: {}
+    try:
+        out = tm.filing_decisions(Conn(), 1, {"positional": []}, [], {})
+    finally:
+        tm._lines, tm.mapping.map_filing, tm._arcs = orig_lines, orig_map, orig_arcs
+    shares, allowance, cover = out
+    assert shares["disposition"] == "mapped" and shares["concept"] == "shares_outstanding_resolved"
+    assert shares["rule_id"] == tm.PARENTHETICAL_RULE
+    assert allowance["disposition"] == "excluded" and allowance["reason"] == "cover_or_parenthetical"
+    assert cover["disposition"] == "excluded" and cover["reason"] == "cover_or_parenthetical"

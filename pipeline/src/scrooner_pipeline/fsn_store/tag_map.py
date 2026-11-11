@@ -81,6 +81,14 @@ RESIDUE_COLUMNS = [
 STATEMENTS = ("BS", "IS", "CF", "EQ", "CI", "CP", "UN")
 TAXONOMY = {"us-gaap": "us-gaap", "srt": "srt", "dei": "dei", "ifrs-full": "ifrs"}
 MAPPED_STMTS = ("BS", "IS", "CF")
+# statement facts printed only in a parenthetical (Tag Expert 2026-11-11, net-income-and-shares.md sec. 7,
+# shareholder-returns.md sec. 3); the cover page's dei share count is a different date and never one of them
+PARENTHETICAL_FACTS = {
+    "CommonStockSharesOutstanding": "shares_outstanding_resolved",
+    "CommonStockDividendsPerShareDeclared": "dividends_per_share_resolved",
+    "CommonStockDividendsPerShareCashPaid": "dividends_per_share_resolved",
+}
+PARENTHETICAL_RULE = "tagmap.parenthetical_fact@1"
 PRESENTATION_ONLY = re.compile(
     r"(Abstract|Axis|Domain|Member|Table|LineItems)$"
 )  # what mapping.map_filing decides
@@ -255,6 +263,27 @@ def filing_decisions(
                 reason="presentation-only",
                 decided_by="structural",
             )
+        elif (
+            ln["inpth"]
+            and ln["stmt"] in ("BS", "EQ")
+            and not ln["custom"]
+            and ln["tag"] in PARENTHETICAL_FACTS
+        ):
+            # Tag Expert 2026-11-11: shares outstanding sit in the BALANCE-SHEET parenthetical and DPS in the EQUITY
+            # parenthetical at many filers (MDT FY2019+): for these tags only, the parenthetical row is the fact.
+            # The library's row for (stmt, tag) decides when it has one; else the seed's concept.
+            lib = (library or {}).get((ln["stmt"], ln["tag"]))
+            if lib:
+                apply_library(rec, lib)
+            else:
+                rec.update(
+                    disposition="mapped",
+                    concept=PARENTHETICAL_FACTS[ln["tag"]],
+                    rule_id=PARENTHETICAL_RULE,
+                    decided_by="rule",
+                    reason="parenthetical fact",
+                )
+                mapped.setdefault((ln["stmt"], ln["tag"]), rec["concept"])
         elif ln["stmt"] == "CP" or ln["inpth"]:
             rec.update(
                 disposition="excluded",
