@@ -73,14 +73,20 @@ def test_alternate_tags_for_one_concept_never_overlap_in_era(tmp_path):
     assert got[("BS", "ReceivablesNetCurrent")]["decision"] == "concept"  # a tag switch: its own era
 
 
-def test_profitloss_is_decided_per_filing_not_per_company(tmp_path):
-    # AVGO pattern: NetIncomeLoss and an NCI line until filing 3; from filing 4 only ProfitLoss is printed
-    rows = [{"stmt": "IS", "tag": "NetIncomeLoss", "filing_ids": "1;2;3"},
-            {"stmt": "IS", "tag": "NetIncomeLossAttributableToNoncontrollingInterest", "filing_ids": "2;3"},
-            {"stmt": "IS", "tag": "ProfitLoss", "filing_ids": "2;3;4;5"}]
-    got = _run(tmp_path, rows, catalog=("net_income_resolved",))
-    assert got[("IS", "ProfitLoss")]["decision"] == "concept"
-    assert "2 of 4 filings" in got[("IS", "ProfitLoss")]["reason"]
+def test_profitloss_is_net_income_only_outside_the_netincomeloss_and_nci_eras_and_the_cut_era_keeps_a_reason(tmp_path):
+    # AVGO pattern: NetIncomeLoss to 2019-07, an NCI line to 2020-10, ProfitLoss 2016..2026
+    rows = [{"stmt": "IS", "tag": "NetIncomeLoss", "era_from": "2015-01-31", "era_to": "2019-07-31", "filing_ids": "1;2",
+             "decision": "concept", "canonical_concept": "net_income_resolved", "decided_by": "rule"},
+            {"stmt": "IS", "tag": "NetIncomeLossAttributableToNoncontrollingInterest", "era_from": "2016-04-30", "era_to": "2020-10-31", "filing_ids": "2;3"},
+            {"stmt": "IS", "tag": "ProfitLoss", "era_from": "2016-04-30", "era_to": "2026-07-31", "filing_ids": "2;3;4"}]
+    out = tmp_path / "x"
+    out.mkdir()
+    _run(out, rows, catalog=("net_income_resolved",))
+    pls = [r for r in csv.DictReader(open(out / "out.csv")) if r["tag"] == "ProfitLoss"]
+    pl = [r for r in pls if r["decision"] == "concept"]
+    assert pl and pl[0]["era_from"] == "2020-11-01" and pl[0]["era_to"] == "2026-07-31"
+    cut = [r for r in pls if r["decision"] == "excluded"]
+    assert cut and cut[0]["reason_class"] == "ni_incl_nci" and cut[0]["era_to"] == "2020-10-31"
 
 
 def test_income_before_tax_is_found_by_calc_position_not_by_label(tmp_path):
@@ -92,13 +98,24 @@ def test_income_before_tax_is_found_by_calc_position_not_by_label(tmp_path):
     assert got[("IS", "IncomeLossAttributableToParent")]["decision"] != "concept"  # a label alone never promotes
 
 
-def test_a_component_label_is_never_promoted_in_its_own_filings(tmp_path):
-    rows = [{"stmt": "IS", "tag": "Revenues", "filing_ids": "1;2", "evidence_plabel": "Total revenues"},
-            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerIncludingAssessedTax", "filing_ids": "2;3", "evidence_plabel": "Product sales"},
-            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerExcludingAssessedTax", "filing_ids": "2;4", "evidence_plabel": "Total revenues"}]
+def test_a_losing_tag_keeps_the_concept_only_outside_the_winners_era_and_never_a_component_label(tmp_path):
+    rows = [{"stmt": "IS", "tag": "Revenues", "filing_ids": "1;2", "era_from": "2015-03-31", "era_to": "2021-06-30", "evidence_plabel": "Total revenues"},
+            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerIncludingAssessedTax", "filing_ids": "2", "era_from": "2018-06-30", "era_to": "2021-06-30", "evidence_plabel": "Product sales"},
+            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerExcludingAssessedTax", "filing_ids": "2;4", "era_from": "2020-12-31", "era_to": "2026-06-30", "evidence_plabel": "Total revenues"}]
     got = _run(tmp_path, rows, catalog=("revenue_sanity_resolved",))
     assert got[("IS", "RevenueFromContractWithCustomerIncludingAssessedTax")]["decision"] == "excluded"
-    assert got[("IS", "RevenueFromContractWithCustomerExcludingAssessedTax")]["decision"] == "concept"
+    ex = got[("IS", "RevenueFromContractWithCustomerExcludingAssessedTax")]
+    assert ex["decision"] == "concept" and ex["era_from"] == "2021-07-01"  # never the shared era: no two concept tags per period
+
+
+def test_committed_ranks_1_50_map_covers_the_full_sector_template():
+    cov = ROOT / "pipeline" / "scripts" / "tag_library" / "coverage_full.py"
+    d = ROOT / "data-team" / "47-fsn-store" / "company_tag_map"
+    with __import__("tempfile").TemporaryDirectory() as t:
+        out = subprocess.run([sys.executable, "-I", str(cov), str(d / "ranks_1_50.csv"), str(d / "template_points_ranks_1_50.csv"),
+                              str(d / "concepts_catalog.csv"), str(d / "note_sourced_candidates_ranks_1_50.csv"),
+                              str(d / "template_out_candidates_ranks_1_50.csv"), t + "/cov.csv"], check=True, capture_output=True, text=True).stdout
+    assert out.strip().splitlines()[-1] == "gaps 0", out
 
 
 def test_committed_ranks_1_50_map_leaves_no_core_point_without_source_or_reason():

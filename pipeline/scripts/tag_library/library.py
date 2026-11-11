@@ -24,6 +24,12 @@ TIERS = {
     ("BS", "accounts_receivable"): ["AccountsReceivableNetCurrent", "ReceivablesNetCurrent", "AccountsNotesAndLoansReceivableNetCurrent"],
     ("BS", "accounts_payable"): ["AccountsPayableCurrent", "AccountsPayableTradeCurrent"],
     ("BS", "inventory"): ["InventoryNet"],
+    ("CF", "cash_paid_for_interest"): ["InterestPaidNet", "InterestPaid"],
+    ("CF", "cash_paid_for_income_taxes"): ["IncomeTaxesPaidNet", "IncomeTaxesPaid"],
+    ("IS", "weighted_average_shares_basic"): ["WeightedAverageNumberOfSharesOutstandingBasic", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"],
+    ("IS", "weighted_average_shares_diluted"): ["WeightedAverageNumberOfDilutedSharesOutstanding"],
+    ("IS", "basic_eps_resolved"): ["EarningsPerShareBasic", "IncomeLossFromContinuingOperationsPerBasicShare"],
+    ("IS", "diluted_eps_resolved"): ["EarningsPerShareDiluted", "IncomeLossFromContinuingOperationsPerDilutedShare"],
     ("IS", "revenue_sanity_resolved"): ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax",
                                          "RevenuesNetOfInterestExpense", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes", "SalesRevenueNet"],
     ("IS", "income_before_tax_resolved"): ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
@@ -31,12 +37,13 @@ TIERS = {
                                             "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"],
     ("CF", "capex_resolved"): ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
     ("BS", "goodwill"): ["Goodwill"],
-    ("BS", "ppe_net_resolved"): ["PropertyPlantAndEquipmentNet"],
+    ("BS", "ppe_net_resolved"): ["PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"],
+    ("BS", "shares_outstanding_resolved"): ["CommonStockSharesOutstanding"],
     ("IS", "sga_expense"): ["SellingGeneralAndAdministrativeExpense"],
     ("IS", "research_and_development"): ["ResearchAndDevelopmentExpense", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"],
     ("IS", "operating_expenses_resolved"): ["OperatingExpenses"],
-    ("IS", "interest_income"): ["InvestmentIncomeInterest"],
-    ("IS", "other_income_expense_net"): ["NonoperatingIncomeExpense"],
+    ("IS", "interest_income"): ["InvestmentIncomeInterest", "InvestmentIncomeInterestAndDividend"],
+    ("IS", "other_income_expense_net"): ["OtherNonoperatingIncomeExpense", "NonoperatingIncomeExpense"],
     ("CF", "sbc"): ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"],
     ("CF", "depreciation_and_amortization_resolved"): ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
                                                         "DepreciationAmortizationAndAccretionNet"],
@@ -70,7 +77,13 @@ OVERRIDES = {  # (ticker, stmt, custom tag) -> (concept, evidence)
     ("CVX", "BS", "CashAndCashEquivalentsExcludingTimeDeposits"): ("cash_and_equivalents_resolved", "CVX face line 'Cash and cash equivalents' from 2024-09 (custom tag; time deposits shown apart)"),
     ("CVX", "BS", "CashandCashEquivalentsExcludingTimeDepositsatCarryingValue"): ("cash_and_equivalents_resolved", "CVX face line 'Cash and cash equivalents' 2019-12..2022-03 (custom tag)"),
 }
+COMBINED_CO = {  # (ticker, stmt, custom tag) -> (spanned concepts, evidence)
+    ("MSFT", "CF", "DepreciationAmortizationAndOther"): (["depreciation_and_amortization", "other_noncash"], "MSFT CF line 'Depreciation, amortization, and other' (custom tag): D&A plus other non-cash items"),
+}
 NOT_CO = {
+    ("UNH", "IS", "SellingGeneralAndAdministrativeExpense"): ("not_sga_broad_operating_costs", "UNH 'Operating costs' is broad operating cost, not SG&A (income-statement card)"),
+    ("UNH", "IS", "CostOfGoodsSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
+    ("UNH", "IS", "CostOfGoodsAndServicesSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
     ("CAT", "BS", "CashCashEquivalentsAndShortTermInvestments"): ("cash_incl_short_term_investments", "CAT pre-2021 face line 'Cash and short-term investments': not cash_and_equivalents (blank with reason)"),
 }
 # old concept_mapping errors found 2026-11-11 (ranks 1-50): founder "old was not reliable"
@@ -107,8 +120,12 @@ RESIDUE = [  # applied last, to rows nothing above decided: (stmt set or None, r
 ]
 RESIDUE = [(st, re.compile(rx), rc, why) for st, rx, rc, why in RESIDUE]
 ASK_DEFAULT = {  # Tag Expert questions: a decision now, re-decided on the ruling
-    "CommonStockSharesOutstanding": ("share_terms_parenthetical", "BS share count; shares_outstanding comes from the cover page (Tag Expert to confirm)"),
-    "CommonStockSharesIssued": ("share_terms_parenthetical", "BS share count (Tag Expert to confirm)"),
+    "CommonStockSharesIssued": ("share_terms_parenthetical", "BS issued-share count, not outstanding (Tag Expert ruling (a) 2026-11-11)"),
+}
+FLAG = {  # Tag Expert rulings 2026-11-11 (docs/tag-expert-playbooks 08ab3ed7): visible flags carried in the reason
+    ("BS", "ReceivablesNetCurrent"): "flag wider_perimeter_non_trade (sole receivables line)",
+    ("BS", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"): "flag includes_finance_lease_rou",
+    ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: sum and flag summed_classes",
 }
 
 prio = {}
@@ -141,6 +158,30 @@ def cid_is_bank(rs):
     return bool({"InterestAndDividendIncomeOperating", "NoninterestIncome", "Deposits", "ProvisionForLoanLeaseAndOtherLosses"} & tags) and "NoninterestExpense" in tags
 
 
+def day_after(d):
+    import datetime
+    return (datetime.date.fromisoformat(d) + datetime.timedelta(days=1)).isoformat()
+
+
+def day_before(d):
+    import datetime
+    return (datetime.date.fromisoformat(d) - datetime.timedelta(days=1)).isoformat()
+
+
+def era_outside(loser, winners):
+    """the part of loser's era outside every winner's era: (from, to) or None. Never a partial-filing row: the mapper
+    picks per period across a concept's tags, so two concept tags must never cover the same period."""
+    if not winners:
+        return loser["era_from"], loser["era_to"]
+    lo = min(w["era_from"] for w in winners)
+    hi = max(w["era_to"] for w in winners)
+    if loser["era_to"] > hi:
+        return max(loser["era_from"], day_after(hi)), loser["era_to"]  # never widen an era already narrowed
+    if loser["era_from"] < lo:
+        return loser["era_from"], min(loser["era_to"], day_before(lo))
+    return None
+
+
 def shares_filing(a, b):
     fa, fb = a.get("filing_ids"), b.get("filing_ids")
     if not fa or not fb:
@@ -167,30 +208,43 @@ for cid, rs in by_co.items():
             rc, why = NOT[(st, tag)]
             r.update(decision="excluded", canonical_concept="", reason_class=rc, reason=why, decided_by="library")
         elif (st, tag) in tier_of:
-            r.update(decision="concept", canonical_concept=tier_of[(st, tag)][0], reason_class="", reason="", decided_by="library")
+            r.update(decision="concept", canonical_concept=tier_of[(st, tag)][0], reason_class="", reason=FLAG.get((st, tag), ""), decided_by="library")
     for r in rs:
         k = (r["ticker"], r["stmt"], r["tag"])
         if k in OVERRIDES:
             r.update(decision="concept", canonical_concept=OVERRIDES[k][0], reason_class="", reason=OVERRIDES[k][1], decided_by="company_override")
         elif k in NOT_CO:
             r.update(decision="excluded", canonical_concept="", reason_class=NOT_CO[k][0], reason=NOT_CO[k][1], decided_by="company_override")
+    for r in rs:
+        k = (r["ticker"], r["stmt"], r["tag"])
+        if k in COMBINED_CO:
+            r.update(decision="combined", canonical_concept="", components=";".join(COMBINED_CO[k][0]),
+                     reason_class="line_presented_combined_with_others", reason=COMBINED_CO[k][1], decided_by="company_override")
     # sole-source fallbacks (Dhairya 2026-11-11): an exclusion may never leave a template point without a source
     def fids(r):
         ids = set((r.get("filing_ids") or "").split(";")) - {""}
         return ids or {"ALL"}  # no filing list (legacy rows): the tag is printed in every filing
 
+    pending_extra = []
+
     def fallback(alt_key, primary_tags, blockers, concept, why_ok, rc_no, why_no):
-        """per filing: alt is the concept in filings with no primary line and no blocker line"""
+        """alt is the concept only for the era outside every primary concept line and every blocker line"""
         alt = idx.get(alt_key)
         if not alt or alt["taxonomy"] != "us-gaap":
             return
-        taken = set().union(*[fids(idx[k]) for k in primary_tags if k in idx and idx[k].get("decision") == "concept"]) if primary_tags else set()
-        blocked = set().union(*[fids(idx[k]) for k in blockers if k in idx]) if blockers else set()
-        own = fids(alt) - taken - blocked
-        if own:
-            alt.update(decision="concept", canonical_concept=concept, reason_class="",
-                       reason=f"{why_ok} (in {len(own)} of {len(fids(alt))} filings; elsewhere the primary line or a blocker is printed)", decided_by="library")
-        elif fids(alt) & blocked - taken and rc_no:
+        win = [idx[k] for k in primary_tags if k in idx and idx[k].get("decision") == "concept" and idx[k] is not alt]
+        win += [idx[k] for k in blockers if k in idx]
+        part = era_outside(alt, win)
+        if part and rc_no and (part[0] > alt["era_from"] or part[1] < alt["era_to"]):
+            cut = dict(alt)  # the cut-out era keeps its reason, so the gap is explained, never silent
+            cut.update(decision="excluded", canonical_concept="", reason_class=rc_no, reason=why_no + " (era cut out of the concept row)",
+                       era_from=alt["era_from"] if part[0] > alt["era_from"] else day_after(part[1]),
+                       era_to=day_before(part[0]) if part[0] > alt["era_from"] else alt["era_to"], decided_by="library")
+            pending_extra.append(cut)
+        if part:
+            alt.update(decision="concept", canonical_concept=concept, reason_class="", era_from=part[0], era_to=part[1],
+                       reason=f"{why_ok} (era {part[0]}..{part[1]}; outside the primary/blocker lines)", decided_by="library")
+        elif rc_no:
             alt.update(decision="excluded", canonical_concept="", reason_class=rc_no, reason=why_no, decided_by="library")
     fallback(("BS", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"), [("BS", "StockholdersEquity")],
              [("BS", "MinorityInterest")], "stockholders_equity_resolved",
@@ -208,15 +262,9 @@ for cid, rs in by_co.items():
              "ni_after_preferred", "net income after preferred dividends: not net_income")
     # CostOfRevenue labelled as total costs and expenses (BA, LMT trap): never cost of revenue
     cor = idx.get(("IS", "CostOfRevenue"))
-    if cor and "total cost" in (cor.get("evidence_plabel") or "").lower():
+    if cor and re.search(r"(?i)costs? and expenses", cor.get("evidence_plabel") or ""):
         cor.update(decision="excluded", canonical_concept="", reason_class="total_costs_incl_cost_of_revenue",
                    reason="CostOfRevenue tag on a 'total costs and expenses' line: the cost-of-sales line wins", decided_by="library")
-    r = idx.get(("BS", "CashAndDueFromBanks"))
-    if r and r.get("decision") != "concept":
-        plain = set().union(*[fids(idx[("BS", t)]) for t in ("CashAndCashEquivalentsAtCarryingValue", "Cash") if ("BS", t) in idx]) if any(("BS", t) in idx for t in ("CashAndCashEquivalentsAtCarryingValue", "Cash")) else set()
-        if fids(r) - plain:
-            r.update(decision="excluded", canonical_concept="", reason_class="bank_cash_perimeter",
-                     reason="cash and due from banks is the only cash line in these filings: bank/broker cash perimeter pending", decided_by="library")
     if cid_is_bank(rs):
         r = None
         if r and not any(("BS", t) in idx for t in ("CashAndCashEquivalentsAtCarryingValue", "Cash")):
@@ -240,6 +288,12 @@ for cid, rs in by_co.items():
     if e and e.get("decision") != "concept":
         e.update(decision="concept", canonical_concept="basic_eps_resolved", reason_class="",
                  reason="one printed EPS line serves basic AND diluted (mapper: feed diluted_eps from this row too)", decided_by="library")
+    non = idx.get(("IS", "NonoperatingIncomeExpense"))
+    if non and non.get("decision") == "concept":
+        under = [r for r in rs if r["stmt"] == "IS" and "NonoperatingIncomeExpense" in (r.get("evidence_cal_parent") or "").split(";") and re.search(r"Interest", r["tag"])]
+        if under:
+            non.update(decision="excluded", canonical_concept="", reason_class="nonoperating_total_incl_interest",
+                       reason="NonoperatingIncomeExpense has interest lines under it: the total incl. interest, not other_income_expense_net (Tag Expert (f))", decided_by="library")
     # SG&A parts: component of sga_expense in eras with no SG&A total
     sga = idx.get(("IS", "SellingGeneralAndAdministrativeExpense"))
     for t in SGA_PARTS:
@@ -265,11 +319,14 @@ for cid, rs in by_co.items():
             clash = next((k for k in kept if shares_filing(r, k)), None)
             child = clash is not None and clash["tag"] in (r.get("evidence_cal_parent") or "").split(";")
             own = set((r.get("filing_ids") or "").split(";")) - set().union(*[set((k.get("filing_ids") or "").split(";")) for k in kept])
-            component_label = re.search(r"(?i)\b(product|service|automotive|leasing|other|segment)\b", r.get("evidence_plabel") or "")
-            if clash and own - {""} and (r["decided_by"] == "company_override" or not component_label):
-                r.update(reason=f"concept only in filings where {clash['tag']} is not printed ({len(own)} filing(s))")
-                kept.append(r)
-                continue
+            if clash:
+                same = [k for k in kept if shares_filing(r, k)]
+                part = era_outside(r, same)
+                comp = re.search(r"(?i)\b(product|service|automotive|leasing|other|segment)\b", r.get("evidence_plabel") or "")
+                if part and (r["decided_by"] == "company_override" or not comp):
+                    r.update(era_from=part[0], era_to=part[1], reason=(r.get("reason") or "") + f" [era limited to {part[0]}..{part[1]}: outside {', '.join(k['tag'] for k in same)}]")
+                    kept.append(r)
+                    continue
             if clash:
                 r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping",
                          reason=f"same concept {con} printed as {clash['tag']} in the same filing(s); that tag wins", decided_by=r["decided_by"] + "+deoverlap")
@@ -293,6 +350,73 @@ for cid, rs in by_co.items():
             r.update(decision="excluded", reason_class="not_in_any_mapped_calc_path",
                      reason="no calc path into a mapped total in this company's filings, and no catalog match by tag, statement or position",
                      decided_by="residue_rule")
+    for r in rs:
+        if r["stmt"] == "UN" and r.get("decision") == "excluded" and r.get("reason_class") == "cover_or_parenthetical":
+            r.update(reason_class="co_registrant_statement", reason="FSN stmt UN: a co-registrant subsidiary's own statement (e.g. DUK Carolinas), never the group's (cash-flow card D4)")
+    # D3: where IS and CF both print D&A in one filing, the CF line wins
+    cf_da = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved"]
+    for r in rs:
+        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved" and any(shares_filing(r, k) for k in cf_da):
+            r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping", reason="D&A printed on both IS and CF in these filings: the CF line wins (cash-flow card D3)", decided_by="library")
+    # D1/D2: label wording widens the line beyond the concept -> combined (labels only demote)
+    for r in rs:
+        lab = r.get("evidence_plabel") or ""
+        if r.get("decision") == "concept" and r["canonical_concept"] == "share_buybacks_resolved" and re.search(r"(?i)excise|withh?olding", lab):
+            r.update(decision="combined", canonical_concept="", components="share_buybacks;excise_tax_or_withholding",
+                     reason_class="line_presented_combined_with_others", reason="buyback line includes excise tax or tax-withholding shares (label); founder 2026-11-04 buyback perimeter; cash-flow card D1", decided_by="library")
+        if r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved" and re.search(r"(?i)impairment|accretion|nuclear fuel", lab):
+            pure = [k for k in cf_da if k is not r and shares_filing(r, k)]
+            if not pure:
+                r.update(decision="combined", canonical_concept="", components="depreciation_and_amortization;impairment_accretion_or_fuel",
+                         reason_class="line_presented_combined_with_others", reason="D&A line includes impairment, accretion or nuclear fuel (label); no pure D&A line printed; cash-flow card D2", decided_by="library")
+    for r in rs:
+        lab = r.get("evidence_plabel") or ""
+        if r.get("decision") == "concept" and r["canonical_concept"] == "accounts_receivable" and re.search(r"(?i)\band other\b|notes and", lab):
+            r.update(decision="combined", canonical_concept="", components="accounts_receivable;other_receivables",
+                     reason_class="line_presented_combined_with_others", reason="receivables line includes other or notes receivable (label); shown as the company line (BS card)", decided_by="library")
+        if r.get("decision") == "concept" and r["canonical_concept"] == "interest_expense_resolved" and re.search(r"(?i)\bnet\b", lab):
+            r.update(decision="combined", canonical_concept="", components="interest_expense;interest_income",
+                     reason_class="line_presented_combined_with_others", reason="'interest expense, net' is net of interest income (label); shown as the company line (IS card)", decided_by="library")
+        if r.get("reason_class") == "nonoperating_total_incl_interest":
+            r.update(decision="combined", components="other_income_expense_net;interest_expense;interest_income", reason_class="line_presented_combined_with_others",
+                     reason="total non-operating income incl. interest: shown as the company line; never other_income_expense_net (double counts interest)")
+    if not any(r.get("decision") == "concept" and r["canonical_concept"] == "inventory" for r in rs):
+        for r in rs:
+            if (r["stmt"] == "BS" and re.search(r"Inventor", r["tag"]) and "Noncurrent" not in r["tag"] and not re.search(r"(Abstract|Table|LineItems|Axis|Domain|Member|RollForward)$", r["tag"])
+                    and "AssetsCurrent" in (r.get("evidence_cal_parent") or "").split(";")):
+                r.update(decision="component", canonical_concept="", parent_concept="inventory", combine_sign="1", reason_class="",
+                         reason="no inventory total printed: inventory = the printed inventory lines (BS card)", decided_by="library")
+    cf_due = ("CF", "CashAndDueFromBanks") in idx
+    if cf_due and ("BS", "CashAndDueFromBanks") in idx:
+        due = idx[("BS", "CashAndDueFromBanks")]
+        dep = idx.get(("BS", "InterestBearingDepositsInBanks"))
+        if ("CF", "InterestBearingDepositsInBanks") in idx and dep:
+            for x in (due, dep):
+                x.update(decision="component", canonical_concept="", parent_concept="cash_and_equivalents_resolved", combine_sign="1", reason_class="",
+                         reason="bank/broker cash = the BS lines the CF uses as ending cash (BS card)", decided_by="library")
+        else:
+            due.update(decision="concept", canonical_concept="cash_and_equivalents_resolved", reason_class="",
+                       reason="bank cash: the BS line equals the CF ending cash line (BS card)", decided_by="library")
+    extra = list(pending_extra)
+    opex_total = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "OperatingExpenses" and r.get("decision") == "concept"]
+    gp = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "GrossProfit"]
+    if not opex_total and gp:
+        for r in rs:
+            par = (r.get("evidence_cal_parent") or "").split(";")
+            if (r["stmt"] == "IS" and r["taxonomy"] in ("us-gaap", "custom") and "OperatingIncomeLoss" in par and r["tag"] not in ("GrossProfit", "OperatingIncomeLoss")
+                    and not re.search(r"(?i)\b(gain|income)\b|^(total )?(net )?(revenues?|sales)$", r.get("evidence_plabel") or "")
+                    and not re.search(r"(Revenue|Sales|GrossProfit|CostOf)", r["tag"])):
+                e = dict(r)
+                e.update(decision="component", canonical_concept="", parent_concept="operating_expenses_resolved", combine_sign="1",
+                         reason_class="", reason="no operating-expenses total printed: operating expenses = the expense lines between gross profit and operating income (mapper: GP - sum = OI must tie per filing, else hold)",
+                         decided_by="library_opex_parts")
+                extra.append(e)
+    wb = idx.get(("IS", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"))
+    if wb and wb.get("decision") == "concept":
+        e = dict(wb)
+        e.update(canonical_concept="weighted_average_shares_diluted", reason="one printed weighted-share line serves basic AND diluted (Tag Expert (c))")
+        extra.append(e)
+    rs.extend(extra)
     out_rows.extend(rs)
 
 COLS = ["company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept", "combine_sign",

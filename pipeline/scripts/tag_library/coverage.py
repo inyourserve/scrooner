@@ -8,6 +8,7 @@ CORE = ["revenue_sanity_resolved", "net_income_resolved", "total_assets_resolved
         "cash_and_equivalents_resolved", "cfo_resolved", "cash_flow_investing_resolved", "cash_flow_financing_resolved",
         "basic_eps_resolved", "diluted_eps_resolved", "income_before_tax_resolved", "income_tax_expense_resolved"]
 REASONS = {"stockholders_equity_resolved": {"parent_equity_not_printed", "equity_incl_nci"},
+           "net_income_resolved": {"ni_incl_nci"},
            "cash_and_equivalents_resolved": {"bank_cash_perimeter", "cash_incl_short_term_investments"},
            "revenue_sanity_resolved": {"catalog_gap_bank_nii"}}
 FEEDS_BOTH = {"EarningsPerShareBasicAndDiluted": ("basic_eps_resolved", "diluted_eps_resolved")}
