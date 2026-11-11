@@ -512,16 +512,46 @@ def build_eras(appear: dict[date, object], annual_periods: list[date]) -> list[t
 
 # ---------------------------------------------------------------- DB helpers
 
+class _Rows(list):
+    def fetchall(self):
+        return list(self)
+
+
+class Db:
+    """One connection, statement_timeout 120s; reconnects and retries a read when the pooler drops the connection."""
+
+    def __init__(self):
+        self.conn = None
+        self._open()
+
+    def _open(self):
+        import psycopg
+        url = os.environ.get("DATABASE_URL")
+        if not url:
+            for line in (REPO / "pipeline/.env").read_text().splitlines():
+                if line.startswith("DATABASE_URL="):
+                    url = line.split("=", 1)[1].strip().strip("\"'")
+        self.conn = psycopg.connect(url, autocommit=True)
+        self.conn.execute("set statement_timeout='120s'")
+
+    def execute(self, sql, params=None):
+        import psycopg
+        for attempt in range(4):
+            try:
+                return _Rows(self.conn.execute(sql, params).fetchall())
+            except psycopg.OperationalError as exc:
+                if attempt == 3 or "statement timeout" in str(exc):
+                    raise
+                print(f"reconnecting after: {exc}", file=sys.stderr)
+                try:
+                    self.conn.close()
+                except Exception:
+                    pass
+                self._open()
+
+
 def connect():
-    import psycopg
-    url = os.environ.get("DATABASE_URL")
-    if not url:
-        for line in (REPO / "pipeline/.env").read_text().splitlines():
-            if line.startswith("DATABASE_URL="):
-                url = line.split("=", 1)[1].strip().strip("\"'")
-    conn = psycopg.connect(url, autocommit=True)
-    conn.execute("set statement_timeout='120s'")
-    return conn
+    return Db()
 
 
 # ---------------------------------------------------------------- seed
