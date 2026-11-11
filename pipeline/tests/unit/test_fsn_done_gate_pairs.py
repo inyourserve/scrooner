@@ -278,9 +278,10 @@ def test_a_6_or_9_month_value_is_never_matched_by_the_quarter_ending_that_day():
     assert transitions == {REV: {"valued": 1, "no_new_cell": 3}}
     assert sorted(k["period_id"] for k in no_row) == ["3y", "9m", "h1"]
     gate = {1: {"data_points": {REV: [], NI: []}}}
-    assert pilot.hold_valued_to_no_row(gate, no_row) == {(1, REV): 3}
-    assert gate[1]["data_points"] == {REV: ["C2_valued_to_no_row:3"], NI: []}
-    assert pilot.done_pairs(gate) == [(1, NI)]
+    # founder 2026-11-11 "move to the new system": counted as the old-vs-new diff, never a hold
+    assert pilot.count_valued_to_no_row(no_row) == {(1, REV): 3}
+    assert gate[1]["data_points"] == {REV: [], NI: []}
+    assert pilot.done_pairs(gate) == [(1, NI), (1, REV)]  # both written; the 3 old keys are the diff
 
 
 YTD_PERIODS = {
@@ -357,6 +358,7 @@ def test_an_unprinted_ytd_key_becomes_a_hybrid_gap_defect_blank_with_exact_dates
     from datetime import date
 
     from scrooner_pipeline.fsn_store import select as sel
+
     """CELL-FORMAT v1.2: a before-image 6/9-month key with no TP cell is a defect blank under the gap_blank
     conventions (N1): hybrid_gap_unresolved when the period's filing is stored (accession in input_refs), else
     filing_not_in_store; a mapped point's unprinted key is period / period_engineer and an unmapped one vocabulary /
@@ -446,12 +448,27 @@ def test_an_unprinted_ytd_key_becomes_a_hybrid_gap_defect_blank_with_exact_dates
         "hybrid_gap_unresolved": 1,
         "period_grain_outside_template": 1,
     }
-    assert sorted((k["data_point"], k["period_id"]) for k in listed) == [(NI, "3y"), (REV, "3y")]
+    assert sorted((k["data_point"], k["period_id"]) for k in listed) == [
+        (NI, "3y"),
+        (REV, "3y"),
+    ]
     # a YTD key inside an excluded wrong-entity window with no stored filing: the history horizon blank (main)
-    hist = dict(_store_report(1), history_windows={"exclude": [["2024-07-01", "2024-12-31"]], "predecessor": []})
-    hrows, _ = pilot.ytd_gap_blanks([], before[:3], CONCEPTS, YTD_PERIODS, {REV}, [hist])
-    nine = next(r for r in hrows if r["period_start"] == "2024-01-01" and r["period_end"] == "2024-09-30")
-    assert (nine["state"], nine["reason_code"]) == ("history_horizon", "no_public_filing_for_period")
+    hist = dict(
+        _store_report(1),
+        history_windows={"exclude": [["2024-07-01", "2024-12-31"]], "predecessor": []},
+    )
+    hrows, _ = pilot.ytd_gap_blanks(
+        [], before[:3], CONCEPTS, YTD_PERIODS, {REV}, [hist]
+    )
+    nine = next(
+        r
+        for r in hrows
+        if r["period_start"] == "2024-01-01" and r["period_end"] == "2024-09-30"
+    )
+    assert (nine["state"], nine["reason_code"]) == (
+        "history_horizon",
+        "no_public_filing_for_period",
+    )
     # idempotent: a second pass finds the blanks and adds nothing; no stored filings in the report -> no blank
     assert pilot.ytd_gap_blanks(
         cells + rows, before, CONCEPTS, YTD_PERIODS, {REV, NI}, [_store_report(1)]
@@ -476,7 +493,9 @@ def test_done_gate_command_writes_unprinted_ytd_keys_as_blanks_and_writes_the_pa
         _cell(1, REV, "Q", "2024-06-30"),
         _cell(1, NI, "Q", "2024-06-30"),
         _tp(1, NI, "2024-09-30", 3),  # binds to the 9-month period
-        _tp(1, NI, "2023-06-30", 2),  # no 6-month period ends there: the loader will reject it (item 3)
+        _tp(
+            1, NI, "2023-06-30", 2
+        ),  # no 6-month period ends there: the loader will reject it (item 3)
     ]
     out = _out_dir(tmp_path, [_store_report(1)], cells, before, periods=YTD_PERIODS)
     args = ["done-gate", "--pilot-out", str(out), "--data-points", f"{REV},{NI}"]
@@ -503,12 +522,16 @@ def test_done_gate_command_writes_unprinted_ytd_keys_as_blanks_and_writes_the_pa
     report = json.loads((out / "valued_to_blank.json").read_text())
     # item 1: the multi-year key in its own column; item 3: TP prints the loader will reject, per company
     assert report["valued_to_not_in_template_by_data_point"] == {REV: 1}
-    assert report["valued_to_not_in_template_by_pair"] == [{"company_id": 1, "data_point": REV, "keys": 1}]
+    assert report["valued_to_not_in_template_by_pair"] == [
+        {"company_id": 1, "data_point": REV, "keys": 1}
+    ]
     assert report["tp_rejected_by_company"] == {
         "1": {"tp_prints": 2, "period_unresolvable": 1, "rejected": 1, "share": 0.5}
     }
     assert report["tp_rejected_share"] == 0.5
-    assert "TP prints the loader will reject: 1 of 2; 1 companies above 0.5%" in res.output
+    assert (
+        "TP prints the loader will reject: 1 of 2; 1 companies above 0.5%" in res.output
+    )
     assert report["ytd_keys_written_as_blanks_by_data_point"] == {REV: 2}
     assert report["valued_to_no_row_by_pair"] == []
     # a second run adds nothing
@@ -547,7 +570,13 @@ def _out_dir(tmp_path, reports, cells, before, gaps=(), periods=None):
         "period",
         ["id", "company_id", "start_date", "end_date", "period_type"],
         [
-            [k, v.get("company_id", "1"), v["start_date"], v["end_date"], v["period_type"]]
+            [
+                k,
+                v.get("company_id", "1"),
+                v["start_date"],
+                v["end_date"],
+                v["period_type"],
+            ]
             for k, v in (periods or PERIODS).items()
         ],
     )
@@ -587,18 +616,20 @@ def test_done_gate_command_writes_pairs_proof_scope_and_the_c2_report(tmp_path):
         ["done-gate", "--pilot-out", str(out), "--data-points", f"{REV},{NI}"],
     )
     assert res.exit_code == 0, res.output + repr(res.exception)
-    # company 1: both pairs; company 2: net income would drop its FY 2023 value with no row (C2, Ritwik
-    # 2026-11-10), so that pair is held and revenue alone is written; company 3: criterion 1 fails
-    assert "3 pairs of 6; 1 companies fully done" in res.output
-    assert "valued->no-row in written pairs: 0" in res.output
+    # companies 1 and 2: both pairs. Company 2's net income drops its old FY 2023 value with no new row: since
+    # the founder's 2026-11-11 "move to the new system" that is the old-vs-new diff (reported), not a hold.
+    # Company 3: criterion 1 fails
+    assert "4 pairs of 6; 2 companies fully done" in res.output
+    assert "valued->no-row in written pairs: 1" in res.output
     pairs = (out / "done_pairs.tsv").read_text().splitlines()
     assert pairs == [
         "company_id\tdata_point",
         f"1\t{NI}",
         f"1\t{REV}",
+        f"2\t{NI}",
         f"2\t{REV}",
     ]
-    assert (out / "done_companies.txt").read_text().split() == ["1"]
+    assert (out / "done_companies.txt").read_text().split() == ["1", "2"]
     assert (out / "written_companies.txt").read_text().split() == [
         "1",
         "2",
@@ -612,12 +643,11 @@ def test_done_gate_command_writes_pairs_proof_scope_and_the_c2_report(tmp_path):
     assert report["valued_to_no_row_by_pair"] == [
         {"company_id": 2, "data_point": NI, "keys": 1}
     ]
-    assert report["valued_to_no_row_in_written_pairs"] == 0
+    assert report["valued_to_no_row_in_written_pairs"] == 1
     rows = (out / "valued_to_no_row.tsv").read_text().splitlines()
     assert rows[1].split("\t")[:4] == ["2", NI, "1", "FY"]
     not_done = json.loads((out / "not_done.json").read_text())
-    assert set(not_done) == {"2", "3"}
-    assert not_done["2"]["data_points"] == {NI: ["C2_valued_to_no_row:1"]}
+    assert set(not_done) == {"3"}
 
 
 @pytest.mark.unit
