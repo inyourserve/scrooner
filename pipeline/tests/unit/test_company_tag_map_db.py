@@ -192,3 +192,19 @@ def test_combined_line_is_served_in_company_combined_line_and_feeds_no_concept(i
         assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s", co) == 0
         got = conn.execute("select data_point_name, state, reason_text from analytics.cell_blank_reason where company_id = %s order by 1", (co,)).fetchall()
         assert got == [("tm_ap", "not_in_template", "shown as the company's combined line 'AP and accrued'"), ("tm_other", "not_in_template", "shown as the company's combined line 'AP and accrued'")]
+
+
+@pytest.mark.integration
+def test_coregistrant_filing_facts_are_never_served_only_the_registrants_own(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000000501", True)  # PLD-shaped: the parent
+        fact("Revenues", "in", "old", "100")                   # the parent's own filing
+        fact("Revenues", "in", "new", "40")                    # the later, combined filing's subsidiary figure
+        for name, role in (("old", "primary"), ("new", "co_registrant")):
+            conn.execute("insert into core.filing_registrant (accession_number, registrant_cik, company_id, role, filer_count) values (%s,'0000000501',%s,%s,2)", (f"0000000501-{name}", co, role))
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-01-01','t','tm.r@1')", (co, x["rev"]))
+        conn.commit()
+        assert resolve(conn, {"0000000501"})["errored"] == 0
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == Decimal("100")

@@ -155,6 +155,13 @@ def _load_facts(conn: psycopg.Connection, company_id: int, tags: set[tuple[str, 
             join core.period p on p.id = f.period_id
             join core.filing fl on fl.id = f.filing_id
             where f.company_id = %s and f.is_authoritative
+              -- a filing in which THIS company is only a co-registrant (or quarantined) carries the filer's
+              -- statements, not its own: never a source (core.filing_registrant, rule
+              -- entity.shared_accession_primary_filer@1)
+              and not exists (
+                  select 1 from core.filing_registrant r
+                  where r.accession_number = fl.accession_number and r.company_id = f.company_id
+                    and r.role in ('co_registrant', 'quarantined'))
               and c.tag = any(%s)
             order by c.taxonomy, c.tag, f.period_id,
                      fl.filing_date desc nulls last, f.filing_id desc, f.id desc
