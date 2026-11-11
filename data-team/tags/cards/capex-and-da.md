@@ -36,3 +36,6 @@ FSN rules: capex `cf.capex_block_member@1-4` (calc position) + `cf.capex_nature_
 - NEE capex = FPL + "Capital expenditures" + other + nuclear fuel (0000753308-26-000015 CF l28, 29, 32, 31); "Independent power and other investments" l30 is combined. WELL = capital improvements + CIP (0000766704-26-000010 l23-24). REIT capex = development + TI/leasing commissions + property improvements (PLD 0001193125-26-051453 l27, 30, 31); rental fleet = rental + non-rental equipment (URI). Acquisitions, capitalised interest and proceeds excluded.
 - D&A sums: BKNG `DepreciationNonproduction` + `AmortizationOfIntangibleAssets` (0001075531-19-000009 l4-5); SCHW custom + amortization (0000316709-26-000009 l5-6). DUK: serve IS D&A 6,324M; CF 7,704M is combined (accretion + nuclear fuel).
 - Combined: "depreciation, amortization and impairment" (GM); "…and other operating gains" (CMCSA); "capital expenditures and investments" (PSX, COP); "capital expenditures, net" (SPG, TDG, CI).
+
+## 7. D&A source rule (Dhairya 2026-11-11, refining the Verifier utility ruling)
+- The CF D&A line wins over the IS line UNLESS the CF line is combined (accretion, nuclear fuel, impairment, financing-cost amortization); then the pure IS D&A line is served (DUK FY2025: CF 7,704M combined, IS 6,324M served).
