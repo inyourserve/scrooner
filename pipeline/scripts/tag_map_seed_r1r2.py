@@ -93,8 +93,13 @@ def parse_period(text: str, end: bool) -> date | None:
     text = (text or "").strip()
     if not text:
         return None
+    if re.fullmatch(r"\d{4}", text) and int(text[2:]) > 12:  # a plain year (tag cards: '2015'), not YYMM
+        return date(int(text), 12, 31) if end else date(int(text), 1, 1)
     if re.fullmatch(r"\d{4}", text):
         y, m = 2000 + int(text[:2]), int(text[2:])
+        return date(y, m, calendar.monthrange(y, m)[1] if end else 1)
+    if re.fullmatch(r"\d{4}-\d{2}", text):  # 'YYYY-MM' (tag cards)
+        y, m = int(text[:4]), int(text[5:])
         return date(y, m, calendar.monthrange(y, m)[1] if end else 1)
     return date.fromisoformat(text)
 
@@ -109,7 +114,7 @@ def _tag(raw: str) -> tuple[str | None, str]:
 def _entry(**kw) -> dict:
     base = {"taxonomy": None, "company": None, "decision": "", "concept": "", "sign": "", "components": [],
             "applies_to": "", "era": (None, None), "reason": "", "exceptions": [], "source": "", "rule_id": RULE_LIBRARY,
-            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None}
+            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "detail_note": "", "exceptions_text": ""}
     base.update(kw)
     return base
 
@@ -132,28 +137,44 @@ def parse_company_rows(rows: list[dict], source: str) -> list[dict]:
                 taxonomy=tx, company=int(r["company_id"]), decision=dec, concept=r.get("concept", ""),
                 reason=reason, sign=sign, home_stmts=[stmt],
                 era=(parse_period(r.get("era_from", ""), False), parse_period(r.get("era_to", ""), True)),
-                source=source, rule_id=RULE_COMPANY, kind="company_tag" if tag else "company_concept")
+                source=source, rule_id=RULE_COMPANY, prio=0, kind="company_tag" if tag else "company_concept")
                 | {"tag": tag})
     return out
 
 
 def parse_tag_rows(rows: list[dict], source: str) -> list[dict]:
-    """std-tags-rank files (statements, concept, reason) and fsn library files (home_stmt, concept key, sign,
-    applies_to, exceptions, era, evidence, components); header spelling tolerant of case, spaces, underscores."""
+    """Three tag-level shapes, header spelling tolerant of case, spaces, underscores:
+    tag cards data-team/tags/library/fsn-*.csv (canonical_concept_key, sign_rule, applies_to, exceptions, era_from,
+    era_to, evidence; decided_by 'tag-card', prio 1), std-tags-rank files (statements, concept, reason; prio 2),
+    and the older library shape (home_stmt, concept key, sign, era)."""
     out = []
     for raw in rows:
         r = {_hk(k): (v or "").strip() for k, v in raw.items() if k}
         if not r.get("tag"):
             continue
+        card = "canonical_concept_key" in r
         tx, tag = _tag(r["tag"])
-        stmts = [x.upper() for x in re.split(r"[/;,| ]+", r.get("statements") or r.get("home_stmt", "")) if x]
+        homes_txt = r.get("statements") or r.get("home_stmt", "")
+        if re.search(r"parenthetical", homes_txt, re.I):  # 'BS parenthetical' lines are FSN stmt CP, not seeded
+            homes_txt = "CP"
+        stmts = [x.upper() for x in re.split(r"[/;,| ]+", homes_txt) if x]
         lo, hi = parse_range(r.get("era", ""))
+        if r.get("era_from") or r.get("era_to"):
+            lo, hi = parse_period(r.get("era_from", ""), False), parse_period(r.get("era_to", ""), True)
+        exc_txt = r.get("exceptions", "")
+        try:
+            if exc_txt and not re.fullmatch(r"[\d@.\-;,| ]+", exc_txt):
+                raise ValueError
+            exc, exc_free = parse_exceptions(exc_txt), ""
+        except ValueError:
+            exc, exc_free = [], exc_txt  # free-text exceptions are not machine-evaluated; carried as a note
         out.append(_entry(
             taxonomy=tx, tag=tag, home_stmts=stmts, decision=r.get("decision", "").lower(),
-            concept=r.get("concept_key") or r.get("concept", ""), sign=r.get("sign", ""),
+            concept=r.get("canonical_concept_key") or r.get("concept_key") or r.get("concept", ""),
+            sign=r.get("sign", "") if not card else "",
             applies_to=r.get("applies_to", ""), era=(lo, hi), reason=r.get("evidence") or r.get("reason", ""),
-            components=_split(r.get("components", "")), exceptions=parse_exceptions(r.get("exceptions", "")),
-            source=source))
+            components=_split(r.get("components", "")), exceptions=exc, exceptions_text=exc_free,
+            source="tag-card" if card else source, prio=1 if card else 2))
     return out
 
 
@@ -173,7 +194,7 @@ def parse_ranks_rows(rows: list[dict], source: str) -> list[dict]:
             sign=sign, components=_split(r.get("components", "")), reason=r.get("reason", ""),
             home_stmts=[r["stmt"].upper()], source=f"{source}:{r.get('decided_by', '')}", rule_id=RULE_COMPANY,
             era=(parse_period(r.get("era_from", ""), False), parse_period(r.get("era_to", ""), True)),
-            kind="company_tag", reason_class=r.get("reason_class", ""), raw=r))
+            kind="company_tag", prio=0, reason_class=r.get("reason_class", ""), raw=r))
     return out
 
 
@@ -206,15 +227,16 @@ def parse_exceptions(text: str) -> list[tuple[int | None, tuple[date | None, dat
 
 
 def applies(entry: dict, company_id: int, templates: set[str]) -> bool:
-    """Company rows: only that company. Tag rows: applies_to empty/all, numeric company ids, or sector template names."""
+    """Company rows: only that company. Tag rows: explicit numeric company ids or 'sector:'/'template:' names restrict;
+    empty, 'all...' and any other descriptive text (tag cards: 'classified balance sheets (828 cos)') applies to all."""
     if entry["company"] is not None:
         return entry["company"] == company_id
     toks = _split(entry["applies_to"])
-    if not toks or any(t.lower() in ("all", "*") for t in toks):
-        return True
     ids = {int(t) for t in toks if t.isdigit()}
     names = {re.sub(r"^(sector|template|sector_template)\s*:\s*", "", t, flags=re.I).strip().lower()
-             for t in toks if not t.isdigit()}
+             for t in toks if re.match(r"(sector|template|sector_template)\s*:", t, re.I)}
+    if not ids and not names:
+        return True
     return company_id in ids or bool(names & {x.lower() for x in templates})
 
 
@@ -248,7 +270,7 @@ def clip(era: tuple[date, date | None], include: tuple, excludes: list[tuple]) -
 def build_index(entries: list[dict]) -> dict[tuple[str, str], list[dict]]:
     """(tag, stmt) -> entries; company rows first, then tag-level rows in source order. Concept-level rows excluded."""
     idx: dict[tuple[str, str], list[dict]] = defaultdict(list)
-    for e in sorted((x for x in entries if x["kind"] != "company_concept"), key=lambda x: x["company"] is None):
+    for e in sorted((x for x in entries if x["kind"] != "company_concept"), key=lambda x: x["prio"]):
         for stmt in e["home_stmts"]:
             idx[(e["tag"], stmt)].append(e)
     return idx
@@ -267,10 +289,12 @@ def missing_detail(e: dict) -> str | None:
 
 
 def parse_condition(text: str) -> list[tuple[str, str]]:
-    """'copresent:Tag and label!~regex' -> [('copresent','Tag'), ('label!~','regex')]. Per-filing, from fsn.line only."""
+    """'copresent:Tag and label!~regex and near~regex' -> [(kind, arg)]. Per-filing, from fsn.line only.
+    near~ is an ambiguity guard for label!~: FSN plabels can be shifted one row (tag and value right), so a demotion
+    on the label is only made when no neighbouring row label looks like the line the tag is wanted for."""
     out = []
     for tok in [t.strip() for t in re.split(r"\s+and\s+", text or "") if t.strip()]:
-        m = re.match(r"(copresent:|absent:|label!~|label~)(.+)$", tok)
+        m = re.match(r"(copresent:|absent:|label!~|label~|near~)(.+)$", tok)
         if not m:
             raise ValueError(f"unsupported condition {tok!r}")
         out.append((m.group(1), m.group(2).strip()))
@@ -301,20 +325,33 @@ def attach_conditions(entries: list[dict], overlay: list[dict]) -> None:
             e["reason"] = o.get("reason", "") or e["reason"]
 
 
-def cond_ok(cond: list[tuple[str, str]], row: tuple, printed: dict) -> bool:
-    """One filing: row is the key's appearance tuple; printed[(filing, stmt)] = tags printed on that statement."""
+def is_nondim(row: tuple) -> bool:
+    return row[16] if len(row) > 16 else True
+
+
+def cond_ok(cond: list[tuple[str, str]], row: tuple, printed: dict) -> str:
+    """One filing: 'ok', 'bad' (condition clearly fails) or 'amb' (a label demotion that a neighbouring row label
+    contradicts, or no label to judge by). printed[(filing, stmt)] = tags printed on that statement."""
     tags = printed.get((row[FID], row[3]), set())
+    lab = row[PLABEL] or ""
+    near = [x for x in (row[17] if len(row) > 17 else None, row[18] if len(row) > 18 else None) if x]
+    state = "ok"
     for kind, arg in cond:
         if kind == "copresent:" and arg not in tags:
-            return False
+            return "bad"
         if kind == "absent:" and arg in tags:
-            return False
-        lab = row[PLABEL] or ""
+            return "bad"
         if kind == "label~" and not re.search(arg, lab, re.I):
-            return False
-        if kind == "label!~" and re.search(arg, lab, re.I):
-            return False
-    return True
+            return "bad"
+        if kind == "label!~":
+            if not lab:
+                state = "amb"
+            elif re.search(arg, lab, re.I):
+                guards = [a for k, a in cond if k == "near~"]
+                state = "amb" if any(re.search(g, n, re.I) for g in guards for n in near) else "bad"
+                if state == "bad":
+                    return "bad"
+    return state
 
 
 def expand_company(company_id: int, templates: set[str], groups: dict, annual: list[date], index: dict) -> dict:
@@ -354,9 +391,14 @@ def _expand_key(company_id, templates, taxonomy, tag, stmt, appear, annual, inde
             is_company = e["company"] is not None
             # filings of this era where the entry's per-filing conditions hold
             in_era = {p: r for p, r in appear.items() if era[0] <= p and (era[1] is None or p <= era[1])}
-            ok = {p: r for p, r in in_era.items() if cond_ok(e["cond"], r, printed)
+            states = {p: cond_ok(e["cond"], r, printed) for p, r in in_era.items()}
+            ok = {p: r for p, r in in_era.items() if states[p] == "ok"
+                  and (e["decision"] == "excluded" or is_nondim(r))  # concepts only from non-dimensional face lines
                   and not (e["decision"] == "component" and e["concept"] in totals[r[FID]])}
-            bad = {p: r for p, r in in_era.items() if p not in ok and not cond_ok(e["cond"], r, printed)}
+            bad = {p: r for p, r in in_era.items() if states[p] == "bad"}
+            if any(v == "amb" for v in states.values()):
+                res["needs_detail"].append(dict(e, detail_note="label demotion ambiguous: a neighbouring row label "
+                                                "looks like the wanted line, or no label (FSN plabels can shift one row)"))
             variants = [(e, ok)]
             if e["else_reason"] and bad:
                 variants.append((dict(e, decision="excluded", reason=e["else_reason"], concept="", kind="condition"),
@@ -448,14 +490,22 @@ def connect():
 # ---------------------------------------------------------------- seed
 
 APPEAR_SQL = """
+with fl as (
+    select l.*, lag(l.plabel) over w as prev_label, lead(l.plabel) over w as next_label
+      from fsn.line l join fsn.filing f2 on f2.id = l.filing_id
+     where f2.company_id = any(%s) and f2.period >= %s
+    window w as (partition by l.filing_id, l.report order by l.line)),
+nd as (select distinct v.filing_id, v.tag_id from fsn.value v
+        where v.dim_id = 0 and v.filing_id in (select id from fsn.filing where company_id = any(%s) and period >= %s))
 select distinct on (f.company_id, split_part(t.version, '/', 1), t.custom, t.tag, l.stmt, f.id)
        f.company_id, case when t.custom then 'custom' else split_part(t.version, '/', 1) end as taxonomy,
        t.tag, l.stmt, t.abstract, f.id, f.accession, f.period, f.form, f.amendment, f.fy, f.accepted,
-       l.report, l.line, l.plabel, t.id as tag_id
-  from fsn.line l
+       l.report, l.line, l.plabel, t.id as tag_id, (nd.tag_id is not null) as nondim, l.prev_label, l.next_label
+  from fl l
   join fsn.filing f on f.id = l.filing_id
   join fsn.tag t on t.id = l.tag_id
- where f.company_id = any(%s) and f.period >= %s and l.stmt = any(%s)
+  left join nd on nd.filing_id = f.id and nd.tag_id = t.id
+ where l.stmt = any(%s)
  order by f.company_id, split_part(t.version, '/', 1), t.custom, t.tag, l.stmt, f.id, l.report, l.line
 """
 
@@ -512,7 +562,7 @@ def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, st
         stats["review_keys"] += res["review"]
         for e in res["needs_detail"]:
             stats["needs_detail"][(e["source"], e["tag"], "/".join(e["home_stmts"]), e["decision"], e["concept"],
-                                   missing_detail(e) or "decision not loadable on a tagged row")].add(cid)
+                                   e["detail_note"] or missing_detail(e) or "decision not loadable on a tagged row")].add(cid)
         good = []
         for e, a, b, rr in res["rows"]:
             if valid_concepts is not None and e["decision"] != "excluded" and e["concept"] and \
@@ -549,6 +599,7 @@ def cmd_seed(args) -> None:
     entries, files = load_sources(args.decisions or DEFAULT_GLOBS)
     attach_conditions(entries, load_conditions())
     index = build_index(entries)
+    free_exc = sorted({(e["source"], e["tag"]) for e in entries if e["exceptions_text"]})
     with open(COHORT_CSV, newline="") as f:
         cohort = {int(r["company_id"]): r["cik"] for r in csv.DictReader(f)}
     ids = sorted(cohort)
@@ -570,7 +621,7 @@ def cmd_seed(args) -> None:
             for cid, t in conn.execute(TEMPLATE_SQL, (batch,)).fetchall():
                 tmpl[cid].add(t)
             by_co: dict[int, list] = defaultdict(list)
-            for r in conn.execute(APPEAR_SQL, (batch, FLOOR, list(SEED_STMTS))).fetchall():
+            for r in conn.execute(APPEAR_SQL, (batch, FLOOR, batch, FLOOR, list(SEED_STMTS))).fetchall():
                 by_co[r[0]].append(r)
             for cid, rows in by_co.items():
                 csv_rows, keyinfo = seed_company_rows(cid, cohort[cid], rows, tmpl[cid], index, valid, conn, stats)
@@ -622,7 +673,7 @@ def cmd_seed(args) -> None:
     dec_total = sum(c["decided"] for c in per_company.values())
     complete = sum(1 for c in per_company.values() if c["fy2023_statement_tags"] and c["undecided"] == 0)
     summary = {
-        "source_files": files, "entries": len(entries), "concept_level_company_rows": len(cl),
+        "source_files": files, "entries": len(entries), "entries_with_free_text_exceptions_not_evaluated": len(free_exc), "concept_level_company_rows": len(cl),
         "companies_in_cohort": len(ids), "companies_with_fsn_rows": len(per_company), "csv_rows": n_rows,
         "rows_by_decision": dict(by_decision), "passthrough_rows_eq_cp_un": passthrough, "rows_by_source": dict(by_source),
         "keys_where_company_row_overrode_tag_row": stats["overrides"],

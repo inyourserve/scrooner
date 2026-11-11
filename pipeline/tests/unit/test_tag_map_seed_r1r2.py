@@ -215,3 +215,54 @@ def test_ranks_file_rows_are_company_specific_and_blank_means_undecided():
     assert [e["decision"] for e in ents] == ["concept", "review", "component", "combined"]
     assert ents[0]["source"] == "ranks_1_50.csv:library" and ents[0]["rule_id"] == m.RULE_COMPANY
     assert m.missing_detail(ents[2]) is None and m.missing_detail(ents[3]) == "member tags / concept"
+
+
+def ap2(fid, stmt, tag, period, plabel, prev="", nxt="", nondim=True):
+    return ap(fid, stmt, tag, period, plabel) + (nondim, prev, nxt)
+
+
+LIB_COR = [("fsn-x.csv", [{"tag": "us-gaap:CostOfRevenue", "home_stmt": "IS", "decision": "map",
+                           "concept key": "cost_of_revenue", "evidence": "lib"}])]
+OVERLAY_COR = [{"stmt": "IS", "tag": "CostOfRevenue", "decision": "concept", "concept": "cost_of_revenue",
+                "condition": "label!~total (costs|operating) and near~cost of (sales|goods|products)",
+                "else_reason": "label"}]
+
+
+def test_shifted_label_is_needs_detail_not_demotion():
+    key = ("us-gaap", "CostOfRevenue", "IS")
+    # own label says 'total costs' but the row above is 'cost of products': a one-row label shift is possible
+    amb = {key: {p: ap2(i, "IS", "CostOfRevenue", p, "Total costs and expenses", prev="Cost of products") for i, p in
+                 enumerate(P)}}
+    res = expand(LIB_COR, amb, overlay=OVERLAY_COR)[key]
+    assert res["rows"] == [] and "ambiguous" in res["needs_detail"][0]["detail_note"]
+    clear = {key: {p: ap2(i, "IS", "CostOfRevenue", p, "Total costs and expenses", prev="Revenues", nxt="Operating income")
+                   for i, p in enumerate(P)}}
+    assert [x[0] for x in spans(expand(LIB_COR, clear, overlay=OVERLAY_COR)[key])] == ["excluded"]
+    differs = {key: {p: ap2(i, "IS", "CostOfRevenue", p, "Costs of things") for i, p in enumerate(P)}}
+    assert [x[0] for x in spans(expand(LIB_COR, differs, overlay=OVERLAY_COR)[key])] == ["concept"]  # differs != demote
+
+
+def test_dimensional_only_line_never_becomes_concept():
+    key = ("us-gaap", "CostOfRevenue", "IS")
+    dim = {key: {p: ap2(i, "IS", "CostOfRevenue", p, "x", nondim=False) for i, p in enumerate(P)}}
+    assert expand(LIB_COR, dim)[key]["rows"] == []
+    ex = [("fsn-x.csv", [{"tag": "us-gaap:CostOfRevenue", "home_stmt": "IS", "decision": "exclude", "evidence": "e"}])]
+    assert [x[0] for x in spans(expand(ex, dim)[key])] == ["excluded"]
+
+
+CARD = [{"tag": "us-gaap:Assets", "home_stmt": "BS", "decision": "map", "canonical_concept_key": "total_assets",
+         "sign_rule": "as filed", "applies_to": "classified balance sheets (828 cos)",
+         "exceptions": "HLI label shift (value right), 175 unclassified", "era_from": "2015", "era_to": "",
+         "evidence": "card"}]
+
+
+def test_tag_card_shape_precedence_and_free_text():
+    ents = m.parse_source("fsn-balance-sheet-assets.csv", CARD)
+    e = ents[0]
+    assert e["source"] == "tag-card" and e["concept"] == "total_assets" and e["era"] == (date(2015, 1, 1), None)
+    assert e["exceptions"] == [] and e["exceptions_text"] and m.applies(e, 1, set())  # descriptive text applies to all
+    lo = m.parse_source("std-tags-rank-1.csv", [{"rank": "1", "tag": "us-gaap:Assets", "statements": "BS",
+                                                 "decision": "exclude", "concept": "", "reason": "r"}])
+    co_ = m.parse_source("companies-x.csv", [co(1, "BS", "Assets", "map", "assets_x")])
+    idx = m.build_index(lo + ents + co_)
+    assert [x["source"] for x in idx[("Assets", "BS")]] == ["companies-x.csv", "tag-card", "std-tags-rank-1.csv"]
