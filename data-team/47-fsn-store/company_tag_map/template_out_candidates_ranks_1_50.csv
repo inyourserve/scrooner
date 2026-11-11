@@ -1,215 +1,146 @@
-company_id,cik,ticker,data_point,in_template,reason,evidence
-1,0000019617,JPM,accounts_receivable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1,0000019617,JPM,current_assets,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1,0000019617,JPM,current_liabilities,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1,0000019617,JPM,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1,0000019617,JPM,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3,0000320193,AAPL,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4,0000789019,MSFT,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4,0000789019,MSFT,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-9,0001652044,GOOG,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-9,0001652044,GOOG,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-9,0001652044,GOOG,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-9,0001652044,GOOG,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-85,0000002488,AMD,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-134,0000006951,AMAT,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-134,0000006951,AMAT,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-251,0000018230,CAT,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-251,0000018230,CAT,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-279,0000021344,KO,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-279,0000021344,KO,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-279,0000021344,KO,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-279,0000021344,KO,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-608,0000040545,GE,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-608,0000040545,GE,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-666,0000059478,LLY,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-666,0000059478,LLY,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-666,0000059478,LLY,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-666,0000059478,LLY,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,accounts_receivable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,current_assets,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,current_liabilities,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-716,0000070858,BAC,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1010,0000072971,WFC,current_assets,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1010,0000072971,WFC,current_liabilities,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1010,0000072971,WFC,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1010,0000072971,WFC,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1010,0000072971,WFC,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1042,0000080424,PG,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1042,0000080424,PG,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1042,0000080424,PG,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,amortization_of_intangibles,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,interest_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1086,0000093410,CVX,sbc,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1104,0000097476,TXN,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1104,0000097476,TXN,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1104,0000097476,TXN,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1104,0000097476,TXN,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1105,0000097745,TMO,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1105,0000097745,TMO,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1123,0000101829,RTX,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1123,0000101829,RTX,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1123,0000101829,RTX,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,amortization_of_intangibles,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,interest_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1134,0000104169,WMT,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1164,0000200406,JNJ,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1164,0000200406,JNJ,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1164,0000200406,JNJ,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1182,0000310158,MRK,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1182,0000310158,MRK,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1182,0000310158,MRK,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1182,0000310158,MRK,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1207,0000318154,AMGN,interest_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1207,0000318154,AMGN,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1236,0000354950,HD,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1236,0000354950,HD,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1236,0000354950,HD,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1236,0000354950,HD,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1263,0000707549,LRCX,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1321,0000723125,MU,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1321,0000723125,MU,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1321,0000723125,MU,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1321,0000723125,MU,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,accounts_payable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1354,0000731766,UNH,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1649,0000858877,CSCO,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,accounts_payable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,accounts_receivable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,current_assets,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,current_liabilities,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1767,0000886982,GS,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,accounts_payable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,accounts_receivable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,capex,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,current_assets,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,current_liabilities,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1807,0000895421,MS,share_buybacks,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,amortization_of_intangibles,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-1857,0000909832,COST,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2328,0001018724,AMZN,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2328,0001018724,AMZN,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2328,0001018724,AMZN,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2328,0001018724,AMZN,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2328,0001018724,AMZN,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2726,0001535527,CRWD,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2726,0001535527,CRWD,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2726,0001535527,CRWD,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2726,0001535527,CRWD,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2848,0001551152,ABBV,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2848,0001551152,ABBV,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2848,0001551152,ABBV,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-2848,0001551152,ABBV,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,accounts_receivable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,amortization_of_intangibles,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,goodwill,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3007,0001065280,NFLX,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3083,0001571996,DELL,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3398,0001594805,SHOP,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3398,0001594805,SHOP,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3398,0001594805,SHOP,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3398,0001594805,SHOP,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3418,0001596532,ANET,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3418,0001596532,ANET,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-3932,0001141391,MA,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,interest_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4015,0001996810,GEV,ppe_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4841,0001707925,LIN,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4945,0001318605,TSLA,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4945,0001318605,TSLA,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4945,0001318605,TSLA,share_buybacks,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4969,0001321655,PLTR,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4969,0001321655,PLTR,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4969,0001321655,PLTR,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-4969,0001321655,PLTR,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5050,0001326801,META,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5050,0001326801,META,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5050,0001326801,META,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5050,0001326801,META,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5058,0001327567,PANW,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5058,0001327567,PANW,dividends_paid,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5058,0001327567,PANW,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5116,0001730168,AVGO,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5116,0001730168,AVGO,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5203,0001341439,ORCL,cf_ap_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5203,0001341439,ORCL,depreciation_and_amortization,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5203,0001341439,ORCL,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,accounts_payable,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,amortization_of_intangibles,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,cf_ar_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,goodwill,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,operating_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5351,0002115436,XOM,sbc,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,cf_inventory_change,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,cost_of_revenue,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,gross_profit,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,interest_income,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,inventory,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5718,0001403161,V,research_and_development,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5761,0001413329,PM,operating_expenses,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5761,0001413329,PM,other_income_expense_net,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
-5761,0001413329,PM,sga_expense,false,line_not_presented_and_not_reported,no FSN statement line maps to it (company_tag_map ranks 1-50 v2) and no SEC companyfacts fact under the concept tag set since 2015 (DATA-INFERRED)
+company_id,ticker,data_point,in_template,reason,evidence
+1,JPM,accounts_receivable,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1,JPM,current_assets,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1,JPM,current_liabilities,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1,JPM,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1,JPM,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+4,MSFT,interest_income,false,not_reported,"no fact under 6 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+9,GOOG,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+85,AMD,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+251,CAT,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+251,CAT,interest_income,false,not_reported,"no fact under 6 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+279,KO,cf_ap_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+279,KO,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+608,GE,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+608,GE,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+666,LLY,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+666,LLY,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+666,LLY,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+666,LLY,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+716,BAC,accounts_receivable,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+716,BAC,current_assets,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+716,BAC,current_liabilities,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+716,BAC,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+716,BAC,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1010,WFC,current_assets,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1010,WFC,current_liabilities,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1010,WFC,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1010,WFC,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1042,PG,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1042,PG,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1086,CVX,amortization_of_intangibles,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1086,CVX,cf_ap_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1086,CVX,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1086,CVX,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1086,CVX,interest_income,false,not_reported,"no fact under 6 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1086,CVX,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1086,CVX,sbc,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1104,TXN,depreciation_and_amortization,false,only_component_reported,only component tag(s) AmortizationOfIntangibleAssets;Depreciation reported; a component never stands in for the total
+1105,TMO,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1123,RTX,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1134,WMT,amortization_of_intangibles,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1134,WMT,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1134,WMT,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1134,WMT,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1134,WMT,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1134,WMT,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1164,JNJ,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1164,JNJ,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1182,MRK,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1182,MRK,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1182,MRK,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1207,AMGN,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1236,HD,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1236,HD,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1321,MU,interest_income,false,not_reported,"no fact under 6 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1354,UNH,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1354,UNH,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1354,UNH,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1354,UNH,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,accounts_payable,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,accounts_receivable,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,cf_ap_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1767,GS,current_assets,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,current_liabilities,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1767,GS,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1767,GS,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1767,GS,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1767,GS,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,accounts_payable,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1807,MS,accounts_receivable,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1807,MS,capex,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1807,MS,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,current_assets,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1807,MS,current_liabilities,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1807,MS,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1807,MS,share_buybacks,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1857,COST,amortization_of_intangibles,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1857,COST,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+1857,COST,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1857,COST,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+1857,COST,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2328,AMZN,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2328,AMZN,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+2328,AMZN,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2726,CRWD,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2726,CRWD,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2726,CRWD,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+2848,ABBV,depreciation_and_amortization,false,only_component_reported,only component tag(s) AmortizationOfIntangibleAssets;Depreciation reported; a component never stands in for the total
+2848,ABBV,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+3007,NFLX,accounts_receivable,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,amortization_of_intangibles,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,goodwill,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+3007,NFLX,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3007,NFLX,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+3398,SHOP,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3398,SHOP,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3398,SHOP,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3418,ANET,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3932,MA,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3932,MA,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+3932,MA,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+3932,MA,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+3932,MA,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4015,GEV,cf_ar_change,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4015,GEV,depreciation_and_amortization,false,only_component_reported,only component tag(s) AmortizationOfIntangibleAssets;Depreciation reported; a component never stands in for the total
+4015,GEV,interest_expense,false,not_reported,"no fact under 7 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4015,GEV,interest_income,false,not_reported,"no fact under 6 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4015,GEV,ppe_net,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4841,LIN,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+4841,LIN,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+4841,LIN,operating_expenses,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+4841,LIN,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+4945,TSLA,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4945,TSLA,share_buybacks,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4969,PLTR,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4969,PLTR,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+4969,PLTR,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5050,META,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5050,META,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5050,META,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5058,PANW,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5058,PANW,dividends_paid,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5203,ORCL,depreciation_and_amortization,false,only_component_reported,only component tag(s) AmortizationOfIntangibleAssets;Depreciation reported; a component never stands in for the total
+5203,ORCL,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5351,XOM,amortization_of_intangibles,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5351,XOM,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5351,XOM,goodwill,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5351,XOM,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5351,XOM,operating_income,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5351,XOM,sbc,false,not_reported,"no fact under 2 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5718,V,cf_inventory_change,false,not_reported,"no fact under 1 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5718,V,cost_of_revenue,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5718,V,gross_profit,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5718,V,inventory,false,not_reported,"no fact under 5 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5718,V,research_and_development,false,not_reported,"no fact under 3 tags in the FSN store (statements and notes, predecessor filings included) since 2015"
+5761,PM,other_income_expense_net,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
+5761,PM,sga_expense,false,line_not_presented_on_face,"no face line maps to it; note values are never used for this point (segment-total risk, Verifier 2026-11-11)"
