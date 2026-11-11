@@ -2,18 +2,22 @@
 
 Compact orientation only. Generated evidence and the task board win if this file becomes stale.
 
-Updated: 2026-11-10 ~08:00 UTC (Dhairya, Mac manager session; sync pass at founder's request "come at one level field, sync everything, make everything latest"). Earlier update 2026-11-08 by the cloud manager session `session_01GLmSDyzegqZw4JqC91z7XH`.
+Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager session stood down 2026-11-11).
 
-## Live state 2026-11-10 (read from production, not recalled)
+## Methodology changed entirely (founder, 2026-11-11, typed in Dhairya's session)
 
-- Certified 0 / 1,000. cell_proof: 75.9% PROVEN over 997 companies (last proof run predates the FSN writes).
-- FSN store loaded: 902 companies (fsn.company_load), 41,794 filings, 3,816,038 library rows (fsn.line_map). XOM history included via 0121.
-- canonical_fact written from the FSN store: ONE company, MDT (3639), 779 protected cells, top-100 run 42649721096 (2026-11-09 16:18 UTC). Every other company failed the per-company done gate (9-231 reasonless keys and 1-3 filings not stored each). The nightly tried to overwrite MDT 241 times; every attempt was skipped and logged, so the protection works.
-- Open on MDT (Ritwik, binding C4/N2 and C6): cell_proof over MDT's written pairs (any served DISAGREE re-written as a blank defect); its dividends_per_share cells need a Verifier check against the filings or a hold.
-- Next: the per-pair done gate is ON MAIN (50da4594). Ritwik (cloud) review 2026-11-10: PASS with G1-G4 (branch review/done-gate-pairs-2026-11-10). Before the next select_write: G1 a proof_blank stage plus MDT cell_proof/proof-blank summary; G2 out-of-template and no-expected-key pairs with old values written as reason rows, held pairs counted; G3 YTD (H1/9M) holds reported apart at C7, for a joint Ritwik decision here. Then the C7 cohort dry run (main + PR #4 + PR #6 + 2026m10) with the N4/G2/G3 tables, then clearance, then the next write.
-- Ritwik (both sessions): binding C1-C8 + N1-N5 + G1-G4, as amended by the founder decision of 2026-11-11 (typed in Dhairya's session, relayed): old values are for learning only. C2, G2(c) and G3 (valued->no-row, YTD holds) are a DIFF REPORT, not a hold; no restore to old values. Gates kept: zero blanks without an evidenced reason, no served cell_proof DISAGREE (N2 blank), the Verifier draw, EPS never derived, DPS/debt/TL held where not proven. Ritwik (cloud) 2026-11-11: NO OBJECTION recorded; scrooner-3d (Mac Ritwik) clears the top-100 here. PR #5: merged 1722a8c6; B1/B2 fixed (re-checked: 9/9 guard script tests pass; removing the fail-closed return fails 2).
-- Next.js 16.4.4 is on main (the security advisory is closed). Code lands on main only; no Vercel steps (founder 2026-11-03).
-- One manager: Mac session "Dhairya" and cloud manager session_01GLmSDyzegqZw4JqC91z7XH both act as Dhairya. Both read and update THIS file first; whoever acts records it here.
+"Move to new. Use just old learning not the system." / "Fuck the old data." / "We have changed our methodology entirely."
+
+- The old canonical_fact values and the old normalize/map system are learning only. They never gate a write, are never restored, and get no more protection work. C2, G2(c), G3 and before-image key coverage are diff reports, not holds. This supersedes the MDT restore and the old-value parts of C1-C8/N1-N5/G1-G4.
+- A write passes on the new system alone, judged against the SEC filing: every template cell has a filing-traceable value or an evidenced reason; no served cell_proof DISAGREE; EPS never derived; DPS and debt held where not proven. The Verifier ("Scrooner production cells verification") clears writes. Write each company that passes; don't wait for a full cohort.
+- The nightly moves to the new path (branch work/fsn-nightly-incremental: per-filing EDGAR XBRL into FSN rows, 20/20 exact against 2026m10). The old path stops writing each company as it moves over.
+- Core work = the library and the mapper. Live 2026-11-11: fsn.concept_rule = 62 rules / 24 concepts; fsn.line_map = 3.20M of 4.12M statement lines UNMAPPED (78%). Ritwik (Mac, scrooner-3d) leads, reading FSN company by company with the Tag Expert: top-100 ranks 1-50 Mac Ritwik, 51-100 cloud Ritwik. Every IS/BS/CF/equity line is mapped, combined or excluded with a reason, by filing structure. The Mapping builder turns those decisions into tested rules. Metric: unmapped statement lines in the top 100, down to 0.
+- One direction, one manager (Dhairya). Everything else stops. Assignments: Engineering = top-100 dry run on the new gate, then write; CF/BS/sector-template/family-prep sessions = fix Engineering's ranked gate-failure causes; Verifier = clearances plus the 200-cell answer key; CI = keep main green.
+
+## Live numbers 2026-11-11 ~07:30 UTC
+
+- Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).
+- Next.js 16.4.4 is on main. Code lands on main only; no Vercel steps (founder 2026-11-03).
 
 ## Product objective
 
