@@ -208,3 +208,24 @@ def test_coregistrant_filing_facts_are_never_served_only_the_registrants_own(iso
         conn.commit()
         assert resolve(conn, {"0000000501"})["errored"] == 0
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == Decimal("100")
+
+
+@pytest.mark.integration
+def test_history_source_predecessor_window_is_read_and_exclude_window_is_not(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        succ, sper, sfil, sfact = x["company"]("0000000601", True)
+        pred, pper, pfil, pfact = x["company"]("0000000602", False)  # the predecessor's own core.company row
+        pfact("Revenues", "in", "old", "100")   # predecessor history for the 2018 period (the successor has none)
+        sfact("Revenues", "out", "new", "55")   # the successor's own 2020 filing, inside an exclude window
+        conn.execute("update core.filing set period_of_report = '2018-12-31' where company_id = %s", (pred,))
+        conn.execute("update core.filing set period_of_report = '2020-12-31' where company_id = %s", (succ,))
+        ins = "insert into core.company_history_source (company_id, source_cik, relation, source_name, valid_from, valid_to, reason) values (%s,%s,%s,'n',%s,%s,'t')"
+        conn.execute(ins, (succ, "0000000602", "predecessor", "2014-01-01", "2019-12-31"))
+        conn.execute(ins, (succ, "0000000601", "exclude", "2020-01-01", "2020-12-31"))
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-01-01','t','tm.r@1')", (succ, x["rev"]))
+        conn.commit()
+        assert resolve(conn, {"0000000601"})["errored"] == 0
+        got = dict(conn.execute("select period_id, value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", (succ, x["rev"])).fetchall())
+        assert got == {sper["in"]: Decimal("100")}  # predecessor window read onto the successor's period; exclude window never sourced

@@ -181,7 +181,7 @@ def seed_company_tag_map_cmd(
         stats = seed_tag_map(conn, path, apply=apply)
     typer.echo(
         f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
-        f"undecided_skipped={stats['undecided_skipped']} applied={stats['applied']}"
+        f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"
     )
     for cik, c in sorted(stats["completeness"].items()):
         typer.echo(

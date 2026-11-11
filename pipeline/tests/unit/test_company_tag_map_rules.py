@@ -358,3 +358,10 @@ def test_winner_tag_gap_is_a_reasoned_blank_never_a_fallback_to_the_alternate():
     cells, stats = build_cells([win, alt], facts, INFO, {}, {}, periods, alts)
     assert [(c["period_id"], c["value"]) for c in cells] == [(7, Decimal("10"))]  # never the alternate's 11 or 12
     assert [(b["period_id"], b["reason_code"], b["reason"]) for b in stats["blanks"]] == [(8, "no_fact_under_winner_tag", "no fact under Revenues for this period")]
+
+
+def test_seeder_holds_note_sourced_and_template_out_rows_as_verifier_sample_failed():
+    from scrooner_pipeline.mapper.company_tag_map_seed import held_by_verifier
+
+    assert held_by_verifier({"decided_by": "note_sourced"}) and held_by_verifier({"reason_class": "template_out"})
+    assert not held_by_verifier({"decided_by": "structure", "reason_class": "detail_of_printed_total"})

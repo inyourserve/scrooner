@@ -185,6 +185,11 @@ def _load_facts(
                   select 1 from core.filing_registrant r
                   where r.accession_number = fl.accession_number and r.company_id = f.company_id
                     and r.role in ('co_registrant', 'quarantined'))
+              -- the company's OWN filings inside an 'exclude' window belong to another entity (core.company_history_source)
+              and not exists (
+                  select 1 from core.company_history_source h
+                  where h.company_id = f.company_id and h.relation = 'exclude'
+                    and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to)
               and c.tag = any(%s)
             order by c.taxonomy, c.tag, f.period_id,
                      fl.filing_date desc nulls last, f.filing_id desc, f.id desc
@@ -207,7 +212,61 @@ def _load_facts(
                 out[(taxonomy, tag)][period_id] = Fact(
                     Decimal(value), fact_id, end, derived, filing_id, acc, filed
                 )
+    _merge_predecessor_facts(conn, company_id, tags, out)
     return out
+
+
+def _merge_predecessor_facts(conn, company_id, tags, out) -> None:
+    """History of a 'predecessor' window (core.company_history_source): authoritative facts of filings of the
+    predecessor's own core.company row whose period lies in [valid_from, valid_to], re-keyed onto THIS company's
+    core.period by (start, end, type). A predecessor CIK without a core.company row has no facts in core.fact to
+    read (its history needs ingestion first); nothing is invented for it. Latest filing wins on a clash."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select distinct on (c.taxonomy, c.tag, sp.id)
+                   c.taxonomy, c.tag, sp.id, f.value, f.id, p.end_date, f.is_derived,
+                   f.filing_id, fl.accession_number, fl.filing_date
+            from core.company_history_source h
+            join core.company pc on pc.cik = h.source_cik
+            join core.fact f on f.company_id = pc.id and f.is_authoritative
+            join core.concept c on c.id = f.concept_id
+            join core.period p on p.id = f.period_id
+            join core.filing fl on fl.id = f.filing_id
+            join core.period sp on sp.company_id = h.company_id and sp.start_date = p.start_date
+                 and sp.end_date = p.end_date and sp.period_type = p.period_type
+            where h.company_id = %s and h.relation = 'predecessor'
+              and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to
+              and c.tag = any(%s)
+              and not exists (
+                  select 1 from core.filing_registrant r
+                  where r.accession_number = fl.accession_number and r.company_id = pc.id
+                    and r.role in ('co_registrant', 'quarantined'))
+            order by c.taxonomy, c.tag, sp.id, fl.filing_date desc nulls last, f.filing_id desc, f.id desc
+            """,
+            (company_id, sorted({t for _, t in tags if t is not None})),
+        )
+        for (
+            taxonomy,
+            tag,
+            period_id,
+            value,
+            fact_id,
+            end,
+            derived,
+            filing_id,
+            acc,
+            filed,
+        ) in cur.fetchall():
+            if (taxonomy, tag) not in tags:
+                continue
+            new = Fact(Decimal(value), fact_id, end, derived, filing_id, acc, filed)
+            old = out[(taxonomy, tag)].get(period_id)
+            if old is None or (new.filed or date.min, new.filing_id) > (
+                old.filed or date.min,
+                old.filing_id,
+            ):
+                out[(taxonomy, tag)][period_id] = new
 
 
 def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):

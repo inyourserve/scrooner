@@ -44,6 +44,18 @@ DECISIONS = {
     "not_in_template",
 }
 TAGLESS = {"not_presented", "not_in_template"}
+# Verifier sample failed about 40% on note-sourced and template-OUT candidates (2026-11-11): not loaded, the
+# points stay open (no value, no reason row). Matched against decided_by / rule_id / reason_class.
+HELD_MARKERS = ("note_sourced", "note-sourced", "template_out", "template-out")
+
+
+def held_by_verifier(raw: dict) -> bool:
+    text = " ".join(
+        str(raw.get(k) or "") for k in ("decided_by", "rule_id", "reason_class")
+    ).lower()
+    return any(m in text for m in HELD_MARKERS)
+
+
 COLUMNS = (
     "company_id cik taxonomy tag stmt decision canonical_concept_id parent_concept_id sign serve_note components "
     "reason_class reason era_from era_to evidence_adsh evidence_report evidence_line evidence_plabel "
@@ -261,9 +273,20 @@ def seed(
         concept_by_name = dict(cur.fetchall())
     by_company: dict[int, list[dict]] = defaultdict(list)
     undecided: list[dict] = []
+    held_verifier = 0
     errors: list[str] = []
     warnings: list[str] = []
     for i, raw in enumerate(read_rows(path), start=1):
+        if held_by_verifier(raw):
+            held_verifier += 1
+            undecided.append(
+                {
+                    "cik": str(raw.get("cik") or "").zfill(10),
+                    "company_id": raw.get("company_id"),
+                    "stmt": raw.get("stmt"),
+                }
+            )
+            continue
         if raw.get("decision") is None:  # undecided: absent, not excluded
             cik = str(raw.get("cik") or "").zfill(10)
             undecided.append(
@@ -287,7 +310,8 @@ def seed(
     stats: dict[str, Any] = {
         "companies": len(by_company),
         "rows": sum(map(len, by_company.values())),
-        "undecided_skipped": len(undecided),
+        "undecided_skipped": len(undecided) - held_verifier,
+        "held_verifier_sample_failed": held_verifier,
         "completeness": completeness(
             [r for rs in by_company.values() for r in rs], undecided
         ),
