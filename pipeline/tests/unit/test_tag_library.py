@@ -106,3 +106,12 @@ def test_committed_ranks_1_50_map_leaves_no_core_point_without_source_or_reason(
     csv_path = ROOT / "data-team" / "47-fsn-store" / "company_tag_map" / "ranks_1_50.csv"
     out = subprocess.run([sys.executable, "-I", str(cov), str(csv_path)], check=True, capture_output=True, text=True).stdout
     assert out.strip().splitlines()[-1] == "gaps 0", out
+
+
+def test_committed_ranks_1_50_map_has_a_decision_and_a_reason_for_every_row():
+    csv_path = ROOT / "data-team" / "47-fsn-store" / "company_tag_map" / "ranks_1_50.csv"
+    rows = list(csv.DictReader(open(csv_path)))
+    assert rows
+    assert not [r for r in rows if r["decision"] not in ("concept", "component", "combined", "excluded")]
+    assert not [r for r in rows if r["decision"] == "excluded" and not (r["reason_class"] and r["reason"])]
+    assert not [r for r in rows if r["decision"] == "combined" and r["canonical_concept"]]

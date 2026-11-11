@@ -66,6 +66,7 @@ OVERRIDES = {  # (ticker, stmt, custom tag) -> (concept, evidence)
     ("GE", "BS", "CashAndEquivalentsExcludingAssetsHeldForSale"): ("cash_and_equivalents_resolved", "GE face line 'Cash and equivalents' 2015-2017 (custom tag; held-for-sale cash shown apart)"),
     ("XOM", "IS", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes"): ("revenue_sanity_resolved", "XOM face top line 'Sales and other operating revenue' 2015-2018 (custom tag); 'Total revenues and other income' adds other income"),
     ("TSLA", "IS", "RevenueFromContractWithCustomerExcludingAssessedTax"): ("revenue_sanity_resolved", "TSLA face line 'Total revenues' after 2023-06 when Revenues is no longer printed (before: a child of Revenues, leasing added on top)"),
+    ("AVGO", "IS", "CommonStockDividendsDeclaredandPaidperShare"): ("dividends_per_share_resolved", "AVGO IS line 'Cash dividends declared and paid per share' (custom tag)"),
     ("CVX", "BS", "CashAndCashEquivalentsExcludingTimeDeposits"): ("cash_and_equivalents_resolved", "CVX face line 'Cash and cash equivalents' from 2024-09 (custom tag; time deposits shown apart)"),
     ("CVX", "BS", "CashandCashEquivalentsExcludingTimeDepositsatCarryingValue"): ("cash_and_equivalents_resolved", "CVX face line 'Cash and cash equivalents' 2019-12..2022-03 (custom tag)"),
 }
@@ -86,6 +87,29 @@ for t in ("NetIncomeLoss", "ProfitLoss", "NetIncomeLossAvailableToCommonStockhol
 NOT[("IS", "ProfitLoss")] = ("ni_incl_nci", "ProfitLoss includes NCI unless no NCI line exists (fallback below)")
 NCI_TAGS = {"NetIncomeLossAttributableToNoncontrollingInterest", "MinorityInterestInNetIncomeLossOfConsolidatedEntities"}
 CATALOG = set()
+
+RESIDUE = [  # applied last, to rows nothing above decided: (stmt set or None, regex on tag, reason_class, reason)
+    (None, r"(?i)percent", "ratio_line", "a percent-of-sales or ratio line, not an amount"),
+    ({"CF"}, r"^(InterestPaid|IncomeTaxesPaid|ProceedsFromIncomeTaxRefunds)", "pending_catalog_concept",
+     "cash paid for interest / income taxes: catalog concept arrives with 0122, then re-decided as a concept row"),
+    ({"IS"}, r"^(NetIncomeLossAvailableToCommonStockholdersDiluted|UndistributedEarnings|DistributedEarnings|ParticipatingSecurities|IncomeLossFromContinuingOperationsPerDilutedShare)",
+     "eps_numerator", "EPS numerator or allocation to participating securities; EPS itself is mapped"),
+    ({"BS"}, r"^CommitmentsAndContingencies$", "caption_no_value", "commitments and contingencies caption: carries no amount on the face"),
+    ({"BS"}, r"(Accumulated|Allowance|Reserve)", "contra_parenthetical", "allowance, reserve or accumulated depreciation/amortization; the net line carries the concept"),
+    ({"BS"}, r"(FairValue|Pledged|AmortizedCost|VariableInterestEntit|Collateral)", "fair_value_or_pledged_detail", "fair value, pledged-collateral or VIE detail printed with the BS"),
+    ({"BS"}, r"(TemporaryEquity|Redeemable)", "temporary_equity", "temporary/mezzanine equity; not stockholders_equity, no catalog concept"),
+    ({"BS"}, r"^InventoryNoncurrent$", "inventory_noncurrent", "inventory classified in other assets; the inventory concept is the current line"),
+    ({"BS", "EQ"}, r"Shares?$|SharesHeld|InShares", "share_terms_parenthetical", "share count, not an amount"),
+    ({"CF"}, r"(Discontinued|DisposalGroup)", "discontinued_operations", "discontinued-operations cash flow; the totals carry the concepts"),
+    ({"CF"}, r"^(LiabilitiesAssumed|DividendsPayable|Noncash|OtherSignificantNoncash|StockIssued|TransferOf|NonCash)", "noncash_supplemental", "non-cash supplemental disclosure; never a cash flow"),
+    ({"EQ"}, r"", "equity_statement_line", "equity statement balance or movement; no catalog concept (DPS handled above)"),
+    ({"CI"}, r"", "oci_component", "comprehensive income detail; the CI total is mapped"),
+]
+RESIDUE = [(st, re.compile(rx), rc, why) for st, rx, rc, why in RESIDUE]
+ASK_DEFAULT = {  # Tag Expert questions: a decision now, re-decided on the ruling
+    "CommonStockSharesOutstanding": ("share_terms_parenthetical", "BS share count; shares_outstanding comes from the cover page (Tag Expert to confirm)"),
+    "CommonStockSharesIssued": ("share_terms_parenthetical", "BS share count (Tag Expert to confirm)"),
+}
 
 prio = {}
 for p in Path(rules_dir).glob("*.jsonl"):
@@ -251,6 +275,24 @@ for cid, rs in by_co.items():
                          reason=f"same concept {con} printed as {clash['tag']} in the same filing(s); that tag wins", decided_by=r["decided_by"] + "+deoverlap")
             else:
                 kept.append(r)
+    for r in rs:
+        if r.get("decision"):
+            continue
+        if r["tag"] in ASK_DEFAULT:
+            rc, why = ASK_DEFAULT[r["tag"]]
+            r.update(decision="excluded", reason_class=rc, reason=why, decided_by="ask_default")
+            continue
+        if r["decided_by"] == "ask_expert":
+            r.update(decision="excluded", reason_class="pending_catalog_concept", reason=r["reason"], decided_by="ask_default")
+            continue
+        for sts, rx, rc, why in RESIDUE:
+            if (sts is None or r["stmt"] in sts) and rx.search(r["tag"]):
+                r.update(decision="excluded", reason_class=rc, reason=why, decided_by="residue_rule")
+                break
+        else:
+            r.update(decision="excluded", reason_class="not_in_any_mapped_calc_path",
+                     reason="no calc path into a mapped total in this company's filings, and no catalog match by tag, statement or position",
+                     decided_by="residue_rule")
     out_rows.extend(rs)
 
 COLS = ["company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept", "combine_sign",
