@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # One queue for every heavy database workflow (2026-10-21). The Supabase database is
 # small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
@@ -27,7 +28,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-08: GitHub starts this schedule hours late, so it can land on an FSN production
+    # write in progress; wait for the write instead of running beside it.
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   yfinance-cross-check:
+    needs: wait-for-fsn-write
     name: yfinance cross-check and report
     runs-on: ubuntu-latest
     # ~750 companies * 1.2s pace + the new yfinance-financials rotation
@@ -69,6 +85,11 @@ jobs:
       - name: Investigate and auto-fix reconcilable findings
         if: always()
         timeout-minutes: 30
+        env:
+          # on: companies on the hybrid FSN path are never written here (fsn_store/new_path.py,
+          # FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md); off by default, switched on together with pipeline-refresh's
+          # HYBRID_NEW_PATH (the same repository variable)
+          HYBRID_NEW_PATH: ${{ vars.HYBRID_NEW_PATH || 'off' }}
         run: uv run --project pipeline scrooner-sanity investigate
       - name: Run rendered-report parser on remaining critical findings
         # Added 2026-09-20 -- closes a real gap: tag_investigator's

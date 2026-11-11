@@ -163,6 +163,24 @@ cur.execute(
     where d.filing_date >= current_date - make_interval(days => %s)
       and c.status = 'active'
       and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
+      -- Only filings with work left (2026-11-10). The window is counted in calendar days, so a
+      -- Monday night re-selected every Thursday/Friday filer the Friday-Sunday runs had already
+      -- done: run 42712874321 took 1,017 companies, of which about 73% already had their
+      -- filing's facts, and ran out of its 7,000s budget (7,074s), skipping six map stages.
+      -- Selected: the filing's facts are not in core.fact yet (companyfacts lags the index by a
+      -- day or two), or they arrived in the last 48 hours, so a night that skipped stages for a
+      -- company is retried once.
+      and (
+        not exists (
+          select 1 from core.filing f join core.fact x on x.filing_id = f.id
+          where f.accession_number = d.accession_number
+        )
+        or exists (
+          select 1 from core.filing f join core.fact x on x.filing_id = f.id
+          where f.accession_number = d.accession_number
+            and x.created_at >= now() - make_interval(hours => %s)
+        )
+      )
     union
     -- Backlog (added 2026-09-27): a company whose latest 10-K/10-Q has
     -- no core.fact rows yet, although a companyfacts payload fetched
@@ -189,7 +207,11 @@ cur.execute(
       limit %s
     ) backlog
     """,
-    (int(os.environ["LOOKBACK_DAYS"]), int(os.environ.get("BACKLOG_LIMIT", "150"))),
+    (
+        int(os.environ["LOOKBACK_DAYS"]),
+        int(os.environ.get("FACTS_RETRY_HOURS", "48")),
+        int(os.environ.get("BACKLOG_LIMIT", "150")),
+    ),
 )
 print(','.join(r[0] for r in cur.fetchall()))
 PY
@@ -214,7 +236,7 @@ if [ -z "$CIKS" ]; then
 fi
 
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
-echo "reprocess_recent_filers: ${N} companies (filed in the last ${FILER_LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
+echo "reprocess_recent_filers: ${N} companies (a 10-K/10-Q filed in the last ${FILER_LOOKBACK_DAYS} days whose facts are missing or arrived in the last ${FACTS_RETRY_HOURS:-48}h, or latest 10-K/10-Q not yet normalized)"
 
 SHARDS="${REPROCESS_SHARDS:-4}"
 echo "reprocess_recent_filers: running each stage across up to ${SHARDS} parallel shards"
@@ -252,26 +274,43 @@ STAGES=(
   map:calculate-fcf-growth map:calculate-dividend-streak
   map:build-tag-library
 )
-# Hybrid as the only writer for the cohort (founder direction relayed by Dhairya 2026-11-09;
-# data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md). With HYBRID_ONLY_COHORT=on
-# the stages that write facts and canonical values (every normalize:* stage, map:resolve-facts,
-# map:split-rebase, map:resolve-concept-fallbacks) skip the cohort's CIKs; the derived-metric stages
-# (map:calculate onwards) still run for every company, recomputing from canonical_fact. Off by default.
+# The hybrid is the only writer for every company on the new nightly path (founder decisions relayed by
+# Dhairya 2026-11-09/11; data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md). With
+# HYBRID_NEW_PATH=on the stages that write facts or canonical values (every normalize:* stage,
+# map:resolve-facts, map:split-rebase, map:resolve-concept-fallbacks) skip those companies entirely:
+# a company is on the new path once an applied FSN cell write landed for it (`scrooner-fsn
+# new-path-ciks`, fsn_store/new_path.py). The derived-metric stages (map:calculate onwards) still run
+# for every company, recomputing from canonical_fact. If the set cannot be read, the writer stages
+# skip the whole cohort (fail closed). Off by default.
 ALL_CIKS="$CIKS"
 WRITER_CIKS="$CIKS"
-if [ "${HYBRID_ONLY_COHORT:-off}" = on ]; then
-  COHORT_CSV="${HYBRID_COHORT_CSV:-data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv}"
-  [ -f "$COHORT_CSV" ] || COHORT_CSV="$SCRIPT_DIR/../../$COHORT_CSV"
-  if [ -f "$COHORT_CSV" ]; then
-    WRITER_CIKS=$(python3 -c '
-import csv, sys
-cohort = {r["cik"].zfill(10) for r in csv.DictReader(open(sys.argv[1]))}
-print(",".join(c for c in sys.argv[2].split(",") if c and c.zfill(10) not in cohort))' "$COHORT_CSV" "$CIKS")
-    echo "reprocess_recent_filers: HYBRID_ONLY_COHORT=on, writer stages skip $(( $(echo "$CIKS" | tr ',' '\n' | awk 'NF' | wc -l) - $(echo "$WRITER_CIKS" | tr ',' '\n' | awk 'NF' | wc -l) )) cohort companies"
+if [ "${HYBRID_NEW_PATH:-off}" = on ]; then
+  SKIP_FILE="$(mktemp)"
+  if uv run scrooner-fsn new-path-ciks --out "$SKIP_FILE" >/dev/null; then
+    SKIP_SOURCE="new path ($(tr ',' '\n' < "$SKIP_FILE" | awk 'NF' | wc -l | tr -d ' ') companies)"
   else
-    echo "reprocess_recent_filers: HYBRID_ONLY_COHORT=on but no cohort CSV; writer stages skip every company" >&2
-    WRITER_CIKS=""
+    COHORT_CSV="${HYBRID_COHORT_CSV:-data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv}"
+    [ -f "$COHORT_CSV" ] || COHORT_CSV="$SCRIPT_DIR/../../$COHORT_CSV"
+    echo "reprocess_recent_filers: HYBRID_NEW_PATH=on but the new-path set could not be read; writer stages skip the whole cohort" >&2
+    if [ -f "$COHORT_CSV" ]; then
+      python3 -c 'import csv, sys; print(",".join(r["cik"].zfill(10) for r in csv.DictReader(open(sys.argv[1]))))' "$COHORT_CSV" > "$SKIP_FILE"
+      SKIP_SOURCE="cohort (fail closed)"
+    else
+      echo "reprocess_recent_filers: and no cohort CSV either; writer stages skip every company" >&2
+      CIKS_SKIP_ALL=1
+      SKIP_SOURCE="every company (fail closed)"
+    fi
   fi
+  if [ -n "${CIKS_SKIP_ALL:-}" ]; then
+    WRITER_CIKS=""
+  else
+    WRITER_CIKS=$(python3 -c '
+import sys
+skip = {c.strip().zfill(10) for c in open(sys.argv[1]).read().split(",") if c.strip()}
+print(",".join(c for c in sys.argv[2].split(",") if c and c.zfill(10) not in skip))' "$SKIP_FILE" "$CIKS")
+  fi
+  rm -f "$SKIP_FILE"
+  echo "reprocess_recent_filers: HYBRID_NEW_PATH=on, writer stages skip $(( $(echo "$CIKS" | tr ',' '\n' | awk 'NF' | wc -l) - $(echo "$WRITER_CIKS" | tr ',' '\n' | awk 'NF' | wc -l) )) of these companies (skip set: $SKIP_SOURCE)"
 fi
 is_writer_stage() {
   case "$1" in

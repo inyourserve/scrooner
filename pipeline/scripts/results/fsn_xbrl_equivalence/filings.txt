@@ -1,4 +1,4 @@
-# cik accession ticker: 20 top-100 10-K/10-Q filings in the SEC FSN set 2026m10 (published 2026-11-04)
+# cik accession ticker. First 20: top-100 10-K/10-Q filings in the SEC FSN set 2026m10 (published 2026-11-04)
 1652044 0001652044-26-000084 GOOG
 789019 0001193125-26-436133 MSFT
 1018724 0001018724-26-000040 AMZN
@@ -19,3 +19,7 @@
 12927 0001628280-26-067508 BA
 1467373 0001467373-26-000049 ACN
 896159 0000896159-26-000021 CB
+# amendments (Ritwik's review item 5, 2026-11-11): every cohort 10-K/A or 10-Q/A in 2026m05..m10 that carries statements, plus the cover-only one
+1664703 0001628280-26-050325 BE
+1792789 0001792789-26-000035 DASH
+842023 0001140361-26-041062 TECH

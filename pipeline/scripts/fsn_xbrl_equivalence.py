@@ -1,11 +1,12 @@
-"""Equivalence run: EDGAR-built FSN rows (fsn_store.xbrl_fsn) vs the same filings in a SEC FSN set.
+"""Equivalence run: EDGAR-built FSN rows (fsn_store.xbrl_fsn) vs the same filings in SEC FSN sets.
 
 usage:
   SEC_USER_AGENT="Name contact@example.com" uv run --project pipeline python pipeline/scripts/fsn_xbrl_equivalence.py \\
       --fsn-zip .cache/2026_10_notes.zip --filings pipeline/scripts/results/fsn_xbrl_equivalence/filings.txt \\
       --edgar-cache .cache/edgar --out pipeline/scripts/results/fsn_xbrl_equivalence
 
---fsn-zip: a SEC Financial Statement and Notes set (downloaded with --download SET once, sec.gov).
+--fsn-zip (repeatable): SEC Financial Statement and Notes set zips (sec.gov); each filing is compared
+with the first set that holds it.
 --filings: lines 'cik accession ticker'. Writes results.json (per filing, xbrl_equivalence.compare)
 and summary.md. Reads sec.gov only, at most 4 requests/s (edgar_fetch.EdgarClient). No database.
 """
@@ -70,9 +71,8 @@ def cached_filing(
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--fsn-zip", required=True)
     ap.add_argument(
-        "--fsn-set", default="", help="e.g. 2026m10 (default: from the zip name)"
+        "--fsn-zip", required=True, action="append", help="one or more SEC FSN set zips"
     )
     ap.add_argument("--filings", required=True)
     ap.add_argument("--edgar-cache", default=".cache/edgar")
@@ -83,10 +83,17 @@ def main() -> int:
         for ln in Path(args.filings).read_text().splitlines()
         if ln.strip() and not ln.startswith("#")
     ]
-    fsn_set = args.fsn_set or Path(args.fsn_zip).name.replace("_notes.zip", "").replace(
-        "_", "m"
-    )
-    expected = fsn_rows(Path(args.fsn_zip), {p[1] for p in picks}, fsn_set)
+    sets = [(Path(z), Path(z).name.replace("_notes.zip", "").replace("_", "m")) for z in args.fsn_zip]
+    expected: dict[str, dict[str, list[dict[str, str]]]] = {}
+    found_in: dict[str, str] = {}
+    for zpath, name in sets:
+        for adsh, tables in fsn_rows(zpath, {p[1] for p in picks}, name).items():
+            if tables["sub"] and adsh not in expected:
+                expected[adsh], found_in[adsh] = tables, name
+    missing = [p[1] for p in picks if p[1] not in expected]
+    if missing:
+        raise SystemExit(f"not in any given FSN set: {missing}")
+    fsn_set = ",".join(name for _, name in sets)
     ua = os.environ.get("SEC_USER_AGENT", "")
     client = EdgarClient(ua) if ua else None
     results = {}
@@ -97,6 +104,8 @@ def main() -> int:
         res = compare(expected[adsh], got)
         res["ticker"] = ticker
         res["cik"] = cik
+        res["form"] = expected[adsh]["sub"][0]["form"]
+        res["fsn_set"] = found_in[adsh]
         results[adsh] = res
         print(
             f"{ticker:6} {adsh} pass={res['pass']} num={res['num']['fsn']}/{res['num']['missing']}/{res['num']['extra']}"
@@ -127,12 +136,12 @@ def main() -> int:
         f"- cal arcs: {sum(r['cal']['fsn_arcs'] for r in results.values())}; filings with identical arc groups "
         f"{sum(r['cal']['pass'] for r in results.values())}",
         "",
-        "| ticker | accession | pass | num rows | num missing/extra | reports exact | item diffs | structural | cal | sub diff |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| ticker | form | set | accession | pass | num rows | num missing/extra | reports exact | item diffs | structural | cal | sub diff |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for adsh, r in results.items():
         lines.append(
-            f"| {r['ticker']} | {adsh} | {'yes' if r['pass'] else 'NO'} | {r['num']['fsn']} | {r['num']['missing']}/{r['num']['extra']} "
+            f"| {r['ticker']} | {r['form']} | {r['fsn_set']} | {adsh} | {'yes' if r['pass'] else 'NO'} | {r['num']['fsn']} | {r['num']['missing']}/{r['num']['extra']} "
             f"| {r['pre']['reports_exact']}/{r['pre']['reports']} | {r['pre']['reports_item_diffs']} | {r['pre']['structural_row_diffs']} "
             f"| {'same' if r['cal']['pass'] else 'DIFF'} | {r['sub']['diff'] or ''} |"
         )

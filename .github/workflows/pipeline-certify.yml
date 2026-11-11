@@ -20,6 +20,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # One queue for every heavy database workflow (see pipeline-tag-library.yml for the history).
 # GitHub keeps ONE pending run per group: check `gh run list` before dispatching a manual run.
@@ -28,7 +29,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-09: a manually dispatched heavy job must not start beside an FSN production write either
+    # (the write refuses to start beside it; this is the other direction).
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   certify:
+    needs: wait-for-fsn-write
     name: Run invariants I1-I11 for the selected shards
     runs-on: ubuntu-latest
     timeout-minutes: 150

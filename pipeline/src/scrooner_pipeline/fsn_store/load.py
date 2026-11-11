@@ -507,8 +507,10 @@ def run(
     predecessors: dict[str, str] | None = None,
     connect: Callable[[], psycopg.Connection] | None = None,
     increment: bool = False,
+    input_sha: str | None = None,
 ) -> dict[str, Any]:
-    """Load every (or the named) company directories; one rule_run for the batch.
+    """Load every (or the named) company directories; one rule_run for the batch. input_sha: the sha256 of the
+    dispatched CIK list (pipeline-fsn-write.yml `ciks`), recorded in the run's stats.
     increment: EDGAR-built directories (load_company, module docstring).
 
     A company that fails is rolled back and skipped. If the failure LOST the connection (the pooler dropped it:
@@ -537,6 +539,8 @@ def run(
         "value": 0,
         "line": 0,
     }
+    if input_sha:
+        out["input_ciks_sha256"] = input_sha
     out["reconnects"] = 0
     current = conn
     try:

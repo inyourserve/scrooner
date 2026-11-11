@@ -162,6 +162,11 @@ if [ "$2" = "python3" ]; then
   exit 0
 fi
 prog="$2"; stage="$3"
+if [ "$stage" = "new-path-ciks" ]; then
+  [ -n "${FAKE_NEWPATH_FAIL:-}" ] && exit 1
+  printf '%s' "${FAKE_NEWPATH:-}" > "$5"
+  exit 0
+fi
 echo "RUN $prog $stage" >> "$FAKE_LOG"
 echo "$stage ${5:-}" >> "$FAKE_LOG.ciks"
 if [ "$stage" = "build-tag-library" ] && [ -n "$FAKE_TAG_HANG" ]; then sleep 300; fi
@@ -267,36 +272,50 @@ def test_tag_library_is_killed_at_its_cap_and_reported(tmp_path):
     assert "map:build-tag-library" in out.stderr
 
 
-@pytest.mark.unit
-def test_hybrid_only_cohort_keeps_cohort_companies_out_of_the_writer_stages(tmp_path):
-    """HYBRID_ONLY_COHORT=on (FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09): normalize:* and the
-    canonical-value stages skip the cohort's CIKs; the derived-metric stages still run for all."""
-    cohort = tmp_path / "cohort.csv"
-    cohort.write_text("company_id,cik,ticker\n2,0000000002,TWO\n")
-    out, _ = _run_script(
-        tmp_path,
-        REPO_ROOT,
-        "pipeline/" + SCRIPT_REL,
-        HYBRID_ONLY_COHORT="on",
-        HYBRID_COHORT_CSV=str(cohort),
-    )
-    assert out.returncode == 0, (out.stdout, out.stderr)
-    ciks = {}
+WRITERS = ("identity", "facts", "derive-q4", "resolve-facts", "split-rebase", "resolve-concept-fallbacks")
+DERIVED = ("calculate", "growth", "ttm-margins", "calculate-dividend-streak")
+
+
+def _ciks_by_stage(tmp_path):
+    out = {}
     for line in (tmp_path / "calls.log.ciks").read_text().splitlines():
         stage, _, val = line.partition(" ")
-        ciks[stage] = val
-    for writer in (
-        "identity",
-        "facts",
-        "derive-q4",
-        "resolve-facts",
-        "split-rebase",
-        "resolve-concept-fallbacks",
-    ):
-        assert ciks[writer] == "0000000001,0000000003", writer
-    for derived in ("calculate", "growth", "ttm-margins", "calculate-dividend-streak"):
-        assert ciks[derived] == "0000000001,0000000002,0000000003", derived
-    # off (the default): every stage sees every company
-    out, _ = _run_script(tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL)
-    lines = (tmp_path / "calls.log.ciks").read_text().splitlines()
-    assert any(l == "facts 0000000001,0000000002,0000000003" for l in lines[-30:])
+        out[stage] = val
+    return out
+
+
+@pytest.mark.unit
+def test_hybrid_new_path_companies_skip_every_old_path_writer_stage(tmp_path):
+    """HYBRID_NEW_PATH=on: a company an FSN write has landed for (scrooner-fsn new-path-ciks) is out of
+    every normalize:* and canonical-value stage; the derived-metric stages still run for all."""
+    out, _ = _run_script(tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL, HYBRID_NEW_PATH="on", FAKE_NEWPATH="0000000002")
+    assert out.returncode == 0, (out.stdout, out.stderr)
+    ciks = _ciks_by_stage(tmp_path)
+    for w in WRITERS:
+        assert ciks[w] == "0000000001,0000000003", w
+    for d in DERIVED:
+        assert ciks[d] == "0000000001,0000000002,0000000003", d
+
+
+@pytest.mark.unit
+def test_hybrid_new_path_is_off_by_default(tmp_path):
+    out, _ = _run_script(tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL, FAKE_NEWPATH="0000000002")
+    assert out.returncode == 0
+    assert _ciks_by_stage(tmp_path)["facts"] == "0000000001,0000000002,0000000003"
+    assert "HYBRID_NEW_PATH" not in out.stdout
+
+
+@pytest.mark.unit
+def test_hybrid_new_path_fails_closed_to_the_whole_cohort(tmp_path):
+    """The new-path set cannot be read: the writer stages skip the whole cohort, never write it."""
+    cohort = tmp_path / "cohort.csv"
+    cohort.write_text("company_id,cik,ticker\n2,0000000002,TWO\n3,0000000003,THREE\n")
+    out, _ = _run_script(
+        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL,
+        HYBRID_NEW_PATH="on", FAKE_NEWPATH_FAIL="1", HYBRID_COHORT_CSV=str(cohort),
+    )
+    assert "could not be read" in out.stderr
+    ciks = _ciks_by_stage(tmp_path)
+    for w in WRITERS:
+        assert ciks[w] == "0000000001", w
+    assert ciks["calculate"] == "0000000001,0000000002,0000000003"

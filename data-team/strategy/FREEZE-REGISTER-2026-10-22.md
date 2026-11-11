@@ -115,6 +115,8 @@ Rules frozen with the enum:
 | RF-49 | `history.successor_link@1` | 2 | none | E9, E7 (XOM) | history | Tier 2 | period_engineer + company_master |
 | RF-50 | `period.ytd_route_calendar@1` | 2 | none | E13 | derived | Tier 2 | period_engineer |
 
+**RF-22 `split.event_basis@1` — Turn-on condition (release approver Ritwik, 2026-11-10): must not be turned on before the archive follows the actual update (fixed in work/corporate-actions/archive-follows-update).**
+
 ### 3.3 Map to the W register and the 28 themes (every item has at least one family)
 W1 RF-01; W2 RF-02; W3 RF-03; W4 RF-04; W5 RF-05; W6 RF-06; W7 RF-07; W8 RF-08 (+RF-36); W9 RF-09 (+RF-38); W10 RF-10; W11 RF-11 (CDE), RF-23 (AMP, SWX), RF-43 (CDE custom noncurrent line); W12 RF-11, RF-12, RF-13.
 T1 RF-13, RF-48; T2 RF-14; T3 RF-40, RF-41; T4 RF-10, RF-15, RF-22; T5 RF-02, RF-23; T6 RF-08, RF-11, RF-36, RF-43; T7 RF-09, RF-30, RF-33, RF-34, RF-38; T8 RF-06, RF-07; T9 RF-05; T10 RF-04, RF-22, RF-46; T11 RF-17, RF-03; T12 RF-43; E1 RF-47; E2 RF-18, RF-15, RF-03; E3 RF-44; E4 RF-08, RF-12, RF-36; E5 RF-45; E6 RF-21; E7 RF-20, RF-49; E8 RF-42; E9 RF-37, RF-49; E10 RF-25; E11 RF-31, RF-32; E12 RF-16; E13 RF-01, RF-12, RF-50; E14 RF-43; E15 RF-19; E16 RF-24, RF-03. **28 of 28.** Owners and acceptance tests per theme: `team/WO-ADDENDA-2026-10-22.md` section 3.

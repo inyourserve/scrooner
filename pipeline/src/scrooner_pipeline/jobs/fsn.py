@@ -5,7 +5,10 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
+from collections import Counter
+from datetime import date
 from pathlib import Path
+from typing import Any
 
 import typer
 
@@ -144,6 +147,9 @@ def load_cmd(
         "--increment",
         help="EDGAR-built directories (scrooner-fsn nightly): add or replace those accessions only.",
     ),
+    input_sha: str = typer.Option(
+        "", help="sha256 of the dispatched CIK list, recorded in the rule_run stats."
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -166,6 +172,7 @@ def load_cmd(
                 # the shard goes on with the next company instead of dying in rollback()
                 connect=lambda: psycopg.connect(settings.database_url),
                 increment=increment,
+                input_sha=input_sha or None,
             )
     except psycopg.OperationalError:
         if res is None:
@@ -389,17 +396,24 @@ def pilot_prod_cmd(
     ids = [r["company_id"] for r in reports]
     with get_connection() as conn:
         conn.execute("set statement_timeout = '10min'")
-        for table, cols in (
-            ("analytics.canonical_fact", "*"),
-            ("analytics.cell_blank_reason", "*"),
-            ("analytics.slot_protected_cell", "*"),
+        for table, cols, where in (
+            ("analytics.canonical_fact", "*", "company_id = any(%s)"),
+            ("analytics.cell_blank_reason", "*", "company_id = any(%s)"),
+            ("analytics.slot_protected_cell", "*", "company_id = any(%s)"),
+            # the done gate's hold guard (ruling C2) reads concept names and period dates with the image
+            ("analytics.canonical_concept", "id, name", "%s::bigint[] is not null"),
+            (
+                "core.period",
+                "id, company_id, start_date, end_date, period_type, fiscal_year, fiscal_period",
+                "company_id = any(%s)",
+            ),
         ):
             path = root / "before_image" / f"{table.split('.')[1]}.csv.gz"
             path.parent.mkdir(parents=True, exist_ok=True)
             with (
                 gzip.open(path, "wb") as fh,
                 conn.cursor().copy(
-                    f"copy (select {cols} from {table} where company_id = any(%s) order by 1) to stdout with csv header",
+                    f"copy (select {cols} from {table} where {where} order by 1) to stdout with csv header",
                     (ids,),
                 ) as cp,
             ):
@@ -430,6 +444,15 @@ def pilot_prod_cmd(
     )
 
 
+# Data points the FSN write never switches until the approver clears them (ruling RULING-DONE-GATE-C4-2026-11-09)
+HELD_OUT = {
+    "dividends_per_share_resolved": "C6: the Q4 FY-9M route must check the same share basis first",
+    "total_debt_resolved": "C8: seed defect, release case §2/§3a",
+    "total_liabilities_resolved": "C8: seed defect, release case §2/§3a",
+    "shares_outstanding_resolved": "R2 (Ritwik 2026-11-10): not in the template, so the gate cannot cover it",
+}
+
+
 @app.command("done-gate")
 def done_gate_cmd(
     pilot_out: str = typer.Option(
@@ -439,22 +462,332 @@ def done_gate_cmd(
         ..., help="Comma-separated data points the write switches."
     ),
 ) -> None:
-    """Design §5 criteria 1-5 per company (read-only): writes done_companies.txt (company ids that may
-    switch) and not_done.json (company id -> failed criteria) into the output directory."""
-    from scrooner_pipeline.fsn_store.pilot import done_gate
+    """The done gate (founder 2026-11-09 "No fallback. Everything is the hybrid", on ruling
+    RULING-DONE-GATE-C4-2026-11-09), read-only. Every in-template pair of a company passing criteria 1/2/5 is
+    written whole (gap keys as reasoned blanks). Writes into the output directory:
+      done_pairs.tsv         company_id, data_point: the pairs to write
+      done_companies.txt     companies whose every listed pair is written
+      written_companies.txt  companies with at least one pair to write: the cell_proof scope (C4)
+      not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}, ...}
+      valued_to_blank.json   C2 as a report: valued->blank transitions per data point by reason class, and the
+                             pairs whose new cells hold no value where the before-image had values
+    A before-image 6-month, 9-month or multi-year key with no printed TP cell (CELL-FORMAT v1.2) is added to its
+    family's cells file (out/cells/<family>/cells.jsonl.gz) as an exact-dated hybrid gap blank before the C2 check,
+    so the write carries a visible reason for it; a second run finds the blank and adds nothing.
+    The before-image (pilot-prod) is required, so the C2 report is never skipped."""
+    import gzip
+
+    from scrooner_pipeline.fsn_store.pilot import (
+        done_gate,
+        done_pairs,
+        fully_done,
+        hold_guard,
+        hold_valued_to_no_row,
+        ytd_gap_blanks,
+    )
+    from scrooner_pipeline.normalizer.cell_loader import (
+        OWNERSHIP,
+        bind_tp,
+        ytd_periods_by_class,
+    )
 
     root = Path(pilot_out)
+    points = {s for s in data_points.split(",") if s}
+    refused = sorted(points & set(HELD_OUT))
+    if refused:
+        raise typer.BadParameter(
+            "; ".join(f"{dp} stays out ({HELD_OUT[dp]})" for dp in refused)
+        )
     reports = json.loads((root / "report.json").read_text())
     gaps_path = root / "gaps.csv"
     gaps = list(csv.DictReader(gaps_path.open())) if gaps_path.exists() else []
     missing = json.loads((root / "missing_filings.json").read_text())
-    res = done_gate(reports, gaps, missing, {s for s in data_points.split(",") if s})
-    done = sorted(c for c, f in res.items() if not f)
-    (root / "done_companies.txt").write_text("".join(f"{c}\n" for c in done))
-    (root / "not_done.json").write_text(
-        json.dumps({c: f for c, f in res.items() if f}, indent=1)
+    image = root / "before_image"
+    for name in ("canonical_fact", "canonical_concept", "period"):
+        if not (image / f"{name}.csv.gz").exists():
+            raise typer.BadParameter(
+                f"{image}/{name}.csv.gz is missing: run pilot-prod first (C2 hold guard)"
+            )
+
+    def rows(name):
+        with gzip.open(image / f"{name}.csv.gz", "rt") as fh:
+            return list(csv.DictReader(fh))
+
+    cells: list[dict] = []
+    for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
+        with gzip.open(path, "rt") as fh:
+            cells.extend(json.loads(line) for line in fh if line.strip())
+    before = rows("canonical_fact")
+    names = {r["id"]: r["name"] for r in rows("canonical_concept")}
+    periods = {r["id"]: r for r in rows("period")}
+    # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed become reasoned TP blanks
+    ytd_rows, ytd_skipped = ytd_gap_blanks(
+        cells, before, names, periods, points, reports
     )
-    typer.echo(f"done gate: {len(done)} of {len(res)} companies may switch")
+    by_family: dict[str, list[dict]] = {}
+    for r in ytd_rows:
+        by_family.setdefault(OWNERSHIP.get(r["data_point_name"], "unowned"), []).append(
+            r
+        )
+    for fam, add in sorted(by_family.items()):
+        d = root / "cells" / fam
+        d.mkdir(parents=True, exist_ok=True)
+        path = d / "cells.jsonl.gz"
+        old = []
+        if path.exists():
+            with gzip.open(path, "rt") as fh:
+                old = [json.loads(line) for line in fh if line.strip()]
+        with gzip.open(path, "wt") as fh:
+            for r in old + add:
+                fh.write(json.dumps(r, default=str) + "\n")
+        manifest = d / "manifest.json"
+        if manifest.exists():
+            m = json.loads(manifest.read_text())
+            m["rows"] = len(old) + len(add)
+            m["data_points"] = sorted(
+                set(m.get("data_points") or []) | {r["data_point_name"] for r in add}
+            )
+            manifest.write_text(json.dumps(m))
+    cells.extend(ytd_rows)
+    not_in_template: list[dict] = []
+    emptied, transitions, no_row = hold_guard(
+        cells, before, names, periods, points, not_in_template
+    )
+    # approver ruling 2026-11-10, item 3: a TP print the loader will reject (no YTD period of its class at its end,
+    # or two at the same nearest end) is not written and gets no reason row; count it per company with the share
+    # of the company's TP prints, by the loader's own binding rule (bind_tp) over the before-image core.period
+    by_company_periods: dict[int, list] = {}
+    for pid, p in periods.items():
+        if p.get("company_id"):
+            by_company_periods.setdefault(int(p["company_id"]), []).append(
+                (
+                    pid,
+                    date.fromisoformat(p["start_date"]),
+                    date.fromisoformat(p["end_date"]),
+                    p["period_type"],
+                )
+            )
+    ytd_by_company = {
+        c: ytd_periods_by_class(ps) for c, ps in by_company_periods.items()
+    }
+    tp_stats: dict[int, Counter] = {}
+    for r in cells:
+        if (
+            r.get("period_grain") != "TP"
+            or r["data_point_name"] not in points
+            or r.get("period_start")
+            or r.get("qtrs") not in (2, 3)
+        ):
+            continue
+        cid = int(r["company_id"])
+        st = tp_stats.setdefault(cid, Counter())
+        st["tp_prints"] += 1
+        _pid, why = bind_tp(
+            ytd_by_company.get(cid, {}), date.fromisoformat(r["fsn_end"]), r["qtrs"]
+        )
+        if why:
+            st[why] += 1
+            st["rejected"] += 1
+    tp_rejected_by_company = {
+        str(c): {
+            **dict(st),
+            "share": round(st["rejected"] / st["tp_prints"], 6),
+        }
+        for c, st in sorted(tp_stats.items())
+    }
+    tp_total = sum(st["tp_prints"] for st in tp_stats.values())
+    tp_rej = sum(st["rejected"] for st in tp_stats.values())
+    gate = done_gate(reports, gaps, missing, points)
+    # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
+    no_row_by_pair = hold_valued_to_no_row(gate, no_row)
+    with (root / "valued_to_no_row.tsv").open("w") as fh:
+        cols = [
+            "company_id",
+            "data_point",
+            "period_id",
+            "grain",
+            "start",
+            "end",
+            "before_value",
+            "why",
+        ]
+        fh.write("\t".join(cols) + "\n")
+        for k in no_row:
+            fh.write("\t".join("" if k[c] is None else str(k[c]) for c in cols) + "\n")
+    pairs = done_pairs(gate)
+    written_no_row = sum(no_row_by_pair.get(p, 0) for p in pairs)
+    if (
+        written_no_row
+    ):  # cannot happen (the pairs were held above); refuse rather than write
+        raise RuntimeError(f"{written_no_row} valued->no-row keys in done pairs")
+    full = fully_done(gate)
+    written = sorted({cid for cid, _dp in pairs})
+    listed = sum(len(g["data_points"]) for g in gate.values())
+    (root / "done_pairs.tsv").write_text(
+        "company_id\tdata_point\n" + "".join(f"{c}\t{dp}\n" for c, dp in pairs)
+    )
+    (root / "done_companies.txt").write_text("".join(f"{c}\n" for c in full))
+    (root / "written_companies.txt").write_text("".join(f"{c}\n" for c in written))
+    not_done = {
+        cid: {
+            "company": g["company"],
+            "data_points": {dp: f for dp, f in g["data_points"].items() if f},
+            "out_of_template": g["out_of_template"],
+            "gap_blanks": g["gap_blanks"],
+        }
+        for cid, g in gate.items()
+        if g["company"] or any(g["data_points"].values())
+    }
+    (root / "not_done.json").write_text(json.dumps(not_done, indent=1))
+    gap_blanks: dict[str, int] = {}
+    for g in gate.values():
+        for dp, n in g["gap_blanks"].items():
+            gap_blanks[dp] = gap_blanks.get(dp, 0) + n
+    (root / "valued_to_blank.json").write_text(
+        json.dumps(
+            {
+                # C2 as a report (founder 2026-11-09: no hold); the approver reviews it before dispatch
+                "valued_to_blank_by_data_point": transitions,
+                # must be 0 in every written pair (Ritwik 2026-11-10); the keys are in valued_to_no_row.tsv
+                "valued_to_no_row_by_pair": [
+                    {"company_id": c, "data_point": dp, "keys": n}
+                    for (c, dp), n in sorted(no_row_by_pair.items())
+                ],
+                "valued_to_no_row_in_written_pairs": written_no_row,
+                "pairs_with_no_new_value_but_old_values": [
+                    {"company_id": c, "data_point": dp, "why": w}
+                    for (c, dp), w in sorted(emptied.items())
+                ],
+                "gap_keys_written_as_blanks_by_data_point": dict(
+                    sorted(gap_blanks.items())
+                ),
+                # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed, added as TP blanks
+                "ytd_keys_written_as_blanks_by_data_point": dict(
+                    sorted(Counter(r["data_point_name"] for r in ytd_rows).items())
+                ),
+                "ytd_keys_not_blanked": ytd_skipped,
+                # approver ruling 2026-11-10, item 1: before-image multi-year keys written as not_in_template
+                "valued_to_not_in_template_by_data_point": dict(
+                    sorted(Counter(k["data_point"] for k in not_in_template).items())
+                ),
+                "valued_to_not_in_template_by_pair": [
+                    {"company_id": c, "data_point": dp, "keys": n}
+                    for (c, dp), n in sorted(
+                        Counter(
+                            (k["company_id"], k["data_point"]) for k in not_in_template
+                        ).items()
+                    )
+                ],
+                "valued_to_not_in_template_keys": not_in_template,
+                # item 3: TP prints the loader will reject (ambiguous or no YTD period), per company and in total
+                "tp_rejected_by_company": tp_rejected_by_company,
+                "tp_rejected_share": round(tp_rej / tp_total, 6) if tp_total else 0.0,
+            },
+            indent=1,
+        )
+    )
+    per_point: dict[str, int] = {}
+    for _c, dp in pairs:
+        per_point[dp] = per_point.get(dp, 0) + 1
+    typer.echo(
+        f"done gate: {len(pairs)} pairs of {listed}; {len(full)} companies fully done"
+    )
+    typer.echo(
+        f"done gate: pairs passing per data point {json.dumps(dict(sorted(per_point.items())))}"
+    )
+    typer.echo(
+        f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
+        f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
+    )
+    over = sum(1 for v in tp_rejected_by_company.values() if v["share"] > 0.005)
+    typer.echo(
+        f"done gate: TP prints the loader will reject: {tp_rej} of {tp_total}; "
+        f"{over} companies above 0.5%; {len(not_in_template)} multi-year keys written as not_in_template"
+    )
+    typer.echo(
+        f"done gate: {len(ytd_rows)} before-image year-to-date keys with nothing printed added as TP blanks; "
+        f"{len(ytd_skipped)} not blanked (no stored filings in the report)"
+    )
+    typer.echo(
+        f"done gate: {len(no_row)} before-image values would have no row; "
+        f"{len(no_row_by_pair)} pairs held for it; valued->no-row in written pairs: {written_no_row}"
+    )
+
+
+@app.command("proof-blank")
+def proof_blank_cmd(
+    write_dir: str = typer.Option(
+        "out/write",
+        help="The select_write run's written cells: <dir>/<family>/cells.jsonl.gz.",
+    ),
+    out: str = typer.Option("out/proof_blank", help="Output directory (same layout)."),
+) -> None:
+    """Ruling addendum N2 (no fallback), READ-ONLY on production: the written cells that analytics.cell_proof
+    DISAGREEs with become defect blanks (identity / verifier, cell_proof_disagree) instead of being restored to
+    old values. Writes <out>/<family>/cells.jsonl.gz holding every row of each pair with a DISAGREE (the loader
+    replaces a pair whole) and <out>/summary.json. Loading it is a production write: `scrooner-cells load ... --apply`
+    on the founder's words. The before-image restore stays an emergency rollback only."""
+    import gzip
+
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store.pilot import blank_disagreements
+
+    families: dict[str, list[dict]] = {}
+    for path in sorted(Path(write_dir).glob("*/cells.jsonl.gz")):
+        with gzip.open(path, "rt") as fh:
+            families[path.parent.name] = [
+                json.loads(line) for line in fh if line.strip()
+            ]
+    ids = sorted({int(r["company_id"]) for rows in families.values() for r in rows})
+    if not ids:
+        raise typer.BadParameter(f"no written cells under {write_dir}")
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '5min'")
+        cur = conn.execute(
+            """select id, company_id, data_point_name, period_grain, period_start, period_end, shown_value,
+                      position_value, reason_code, rule_id
+               from analytics.cell_proof where verdict = 'DISAGREE' and company_id = any(%s)""",
+            (ids,),
+        )
+        cols = [c.name for c in cur.description]
+        disagrees = [dict(zip(cols, r)) for r in cur.fetchall()]
+        conn.rollback()
+    root = Path(out)
+    summary: dict[str, Any] = {
+        "companies": len(ids),
+        "disagree_rows": len(disagrees),
+        "families": {},
+    }
+    matched_ids: set = set()
+    for fam, rows in sorted(families.items()):
+        points = {r["data_point_name"] for r in rows}
+        mine = [d for d in disagrees if d["data_point_name"] in points]
+        blanked, unmatched = blank_disagreements(rows, mine)
+        matched_ids |= {d["id"] for d in mine} - {d["id"] for d in unmatched}
+        if not blanked:
+            continue
+        d = root / fam
+        d.mkdir(parents=True, exist_ok=True)
+        with gzip.open(d / "cells.jsonl.gz", "wt") as fh:
+            for r in blanked:
+                fh.write(json.dumps(r, default=str) + "\n")
+        n = sum(1 for r in blanked if r.get("reason_code") == "cell_proof_disagree")
+        (d / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "family": fam,
+                    "rule_id": "fsn.cell_proof_blank@1",
+                    "rows": len(blanked),
+                    "blanked": n,
+                }
+            )
+        )
+        summary["families"][fam] = {"rows_reloaded": len(blanked), "cells_blanked": n}
+    unmatched_all = [d for d in disagrees if d["id"] not in matched_ids]
+    summary["disagree_not_in_written_cells"] = len(unmatched_all)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
+    typer.echo(f"proof-blank: {json.dumps(summary, default=str)}")
 
 
 @app.command("extract-sec")
@@ -587,3 +920,23 @@ def nightly_cmd(
         f"fsn nightly: {summary['candidates']} new filings, {summary['built']} built for {len(written)} companies,"
         f" {len(res.failed)} failed, {len(res.deferred)} deferred ({res.requests_seconds}s)"
     )
+
+
+@app.command("new-path-ciks")
+def new_path_ciks_cmd(
+    out: str = typer.Option(
+        "", help="Write the comma-separated CIKs here (default: stdout)."
+    ),
+) -> None:
+    """The companies on the hybrid FSN nightly path (fsn_store/new_path.py), read-only. The old
+    normalize/map writer stages skip them when HYBRID_NEW_PATH=on (reprocess_recent_filers.sh)."""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import new_path
+
+    with get_connection() as conn:
+        found = new_path.ciks(conn)
+        conn.rollback()
+    text = ",".join(found)
+    if out:
+        Path(out).write_text(text)
+    typer.echo(text)

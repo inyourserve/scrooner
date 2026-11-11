@@ -2,7 +2,18 @@
 
 Compact orientation only. Generated evidence and the task board win if this file becomes stale.
 
-Updated: 2026-11-08 UTC (Dhairya, manager session `session_01GLmSDyzegqZw4JqC91z7XH`).
+Updated: 2026-11-10 ~08:00 UTC (Dhairya, Mac manager session; sync pass at founder's request "come at one level field, sync everything, make everything latest"). Earlier update 2026-11-08 by the cloud manager session `session_01GLmSDyzegqZw4JqC91z7XH`.
+
+## Live state 2026-11-10 (read from production, not recalled)
+
+- Certified 0 / 1,000. cell_proof: 75.9% PROVEN over 997 companies (last proof run predates the FSN writes).
+- FSN store loaded: 902 companies (fsn.company_load), 41,794 filings, 3,816,038 library rows (fsn.line_map). XOM history included via 0121.
+- canonical_fact written from the FSN store: ONE company, MDT (3639), 779 protected cells, top-100 run 42649721096 (2026-11-09 16:18 UTC). Every other company failed the per-company done gate (9-231 reasonless keys and 1-3 filings not stored each). The nightly tried to overwrite MDT 241 times; every attempt was skipped and logged, so the protection works.
+- Open on MDT (Ritwik, binding C4/N2 and C6): cell_proof over MDT's written pairs (any served DISAGREE re-written as a blank defect); its dividends_per_share cells need a Verifier check against the filings or a hold.
+- Next: the per-pair done gate is ON MAIN (50da4594). Ritwik (cloud) review 2026-11-10: PASS with G1-G4 (branch review/done-gate-pairs-2026-11-10). Before the next select_write: G1 a proof_blank stage plus MDT cell_proof/proof-blank summary; G2 out-of-template and no-expected-key pairs with old values written as reason rows, held pairs counted; G3 YTD (H1/9M) holds reported apart at C7, for a joint Ritwik decision here. Then the C7 cohort dry run (main + PR #4 + PR #6 + 2026m10) with the N4/G2/G3 tables, then clearance, then the next write.
+- Ritwik (both sessions): binding C1-C8 + N1-N5 (review/ruling-done-gate-c4-2026-11-09) + G1-G4. A clearance of a data_points list is written here by a Ritwik; neither clears alone while the other has an objection recorded here. PR #5: CHANGES (B1 fails open on a GitHub API error, B2 missing test).
+- Next.js 16.4.4 is on main (the security advisory is closed). Code lands on main only; no Vercel steps (founder 2026-11-03).
+- One manager: Mac session "Dhairya" and cloud manager session_01GLmSDyzegqZw4JqC91z7XH both act as Dhairya. Both read and update THIS file first; whoever acts records it here.
 
 ## Product objective
 
@@ -40,12 +51,12 @@ Not reachable from cloud: the CI/CD session (needs a trusted device) and the Mac
 | Cash flow: FX identity tags, buyback/dividend detector, absent-line reasons (15-company sample: valued 51.4% to 58.0%) | draft PR #4 (`work/cashflow/fsn-gaps-rebased`, CI green). Ruling (Dhairya): a printed 0 in the latest copy is served as 0 | Verifier PASS 2026-11-08 (verify/cf-gaps-redraw-2026-11-08, 4c64d769) at d1a0050: 0 wrong shown values, 21/21 new values, 15/15 cohort absent-line claims; scratch store on 60 cohort companies: CF gaps 6,272 to 283. Brixmor Q4 2015/16 buyback reason follow-up done (26063db). Remaining: cohort dry run after the write; CAD filers CP/IMO open pending the currency ruling |
 | Verifier reports 2026-11-01..03 | PR #2 (`verify/consolidated-2026-11-08`) | docs only; founder to merge |
 | Verifier verdicts 2026-11-08 (PR #4 and #6 passes) | PR #7 (`verify/2026-11-08-lane-verdicts`) | docs only; founder to merge (ledger conflict with PR #2 is trivial: keep both blocks) |
-| FSN write vs nightly jobs: live two-way guard instead of a clock window | PR #5 (CI/CD session) | review, founder to merge |
-| FSN nightly incremental: per-filing EDGAR XBRL to FSN rows, `load --increment`, refresh step and `HYBRID_ONLY_COHORT` cohort skip, both flags off | `work/fsn-nightly-incremental` (CI green); design `data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md` | Equivalence with the 2026m10 set: 20/20 top-100 filings, 22,774 values exact. The first run backfills every filing since the latest FSN set. Next: a `build`-stage dispatch to measure the backfill; `load`/`write` need the founder's typed words; the 0113 guard is untouched |
+| FSN write vs nightly jobs: live two-way guard; nightly reprocess selects only filers with work left; normalizer_backlog from ingest time | PR #5 (CI/CD session, CI green before the 11-10 additions) | review (balance-sheet lane), founder to merge before tonight's refresh |
+| FSN nightly incremental: per-filing EDGAR XBRL to FSN rows, `load --increment`, refresh step and `HYBRID_NEW_PATH` writer skip for FSN-written companies, both flags off | `work/fsn-nightly-incremental` (CI green); design `data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md` | Equivalence with the 2026m10 set: 20/20 top-100 filings, 22,774 values exact. The first run backfills every filing since the latest FSN set. Next: a `build`-stage dispatch to measure the backfill; `load`/`write` need the founder's typed words; the 0113 guard is untouched |
 
 Merged 2026-11-08: PR #1 (3d093b3), the nightly refresh row-count alert fix plus CI flake and tag-library timeout fixes.
 
-Open issue: the nightly refresh on 3d093b3 (run 42507618224, 2026-11-08) still failed, for a new reason: stage `normalize:facts` failed and the reprocess job ran past its 7,000s budget, so every map stage after calculate was skipped (growth, TTM, expanded metrics, piotroski, reconciliation, dividend streak, tag library). Not yet investigated: the CI/CD session (owner of PR #1/#5) can't be messaged from a cloud session; the founder needs to hand it over.
+Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712874321 (11-09) did NOT fail in normalize:facts (rc 0); it ran out of the 7,000s budget (7,074s) with 1,017 companies, ~73% of which already had their filing's facts (the 4-day window is in calendar days, so Monday re-ran the Thu/Fri filers done Fri-Sun). Fix: select a filer only if its filing's facts are missing or arrived in the last 48h (live: 155 now vs 403 in-window filings; ~300 vs 1,017 on 11-09). Its gate alert normalizer_backlog was a weekend artifact (max filing_date read as midnight); now measured from core.filing.created_at, 5-day limit. Run 42507618224 (11-08) had the same cause: 1,414 companies, normalize:facts killed at its 1,800s stage cap (not an error of its own), budget out at 7,212s.
 
 ## Founder decisions 2026-11-09 (~21:40 IST, in the manager session)
 

@@ -20,7 +20,7 @@ from typing import Any, Protocol
 
 import structlog
 
-from scrooner_pipeline.fsn_store.xbrl_fsn import FilingFiles
+from scrooner_pipeline.fsn_store.xbrl_fsn import ConversionError, FilingFiles
 
 logger = structlog.get_logger()
 ARCHIVES = "https://www.sec.gov/Archives/edgar/data"
@@ -164,10 +164,22 @@ def fetch_filing(
     files: dict[str, bytes] = {}
     for n in wanted_files(names):
         files[n] = client.get(f"{base}/{n}").content
-    if "FilingSummary.xml" in files:
-        for n in rendered_pages(files["FilingSummary.xml"]):
-            if n in names:
-                files[n] = client.get(f"{base}/{n}").content
+    # fail closed: a filing is built from all of its inputs or not at all (any HTTP error raises
+    # above; a missing FilingSummary, instance or statement R page raises here). build() then reports
+    # it as failed, nothing is loaded for it, and the next night's window retries it.
+    if "FilingSummary.xml" not in files:
+        raise ConversionError(f"{adsh}: no FilingSummary.xml in the filing directory")
+    if not any(
+        n.endswith(".xml") and n != "FilingSummary.xml" and not LINKBASE.search(n)
+        for n in files
+    ):
+        raise ConversionError(f"{adsh}: no XBRL instance in the filing directory")
+    for n in rendered_pages(files["FilingSummary.xml"]):
+        if n not in names:
+            raise ConversionError(
+                f"{adsh}: rendered page {n} is listed but not in the filing directory"
+            )
+        files[n] = client.get(f"{base}/{n}").content
     header = parse_header(client.get(f"{base}/{adsh}-index-headers.html").text)
     header["fsn_set"] = fsn_set
     logger.info("fsn_edgar.fetched", cik=str(cik), adsh=adsh, files=len(files))

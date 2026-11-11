@@ -470,6 +470,7 @@ def _load_all_facts_for_tag(
 _DROP_STALE_DISPLAY_ROWS_SQL = """
 delete from analytics.canonical_fact cf
 where cf.canonical_concept_id = %(resolved_id)s
+  and cf.company_id != all(%(skip_ids)s)
   and cardinality(cf.source_fact_ids) > 0
   and (
       (
@@ -557,20 +558,27 @@ def resolve_company_tag_preferences(
     (whatever wrote them first -- resolve() or concept_fallback.py --
     stays authoritative), and the DELETE is scoped to preferred
     companies only, never the whole concept."""
+    from scrooner_pipeline.fsn_store import new_path
+
     primary_id = _concept_id(conn, concept_name)
     resolved_id = _concept_id(conn, resolved_concept_name)
+    # companies on the hybrid FSN path are never written here (HYBRID_NEW_PATH, fsn_store/new_path.py)
+    skip_ids = sorted(new_path.excluded_company_ids(conn)) or [-1]
 
     with conn.cursor() as cur:
         cur.execute(
-            "select company_id, taxonomy, tag from analytics.company_tag_preference where canonical_concept_id = %s",
-            (primary_id,),
+            "select company_id, taxonomy, tag from analytics.company_tag_preference where canonical_concept_id = %s and company_id != all(%s)",
+            (primary_id, skip_ids),
         )
         preferences = cur.fetchall()
     preferred_company_ids = [company_id for company_id, _t, _g in preferences]
 
     with conn.cursor() as cur:
         if concept_name not in NO_BASELINE_COPY:
-            cur.execute(_DROP_STALE_DISPLAY_ROWS_SQL, {"resolved_id": resolved_id})
+            cur.execute(
+                _DROP_STALE_DISPLAY_ROWS_SQL,
+                {"resolved_id": resolved_id, "skip_ids": skip_ids},
+            )
             if cur.rowcount:
                 logger.info(
                     "sanity.tag_investigator.dropped_stale_display_rows",
@@ -592,12 +600,14 @@ def resolve_company_tag_preferences(
             from analytics.canonical_fact
             where canonical_concept_id = %(primary_id)s
               and company_id != all(%(preferred_ids)s)
+              and company_id != all(%(skip_ids)s)
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
                 {
                     "resolved_id": resolved_id,
                     "primary_id": primary_id,
                     "preferred_ids": preferred_company_ids or [-1],
+                    "skip_ids": skip_ids,
                 },
             )
 
@@ -696,7 +706,16 @@ def investigate_open_findings(
         "shares_outstanding": "shares_outstanding",
     }
 
+    from scrooner_pipeline.fsn_store import new_path
+
+    skip = new_path.excluded_company_ids(
+        conn
+    )  # the hybrid FSN path's companies (HYBRID_NEW_PATH)
+    stats["skipped_new_path"] = 0
     for check_id, company_id, metric_name, external_value in rows:
+        if company_id in skip:
+            stats["skipped_new_path"] += 1
+            continue
         concept_name = CONCEPT_FOR_METRIC.get(metric_name)
         if concept_name is None or external_value is None:
             continue

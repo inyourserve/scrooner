@@ -62,6 +62,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # One queue for every heavy database workflow (2026-10-21). The Supabase database is
 # small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
@@ -90,7 +91,22 @@ env:
   SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-09: a manually dispatched heavy job must not start beside an FSN production write either
+    # (the write refuses to start beside it; this is the other direction).
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   resolve:
+    needs: wait-for-fsn-write
     name: Phase 1 - normalize and resolve (shard ${{ matrix.shard }})
     runs-on: ubuntu-latest
     timeout-minutes: 360

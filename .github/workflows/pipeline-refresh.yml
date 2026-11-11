@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 # One queue for every heavy database workflow (2026-10-21). The Supabase database is
 # small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
@@ -32,7 +33,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  wait-for-fsn-write:
+    # 2026-11-08: GitHub starts this schedule hours late, so it can land on an FSN production
+    # write in progress; wait for the write instead of running beside it.
+    name: Wait while an FSN production write is in progress
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/ci
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/ci/heavy_job_guard.sh wait-for-write 330
+
   filing-index:
+    needs: wait-for-fsn-write
     # Index + Normalizer/Mapper reprocess ONLY. Split from the operational steps
     # (see `operational-gate` below) on 2026-10-10: the reprocess alone ran past
     # the old shared 90-minute cap on Oct 9 (84 min in, still going), so the
@@ -115,11 +131,16 @@ jobs:
         # REPROCESS_BUDGET_SECS (7000s = 117 min) normally ends the run first.
         timeout-minutes: 150
         if: always()
+        # 120h, not the script's 48h default (2026-11-11, balance-sheet lane review of PR #5): the
+        # 11-08 and 11-09 runs both skipped their last map stages, and a 48h retry would never
+        # reselect companies whose facts landed before those two nights. Bounded by the 4-day
+        # filing window. Follow-up: measure the retry from the last run that finished every stage.
         env:
-          # on: the old normalizer/mapper stop writing the cohort's facts and canonical values (the
-          # hybrid is their only writer); derived metrics still recompute for every company. Turn on
-          # together with FSN_NIGHTLY_STAGE=write, never before (founder's typed words).
-          HYBRID_ONLY_COHORT: ${{ vars.HYBRID_ONLY_COHORT || 'off' }}
+          FACTS_RETRY_HOURS: "120"
+          # on: the old normalizer/mapper stop writing the facts and canonical values of every company
+          # the FSN write owns (the hybrid is their only writer); derived metrics still recompute for
+          # every company. Turn on together with FSN_NIGHTLY_STAGE=write, never before (founder's typed words).
+          HYBRID_NEW_PATH: ${{ vars.HYBRID_NEW_PATH || 'off' }}
         run: pipeline/scripts/reprocess_recent_filers.sh
 
   operational-gate:

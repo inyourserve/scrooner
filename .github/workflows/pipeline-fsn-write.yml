@@ -6,24 +6,37 @@ name: FSN store production write (cohort)
 #   stage load_map:     shard from the bucket -> load fsn.* (filing, report, tag, dim, line, value, calc_arc,
 #                       company_load) -> map fsn.line_map (the library) and fsn.filing_check
 #   stage select_write: (also runs load_map) -> select -> before-image of the shard's canonical_fact and
-#                       cell_blank_reason (uploaded BEFORE the write) -> done gate (design §5 criteria 1-5 per
-#                       company) -> `scrooner-cells load --apply` for the passed data points of the companies
-#                       that passed; a company that fails keeps its current rows (design §7.6)
+#                       cell_blank_reason (uploaded BEFORE the write) -> done gate (ruling
+#                       RULING-DONE-GATE-C4-2026-11-09 with the founder's no-fallback decision 2026-11-09:
+#                       criteria 1/2/5 per company; every listed in-template pair of a passing company is written
+#                       whole, a gap key as a reasoned blank; C2 is a report, valued_to_blank.json) ->
+#                       `scrooner-cells load --apply` for the done pairs (design §7.6). The
+#                       cell_proof scope is out/written_companies.txt (every company with a written pair, C4).
+#                       dividends_per_share (C6), total debt and total liabilities (C8) stay out.
 #                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
 #                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
+#   stage select_plan:  the whole select_write path against production (shard, load and map, pilot, pilot-prod
+#                       before-image, done gate, write filter), but `scrooner-cells load --plan`: every company's
+#                       transaction is rolled back, so it writes NO analytics.canonical_fact, cell_blank_reason or
+#                       slot_protected_cell row (the loader records one dry_run analytics.rule_run row per family
+#                       file). load/map still WRITE fsn.* (the store and the library: fsn.filing ... line_map,
+#                       filing_check) and the seed job writes fsn.concept_rule, exactly as load_map does, under the
+#                       founder's store-load approval. Uploads the C2 table (valued_to_no_row.tsv,
+#                       valued_to_blank.json), not_done.json, done_pairs.tsv, done_companies.txt, the plan reports
+#                       (write-*.json) and the before-image. Same window, headroom and shard rules; no CIK list.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
 #                       company with a served cell_proof DISAGREE after the write is restored)
 # Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
 # capex and D&A cells stay out until the release approver clears them (data_points input). Connections: at
 # most 2 per shard, preflight at start and a re-check before every company (pause while client backends
-# exceed 60); never inside the nightly refresh window.
+# exceed 60); never while a heavy nightly job runs or is queued (live check), never 17:00-02:00 UTC.
 on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "load_map (fsn.* + library), select_write (also writes canonical_fact) or restore"
+        description: "load_map (fsn.* + library), select_plan (select_write rolled back: no canonical_fact write), select_write (also writes canonical_fact) or restore"
         type: choice
-        options: [load_map, select_write, restore]
+        options: [load_map, select_plan, select_write, restore]
         default: load_map
       shards:
         description: "Shards, 1..20 (each holds at most 2 production connections: budget 40)"
@@ -31,9 +44,12 @@ on:
       limit:
         description: "Only the first N cohort companies (rank order); empty = all 1,000"
         default: ""
+      ciks:
+        description: "load_map only: comma-separated CIKs (all in cohort v1.1) instead of cohort/limit; empty = the cohort"
+        default: ""
       data_points:
         description: "Data points the cell write may touch (passed families)"
-        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved"
+        default: "revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved"
       restore_run:
         description: "restore only: the select_write run id whose before-images to put back"
         default: ""
@@ -65,6 +81,7 @@ jobs:
     timeout-minutes: 20
     outputs:
       shards: ${{ steps.s.outputs.shards }}
+      ciks_sha256: ${{ steps.s.outputs.ciks_sha256 }}
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -72,20 +89,38 @@ jobs:
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
       SHARDS: ${{ inputs.shards }}
       LIMIT: ${{ inputs.limit }}
+      CIKS_LIST: ${{ inputs.ciks }}
+      STAGE: ${{ inputs.stage }}
     steps:
-      - name: Outside the nightly window, connection headroom
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - name: Shard plan (before any database connection; a CIK list must be in cohort v1.1 and needs load_map)
+        id: s
+        run: python3 pipeline/scripts/fsn_write_shards.py "$COHORT_CSV" "$STAGE" "$SHARDS" "$LIMIT" "$CIKS_LIST" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          path: .guard
+          sparse-checkout: scripts/ci
+      # Live check (2026-11-08): GitHub starts the scheduled heavy jobs hours late (refresh
+      # scheduled 12:23 UTC, observed 17:47-21:49 UTC starts, ends up to 01:34 UTC), so ask
+      # GitHub what is running instead of trusting the clock. The scheduled heavy jobs in
+      # turn wait while a write is in progress (heavy_job_guard.sh wait-for-write).
+      - name: No heavy database job running or queued
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .guard/scripts/ci/heavy_job_guard.sh refuse-if-heavy
+      - name: Outside the observed nightly window, connection headroom
         run: |
           set -eu
           now=$(date -u +%H%M)
-          if [ "$now" -ge 1800 ] && [ "$now" -lt 2130 ]; then echo "::error::inside the 18:00-21:30 UTC nightly window"; exit 1; fi
+          # Backstop for a heavy job about to start: observed nightly starts 17:47-21:49 UTC.
+          if [ "$now" -ge 1700 ] || [ "$now" -lt 0200 ]; then echo "::error::inside the 17:00-02:00 UTC nightly window"; exit 1; fi
           case "$SHARDS" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
           if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 20 ]; then echo "::error::shards must be 1..20"; exit 1; fi
           used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")
           echo "client backends now: $used; this run adds up to $((SHARDS * 2))"
           if [ $((used + SHARDS * 2)) -gt "$MAX_BACKENDS" ]; then echo "::error::$used + $((SHARDS * 2)) would exceed $MAX_BACKENDS of 90"; exit 1; fi
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.code_ref }}
       - uses: astral-sh/setup-uv@v6
       - uses: actions/setup-python@v5
         with:
@@ -94,19 +129,6 @@ jobs:
       - name: Seed concept rules (production fsn.concept_rule)
         if: inputs.stage != 'restore'
         run: uv run --project pipeline scrooner-fsn seed-rules $(ls data-team/47-fsn-store/concept_rules/*.jsonl | grep -v _provenance) --apply
-      - id: s
-        run: |
-          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
-          import csv, json, os
-          rows = list(csv.DictReader(open(os.environ["COHORT_CSV"])))
-          if os.environ["LIMIT"]:
-              rows = rows[: int(os.environ["LIMIT"])]
-          n = max(1, min(int(os.environ["SHARDS"]), len(rows)))
-          shards = [[] for _ in range(n)]
-          for r in rows:
-              shards[int(r["company_id"]) % n].append(r["cik"].zfill(10))
-          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(c)} for i, c in enumerate(shards) if c]))
-          EOF
 
   write:
     name: write shard ${{ matrix.shard.i }}
@@ -127,6 +149,7 @@ jobs:
       CIKS: ${{ matrix.shard.ciks }}
       STAGE: ${{ inputs.stage }}
       DATA_POINTS: ${{ inputs.data_points }}
+      CIKS_SHA256: ${{ needs.seed.outputs.ciks_sha256 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -144,29 +167,29 @@ jobs:
       - name: Load fsn.* (production, one transaction per company, idempotent on input sha + loader commit)
         run: |
           mkdir -p out
-          uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
+          uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json --input-sha "$CIKS_SHA256"
       - name: Map (fsn.line_map), checks (fsn.filing_check), select, report (production fsn.* writes)
         # interest-expense note values cleared by the Verifier draw 2026-11-03 (Ritwik); operating income
         # is never note-sourced (select.NOTE_TAGS)
         run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
       - name: Before-image of canonical_fact and reasons (read)
-        if: inputs.stage == 'select_write'
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         run: |
           uv run --project pipeline scrooner-fsn pilot-prod --pilot-out out
           python3 -c "import json; print('\n'.join(str(r['company_id']) for r in json.load(open('out/report.json'))))" > out/before_image/companies.txt
           echo "$DATA_POINTS" > out/before_image/data_points.txt
       - name: Store the before-image before any write
-        if: inputs.stage == 'select_write'
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         uses: actions/upload-artifact@v4
         with:
           name: fsn-write-before-image-${{ matrix.shard.i }}
           path: out/before_image/
           if-no-files-found: error
           retention-days: 90
-      - name: Done gate (design §5 criteria 1-5 per company, read)
-        if: inputs.stage == 'select_write'
+      - name: Done gate (criteria 1/2/5 per company; pairs written whole, gaps as reasoned blanks; C2 report; read)
+        if: inputs.stage == 'select_write' || inputs.stage == 'select_plan'
         run: uv run --project pipeline scrooner-fsn done-gate --pilot-out out --data-points "$DATA_POINTS"
-      - name: Write the passed data points of the done companies to canonical_fact
+      - name: Write the done (company, data point) pairs to canonical_fact
         if: inputs.stage == 'select_write'
         run: |
           set -u
@@ -176,29 +199,26 @@ jobs:
             fam=$(basename "$d")
             [ "$fam" = "unowned" ] && continue
             mkdir -p "out/write/$fam"
-            python3 - "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_companies.txt <<'EOF'
-          import gzip, json, sys
-          src, dst, allowed, done_path = sys.argv[1], sys.argv[2], set(sys.argv[3].split(",")), sys.argv[4]
-          done = {int(x) for x in open(done_path).read().split()}
-          rows = [json.loads(l) for l in gzip.open(src, "rt")]
-          keep = [
-              r for r in rows
-              if r["data_point_name"] in allowed and int(r["company_id"]) in done
-              # operating income is never note-sourced (Ritwik 2026-11-03); select never emits it, refuse it here too
-              and not (r["data_point_name"] == "operating_income_resolved" and (r.get("input_refs") or {}).get("source") == "note")
-          ]
-          with gzip.open(dst, "wt") as fh:
-              for r in keep:
-                  fh.write(json.dumps(r) + "\n")
-          json.dump({"family": src.split("/")[-2], "rule_id": "fsn.select@1", "rows": len(keep),
-                     "data_points": sorted({r["data_point_name"] for r in keep}), "period_floor": "2014-01-01"},
-                    open(dst.rsplit("/", 1)[0] + "/manifest.json", "w"))
-          print(f"{src}: {len(keep)} of {len(rows)} rows (passed data points, {len(done)} done companies)")
-          EOF
+            python3 pipeline/scripts/fsn_write_filter.py "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_pairs.tsv
             if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
             uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
               --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell write $fam failed"
+          done
+      - name: Plan the done (company, data point) pairs (select_plan; every company rolled back, nothing written)
+        if: inputs.stage == 'select_plan'
+        run: |
+          set -u
+          for d in out/cells/*/; do
+            [ -f "$d/cells.jsonl.gz" ] || continue
+            fam=$(basename "$d")
+            [ "$fam" = "unowned" ] && continue
+            mkdir -p "out/write/$fam"
+            python3 pipeline/scripts/fsn_write_filter.py "$d/cells.jsonl.gz" "out/write/$fam/cells.jsonl.gz" "$DATA_POINTS" out/done_pairs.tsv
+            if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
+            uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --plan \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
+              --report "out/write-$fam.json" || echo "::warning::cell plan $fam failed"
           done
       - name: Shard outcome (red when the shard had companies and no company report; warn on failures)
         if: always()
@@ -215,9 +235,14 @@ jobs:
             out/load.json
             out/summary.md
             out/done_companies.txt
+            out/done_pairs.tsv
+            out/written_companies.txt
+            out/valued_to_blank.json
+            out/valued_to_no_row.tsv
             out/not_done.json
             out/missing_filings.json
             out/write-*.json
+            out/write/
           if-no-files-found: ignore
 
   restore:
@@ -227,7 +252,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
+      # the pipeline's Settings require all four, as in the other jobs (restore run 42966152108 failed without them)
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
       RESTORE_IDS: ${{ inputs.restore_company_ids }}
     steps:
       - uses: actions/checkout@v4

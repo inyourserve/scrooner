@@ -69,10 +69,16 @@ FRESHNESS_TARGETS = (
         # published nothing (rare, checked against raw below) or the
         # Normalizer isn't running. 4 days (not 72h like filing_index) gives
         # slack for a real weekend + Monday SEC processing lag.
+        # 2026-11-10: measured from when a filing row was ingested (created_at, set once and never
+        # rewritten by a re-normalize), not from its filing_date. filing_date is a calendar date
+        # read as midnight, and the gate runs after midnight UTC: on Monday night Friday's filings
+        # are the newest (Monday's index is not final yet), so run 42712874321 alerted at
+        # 4 days 53 minutes although Friday's filings had been ingested on Saturday (2.3 days
+        # earlier). 5 days covers a weekend plus a Monday holiday.
         "normalizer_backlog",
-        "select max(filing_date)::timestamptz from core.filing",
+        "select max(created_at) from core.filing",
         "select count(*) from core.filing",
-        timedelta(days=4),
+        timedelta(days=5),
     ),
     FreshnessTarget(
         # Same shape, one stage further downstream -- catches the case
