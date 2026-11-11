@@ -3,6 +3,10 @@ basis (WO-22 / WO-2 item 6, tickets SB-2..SB-5; design
 data-team/strategy/team/WO-REVIEW-period-engineer.md section 2; rule
 `split.event_basis@1`, default OFF).
 
+Flag condition: split.event_basis@1 must not be turned on before the archive
+follows the actual update (fixed in work/corporate-actions/archive-follows-update;
+release approver 2026-11-10).
+
 Principle (design 2.2): a share basis belongs to a FILING, not to a period.
 Every number in one filing is on that filing's own basis, so the factor that
 converts a value to today's basis is a property of its SOURCE FILING DATE:
