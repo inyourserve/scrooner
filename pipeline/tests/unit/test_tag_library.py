@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[3]
 LIB = ROOT / "pipeline" / "scripts" / "tag_library" / "library.py"
 FIELDS = ["rank", "company_id", "cik", "ticker", "taxonomy", "stmt", "tag", "lines", "filings", "evidence_plabel",
           "evidence_adsh", "evidence_cal_parent", "era_from", "era_to", "decision", "canonical_concept", "reason_class",
-          "reason", "decided_by"]
+          "reason", "decided_by", "filing_ids", "ibt_by_calc"]
 
 
 def _run(tmp_path, rows, catalog=("net_income", "net_income_resolved", "sga_expense", "accounts_payable")):
@@ -71,3 +71,38 @@ def test_alternate_tags_for_one_concept_never_overlap_in_era(tmp_path):
     rows[0].update(era_to="2025-12-31")
     got = _run(tmp_path, rows, catalog=("accounts_receivable",))
     assert got[("BS", "ReceivablesNetCurrent")]["decision"] == "concept"  # a tag switch: its own era
+
+
+def test_profitloss_is_decided_per_filing_not_per_company(tmp_path):
+    # AVGO pattern: NetIncomeLoss and an NCI line until filing 3; from filing 4 only ProfitLoss is printed
+    rows = [{"stmt": "IS", "tag": "NetIncomeLoss", "filing_ids": "1;2;3"},
+            {"stmt": "IS", "tag": "NetIncomeLossAttributableToNoncontrollingInterest", "filing_ids": "2;3"},
+            {"stmt": "IS", "tag": "ProfitLoss", "filing_ids": "2;3;4;5"}]
+    got = _run(tmp_path, rows, catalog=("net_income_resolved",))
+    assert got[("IS", "ProfitLoss")]["decision"] == "concept"
+    assert "2 of 4 filings" in got[("IS", "ProfitLoss")]["reason"]
+
+
+def test_income_before_tax_is_found_by_calc_position_not_by_label(tmp_path):
+    rows = [{"stmt": "IS", "tag": "IncomeLossAttributableToParent", "evidence_plabel": "INCOME BEFORE INCOME TAXES", "ibt_by_calc": "8", "filing_ids": "1;2"}]
+    got = _run(tmp_path, rows, catalog=("income_before_tax_resolved",))
+    assert got[("IS", "IncomeLossAttributableToParent")]["canonical_concept"] == "income_before_tax_resolved"
+    rows[0]["ibt_by_calc"] = "0"
+    got = _run(tmp_path, rows, catalog=("income_before_tax_resolved",))
+    assert got[("IS", "IncomeLossAttributableToParent")]["decision"] != "concept"  # a label alone never promotes
+
+
+def test_a_component_label_is_never_promoted_in_its_own_filings(tmp_path):
+    rows = [{"stmt": "IS", "tag": "Revenues", "filing_ids": "1;2", "evidence_plabel": "Total revenues"},
+            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerIncludingAssessedTax", "filing_ids": "2;3", "evidence_plabel": "Product sales"},
+            {"stmt": "IS", "tag": "RevenueFromContractWithCustomerExcludingAssessedTax", "filing_ids": "2;4", "evidence_plabel": "Total revenues"}]
+    got = _run(tmp_path, rows, catalog=("revenue_sanity_resolved",))
+    assert got[("IS", "RevenueFromContractWithCustomerIncludingAssessedTax")]["decision"] == "excluded"
+    assert got[("IS", "RevenueFromContractWithCustomerExcludingAssessedTax")]["decision"] == "concept"
+
+
+def test_committed_ranks_1_50_map_leaves_no_core_point_without_source_or_reason():
+    cov = ROOT / "pipeline" / "scripts" / "tag_library" / "coverage.py"
+    csv_path = ROOT / "data-team" / "47-fsn-store" / "company_tag_map" / "ranks_1_50.csv"
+    out = subprocess.run([sys.executable, "-I", str(cov), str(csv_path)], check=True, capture_output=True, text=True).stdout
+    assert out.strip().splitlines()[-1] == "gaps 0", out
