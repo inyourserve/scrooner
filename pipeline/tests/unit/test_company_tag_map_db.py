@@ -118,7 +118,22 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         # one tag feeds a second concept in the same era; an excluded row clashes with any row of the tag
         conn.execute(base, (co, "concept", x["opex"], None, "2018-01-01", None))
         conn.commit()
-        bad("excluded", None, "not used", "2019-01-01", None)
+        # an excluded detail row (no concept) may coexist with a component row of the same tag; two excluded clash
+        comp = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, parent_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','T','IS','component',%s,'2018-01-01','t','tm.r@1')"
+        comp = comp.replace("'T'", "'T2'")
+        conn.execute(comp, (co, x["rev"]))
+        conn.execute(comp, (co, x["opex"]))  # one tag a component of two parents
+        base2 = base.replace("'T'", "'T2'")
+        conn.execute(base2, (co, "excluded", None, "detail", "2018-01-01", None))
+        conn.commit()
+        with pytest.raises(psycopg.errors.Error):  # two excluded rows of one tag still clash
+            conn.execute(base2, (co, "excluded", None, "again", "2019-01-01", None))
+        conn.rollback()
+        with pytest.raises(psycopg.errors.Error):  # another tag, same concept, overlapping era: refused
+            conn.execute(base.replace("'T'", "'T3'"), (co, "concept", x["rev"], None, "2019-01-01", None))
+        conn.rollback()
+        conn.execute(base.replace("'T'", "'T3'").replace("'IS'", "'IS'"), (co, "concept", x["rev"], None, "2012-01-01", "2014-12-31"))  # an era before: fine
+        conn.commit()
         conn.commit()
         csv_path = tmp_path / "m.csv"
         csv_path.write_text(
@@ -128,7 +143,7 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         )
         dry = seed(conn, csv_path)
         assert dry["rows"] == 2 and dry["errors"] == [] and not dry["applied"]
-        assert _one(conn, "select count(*) from analytics.company_tag_map") == 3  # dry run wrote nothing
+        assert _one(conn, "select count(*) from analytics.company_tag_map") == 7  # dry run wrote nothing
         done = seed(conn, csv_path, apply=True)
         assert done["applied"] and _one(conn, "select count(*) from analytics.company_tag_map") == 2
         assert _one(conn, "select count(*) from analytics.company_tag_map where tag = 'T'") == 0  # replaced

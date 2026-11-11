@@ -376,6 +376,8 @@ def build_cells(
                     "value": ref_value,
                     "source_fact_ids": sorted({f.fact_id for _, f in d}),
                     "serve_note": _note(d),
+                    "_filing_id": ref.filing_id,
+                    "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
                 }
             )
             continue
@@ -390,8 +392,12 @@ def build_cells(
                 "value": sum((f.value * _sign(r) for r, f in c), Decimal(0)),
                 "source_fact_ids": sorted({f.fact_id for _, f in c}),
                 "serve_note": _note(c),
+                "_filing_id": c[0][1].filing_id,
+                "_from_components": True,
+                "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
             }
         )
+    cells = _opex_tie(cells, concept_info, dcml, stats)
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
     held_keys = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
     name_to_id = {n: i for i, (n, _) in concept_info.items()}
@@ -504,6 +510,61 @@ def build_cells(
             }
         )
     return cells, stats
+
+
+def _base(name: str) -> str:
+    return name.removesuffix("_resolved")
+
+
+def _opex_tie(cells: list[dict], concept_info, dcml, stats: dict) -> list[dict]:
+    """operating_expenses built from component lines (no opex total printed) must tie, per filing, to the
+    printed statement: gross profit - sum(components) = operating income within the rounding tolerance
+    (checks.tol_of). No gross profit / operating income of the same filing, or no tie: the cell is HELD."""
+    by_name: dict[tuple[str, int], dict] = {}
+    for c in cells:
+        by_name.setdefault(
+            (_base(concept_info[c["canonical_concept_id"]][0]), c["period_id"]), c
+        )
+    kept = []
+    for c in cells:
+        if not (
+            c.get("_from_components")
+            and _base(concept_info[c["canonical_concept_id"]][0])
+            == "operating_expenses"
+        ):
+            kept.append(c)
+            continue
+        gp = by_name.get(("gross_profit", c["period_id"]))
+        oi = by_name.get(("operating_income", c["period_id"]))
+        key = (c["canonical_concept_id"], c["period_id"])
+        if (
+            gp is None
+            or oi is None
+            or gp["_filing_id"] != c["_filing_id"]
+            or oi["_filing_id"] != c["_filing_id"]
+        ):
+            stats["held"].append(
+                {
+                    "canonical_concept_id": key[0],
+                    "period_id": key[1],
+                    "reason": "opex_tie_needs_gross_profit_and_operating_income_of_the_filing",
+                }
+            )
+            continue
+        tol = tol_of(
+            [dcml.get(k) for k in c["_dcml_keys"] + gp["_dcml_keys"] + oi["_dcml_keys"]]
+        )
+        if abs(gp["value"] - c["value"] - oi["value"]) > tol:
+            stats["held"].append(
+                {
+                    "canonical_concept_id": key[0],
+                    "period_id": key[1],
+                    "reason": "opex_components_do_not_tie_gross_profit_to_operating_income",
+                }
+            )
+            continue
+        kept.append(c)
+    return kept
 
 
 def _load_periods(

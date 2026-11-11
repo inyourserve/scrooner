@@ -27,9 +27,10 @@
 -- stmt is the FSN statement code (BS/IS/CF/EQ/CI/UN/CP): the same tag on two statements is two rows
 -- (NetIncomeLoss on CF is the cash-flow start line, not net income). era_to NULL = open-ended.
 -- Eras of one (company, taxonomy, tag, stmt, concept) - or, for tagless rows, (company, stmt, canonical_concept) -
--- must not overlap. One tag may feed two concepts (EarningsPerShareBasicAndDiluted: basic and diluted EPS) and
--- one concept may list several tags with overlapping eras (10-Q vs 10-K tags); an 'excluded' row overlaps any
--- row of the same tag and statement. The mapper takes the latest filing's value among a concept's tags. (trigger; btree_gist is not assumed).
+-- must not overlap; and two 'concept' rows of one (company, stmt, concept) never overlap, even under different
+-- tags (the library cuts eras so a concept has one tag per period). One tag may feed two concepts (EarningsPerShareBasicAndDiluted: basic and diluted EPS) and
+-- one concept may list several tags in consecutive eras (10-Q vs 10-K tags); an 'excluded' detail row (no
+-- concept) may coexist with a component row of the same tag (two excluded rows still clash). The mapper takes the latest filing's value among a concept's tags. (trigger; btree_gist is not assumed).
 -- NOT applied: needs the founder's typed words.
 create table if not exists analytics.company_tag_map (
     id                    bigint generated always as identity primary key,
@@ -83,12 +84,14 @@ begin
         select 1 from analytics.company_tag_map m
         where m.company_id = new.company_id and m.stmt = new.stmt
           and m.id is distinct from new.id
-          and case when new.tag is null
+          and (case when new.tag is null
                    then m.tag is null and m.canonical_concept_id = new.canonical_concept_id
                    else m.taxonomy = new.taxonomy and m.tag = new.tag
-                        and (coalesce(m.canonical_concept_id, m.parent_concept_id)
-                                 is not distinct from coalesce(new.canonical_concept_id, new.parent_concept_id)
-                             or m.decision = 'excluded' or new.decision = 'excluded') end
+                        and coalesce(m.canonical_concept_id, m.parent_concept_id)
+                                is not distinct from coalesce(new.canonical_concept_id, new.parent_concept_id) end
+               -- two 'concept' rows of one concept never cover the same period, even under different tags
+               or (new.decision = 'concept' and m.decision = 'concept'
+                   and m.canonical_concept_id = new.canonical_concept_id))
           and m.era_from <= coalesce(new.era_to, 'infinity'::date)
           and new.era_from <= coalesce(m.era_to, 'infinity'::date)
     ) then

@@ -235,7 +235,7 @@ def test_selection_path_never_takes_an_absolute_value():
     from pathlib import Path
 
     src = (Path(__file__).resolve().parents[2] / "src/scrooner_pipeline/mapper/company_tag_map.py").read_text()
-    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l)
+    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l and 'abs(gp["value"]' not in l)
     assert "abs(" not in code  # the only abs() is the tie-tolerance difference of two totals
     row = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, ERA, None)
     cells, _ = run([row], {("us-gaap", "T"): {7: fact("-5", 1)}})
@@ -264,3 +264,52 @@ def test_d3_no_cross_section_identity_total_minus_other_section_is_refused():
     # even a total and a line of different sections with no calc relation at all is refused
     cells, stats = run(rows, facts, {"A-10": {("Other", "Thing")}})
     assert cells == [] and stats["held"]
+
+
+def test_era_is_authoritative_a_row_serves_only_periods_inside_it():
+    row = MapRow("us-gaap", "ProfitLoss", "IS", "concept", OPEX, None, 1, date(2021, 1, 1), None)  # AVGO-style: from 2021
+    facts = {("us-gaap", "ProfitLoss"): {7: Fact(Decimal("5"), 1, date(2020, 10, 31), False, 10, "A-10"), 8: Fact(Decimal("6"), 2, date(2021, 3, 31), False, 10, "A-10")}}
+    cells, _ = run([row], facts)
+    assert [(c["period_id"], c["value"]) for c in cells] == [(8, Decimal("6"))]  # the 2020 period is outside the era
+
+
+OPEX_ID, GP_ID, OI_ID = 11, 12, 13
+OPEX_INFO = {OPEX_ID: ("operating_expenses_resolved", "income_statement"), GP_ID: ("gross_profit", "income_statement"), OI_ID: ("operating_income", "income_statement")}
+
+
+def _opex(gp, a, b, oi):
+    rows = [
+        MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "R", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+        MapRow("us-gaap", "G", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+    ]
+    facts = {
+        ("us-gaap", "GrossProfit"): {7: fact(gp, 1)},
+        ("us-gaap", "OperatingIncomeLoss"): {7: fact(oi, 2)},
+        ("us-gaap", "R"): {7: fact(a, 3)},
+        ("us-gaap", "G"): {7: fact(b, 4)},
+    }
+    arcs = {"A-10": {("OperatingIncomeLoss", "R"), ("OperatingIncomeLoss", "G")}}
+    return build_cells(rows, facts, OPEX_INFO, arcs, {})
+
+
+def test_opex_components_must_tie_gross_profit_to_operating_income():
+    cells, stats = _opex("100", "30", "20", "50")  # 100 - 50 = 50
+    assert {c["canonical_concept_id"]: c["value"] for c in cells}[OPEX_ID] == Decimal("50") and stats["held"] == []
+    cells, stats = _opex("100", "30", "20", "40")  # 100 - 50 != 40
+    assert OPEX_ID not in {c["canonical_concept_id"] for c in cells}
+    assert stats["held"][0]["reason"] == "opex_components_do_not_tie_gross_profit_to_operating_income"
+
+
+def test_seeder_refuses_two_concept_rows_of_one_concept_with_overlapping_eras():
+    from scrooner_pipeline.mapper.company_tag_map_seed import check_overlaps
+
+    def row(tag, a, b):
+        return {"company_id": 1, "stmt": "IS", "taxonomy": "us-gaap", "tag": tag, "decision": "concept",
+                "canonical_concept_id": 5, "parent_concept_id": None, "era_from": date.fromisoformat(a),
+                "era_to": date.fromisoformat(b) if b else None}
+
+    assert check_overlaps([row("A", "2015-01-01", "2019-12-31"), row("B", "2020-01-01", None)]) == []  # cut eras
+    errs = check_overlaps([row("A", "2015-01-01", "2020-06-30"), row("B", "2020-01-01", None)])
+    assert len(errs) == 1 and "two concept rows overlap" in errs[0]
