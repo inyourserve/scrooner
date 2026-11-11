@@ -139,6 +139,19 @@ def test_statement_types_follow_the_fsn_set():
     }
 
 
+def test_a_cover_only_amendment_has_no_cp():
+    """TECH 10-K/A (Part III, 2026m10): no statements, so the cover report carries no stmt."""
+    assert (
+        xbrl_fsn.classify_reports(
+            [(1, "C", "Cover", ""), (2, "N", "Insider Trading", "")]
+        )
+        == {}
+    )
+    assert xbrl_fsn.classify_reports(
+        [(1, "C", "Cover", ""), (2, "S", "Balance Sheets", "")]
+    )[1] == ("CP", 0)
+
+
 def test_index_header_parse():
     text = """<ACCEPTANCE-DATETIME>20261021171819
 CONFORMED SUBMISSION TYPE:\t10-Q
@@ -377,7 +390,11 @@ class _FakeClient:
     def get(self, url: str):
         name = url.rsplit("/", 1)[-1]
         if name == "index.json":
-            return _FakeResp(json.dumps({"directory": {"item": [{"name": n} for n in self.files]}}).encode())
+            return _FakeResp(
+                json.dumps(
+                    {"directory": {"item": [{"name": n} for n in self.files]}}
+                ).encode()
+            )
         body = self.files[name]
         if isinstance(body, Exception):
             raise body
@@ -387,16 +404,22 @@ class _FakeClient:
 def _directory() -> dict[str, object]:
     files, _ = load_fixture(META)
     out: dict[str, object] = dict(files.files)
-    out[f"{META}-index-headers.html"] = b"&lt;ACCEPTANCE-DATETIME&gt;20261029161000\nCONFORMED SUBMISSION TYPE:\t10-Q\n"
+    out[f"{META}-index-headers.html"] = (
+        b"&lt;ACCEPTANCE-DATETIME&gt;20261029161000\nCONFORMED SUBMISSION TYPE:\t10-Q\n"
+    )
     return out
 
 
 def test_fetch_builds_the_filing_from_all_of_its_inputs():
-    ff = edgar_fetch.fetch_filing(_FakeClient(_directory()), META.split("-")[0], META, "edgar:2026-11-11")
+    ff = edgar_fetch.fetch_filing(
+        _FakeClient(_directory()), META.split("-")[0], META, "edgar:2026-11-11"
+    )
     assert xbrl_fsn.convert(ff)["num"]
 
 
-@pytest.mark.parametrize("break_it", ["http_error", "missing_r_page", "no_summary", "no_instance"])
+@pytest.mark.parametrize(
+    "break_it", ["http_error", "missing_r_page", "no_summary", "no_instance"]
+)
 def test_fetch_fails_closed(break_it):
     """Any missing input fails the whole filing (never a partial build); build() reports it, loads nothing."""
     import httpx
@@ -407,7 +430,9 @@ def test_fetch_fails_closed(break_it):
     instance = next(n for n in d if n.endswith("_htm.xml"))
     if break_it == "http_error":
         req = httpx.Request("GET", "https://www.sec.gov/x")
-        d[instance] = httpx.HTTPStatusError("404", request=req, response=httpx.Response(404, request=req))
+        d[instance] = httpx.HTTPStatusError(
+            "404", request=req, response=httpx.Response(404, request=req)
+        )
     elif break_it == "missing_r_page":
         d.pop("R2.htm")
     elif break_it == "no_summary":
@@ -415,8 +440,15 @@ def test_fetch_fails_closed(break_it):
     else:
         d.pop(instance)
     client = _FakeClient(d)
-    cand = increment.Candidate(1, "0001326801", META, "10-Q", "2026-10-29", "2026-09-30")
-    res = increment.build([cand], lambda c: edgar_fetch.fetch_filing(client, c.cik, c.accession, "edgar:2026-11-11"))
+    cand = increment.Candidate(
+        1, "0001326801", META, "10-Q", "2026-10-29", "2026-09-30"
+    )
+    res = increment.build(
+        [cand],
+        lambda c: edgar_fetch.fetch_filing(
+            client, c.cik, c.accession, "edgar:2026-11-11"
+        ),
+    )
     assert not res.built and [f["accession"] for f in res.failed] == [META]
 
 
@@ -424,11 +456,28 @@ def test_nightly_stage_is_off_by_default():
     import os
     import subprocess
 
-    script = Path(__file__).resolve().parents[2] / "scripts" / "fsn_nightly_incremental.sh"
+    script = (
+        Path(__file__).resolve().parents[2] / "scripts" / "fsn_nightly_incremental.sh"
+    )
     env = {k: v for k, v in os.environ.items() if k != "FSN_NIGHTLY_STAGE"}
-    out = subprocess.run(["bash", str(script)], capture_output=True, text=True, env=env, timeout=60)
+    out = subprocess.run(
+        ["bash", str(script)], capture_output=True, text=True, env=env, timeout=60
+    )
     assert out.returncode == 0 and "FSN_NIGHTLY_STAGE=off, skipped" in out.stdout
-    wf = (Path(__file__).resolve().parents[3] / ".github" / "workflows" / "pipeline-refresh.yml").read_text()
-    assert "vars.FSN_NIGHTLY_STAGE || 'off'" in wf and "vars.HYBRID_NEW_PATH || 'off'" in wf
-    sanity = (Path(__file__).resolve().parents[3] / ".github" / "workflows" / "pipeline-sanity.yml").read_text()
+    wf = (
+        Path(__file__).resolve().parents[3]
+        / ".github"
+        / "workflows"
+        / "pipeline-refresh.yml"
+    ).read_text()
+    assert (
+        "vars.FSN_NIGHTLY_STAGE || 'off'" in wf
+        and "vars.HYBRID_NEW_PATH || 'off'" in wf
+    )
+    sanity = (
+        Path(__file__).resolve().parents[3]
+        / ".github"
+        / "workflows"
+        / "pipeline-sanity.yml"
+    ).read_text()
     assert "vars.HYBRID_NEW_PATH || 'off'" in sanity

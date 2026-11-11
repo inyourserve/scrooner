@@ -1,7 +1,7 @@
 Statement-type classifier (fsn_store.xbrl_fsn.classify_reports) against every 10-K/10-Q/amendment in the SEC set 2026m10 (ren + pre stmt, 2026-11-09).
 Measured on the FSN ren rows themselves (report, menucat, shortname, longname), so no EDGAR fetch is involved.
 
-filings 1014 all right 977 reports 7333 68
-[(('', 'CP'), 17), (('CI', 'UN'), 9), (('SI', 'UN'), 9), (('EQ', 'UN'), 7), (('', 'UN'), 7), (('UN', 'EQ'), 4), (('BS', 'UN'), 4), (('SI', 'EQ'), 4), (('CF', 'UN'), 3), (('IS', 'UN'), 2), (('CP', 'UN'), 1), (('CP', ''), 1)]
+filings 1014 all right 993 reports 7333 52 (99.30%)
+[(('CI', 'UN'), 9), (('SI', 'UN'), 9), (('EQ', 'UN'), 7), (('', 'UN'), 7), (('UN', 'EQ'), 4), (('BS', 'UN'), 4), (('SI', 'EQ'), 4), (('CF', 'UN'), 3), (('IS', 'UN'), 2), (('CP', 'UN'), 1), (('', 'CP'), 1), (('CP', ''), 1)]
 
-Confusions are (FSN stmt, ours); '' = no stmt (no pre rows in the shard view). SI = schedule of investments (BDCs, not in STATEMENT_STMTS).
+Confusions are (FSN stmt, ours); '' = no stmt (no pre rows in the shard view). SI = schedule of investments (BDCs, not in STATEMENT_STMTS). Re-measured 2026-11-11 after the cover-only rule (a filing without statements has no CP cover).

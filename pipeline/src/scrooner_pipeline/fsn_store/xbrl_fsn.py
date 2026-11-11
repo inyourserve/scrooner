@@ -592,9 +592,14 @@ def classify_reports(
             if k == "CI":
                 kinds[rep] = "IS"
                 break
-    # only the first cover report is the CP (MU's 'Audit Information' cover report has no stmt)
+    # only the first cover report is the CP (MU's 'Audit Information' cover report has no stmt), and only
+    # when the filing has statements: a cover-only amendment's cover has no stmt (TECH 10-K/A; 2026m10:
+    # 996 of 997 filings with statements have a CP cover, 16 of 16 without have none)
     covers = [rep for rep, menucat, _, _ in reports if menucat == "C"]
-    out: dict[int, tuple[str, int]] = {covers[0]: ("CP", 0)} if covers else {}
+    has_statements = any(menucat == "S" for _, menucat, _, _ in reports)
+    out: dict[int, tuple[str, int]] = (
+        {covers[0]: ("CP", 0)} if covers and has_statements else {}
+    )
     used: set[tuple[str, int]] = set()
     prev = "UN"
     for rep, _short, p in stm:
