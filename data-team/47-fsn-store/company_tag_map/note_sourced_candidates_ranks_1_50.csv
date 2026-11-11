@@ -1,105 +1,84 @@
-company_id,cik,ticker,concept,sec_tags_with_facts,years_2015plus,verifier_stratum,risk
-1,0000019617,JPM,amortization_of_intangibles,AmortizationOfIntangibleAssets,4,note_sourced,
-1,0000019617,JPM,cash_and_equivalents,Cash;CashAndCashEquivalentsAtCarryingValue;CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,12,note_sourced,
-1,0000019617,JPM,interest_income,InvestmentIncomeInterest,12,note_sourced,
-3,0000320193,AAPL,amortization_of_intangibles,AmortizationOfIntangibleAssets,6,note_sourced,
-3,0000320193,AAPL,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,9,note_sourced,
-4,0000789019,MSFT,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-4,0000789019,MSFT,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-4,0000789019,MSFT,operating_expenses,OperatingExpenses,5,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-9,0001652044,GOOG,amortization_of_intangibles,AmortizationOfIntangibleAssets,2,note_sourced,
-9,0001652044,GOOG,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-85,0000002488,AMD,other_income_expense_net,NonoperatingIncomeExpense,2,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-134,0000006951,AMAT,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,12,note_sourced,
-134,0000006951,AMAT,amortization_of_intangibles,AmortizationOfIntangibleAssets,10,note_sourced,
-134,0000006951,AMAT,interest_income,InvestmentIncomeInterest,4,note_sourced,
-251,0000018230,CAT,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-251,0000018230,CAT,gross_profit,GrossProfit,6,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-251,0000018230,CAT,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,12,note_sourced,
-251,0000018230,CAT,stockholders_equity,MembersEquity;PartnersCapital;StockholdersEquity;StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,12,note_sourced,
-279,0000021344,KO,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,11,note_sourced,
-279,0000021344,KO,amortization_of_intangibles,AmortizationOfIntangibleAssets,9,note_sourced,
-279,0000021344,KO,cf_ar_change,IncreaseDecreaseInAccountsReceivable;IncreaseDecreaseInReceivables,11,note_sourced,
-279,0000021344,KO,cf_inventory_change,IncreaseDecreaseInInventories,11,note_sourced,
-608,0000040545,GE,gross_profit,GrossProfit,2,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-608,0000040545,GE,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,2,note_sourced,
-608,0000040545,GE,interest_income,InvestmentIncomeInterest,9,note_sourced,
-608,0000040545,GE,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,8,note_sourced,
-643,0000050863,INTC,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-643,0000050863,INTC,interest_income,InvestmentIncomeInterest,12,note_sourced,
-666,0000059478,LLY,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-666,0000059478,LLY,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,11,note_sourced,
-666,0000059478,LLY,interest_income,InvestmentIncomeInterest,11,note_sourced,
-666,0000059478,LLY,operating_expenses,OperatingExpenses,5,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-1010,0000072971,WFC,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,11,note_sourced,
-1042,0000080424,PG,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-1042,0000080424,PG,research_and_development,ResearchAndDevelopmentExpense;ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,12,note_sourced,
-1042,0000080424,PG,stockholders_equity,MembersEquity;PartnersCapital;StockholdersEquity;StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,12,note_sourced,
-1086,0000093410,CVX,cf_inventory_change,IncreaseDecreaseInInventories,12,note_sourced,
-1086,0000093410,CVX,research_and_development,ResearchAndDevelopmentExpense;ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,11,note_sourced,
-1086,0000093410,CVX,share_buybacks,PaymentsForRepurchaseOfCommonStock,12,note_sourced,
-1104,0000097476,TXN,interest_income,InvestmentIncomeInterest,2,note_sourced,
-1105,0000097745,TMO,gross_profit,GrossProfit,5,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-1123,0000101829,RTX,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-1123,0000101829,RTX,gross_profit,GrossProfit,6,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-1134,0000104169,WMT,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,12,note_sourced,
-1164,0000200406,JNJ,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-1164,0000200406,JNJ,operating_income,OperatingIncomeLoss,1,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-1182,0000310158,MRK,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-1182,0000310158,MRK,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-1182,0000310158,MRK,interest_income,InvestmentIncomeInterest,12,note_sourced,
-1207,0000318154,AMGN,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-1207,0000318154,AMGN,gross_profit,GrossProfit,6,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-1207,0000318154,AMGN,interest_income,InvestmentIncomeInterest,6,note_sourced,
-1263,0000707549,LRCX,amortization_of_intangibles,AmortizationOfIntangibleAssets,10,note_sourced,
-1263,0000707549,LRCX,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-1263,0000707549,LRCX,interest_income,InvestmentIncomeInterest,12,note_sourced,
-1321,0000723125,MU,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,12,note_sourced,
-1321,0000723125,MU,amortization_of_intangibles,AmortizationOfIntangibleAssets,10,note_sourced,
-1354,0000731766,UNH,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-1354,0000731766,UNH,inventory,InventoryNet,5,note_sourced,
-1649,0000858877,CSCO,depreciation_and_amortization,DepreciationAmortizationAndAccretionNet;DepreciationAndAmortization;DepreciationDepletionAndAmortization,12,note_sourced,
-1767,0000886982,GS,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-1767,0000886982,GS,goodwill,Goodwill,12,note_sourced,
-1767,0000886982,GS,interest_income,InvestmentIncomeInterest,6,note_sourced,
-1767,0000886982,GS,ppe_net,PropertyPlantAndEquipmentNet,5,note_sourced,
-1807,0000895421,MS,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-1857,0000909832,COST,goodwill,Goodwill,8,note_sourced,
-1857,0000909832,COST,gross_profit,GrossProfit,2,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-2328,0001018724,AMZN,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-2726,0001535527,CRWD,depreciation_and_amortization,DepreciationAmortizationAndAccretionNet;DepreciationAndAmortization;DepreciationDepletionAndAmortization,2,note_sourced,
-2733,0001045810,NVDA,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-2848,0001551152,ABBV,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,11,note_sourced,
-2848,0001551152,ABBV,gross_profit,GrossProfit,11,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-2848,0001551152,ABBV,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-2848,0001551152,ABBV,interest_income,InvestmentIncomeInterest,12,note_sourced,
-3007,0001065280,NFLX,gross_profit,GrossProfit,6,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-3083,0001571996,DELL,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-3083,0001571996,DELL,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,12,note_sourced,
-3398,0001594805,SHOP,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,11,note_sourced,
-3398,0001594805,SHOP,accounts_receivable,AccountsNotesAndLoansReceivableNetCurrent;AccountsReceivableNetCurrent;ReceivablesNetCurrent,12,note_sourced,
-3398,0001594805,SHOP,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-3398,0001594805,SHOP,cf_ar_change,IncreaseDecreaseInAccountsReceivable;IncreaseDecreaseInReceivables,1,note_sourced,
-3398,0001594805,SHOP,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,4,note_sourced,
-3398,0001594805,SHOP,inventory,InventoryNet,6,note_sourced,
-3398,0001594805,SHOP,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,12,note_sourced,
-3418,0001596532,ANET,amortization_of_intangibles,AmortizationOfIntangibleAssets,8,note_sourced,
-3932,0001141391,MA,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-4015,0001996810,GEV,accounts_payable,AccountsPayableCurrent;AccountsPayableTradeCurrent,3,note_sourced,
-4015,0001996810,GEV,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,2,note_sourced,
-4841,0001707925,LIN,amortization_of_intangibles,AmortizationOfIntangibleAssets,10,note_sourced,
-4945,0001318605,TSLA,amortization_of_intangibles,AmortizationOfIntangibleAssets,5,note_sourced,
-4969,0001321655,PLTR,amortization_of_intangibles,AmortizationOfIntangibleAssets,3,note_sourced,
-4969,0001321655,PLTR,goodwill,Goodwill,2,note_sourced,
-5050,0001326801,META,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,note_sourced,
-5050,0001326801,META,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,10,note_sourced,
-5050,0001326801,META,interest_income,InvestmentIncomeInterest,10,note_sourced,
-5058,0001327567,PANW,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-5058,0001327567,PANW,inventory,InventoryNet,3,note_sourced,
-5203,0001341439,ORCL,gross_profit,GrossProfit,4,note_sourced,segment-total risk: verify it is consolidated (11-03 OI lesson)
-5203,0001341439,ORCL,interest_income,InvestmentIncomeInterest,12,note_sourced,
-5718,0001403161,V,amortization_of_intangibles,AmortizationOfIntangibleAssets,12,note_sourced,
-5761,0001413329,PM,interest_expense,InterestAndDebtExpense;InterestExpense;InterestExpenseNonoperating;InterestExpenseOperating,11,note_sourced,
-5761,0001413329,PM,interest_income,InvestmentIncomeInterest,11,note_sourced,
-5761,0001413329,PM,research_and_development,ResearchAndDevelopmentExpense;ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,11,note_sourced,
-5761,0001413329,PM,sbc,AllocatedShareBasedCompensationExpense;ShareBasedCompensation,3,note_sourced,
+company_id,ticker,concept,tags_found,periods,check,verifier_stratum
+1,JPM,amortization_of_intangibles,AmortizationOfIntangibleAssets,4,"note-only fact (FSN store, undimensioned)",note_sourced
+3,AAPL,amortization_of_intangibles,AmortizationOfIntangibleAssets,3,"note-only fact (FSN store, undimensioned)",note_sourced
+3,AAPL,interest_expense,InterestExpense;InterestExpenseDebt,35,"note-only fact (FSN store, undimensioned)",note_sourced
+3,AAPL,interest_income,InvestmentIncomeInterestAndDividend,35,"note-only fact (FSN store, undimensioned)",note_sourced
+4,MSFT,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+4,MSFT,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseNonoperating,42,"note-only fact (FSN store, undimensioned)",note_sourced
+9,GOOG,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseNonoperating,37,"note-only fact (FSN store, undimensioned)",note_sourced
+9,GOOG,interest_income,InterestIncomeOther,47,"note-only fact (FSN store, undimensioned)",note_sourced
+134,AMAT,amortization_of_intangibles,AmortizationOfIntangibleAssets,39,"note-only fact (FSN store, undimensioned)",note_sourced
+134,AMAT,interest_income,InvestmentIncomeInterest,12,"note-only fact (FSN store, undimensioned)",note_sourced
+251,CAT,amortization_of_intangibles,AmortizationOfIntangibleAssets,46,"note-only fact (FSN store, undimensioned)",note_sourced
+279,KO,amortization_of_intangibles,AmortizationOfIntangibleAssets,9,"note-only fact (FSN store, undimensioned)",note_sourced
+279,KO,cf_ar_change,IncreaseDecreaseInAccountsReceivable,11,"note-only fact (FSN store, undimensioned)",note_sourced
+279,KO,cf_inventory_change,IncreaseDecreaseInInventories,11,"note-only fact (FSN store, undimensioned)",note_sourced
+608,GE,interest_expense,InterestAndDebtExpense,2,"note-only fact (FSN store, undimensioned)",note_sourced
+608,GE,interest_income,InvestmentIncomeInterest,9,"note-only fact (FSN store, undimensioned)",note_sourced
+608,GE,sbc,AllocatedShareBasedCompensationExpense,8,"note-only fact (FSN store, undimensioned)",note_sourced
+643,INTC,interest_expense,InterestExpense;InterestExpenseNonoperating,37,"note-only fact (FSN store, undimensioned)",note_sourced
+643,INTC,interest_income,InvestmentIncomeInterest,47,"note-only fact (FSN store, undimensioned)",note_sourced
+666,LLY,amortization_of_intangibles,AmortizationOfIntangibleAssets,14,"note-only fact (FSN store, undimensioned)",note_sourced
+666,LLY,interest_expense,InterestExpense;InterestExpenseNonoperating,37,"note-only fact (FSN store, undimensioned)",note_sourced
+666,LLY,interest_income,InvestmentIncomeInterest,43,"note-only fact (FSN store, undimensioned)",note_sourced
+1010,WFC,sbc,ShareBasedCompensation,11,"note-only fact (FSN store, undimensioned)",note_sourced
+1042,PG,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+1042,PG,research_and_development,ResearchAndDevelopmentExpense,12,"note-only fact (FSN store, undimensioned)",note_sourced
+1086,CVX,cf_inventory_change,IncreaseDecreaseInInventories,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1086,CVX,research_and_development,ResearchAndDevelopmentExpense,11,"note-only fact (FSN store, undimensioned)",note_sourced
+1086,CVX,share_buybacks,PaymentsForRepurchaseOfCommonStock,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1104,TXN,interest_income,InvestmentIncomeInterest,2,"note-only fact (FSN store, undimensioned)",note_sourced
+1123,RTX,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+1134,WMT,sbc,AllocatedShareBasedCompensationExpense,12,"note-only fact (FSN store, undimensioned)",note_sourced
+1164,JNJ,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+1182,MRK,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+1182,MRK,interest_expense,InterestExpense;InterestExpenseNonoperating,37,"note-only fact (FSN store, undimensioned)",note_sourced
+1182,MRK,interest_income,InvestmentIncomeInterest,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1207,AMGN,amortization_of_intangibles,AmortizationOfIntangibleAssets,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1263,LRCX,amortization_of_intangibles,AmortizationOfIntangibleAssets,38,"note-only fact (FSN store, undimensioned)",note_sourced
+1263,LRCX,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseDebt;InterestExpenseNonoperating,37,"note-only fact (FSN store, undimensioned)",note_sourced
+1263,LRCX,interest_income,InvestmentIncomeInterest,47,"note-only fact (FSN store, undimensioned)",note_sourced
+1321,MU,amortization_of_intangibles,AmortizationOfIntangibleAssets,33,"note-only fact (FSN store, undimensioned)",note_sourced
+1354,UNH,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+1354,UNH,inventory,InventoryNet,5,"note-only fact (FSN store, undimensioned)",note_sourced
+1649,CSCO,depreciation_and_amortization,DepreciationDepletionAndAmortization,12,"note-only fact (FSN store, undimensioned)",note_sourced
+1767,GS,amortization_of_intangibles,AmortizationOfIntangibleAssets,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1767,GS,goodwill,Goodwill,46,"note-only fact (FSN store, undimensioned)",note_sourced
+1767,GS,ppe_net,PropertyPlantAndEquipmentNet,13,"note-only fact (FSN store, undimensioned)",note_sourced
+1807,MS,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+1857,COST,goodwill,Goodwill,9,"note-only fact (FSN store, undimensioned)",note_sourced
+2328,AMZN,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+2726,CRWD,depreciation_and_amortization,DepreciationDepletionAndAmortization,2,"note-only fact (FSN store, undimensioned)",note_sourced
+2733,NVDA,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+2848,ABBV,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseDebt,46,"note-only fact (FSN store, undimensioned)",note_sourced
+2848,ABBV,interest_income,InvestmentIncomeInterest;InvestmentIncomeInterestAndDividend,35,"note-only fact (FSN store, undimensioned)",note_sourced
+3007,NFLX,interest_income,InterestIncomeOperating,3,"note-only fact (FSN store, undimensioned)",note_sourced
+3083,DELL,amortization_of_intangibles,AmortizationOfIntangibleAssets,47,"note-only fact (FSN store, undimensioned)",note_sourced
+3083,DELL,interest_expense,InterestExpense;InterestExpenseDebt;InterestExpenseNonoperating,24,"note-only fact (FSN store, undimensioned)",note_sourced
+3083,DELL,interest_income,InvestmentIncomeInterestAndDividend,32,"note-only fact (FSN store, undimensioned)",note_sourced
+3398,SHOP,accounts_receivable,ReceivablesNetCurrent,8,"note-only fact (FSN store, undimensioned)",note_sourced
+3398,SHOP,amortization_of_intangibles,AmortizationOfIntangibleAssets,10,"note-only fact (FSN store, undimensioned)",note_sourced
+3398,SHOP,inventory,InventoryNet,3,"note-only fact (FSN store, undimensioned)",note_sourced
+3398,SHOP,sbc,AllocatedShareBasedCompensationExpense,12,"note-only fact (FSN store, undimensioned)",note_sourced
+3418,ANET,amortization_of_intangibles,AmortizationOfIntangibleAssets,20,"note-only fact (FSN store, undimensioned)",note_sourced
+3932,MA,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+4015,GEV,sbc,AllocatedShareBasedCompensationExpense,4,"note-only fact (FSN store, undimensioned)",note_sourced
+4841,LIN,amortization_of_intangibles,AmortizationOfIntangibleAssets,26,"note-only fact (FSN store, undimensioned)",note_sourced
+4945,TSLA,amortization_of_intangibles,AmortizationOfIntangibleAssets,5,"note-only fact (FSN store, undimensioned)",note_sourced
+4969,PLTR,amortization_of_intangibles,AmortizationOfIntangibleAssets,3,"note-only fact (FSN store, undimensioned)",note_sourced
+4969,PLTR,goodwill,Goodwill,2,"note-only fact (FSN store, undimensioned)",note_sourced
+5050,META,amortization_of_intangibles,AmortizationOfIntangibleAssets,40,"note-only fact (FSN store, undimensioned)",note_sourced
+5050,META,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseDebt;InterestExpenseNonoperating,22,"note-only fact (FSN store, undimensioned)",note_sourced
+5050,META,interest_income,InvestmentIncomeInterest,10,"note-only fact (FSN store, undimensioned)",note_sourced
+5058,PANW,amortization_of_intangibles,AmortizationOfIntangibleAssets,43,"note-only fact (FSN store, undimensioned)",note_sourced
+5058,PANW,interest_income,InterestIncomeOther,39,"note-only fact (FSN store, undimensioned)",note_sourced
+5058,PANW,inventory,InventoryNet,3,"note-only fact (FSN store, undimensioned)",note_sourced
+5116,AVGO,interest_income,InterestIncomeOther,11,"note-only fact (FSN store, undimensioned)",note_sourced
+5203,ORCL,interest_income,InvestmentIncomeInterest,47,"note-only fact (FSN store, undimensioned)",note_sourced
+5351,XOM,interest_income,InvestmentIncomeInterest,9,"note-only fact (FSN store, undimensioned)",note_sourced
+5351,XOM,research_and_development,ResearchAndDevelopmentExpense,11,"note-only fact (FSN store, undimensioned)",note_sourced
+5718,V,amortization_of_intangibles,AmortizationOfIntangibleAssets,11,"note-only fact (FSN store, undimensioned)",note_sourced
+5761,PM,interest_expense,FinanceLeaseInterestExpense;InterestExpense;InterestExpenseNonoperating,20,"note-only fact (FSN store, undimensioned)",note_sourced
+5761,PM,interest_income,InvestmentIncomeInterest,11,"note-only fact (FSN store, undimensioned)",note_sourced
+5761,PM,research_and_development,ResearchAndDevelopmentExpense,11,"note-only fact (FSN store, undimensioned)",note_sourced
+5761,PM,sbc,AllocatedShareBasedCompensationExpense,6,"note-only fact (FSN store, undimensioned)",note_sourced
