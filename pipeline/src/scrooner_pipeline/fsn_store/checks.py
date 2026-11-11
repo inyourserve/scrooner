@@ -79,7 +79,8 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
                 where l.filing_id = %%s
             ) x where es in ('BS', 'IS', 'CF')
             order by es, report, line
-            """ % effective_stmt_sql("l"),
+            """
+            % effective_stmt_sql("l"),
             (filing_id,),
         )
         lines = cur.fetchall()
