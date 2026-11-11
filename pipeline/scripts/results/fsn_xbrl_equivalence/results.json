@@ -11,6 +11,8 @@
     "pass": true
    },
    "cik": "40545",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -52,6 +54,8 @@
     "pass": true
    },
    "cik": "50863",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {
      "footnote": 2
@@ -109,6 +113,8 @@
     "pass": true
    },
    "cik": "51143",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -150,6 +156,8 @@
     "pass": true
    },
    "cik": "70858",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -191,6 +199,8 @@
     "pass": true
    },
    "cik": "72971",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {
      "footnote": 2
@@ -205,11 +215,11 @@
        "0",
        "USD",
        "0x00000000",
-       "0",
+       "1",
        ""
       ],
-      "",
-      "Our consolidated assets at September 30, 2026, and December 31, 2025, include the following assets of certain variable interest entities (VIEs) that can only be used to settle the liabilities of those VIEs: Trading assets, $3.2 billion and $2.3 billion; Available-for-sale debt securities, $704 million and $0 million; Loans, $14.2 billion and $11.3 billion; All other assets, $269 million and $224 million; and Total assets, $18.4 billion and $13.8 billion, respectively."
+      "Our consolidated assets at September 30, 2026, and December 31, 2025, include the following assets of certain variable interest entities (VIEs) that can only be used to settle the liabilities of those VIEs: Trading assets, $3.2 billion and $2.3 billion; Available-for-sale debt securities, $704 million and $0 million; Loans, $14.2 billion and $11.3 billion; All other assets, $269 million and $224 million; and Total assets, $18.4 billion and $13.8 billion, respectively.",
+      ""
      ],
      "missing": []
     },
@@ -248,6 +258,8 @@
     "pass": true
    },
    "cik": "77476",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -289,6 +301,8 @@
     "pass": true
    },
    "cik": "200406",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -330,6 +344,8 @@
     "pass": true
    },
    "cik": "723125",
+   "form": "10-K",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -371,6 +387,8 @@
     "pass": true
    },
    "cik": "732717",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -412,6 +430,8 @@
     "pass": true
    },
    "cik": "753308",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -453,6 +473,8 @@
     "pass": true
    },
    "cik": "896159",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {
      "footnote": 6
@@ -461,7 +483,7 @@
      "extra": [],
      "footnote": [
       [
-       "LiabilityForFuturePolicyBenefitReinsuranceRecoverableAfterAllowance",
+       "ReinsuranceRecoverablesOnPaidAndUnpaidLosses",
        "us-gaap/2026",
        "20260930",
        "0",
@@ -510,6 +532,8 @@
     "pass": true
    },
    "cik": "909832",
+   "form": "10-K",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {
      "footnote": 2
@@ -524,11 +548,11 @@
        "0",
        "USD",
        "0x00000000",
-       "1",
+       "0",
        ""
       ],
-      "",
-      "Net of unamortized debt discounts and issuance costs."
+      "Net of unamortized debt discounts and issuance costs.",
+      ""
      ],
      "missing": []
     },
@@ -567,6 +591,8 @@
     "pass": true
    },
    "cik": "1018724",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -597,6 +623,74 @@
    },
    "ticker": "AMZN"
   },
+  "0001140361-26-041062": {
+   "cal": {
+    "fsn_arcs": 0,
+    "fsn_groups": 0,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 0,
+    "ours_groups": 0,
+    "pass": true
+   },
+   "cik": "842023",
+   "form": "10-K/A",
+   "fsn_set": "2026m10",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 2,
+    "missing": 0,
+    "ours": 2,
+    "pass": true
+   },
+   "pass": false,
+   "pre": {
+    "examples": [
+     {
+      "fsn": [],
+      "ours": [
+       [
+        "CP",
+        "0",
+        "EntityPublicFloat",
+        "dei/2025",
+        "label",
+        "Entity Public Float",
+        "0"
+       ],
+       [
+        "CP",
+        "0",
+        "EntityCommonStockSharesOutstanding",
+        "dei/2025",
+        "label",
+        "Entity Common Stock, Shares Outstanding",
+        "0"
+       ]
+      ],
+      "report": "1"
+     }
+    ],
+    "fsn_rows": 0,
+    "ours_rows": 34,
+    "pass_exact": false,
+    "pass_items": false,
+    "reports": 1,
+    "reports_exact": 0,
+    "reports_item_diffs": 1,
+    "structural_row_diffs": 66
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "TECH"
+  },
   "0001193125-26-436133": {
    "cal": {
     "fsn_arcs": 163,
@@ -608,6 +702,8 @@
     "pass": true
    },
    "cik": "789019",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -649,6 +745,8 @@
     "pass": true
    },
    "cik": "1467373",
+   "form": "10-K",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -679,6 +777,65 @@
    },
    "ticker": "ACN"
   },
+  "0001628280-26-050325": {
+   "cal": {
+    "fsn_arcs": 206,
+    "fsn_groups": 20,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 206,
+    "ours_groups": 20,
+    "pass": true
+   },
+   "cik": "1664703",
+   "form": "10-Q/A",
+   "fsn_set": "2026m07",
+   "num": {
+    "column_diffs": {
+     "footnote": 26
+    },
+    "examples": {
+     "extra": [],
+     "footnote": [
+      [
+       "OtherLiabilitiesCurrent",
+       "us-gaap/2026",
+       "20251231",
+       "0",
+       "USD",
+       "0x00000000",
+       "1",
+       ""
+      ],
+      "We have a variable interest entity related to a joint venture in the Republic of Korea (see Note 11Related Party Transactions in this Quarterly Report on Form 10-Q), which represents a portion of the consolidated balances recorded within these financial statement line items. | Including amounts from related parties of $2.5 million and $0.04 million as of June 30, 2026, and December 31, 2025, respectively.",
+      ""
+     ],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 1180,
+    "missing": 0,
+    "ours": 1180,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 275,
+    "ours_rows": 275,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 9,
+    "reports_exact": 9,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "BE"
+  },
   "0001628280-26-066773": {
    "cal": {
     "fsn_arcs": 108,
@@ -690,6 +847,8 @@
     "pass": true
    },
    "cik": "1326801",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -731,6 +890,8 @@
     "pass": true
    },
    "cik": "1318605",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -772,6 +933,8 @@
     "pass": true
    },
    "cik": "12927",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -813,6 +976,8 @@
     "pass": true
    },
    "cik": "21344",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -854,6 +1019,8 @@
     "pass": true
    },
    "cik": "1652044",
+   "form": "10-Q",
+   "fsn_set": "2026m10",
    "num": {
     "column_diffs": {},
     "examples": {
@@ -883,7 +1050,50 @@
     "pass": true
    },
    "ticker": "GOOG"
+  },
+  "0001792789-26-000035": {
+   "cal": {
+    "fsn_arcs": 221,
+    "fsn_groups": 27,
+    "groups_only_fsn": 0,
+    "groups_only_ours": 0,
+    "ours_arcs": 221,
+    "ours_groups": 27,
+    "pass": true
+   },
+   "cik": "1792789",
+   "form": "10-K/A",
+   "fsn_set": "2026m05",
+   "num": {
+    "column_diffs": {},
+    "examples": {
+     "extra": [],
+     "missing": []
+    },
+    "extra": 0,
+    "fsn": 956,
+    "missing": 0,
+    "ours": 956,
+    "pass": true
+   },
+   "pass": true,
+   "pre": {
+    "examples": [],
+    "fsn_rows": 206,
+    "ours_rows": 206,
+    "pass_exact": true,
+    "pass_items": true,
+    "reports": 8,
+    "reports_exact": 8,
+    "reports_item_diffs": 0,
+    "structural_row_diffs": 0
+   },
+   "sub": {
+    "diff": {},
+    "pass": true
+   },
+   "ticker": "DASH"
   }
  },
- "fsn_set": "2026m10"
+ "fsn_set": "2026m10,2026m07,2026m05"
 }
