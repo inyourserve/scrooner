@@ -73,3 +73,6 @@ Findings:
 - `RestrictedCash*` family: component; sum only inside one family (ARCC `RestrictedCash`; HTZ/AX `RestrictedCashAndCashEquivalents`); do not add to CCE if the filer's CCE already includes it (check the face).
 - `CashAndDueFromBanks`: bank component only; never bank cash.
 - Evidence: FILING-CHECKED for the rows named; populations DATA-INFERRED. Verified by: Tag Expert (me).
+
+## Ranks 1-50 relay (Ritwik relay 2026-11-11, work/tag-library/ranks-1-50 aea0cf4 data-team/47-fsn-store/company_tag_map/ranks_1_50.csv (evidence_adsh + label per row); DATA-INFERRED, not yet filing-checked by the Verifier)
+- Custom or variant cash tags in the standard position: GE 2015-2017 `CashAndEquivalentsExcludingAssetsHeldForSale`; CVX "…ExcludingTimeDeposits" (2019-2022 and 2024+); MS pre-2020 `CashAndDueFromBanks` (bank-style cash line).

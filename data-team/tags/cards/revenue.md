@@ -115,3 +115,9 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 
 ## 9. Relays 2026-11-11
 - AT&T 10-Q 0000732717-26-000297 R2 l11-12: `CostOfGoodsAndServicesSold` labelled "Equipment" carries only a member value; with "Other cost of revenues" there is no total cost line: cost of revenue = sum of the cost lines (excluding D&A perimeter) (cash-flow lane I6; Ritwik cloud).
+
+## 10. Ranks 1-50 relay (Ritwik relay 2026-11-11, work/tag-library/ranks-1-50 aea0cf4 data-team/47-fsn-store/company_tag_map/ranks_1_50.csv (evidence_adsh + label per row); DATA-INFERRED, not yet filing-checked by the Verifier)
+- AMGN: product sales on `RevenueFromContractWithCustomerIncludingAssessedTax`, TOTAL revenues on `…ExcludingAssessedTax`: never pick by the Including/Excluding name; pick the calc top of the revenue block.
+- TSLA: `RevenueFromContractWithCustomerExcludingAssessedTax` is a calc CHILD of `Revenues` until 2023, then the top line: the same tag changes role across eras.
+- XOM pre-2018: custom `xom:SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes` is the revenue line (custom tag in a standard position).
+- MS, WFC: revenue = `RevenuesNetOfInterestExpense` ("Net revenues" / "Total revenue").
