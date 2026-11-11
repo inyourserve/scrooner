@@ -1,0 +1,129 @@
+"""resolve-facts through analytics.company_tag_map on a migrated scratch database (CI: Postgres 16)."""
+
+from __future__ import annotations
+
+from decimal import Decimal
+
+import psycopg
+import pytest
+
+from scrooner_pipeline.mapper.resolve import resolve
+
+
+def _one(conn, sql, *args):
+    return conn.execute(sql, args).fetchone()[0]
+
+
+def _seed(conn):
+    cc = lambda n, st: _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values (%s,%s,'first_match') returning id", n, st)
+    rev, opex = cc("tm_rev", "income_statement"), cc("tm_opex", "income_statement")
+    raw = _one(conn, "insert into raw.sec_companyfacts (cik, source_url, sha256, storage_path, http_status) values ('0000000000','u','s','p',200) returning id")
+    unit = _one(conn, "insert into core.unit (unit_name) values ('USD') returning id")
+    tags = {}
+    for t in ("Revenues", "SalesRevenueNet", "OpA", "OpB", "OtherOpex"):
+        tags[t] = _one(conn, "insert into core.concept (taxonomy, tag) values ('us-gaap', %s) returning id", t)
+    # global rules that would pick the excluded / unmapped tags
+    for cid, tag, pr in ((rev, "SalesRevenueNet", 1), (rev, "Revenues", 2), (opex, "OtherOpex", 1)):
+        conn.execute("insert into analytics.concept_mapping (canonical_concept_id, concept_id, priority) values (%s,%s,%s)", (cid, tags[tag], pr))
+    ctx = {"rev": rev, "opex": opex, "raw": raw, "unit": unit, "tags": tags}
+
+    def company(cik, mapped):
+        co = _one(conn, "insert into core.company (cik, company_name) values (%s,%s) returning id", cik, cik)
+        per = {}
+        for name, end in (("in", "2018-12-31"), ("out", "2020-12-31")):
+            per[name] = _one(conn, "insert into core.period (company_id, start_date, end_date, period_type) values (%s,%s,%s,'duration') returning id", co, f"{end[:4]}-01-01", end)
+        fil = {}
+        for name, d in (("old", "2019-02-01"), ("new", "2019-03-01")):
+            fil[name] = _one(conn, "insert into core.filing (company_id, accession_number, form, filing_date) values (%s,%s,'10-K',%s) returning id", co, f"{cik}-{name}", d)
+
+        def fact(tag, period, filing, value, auth=True):
+            return _one(conn, "insert into core.fact (company_id, concept_id, unit_id, period_id, filing_id, value, is_authoritative, raw_object_id) values (%s,%s,%s,%s,%s,%s,%s,%s) returning id",
+                        co, tags[tag], unit, per[period], fil[filing], Decimal(value), auth, raw)
+
+        return co, per, fil, fact
+
+    ctx["company"] = company
+    return ctx
+
+
+@pytest.mark.integration
+def test_tag_map_company_uses_only_the_map_and_control_keeps_the_old_path(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000000101", True)
+        fact("Revenues", "in", "old", "100")
+        f_new = fact("Revenues", "in", "new", "110")          # latest accepted filing wins
+        fact("SalesRevenueNet", "in", "new", "777")             # excluded in the map, first in the global rules
+        fact("Revenues", "out", "new", "55")                    # outside the era
+        a = fact("OpA", "in", "new", "10")
+        b = fact("OpB", "in", "new", "5")
+        fact("OtherOpex", "in", "new", "444")                   # global rule for opex, not in the map
+        # a non-authoritative copy (other unit) must never be used
+        u2 = _one(conn, "insert into core.unit (unit_name) values ('USDx') returning id")
+        conn.execute("insert into core.fact (company_id, concept_id, unit_id, period_id, filing_id, value, is_authoritative, raw_object_id) values (%s,%s,%s,%s,%s,%s,false,%s)", (co, x["tags"]["Revenues"], u2, per["in"], fil["new"], Decimal("999"), x["raw"]))
+        calc = _one(conn, "insert into fsn.filing (accession, cik, form, fsn_set) values (%s,'0000000101','10-K','t') returning id", "0000000101-new")
+        pt, ca, cb = (_one(conn, "insert into fsn.tag (tag, version) values (%s,'2018') returning id", t) for t in ("OperatingExpenses", "OpA", "OpB"))
+        for c in (ca, cb):
+            conn.execute("insert into fsn.calc_arc (filing_id, grp, arc, parent_tag_id, child_tag_id, weight) values (%s,1,%s,%s,%s,1)", (calc, c, pt, c))
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, combine_sign, reason_class, era_from, era_to, evidence_cal_parent, decided_by, rule_id) values (%s,'us-gaap',%s,'IS',%s,%s,%s,%s,%s,%s,%s,%s,'t','t@1')"
+        conn.execute(ins, (co, "Revenues", "concept", x["rev"], None, None, None, "2015-01-01", "2019-12-31", None))
+        conn.execute(ins, (co, "SalesRevenueNet", "excluded", x["rev"], None, None, "wrong_concept", "2015-01-01", None, None))
+        for t in ("OpA", "OpB"):
+            conn.execute(ins, (co, t, "component", None, x["opex"], 1, None, "2015-01-01", None, "OperatingExpenses"))
+        # control: no map rows, same global rules
+        co2, per2, fil2, fact2 = x["company"]("0000000102", False)
+        fact2("SalesRevenueNet", "in", "new", "5")
+        fact2("Revenues", "in", "new", "6")
+        conn.commit()
+
+        stats = resolve(conn, {"0000000101", "0000000102"})
+        assert stats["tag_map_companies"] == 1 and stats["errored"] == 0
+        rows = conn.execute("select company_id, canonical_concept_id, period_id, value, source_fact_ids from analytics.canonical_fact where company_id in (%s,%s)", (co, co2)).fetchall()
+        by = {(r[0], r[1], r[2]): (r[3], r[4]) for r in rows}
+        assert by[(co, x["rev"], per["in"])] == (Decimal("110"), [f_new])
+        assert (co, x["rev"], per["out"]) not in by
+        assert by[(co, x["opex"], per["in"])][0] == Decimal("15")
+        assert sorted(by[(co, x["opex"], per["in"])][1]) == sorted([a, b])
+        assert 444 not in {v for v, _ in by.values()} and 777 not in {v for v, _ in by.values()} and 999 not in {v for v, _ in by.values()}
+        assert len([k for k in by if k[0] == co]) == 2
+        assert by[(co2, x["rev"], per2["in"])][0] == Decimal("5")   # old path: global priority 1
+
+
+@pytest.mark.integration
+def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path):
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed
+
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, *_ = x["company"]("0000000201", True)
+        conn.commit()
+        base = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, reason, era_from, era_to, decided_by, rule_id) values (%s,'us-gaap','T','IS',%s,%s,%s,%s,%s,'t','r@1')"
+
+        def bad(*args):
+            with pytest.raises(psycopg.errors.Error):
+                conn.execute(base, (co, *args))
+            conn.rollback()
+
+        bad("concept", None, None, "2015-01-01", None)            # concept needs a concept
+        bad("excluded", None, None, "2015-01-01", None)           # excluded needs a reason
+        bad("concept", x["rev"], None, "2016-01-01", "2015-01-01")  # era_from > era_to
+        conn.execute(base, (co, "concept", x["rev"], None, "2015-01-01", "2017-12-31"))
+        conn.commit()
+        bad("concept", x["rev"], None, "2017-12-31", None)        # overlapping era, same tag and stmt
+        conn.execute(base, (co, "concept", x["rev"], None, "2018-01-01", None))  # adjacent era is fine
+        conn.commit()
+        csv_path = tmp_path / "m.csv"
+        csv_path.write_text(
+            "cik,taxonomy,tag,stmt,decision,canonical_concept,era_from,decided_by,rule_id,reason\n"
+            "0000000201,us-gaap,Revenues,IS,concept,tm_rev,2015-01-01,t,r@1,\n"
+            "0000000201,us-gaap,Other,IS,excluded,,2015-01-01,t,r@1,not a revenue line\n"
+        )
+        dry = seed(conn, csv_path)
+        assert dry["rows"] == 2 and dry["errors"] == [] and not dry["applied"]
+        assert _one(conn, "select count(*) from analytics.company_tag_map") == 2  # dry run wrote nothing
+        done = seed(conn, csv_path, apply=True)
+        assert done["applied"] and _one(conn, "select count(*) from analytics.company_tag_map") == 2
+        assert _one(conn, "select count(*) from analytics.company_tag_map where tag = 'T'") == 0  # replaced
+        csv_path.write_text(csv_path.read_text() + "0000000201,us-gaap,Bad,IS,excluded,,2015-01-01,t,r@1,\n")
+        assert seed(conn, csv_path, apply=True)["errors"]  # a bad row blocks the whole file
