@@ -47,6 +47,7 @@ from scrooner_pipeline.common.rule_flags import (
     rule_enabled,
 )
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
+from scrooner_pipeline.normalizer.predecessors import Route, predecessor_routes
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
 logger = structlog.get_logger()
@@ -180,7 +181,8 @@ def normalize_facts_for_cik(
     storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
 ) -> dict:
     company_id = _get_company_id(conn, cik)
-    if company_id is None:
+    routes = predecessor_routes(conn, cik)
+    if company_id is None and not routes:
         logger.warning("facts.no_company_for_cik", cik=cik)
         return {"cik": cik, "status": "no_company"}
 
@@ -190,7 +192,15 @@ def normalize_facts_for_cik(
         return {"cik": cik, "status": "no_companyfacts"}
     raw_object_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
-    return normalize_payload(conn, company_id, cik, payload, raw_object_id)
+    result = {"cik": cik, "status": "ok"}
+    if company_id is not None:
+        result = normalize_payload(conn, company_id, cik, payload, raw_object_id)
+    # Predecessor windows: the same payload, attributed to each successor company.
+    result["predecessor_routes"] = [
+        normalize_payload(conn, r.company_id, cik, payload, raw_object_id, window=r)
+        for r in routes
+    ]
+    return result
 
 
 def normalize_payload(
@@ -199,13 +209,26 @@ def normalize_payload(
     cik: str,
     payload: dict,
     raw_object_id: int,
+    window: Route | None = None,
 ) -> dict:
-    """The ONE write path for facts: a companyfacts-shaped payload into
+    """`window` (predecessor routing, see normalizer/predecessors.py): only facts whose period END
+    lies inside the window are written, to `company_id` (the successor).
+
+    The ONE write path for facts: a companyfacts-shaped payload into
     core.fact with `raw_object_id` as lineage. Called with the SEC companyfacts
     payload by normalize_facts_for_cik, and by the B9 instance fallback with a
     payload built from the filing's own XBRL (FSN set or instance) for a
     periodic filing the companyfacts API never carried (2026-10-31)."""
     filing_by_accn = _load_filing_lookup(conn, company_id)
+    if window is not None:
+        # A source CIK that is also its own core.company owns its filings (one owner per accession).
+        filing_by_accn.update(
+            conn.execute(
+                "select f.accession_number, f.id from core.filing f join core.company c "
+                "on c.id = f.company_id where c.cik = %s",
+                (cik,),
+            ).fetchall()
+        )
     period_by_key = _load_period_lookup(conn, company_id)
     unit_by_name = _load_unit_lookup(conn)
 
@@ -222,6 +245,7 @@ def normalize_payload(
         "skipped_unmapped_unit": 0,
         "skipped_period_not_found": 0,
         "skipped_before_history_floor": 0,
+        "skipped_outside_window": 0,
     }
     insert_rows = []
     for r in raw_rows:
@@ -237,6 +261,9 @@ def normalize_payload(
             continue
 
         end_date = _parse_date(r["end"])
+        if window is not None and not window.contains(end_date):
+            stats["skipped_outside_window"] += 1
+            continue
         if end_date < FACT_HISTORY_FLOOR:
             stats["skipped_before_history_floor"] += 1
             continue
