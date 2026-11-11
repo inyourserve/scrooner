@@ -190,3 +190,65 @@ def test_parenthetical_share_count_is_the_fact_but_other_parentheticals_stay_exc
     assert shares["rule_id"] == tm.PARENTHETICAL_RULE
     assert allowance["disposition"] == "excluded" and allowance["reason"] == "cover_or_parenthetical"
     assert cover["disposition"] == "excluded" and cover["reason"] == "cover_or_parenthetical"
+
+
+def _rec(stmt, tag, label, disposition="mapped", concept="x"):
+    return {"stmt": stmt, "report": 2, "line": 1, "plabel": label, "tag": tag, "version": "us-gaap/2024",
+            "custom": False, "abstract": False, "inpth": False, "disposition": disposition, "concept": concept,
+            "combine_role": None, "sign": None, "reason": None, "rule_id": "r", "decided_by": "library",
+            "components": None}
+
+
+def test_guards_from_the_tag_expert_rulings():
+    """Tag Expert 2026-11-11 (4b7392e0): excise/withholding buybacks, impairment/accretion D&A, restricted cash,
+    equity including NCI: the label or the statement decides, whatever the library or a rule said"""
+    out = [
+        _rec("CF", "PaymentsForRepurchaseOfCommonStock", "Repurchases of common stock, including excise tax", concept="share_buybacks_resolved"),
+        _rec("CF", "PaymentsForRepurchaseOfCommonStock", "Repurchases of common stock", concept="share_buybacks_resolved"),
+        _rec("CF", "DepreciationDepletionAndAmortization", "Depreciation, depletion, amortization and impairments", concept="d"),
+        _rec("BS", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "Cash and due from banks", "excluded", None),
+    ]
+    tag_map.apply_guards(out)
+    assert out[0]["disposition"] == "combined" and out[0]["decided_by"] == "guard"
+    assert out[1]["disposition"] == "mapped" and out[1]["concept"] == "share_buybacks_resolved"
+    assert out[2]["disposition"] == "combined"
+    assert out[3]["disposition"] == "mapped" and out[3]["concept"] == "cash_and_equivalents_resolved"
+
+
+def test_restricted_cash_total_beside_a_cash_line_is_combined():
+    out = [
+        _rec("BS", "CashAndCashEquivalentsAtCarryingValue", "Cash and cash equivalents", concept="cash_and_equivalents_resolved"),
+        _rec("BS", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "Total cash", "excluded", None),
+    ]
+    tag_map.apply_guards(out)
+    assert out[1]["disposition"] == "combined" and out[0]["concept"] == "cash_and_equivalents_resolved"
+
+
+@pytest.mark.parametrize(
+    "others, want",
+    [
+        ([], ("mapped", "stockholders_equity_resolved")),  # JNJ / AVGO / V: the only equity line
+        (["MinorityInterest"], ("excluded", None)),  # NCI printed, no parent line: not presented
+        (["StockholdersEquity"], ("excluded", None)),  # beside a parent line: a different total
+    ],
+)
+def test_equity_including_nci(others, want):
+    out = [_rec("BS", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest", "Total equity", "unmapped", None)]
+    out += [_rec("BS", t, t) for t in others]
+    tag_map.apply_guards(out)
+    assert (out[0]["disposition"], out[0]["concept"]) == want
+
+
+def test_guards_run_inside_the_filing_pass(monkeypatch):
+    """without a rule, R2 would make the excise-tax buyback line its own element; the guard in the filing pass makes
+    it combined"""
+    import scrooner_pipeline.fsn_store.tag_map as tm
+
+    row = {"stmt": "CF", "report": 6, "line": 12, "plabel": "Repurchase of common stock, including excise tax",
+           "tag": "PaymentsForRepurchaseOfCommonStock", "version": "us-gaap/2024", "custom": False, "abstract": False,
+           "inpth": False}
+    monkeypatch.setattr(tm, "_lines", lambda conn, fid: [dict(row)])
+    monkeypatch.setattr(tm.mapping, "map_filing", lambda *a, **k: {})
+    monkeypatch.setattr(tm, "_arcs", lambda conn, fid: {})
+    (rec,) = tm.filing_decisions(None, 1, {"positional": []}, [], {})
+    assert rec["disposition"] == "combined" and rec["decided_by"] == "guard"

@@ -3,7 +3,7 @@
 `scrooner-fsn tag-map --library <standard-tag-library.csv>` (fsn_store/tag_map.py, branch work/tag-expert/company-tag-map)
 on a LOCAL store built from every SEC FSN set 2014q1-2026m10 for the cohort's top 100 (95 loaded; AMD, XOM, MS, QCOM,
 VLO were not in the cohort report used for company ids). Not production: Engineering runs the same read-only command on
-the production store to produce the analytics.company_tag_map rows. Library: docs/tag-expert-playbooks @ 08ab3ed7.
+the production store to produce the analytics.company_tag_map rows. Library: docs/tag-expert-playbooks @ 4b7392e0.
 
 - `residue_by_company_top100.csv`: open tag eras per company (rank, ticker), FY2023+ split into extension / standard / detector-held.
 - `residue.csv`: every undecided tag era with filing evidence (accession, report, line, label): the Ritwik / Tag Expert queue.

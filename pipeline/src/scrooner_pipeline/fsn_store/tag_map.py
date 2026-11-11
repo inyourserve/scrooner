@@ -431,7 +431,125 @@ def filing_decisions(
                 decided_by="calc_ancestor",
                 reason="calc path " + " > ".join(path),
             )
+    apply_guards(out)
     return out
+
+
+# Tag Expert rulings 2026-11-11 (docs/tag-expert-playbooks @ 4b7392e0, TAG-EXPERT-RECONCILE-FSN-CARDS): conditions the
+# library can only state in its caveat text, enforced on every decision of a filing, rule decisions included.
+BUYBACK_TAGS = {"PaymentsForRepurchaseOfCommonStock", "PaymentsForRepurchaseOfEquity"}
+BUYBACK_COMBINED_LABEL = re.compile(
+    r"excise|withh?olding|tax(es)? (paid|withheld)", re.I
+)
+DA_TAGS = {
+    "DepreciationDepletionAndAmortization",
+    "DepreciationAmortizationAndAccretionNet",
+    "DepreciationAndAmortization",
+}
+DA_COMBINED_LABEL = re.compile(r"impairment|accretion|nuclear fuel", re.I)
+RESTRICTED_CASH_TOTAL = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"
+CASH_TAGS = {
+    "CashAndCashEquivalentsAtCarryingValue",
+    "Cash",
+    "CashAndDueFromBanks",
+    RESTRICTED_CASH_TOTAL,
+}
+EQUITY_INCL_NCI = (
+    "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+)
+PARENT_EQUITY_TAGS = {
+    "StockholdersEquity",
+    "PartnersCapital",
+    "MembersEquity",
+    "PartnersCapitalAttributableToParent",
+}
+NCI_EQUITY = re.compile(r"^(MinorityInterest|.*NoncontrollingInterest)$")
+
+
+def _guard(
+    rec: dict[str, Any], disposition: str, reason: str, concept: str | None = None
+) -> None:
+    was = (
+        f"{rec['disposition']}:{rec['concept']}" if rec["disposition"] else "undecided"
+    )
+    rec.update(
+        disposition=disposition,
+        concept=concept,
+        combine_role="combined_line" if disposition == "combined" else None,
+        sign=None,
+        components=None,
+        decided_by="guard",
+        reason=f"{reason} (was {was})",
+    )
+
+
+def apply_guards(out: list[dict[str, Any]]) -> None:
+    face = [r for r in out if not r["inpth"] and not r["abstract"]]
+    bs_tags = {r["tag"] for r in face if r["stmt"] == "BS"}
+    for rec in out:
+        if rec["custom"] or rec["abstract"] or rec["inpth"]:
+            continue
+        tag, stmt, label = rec["tag"], rec["stmt"], rec["plabel"]
+        if (
+            stmt == "CF"
+            and tag in BUYBACK_TAGS
+            and BUYBACK_COMBINED_LABEL.search(label)
+        ):
+            _guard(
+                rec,
+                "combined",
+                "buyback line with excise/withholding wording = combined, never buybacks",
+            )
+        elif stmt == "CF" and tag in DA_TAGS and DA_COMBINED_LABEL.search(label):
+            _guard(
+                rec,
+                "combined",
+                "D&A line with impairment/accretion/nuclear-fuel wording = combined",
+            )
+        elif stmt == "BS" and tag == RESTRICTED_CASH_TOTAL:
+            if re.search(r"restricted", label, re.I) or (bs_tags & CASH_TAGS) - {
+                RESTRICTED_CASH_TOTAL
+            }:
+                _guard(
+                    rec,
+                    "combined",
+                    "cash incl. restricted: not the sole cash line, or the label names restricted cash",
+                )
+            elif (
+                rec["disposition"] != "mapped"
+                or rec["concept"] != "cash_and_equivalents_resolved"
+            ):
+                _guard(
+                    rec,
+                    "mapped",
+                    "sole cash line, no restricted wording",
+                    "cash_and_equivalents_resolved",
+                )
+        elif stmt == "BS" and tag == EQUITY_INCL_NCI:
+            parent = bool(bs_tags & PARENT_EQUITY_TAGS)
+            nci = any(NCI_EQUITY.search(t) for t in bs_tags if t != EQUITY_INCL_NCI)
+            if parent:
+                _guard(
+                    rec,
+                    "excluded",
+                    "total incl. NCI beside a parent equity line: a different total",
+                )
+            elif nci:
+                _guard(
+                    rec,
+                    "excluded",
+                    "not_presented: NCI printed with no parent equity line (never total - NCI)",
+                )
+            elif (
+                rec["disposition"] != "mapped"
+                or rec["concept"] != "stockholders_equity_resolved"
+            ):
+                _guard(
+                    rec,
+                    "mapped",
+                    "no parent equity line and no NCI line",
+                    "stockholders_equity_resolved",
+                )
 
 
 def company_tag_map(
@@ -598,7 +716,9 @@ def contract_fields(rec: dict[str, Any]) -> dict[str, Any]:
             decision="excluded",
             reason_class=rec["reason"]
             if rec["decided_by"] in ("structural", "library")
-            else "rule_excluded",
+            else (
+                "tag_expert_guard" if rec["decided_by"] == "guard" else "rule_excluded"
+            ),
         )
     return out
 

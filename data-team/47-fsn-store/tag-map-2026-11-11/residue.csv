@@ -425,7 +425,13 @@ company_id,cik,taxonomy,tag,stmt,era_from,era_to,filings,reason,evidence_adsh,ev
 1030,0000078003,ext,StockIssuedAndRedeemedDuringPeriodValueConversionAndRedemptionofStock,EQ,2014-12-31,2022-12-31,18,no_decision,0000078003-23-000024,7,29,Preferred stock conversions and redemptions
 1030,0000078003,ext,StockIssuedDuringPeriodValueShareBasedCompensationAndTreasuryStockValueAcquiredCostMethod,EQ,2025-03-31,,6,no_decision,0000078003-26-000095,6,21,Share-based payment transactions
 1030,0000078003,us-gaap,RevenueFromContractWithCustomerExcludingAssessedTax,IS,2023-12-31,,11,held by is.revenue_lane_total_over_component@1: component_of_printed_total,0000078003-26-000095,2,7,Revenues
-1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2013-12-31,,53,no_decision,0000080424-26-000256,4,31,Reserve for ESOP debt retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2014-06-30,2014-06-30,1,no_decision,0000080424-14-000057,5,41,Reserve for ESOP debt retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2015-06-30,2015-06-30,1,no_decision,0000080424-15-000070,5,41,Reserve for ESOP debt retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2016-06-30,2016-06-30,1,no_decision,0000080424-16-000212,5,43,Reserve for ESOP Debt Retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2017-06-30,2017-06-30,1,no_decision,0000080424-17-000047,5,41,Reserve for ESOP Debt Retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2018-06-30,2018-06-30,1,no_decision,0000080424-18-000055,5,38,Reserve for ESOP Debt Retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2019-06-30,2019-06-30,1,no_decision,0000080424-19-000050,5,40,Reserve for ESOP Debt Retirement
+1042,0000080424,ext,ReserveForEsopDebtRetirement,BS,2020-06-30,2020-06-30,2,no_decision,0000080424-20-000059,5,38,Reserve for ESOP Debt Retirement
 1042,0000080424,ext,GoodwillAndIndefiniteLivedIntangiblesImpairmentCharges,CF,2014-06-30,2017-03-31,10,held by cf.capex_da_held@1: ['not_the_lane_member'],0000080424-17-000026,5,9,Goodwill and Intangible Asset Impairment Charges
 1042,0000080424,ext,GoodwillandIndefinitelivedIntangiblesImpairmentChargesIncludingDiscOps,CF,2015-06-30,2021-06-30,8,held by cf.capex_da_held@1: ['not_the_lane_member'],0000080424-21-000100,6,11,Goodwill and Indefinite-lived Intangibles Impairment Charges Including Disc Ops
 1042,0000080424,ext,ImpairmentOfIntangibleAssetsForGroomingSegmentIndefiniteLivedExcludingGoodwill,CF,2023-12-31,2024-03-31,2,held by cf.capex_da_held@1: ['not_the_lane_member'],0000080424-24-000051,6,8,"Impairment of Intangible Assets for Grooming Segment, Indefinite-Lived (Excluding Goodwill)"
@@ -828,7 +834,6 @@ company_id,cik,taxonomy,tag,stmt,era_from,era_to,filings,reason,evidence_adsh,ev
 1354,0000731766,ext,CumulativeEffectofNewAccountingPronouncement,EQ,2016-03-31,2017-06-30,6,no_decision,0000731766-17-000028,6,13,Adjustment to adopt ASU 2016-09
 1354,0000731766,us-gaap,DepreciationAndAmortization,IS,2013-12-31,2013-12-31,1,held by cf.capex_da_held@1: ['no_face_column_in_lane_window'],0000731766-14-000008,4,11,Depreciation and amortization
 1354,0000731766,us-gaap,DepreciationAndAmortization,IS,2014-03-31,,50,held by cf.capex_da_held@1: ['not_the_lane_member'],0000731766-26-000197,3,16,Depreciation and amortization
-1358,0000732712,ext,DeferredCompensationEmployeeStockOwnershipPlansAndOther,BS,2013-12-31,,52,no_decision,0000732712-26-000052,5,41,Deferred compensation  employee stock ownership plans (ESOPs) and other
 1358,0000732712,us-gaap,DepreciationAndAmortization,IS,2013-12-31,2013-12-31,1,held by cf.capex_da_held@1: ['no_face_column_in_lane_window'],0001193125-14-073266,2,9,Depreciation and amortization expense
 1358,0000732712,us-gaap,DepreciationAndAmortization,IS,2014-03-31,,51,held by cf.capex_da_held@1: ['not_the_lane_member'],0000732712-26-000052,2,13,Depreciation and amortization expense
 1358,0000732712,us-gaap,SalesRevenueGoodsNet,IS,2015-06-30,2018-03-31,12,held by is.revenue_lane_total_over_component@1: component_of_printed_total,0000732712-18-000022,2,3,Wireless equipment revenues
@@ -1650,9 +1655,8 @@ company_id,cik,taxonomy,tag,stmt,era_from,era_to,filings,reason,evidence_adsh,ev
 5480,0001373715,ext,StockIssuedDuringPeriodValueThirdPartyInvestorsNetOfCosts,EQ,2013-12-31,2014-12-31,2,no_decision,0001373715-15-000067,6,25,"Issuance of common stock to third party investors, net of issuance costs"
 5480,0001373715,ext,Stockissuedduringperiodinitialpublicoffering,EQ,2013-12-31,2014-12-31,2,no_decision,0001373715-15-000067,6,17,"Issuance of common stock upon initial public offering, net of offering costs (in shares)"
 5480,0001373715,us-gaap,SalesRevenueServicesNet,IS,2013-12-31,2017-12-31,14,held by is.revenue_lane_total_over_component@1: component_of_printed_total,0001373715-18-000058,4,3,Professional services and other
-5718,0001403161,ext,RightToRecoverForCoveredLosses,BS,2022-09-30,,13,no_decision,0001403161-26-000104,2,43,Right to recover for covered losses
-5718,0001403161,ext,RighttoRecoverforCoveredLosses,BS,2016-06-30,2023-06-30,24,no_decision,0001403161-23-000072,2,35,Right to recover for covered losses
-5718,0001403161,ext,VECoveredLossProtectionfromthePlanRelatingtoLiabilitieswheretheClaimRelatestoInterregionalMultilateralInterchangeFeeRates,BS,2017-09-30,2020-09-30,4,no_decision,0001403161-20-000070,2,46,Right to recover for covered losses
+5718,0001403161,ext,RighttoRecoverforCoveredLosses,BS,2016-06-30,2016-06-30,1,no_decision,0001403161-16-000039,2,49,Right to recover for covered losses (Note 3)
+5718,0001403161,ext,RighttoRecoverforCoveredLosses,BS,2016-12-31,2018-12-31,7,no_decision,0001403161-19-000005,2,46,Right to recover for covered losses (Note 4)
 5718,0001403161,ext,AccruedLitigationAndAccretion,CF,2014-09-30,2016-09-30,3,held by cf.capex_da_held@1: ['perimeter_line_unresolved'],0001403161-16-000058,8,17,Litigation provision (Note 20)
 5718,0001403161,ext,AmortizationOfClientIncentives,CF,2013-12-31,2013-12-31,1,held by cf.capex_da_held@1: ['no_face_column_in_lane_window'],0001403161-14-000005,8,6,Amortization of client incentives
 5718,0001403161,ext,AmortizationOfClientIncentives,CF,2014-03-31,2018-06-30,14,held by cf.capex_da_held@1: ['perimeter_line_unresolved'],0001403161-18-000034,6,4,Client incentives
