@@ -126,3 +126,8 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - "Attributable to common" (NIACSB) = net income only with no preferred stock: yes at CVS, BE, WELL, ETN, BKNG, PH, SCCO, CAT; NOT at OXY (preferred from 2019), BSX (2020-23 convertible preferred), PNC.
 - UNH 10-Q 0000731766-26-000197 prints NetIncomeLoss (l25): the UNH company note's ProfitLoss mapping is wrong.
 - MSI 2018-12: basic and diluted EPS tags swapped (map by label, flag). VRTX "Interest expense" on `InterestIncomeExpenseNet` −44.1M (0000875320-24-000062 l18): map with sign −1; company_tag_map needs a sign column.
+
+## 13. Ruling (b) confirmed and allowed sums (Dhairya / Ritwik 2026-11-11)
+- Dhairya confirmed: "no NI-attributable line" = no parent `NetIncomeLoss` line; an "attributable to common" line after preferred does not block NI = ProfitLoss − NCI (PNC 6,936M stands).
+- Allowed face computations seen: AVGO NI 2019-08..2020-10 = ProfitLoss − NCI (both on the face); TMO pre-2018 cost of revenue = product + service cost lines (ruling (a)).
+- `IncomeLossIncludingPortionAttributableToNoncontrollingInterest` as pretax: PG 2024+, DELL 2019-2021, MCK, PSX (calc +1 beside the tax line).
