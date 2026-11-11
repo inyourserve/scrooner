@@ -284,7 +284,7 @@ def seed(
         by_company[n["company_id"]].append(n)
     for rows in by_company.values():
         errors.extend(check_overlaps(rows))
-    stats = {
+    stats: dict[str, Any] = {
         "companies": len(by_company),
         "rows": sum(map(len, by_company.values())),
         "undecided_skipped": len(undecided),
@@ -295,6 +295,11 @@ def seed(
         "errors": errors,
         "applied": False,
     }
+    stats["winner_tag_gaps"] = winner_tag_gaps(
+        conn,
+        [r for rs in by_company.values() for r in rs],
+        {i: n for n, i in concept_by_name.items()},
+    )
     if errors or not apply:
         return stats  # all-or-nothing on validation
     for company_id, rows in sorted(by_company.items()):
@@ -307,3 +312,56 @@ def seed(
                 cur.executemany(INSERT, rows)
     stats["applied"] = True
     return stats
+
+
+def winner_tag_gaps(
+    conn: psycopg.Connection, rows: list[dict], concept_names: dict[int, str]
+) -> dict:
+    """Read-only count of winner-tag gaps per (company, concept): periods inside a concept row's era where an
+    excluded alternate tag of the same concept (reason_class alternate_tag_overlapping) has an authoritative
+    core.fact but the winner tag has none. The mapper blanks these ("no fact under <tag> for this period")."""
+    by_company: dict[int, list[dict]] = defaultdict(list)
+    for r in rows:
+        by_company[r["company_id"]].append(r)
+    out: dict = {}
+    for company_id, rs in by_company.items():
+        wins = [r for r in rs if r["decision"] == "concept"]
+        alts = [
+            r
+            for r in rs
+            if r["decision"] == "excluded"
+            and r["reason_class"] == "alternate_tag_overlapping"
+        ]
+        tags = sorted({r["tag"] for r in wins + alts})
+        if not alts or not tags:
+            continue
+        with conn.cursor() as cur:
+            cur.execute(
+                """select c.tag, p.end_date from core.fact f join core.concept c on c.id = f.concept_id
+                   join core.period p on p.id = f.period_id
+                   where f.company_id = %s and f.is_authoritative and c.tag = any(%s)""",
+                (company_id, tags),
+            )
+            ends: dict[str, set] = defaultdict(set)
+            for tag, end in cur.fetchall():
+                ends[tag].add(end)
+        for w in wins:
+            cname = concept_names.get(w["canonical_concept_id"], "")
+            for a in alts:
+                if a["stmt"] != w["stmt"] or a["tag"] == w["tag"]:
+                    continue
+                if a["canonical_concept_id"] is not None:
+                    if a["canonical_concept_id"] != w["canonical_concept_id"]:
+                        continue
+                elif f"same concept {cname} " not in (a["reason"] or ""):
+                    continue
+                gap = {
+                    e
+                    for e in ends.get(a["tag"], set())
+                    if w["era_from"] <= e <= (w["era_to"] or date.max)
+                    and a["era_from"] <= e <= (a["era_to"] or date.max)
+                    and e not in ends.get(w["tag"], set())
+                }
+                if gap:
+                    out[(company_id, cname, w["tag"], a["tag"])] = len(gap)
+    return out

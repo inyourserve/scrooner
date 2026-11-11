@@ -93,6 +93,7 @@ class MapRow:
     evidence_plabel: str | None = None
     serve_note: str | None = None
     map_id: int | None = None
+    reason_class: str | None = None
 
 
 @dataclass(frozen=True)
@@ -129,7 +130,7 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
         cur.execute(
             """
             select taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign,
-                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id
+                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class
             from analytics.company_tag_map where company_id = %s
             """,
             (company_id,),
@@ -152,6 +153,7 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
                 evidence_plabel=r[13],
                 serve_note=r[14],
                 map_id=r[15],
+                reason_class=r[16],
             )
             for r in cur.fetchall()
         ]
@@ -322,6 +324,7 @@ def build_cells(
     arcs: dict[str, set[tuple[str, str]]] | None = None,
     dcml: dict[tuple[str, str | None, date], int] | None = None,
     periods: dict[int, tuple[date, date, str]] | None = None,
+    alt_facts: dict[tuple[str | None, str | None], dict[int, Fact]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement)."""
     arcs = arcs or {}
@@ -519,6 +522,63 @@ def build_cells(
                     "grain": grain,
                 }
             )
+    # Inside a concept row's era the value comes ONLY from that row's tag. A period where an excluded alternate
+    # tag of the same concept (reason_class alternate_tag_overlapping) has a fact but the winner tag has none is a
+    # reasoned blank, never a fallback to the alternate.
+    value_now = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
+    held_now = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
+    for row in rows:
+        if row.decision != "concept" or row.canonical_concept_id is None:
+            continue
+        cname = concept_info[row.canonical_concept_id][0]
+        for alt in rows:
+            if (
+                alt.decision != "excluded"
+                or alt.reason_class != "alternate_tag_overlapping"
+            ):
+                continue
+            if alt.stmt != row.stmt or alt.tag == row.tag:
+                continue
+            if alt.canonical_concept_id is not None:
+                if alt.canonical_concept_id != row.canonical_concept_id:
+                    continue
+            elif f"same concept {cname} " not in (alt.reason or ""):
+                continue
+            for period_id, afact in sorted(
+                (alt_facts or {}).get((alt.taxonomy, alt.tag), {}).items()
+            ):
+                key = (row.canonical_concept_id, period_id)
+                if (
+                    not _in_era(row, afact.end)
+                    or not _in_era(alt, afact.end)
+                    or period_id not in periods
+                ):
+                    continue
+                if key in value_now or key in held_now:
+                    continue
+                if period_id in facts.get((row.taxonomy, row.tag), {}):
+                    continue  # the winner has a fact; it was refused or conflicted for its own reason
+                start, end, ptype = periods[period_id]
+                grain = _grain(start, end, ptype)
+                if grain is None:
+                    continue
+                stats["blanks"].append(
+                    {
+                        "canonical_concept_id": row.canonical_concept_id,
+                        "concept_name": cname,
+                        "period_id": period_id,
+                        "state": "defect",
+                        "defect_class": "finding_open",
+                        "owner": "tag_mapper",
+                        "reason_code": "no_fact_under_winner_tag",
+                        "reason": f"no fact under {row.tag} for this period",
+                        "rule_id": RULE_ID,
+                        "period_start": start,
+                        "period_end": end,
+                        "grain": grain,
+                    }
+                )
+                held_now.add(key)
     for concept, period_id in sorted(conflicts):
         if period_id not in (periods or {}):
             continue
@@ -627,13 +687,27 @@ def resolve_for_company(
         if r.tag is not None and r.decision != "excluded"
     }
     facts = _load_facts(conn, company_id, used)
+    alt_tags: set[tuple[str | None, str | None]] = set()
+    for r in rows:
+        if (
+            r.decision == "excluded"
+            and r.reason_class == "alternate_tag_overlapping"
+            and r.tag is not None
+        ):
+            alt_tags.add((r.taxonomy, r.tag))
+    alt_tags -= used
+    alt_facts = _load_facts(
+        conn, company_id, alt_tags
+    )  # read only to detect winner-tag gaps, never a value
     comp_tags = {(r.taxonomy, r.tag) for r in rows if r.decision == "component"}
     accessions = {
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
     periods = _load_periods(conn, company_id)
-    cells, stats = build_cells(rows, facts, concept_info, arcs, dcml, periods)
+    cells, stats = build_cells(
+        rows, facts, concept_info, arcs, dcml, periods, alt_facts
+    )
     targets = set(managed_concept_ids)
     for r in rows:
         targets.update(

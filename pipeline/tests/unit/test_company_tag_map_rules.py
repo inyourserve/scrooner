@@ -346,3 +346,15 @@ def test_net_income_as_profitloss_minus_nci_only_when_no_attributable_line_is_pr
     facts[("us-gaap", "NetIncomeLoss")] = {7: fact("85", 3)}  # printed but the components do not tie: held
     cells, stats = build_cells(_ni_rows(True), facts, NI_INFO, arcs, {})
     assert cells == [] and stats["held"][0]["reason"] == "printed_total_does_not_tie_to_components"
+
+
+def test_winner_tag_gap_is_a_reasoned_blank_never_a_fallback_to_the_alternate():
+    win = MapRow("us-gaap", "Revenues", "IS", "concept", OPEX, None, 1, ERA, None)
+    alt = MapRow("us-gaap", "RevenueFromContract", "IS", "excluded", None, None, 1, ERA, None,
+                 reason="same concept opex served by Revenues in this era", reason_class="alternate_tag_overlapping")
+    facts = {("us-gaap", "Revenues"): {7: fact("10", 1)}}
+    alts = {("us-gaap", "RevenueFromContract"): {7: fact("11", 2), 8: Fact(Decimal("12"), 3, date(2020, 9, 30), False, 11, "A-11")}}
+    periods = {7: (date(2020, 1, 1), END, "duration"), 8: (date(2020, 7, 1), date(2020, 9, 30), "duration")}
+    cells, stats = build_cells([win, alt], facts, INFO, {}, {}, periods, alts)
+    assert [(c["period_id"], c["value"]) for c in cells] == [(7, Decimal("10"))]  # never the alternate's 11 or 12
+    assert [(b["period_id"], b["reason_code"], b["reason"]) for b in stats["blanks"]] == [(8, "no_fact_under_winner_tag", "no fact under Revenues for this period")]

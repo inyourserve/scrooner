@@ -188,6 +188,12 @@ def seed_company_tag_map_cmd(
             f"  {cik}: statement tags decided {c['decided']}/{c['statement_tags']} "
             f"(undecided {c['undecided']}) {c['by_decision']}"
         )
+    for (company_id, concept, winner, alt), n in sorted(
+        stats.get("winner_tag_gaps", {}).items()
+    ):
+        typer.echo(
+            f"  winner-tag gap: company {company_id} {concept} {winner}: {n} period(s) only under {alt}"
+        )
     for w in stats["warnings"]:
         typer.echo(f"  warning: {w}")
     for e in stats["errors"][:50]:
