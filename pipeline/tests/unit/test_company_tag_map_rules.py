@@ -242,9 +242,12 @@ def test_selection_path_never_takes_an_absolute_value():
     assert [c["value"] for c in cells] == [Decimal("-5")]
 
 
-def test_unclassified_statement_UN_is_never_a_home_statement():
-    row = MapRow("us-gaap", "T", "UN", "concept", OPEX, None, 1, ERA, None)
+def test_unclassified_statement_UN_follows_the_row_and_a_wrong_statement_is_still_refused():
+    row = MapRow("us-gaap", "T", "UN", "concept", OPEX, None, 1, ERA, None)  # Revvity-style: the only IS is UN
     cells, stats = run([row], {("us-gaap", "T"): {7: fact("5", 1)}})
+    assert [c["value"] for c in cells] == [Decimal("5")] and stats["stmt_mismatch_rows"] == 0
+    cf = MapRow("us-gaap", "T", "CF", "concept", OPEX, None, 1, ERA, None)  # an IS concept on the CF stays refused
+    cells, stats = run([cf], {("us-gaap", "T"): {7: fact("5", 1)}})
     assert cells == [] and stats["stmt_mismatch_rows"] == 1
 
 
@@ -313,3 +316,33 @@ def test_seeder_refuses_two_concept_rows_of_one_concept_with_overlapping_eras():
     assert check_overlaps([row("A", "2015-01-01", "2019-12-31"), row("B", "2020-01-01", None)]) == []  # cut eras
     errs = check_overlaps([row("A", "2015-01-01", "2020-06-30"), row("B", "2020-01-01", None)])
     assert len(errs) == 1 and "two concept rows overlap" in errs[0]
+
+
+NI = 14
+NI_INFO = {NI: ("net_income", "income_statement")}
+
+
+def _ni_rows(printed: bool):
+    rows = [
+        MapRow("us-gaap", "ProfitLoss", "IS", "component", None, NI, 1, ERA, None, "IncomeStatementRoot"),
+        MapRow("us-gaap", "NetIncomeLossAttributableToNoncontrollingInterest", "IS", "component", None, NI, -1, ERA, None, "IncomeStatementRoot"),
+    ]
+    if printed:
+        rows.append(MapRow("us-gaap", "NetIncomeLoss", "IS", "concept", NI, None, 1, ERA, None))
+    return rows
+
+
+def test_net_income_as_profitloss_minus_nci_only_when_no_attributable_line_is_printed():
+    facts = {
+        ("us-gaap", "ProfitLoss"): {7: fact("100", 1)},
+        ("us-gaap", "NetIncomeLossAttributableToNoncontrollingInterest"): {7: fact("10", 2)},
+    }
+    arcs = {"A-10": {("IncomeStatementRoot", "ProfitLoss"), ("IncomeStatementRoot", "NetIncomeLossAttributableToNoncontrollingInterest")}}
+    cells, _ = build_cells(_ni_rows(False), facts, NI_INFO, arcs, {})
+    assert [c["value"] for c in cells] == [Decimal("90")]  # not printed: face components, 100 - 10
+    facts[("us-gaap", "NetIncomeLoss")] = {7: fact("90", 3)}
+    cells, stats = build_cells(_ni_rows(True), facts, NI_INFO, arcs, {})
+    assert [(c["value"], c["source_fact_ids"]) for c in cells] == [(Decimal("90"), [3])] and stats["held"] == []  # printed total wins
+    facts[("us-gaap", "NetIncomeLoss")] = {7: fact("85", 3)}  # printed but the components do not tie: held
+    cells, stats = build_cells(_ni_rows(True), facts, NI_INFO, arcs, {})
+    assert cells == [] and stats["held"][0]["reason"] == "printed_total_does_not_tie_to_components"

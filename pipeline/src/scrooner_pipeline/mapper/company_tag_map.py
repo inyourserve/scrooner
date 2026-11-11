@@ -310,7 +310,11 @@ def build_cells(
 
     def stmt_ok(concept_id: int, stmt: str) -> bool:
         name, statement = concept_info[concept_id]
-        return stmt in ({STATEMENT_CODE[statement]} | EXTRA_STMT.get(name, set()))
+        # follow the row's stmt as given: 'UN' (unclassified) can be the real entity's only statement
+        # (a co-registrant UN statement is excluded by the library through its own rows, not here)
+        return stmt == "UN" or stmt in (
+            {STATEMENT_CODE[statement]} | EXTRA_STMT.get(name, set())
+        )
 
     direct: dict[tuple[int, int], list[tuple[MapRow, Fact]]] = defaultdict(list)
     comp: dict[tuple[int, int], list[tuple[MapRow, Fact]]] = defaultdict(list)
