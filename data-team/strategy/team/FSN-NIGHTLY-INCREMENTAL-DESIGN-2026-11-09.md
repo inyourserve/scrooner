@@ -36,6 +36,14 @@ Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by D
 - **Cover-only amendments** (Part III 10-K/A) load with cover rows only. They print no statement line, so they can never win a cell.
 - **Floor.** Candidates need `period_of_report >= 2014-01-01`. `pilot` already drops comparatives before the floor.
 
+## After the methodology change (founder, 2026-11-11; NOW.md "The hybrid, exactly")
+
+"FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." Values now come from the SEC company API (`core.fact`, collected nightly by `scrooner-incremental`), selected only through `analytics.company_tag_map` (migration 0123, claimed). FSN tells the mapper which tag is which line. For this branch that means:
+
+- **The converter keeps its job, as the structure feed.** A new 10-K/10-Q's statement lines, calc tree and labels reach `fsn.*` the night it is filed, so the tag-map extraction can learn a new or changed tag (an extension, a re-tagged line) before the bulk FSN set arrives. The 23/23 equivalence is what lets the tag map trust EDGAR-built rows like FSN rows.
+- **The `write` stage moves to the new mapper.** Today `fsn_nightly_incremental.sh` writes FSN-selected values (`pilot` cells). Under the new method the write must be the company_tag_map mapper's write over `core.fact` for the companies with new filings. The `write` stage stays off until that mapper lands; then the stage calls it in place of `pilot` and `cells load`. `build` and `load` are unchanged.
+- **New-path membership follows the writer.** `fsn_store/new_path.py` counts a company as moved once an applied `fsn.*` write has landed (or a `company_value_owner` row exists; C5 keeps that table empty for now). When the company_tag_map writer lands, its rule id must be added to `NEW_PATH_SQL` so its companies move in the same step. That is a one-line change and its test.
+
 ## One writer for the cohort, and the backfill
 
 Founder direction, relayed by Dhairya on 2026-11-09: once the hybrid is live it is the only writer for the 1,000 cohort companies. The nightly path is:
