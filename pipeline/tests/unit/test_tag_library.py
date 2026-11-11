@@ -41,6 +41,7 @@ def test_ap_and_accrued_is_combined_never_accounts_payable(tmp_path):
     r = got[("BS", "AccountsPayableAndAccruedLiabilitiesCurrent")]
     assert r["decision"] == "combined"
     assert r["reason_class"] == "line_presented_combined_with_others"
+    assert r["canonical_concept"] == ""  # a combined line never feeds a single concept (design §3 rule 3)
 
 
 def test_sga_parts_are_components_only_without_a_printed_sga_total(tmp_path):

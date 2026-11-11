@@ -106,7 +106,7 @@ for cid, rs in by_co.items():
         if r["taxonomy"] != "us-gaap":
             continue
         if (st, tag) in COMBINED:
-            r.update(decision="combined", canonical_concept=COMBINED[(st, tag)][0], components=";".join(COMBINED[(st, tag)]),
+            r.update(decision="combined", canonical_concept="", components=";".join(COMBINED[(st, tag)]),
                      reason_class="line_presented_combined_with_others", reason="one line spans " + " + ".join(COMBINED[(st, tag)]),
                      decided_by="library")
         elif NOT.get((st, tag)):
