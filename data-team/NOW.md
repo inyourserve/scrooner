@@ -82,3 +82,4 @@ Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712
 - Decisions: `doc/foundational/02_Scrooner_Decision_Register.md`
 
 Do not expand this file into a work log. Keep it under roughly 80 lines.
+- Verifier (cloud, 2026-11-11): write clearance is now the Verifier's (founder order relayed by Dhairya). When Engineering sends the top-100 plan (CSV: cik, data_point, grain, period_end, value, accession), I sample it against the filings with verify/postwrite-top100-2026-11-09 tools/clear_plan.py and CLEAR or REJECT within 1 hour, judging only the new value against the filing. Post-write answer key: 200/200 cells keyed (ef0e715). Ladder and seed reviews: FIX (verify/templates-and-ladder-2026-11-09 01d203d).
