@@ -127,3 +127,34 @@ def seed(conn: psycopg.Connection, path: Path, *, apply: bool) -> dict[str, Any]
                 ],
             )
     return {"rows": len(rows), "errors": [], "written": len(rows), "rule_ids": rule_ids}
+
+
+def retired_ids(path: Path) -> list[str]:
+    """Rule ids listed in a retired file (one per line, '#' starts a comment)."""
+    if not path.exists():
+        return []
+    return [
+        x.split("#", 1)[0].strip()
+        for x in path.read_text().splitlines()
+        if x.split("#", 1)[0].strip()
+    ]
+
+
+def retire(conn: psycopg.Connection, path: Path, *, apply: bool) -> dict[str, Any]:
+    """Delete withdrawn seed rows (concept_rules/_retired.txt) from fsn.concept_rule. seed() replaces only the rule ids
+    its file carries, so without this a database seeded earlier keeps a removed rule and keeps mapping by it."""
+    ids = retired_ids(path)
+    if not ids:
+        return {"retired": [], "deleted": 0}
+    with conn.cursor() as cur:
+        cur.execute(
+            "select count(*) from fsn.concept_rule where rule_id = any(%s)", (ids,)
+        )
+        present = cur.fetchone()[0]
+    if not apply:
+        return {"retired": ids, "deleted": 0, "present": present}
+    with conn.transaction():
+        with conn.cursor() as cur:
+            cur.execute("delete from fsn.concept_rule where rule_id = any(%s)", (ids,))
+            deleted = cur.rowcount
+    return {"retired": ids, "deleted": deleted}

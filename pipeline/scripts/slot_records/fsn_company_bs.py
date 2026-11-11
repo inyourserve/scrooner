@@ -81,7 +81,10 @@ def instants(d, debt_only=False, subs=None):
     fil = {a: {"adsh": a, "cik": int(s["cik"]), "form": s["form"], "period": s["period"], "filed": s["filed"],
                "accepted": s.get("accepted") or "", "bs": [], "values": defaultdict(dict), "fsn_period": s["fsn_set"]} for a, s in subs.items()}
     for r in table(d, "pre"):
-        if r["adsh"] in fil and r["stmt"] == "BS":
+        # a parenthetical (inpth) is never a balance-sheet line: MSFT's "Short-term investments, securities loaned"
+        # (us-gaap:SecuritiesLoaned, inpth=1 on an ASSET line) made every 2013-2017 debt record coverage-dirty
+        # (Tag Expert 2026-11-09, FILING-CHECKED: 0001193125-16-662209 R6). bs_pre_rows already skips them.
+        if r["adsh"] in fil and r["stmt"] == "BS" and (r.get("inpth") or "0") == "0":
             fil[r["adsh"]]["bs"].append({"report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"],
                                          "plabel": r["plabel"], "custom": not r["version"].startswith(STD)})
     for r in table(d, "num"):

@@ -115,7 +115,15 @@ jobs:
       - name: Map, check, select, report (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
-        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out pilot-out
+        run: |
+          # total debt: the Verifier-passed debt lane over the shard's company directories (no DB, no network);
+          # a lane failure leaves total debt to gaps, never to a guessed value
+          if uv run --project pipeline scrooner-fsn debt-lane --companies companies --out pilot-out/debt; then
+            uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out pilot-out --debt-replay pilot-out/debt/replay.json
+          else
+            echo "::warning::debt lane failed; total debt is not served in this shard"
+            uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out pilot-out
+          fi
       - name: Production side, read-only (before-image, filings not in the store)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}

@@ -86,11 +86,10 @@ def test_bs_seeds_are_valid_and_carry_the_debt_perimeter():
     names = {r["canonical_concept"] for r in rows} | {c for r in rows for c in (r.get("components") or [])} | {
         (r.get("position") or {}).get("anchor_concept") for r in rows} - {None}
     assert rules.validate(rows, {n: i for i, n in enumerate(sorted(names))}) == []
-    debt_slots = {(r["position"]["slot"], r["position"]["anchor_concept"]) for r in rows
-                  if r["canonical_concept"] == "total_debt_resolved" and r["match_kind"] == "calc_position"}
-    for slot in ("borrowing", "finance_lease", "combined"):  # founder: finance leases and debt+finance-lease lines are debt
-        assert (slot, "current_liabilities_resolved") in debt_slots and (slot, "total_liabilities_resolved") in debt_slots, slot
-    assert not any(s == "operating_lease" for s, _ in debt_slots)  # operating leases never enter total debt
+    # total debt is the debt lane's SUM (fsn_store.debt), never a mapped line: no seed may map anything as total debt
+    # (FAMILY-RELEASE-CASE-2026-11-09 §2). The founder's perimeter (finance leases from the notes in, operating leases
+    # out) lives in the lane, tested above (AMZN note finance leases; operating-lease members dropped).
+    assert not [r["rule_id"] for r in rows if r["canonical_concept"] == "total_debt_resolved"]
 
 
 def test_bs_seeds_are_the_exporter_output(tmp_path):
