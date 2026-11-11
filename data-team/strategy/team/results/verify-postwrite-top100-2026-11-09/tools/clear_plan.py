@@ -13,6 +13,7 @@ MAP = {"revenue_sanity_resolved":"revenue","revenue_resolved":"revenue","net_inc
        "basic_eps_resolved":"eps_basic","diluted_eps_resolved":"eps_diluted","dividends_per_share":"dps","dividends_per_share_resolved":"dps","shares_outstanding_resolved":"shares_outstanding"}
 KIND = {"cfo":"cf","share_buybacks":"cf","dividends_paid":"cf","eps_basic":"eps","eps_diluted":"eps","dps":"eps","shares_outstanding":"sh"}
 def main(plan, out, n=200, seed="20261111"):
+    n = int(n)
     rows = list(csv.DictReader(open(plan)))
     strata = collections.defaultdict(list)
     for r in rows:
