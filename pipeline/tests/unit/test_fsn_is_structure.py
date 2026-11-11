@@ -281,3 +281,79 @@ def test_interest_line_that_includes_the_amortization_still_maps():
     """Crown Castle: "Interest expense and amortization of deferred financing costs" is itself the total"""
     face = [IE_FACE[0], _row(2, "InterestExpenseDebt", "Interest expense and amortization of deferred financing costs"), *IE_FACE[2:]]
     assert is_structure.interest_slot(face)["status"] == "mapped"
+
+
+# ---------------------------------------------------------------- two mapped lines for one concept
+@pytest.fixture
+def conflict_store(isolated_database_url):
+    c = psycopg.connect(isolated_database_url)
+    if _one(c, "select count(*) from information_schema.tables where table_schema = 'fsn' and table_name in ('filing', 'line', 'concept_rule')") != 3:
+        c.close()
+        pytest.skip("needs migration 0118")
+    cf_concepts = ("capex_resolved", "depreciation_and_amortization_resolved", "share_buybacks_resolved", "dividends_paid_resolved")
+    for name in (is_structure.REVENUE, is_structure.CFO, PRETAX, detectors.NI, "income_tax_expense_resolved", "interest_expense_resolved", *cf_concepts):
+        c.execute(
+            "insert into analytics.canonical_concept (name, statement, combination_mode) values (%s, 'income_statement', 'first_match') "
+            "on conflict (name) do nothing",
+            (name,),
+        )
+    for cik, t in (("0000040545", "GE"), ("0000104169", "WMT")):
+        c.execute("insert into core.company (cik, company_name) values (%s, %s)", (cik, t))
+        c.commit()
+        load.load_company(c, ROOT / "pipeline/tests/fixtures/fsn_is_structure" / cik, loader_commit="test")
+        c.commit()
+    for f in ("is.jsonl", "is_pretax_tax_interest.jsonl", "cf.jsonl"):
+        res = rules.seed(c, ROOT / "data-team" / "47-fsn-store" / "concept_rules" / f, apply=True)
+        assert not res["errors"], res["errors"]
+    c.commit()
+    yield c
+    c.close()
+
+
+def _fid_cik(conn, cik):
+    return _one(conn, "select f.id from fsn.filing f join core.company c on c.id = f.company_id where c.cik = %s", (cik,))
+
+
+@pytest.mark.integration
+def test_ge_revenue_component_and_continuing_cfo_give_way_to_the_printed_totals(conflict_store):
+    """GE FY2024 10-K: the seed maps a revenue component beside 'Total revenues' and the continuing-operations
+    cash from operations beside the total; select would blank both keys (conflicting_values_in_filing). With the
+    detector exactly one line each remains: the lane's revenue total and the printed CFO total."""
+    c = conflict_store
+    rs = mapping.load_rules(c)
+    fid = _fid_cik(c, "0000040545")
+    mapping.map_filing(c, fid, rs, detectors=detectors.DEFAULT[:-1])
+    assert len(_lines(c, fid, is_structure.REVENUE)) >= 2
+    assert {t for t, _ in _lines(c, fid, is_structure.CFO)} >= {is_structure.CFO_TOTAL_TAG, is_structure.CFO_CONTINUING_TAG}
+    mapping.map_filing(c, fid, rs, detectors=detectors.DEFAULT)
+    assert [t for t, _ in _lines(c, fid, is_structure.REVENUE)] == ["Revenues"]
+    assert [t for t, _ in _lines(c, fid, is_structure.CFO)] == [is_structure.CFO_TOTAL_TAG]
+
+
+@pytest.mark.integration
+def test_walmart_total_with_other_income_stays_a_conflict(conflict_store):
+    """WMT 'Total revenues' carries OtherIncome (membership and other income) as a calc child: the lane holds that
+    perimeter (hold_perimeter_children), so the detector changes nothing and the key stays a reasoned blank until the
+    perimeter is ruled"""
+    c = conflict_store
+    rs = mapping.load_rules(c)
+    fid = _fid_cik(c, "0000104169")
+    mapping.map_filing(c, fid, rs, detectors=detectors.DEFAULT[:-1])
+    before = sorted(_lines(c, fid, is_structure.REVENUE))
+    mapping.map_filing(c, fid, rs, detectors=detectors.DEFAULT)
+    assert len(before) >= 2 and sorted(_lines(c, fid, is_structure.REVENUE)) == before
+
+
+def test_cfo_continuing_line_kept_when_no_total_is_printed(monkeypatch):
+    """the continuing-operations line is the only CFO line: nothing to resolve, nothing unmapped"""
+    monkeypatch.setattr(is_structure, "_concept_ids", lambda conn, names: {is_structure.REVENUE: 1, is_structure.CFO: 2})
+    monkeypatch.setattr(is_structure, "_line_tags", lambda conn, fid: {(7, 3): is_structure.CFO_CONTINUING_TAG})
+    assert is_structure.conflict_detector(None, 1, [(1, 7, 3, 2, "mapped")]) == []
+
+
+def test_two_cfo_lines_without_a_printed_total_are_left_alone(monkeypatch):
+    """only the printed total outranks the continuing line; two other lines stay as they are (select's conflict blank)"""
+    monkeypatch.setattr(is_structure, "_concept_ids", lambda conn, names: {is_structure.REVENUE: 1, is_structure.CFO: 2})
+    tags = {(7, 3): is_structure.CFO_CONTINUING_TAG, (7, 4): "NetCashProvidedByUsedInOperatingActivitiesDiscontinuedOperations"}
+    monkeypatch.setattr(is_structure, "_line_tags", lambda conn, fid: tags)
+    assert is_structure.conflict_detector(None, 1, [(1, 7, 3, 2, "mapped"), (1, 7, 4, 2, "mapped")]) == []

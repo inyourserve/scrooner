@@ -768,4 +768,12 @@ def _interest(
     return interest_detector(conn, filing_id, decisions)
 
 
-DEFAULT = [capex_da_detector, net_income_detector, _pretax, _interest]
+def _conflict(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    from scrooner_pipeline.fsn_store.is_structure import conflict_detector  # noqa: PLC0415
+
+    return conflict_detector(conn, filing_id, decisions)
+
+
+DEFAULT = [capex_da_detector, net_income_detector, _pretax, _interest, _conflict]

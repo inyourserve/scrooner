@@ -299,3 +299,123 @@ def interest_detector(
             },
         )
     ]
+
+
+# ---------------------------------------------------------------- two mapped lines for one concept (write blockers)
+# select.select_concept blanks a key as conflicting_values_in_filing when two mapped prints of the latest filing
+# differ. Tag Expert (2026-11-09, production fsn.line_map, latest 10-K): revenue at 33 companies (a component line
+# under RevenueFromContractWithCustomer{Ex,In}cludingAssessedTax mapped beside the Revenues total: GM, WMT, CVX,
+# Welltower, Healthpeak), cfo at 16 (NetCashProvidedByUsedInOperatingActivitiesContinuingOperations mapped beside the
+# printed total when discontinued operations differ). In the write these become blanks over shown values.
+REVENUE = "revenue_sanity_resolved"
+REVENUE_RULE = "is.revenue_lane_total_over_component@1"
+CFO = "cfo_resolved"
+CFO_TOTAL_TAG = "NetCashProvidedByUsedInOperatingActivities"
+CFO_CONTINUING_TAG = "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"
+CFO_RULE = "cf.cfo_continuing_held_total_printed@1"
+
+
+def _concept_ids(conn: psycopg.Connection, names: list[str]) -> dict[str, int]:
+    return dict(
+        conn.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (names,),
+        ).fetchall()
+    )
+
+
+def _line_tags(conn: psycopg.Connection, filing_id: int) -> dict[tuple[int, int], str]:
+    return {
+        (r, ln): t
+        for r, ln, t in conn.execute(
+            "select l.report, l.line, t.tag from fsn.line l join fsn.tag t on t.id = l.tag_id where l.filing_id = %s",
+            (filing_id,),
+        ).fetchall()
+    }
+
+
+def calc_arcs(conn: psycopg.Connection, filing_id: int) -> dict[str, dict[str, int]]:
+    """the filing's calc tree in the lane's shape: {parent tag: {child tag: weight}}"""
+    out: dict[str, dict[str, int]] = {}
+    for p, c, w in conn.execute(
+        """select p.tag, c.tag, a.weight from fsn.calc_arc a join fsn.tag p on p.id = a.parent_tag_id
+           join fsn.tag c on c.id = a.child_tag_id where a.filing_id = %s""",
+        (filing_id,),
+    ).fetchall():
+        out.setdefault(p, {})[c] = int(w)
+    return out
+
+
+def revenue_choice(
+    face: list[dict[str, Any]], arcs: dict[str, dict[str, int]]
+) -> dict[str, Any]:
+    """the lane's revenue slot (is_detect.revenue_slot, imported) on one primary face, as is_detect.detect_filing
+    calls it: shape from the face tags, calc arcs restricted to face tags"""
+    lane = det._is_lane()
+    face_tags = {r["tag"] for r in face}
+    a = {pp: set(kids) & face_tags for pp, kids in arcs.items()}
+    return lane.revenue_slot(face, a, lane.shape_of(face_tags), face_tags, arcs)
+
+
+def conflict_detector(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    """FORMATS-v1.1 detector: where the seed maps two or more lines to revenue or cfo in one filing, keep the one the
+    structure names and unmap the rest; otherwise change nothing (the conflict stays a reasoned blank)."""
+    cid = _concept_ids(conn, [REVENUE, CFO])
+    mapped: dict[str, list[tuple]] = {}
+    for d in decisions:
+        for name, i in cid.items():
+            if d[3] == i and d[4] == "mapped":
+                mapped.setdefault(name, []).append(d)
+    out: list[tuple] = []
+    if len(mapped.get(CFO, [])) >= 2:
+        tags = _line_tags(conn, filing_id)
+        by_tag = {tags.get((d[1], d[2])): d for d in mapped[CFO]}
+        if CFO_TOTAL_TAG in by_tag and CFO_CONTINUING_TAG in by_tag:
+            d = by_tag[CFO_CONTINUING_TAG]
+            out.append(
+                (
+                    filing_id,
+                    d[1],
+                    d[2],
+                    None,
+                    "unmapped",
+                    CFO_RULE,
+                    None,
+                    {
+                        "detector": "is_structure.conflict",
+                        "tag": CFO_CONTINUING_TAG,
+                        "held": "total_printed_in_filing",
+                    },
+                )
+            )
+    if len(mapped.get(REVENUE, [])) >= 2:
+        rows, coreg = det.is_face_rows(conn, filing_id)
+        rep, face = det._is_lane().primary_face(rows, coreg) if rows else (None, [])
+        if face:
+            slot = revenue_choice(face, calc_arcs(conn, filing_id))
+            keep = (rep, slot.get("line"))
+            if slot.get("gate") == "G1_printed_total" and keep in {
+                (d[1], d[2]) for d in mapped[REVENUE]
+            }:
+                for d in mapped[REVENUE]:
+                    if (d[1], d[2]) != keep:
+                        out.append(
+                            (
+                                filing_id,
+                                d[1],
+                                d[2],
+                                None,
+                                "unmapped",
+                                REVENUE_RULE,
+                                None,
+                                {
+                                    "detector": "is_structure.conflict",
+                                    "held": "component_of_printed_total",
+                                    "total_tag": slot["tag"],
+                                    "total_line": slot["line"],
+                                },
+                            )
+                        )
+    return out
