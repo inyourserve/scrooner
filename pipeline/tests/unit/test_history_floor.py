@@ -82,6 +82,7 @@ def _patch_facts(monkeypatch):
             n += 1
             all_keys[key] = n
     monkeypatch.setattr(facts_mod, "_get_company_id", lambda c, k: 1)
+    monkeypatch.setattr(facts_mod, "predecessor_routes", lambda c, k: [])
     monkeypatch.setattr(facts_mod, "_latest_companyfacts_object", lambda c, k: (5, "raw/x.json"))
     monkeypatch.setattr(facts_mod, "_load_json", lambda s, p: PAYLOAD)
     monkeypatch.setattr(facts_mod, "_load_filing_lookup", lambda c, i: {"A1": 1, "A2": 2})
