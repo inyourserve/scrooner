@@ -52,7 +52,10 @@ def _rows(*lines, report=2):
         ("cost_of_revenue_resolved", "CostsAndExpenses", "Total costs and expenses", "combined"),
         ("cost_of_revenue_resolved", "OperatingExpenses", "Operating expenses", None),
         ("interest_expense_resolved", "InterestExpense", "Total interest expense", "common"),
-        ("interest_expense_resolved", "InterestExpenseNonoperating", "Interest expense, net", "common"),
+        # Tag Expert 2026-11-11: a ", net" label is a net perimeter even under an InterestExpense* tag
+        ("interest_expense_resolved", "InterestExpenseNonoperating", "Interest expense, net", "net"),
+        ("interest_expense_resolved", "InterestExpenseNonoperating", "Interest expense", "common"),
+        ("interest_expense_resolved", "InterestExpenseOperating", "Total interest expense", "common"),
         ("interest_expense_resolved", "InterestIncomeExpenseNet", "Net interest income", "net"),
         ("interest_expense_resolved", "acme_InterestAndOther", "Interest and other, net", "net"),
         ("interest_expense_resolved", "acme_FinancingCosts", "Interest on borrowings", "common"),

@@ -410,6 +410,7 @@ _INTEREST_NET_TAGS = {
 _INTEREST_NET_RX = re.compile(
     r"net interest|interest\b.*,\s*net\b|interest (income|and other)", re.I
 )
+_NET_SUFFIX_RX = re.compile(r",\s*net\b", re.I)
 _NI_RX = re.compile(r"\bnet (income|loss|earnings)|\bprofit\b|\bearnings\b", re.I)
 _PER_SHARE_RX = re.compile(r"per (common |ordinary |class [a-z] )?share|\beps\b", re.I)
 _PER_UNIT_RX = re.compile(
@@ -436,7 +437,9 @@ def is_line_class(concept: str, tag: str, label: str) -> str | None:
             return "common"
         return None
     if concept == "interest_expense_resolved":
-        if tag.startswith("InterestExpense"):
+        # Tag Expert 2026-11-11 (data-team/tags/cards/sector-faces.md): a "..., net" label is a net perimeter even
+        # under an InterestExpense* tag ("Interest expense, net" nets interest income in)
+        if tag.startswith("InterestExpense") and not _NET_SUFFIX_RX.search(label):
             return "common"
         if tag in _INTEREST_NET_TAGS or _INTEREST_NET_RX.search(label):
             return "net"
