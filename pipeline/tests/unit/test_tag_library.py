@@ -155,3 +155,15 @@ def test_receivables_net_current_under_a_non_plain_label_is_combined(tmp_path):
     got = _run(tmp_path, [{"stmt": "BS", "tag": "ReceivablesNetCurrent", "evidence_plabel": "Notes and accounts receivable, net"}],
                catalog=("accounts_receivable",))
     assert got[("BS", "ReceivablesNetCurrent")]["decision"] == "combined"
+
+
+def test_committed_map_has_no_two_concept_rows_overlapping_for_one_company_statement_and_concept():
+    # the 0122 trigger's rule, checked on the committed seed: one tag per (company, stmt, concept) per period
+    import collections
+    rows = [r for r in csv.DictReader(open(ROOT / "data-team" / "47-fsn-store" / "company_tag_map" / "ranks_1_50.csv"))
+            if r["decision"] == "concept"]
+    g = collections.defaultdict(list)
+    for r in rows:
+        g[(r["company_id"], r["stmt"], r["canonical_concept"])].append((r["era_from"], r["era_to"], r["tag"]))
+    clashes = [(k, a, b) for k, v in g.items() for a, b in zip(sorted(v), sorted(v)[1:]) if b[0] <= a[1]]
+    assert not clashes, clashes[:5]

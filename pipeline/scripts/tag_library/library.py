@@ -456,6 +456,45 @@ for cid, rs in by_co.items():
         e.update(canonical_concept="weighted_diluted_shares", reason="one printed weighted-share line serves basic AND diluted (Tag Expert (c))")
         extra.append(e)
     rs.extend(extra)
+    # FINAL de-overlap (0122 trigger): no two 'concept' rows for one (company, stmt, concept) may overlap in era, whatever the
+    # filings. Winner by rule priority, then tier, then filings; a loser keeps only its era outside the kept rows, and the
+    # cut-out era becomes an excluded reason row.
+    cut_rows = []
+    groups = collections.defaultdict(list)
+    for r in rs:
+        if r.get("decision") == "concept" and r.get("canonical_concept"):
+            groups[(r["stmt"], r["canonical_concept"])].append(r)
+    for (st, con), g in groups.items():
+        g.sort(key=lambda r: (prio.get((st, r["tag"]), 50), tier_of.get((st, r["tag"]), (con, 9))[1], -int(r.get("filings") or 0), r["era_from"]))
+        kept = []
+        for r in g:
+            hit = [k for k in kept if overlap(r, k)]
+            if not hit:
+                kept.append(r)
+                continue
+            lo, hi = min(k["era_from"] for k in hit), max(k["era_to"] for k in hit)
+            parts = []
+            if r["era_from"] < lo:
+                parts.append((r["era_from"], day_before(lo)))
+            if r["era_to"] > hi:
+                parts.append((day_after(hi), r["era_to"]))
+            parts = [p for p in parts if p[0] <= p[1] and not any(overlap({"era_from": p[0], "era_to": p[1]}, k) for k in kept)]
+            mid = dict(r)  # the era the winner serves: a reason row
+            mid.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping",
+                       reason=f"same concept {con} served by {', '.join(k['tag'] for k in hit)} in this era (no two concept tags per period)",
+                       era_from=max(r["era_from"], lo), era_to=min(r["era_to"], hi), decided_by="final_deoverlap")
+            cut_rows.append(mid)
+            for i, (f, t) in enumerate(parts):
+                c = r if i == 0 else dict(r)
+                c.update(era_from=f, era_to=t)
+                if i:
+                    cut_rows.append(c)
+                kept.append(c)
+            if not parts:
+                r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping",
+                         reason=mid["reason"], decided_by="final_deoverlap")
+                cut_rows.remove(mid)
+    rs.extend(cut_rows)
     out_rows.extend(rs)
 
 COLS = ["company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept", "combine_sign",
