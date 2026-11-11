@@ -64,7 +64,7 @@ company_id,ticker,template,data_point,status
 3,AAPL,general,income_before_tax,sourced
 3,AAPL,general,income_tax_expense,sourced
 3,AAPL,general,interest_expense,note-sourced candidate (Verifier draw)
-3,AAPL,general,interest_income,template-OUT candidate (Verifier draw)
+3,AAPL,general,interest_income,note-sourced candidate (Verifier draw)
 3,AAPL,general,inventory,sourced
 3,AAPL,general,net_income,sourced
 3,AAPL,general,net_lease_revenue,template seed: should be COND
@@ -134,7 +134,7 @@ company_id,ticker,template,data_point,status
 4,MSFT,general,total_liabilities,sourced
 9,GOOG,general,accounts_payable,sourced
 9,GOOG,general,accounts_receivable,sourced
-9,GOOG,general,amortization_of_intangibles,note-sourced candidate (Verifier draw)
+9,GOOG,general,amortization_of_intangibles,combined (reasoned blank)
 9,GOOG,general,basic_eps,sourced
 9,GOOG,general,capex,sourced
 9,GOOG,general,cash_and_equivalents,sourced
@@ -149,7 +149,7 @@ company_id,ticker,template,data_point,status
 9,GOOG,general,cost_of_revenue,sourced
 9,GOOG,general,current_assets,sourced
 9,GOOG,general,current_liabilities,sourced
-9,GOOG,general,depreciation_and_amortization,template-OUT candidate (Verifier draw)
+9,GOOG,general,depreciation_and_amortization,combined (reasoned blank)
 9,GOOG,general,diluted_eps,sourced
 9,GOOG,general,dividends_paid,sourced
 9,GOOG,general,dividends_per_share,sourced
@@ -160,7 +160,7 @@ company_id,ticker,template,data_point,status
 9,GOOG,general,income_before_tax,sourced
 9,GOOG,general,income_tax_expense,sourced
 9,GOOG,general,interest_expense,note-sourced candidate (Verifier draw)
-9,GOOG,general,interest_income,template-OUT candidate (Verifier draw)
+9,GOOG,general,interest_income,note-sourced candidate (Verifier draw)
 9,GOOG,general,inventory,sourced
 9,GOOG,general,net_income,sourced
 9,GOOG,general,net_lease_revenue,template seed: should be COND
@@ -300,7 +300,7 @@ company_id,ticker,template,data_point,status
 251,CAT,general,effective_tax_rate_reported,tax note
 251,CAT,general,employee_count,cover page / 10-K text
 251,CAT,general,goodwill,sourced
-251,CAT,general,gross_profit,note-sourced candidate (Verifier draw)
+251,CAT,general,gross_profit,template-OUT candidate (Verifier draw)
 251,CAT,general,income_before_tax,sourced
 251,CAT,general,income_tax_expense,sourced
 251,CAT,general,interest_expense,sourced
@@ -315,7 +315,7 @@ company_id,ticker,template,data_point,status
 251,CAT,general,public_float,cover page
 251,CAT,general,research_and_development,sourced
 251,CAT,general,revenue_sanity,sourced
-251,CAT,general,sbc,note-sourced candidate (Verifier draw)
+251,CAT,general,sbc,sourced
 251,CAT,general,sga_expense,sourced
 251,CAT,general,share_buybacks,sourced
 251,CAT,general,shares_outstanding,held R2 (no BS-parenthetical count; never the dei cover count)
@@ -396,7 +396,7 @@ company_id,ticker,template,data_point,status
 608,GE,general,effective_tax_rate_reported,tax note
 608,GE,general,employee_count,cover page / 10-K text
 608,GE,general,goodwill,sourced
-608,GE,general,gross_profit,note-sourced candidate (Verifier draw)
+608,GE,general,gross_profit,template-OUT candidate (Verifier draw)
 608,GE,general,income_before_tax,sourced
 608,GE,general,income_tax_expense,sourced
 608,GE,general,interest_expense,note-sourced candidate (Verifier draw)
@@ -500,7 +500,7 @@ company_id,ticker,template,data_point,status
 666,LLY,general,inventory,sourced
 666,LLY,general,net_income,sourced
 666,LLY,general,net_lease_revenue,template seed: should be COND
-666,LLY,general,operating_expenses,note-sourced candidate (Verifier draw)
+666,LLY,general,operating_expenses,template-OUT candidate (Verifier draw)
 666,LLY,general,operating_income,template-OUT candidate (Verifier draw)
 666,LLY,general,other_income_expense_net,sourced
 666,LLY,general,ppe_net,sourced
@@ -664,7 +664,7 @@ company_id,ticker,template,data_point,status
 1086,CVX,general,gross_profit,template-OUT candidate (Verifier draw)
 1086,CVX,general,income_before_tax,sourced
 1086,CVX,general,income_tax_expense,sourced
-1086,CVX,general,interest_expense,template-OUT candidate (Verifier draw)
+1086,CVX,general,interest_expense,sourced
 1086,CVX,general,interest_income,template-OUT candidate (Verifier draw)
 1086,CVX,general,inventory,sourced
 1086,CVX,general,net_income,sourced
@@ -757,7 +757,7 @@ company_id,ticker,template,data_point,status
 1105,TMO,general,effective_tax_rate_reported,tax note
 1105,TMO,general,employee_count,cover page / 10-K text
 1105,TMO,general,goodwill,sourced
-1105,TMO,general,gross_profit,note-sourced candidate (Verifier draw)
+1105,TMO,general,gross_profit,template-OUT candidate (Verifier draw)
 1105,TMO,general,income_before_tax,sourced
 1105,TMO,general,income_tax_expense,sourced
 1105,TMO,general,interest_expense,sourced
@@ -805,7 +805,7 @@ company_id,ticker,template,data_point,status
 1123,RTX,general,effective_tax_rate_reported,tax note
 1123,RTX,general,employee_count,cover page / 10-K text
 1123,RTX,general,goodwill,sourced
-1123,RTX,general,gross_profit,note-sourced candidate (Verifier draw)
+1123,RTX,general,gross_profit,template-OUT candidate (Verifier draw)
 1123,RTX,general,income_before_tax,sourced
 1123,RTX,general,income_tax_expense,sourced
 1123,RTX,general,interest_expense,combined (reasoned blank)
@@ -830,7 +830,7 @@ company_id,ticker,template,data_point,status
 1123,RTX,general,total_debt_split,held C8
 1123,RTX,general,total_liabilities,sourced
 1134,WMT,general,accounts_payable,sourced
-1134,WMT,general,accounts_receivable,sourced
+1134,WMT,general,accounts_receivable,combined (reasoned blank)
 1134,WMT,general,amortization_of_intangibles,template-OUT candidate (Verifier draw)
 1134,WMT,general,basic_eps,sourced
 1134,WMT,general,capex,sourced
@@ -856,7 +856,7 @@ company_id,ticker,template,data_point,status
 1134,WMT,general,gross_profit,template-OUT candidate (Verifier draw)
 1134,WMT,general,income_before_tax,sourced
 1134,WMT,general,income_tax_expense,sourced
-1134,WMT,general,interest_expense,template-OUT candidate (Verifier draw)
+1134,WMT,general,interest_expense,sourced
 1134,WMT,general,interest_income,sourced
 1134,WMT,general,inventory,sourced
 1134,WMT,general,net_income,sourced
@@ -910,7 +910,7 @@ company_id,ticker,template,data_point,status
 1164,JNJ,general,net_income,sourced
 1164,JNJ,general,net_lease_revenue,template seed: should be COND
 1164,JNJ,general,operating_expenses,template-OUT candidate (Verifier draw)
-1164,JNJ,general,operating_income,note-sourced candidate (Verifier draw)
+1164,JNJ,general,operating_income,template-OUT candidate (Verifier draw)
 1164,JNJ,general,other_income_expense_net,sourced
 1164,JNJ,general,ppe_net,sourced
 1164,JNJ,general,public_float,cover page
@@ -997,11 +997,11 @@ company_id,ticker,template,data_point,status
 1207,AMGN,general,effective_tax_rate_reported,tax note
 1207,AMGN,general,employee_count,cover page / 10-K text
 1207,AMGN,general,goodwill,sourced
-1207,AMGN,general,gross_profit,note-sourced candidate (Verifier draw)
+1207,AMGN,general,gross_profit,template-OUT candidate (Verifier draw)
 1207,AMGN,general,income_before_tax,sourced
 1207,AMGN,general,income_tax_expense,sourced
-1207,AMGN,general,interest_expense,template-OUT candidate (Verifier draw)
-1207,AMGN,general,interest_income,note-sourced candidate (Verifier draw)
+1207,AMGN,general,interest_expense,combined (reasoned blank)
+1207,AMGN,general,interest_income,combined (reasoned blank)
 1207,AMGN,general,inventory,sourced
 1207,AMGN,general,net_income,sourced
 1207,AMGN,general,net_lease_revenue,template seed: should be COND
@@ -1118,7 +1118,7 @@ company_id,ticker,template,data_point,status
 1263,LRCX,general,total_debt_split,held C8
 1263,LRCX,general,total_liabilities,sourced
 1321,MU,general,accounts_payable,combined (reasoned blank)
-1321,MU,general,accounts_receivable,sourced
+1321,MU,general,accounts_receivable,combined (reasoned blank)
 1321,MU,general,amortization_of_intangibles,note-sourced candidate (Verifier draw)
 1321,MU,general,basic_eps,sourced
 1321,MU,general,capex,sourced
@@ -1350,7 +1350,7 @@ company_id,ticker,template,data_point,status
 1807,MS,broker_am,total_debt_split,held C8
 1807,MS,broker_am,total_liabilities,sourced
 1857,COST,general,accounts_payable,sourced
-1857,COST,general,accounts_receivable,sourced
+1857,COST,general,accounts_receivable,combined (reasoned blank)
 1857,COST,general,amortization_of_intangibles,template-OUT candidate (Verifier draw)
 1857,COST,general,basic_eps,sourced
 1857,COST,general,capex,sourced
@@ -1373,17 +1373,17 @@ company_id,ticker,template,data_point,status
 1857,COST,general,effective_tax_rate_reported,tax note
 1857,COST,general,employee_count,cover page / 10-K text
 1857,COST,general,goodwill,note-sourced candidate (Verifier draw)
-1857,COST,general,gross_profit,note-sourced candidate (Verifier draw)
+1857,COST,general,gross_profit,template-OUT candidate (Verifier draw)
 1857,COST,general,income_before_tax,sourced
 1857,COST,general,income_tax_expense,sourced
 1857,COST,general,interest_expense,sourced
-1857,COST,general,interest_income,template-OUT candidate (Verifier draw)
+1857,COST,general,interest_income,combined (reasoned blank)
 1857,COST,general,inventory,sourced
 1857,COST,general,net_income,sourced
 1857,COST,general,net_lease_revenue,template seed: should be COND
 1857,COST,general,operating_expenses,template-OUT candidate (Verifier draw)
 1857,COST,general,operating_income,sourced
-1857,COST,general,other_income_expense_net,template-OUT candidate (Verifier draw)
+1857,COST,general,other_income_expense_net,combined (reasoned blank)
 1857,COST,general,ppe_net,sourced
 1857,COST,general,public_float,cover page
 1857,COST,general,research_and_development,template-OUT candidate (Verifier draw)
@@ -1565,7 +1565,7 @@ company_id,ticker,template,data_point,status
 2848,ABBV,general,effective_tax_rate_reported,tax note
 2848,ABBV,general,employee_count,cover page / 10-K text
 2848,ABBV,general,goodwill,sourced
-2848,ABBV,general,gross_profit,note-sourced candidate (Verifier draw)
+2848,ABBV,general,gross_profit,template-OUT candidate (Verifier draw)
 2848,ABBV,general,income_before_tax,sourced
 2848,ABBV,general,income_tax_expense,sourced
 2848,ABBV,general,interest_expense,note-sourced candidate (Verifier draw)
@@ -1613,11 +1613,11 @@ company_id,ticker,template,data_point,status
 3007,NFLX,general,effective_tax_rate_reported,tax note
 3007,NFLX,general,employee_count,cover page / 10-K text
 3007,NFLX,general,goodwill,template-OUT candidate (Verifier draw)
-3007,NFLX,general,gross_profit,note-sourced candidate (Verifier draw)
+3007,NFLX,general,gross_profit,template-OUT candidate (Verifier draw)
 3007,NFLX,general,income_before_tax,sourced
 3007,NFLX,general,income_tax_expense,sourced
 3007,NFLX,general,interest_expense,sourced
-3007,NFLX,general,interest_income,template-OUT candidate (Verifier draw)
+3007,NFLX,general,interest_income,note-sourced candidate (Verifier draw)
 3007,NFLX,general,inventory,template-OUT candidate (Verifier draw)
 3007,NFLX,general,net_income,sourced
 3007,NFLX,general,net_lease_revenue,template seed: should be COND
@@ -1665,7 +1665,7 @@ company_id,ticker,template,data_point,status
 3083,DELL,general,income_before_tax,sourced
 3083,DELL,general,income_tax_expense,sourced
 3083,DELL,general,interest_expense,note-sourced candidate (Verifier draw)
-3083,DELL,general,interest_income,template-OUT candidate (Verifier draw)
+3083,DELL,general,interest_income,note-sourced candidate (Verifier draw)
 3083,DELL,general,inventory,sourced
 3083,DELL,general,net_income,sourced
 3083,DELL,general,net_lease_revenue,template seed: should be COND
@@ -1694,7 +1694,7 @@ company_id,ticker,template,data_point,status
 3398,SHOP,general,cash_flow_financing,sourced
 3398,SHOP,general,cash_flow_investing,sourced
 3398,SHOP,general,cf_ap_change,combined (reasoned blank)
-3398,SHOP,general,cf_ar_change,note-sourced candidate (Verifier draw)
+3398,SHOP,general,cf_ar_change,template-OUT candidate (Verifier draw)
 3398,SHOP,general,cf_inventory_change,template-OUT candidate (Verifier draw)
 3398,SHOP,general,cfo,sourced
 3398,SHOP,general,collaborative_arrangement_revenue,template seed: should be COND
@@ -1830,7 +1830,7 @@ company_id,ticker,template,data_point,status
 3932,MA,general,total_debt_split,held C8
 3932,MA,general,total_liabilities,sourced
 4015,GEV,general,accounts_payable,combined (reasoned blank)
-4015,GEV,general,accounts_receivable,sourced
+4015,GEV,general,accounts_receivable,combined (reasoned blank)
 4015,GEV,general,amortization_of_intangibles,sourced
 4015,GEV,general,basic_eps,sourced
 4015,GEV,general,capex,sourced
@@ -2097,7 +2097,7 @@ company_id,ticker,template,data_point,status
 5058,PANW,general,income_before_tax,sourced
 5058,PANW,general,income_tax_expense,sourced
 5058,PANW,general,interest_expense,sourced
-5058,PANW,general,interest_income,template-OUT candidate (Verifier draw)
+5058,PANW,general,interest_income,note-sourced candidate (Verifier draw)
 5058,PANW,general,inventory,note-sourced candidate (Verifier draw)
 5058,PANW,general,net_income,sourced
 5058,PANW,general,net_lease_revenue,template seed: should be COND
@@ -2145,7 +2145,7 @@ company_id,ticker,template,data_point,status
 5116,AVGO,general,income_before_tax,sourced
 5116,AVGO,general,income_tax_expense,sourced
 5116,AVGO,general,interest_expense,sourced
-5116,AVGO,general,interest_income,template-OUT candidate (Verifier draw)
+5116,AVGO,general,interest_income,note-sourced candidate (Verifier draw)
 5116,AVGO,general,inventory,sourced
 5116,AVGO,general,net_income,sourced
 5116,AVGO,general,net_lease_revenue,template seed: should be COND
@@ -2179,7 +2179,7 @@ company_id,ticker,template,data_point,status
 5203,ORCL,general,cfo,sourced
 5203,ORCL,general,collaborative_arrangement_revenue,template seed: should be COND
 5203,ORCL,general,comprehensive_income,sourced
-5203,ORCL,general,cost_of_revenue,sourced
+5203,ORCL,general,cost_of_revenue,excluded with point reason (component_of_unprinted_total)
 5203,ORCL,general,current_assets,sourced
 5203,ORCL,general,current_liabilities,sourced
 5203,ORCL,general,depreciation_and_amortization,template-OUT candidate (Verifier draw)
@@ -2189,7 +2189,7 @@ company_id,ticker,template,data_point,status
 5203,ORCL,general,effective_tax_rate_reported,tax note
 5203,ORCL,general,employee_count,cover page / 10-K text
 5203,ORCL,general,goodwill,sourced
-5203,ORCL,general,gross_profit,note-sourced candidate (Verifier draw)
+5203,ORCL,general,gross_profit,template-OUT candidate (Verifier draw)
 5203,ORCL,general,income_before_tax,sourced
 5203,ORCL,general,income_tax_expense,sourced
 5203,ORCL,general,interest_expense,sourced
@@ -2222,7 +2222,7 @@ company_id,ticker,template,data_point,status
 5351,XOM,general,cash_flow_financing,sourced
 5351,XOM,general,cash_flow_investing,sourced
 5351,XOM,general,cf_ap_change,sourced
-5351,XOM,general,cf_ar_change,template-OUT candidate (Verifier draw)
+5351,XOM,general,cf_ar_change,combined (reasoned blank)
 5351,XOM,general,cf_inventory_change,sourced
 5351,XOM,general,cfo,sourced
 5351,XOM,general,collaborative_arrangement_revenue,template seed: should be COND
@@ -2230,7 +2230,7 @@ company_id,ticker,template,data_point,status
 5351,XOM,general,cost_of_revenue,template-OUT candidate (Verifier draw)
 5351,XOM,general,current_assets,sourced
 5351,XOM,general,current_liabilities,sourced
-5351,XOM,general,depreciation_and_amortization,combined (reasoned blank)
+5351,XOM,general,depreciation_and_amortization,sourced
 5351,XOM,general,diluted_eps,sourced
 5351,XOM,general,dividends_paid,sourced
 5351,XOM,general,dividends_per_share,sourced
@@ -2241,7 +2241,7 @@ company_id,ticker,template,data_point,status
 5351,XOM,general,income_before_tax,sourced
 5351,XOM,general,income_tax_expense,sourced
 5351,XOM,general,interest_expense,sourced
-5351,XOM,general,interest_income,template-OUT candidate (Verifier draw)
+5351,XOM,general,interest_income,note-sourced candidate (Verifier draw)
 5351,XOM,general,inventory,sourced
 5351,XOM,general,net_income,sourced
 5351,XOM,general,net_lease_revenue,template seed: should be COND
@@ -2250,7 +2250,7 @@ company_id,ticker,template,data_point,status
 5351,XOM,general,other_income_expense_net,sourced
 5351,XOM,general,ppe_net,sourced
 5351,XOM,general,public_float,cover page
-5351,XOM,general,research_and_development,template-OUT candidate (Verifier draw)
+5351,XOM,general,research_and_development,note-sourced candidate (Verifier draw)
 5351,XOM,general,revenue_sanity,sourced
 5351,XOM,general,sbc,template-OUT candidate (Verifier draw)
 5351,XOM,general,sga_expense,sourced

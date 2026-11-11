@@ -34,7 +34,8 @@ TIERS = {
                                          "RevenuesNetOfInterestExpense", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes", "SalesRevenueNet"],
     ("IS", "income_before_tax_resolved"): ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                             "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
-                                            "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"],
+                                            "IncomeLossFromContinuingOperationsBeforeIncomeTaxes",
+                                            "IncomeLossIncludingPortionAttributableToNoncontrollingInterest"],  # '...before Tax' (PG, MCK, PSX)
     ("CF", "capex_resolved"): ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
     ("BS", "goodwill"): ["Goodwill"],
     ("BS", "ppe_net_resolved"): ["PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"],
@@ -61,9 +62,10 @@ COMBINED = {
     ("CF", "IncreaseDecreaseInAccountsPayableAndAccruedLiabilities"): ["cf_ap_change", "accrued_liabilities_change"],
     ("CF", "IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities"): ["cf_ap_change", "other_operating_liabilities_change"],
     ("CF", "IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets"): ["cf_ar_change", "other_operating_assets_change"],
+    ("CF", "IncreaseDecreaseInAccountsAndNotesReceivable"): ["cf_ar_change", "notes_receivable_change"],
 }
 NOT = {
-    ("IS", "CostsAndExpenses"): ("total_costs_incl_cost_of_revenue", "total costs and expenses includes cost of revenue: not operating_expenses (old concept_mapping was wrong)"),
+    ("IS", "CostsAndExpenses"): ("total_costs_incl_cost_of_revenue", "the printed total (often labelled 'Total operating expenses') includes cost of sales: not operating_expenses"),
     ("IS", "GeneralAndAdministrativeExpense"): None,  # decided by SGA_PARTS / tier below, never as sga alone
     ("IS", "InterestIncomeExpenseNet"): ("net_interest", "net interest income/expense (bank NII or net financing cost): not other_income_expense_net, not interest_income"),
     ("IS", "InterestIncomeExpenseNonoperatingNet"): ("net_interest", "net nonoperating interest: not other_income_expense_net"),
@@ -78,9 +80,17 @@ OVERRIDES = {  # (ticker, stmt, custom tag) -> (concept, evidence)
     ("CVX", "BS", "CashandCashEquivalentsExcludingTimeDepositsatCarryingValue"): ("cash_and_equivalents_resolved", "CVX face line 'Cash and cash equivalents' 2019-12..2022-03 (custom tag)"),
 }
 COMBINED_CO = {  # (ticker, stmt, custom tag) -> (spanned concepts, evidence)
+    ("GOOG", "CF", "DepreciationandImpairmentonDispositionofPropertyandEquipment"): (["depreciation_and_amortization", "impairment"], "GOOG 'Depreciation and impairment of property and equipment' (custom): includes impairment (D2)"),
+    ("GOOG", "CF", "DepreciationAndImpairmentOnDispositionOfPropertyAndEquipment"): (["depreciation_and_amortization", "impairment"], "GOOG 'Depreciation and impairment of property and equipment' (custom): includes impairment (D2)"),
+    ("GOOG", "CF", "AmortizationandImpairmentofIntangibleandOtherAssets"): (["amortization_of_intangibles", "impairment"], "GOOG 'Amortization and impairment of intangible and other assets' (custom): includes impairment"),
+    ("GOOG", "CF", "AmortizationandImpairmentofIntangibleAssets"): (["amortization_of_intangibles", "impairment"], "GOOG 'Amortization and impairment of intangible assets' (custom): includes impairment"),
+    ("GOOG", "CF", "AmortizationAndImpairmentOfIntangibleAssets"): (["amortization_of_intangibles", "impairment"], "GOOG 'Amortization and impairment of intangible assets' (custom): includes impairment"),
     ("MSFT", "CF", "DepreciationAmortizationAndOther"): (["depreciation_and_amortization", "other_noncash"], "MSFT CF line 'Depreciation, amortization, and other' (custom tag): D&A plus other non-cash items"),
 }
 NOT_CO = {
+    ("GOOG", "CF", "Depreciation"): ("d_and_a_not_presented", "GOOG prints depreciation only (2023-12+): D&A is not presented (ruling 2026-11-11: a component sum only when D and A are both printed)"),
+    ("WMT", "IS", "FinanceLeaseAndFinancingObligationInterestExpense"): ("alternate_tag_overlapping", "WMT custom finance-lease interest inside the era of the standard FinanceLeaseInterestExpense line: never added twice"),
+    ("ORCL", "IS", "CostOfServices"): ("component_of_unprinted_total", "ORCL 'Services' is one cost line beside cloud/license, hardware and other costs; no cost-of-revenue total is printed (template-OUT candidate)"),
     ("UNH", "IS", "SellingGeneralAndAdministrativeExpense"): ("not_sga_broad_operating_costs", "UNH 'Operating costs' is broad operating cost, not SG&A (income-statement card)"),
     ("UNH", "IS", "CostOfGoodsSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
     ("UNH", "IS", "CostOfGoodsAndServicesSold"): ("cost_of_products_not_total_cor", "UNH 'Cost of products sold' is one cost line beside medical costs, not total cost of revenue"),
@@ -123,9 +133,9 @@ ASK_DEFAULT = {  # Tag Expert questions: a decision now, re-decided on the rulin
     "CommonStockSharesIssued": ("share_terms_parenthetical", "BS issued-share count, not outstanding (Tag Expert ruling (a) 2026-11-11)"),
 }
 FLAG = {  # Tag Expert rulings 2026-11-11 (docs/tag-expert-playbooks 08ab3ed7): visible flags carried in the reason
-    ("BS", "ReceivablesNetCurrent"): "flag wider_perimeter_non_trade (sole receivables line)",
+    ("BS", "ReceivablesNetCurrent"): "plain 'accounts receivable, net' label only (Tag Expert correction (d))",
     ("BS", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"): "flag includes_finance_lease_rou",
-    ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: sum and flag summed_classes",
+    ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: per class, NEVER summed (an instant is never derived; Tag Expert correction 2026-11-11)",
 }
 
 prio = {}
@@ -352,12 +362,8 @@ for cid, rs in by_co.items():
                      decided_by="residue_rule")
     for r in rs:
         if r["stmt"] == "UN" and r.get("decision") == "excluded" and r.get("reason_class") == "cover_or_parenthetical":
-            r.update(reason_class="co_registrant_statement", reason="FSN stmt UN: a co-registrant subsidiary's own statement (e.g. DUK Carolinas), never the group's (cash-flow card D4)")
-    # D3: where IS and CF both print D&A in one filing, the CF line wins
+            r.update(reason_class="co_registrant_statement", reason="FSN stmt UN: excluded because the company's own IS/BS/CF cover these points; a co-registrant statement where the column carries a LegalEntityAxis member (D4; Revvity/PLNT are UN and the real entity)")
     cf_da = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved"]
-    for r in rs:
-        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved" and any(shares_filing(r, k) for k in cf_da):
-            r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping", reason="D&A printed on both IS and CF in these filings: the CF line wins (cash-flow card D3)", decided_by="library")
     # D1/D2: label wording widens the line beyond the concept -> combined (labels only demote)
     for r in rs:
         lab = r.get("evidence_plabel") or ""
@@ -369,9 +375,17 @@ for cid, rs in by_co.items():
             if not pure:
                 r.update(decision="combined", canonical_concept="", components="depreciation_and_amortization;impairment_accretion_or_fuel",
                          reason_class="line_presented_combined_with_others", reason="D&A line includes impairment, accretion or nuclear fuel (label); no pure D&A line printed; cash-flow card D2", decided_by="library")
+    # D3 (refined 2026-11-11): the CF line wins over IS D&A only while it is a pure concept line; a combined CF line
+    # (impairment, accretion, nuclear fuel) leaves the pure IS line served (DUK FY2025: IS 6,324M vs CF 7,704M)
+    cf_da = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved"]
+    for r in rs:
+        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved" and any(shares_filing(r, k) for k in cf_da):
+            r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping", reason="D&A printed on both IS and CF in these filings: the CF line wins (cash-flow card D3)", decided_by="library")
     for r in rs:
         lab = r.get("evidence_plabel") or ""
-        if r.get("decision") == "concept" and r["canonical_concept"] == "accounts_receivable" and re.search(r"(?i)\band other\b|notes and", lab):
+        plain_ar = re.fullmatch(r"(?i)\s*(trade )?accounts receivable(s)?(,? net)?(,? less allowance[^|]*|,? net of allowance[^|]*)?\s*", lab or "")
+        if r.get("decision") == "concept" and r["canonical_concept"] == "accounts_receivable" and (re.search(r"(?i)\band other\b|notes and", lab)
+                or (r["tag"] == "ReceivablesNetCurrent" and not plain_ar)):
             r.update(decision="combined", canonical_concept="", components="accounts_receivable;other_receivables",
                      reason_class="line_presented_combined_with_others", reason="receivables line includes other or notes receivable (label); shown as the company line (BS card)", decided_by="library")
         if r.get("decision") == "concept" and r["canonical_concept"] == "interest_expense_resolved" and re.search(r"(?i)\bnet\b", lab):
@@ -397,6 +411,75 @@ for cid, rs in by_co.items():
         else:
             due.update(decision="concept", canonical_concept="cash_and_equivalents_resolved", reason_class="",
                        reason="bank cash: the BS line equals the CF ending cash line (BS card)", decided_by="library")
+    # product + service cost lines printed side by side with no cost-of-revenue total: a printed component sum (D3, TMO)
+    COR_TOTALS = ("CostOfRevenue", "CostOfGoodsAndServicesSold")
+    prod, serv = idx.get(("IS", "CostOfGoodsSold")), idx.get(("IS", "CostOfServices"))
+    if prod and serv and shares_filing(prod, serv) and serv.get("decided_by") != "company_override":
+        tot = [idx[("IS", t)] for t in COR_TOTALS if ("IS", t) in idx and idx[("IS", t)].get("decision") == "concept"]
+        if not any(shares_filing(prod, t) for t in tot):
+            for x in (prod, serv):
+                x.update(decision="component", canonical_concept="", parent_concept="cost_of_revenue_resolved", combine_sign="1", reason_class="",
+                         reason="product and service costs printed side by side with no cost-of-revenue total: a printed component sum (ruling D3)", decided_by="library")
+    # ruling (3) 2026-11-11: NI = ProfitLoss - NCI only where both are printed on the IS face, the NCI line is the printed
+    # deduction, and no NI-attributable line exists in that era (AVGO 2019-08..2020-10): a duration component sum (D3)
+    nci = next((idx[("IS", t)] for t in NCI_TAGS if ("IS", t) in idx), None)
+    nil = idx.get(("IS", "NetIncomeLoss"))
+    for cut in list(pending_extra):
+        if cut["tag"] == "ProfitLoss" and cut["reason_class"] == "ni_incl_nci" and nci and overlap(cut, nci):
+            a = max(cut["era_from"], nci["era_from"], day_after(nil["era_to"]) if nil else "0000-00-00")
+            b = min(cut["era_to"], nci["era_to"])
+            if a > b:
+                continue
+            if cut["era_from"] < a:  # the part where NetIncomeLoss is printed keeps its reason
+                cut["era_to"] = day_before(a)
+            else:
+                pending_extra.remove(cut)
+            for x, sign in ((cut, "1"), (nci, "-1")):
+                e = dict(x)
+                e.update(decision="component", canonical_concept="", parent_concept="net_income_resolved", combine_sign=sign, era_from=a, era_to=b,
+                         reason_class="", reason="NI attributable = ProfitLoss - NCI, both printed on the IS face, no NI-attributable line in this era (ruling 3, 2026-11-11)",
+                         decided_by="library")
+                pending_extra.append(e)
+    if rs and rs[0]["ticker"] == "WMT":  # ruling 2026-11-11: WMT interest expense = debt + finance-lease interest, as printed
+        for t in ("InterestExpenseDebt", "InterestExpenseLesseeAssetsUnderCapitalLease", "FinanceLeaseInterestExpense"):
+            x = idx.get(("IS", t))
+            if x:
+                x.update(decision="component", canonical_concept="", parent_concept="interest_expense_resolved", combine_sign="1", reason_class="",
+                         reason="WMT interest expense = the printed debt + finance-lease interest lines (ruling 2026-11-11)", decided_by="company_override")
+    # Verifier 2026-11-11 face re-checks
+    bs_se = idx.get(("BS", "StockholdersEquity"))
+    eq_se = idx.get(("EQ", "StockholdersEquity"))
+    if eq_se and not (bs_se and bs_se.get("decision") == "concept"):
+        eq_se.update(decision="concept", canonical_concept="stockholders_equity_resolved", reason_class="",
+                     reason="parent equity is printed only on the equity statement (period-end balance), the BS prints total incl. NCI: a printed instant, not derived (CAT, PG)",
+                     decided_by="library")
+    sbc_cf = [r for r in rs if r.get("decision") == "concept" and r["canonical_concept"] == "sbc"]
+    for t in ("AllocatedShareBasedCompensationExpense", "ShareBasedCompensation"):
+        x = idx.get(("EQ", t))
+        if x and not sbc_cf:
+            x.update(decision="concept", canonical_concept="sbc", reason_class="", reason="stock-based compensation printed only on the equity statement (CAT)", decided_by="library")
+            sbc_cf.append(x)
+    ied = idx.get(("IS", "InterestExpenseDebt"))
+    if ied and ied.get("decision") == "excluded":
+        lab = ied.get("evidence_plabel") or ""
+        others = [r for r in rs if r["stmt"] == "IS" and r is not ied and re.match(r"Interest(Expense|AndDebtExpense)", r["tag"]) and r.get("decision") == "concept"]
+        if re.search(r"(?i)\bnet\b", lab):
+            ied.update(decision="combined", canonical_concept="", components="interest_expense;interest_income", reason_class="line_presented_combined_with_others",
+                       reason="'interest expense, net' on InterestExpenseDebt: net of interest income (IS card)", decided_by="library")
+        elif not others and re.search(r"(?i)interest", lab):
+            ied.update(decision="concept", canonical_concept="interest_expense_resolved", reason_class="",
+                       reason="sole-line rule: InterestExpenseDebt is the only interest-expense line, labelled interest (label_unverified until the Verifier checks it)", decided_by="library")
+    for t in ("InterestAndOtherIncome",):
+        x = idx.get(("IS", t))
+        if x and re.search(r"(?i)and other", x.get("evidence_plabel") or ""):
+            x.update(decision="combined", canonical_concept="", components="interest_income;other_income_expense_net", reason_class="line_presented_combined_with_others",
+                     reason="'interest income and other' spans interest income and other income (COST)", decided_by="library")
+    if cid_is_bank(rs) or ("IS", "InterestAndDividendIncomeOperating") in idx:
+        bank_ii = dict(rs[0])
+        bank_ii.update(tag="(bank interest income lines)", stmt="IS", decision="excluded", canonical_concept="", parent_concept="", components="",
+                       reason_class="bank_interest_income_component", reason="bank: interest income lines are components of net interest income (bank template); no single industrial interest_income",
+                       era_from=min(r["era_from"] for r in rs), era_to=max(r["era_to"] for r in rs), decided_by="library", taxonomy="note", lines="0", filings="0")
+        pending_extra.append(bank_ii)
     extra = list(pending_extra)
     opex_total = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "OperatingExpenses" and r.get("decision") == "concept"]
     gp = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "GrossProfit"]
@@ -411,12 +494,57 @@ for cid, rs in by_co.items():
                          reason_class="", reason="no operating-expenses total printed: operating expenses = the expense lines between gross profit and operating income (mapper: GP - sum = OI must tie per filing, else hold)",
                          decided_by="library_opex_parts")
                 extra.append(e)
+    eb = idx.get(("IS", "EarningsPerShareBasicAndDiluted"))
+    if eb and eb.get("decision") == "concept":
+        other = "basic_eps_resolved" if eb["canonical_concept"] == "diluted_eps_resolved" else "diluted_eps_resolved"
+        e = dict(eb)
+        e.update(canonical_concept=other, reason="one printed EPS line serves basic AND diluted (row per concept)")
+        extra.append(e)
     wb = idx.get(("IS", "WeightedAverageNumberOfShareOutstandingBasicAndDiluted"))
     if wb and wb.get("decision") == "concept":
         e = dict(wb)
         e.update(canonical_concept="weighted_diluted_shares", reason="one printed weighted-share line serves basic AND diluted (Tag Expert (c))")
         extra.append(e)
     rs.extend(extra)
+    # FINAL de-overlap (0122 trigger): no two 'concept' rows for one (company, stmt, concept) may overlap in era, whatever the
+    # filings. Winner by rule priority, then tier, then filings; a loser keeps only its era outside the kept rows, and the
+    # cut-out era becomes an excluded reason row.
+    cut_rows = []
+    groups = collections.defaultdict(list)
+    for r in rs:
+        if r.get("decision") == "concept" and r.get("canonical_concept"):
+            groups[(r["stmt"], r["canonical_concept"])].append(r)
+    for (st, con), g in groups.items():
+        g.sort(key=lambda r: (prio.get((st, r["tag"]), 50), tier_of.get((st, r["tag"]), (con, 9))[1], -int(r.get("filings") or 0), r["era_from"]))
+        kept = []
+        for r in g:
+            hit = [k for k in kept if overlap(r, k)]
+            if not hit:
+                kept.append(r)
+                continue
+            lo, hi = min(k["era_from"] for k in hit), max(k["era_to"] for k in hit)
+            parts = []
+            if r["era_from"] < lo:
+                parts.append((r["era_from"], day_before(lo)))
+            if r["era_to"] > hi:
+                parts.append((day_after(hi), r["era_to"]))
+            parts = [p for p in parts if p[0] <= p[1] and not any(overlap({"era_from": p[0], "era_to": p[1]}, k) for k in kept)]
+            mid = dict(r)  # the era the winner serves: a reason row
+            mid.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping",
+                       reason=f"same concept {con} served by {', '.join(k['tag'] for k in hit)} in this era (no two concept tags per period)",
+                       era_from=max(r["era_from"], lo), era_to=min(r["era_to"], hi), decided_by="final_deoverlap")
+            cut_rows.append(mid)
+            for i, (f, t) in enumerate(parts):
+                c = r if i == 0 else dict(r)
+                c.update(era_from=f, era_to=t)
+                if i:
+                    cut_rows.append(c)
+                kept.append(c)
+            if not parts:
+                r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping",
+                         reason=mid["reason"], decided_by="final_deoverlap")
+                cut_rows.remove(mid)
+    rs.extend(cut_rows)
     out_rows.extend(rs)
 
 COLS = ["company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept", "combine_sign",

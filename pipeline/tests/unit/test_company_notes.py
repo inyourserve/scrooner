@@ -87,3 +87,23 @@ def test_exceptions_and_std_tags_are_applied(tmp_path):
     assert "TST prints no gross profit line" in md.split("## Company exceptions")[1].split("## Excluded")[0]
     assert "| mapped |" in _table_row(md, "goodwill")[0] and "std-tags decision rank 400" in _table_row(md, "goodwill")[0]
     assert "UNDECIDED line BS us-gaap:Mystery" not in md
+
+
+def test_coverage_status_replaces_undecided_and_candidates_become_pending_verifier(tmp_path):
+    cov = tmp_path / "cov.csv"
+    cov.write_text("company_id,ticker,template,data_point,status\n"
+                   "9,TST,general,total_debt,held C8 (debt lane)\n"
+                   "9,TST,general,interest_income,note-sourced candidate (Verifier draw)\n")
+    tm, ident, out = tmp_path / "tm.csv", tmp_path / "id.csv", tmp_path / "out"
+    with open(tm, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=FIELDS)
+        w.writeheader()
+        w.writerows(ROWS)
+    ident.write_text("company_id,cik,name,ticker,sic_code,sector\n9,0000000009,Test Co,TST,3571,Technology\n")
+    subprocess.run([sys.executable, "-I", str(GEN), "--tag-map", str(tm), "--identity", str(ident), "--out", str(out),
+                    "--coverage", str(cov)], check=True, capture_output=True)
+    md = (out / "TST.md").read_text()
+    assert "held C8" in _table_row(md, "total_debt")[0]
+    assert "PENDING VERIFIER `interest_income`" in md
+    assert "UNDECIDED data point `total_debt`" not in md
+    assert "UNDECIDED data point" not in md  # points outside the coverage file are 'not in the approved template'

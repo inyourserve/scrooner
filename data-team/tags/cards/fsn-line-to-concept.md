@@ -73,3 +73,21 @@ Custom extension lines: map only by structure (statement position, calc parent, 
 | InterestAndDividendIncomeOperating | revenue | bank interest income |
 | GeneralAndAdministrativeExpense | SG&A | G&A only; SG&A = S&M + G&A when S&M is separate |
 Combined lines (reason `line_presented_combined_with_others`): AccountsPayableAndAccruedLiabilitiesCurrent and variants; CF IncreaseDecreaseIn…AndOther… lines.
+
+## N. Known filer label errors (tag right, label wrong): exempt them from label-DEMOTION rules (2026-11-11)
+A label rule can demote a correct line when the filer's label linkbase is wrong. Known cases (FILING-CHECKED unless marked):
+| Filer | Filing | Error |
+|---|---|---|
+| STX | 0001137789-26-000309 | label shifted: Goodwill 1,221 labelled "Other intangible assets" |
+| POWL | 0000080420-23-000051 | labels swapped |
+| EXLS | 0001297989-23-000009 | labels swapped |
+| DY | 0000067215-19-000043 | label shifted |
+| HLI | 0001302215-23-000079 | "other assets" label on total assets |
+| TRU | 0001552033-17-000027 | label shifted |
+| LH | 0000920148-24-000118 | label shifted (10,427.1M) |
+| MUR | 0000717423-20-000008 | label shifted (5,913,893K) |
+| MSI | 2018-12 filing | basic/diluted EPS labels swapped (Ritwik; DATA-INFERRED) |
+| FIVE | 0001177609-20-000030 R6 | withholding label on two rows (12,663)K vs (3,789)K |
+| ETSY | 0001370637-18-000020 R7 | two rows with one label (10,301)K / (6,417)K |
+| FICO | (fsn-balance-sheet-assets) | "…Current" label on a noncurrent position (DATA-INFERRED) |
+Guard: when a label would demote a line, check it against the calc position and the value (e.g. a "Goodwill" tag whose value equals the goodwill note) before demoting; a demotion that breaks the statement's calc tie is a label error, not a component.

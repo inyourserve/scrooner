@@ -33,7 +33,9 @@ for r in m:
 POINT_REASON = {"nonoperating_total_incl_interest": "other_income_expense_net", "parent_equity_not_printed": "stockholders_equity",
                 "bank_cash_perimeter": "cash_and_equivalents", "cash_incl_short_term_investments": "cash_and_equivalents",
                 "catalog_gap_bank_nii": "interest_income", "total_costs_incl_cost_of_revenue": "operating_expenses",
-                "not_sga_broad_operating_costs": "sga_expense", "cost_of_products_not_total_cor": "cost_of_revenue"}
+                "not_sga_broad_operating_costs": "sga_expense", "cost_of_products_not_total_cor": "cost_of_revenue",
+                "component_of_unprinted_total": "cost_of_revenue", "d_and_a_not_presented": "depreciation_and_amortization",
+                "bank_interest_income_component": "interest_income"}
 for r in m:
     if r["decision"] == "excluded" and r["reason_class"] in POINT_REASON:
         st[r["company_id"]].setdefault(POINT_REASON[r["reason_class"]], "excluded with point reason (" + r["reason_class"] + ")")
