@@ -97,6 +97,7 @@ class Fact:
     derived: bool
     filing_id: int
     accession: str
+    filed: date | None = None
 
 
 def enabled(environ=None) -> bool:
@@ -144,7 +145,7 @@ def _load_facts(conn: psycopg.Connection, company_id: int, tags: set[tuple[str, 
             """
             select distinct on (c.taxonomy, c.tag, f.period_id)
                    c.taxonomy, c.tag, f.period_id, f.value, f.id, p.end_date, f.is_derived,
-                   f.filing_id, fl.accession_number
+                   f.filing_id, fl.accession_number, fl.filing_date
             from core.fact f
             join core.concept c on c.id = f.concept_id
             join core.period p on p.id = f.period_id
@@ -166,10 +167,11 @@ def _load_facts(conn: psycopg.Connection, company_id: int, tags: set[tuple[str, 
             derived,
             filing_id,
             acc,
+            filed,
         ) in cur.fetchall():
             if (taxonomy, tag) in tags:
                 out[(taxonomy, tag)][period_id] = Fact(
-                    Decimal(value), fact_id, end, derived, filing_id, acc
+                    Decimal(value), fact_id, end, derived, filing_id, acc, filed
                 )
     return out
 
@@ -334,15 +336,21 @@ def build_cells(
         )
 
     cells: list[dict] = []
+    conflicts: set[tuple[int, int]] = set()
     for key in sorted(set(direct) | set(comp)):
         d = direct.get(key, [])
         c = comp.get(key, [])
-        if len({f.value * _sign(r) for r, f in d}) > 1:
-            stats["conflict_cells"] += (
-                1  # two printed tags disagree: never an arbitrary pick
-            )
-            continue
         if d:
+            # several 'concept' rows may list different tags for one concept (10-Q vs 10-K tags, a mid-year
+            # switch; never printed together in one filing): the LATEST filing's value wins, never a sum, never
+            # tag order. Two listed tags printing different values in that same latest filing: reasoned blank.
+            newest = max((f.filed or date.min, f.filing_id) for _, f in d)
+            d = [(r, f) for r, f in d if (f.filed or date.min, f.filing_id) == newest]
+            if len({f.value * _sign(r) for r, f in d}) > 1:
+                stats["conflict_cells"] += 1
+                hold(key, "conflicting_values_in_filing")
+                conflicts.add(key)
+                continue
             ref = d[0][1]
             ref_value = ref.value * _sign(d[0][0])
             # rule 1: the printed concept wins; components of the SAME filing must still tie (rule 2)
@@ -453,6 +461,29 @@ def build_cells(
                     "grain": grain,
                 }
             )
+    for concept, period_id in sorted(conflicts):
+        if period_id not in (periods or {}):
+            continue
+        start, end, ptype = periods[period_id]
+        grain = _grain(start, end, ptype)
+        if grain is None:
+            continue
+        stats["blanks"].append(
+            {
+                "canonical_concept_id": concept,
+                "concept_name": concept_info[concept][0],
+                "period_id": period_id,
+                "state": "defect",
+                "defect_class": "finding_open",
+                "owner": "tag_mapper",
+                "reason_code": "conflicting_values_in_filing",
+                "reason": "two listed tags print different values for this concept in the latest filing",
+                "rule_id": RULE_ID,
+                "period_start": start,
+                "period_end": end,
+                "grain": grain,
+            }
+        )
     return cells, stats
 
 
@@ -488,13 +519,7 @@ def resolve_for_company(
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
-    periods = (
-        _load_periods(conn, company_id)
-        if any(
-            r.decision in ("not_presented", "not_in_template", "combined") for r in rows
-        )
-        else {}
-    )
+    periods = _load_periods(conn, company_id)
     cells, stats = build_cells(rows, facts, concept_info, arcs, dcml, periods)
     targets = set(managed_concept_ids)
     for r in rows:
@@ -570,7 +595,9 @@ def _write_blanks(
                 ),
                 state=b["state"],
                 rule_id=b["rule_id"],
-                reason_code=b["state"],
+                reason_code=b.get("reason_code", b["state"]),
+                defect_class=b.get("defect_class"),
+                owner=b.get("owner"),
                 reason_text=b["reason"],
                 input_refs={"source": "analytics.company_tag_map", "selector": RULE_ID},
             )

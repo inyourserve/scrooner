@@ -115,6 +115,10 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         conn.commit()
         bad("concept", x["rev"], None, "2017-12-31", None)        # overlapping era, same tag and stmt
         conn.execute(base, (co, "concept", x["rev"], None, "2018-01-01", None))  # adjacent era is fine
+        # one tag feeds a second concept in the same era; an excluded row clashes with any row of the tag
+        conn.execute(base, (co, "concept", x["opex"], None, "2018-01-01", None))
+        conn.commit()
+        bad("excluded", None, "not used", "2019-01-01", None)
         conn.commit()
         csv_path = tmp_path / "m.csv"
         csv_path.write_text(
@@ -124,7 +128,7 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         )
         dry = seed(conn, csv_path)
         assert dry["rows"] == 2 and dry["errors"] == [] and not dry["applied"]
-        assert _one(conn, "select count(*) from analytics.company_tag_map") == 2  # dry run wrote nothing
+        assert _one(conn, "select count(*) from analytics.company_tag_map") == 3  # dry run wrote nothing
         done = seed(conn, csv_path, apply=True)
         assert done["applied"] and _one(conn, "select count(*) from analytics.company_tag_map") == 2
         assert _one(conn, "select count(*) from analytics.company_tag_map where tag = 'T'") == 0  # replaced

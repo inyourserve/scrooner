@@ -178,3 +178,40 @@ def test_combined_cash_flow_line_gives_reasoned_blanks_for_duration_periods():
     periods = {7: (date(2020, 1, 1), END, "duration")}
     cells, stats = build_cells([row], {("us-gaap", "PaymentsForDividendsAndRepurchases"): {7: fact("9", 1)}}, info, {}, {}, periods)
     assert cells == [] and {(b["concept_name"], b["grain"]) for b in stats["blanks"]} == {("share_buybacks", "FY"), ("dividends_paid", "FY")}
+
+
+def test_several_concept_rows_latest_filing_wins_never_sum_or_tag_order():
+    from datetime import date as d
+
+    q = MapRow("us-gaap", "TagQ", "IS", "concept", OPEX, None, 1, ERA, None)
+    k = MapRow("us-gaap", "TagK", "IS", "concept", OPEX, None, 1, ERA, None)
+
+    def f(value, fid, filing, filed):
+        return Fact(Decimal(value), fid, END, False, filing, f"A-{filing}", filed)
+
+    facts = {  # the 10-K (later) prints TagK, the earlier 10-Q printed TagQ for the same period
+        ("us-gaap", "TagQ"): {7: f("10", 1, 20, d(2021, 2, 1))},
+        ("us-gaap", "TagK"): {7: f("12", 2, 21, d(2021, 3, 1))},
+    }
+    for rows in ([q, k], [k, q]):  # row order must not matter
+        cells, stats = run(rows, facts)
+        assert [(c["value"], c["source_fact_ids"]) for c in cells] == [(Decimal("12"), [2])] and not stats["held"]
+    # both listed tags print different values in the SAME latest filing: a reasoned blank, not a pick
+    facts[("us-gaap", "TagQ")] = {7: f("10", 1, 21, d(2021, 3, 1))}
+    cells, stats = build_cells([q, k], facts, INFO, {}, {}, {7: (date(2020, 1, 1), END, "duration")})
+    assert cells == [] and stats["held"][0]["reason"] == "conflicting_values_in_filing"
+    assert [(b["state"], b["reason_code"], b["grain"]) for b in stats["blanks"]] == [("defect", "conflicting_values_in_filing", "FY")]
+    facts[("us-gaap", "TagQ")] = {7: f("12", 1, 21, d(2021, 3, 1))}  # same value in the same filing: fine
+    cells, _ = run([q, k], facts)
+    assert [c["value"] for c in cells] == [Decimal("12")]
+
+
+def test_one_tag_two_concepts_both_get_the_value_and_eps_is_never_derived():
+    info = {**INFO, 8: ("basic_eps_resolved", "income_statement"), 9: ("diluted_eps_resolved", "income_statement")}
+    rows = [MapRow("us-gaap", "EarningsPerShareBasicAndDiluted", "IS", "concept", c, None, 1, ERA, None) for c in (8, 9)]
+    key = ("us-gaap", "EarningsPerShareBasicAndDiluted")
+    cells, _ = build_cells(rows, {key: {7: fact("-1.5", 1)}}, info)
+    assert {(c["canonical_concept_id"], c["value"]) for c in cells} == {(8, Decimal("-1.5")), (9, Decimal("-1.5"))}
+    derived = Fact(Decimal("-0.4"), 2, END, True, 10, "A-10")
+    cells, stats = build_cells(rows, {key: {7: derived}}, info)
+    assert cells == [] and stats["derived_eps_skipped"] == 2

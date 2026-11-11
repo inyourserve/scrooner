@@ -161,13 +161,26 @@ def check_overlaps(rows: list[dict]) -> list[str]:
         else:
             by_key[(r["company_id"], r["taxonomy"], r["tag"], r["stmt"])].append(r)
     errors = []
+
+    def clash(a, b):
+        return (a["era_to"] is None or a["era_to"] >= b["era_from"]) and (
+            b["era_to"] is None or b["era_to"] >= a["era_from"]
+        )
+
     for key, group in by_key.items():
         group.sort(key=lambda r: r["era_from"])
-        for a, b in zip(group, group[1:]):
-            if a["era_to"] is None or a["era_to"] >= b["era_from"]:
-                errors.append(
-                    f"overlapping eras for {key}: {a['era_from']}..{a['era_to']} vs {b['era_from']}..{b['era_to']}"
-                )
+        for i, a in enumerate(group):
+            for b in group[i + 1 :]:
+                if a["tag"] is None:
+                    same = True
+                else:  # one tag may feed two concepts; an excluded row clashes with any row of the tag
+                    ca = a["canonical_concept_id"] or a["parent_concept_id"]
+                    cb = b["canonical_concept_id"] or b["parent_concept_id"]
+                    same = ca == cb or "excluded" in (a["decision"], b["decision"])
+                if same and clash(a, b):
+                    errors.append(
+                        f"overlapping eras for {key}: {a['era_from']}..{a['era_to']} vs {b['era_from']}..{b['era_to']}"
+                    )
     return errors
 
 

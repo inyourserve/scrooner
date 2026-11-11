@@ -3,7 +3,7 @@
 -- ROLLBACK: drop trigger trg_company_tag_map_no_overlap on analytics.company_tag_map; drop function
 --   analytics.company_tag_map_no_overlap(); drop table analytics.company_tag_map;  (nothing else references it)
 --   delete from analytics.canonical_concept where name in ('weighted_average_shares_basic',
---   'weighted_average_shares_diluted','cash_paid_for_interest','cash_paid_for_income_taxes');  (only while unreferenced)
+--   'weighted_average_shares_diluted','cash_paid_for_interest','cash_paid_for_income_taxes','net_interest_income');  (only while unreferenced)
 -- The FSN store (schema fsn, 0118) teaches, per company, which XBRL tag is which statement line (statement,
 -- position, label, calc tree, era). This table records that decision per (company, taxonomy, tag, stmt, era).
 -- Values still come from the SEC company-API facts in core.fact. For a company with rows here the mapper
@@ -25,7 +25,10 @@
 --   'review' (undecided) is never stored.
 -- stmt is the FSN statement code (BS/IS/CF/EQ/CI/UN/CP): the same tag on two statements is two rows
 -- (NetIncomeLoss on CF is the cash-flow start line, not net income). era_to NULL = open-ended.
--- Eras of one (company, taxonomy, tag, stmt) - or, for tagless rows, (company, stmt, canonical_concept) - must not overlap (trigger; btree_gist is not assumed).
+-- Eras of one (company, taxonomy, tag, stmt, concept) - or, for tagless rows, (company, stmt, canonical_concept) -
+-- must not overlap. One tag may feed two concepts (EarningsPerShareBasicAndDiluted: basic and diluted EPS) and
+-- one concept may list several tags with overlapping eras (10-Q vs 10-K tags); an 'excluded' row overlaps any
+-- row of the same tag and statement. The mapper takes the latest filing's value among a concept's tags. (trigger; btree_gist is not assumed).
 -- NOT applied: needs the founder's typed words.
 create table if not exists analytics.company_tag_map (
     id                    bigint generated always as identity primary key,
@@ -81,7 +84,10 @@ begin
           and m.id is distinct from new.id
           and case when new.tag is null
                    then m.tag is null and m.canonical_concept_id = new.canonical_concept_id
-                   else m.taxonomy = new.taxonomy and m.tag = new.tag end
+                   else m.taxonomy = new.taxonomy and m.tag = new.tag
+                        and (coalesce(m.canonical_concept_id, m.parent_concept_id)
+                                 is not distinct from coalesce(new.canonical_concept_id, new.parent_concept_id)
+                             or m.decision = 'excluded' or new.decision = 'excluded') end
           and m.era_from <= coalesce(new.era_to, 'infinity'::date)
           and new.era_from <= coalesce(m.era_to, 'infinity'::date)
     ) then
@@ -108,6 +114,8 @@ insert into analytics.canonical_concept (name, statement, combination_mode, desc
      'Weighted-average basic common shares outstanding for the period (unit: shares, not USD)'),
     ('weighted_average_shares_diluted', 'income_statement', 'first_match',
      'Weighted-average diluted common shares outstanding for the period (unit: shares, not USD)'),
+    ('net_interest_income', 'income_statement', 'first_match',
+     'Net interest income as presented by banks (interest income less interest expense, USD)'),
     ('cash_paid_for_interest', 'cash_flow', 'first_match',
      'Cash paid for interest (supplemental cash-flow disclosure, USD)'),
     ('cash_paid_for_income_taxes', 'cash_flow', 'first_match',
