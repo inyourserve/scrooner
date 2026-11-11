@@ -108,7 +108,7 @@ def test_table_checks_overlap_trigger_and_seeder(isolated_database_url, tmp_path
         bad("concept", None, None, "2015-01-01", None)            # concept needs a concept
         bad("combined", x["rev"], None, "2015-01-01", None)       # combined needs the spanned concept names
         names = {r[0] for r in conn.execute("select name from analytics.canonical_concept")}
-        assert {"weighted_average_shares_basic", "weighted_average_shares_diluted", "cash_paid_for_interest", "cash_paid_for_income_taxes"} <= names
+        assert {"weighted_basic_shares", "weighted_diluted_shares", "cash_paid_for_interest", "cash_paid_for_income_taxes", "net_interest_income"} <= names
         bad("excluded", None, None, "2015-01-01", None)           # excluded needs a reason
         bad("concept", x["rev"], None, "2016-01-01", "2015-01-01")  # era_from > era_to
         conn.execute(base, (co, "concept", x["rev"], None, "2015-01-01", "2017-12-31"))
@@ -158,3 +158,22 @@ def test_tagless_not_presented_writes_blank_reason_and_printed_value_wins(isolat
         # tm_rev is printed for 2018: no blank there (value wins); the unprinted 2020 period is a blank
         assert {b[4].isoformat() for b in blanks if b[0] == "tm_rev"} == {"2020-12-31"}
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == Decimal("110")
+
+
+@pytest.mark.integration
+def test_combined_line_is_served_in_company_combined_line_and_feeds_no_concept(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        conn.execute("insert into core.concept (taxonomy, tag) values ('us-gaap', 'ApAndAccrued')")
+        ap = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_ap','income_statement','first_match') returning id")
+        co, per, fil, fact = x["company"]("0000000401", True)
+        x["tags"]["ApAndAccrued"] = _one(conn, "select id from core.concept where tag = 'ApAndAccrued'")
+        fid = fact("ApAndAccrued", "in", "new", "500")
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, components, reason, era_from, evidence_plabel, decided_by, rule_id) values (%s,'us-gaap','ApAndAccrued','IS','combined',%s,'spans two',%s,'AP and accrued','t','tm.r@1')", (co, ["tm_ap", "tm_other"], "2015-01-01"))
+        conn.commit()
+        assert resolve(conn, {"0000000401"})["errored"] == 0
+        assert conn.execute("select plabel, value, components, source_fact_ids from analytics.company_combined_line where company_id = %s", (co,)).fetchall() == [("AP and accrued", Decimal("500"), ["tm_ap", "tm_other"], [fid])]
+        assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s", co) == 0
+        got = conn.execute("select data_point_name, state, reason_text from analytics.cell_blank_reason where company_id = %s order by 1", (co,)).fetchall()
+        assert got == [("tm_ap", "not_in_template", "shown as the company's combined line 'AP and accrued'"), ("tm_other", "not_in_template", "shown as the company's combined line 'AP and accrued'")]

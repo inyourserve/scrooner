@@ -22,8 +22,11 @@ For a company with rows in analytics.company_tag_map, a canonical fact is built 
     cell is HELD; (3) a component set in which one member is a calc ancestor of another is refused (HELD).
     Held cells are written nowhere and returned in stats["held"] with a reason code.
   * decision 'combined': one printed line spanning several concepts. It NEVER feeds a concept (even if
-    canonical_concept_id is set); each spanned concept without a separately printed value in a period where the
-    line exists gets a reasoned blank "printed only combined with <others> on <stmt> line '<plabel>'".
+    canonical_concept_id is set). It is served as the company's own line in analytics.company_combined_line
+    (printed label, sign x stored value); each spanned concept without a separately printed value in that period
+    is marked not_in_template "shown as the company's combined line '<plabel>'".
+  * sign means: multiply the value STORED in core.fact (the tag's own direction, not the printed sign) by it. The
+    mapper never takes abs() and never flips a sign from a label; core.fact is non-dimensional by construction.
   * decision 'not_presented' / 'not_in_template' (tagless, concept-level): for each of the company's periods in the
     era (instant periods for a balance-sheet concept, FY or quarter durations otherwise) that has no value cell the
     result is a reasoned blank (stats["blanks"], written to analytics.cell_blank_reason by resolve()). A printed
@@ -87,6 +90,7 @@ class MapRow:
     components: tuple[str, ...] | None = None
     evidence_plabel: str | None = None
     serve_note: str | None = None
+    map_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -123,13 +127,13 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
         cur.execute(
             """
             select taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign,
-                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note
+                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id
             from analytics.company_tag_map where company_id = %s
             """,
             (company_id,),
         )
         return [
-            MapRow(*r[:12], tuple(r[12]) if r[12] else None, r[13], r[14])
+            MapRow(*r[:12], tuple(r[12]) if r[12] else None, r[13], r[14], r[15])
             for r in cur.fetchall()
         ]
 
@@ -301,6 +305,7 @@ def build_cells(
         "held": [],
         "blanks": [],
         "blank_conflicts": [],
+        "combined_lines": [],
     }
 
     def stmt_ok(concept_id: int, stmt: str) -> bool:
@@ -392,8 +397,10 @@ def build_cells(
     name_to_id = {n: i for i, (n, _) in concept_info.items()}
     for row in rows:
         if row.decision == "combined":
-            # one printed line spanning several concepts: each spanned concept with no separately printed
-            # value in a period where the line exists is a reasoned blank, never a value
+            # one printed line spanning several concepts (founder ruling doc 02, sector templates item 3): it is
+            # SERVED as the company's own combined line (analytics.company_combined_line: label, sign x stored
+            # value) and never feeds a spanned concept; each spanned concept leaves the company's template for
+            # that period (state not_in_template), unless a separate 'concept' row prints it.
             for period_id, fact in sorted(
                 facts.get((row.taxonomy, row.tag), {}).items()
             ):
@@ -403,18 +410,30 @@ def build_cells(
                 grain = _grain(start, end, ptype)
                 if grain is None:
                     continue
+                stats["combined_lines"].append(
+                    {
+                        "period_id": period_id,
+                        "stmt": row.stmt,
+                        "taxonomy": row.taxonomy,
+                        "tag": row.tag,
+                        "plabel": row.evidence_plabel or row.tag,
+                        "components": list(row.components or ()),
+                        "value": fact.value * _sign(row),
+                        "source_fact_ids": [fact.fact_id],
+                        "tag_map_id": row.map_id,
+                    }
+                )
                 for name in row.components or ():
                     cid = name_to_id.get(name)
                     if cid is not None and (cid, period_id) in value_keys:
                         continue  # a separate 'concept' row prints it: the value wins
-                    others = ", ".join(n for n in row.components if n != name)
                     stats["blanks"].append(
                         {
                             "canonical_concept_id": cid,
                             "concept_name": name,
                             "period_id": period_id,
-                            "state": "not_presented",
-                            "reason": f"printed only combined with {others} on {row.stmt} line '{row.evidence_plabel}'",
+                            "state": "not_in_template",
+                            "reason": f"shown as the company's combined line '{row.evidence_plabel}'",
                             "rule_id": row.rule_id,
                             "period_start": start,
                             "period_end": end,
@@ -551,6 +570,35 @@ def resolve_for_company(
                     for c in cells
                 ],
             )
+        cur.execute(
+            "delete from analytics.company_combined_line where company_id = %s",
+            (company_id,),
+        )
+        if stats["combined_lines"]:
+            cur.executemany(
+                """
+                insert into analytics.company_combined_line
+                    (company_id, period_id, stmt, taxonomy, tag, plabel, components, value,
+                     source_fact_ids, tag_map_id, run_id)
+                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s::uuid)
+                """,
+                [
+                    (
+                        company_id,
+                        b["period_id"],
+                        b["stmt"],
+                        b["taxonomy"],
+                        b["tag"],
+                        b["plabel"],
+                        b["components"],
+                        b["value"],
+                        b["source_fact_ids"],
+                        b["tag_map_id"],
+                        run_id,
+                    )
+                    for b in stats["combined_lines"]
+                ],
+            )
         if stats["blanks"]:
             if run_id is None:
                 raise ValueError(
@@ -561,13 +609,14 @@ def resolve_for_company(
     stats["resolved"] = len(cells)
     stats["held_cells"] = len(stats["held"])
     stats["blank_cells"] = len(stats["blanks"])
+    stats["combined_line_cells"] = len(stats["combined_lines"])
     logger.info(
         "company_tag_map.company_done",
         company_id=company_id,
         **{
             k: v
             for k, v in stats.items()
-            if k not in ("held", "blanks", "blank_conflicts")
+            if k not in ("held", "blanks", "blank_conflicts", "combined_lines")
         },
     )
     return stats

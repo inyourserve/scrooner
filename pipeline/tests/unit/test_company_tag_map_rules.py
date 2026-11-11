@@ -125,10 +125,13 @@ def test_combined_row_never_feeds_a_concept_only_a_reasoned_blank_per_spanned_co
     for canonical in (None, 3):  # even with canonical_concept set the line feeds nothing
         cells, stats = build_cells([combined_row(canonical)], facts, info, {}, {}, periods)
         assert cells == []
+        assert [(l["plabel"], l["value"], l["components"], l["source_fact_ids"]) for l in stats["combined_lines"]] == [
+            ("Accounts payable and accrued liabilities", Decimal("500"), ["accounts_payable", "tm_accrued"], [1])
+        ]
         got = {(b["concept_name"], b["state"], b["reason"], b["rule_id"]) for b in stats["blanks"]}
         assert got == {
-            ("accounts_payable", "not_presented", "printed only combined with tm_accrued on BS line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
-            ("tm_accrued", "not_presented", "printed only combined with accounts_payable on BS line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
+            ("accounts_payable", "not_in_template", "shown as the company's combined line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
+            ("tm_accrued", "not_in_template", "shown as the company's combined line 'Accounts payable and accrued liabilities'", "tm.combined@1"),
         }
 
 
@@ -215,3 +218,49 @@ def test_one_tag_two_concepts_both_get_the_value_and_eps_is_never_derived():
     derived = Fact(Decimal("-0.4"), 2, END, True, 10, "A-10")
     cells, stats = build_cells(rows, {key: {7: derived}}, info)
     assert cells == [] and stats["derived_eps_skipped"] == 2
+
+
+STORED = [("Other", "89"), ("LossOnExtinguishment", "-123.9"), ("IssuanceOfStock", "-32.5")]  # AAPL, PODD, TRMB (stored values)
+
+
+def test_served_value_is_sign_times_the_stored_value_never_the_printed_sign():
+    for tag, stored in STORED:
+        row = lambda sign: MapRow("us-gaap", tag, "IS", "concept", OPEX, None, sign, ERA, None)
+        facts = {("us-gaap", tag): {7: fact(stored, 1)}}
+        assert [c["value"] for c in run([row(1)], facts)[0]] == [Decimal(stored)]  # sign +1: exactly as stored
+        assert [c["value"] for c in run([row(-1)], facts)[0]] == [-Decimal(stored)]
+
+
+def test_selection_path_never_takes_an_absolute_value():
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[2] / "src/scrooner_pipeline/mapper/company_tag_map.py").read_text()
+    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l)
+    assert "abs(" not in code  # the only abs() is the tie-tolerance difference of two totals
+    row = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, ERA, None)
+    cells, _ = run([row], {("us-gaap", "T"): {7: fact("-5", 1)}})
+    assert [c["value"] for c in cells] == [Decimal("-5")]
+
+
+def test_unclassified_statement_UN_is_never_a_home_statement():
+    row = MapRow("us-gaap", "T", "UN", "concept", OPEX, None, 1, ERA, None)
+    cells, stats = run([row], {("us-gaap", "T"): {7: fact("5", 1)}})
+    assert cells == [] and stats["stmt_mismatch_rows"] == 1
+
+
+def test_d3_no_cross_section_identity_total_minus_other_section_is_refused():
+    # liabilities = (liabilities and equity) - (equity): an identity across sections, not a sum of face lines
+    rows = [
+        comp_row("LiabilitiesAndStockholdersEquity", parent="Root", sign=1),
+        comp_row("StockholdersEquity", parent="Root", sign=-1),
+    ]
+    facts = {
+        ("us-gaap", "LiabilitiesAndStockholdersEquity"): {7: fact("1000", 1)},
+        ("us-gaap", "StockholdersEquity"): {7: fact("400", 2)},
+    }
+    arcs = {"A-10": {("LiabilitiesAndStockholdersEquity", "StockholdersEquity")}}
+    cells, stats = run(rows, facts, arcs)
+    assert cells == [] and stats["held"][0]["reason"] in {"ancestor_in_component_set", "component_not_direct_child_of_parent"}
+    # even a total and a line of different sections with no calc relation at all is refused
+    cells, stats = run(rows, facts, {"A-10": {("Other", "Thing")}})
+    assert cells == [] and stats["held"]

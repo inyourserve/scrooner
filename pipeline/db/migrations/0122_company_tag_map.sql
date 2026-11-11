@@ -2,21 +2,22 @@
 -- "FSN for learning (which tag is what), SEC for mapping").
 -- ROLLBACK: drop trigger trg_company_tag_map_no_overlap on analytics.company_tag_map; drop function
 --   analytics.company_tag_map_no_overlap(); drop table analytics.company_tag_map;  (nothing else references it)
---   delete from analytics.canonical_concept where name in ('weighted_average_shares_basic',
---   'weighted_average_shares_diluted','cash_paid_for_interest','cash_paid_for_income_taxes','net_interest_income');  (only while unreferenced)
+--   delete from analytics.canonical_concept where name in ('weighted_basic_shares',
+--   'weighted_diluted_shares','cash_paid_for_interest','cash_paid_for_income_taxes','net_interest_income');  (only while unreferenced)
 -- The FSN store (schema fsn, 0118) teaches, per company, which XBRL tag is which statement line (statement,
 -- position, label, calc tree, era). This table records that decision per (company, taxonomy, tag, stmt, era).
 -- Values still come from the SEC company-API facts in core.fact. For a company with rows here the mapper
 -- (mapper/company_tag_map.py, rule company_tag_map.select@1, off by default) selects facts ONLY through this
 -- table: no analytics.concept_mapping rule, no company_tag_preference override, no fallback applies.
---   sign                 : every value-bearing row ('concept', 'component') serves sign x fact value (-1: gross
+--   sign                 : every value-bearing row ('concept', 'component') serves sign x fact value (multiplies the STORED core.fact value, never the printed sign; -1: gross
 --                          interest reported under a net tag; a capitalized-interest component that subtracts).
 --   serve_note           : label note that travels with the served value (e.g. 'face line including restricted cash').
 --   decision 'concept'   : the tag IS canonical_concept_id on this stmt in this era.
 --   decision 'component' : the tag is a summand of parent_concept_id, added with its sign.
 --   decision 'combined' : ONE printed line that spans SEVERAL concepts ("Accounts payable and accrued liabilities");
---                          components holds the spanned CONCEPT names. It never feeds any concept: the mapper only
---                          writes a reasoned blank per spanned concept (printed only combined with the others).
+--                          components holds the spanned CONCEPT names. It never feeds any concept: the mapper serves
+--                          it as the company's own line in analytics.company_combined_line and marks each spanned
+--                          concept not_in_template for those periods (founder ruling, doc 02 sector templates item 3).
 --   decision 'excluded'  : the tag is never used (reason_class / reason say why).
 --   decision 'not_presented' / 'not_in_template': a CONCEPT-level company decision, no tag ("KLAC's IS has no gross
 --                          profit line"): company, stmt, canonical_concept_id, era, reason. taxonomy and tag are NULL.
@@ -110,9 +111,9 @@ comment on table analytics.company_tag_map is
 -- feeds them). Shares are a count (unit shares), not money; weighted-average counts are income-statement
 -- durations, unlike the balance-sheet instant shares_outstanding.
 insert into analytics.canonical_concept (name, statement, combination_mode, description) values
-    ('weighted_average_shares_basic', 'income_statement', 'first_match',
+    ('weighted_basic_shares', 'income_statement', 'first_match',
      'Weighted-average basic common shares outstanding for the period (unit: shares, not USD)'),
-    ('weighted_average_shares_diluted', 'income_statement', 'first_match',
+    ('weighted_diluted_shares', 'income_statement', 'first_match',
      'Weighted-average diluted common shares outstanding for the period (unit: shares, not USD)'),
     ('net_interest_income', 'income_statement', 'first_match',
      'Net interest income as presented by banks (interest income less interest expense, USD)'),
@@ -121,3 +122,25 @@ insert into analytics.canonical_concept (name, statement, combination_mode, desc
     ('cash_paid_for_income_taxes', 'cash_flow', 'first_match',
      'Cash paid for income taxes, net of refunds (supplemental cash-flow disclosure, USD)')
 on conflict (name) do nothing;
+
+-- The company's own combined lines (a line printed spanning several concepts), served instead of a blank.
+-- Written by mapper/company_tag_map.py (delete-then-insert per company); value = sign x stored companyfacts value.
+create table if not exists analytics.company_combined_line (
+    id               bigint generated always as identity primary key,
+    company_id       bigint not null references core.company (id),
+    period_id        bigint not null references core.period (id),
+    stmt             text not null,
+    taxonomy         text not null,
+    tag              text not null,
+    plabel           text not null check (btrim(plabel) <> ''),
+    components       text[] not null,
+    value            numeric not null,
+    source_fact_ids  bigint[] not null,
+    tag_map_id       bigint references analytics.company_tag_map (id) on delete set null,
+    run_id           uuid references analytics.rule_run (run_id),
+    created_at       timestamptz not null default now(),
+    unique (company_id, period_id, stmt, tag)
+);
+
+comment on table analytics.company_combined_line is
+    'A line the company prints combined with others, shown as its own combined line in its template (never a blank, never mapped to one concept).';
