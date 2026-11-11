@@ -113,8 +113,30 @@ REASONS = {
     "note_value_not_positive": ("evidence_pending", "verifier"),
     "sole_debt_label_not_interest": ("composition", "standardization_lead"),
     "sign_inconsistent": ("filer_error", "verifier"),
+    # a pilot gap key written as a blank (founder 2026-11-09: no fallback, every key of a written pair is the
+    # hybrid's value or a visible reason): the filing is not in the store / the hybrid could not resolve it
+    "filing_not_in_store": ("ingestion", "data_engineer_l1"),
+    "hybrid_gap_unresolved": ("unclassified", "triage"),
+    # ruling addendum N2: a written cell that cell_proof disagrees with is re-written as this blank
+    "cell_proof_disagree": ("identity", "verifier"),
 }
+# hybrid_gap_unresolved: (defect_class, owner) by the pilot's gap cause (input_refs.pilot_cause); ruling addendum N1
+# (Ritwik 2026-11-09): any other cause is unclassified / triage
+GAP_CAUSE_CLASS = {
+    "no_mapped_line": ("vocabulary", "tag_mapper"),
+    "no_mapped_line_cond": ("vocabulary", "tag_mapper"),
+    "no_concept_rule": ("vocabulary", "tag_mapper"),
+    "quarter_not_printed_or_derivable": ("period", "period_engineer"),
+}
+# blank reason -> cell state, for blanks that are not defects (no defect class, no owner): the company has no
+# public filing for this period (its history window ends before it, or a wrong-entity window was excluded and no
+# comparative of the company's own later filings covers the key). Approver note 2026-11-10 (KDP, IBRX quarters).
+HORIZON_REASONS = {"no_public_filing_for_period": "history_horizon"}
 REASON_TEXT = {
+    "no_public_filing_for_period": "The company filed no public report for this period (it was not yet a reporting company in this form, or its earlier filings belong to another entity), so no value exists to show.",
+    "cell_proof_disagree": "The independent proof of this cell against the filing disagrees with the stored value, so it is not shown until the disagreement is resolved.",
+    "filing_not_in_store": "The filing for this period is not in the statement store yet, so no value is shown for it.",
+    "hybrid_gap_unresolved": "The filing is stored, but this value could not be read from its statements yet; the cause is recorded with the cell.",
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
     "conflicting_values_in_filing": "The filing prints two different values for this line and period.",
     "mixed_vintage_inputs": "The quarter would subtract year-to-date values from filings with a restatement between them.",
@@ -230,7 +252,7 @@ class Cell:
     concept: str
     ddate: date
     qtrs: int
-    state: str  # value | derived | defect
+    state: str  # value | derived | defect | history_horizon | not_presented
     value: Decimal | None = None
     filing_id: int | None = None
     tag: str | None = None
@@ -628,11 +650,29 @@ def to_row(
             reason_code=cell.reason_code,
             reason_text=REASON_TEXT[cell.reason_code or ""],
         )
-    if cell.state == "defect":
-        cls, owner = REASONS[cell.reason_code or ""]
+    if cell.state == "history_horizon":
+        if HORIZON_REASONS.get(cell.reason_code or "") != "history_horizon":
+            raise ValueError(
+                f"history_horizon needs a horizon reason, got {cell.reason_code!r}"
+            )
         row.update(
             reason_code=cell.reason_code,
             reason_text=REASON_TEXT[cell.reason_code or ""],
+        )
+    if cell.state == "defect":
+        cls, owner = REASONS[cell.reason_code or ""]
+        if cell.reason_code == "hybrid_gap_unresolved":
+            cls, owner = GAP_CAUSE_CLASS.get(
+                str(cell.input_refs.get("pilot_cause")), (cls, owner)
+            )
+        text = REASON_TEXT[cell.reason_code or ""]
+        if cell.input_refs.get(
+            "pilot_cause"
+        ):  # N1: the reason text carries the pilot cause
+            text += f" Pilot cause: {cell.input_refs['pilot_cause']}."
+        row.update(
+            reason_code=cell.reason_code,
+            reason_text=text,
             defect_class=cls,
             owner=owner,
             root_cause_class=cls,

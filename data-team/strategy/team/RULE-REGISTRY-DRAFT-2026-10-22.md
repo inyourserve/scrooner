@@ -72,6 +72,8 @@ For each rule:
 | 36 | RF-34 (Tier 1 in the register) | `reason.fact_gated@1` | `reason.rule_audit@1` | T6/T7 | interest_coverage_ratio;net_interest_income;dividend_growth_streak_... | 0 / 0 | **serve_time** | R1 | @1 (PATCH) | replaces contradicted reasons | Sector Analyst | Data Engineer L1 | Verifier |
 | 37 | RF-24 | `lineage.required_for_display@1` | `lineage.market_cap_source@1` | E16 | market_cap | 7 / 7 | **serve_time** | R1 | @1 (PATCH) | display panel hidden; value unaffected | Data Engineer | Frontend/Backend | Verifier |
 
+**RF-22 `split.event_basis@1` — Turn-on condition (release approver Ritwik, 2026-11-10): must not be turned on before the archive follows the actual update (fixed in work/corporate-actions/archive-follows-update).**
+
 Totals: 29 recompute_cascade, 3 recompute_leaf, 5 serve_time.
 
 ## Where the computed classification differs from, or sharpens, the planned trains
