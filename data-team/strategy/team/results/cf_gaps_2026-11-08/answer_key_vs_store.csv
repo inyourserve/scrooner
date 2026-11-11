@@ -1,0 +1,16 @@
+cik,company,data_point,grain,period_end,verifier_expected,store_state,store_value_or_reason,store_accession,matches
+0001637459,Kraft Heinz Co,share_buybacks_resolved,Q,2017-07-01,line_not_presented_in_filing,not_presented,only_excluded_lines_presented,0001637459-17-000101,False
+0000922621,ERIE INDEMNITY CO,share_buybacks_resolved,Q,2018-12-31,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0000922621-19-000008,True
+0001037540,"BXP, Inc.",dividends_paid_resolved,Q,2021-09-30,line_presented_combined_with_others,not_presented,line_presented_combined_with_others,0001656423-21-000033,True
+0001679049,"International Seaways, Inc.",share_buybacks_resolved,Q,2018-03-31,line_not_presented_in_filing,not_presented,only_excluded_lines_presented,0001144204-18-025525,False
+0000314808,Valaris Ltd,share_buybacks_resolved,FY,2019-12-31,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0000314808-20-000015,True
+0001393311,Public Storage,share_buybacks_resolved,Q,2016-06-30,only_excluded_lines_presented,not_presented,only_excluded_lines_presented,0001393311-16-000059,True
+0000731802,ATMOS ENERGY CORP,share_buybacks_resolved,Q,2016-06-30,only_excluded_lines_presented,not_presented,only_excluded_lines_presented,0000731802-16-000055,True
+0000866706,ESCO TECHNOLOGIES INC,share_buybacks_resolved,Q,2019-03-31,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0001144204-19-024737,True
+0000715957,"DOMINION ENERGY, INC",share_buybacks_resolved,Q,2022-03-31,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0001564590-22-018135,True
+0001283699,"T-Mobile US, Inc.",share_buybacks_resolved,Q,2015-09-30,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0001283699-15-000055,True
+0001552275,Sunoco LP,share_buybacks_resolved,Q,2023-12-31,line_not_presented_in_filing,not_presented,line_not_presented_in_filing,0001552275-24-000013,True
+0001176948,Ares Management Corp,dividends_paid_resolved,Q,2024-06-30,line_presented_combined_with_others,not_presented,line_presented_combined_with_others,0001628280-24-035320,True
+0000105770,WEST PHARMACEUTICAL SERVICES INC,dividends_paid_resolved,Q,2020-12-31,value: FY 48.1M - 9M from 'Dividend payments',derived,12600000,0000105770-23-000012,True
+0001479094,"STAG Industrial, Inc.",dividends_paid_resolved,Q,2015-03-31,line_presented_combined_with_others,not_presented,line_presented_combined_with_others,0001558370-15-000693,True
+0001567683,"Clearway Energy, Inc.",dividends_paid_resolved,Q,2021-12-31,line_presented_combined_with_others,not_presented,line_presented_combined_with_others,0001567683-22-000006,True

@@ -1,0 +1,80 @@
+change,cik,company,data_point,grain,period_end,before_state,before,after_state,value_or_reason,accession,tag,rule_id
+new_value,0000067347,MODINE MANUFACTURING CO,share_buybacks_resolved,Q,2018-09-30,defect,no_basis_witness,derived,0,0001140361-19-020095,,fsn.select_ytd_difference@1
+new_value,0000067347,MODINE MANUFACTURING CO,share_buybacks_resolved,Q,2021-09-30,defect,no_basis_witness,derived,0,0001140361-22-039767,,fsn.select_ytd_difference@1
+new_value,0000067347,MODINE MANUFACTURING CO,share_buybacks_resolved,Q,2021-12-31,defect,no_basis_witness,derived,0,0001140361-23-004046,,fsn.select_ytd_difference@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,FY,2024-03-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-24-066031,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,FY,2025-03-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-25-077138,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,Q,2024-03-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-24-066031,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,Q,2024-06-30,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-24-094591,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,Q,2024-09-30,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-24-124119,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,Q,2024-12-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-25-016993,,fsn.absent_line@1
+reason_changed,0000797721,VIASAT INC,dividends_paid_resolved,Q,2025-03-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0000950170-25-077138,,fsn.absent_line@1
+new_value,0000861884,"RELIANCE, INC.",cfo_resolved,Q,2014-09-30,defect,latest_copy_fails_identity,derived,53300000,0001104659-15-074533,,fsn.select_ytd_difference@1
+new_value,0000861884,"RELIANCE, INC.",cfo_resolved,Q,2014-12-31,defect,latest_copy_fails_identity,derived,193200000,0001558370-17-000994,,fsn.select_ytd_difference@1
+new_value,0000861884,"RELIANCE, INC.",cfo_resolved,Q,2015-03-31,defect,latest_copy_fails_identity,value,171400000,0001558370-16-005071,NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,fsn.select_printed@1
+new_value,0000861884,"RELIANCE, INC.",cfo_resolved,Q,2015-06-30,defect,latest_copy_fails_identity,derived,292500000,0001558370-16-006999,,fsn.select_ytd_difference@1
+new_value,0000861884,"RELIANCE, INC.",dividends_paid_resolved,Q,2015-03-31,defect,latest_copy_fails_identity,value,31700000,0001558370-16-005071,PaymentsOfOrdinaryDividendsCommonStockAndDividendEquivalents,fsn.select_printed@1
+new_value,0000861884,"RELIANCE, INC.",dividends_paid_resolved,Q,2015-06-30,defect,latest_copy_fails_identity,derived,29700000,0001558370-16-006999,,fsn.select_ytd_difference@1
+new_value,0000861884,"RELIANCE, INC.",share_buybacks_resolved,Q,2015-03-31,defect,latest_copy_fails_identity,value,171200000,0001558370-16-005071,PaymentsForRepurchaseOfCommonStock,fsn.select_printed@1
+new_value,0000861884,"RELIANCE, INC.",share_buybacks_resolved,Q,2015-06-30,defect,latest_copy_fails_identity,derived,28800000,0001558370-16-006999,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,FY,2020-12-31,defect,latest_copy_fails_identity,value,654700000,0001206264-23-000060,NetCashProvidedByUsedInOperatingActivities,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2020-03-31,defect,latest_copy_fails_identity,value,15000000,0001206264-21-000143,NetCashProvidedByUsedInOperatingActivities,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2020-06-30,defect,latest_copy_fails_identity,derived,155400000,0001206264-21-000208,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2020-09-30,defect,latest_copy_fails_identity,derived,327500000,0001206264-21-000250,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2020-12-31,defect,latest_copy_fails_identity,derived,156800000,0001206264-23-000060,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2021-03-31,defect,latest_copy_fails_identity,value,86300000,0001206264-22-000124,NetCashProvidedByUsedInOperatingActivities,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2021-06-30,defect,latest_copy_fails_identity,derived,226700000,0001206264-22-000169,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2021-09-30,defect,latest_copy_fails_identity,derived,284500000,0001206264-22-000182,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,cfo_resolved,Q,2021-12-31,defect,latest_copy_fails_identity,derived,125600000,0001206264-24-000050,,fsn.select_ytd_difference@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,FY,2015-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-16-000106,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,FY,2016-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-17-000021,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,FY,2017-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-18-000033,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,FY,2018-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-19-000047,,fsn.absent_line@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,FY,2020-12-31,defect,latest_copy_fails_identity,value,0,0001206264-23-000060,PaymentsOfDividends,fsn.select_printed@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2015-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-16-000106,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2016-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-17-000021,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2017-03-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-17-000062,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2017-06-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-17-000107,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2017-09-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-17-000148,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2017-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-18-000033,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2018-03-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-18-000074,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2018-06-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-18-000105,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2018-09-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-18-000123,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2018-12-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-19-000047,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2019-03-31,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-19-000093,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2019-06-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-19-000140,,fsn.absent_line@1
+reason_changed,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2019-09-30,defect,perimeter_line_unresolved,not_presented,line_not_presented_in_filing,0001206264-19-000194,,fsn.absent_line@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2020-03-31,defect,latest_copy_fails_identity,value,0,0001206264-21-000143,PaymentsOfDividends,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2020-06-30,defect,latest_copy_fails_identity,derived,0,0001206264-21-000208,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2020-09-30,defect,latest_copy_fails_identity,derived,0,0001206264-21-000250,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2020-12-31,defect,latest_copy_fails_identity,derived,0,0001206264-23-000060,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2021-03-31,defect,latest_copy_fails_identity,value,14300000,0001206264-22-000124,PaymentsOfDividends,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2021-06-30,defect,latest_copy_fails_identity,derived,13800000,0001206264-22-000169,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2021-09-30,defect,latest_copy_fails_identity,derived,17700000,0001206264-22-000182,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,dividends_paid_resolved,Q,2021-12-31,defect,latest_copy_fails_identity,derived,17300000,0001206264-24-000050,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,FY,2020-12-31,defect,latest_copy_fails_identity,value,331800000,0001206264-23-000060,PaymentsForRepurchaseOfEquity,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2020-03-31,defect,latest_copy_fails_identity,value,199300000,0001206264-21-000143,PaymentsForRepurchaseOfEquity,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2020-06-30,defect,latest_copy_fails_identity,derived,200000,0001206264-21-000208,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2020-09-30,defect,latest_copy_fails_identity,derived,100000,0001206264-21-000250,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2020-12-31,defect,latest_copy_fails_identity,derived,132200000,0001206264-23-000060,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2021-03-31,defect,latest_copy_fails_identity,value,313100000,0001206264-22-000124,PaymentsForRepurchaseOfEquity,fsn.select_printed@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2021-06-30,defect,latest_copy_fails_identity,derived,61300000,0001206264-22-000169,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2021-09-30,defect,latest_copy_fails_identity,derived,191400000,0001206264-22-000182,,fsn.select_ytd_difference@1
+new_value,0001206264,SOMNIGROUP INTERNATIONAL INC.,share_buybacks_resolved,Q,2021-12-31,defect,latest_copy_fails_identity,derived,250500000,0001206264-24-000050,,fsn.select_ytd_difference@1
+new_value,0001383650,"Cheniere Energy Partners, L.P.",cfo_resolved,FY,2018-12-31,defect,latest_copy_fails_identity,value,1874000000,0001383650-21-000005,NetCashProvidedByUsedInOperatingActivities,fsn.select_printed@1
+new_value,0001383650,"Cheniere Energy Partners, L.P.",cfo_resolved,Q,2015-12-31,defect,mixed_vintage_inputs,derived,6695000,0001383650-16-000087,,fsn.select_ytd_difference@1
+new_value,0001383650,"Cheniere Energy Partners, L.P.",cfo_resolved,Q,2018-12-31,defect,latest_copy_fails_identity,derived,610000000,0001383650-21-000005,,fsn.select_ytd_difference@1
+reason_changed,0001383650,"Cheniere Energy Partners, L.P.",share_buybacks_resolved,FY,2022-12-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0001383650-23-000008,,fsn.absent_line@1
+reason_changed,0001383650,"Cheniere Energy Partners, L.P.",share_buybacks_resolved,FY,2023-12-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0001383650-24-000013,,fsn.absent_line@1
+reason_changed,0001383650,"Cheniere Energy Partners, L.P.",share_buybacks_resolved,Q,2022-12-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0001383650-23-000008,,fsn.absent_line@1
+reason_changed,0001383650,"Cheniere Energy Partners, L.P.",share_buybacks_resolved,Q,2023-12-31,not_presented,only_excluded_lines_presented,not_presented,line_not_presented_in_filing,0001383650-24-000013,,fsn.absent_line@1
+new_value,0001581068,Brixmor Property Group Inc.,cfo_resolved,Q,2014-03-31,defect,latest_copy_fails_identity,value,86576000,0001581068-15-000050,NetCashProvidedByUsedInOperatingActivities,fsn.select_printed@1
+new_value,0001581068,Brixmor Property Group Inc.,cfo_resolved,Q,2014-06-30,defect,latest_copy_fails_identity,derived,132064000,0001581068-15-000073,,fsn.select_ytd_difference@1
+new_value,0001581068,Brixmor Property Group Inc.,cfo_resolved,Q,2014-09-30,defect,latest_copy_fails_identity,derived,153650000,0001581068-15-000092,,fsn.select_ytd_difference@1
+new_value,0001581068,Brixmor Property Group Inc.,dividends_paid_resolved,Q,2014-03-31,defect,latest_copy_fails_identity,value,29170000,0001581068-15-000050,PaymentsOfCapitalDistribution,fsn.select_printed@1
+reason_changed,0001581068,Brixmor Property Group Inc.,dividends_paid_resolved,Q,2014-06-30,defect,latest_copy_fails_identity,defect,no_basis_witness,0001581068-15-000073,,fsn.select_blank@1
+reason_changed,0001581068,Brixmor Property Group Inc.,dividends_paid_resolved,Q,2014-09-30,defect,latest_copy_fails_identity,defect,no_basis_witness,0001581068-15-000092,,fsn.select_blank@1
+reason_changed,0001581068,Brixmor Property Group Inc.,share_buybacks_resolved,FY,2014-12-31,(no cell),,not_presented,only_excluded_lines_presented,0001581068-17-000005,,fsn.absent_line@1
+reason_changed,0001581068,Brixmor Property Group Inc.,share_buybacks_resolved,Q,2014-12-31,(no cell),,not_presented,only_excluded_lines_presented,0001581068-17-000005,,fsn.absent_line@1
+new_value,0001581068,Brixmor Property Group Inc.,share_buybacks_resolved,Q,2017-06-30,defect,no_basis_witness,derived,0,0001581068-18-000024,,fsn.select_ytd_difference@1
+new_value,0001581068,Brixmor Property Group Inc.,share_buybacks_resolved,Q,2017-09-30,defect,no_basis_witness,derived,0,0001581068-18-000028,,fsn.select_ytd_difference@1

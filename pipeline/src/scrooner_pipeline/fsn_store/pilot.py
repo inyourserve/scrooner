@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import csv
 import gzip
+import re
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from decimal import Decimal
@@ -373,6 +374,166 @@ def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
     return eras
 
 
+ABSENT_LINE_CONCEPTS = ("share_buybacks_resolved", "dividends_paid_resolved")
+WITHHOLD_SHARES_RX = re.compile(
+    r"\b(stock|shares?|units?|awards?|restricted|rsus?|vesting)\b", re.I
+)
+SHARE_PURCHASE_RX = re.compile(r"(purchas|acqui)\w*\b.*\b(shares?|stock)\b", re.I)
+
+
+SHAPE_TAG = ("Abstract", "Table", "Axis", "Domain", "Member", "LineItems")
+INV_TOTALS = (
+    "NetCashProvidedByUsedInInvestingActivities",
+    "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+)
+
+
+def financing_rows(face_rows: list[tuple], lane: Any) -> list[tuple[str, str]] | None:
+    """(tag, label) of the financing-section rows of ONE filing's primary cash-flow statement: the rows after the
+    investing total up to the financing total, in printed line order (run 7's primary_face picks the report).
+    None when the section cannot be located: then nothing is claimed about the filing. Section headers and
+    table/axis rows are dropped; supplemental and non-cash rows sit after the financing total and never count."""
+    face = {"f": list(face_rows)}
+    lane.primary_face(face)
+    rows = face["f"]  # (line, tag, label, custom, negating), primary report only
+    inv = [i for i, r in enumerate(rows) if r[1] in INV_TOTALS]
+    if not inv:
+        return None
+    fin = next(
+        (i for i in range(inv[0] + 1, len(rows)) if rows[i][1] in lane.FIN_TOTALS),
+        None,
+    )
+    if fin is None:
+        return None
+    return [
+        (t, lab)
+        for _ln, t, lab, _cu, _ng in rows[inv[0] + 1 : fin]
+        if not t.endswith(SHAPE_TAG)
+    ]
+
+
+def definitional_exclusions(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[tuple[str, date, int], list[int]]]:
+    """concept -> (tag, ddate, qtrs) -> filing ids whose cash-flow detector held that tag's line because every
+    family line of the filing is excluded by definition (`excluded_only:*`: tax withholding, SBC-plan purchases,
+    NCI or preferred dividends). Used ONLY to give a reason to a key select leaves without a cell; it never removes
+    a print (the latest print wins). Brixmor: its FY2015/FY2016 10-Ks print only "Repurchase of common shares in
+    conjunction with equity award plans" (excluded); its FY2017/FY2018 10-Ks print a separate "Repurchase(s) of
+    common shares 0" under PaymentsForRepurchaseOfCommonStock (the equity-award amounts under the tax-withholding
+    tag), and that 0 is served (Dhairya's ruling 2026-11-08, VERIFY-CF-GAPS-REDRAW-2026-11-08)."""
+    rows = conn.execute(
+        """
+        select lm.evidence->>'concept', t.tag, v.ddate, v.qtrs, lm.filing_id
+        from fsn.line_map lm
+        join fsn.line l using (filing_id, report, line)
+        join fsn.tag t on t.id = l.tag_id
+        join fsn.value v on v.filing_id = lm.filing_id and v.tag_id = l.tag_id
+        join fsn.filing f on f.id = lm.filing_id
+        where f.company_id = %s and lm.rule_id = 'cf.buybacks_dividends_held@1'
+          and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.qtrs > 0 and v.value is not null
+          and jsonb_array_length(lm.evidence->'held') > 0
+          and not exists (
+            select 1 from jsonb_array_elements_text(lm.evidence->'held') h where h not like 'excluded_only:%%'
+          )
+        """,
+        (company_id,),
+    ).fetchall()
+    out: dict[str, dict[tuple[str, date, int], list[int]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    for concept, tag, ddate, qtrs, fid in rows:
+        out[concept][(tag, ddate, int(qtrs))].append(fid)
+    return out
+
+
+def classify_filing(face_rows: list[tuple], lane: Any) -> dict[str, list[str]]:
+    """concept -> the lane classes of ONE filing's financing-section lines (pure; see cf_line_classes)."""
+    out: dict[str, list[str]] = {c: [] for c in ABSENT_LINE_CONCEPTS}
+    fin = financing_rows(face_rows, lane)
+    if fin is None:
+        return {c: ["no_financing_section"] for c in ABSENT_LINE_CONCEPTS}
+    for tag, label in fin:
+        d = lane.dividend_class(tag, label)
+        if d and d != "excluded_noncash":
+            out["dividends_paid_resolved"].append(d)
+        if (
+            lane.REPURCHASE_RX.search(label)
+            or "Repurchase" in tag
+            or "TreasuryStock" in tag
+        ):
+            b = lane.buyback_class(tag, label)
+            if b:
+                out["share_buybacks_resolved"].append(b)
+        elif tag in lane.BUYBACK_TAGS_EXCLUDED or (
+            lane.WITHHOLD_RX.search(label) and WITHHOLD_SHARES_RX.search(label)
+        ):
+            # run 7's excluded buyback tags, or a tax-withholding payment on share awards that names no repurchase
+            # (Viasat 10-Q 0001193125-15-284965 "Payments related to tax withholdings on restricted stock unit
+            # releases"): a line that is NOT the concept, so the filing prints only excluded lines
+            out["share_buybacks_resolved"].append("excluded")
+        elif SHARE_PURCHASE_RX.search(label) and not re.match(
+            r"\s*(proceeds|issuance|issue)\b", label, re.I
+        ):
+            # a purchase of shares the lane's repurchase test does not name ("Purchase of CP Common Shares"
+            # under a custom tag): never evidence that no buyback line is printed, so no claim is made
+            out["share_buybacks_resolved"].append("unclassified_share_line")
+    return out
+
+
+def cf_line_classes(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[int, list[str]]]:
+    """concept -> filing_id -> the run 7 lane classes of the financing-section lines of that filing's primary
+    cash-flow statement (tag and label only; the lane's buyback_class / dividend_class, imported).
+    Verifier 2026-11-08 (VERIFY-CF-GAPS-2026-11-08): section headers (Kraft Heinz), rows of other pages (Erie's
+    related-party table), operating inflows ("Dividends received", Somnigroup) and supplemental non-cash items
+    (BXP "declared but not paid") are never lines of the concept. A filing whose financing section cannot be
+    located gets the marker `no_financing_section`: nothing is claimed. A buyback line counts only when the lane's
+    repurchase test hits it; an unnamed share purchase blocks any claim (`unclassified_share_line`)."""
+    from scrooner_pipeline.fsn_store.cf_detector import _lane  # noqa: PLC0415
+
+    lane = _lane()
+    rows = conn.execute(
+        """select l.filing_id, l.report, l.line, t.tag, coalesce(l.plabel, ''), t.custom, l.negating
+           from fsn.line l join fsn.tag t on t.id = l.tag_id
+           join fsn.filing f on f.id = l.filing_id
+           where f.company_id = %s and l.stmt = 'CF' and not l.inpth""",
+        (company_id,),
+    ).fetchall()
+    by_filing: dict[int, list[tuple]] = defaultdict(list)
+    for fid, rep, ln, tag, label, cu, ng in rows:
+        by_filing[fid].append((rep, ln, tag, label, bool(cu), bool(ng)))
+    out: dict[str, dict[int, list[str]]] = {
+        c: defaultdict(list) for c in ABSENT_LINE_CONCEPTS
+    }
+    for fid, face_rows in by_filing.items():
+        for c, classes in classify_filing(face_rows, lane).items():
+            out[c][fid].extend(classes)
+    return out
+
+
+# derivation policies a derived cell may carry (done criterion 5 counts every other one):
+# same_basis   YTD_n - YTD_(n-1) on SAME_BASIS (design section 4)
+# zero_inputs  both winning year-to-date copies are printed zeros: 0 - 0 = 0 on every basis, no witness needed
+#              (Dhairya's ruling 2026-11-08, Somnigroup Q2/Q3 2020 dividends; Verifier PASS on PR #4 2026-11-08).
+#              Before this, one such cell failed criterion 5 for the whole company.
+APPROVED_DERIVATION_POLICIES = ("same_basis", "zero_inputs")
+
+
+def unapproved_derivations(cells: list[dict[str, Any]]) -> dict[str, int]:
+    """Derived cells per data point whose derivation policy is not approved (done criterion 5)."""
+    return dict(
+        Counter(
+            r["data_point_name"]
+            for r in cells
+            if r["state"] == "derived"
+            and (r.get("derivation") or {}).get("policy")
+            not in APPROVED_DERIVATION_POLICIES
+        )
+    )
+
+
 def report_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -393,8 +554,13 @@ def report_company(
     data = sel.load_company(conn, company_id)
     cells: list[dict[str, Any]] = []
     breaks: dict[str, list[str]] = {}
+    excluded = definitional_exclusions(conn, company_id)
     for concept, prints in sorted(data["prints"].items()):
         unit = "USD/shares" if "eps" in concept else "USD"
+        ex = excluded.get(concept, {})
+        # the latest print always wins (decision 02 rule 3): a line excluded by its label is never mapped, so it never
+        # prints; a period that some filing excludes only gets a reason where select leaves no cell (Dhairya's ruling
+        # 2026-11-08: Brixmor's FY2017/FY2018 10-Ks print "Repurchase(s) of common shares 0", served as 0)
         cs = sel.select_concept(
             concept,
             prints,
@@ -410,6 +576,9 @@ def report_company(
             sel.load_period_rules(period_rules, company_id),
             instant=concept in INSTANT,
         )
+        if ex:
+            cs = sel.explain_excluded_inputs(cs, ex)
+            cs = cs + sel.excluded_period_cells(concept, cs, ex, data["filings"])
         cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
         s = sel._Series(
             [p for p in prints if p.uom == sel.FSN_UOM.get(unit, unit)], data["filings"]
@@ -459,6 +628,7 @@ def report_company(
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
+    line_classes = cf_line_classes(conn, company_id)
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]
@@ -505,6 +675,14 @@ def report_company(
             keys += 1
             k["keys"] += 1
             row = _match(by_point.get(concept, []), grain, end)
+            if row is None and concept in line_classes and grain in ("FY", "Q"):
+                c = sel.absent_line_cell(
+                    concept, grain, end, data, line_classes[concept]
+                )
+                if c is not None:
+                    row = sel.to_row(c, company_id, data["filings"])
+                    cells.append(row)
+                    by_point[concept].append(row)
             if row and row["state"] in ("value", "derived"):
                 valued += 1
                 k["valued"] += 1
@@ -634,21 +812,9 @@ def report_company(
                 1 for r in cells if r.get("reason_code") == "latest_copy_fails_identity"
             ),
             "4_reasonless_template_keys": len(gaps),
-            "5_derived_without_same_basis": sum(
-                1
-                for r in cells
-                if r["state"] == "derived"
-                and (r.get("derivation") or {}).get("policy") != "same_basis"
-            ),
+            "5_derived_without_same_basis": sum(unapproved_derivations(cells).values()),
             # the same count per data point: the done gate counts only the data points a write switches
-            "5_derived_without_same_basis_by_point": dict(
-                Counter(
-                    r["data_point_name"]
-                    for r in cells
-                    if r["state"] == "derived"
-                    and (r.get("derivation") or {}).get("policy") != "same_basis"
-                )
-            ),
+            "5_derived_without_same_basis_by_point": unapproved_derivations(cells),
             "6_proof_disagree": "after the write: cell_proof runs on written cells",
         },
         "cell_states": dict(states),

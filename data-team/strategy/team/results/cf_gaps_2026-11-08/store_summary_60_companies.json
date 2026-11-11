@@ -1,0 +1,60 @@
+{
+ "companies": 60,
+ "cells_2014_on": 10346,
+ "gap_keys_before_cohort_run_41515845455": {
+  "cfo_resolved|no_face_print_for_period": 1,
+  "cfo_resolved|quarter_not_printed_or_derivable": 442,
+  "dividends_paid_resolved|no_face_print_for_period": 43,
+  "dividends_paid_resolved|no_mapped_line": 2584,
+  "dividends_paid_resolved|quarter_not_printed_or_derivable": 226,
+  "share_buybacks_resolved|no_face_print_for_period": 270,
+  "share_buybacks_resolved|no_mapped_line": 1306,
+  "share_buybacks_resolved|quarter_not_printed_or_derivable": 1400
+ },
+ "gap_keys_after": {
+  "cfo_resolved|no_face_print_for_period": 1,
+  "cfo_resolved|quarter_not_printed_or_derivable": 22,
+  "dividends_paid_resolved|no_face_print_for_period": 5,
+  "dividends_paid_resolved|no_mapped_line": 20,
+  "dividends_paid_resolved|quarter_not_printed_or_derivable": 30,
+  "share_buybacks_resolved|no_face_print_for_period": 54,
+  "share_buybacks_resolved|no_mapped_line": 15,
+  "share_buybacks_resolved|quarter_not_printed_or_derivable": 136
+ },
+ "cf_gap_keys_before": 6272,
+ "cf_gap_keys_after": 283,
+ "all_template_points": {
+  "keys": 67701,
+  "valued_pct": 69.3,
+  "valued_or_reasoned_pct": 83.0
+ },
+ "cf_cell_states": {
+  "cfo_resolved|defect|conflicting_values_in_filing": 59,
+  "cfo_resolved|defect|latest_copy_fails_identity": 160,
+  "cfo_resolved|defect|mixed_vintage_inputs": 54,
+  "cfo_resolved|defect|no_basis_witness": 26,
+  "cfo_resolved|defect|no_prior_quarter_end": 16,
+  "cfo_resolved|derived|": 1857,
+  "cfo_resolved|value|": 1504,
+  "dividends_paid_resolved|defect|latest_copy_fails_identity": 8,
+  "dividends_paid_resolved|defect|no_basis_witness": 6,
+  "dividends_paid_resolved|defect|no_prior_quarter_end": 6,
+  "dividends_paid_resolved|defect|perimeter_line_unresolved": 85,
+  "dividends_paid_resolved|defect|perimeter_partnership_distribution": 53,
+  "dividends_paid_resolved|derived|": 276,
+  "dividends_paid_resolved|not_presented|line_not_presented_in_filing": 2270,
+  "dividends_paid_resolved|not_presented|line_presented_combined_with_others": 241,
+  "dividends_paid_resolved|not_presented|only_excluded_lines_presented": 262,
+  "dividends_paid_resolved|value|": 205,
+  "share_buybacks_resolved|defect|latest_copy_fails_identity": 3,
+  "share_buybacks_resolved|defect|no_basis_witness": 10,
+  "share_buybacks_resolved|defect|no_prior_quarter_end": 84,
+  "share_buybacks_resolved|defect|perimeter_line_unresolved": 52,
+  "share_buybacks_resolved|derived|": 233,
+  "share_buybacks_resolved|not_presented|line_not_presented_in_filing": 1260,
+  "share_buybacks_resolved|not_presented|line_presented_combined_with_others": 68,
+  "share_buybacks_resolved|not_presented|only_excluded_lines_presented": 1304,
+  "share_buybacks_resolved|value|": 244
+ },
+ "answer_key_matches": "13/15"
+}
