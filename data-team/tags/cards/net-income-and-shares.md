@@ -102,3 +102,7 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 
 ## 8. Folded in from the FSN-expert handover (2026-11-10)
 - **10-Ks before about 2021 print Q4 three-month values, EPS included** (MSFT dossier, docs/fsn-expert data-team/fsn/companies/MSFT.md). A printed Q4 beats a derived one; for EPS the derived one is never allowed (§7).
+
+## 9. Engineering relay 2026-11-11 (FILING-CHECKED by Engineering)
+- MDT FY2017 prints "Net income" 4,024 (`ProfitLoss`, incl. NCI), then NCI 4, then "attributable to Medtronic" 4,028 (`NetIncomeLoss`); Q2 FY2024 911 / 909 (0001613103-19-000028 R2, 0001613103-24-000165 R2). The two tags are different lines in one statement, never copies of each other. The NCI share can be negative (NI to parent > ProfitLoss, as at CAT).
+- `NetIncomeLoss` is also the CF start line (a different role per statement); this is why `stmt` is part of the company_tag_map key.
