@@ -82,9 +82,9 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2124,SCCO,IS,us-gaap:InterestCostsIncurred,review,interest_expense,1312,2609,52,"face 'interest expense' tagged InterestCostsIncurred (gross, before the separate 'capitalized interest' line): gross or net of capitalized?"
 2124,SCCO,IS,c:CurrentAndRoyaltyTaxes,review,income_tax_expense,1712,2609,27,"tax shown as 'current income taxes and royalty taxes' plus 'deferred income taxes'; total income tax = sum, but royalty taxes are included — Tag Expert"
 2124,SCCO,BS,,not_presented,total_liabilities,,,56,no total liabilities line
-1400,NEE,CF,c:CapitalExpendituresOfPublicUtility,review,capex,1312,2512,33,"FSN-checked 0000753308-26-000015 CF lines 28-32: capex of FPL (28), 'Capital expenditures' (29), 'Independent power and other investments of NEER' (30, includes investments), nuclear fuel purchases (31), other capex (32). Capex = 28+29+32 for sure; 30 and 31 need a definition call (Standardization Lead)"
-1400,NEE,CF,c:CapitalExpendituresOfFPL,review,capex,2203,2609,19,segment component
-1400,NEE,CF,c:OtherCapitalExpenditures,review,capex,1312,2512,36,segment component
+1400,NEE,CF,c:CapitalExpendituresOfPublicUtility,component,capex,1312,2512,33,"NEE capex = 'Capital expenditures of FPL' + 'Capital expenditures' + 'Other capital expenditures' (0000753308-26-000015 CF lines 28, 29, 32); doc 02 line 114 (founder 2026-11-04 item 3)"
+1400,NEE,CF,c:CapitalExpendituresOfFPL,component,capex,2203,2609,19,"NEE capex = 'Capital expenditures of FPL' + 'Capital expenditures' + 'Other capital expenditures' (0000753308-26-000015 CF lines 28, 29, 32); doc 02 line 114 (founder 2026-11-04 item 3)"
+1400,NEE,CF,c:OtherCapitalExpenditures,component,capex,1312,2512,36,"NEE capex = 'Capital expenditures of FPL' + 'Capital expenditures' + 'Other capital expenditures' (0000753308-26-000015 CF lines 28, 29, 32); doc 02 line 114 (founder 2026-11-04 item 3)"
 1400,NEE,CF,us-gaap:CapitalExpendituresIncurredButNotYetPaid,exclude,capex,1312,2609,51,non-cash supplemental disclosure
 1400,NEE,IS,c:InterestExpenseAggregateExpenses,map,interest_expense,1312,2609,51,face 'interest expense' (custom)
 1400,NEE,BS,us-gaap:CommonStockholdersEquity,map,stockholders_equity,1312,1312,1,'total common shareholders equity'
@@ -201,3 +201,41 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4077,NEM,ALL,,exclude_filing,all,2112,2112,1,10-K/A 0001164727-22-000028 with 0 statement lines
 4630,TMUS,ALL,,exclude_filing,all,2006,2006,1,10-Q/A 0001193125-20-214220 with 0 statement lines
 5261,DIS,ALL,,exclude_filing,all,2209,2309,2,10-K/As 0001193125-23-014219 and 0001744489-24-000064 with 0 statement lines
+1400,NEE,CF,c:IndependentPowerInvestments,combined,capex,,,,"'Independent power and other investments of NEER' (CF line 30): doc 02 line 114 counts construction in progress as capex, but the line also holds 'other investments', which line 114 does not include. Combined: capex is blank with reason line_presented_combined_with_others unless a note splits it"
+1400,NEE,CF,us-gaap:PaymentsForProceedsFromNuclearFuel,review,capex,,,,'Nuclear fuel purchases' (CF line 31): doc 02 line 114 does not cover nuclear fuel. RECOMMEND include: nuclear fuel is capitalized in PP&E and amortized (spending on a productive asset). Needs a founder or Standardization Lead ruling
+644,IBM,IS,us-gaap:Revenues,map,revenue,1312,1712,17,"conflict: 'total revenue' (Revenues) beside 'sales' (SalesRevenueGoodsNet) and 'services' (SalesRevenueServicesNet): the total wins, components excluded"
+644,IBM,IS,us-gaap:CostOfRevenue,map,cost_of_revenue,1312,1712,17,"conflict: 'total cost' (CostOfRevenue) beside 'sales'/'services' cost components: the total wins"
+1213,KLAC,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1806,19,"conflict: 'total revenues' (SalesRevenueNet) beside product (SalesRevenueGoodsNet) and service (SalesRevenueServicesNet): the total wins"
+3569,CRM,IS,us-gaap:Revenues,map,revenue,1401,1410,4,"conflict: 'total revenues' beside 'professional services and other' (SalesRevenueServicesNet): the total wins"
+1117,UNP,IS,us-gaap:Revenues,map,revenue,1809,2109,13,"conflict: 'total operating revenues' (Revenues) beside the RevenueFromContract component: the total wins"
+1196,DE,IS,us-gaap:Revenues,map,revenue,1401,2104,25,"conflict: 'net sales and revenues' / 'total' (Revenues) is the consolidated top line; 'net sales' (equipment operations, RevenueFromContract or SalesRevenueGoodsNet) is a component: Revenues wins"
+1358,VZ,IS,us-gaap:Revenues,map,revenue,1506,1803,12,"conflict: 'total operating revenues' beside wireless equipment and service revenue lines: the total wins"
+1358,VZ,IS,us-gaap:CostOfServices + us-gaap:CostOfGoodsSold,component,cost_of_revenue,1506,1803,12,"VZ prints 'cost of services' and 'wireless cost of equipment' with no total: cost of revenue = sum of the two (component); Tag Expert to confirm the perimeter excludes SG&A and D&A"
+1732,GILD,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1809,20,"conflict: 'total revenues' (SalesRevenueNet) beside 'product sales'/'product revenue' and a 'revenues' line: the total wins; Tag Expert to confirm the unlabelled 'revenues' (Revenues) row is not a second total"
+4056,COP,IS,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,review,revenue,1312,2112,33,"conflict where the TOTAL must NOT win: 'total revenues and other income' (Revenues) includes equity earnings, gains and other income; revenue = 'sales and other operating revenues' (SalesRevenueNet before 2018, RevenueFromContract after; but RevenueFromContract also tags 'revenue from contracts with customers', a sub-line): Tag Expert to pick the line per era"
+5261,DIS,IS,us-gaap:SalesRevenueNet,map,revenue,1409,1809,17,"conflict: 'total revenues' beside products and services revenue: the total wins"
+207,BA,IS,us-gaap:CostOfRevenue,exclude,cost_of_revenue,1312,2609,52,"TRAP: BA tags 'total costs and expenses' as CostOfRevenue (includes Boeing Capital interest expense beside cost of products and services). Cost of revenue = CostOfGoodsAndServicesSold ('cost of products and services' / 'cost of goods and services sold') where printed, else CostOfGoodsSold + CostOfServices (components)"
+207,BA,IS,us-gaap:CostOfGoodsAndServicesSold,map,cost_of_revenue,1312,2609,52,the products-and-services cost line (beside the CostOfRevenue total)
+207,BA,IS,us-gaap:CostOfGoodsSold + us-gaap:CostOfServices,component,cost_of_revenue,1312,2609,,used only in filings without a CostOfGoodsAndServicesSold line
+207,BA,IS,us-gaap:Revenues,map,revenue,1312,1806,19,conflict: 'total revenues' beside sales of products/services: the total wins
+683,MCD,CF,us-gaap:PaymentsToAcquireProductiveAssets,exclude,capex,1312,1912,17,"TRAP: 'purchases of restaurant (and other) businesses' are acquisitions tagged with the library capex tag PaymentsToAcquireProductiveAssets; capex = PaymentsToAcquirePropertyPlantAndEquipment 'capital expenditures'. The library rule must not take PaymentsToAcquireProductiveAssets when a PP&E line is on the same statement (or at MCD at all)"
+683,MCD,IS,us-gaap:Revenues,map,revenue,1312,1903,22,"conflict: 'total revenues' beside 'sales by company-operated restaurants': the total wins"
+1030,PFE,IS,us-gaap:Revenues,map,revenue,2312,2606,11,"conflict: 'total revenues' beside 'product revenues' and a 'revenues' RevenueFromContract line: the total wins"
+1204,SCHW,IS,us-gaap:Revenues,map,revenue,1812,2606,31,"conflict: 'total net revenues' beside fee lines tagged RevenueFromContract: the total wins (broker template)"
+1421,WELL,IS,us-gaap:Revenues,map,revenue,1903,2609,31,"conflict: 'total revenues' beside resident fees and 'non-cash consideration' lines tagged RevenueFromContract: the total wins"
+4630,TMUS,IS,us-gaap:Revenues,map,revenue,1312,1806,19,conflict: 'total revenues' beside equipment and service revenue: the total wins
+4630,TMUS,IS,us-gaap:CostOfServices + us-gaap:CostOfGoodsSold,component,cost_of_revenue,1312,1806,19,"TMUS prints cost of services and cost of equipment sales with no total: sum (same pattern as VZ)"
+1700,VRTX,IS,us-gaap:Revenues,map,revenue,1312,1803,18,conflict: 'total revenues' beside 'product revenues net': the total wins
+1975,LMT,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1803,18,conflict: 'total net sales' beside products/services: the total wins
+1975,LMT,IS,us-gaap:CostOfRevenue,review,cost_of_revenue,1312,2609,35,"TRAP: LMT tags both 'total cost of sales' and 'total operating costs and expenses' with CostOfRevenue AND CostOfGoodsAndServicesSold in different eras. Cost of revenue = the line labelled 'total cost of sales' only; a line labelled 'total operating costs and expenses' must be excluded. Needs a label condition per filing (Tag Expert)"
+2376,MPC,IS,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,review,revenue,1806,1912,4,"conflict: MPC prints sales and other operating revenues both excluding and including excise taxes. Recommend the excluding-excise line (net revenue); Standardization Lead to confirm the policy for all refiners (VLO, PSX)"
+2540,ISRG,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1806,19,conflict: 'total revenue' beside product/service: the total wins
+2540,ISRG,IS,us-gaap:CostOfRevenue,map,cost_of_revenue,1312,1806,19,conflict: 'total cost of revenue' beside product/service: the total wins
+5480,NOW,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1712,14,conflict: 'total revenues' beside 'professional services and other': the total wins
+5480,NOW,IS,us-gaap:CostOfRevenue,map,cost_of_revenue,1312,1406,3,conflict: 'total cost of revenues' wins
+5943,ACN,IS,us-gaap:Revenues,review,revenue,1402,1808,19,"conflict: ACN prints 'revenues before reimbursements (net revenues)' (SalesRevenueServicesNet) and 'revenues' incl. reimbursements (Revenues) until FY2018. GAAP total = Revenues; ACN's headline = net revenues. Recommend Revenues (GAAP total, consistent with FY2019+ after ASC 606); Standardization Lead"
+5943,ACN,IS,us-gaap:CostOfRevenue,review,cost_of_revenue,1402,1808,19,same choice for cost: 'cost of services' (incl. reimbursables) vs 'before reimbursable expenses'
+215,BMY,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1809,20,conflict: 'total revenues' beside 'net product sales': the total wins
+1948,COF,IS,us-gaap:InterestExpenseOperating,map,interest_expense,2406,2406,1,"conflict: 'total interest expense' beside an 'interest expense' sub-line: the total wins (bank)"
+4447,FTNT,IS,us-gaap:SalesRevenueNet,map,revenue,1312,1812,21,conflict: 'total revenue' beside product/services: the total wins
+4447,FTNT,IS,us-gaap:CostOfGoodsAndServicesSold,map,cost_of_revenue,1312,1812,21,conflict: 'total cost of revenue' beside product/service cost: the total wins
