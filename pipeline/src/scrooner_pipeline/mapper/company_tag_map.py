@@ -749,6 +749,7 @@ def resolve_for_company(
     managed_concept_ids: set[int],
     concept_info: dict[int, tuple[str, str]],
     run_id: str | None = None,
+    commit: bool = True,
 ) -> dict:
     """Rebuild this company's canonical_fact rows from its tag map. Deletes every concept resolve() manages
     (plus every concept the map targets), so no value of the old path survives for a tag-map company."""
@@ -845,9 +846,13 @@ def resolve_for_company(
                     "blank reasons need the rule_run id of the resolve run"
                 )
             _write_blanks(conn, company_id, run_id, stats["blanks"], concept_info)
-        conn.commit()
+        if commit:
+            conn.commit()
     stats["resolved"] = len(cells)
     stats["held_cells"] = len(stats["held"])
+    stats["cells"] = (
+        cells  # the written rows (the write path protects exactly these keys)
+    )
     stats["blank_cells"] = len(stats["blanks"])
     stats["combined_line_cells"] = len(stats["combined_lines"])
     logger.info(
@@ -856,7 +861,7 @@ def resolve_for_company(
         **{
             k: v
             for k, v in stats.items()
-            if k not in ("held", "blanks", "blank_conflicts", "combined_lines")
+            if k not in ("held", "blanks", "blank_conflicts", "combined_lines", "cells")
         },
     )
     return stats
@@ -899,3 +904,19 @@ def load_concept_info(conn: psycopg.Connection) -> dict[int, tuple[str, str]]:
     with conn.cursor() as cur:
         cur.execute("select id, name, statement from analytics.canonical_concept")
         return {i: (n, s) for i, n, s in cur.fetchall()}
+
+
+def without_tag_map_ciks(conn: psycopg.Connection, ciks: set[str]) -> set[str]:
+    """For the stages that rewrite canonical_fact after resolve (fallbacks, fills, dedup, split rebase): when rule
+    company_tag_map.select@1 is ON, companies that have company_tag_map rows are skipped (the tag-map write path
+    owns their cells). Flag off: returns ciks unchanged, no query."""
+    if not enabled() or not ciks:
+        return ciks
+    with conn.cursor() as cur:
+        cur.execute(
+            """select c.cik from core.company c
+               where c.cik = any(%s) and exists (select 1 from analytics.company_tag_map m where m.company_id = c.id)""",
+            (sorted(ciks),),
+        )
+        skip = {r[0] for r in cur.fetchall()}
+    return ciks - skip

@@ -207,6 +207,59 @@ def seed_company_tag_map_cmd(
         raise typer.Exit(1)
 
 
+@app.command("tagmap-plan")
+def tagmap_plan_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Commit (default: plan, every company's transaction is rolled back).",
+    ),
+    before_image_dir: Path = typer.Option(
+        None,
+        "--before-image-dir",
+        help="Required with --apply: before-image csv.gz directory.",
+    ),
+    template_points: Path = typer.Option(
+        Path("data-team/47-fsn-store/company_tag_map/template_points_ranks_1_50.csv"),
+        "--template-points",
+        help="CSV company_id,template,data_point: each company's template data points.",
+    ),
+    statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
+) -> None:
+    """Rule company_tag_map.select@1 for these companies: tag-map resolve, protection of every written key,
+    ownership. Plan by default (rolled back); prints template cells vs valued / reasoned blank / NEITHER."""
+    from scrooner_pipeline.mapper import company_tag_map_plan as plan
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    if apply and before_image_dir is None:
+        typer.echo("ERROR --apply needs --before-image-dir", err=True)
+        raise typer.Exit(2)
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        tpl = plan.template_points_from_csv(template_points, ids)
+        if apply:
+            typer.echo(
+                f"before-image: {plan.write_before_image(conn, ids, before_image_dir)} -> {before_image_dir}"
+            )
+        rep = plan.run(conn, ids, tpl, apply=apply)
+    typer.echo(f"tagmap-plan [{'apply' if apply else 'plan'}]")
+    for cid, r in rep.items():
+        if "error" in r:
+            typer.echo(f"  {cid}: ERROR {r['error']}")
+            continue
+        typer.echo(
+            f"  {cid}: template {r['template_cells']} valued {r['valued']} blank {r['reasoned_blank']} "
+            f"NEITHER {r['neither']} combined_lines {r['combined_lines']} holds {r['holds']} "
+            f"conflicts {r['conflict_cells']} protected {r['protected_keys']} blanks {r['blank_reasons']}"
+        )
+    bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
+    if bad:
+        typer.echo(f"template cells with neither value nor reason: {bad}")
+
+
 @app.command("split-rebase")
 def split_rebase_cmd(
     ciks: str = typer.Option(
