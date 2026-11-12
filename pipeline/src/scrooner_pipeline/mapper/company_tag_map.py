@@ -368,6 +368,40 @@ def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):
     return arcs, dcml
 
 
+# Owners of a HELD cell (a definition or evidence the library has not settled): the cell is a defect that is
+# guard-hidden, never "not presented". C8 (debt lane) and C6 (DPS) await a verified rule, R2 (no BS-parenthetical
+# share count) a standardization ruling, cover-page / tax-note / conditional-template points a sector decision.
+HELD_OWNERS = (
+    ("held_c8", "verifier"),
+    ("held_c6", "verifier"),
+    ("held_r2", "standardization_lead"),
+    ("held_cover_page", "sector_analyst"),
+    ("held_tax_note", "sector_analyst"),
+    ("held_template_seed", "sector_analyst"),
+    ("held_read_verified_fail", "verifier"),
+)
+
+
+def _status_fields(row: MapRow) -> dict:
+    """state / defect fields of a tagless status row's blank. reason_class held_* -> defect + guard_hidden (never
+    shown as not_presented); everything else keeps the row's own decision as the state."""
+    rc = (row.reason_class or "").lower()
+    if rc.startswith("held_"):
+        owner = next(
+            (o for pre, o in HELD_OWNERS if rc.startswith(pre)), "standardization_lead"
+        )
+        return {
+            "state": "defect",
+            "defect_class": "guard_hidden",
+            "owner": owner,
+            "reason_code": rc,
+        }
+    out = {"state": row.decision}
+    if rc:
+        out["reason_code"] = rc
+    return out
+
+
 def _in_era(row: MapRow, end: date) -> bool:
     """The map's eras are FSN dates (rounded to the nearest month end); a fact's period end is the TRUE end (a
     52/53-week year ends days off a month end). A true end is inside an era when it is, or its month-end
@@ -678,7 +712,7 @@ def build_cells(
                     "canonical_concept_id": concept,
                     "concept_name": concept_info[concept][0],
                     "period_id": period_id,
-                    "state": row.decision,
+                    **_status_fields(row),
                     "reason": row.reason,
                     "rule_id": row.rule_id,
                     "period_start": start,

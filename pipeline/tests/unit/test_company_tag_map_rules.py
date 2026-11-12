@@ -545,3 +545,16 @@ def test_facts_that_exist_but_none_authoritative_give_a_reasoned_blank_never_a_v
     (b,) = stats["blanks"]
     assert (b["state"], b["reason_code"], b["defect_class"], b["owner"]) == ("defect", "no_authoritative_fact", "ingestion", "data_engineer_l1")
     assert "5 fact(s) under Assets" in b["reason"]
+
+
+def test_held_status_rows_are_defects_guard_hidden_never_not_presented():
+    def st(decision, rc):
+        return MapRow(None, None, "IS", decision, OPEX, None, None, ERA, None, None, "status", "tagmap.fy_status@1", reason_class=rc)
+
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    for rc, owner in (("held_c8", "verifier"), ("held_r2", "standardization_lead"), ("held_cover_page", "sector_analyst"), ("held_read_verified_fail_x", "verifier")):
+        _, stats = build_cells([st("not_presented", rc)], {}, INFO, {}, {}, periods)
+        (b,) = stats["blanks"]
+        assert (b["state"], b["defect_class"], b["owner"], b["reason_code"]) == ("defect", "guard_hidden", owner, rc)
+    _, stats = build_cells([st("not_in_template", "combined_line")], {}, INFO, {}, {}, periods)
+    assert [(b["state"], b["reason_code"]) for b in stats["blanks"]] == [("not_in_template", "combined_line")]
