@@ -108,9 +108,12 @@ def test_repeated_part_tag_is_rejected_and_fy_ended_header_dates_the_read():
 def test_era_shortfall_needs_a_window_period_before_the_era():
     from scrooner_pipeline.mapper import company_tag_map_plan as plan
 
-    rows = [(1, date(2019, 1, 1)), (1, date(2015, 1, 1)), (2, date(2019, 1, 1)), (None, date(2024, 1, 1))]
-    assert plan.era_shortfall(rows, [date(2018, 12, 31), date(2025, 12, 31)]) == {2: date(2019, 1, 1)}
+    rows = [(1, date(2019, 1, 1), None), (1, date(2015, 1, 1), date(2018, 12, 31)), (2, date(2019, 1, 1), None),
+            (None, date(2024, 1, 1), None)]
+    assert plan.era_shortfall(rows, [date(2018, 12, 31), date(2025, 12, 31)]) == {2: date(2018, 12, 31)}
     assert plan.era_shortfall(rows, [date(2014, 12, 31), date(2019, 12, 31)]) == {}  # 2014 is outside the window
+    gap = [(3, date(2015, 1, 1), date(2018, 12, 31)), (3, date(2021, 1, 1), None)]  # merged map with a hole
+    assert plan.era_shortfall(gap, [date(2016, 12, 31), date(2019, 12, 31), date(2022, 12, 31)]) == {3: date(2019, 12, 31)}
     ok = {"era_short": {}, "fy01_before": 4, "fy01_after": 4, "values_lost": 0}
     assert plan.coverage_gate_ok(ok)
     assert not plan.coverage_gate_ok({**ok, "fy01_after": 3})
@@ -132,3 +135,31 @@ def test_machine_picks_and_unchecked_rows_are_rejected_as_unverified():
         (dp, "unverified") for dp in ("revenue", "goodwill", "inventory", "capex")
     ]
     assert dl.stmt_code("NOTE", "cash_paid_for_interest", "cash_flow", value_row=True) == "UN"
+
+
+def test_docmap_era_from_2021_leaves_earlier_library_eras_and_period_reasons_intact():
+    ids = {"revenue_sanity_resolved": 1}
+    early = {**LIB, "id": 1, "era_from": date(2015, 1, 1), "era_to": date(2020, 12, 31)}
+    open_row = {**LIB, "id": 2, "tag": "SalesRevenueNet", "era_from": date(2015, 1, 1), "era_to": None}
+    reason = {**LIB, "id": 3, "decision": "not_presented", "taxonomy": None, "tag": None,
+              "era_from": date(2023, 12, 31), "era_to": date(2023, 12, 31)}
+    plan = dl.plan_company([early, open_row, reason], [_doc("us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax")], ids)
+    assert plan.cut == [(2, date(2020, 12, 31))] and plan.delete == []  # 2015-2020 kept; the period reason kept
+    assert len(plan.insert) == 1
+
+
+def test_a_docmap_reason_never_cuts_a_library_value():
+    reason_doc = dl.DocmapRow("T", "revenue_sanity_resolved", "not_presented", (), "IS", "R3.htm", "", date(2021, 1, 1),
+                              "0000000001-26-000001", "no line", "T-docmap.csv")
+    plan = dl.plan_company([LIB], [reason_doc], {"revenue_sanity_resolved": 1})
+    assert plan.cut == [] and plan.delete == [] and len(plan.insert) == 1
+    assert [c["winner"] for c in plan.conflicts] == ["coexist"]
+
+
+def test_a_combined_line_replaces_the_library_period_reasons_inside_its_era():
+    reason = {**LIB, "id": 3, "decision": "not_in_template", "taxonomy": None, "tag": None,
+              "era_from": date(2024, 12, 31), "era_to": date(2024, 12, 31)}
+    combined = dl.DocmapRow("T", "revenue_sanity_resolved", "combined", dl.parse_parts("us-gaap:X"), "IS", "R3.htm",
+                            "Revenue and other", date(2024, 1, 1), "0000000001-26-000001", "", "T-docmap.csv")
+    plan = dl.plan_company([reason], [combined], {"revenue_sanity_resolved": 1})
+    assert plan.delete == [3] and len(plan.insert) == 1  # no overlapping reason rows left behind

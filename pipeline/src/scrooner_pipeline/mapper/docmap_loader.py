@@ -381,6 +381,34 @@ class CompanyPlan:
     agree: int = 0
 
 
+REASON_DECISIONS = {"not_presented", "not_in_template"}
+
+
+def _conflict(
+    d: DocmapRow, winner: str, why: str, library: list[dict], names_by_id: dict
+) -> dict:
+    return {
+        "ticker": d.ticker,
+        "data_point": d.data_point,
+        "winner": winner,
+        "why": why,
+        "docmap_status": d.status,
+        "docmap_tags": "+".join(
+            f"{'-' if s < 0 else ''}{t}:{g}" for s, t, g in d.parts
+        ),
+        "docmap_era_from": d.era_from.isoformat(),
+        "docmap_accession": d.accession,
+        "library": "; ".join(
+            sorted(
+                f"{r['decision']} {r['taxonomy'] or ''}:{r['tag'] or ''} {r['era_from']}..{r['era_to'] or ''} "
+                f"({names_by_id.get(r['canonical_concept_id'] or r['parent_concept_id'], '')})"
+                for r in library
+            )
+        ),
+        "source": d.source,
+    }
+
+
 def plan_company(
     existing: list[dict], docrows: list[DocmapRow], concept_ids: dict[str, int]
 ) -> CompanyPlan:
@@ -403,6 +431,27 @@ def plan_company(
             )
             and r["decision"] != "excluded"
         ]
+        # merge by kind (Dhairya 2026-11-13): a docmap VALUE row competes only with library value rows, a docmap
+        # REASON row only with library reasons. A per-period library reason (open_period, fy_status ...) is never
+        # removed by a value row: a value row is no reason for a period that has no fact.
+        reasons = [r for r in current if r["decision"] in REASON_DECISIONS]
+        values = [r for r in current if r["decision"] not in REASON_DECISIONS]
+        if d.status in TAGLESS_STATUS and d.status != "combined":
+            if values:
+                plan.conflicts.append(
+                    _conflict(
+                        d,
+                        "coexist",
+                        "docmap reason beside a library value: the value is served where printed",
+                        values,
+                        names_by_id,
+                    )
+                )
+            current = reasons
+        elif (
+            d.status != "combined"
+        ):  # a combined line is a reason that also displaces values: it meets both
+            current = values
         if not current:
             plan.insert.append(d)
             continue
@@ -411,34 +460,16 @@ def plan_company(
             continue
         has_combined = any(r["decision"] == "combined" for r in current)
         winner = "docmap" if d.cites_page and not has_combined else "library"
-        plan.conflicts.append(
-            {
-                "ticker": d.ticker,
-                "data_point": d.data_point,
-                "winner": winner,
-                "why": ("docmap cites " + d.r_page)
-                if winner == "docmap"
-                else (
-                    "library combined line: Tag Expert decides"
-                    if has_combined
-                    else "docmap cites no filing page"
-                ),
-                "docmap_status": d.status,
-                "docmap_tags": "+".join(
-                    f"{'-' if s < 0 else ''}{t}:{g}" for s, t, g in d.parts
-                ),
-                "docmap_era_from": d.era_from.isoformat(),
-                "docmap_accession": d.accession,
-                "library": "; ".join(
-                    sorted(
-                        f"{r['decision']} {r['taxonomy'] or ''}:{r['tag'] or ''} {r['era_from']}..{r['era_to'] or ''} "
-                        f"({names_by_id.get(r['canonical_concept_id'] or r['parent_concept_id'], '')})"
-                        for r in current
-                    )
-                ),
-                "source": d.source,
-            }
+        why = (
+            ("docmap cites " + d.r_page)
+            if winner == "docmap"
+            else (
+                "library combined line: Tag Expert decides"
+                if has_combined
+                else "docmap cites no filing page"
+            )
         )
+        plan.conflicts.append(_conflict(d, winner, why, current, names_by_id))
         if winner == "library":
             continue
         for r in current:
