@@ -77,6 +77,10 @@ def main(pdir, ddir, *only):
             if dp == 'sga_expense' and norm_status(k['status']) == 'mapped' and tagset(k['tags']) == {'generalandadministrativeexpense'} and \
                     any(_re.search(r'selling|marketing', t) for t in tagset(p['tags'])):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'amortization_of_intangibles' and ks == 'not_presented' and norm_status(p['status']) == 'mapped' and (p.get('stmt') or '') == 'NOTE':
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'depreciation_and_amortization' and ks == 'mapped' and tagset(k['tags']) == {'depreciationamortizationandaccretionnet'} and norm_status(p['status']) == 'combined':
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: DepreciationAmortizationAndAccretionNet includes accretion -> combined; a label never promotes (DUK ruling; doc 02)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):

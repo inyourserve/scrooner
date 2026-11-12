@@ -36,7 +36,7 @@ tool,AAL,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,AAL,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,AAL,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquireProductiveAssets,us-gaap:PaymentsToAcquireProductiveAssets
 tool,AAL,depreciation_and_amortization,wrong,tag,mapped,mapped,aal:MainlineAndExpressDepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,AAL,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,AAL,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,AAL,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,AAL,dividends_paid,correct,,not_presented,not_presented,,
 tool,AAL,share_buybacks,correct,,not_presented,not_presented,,
@@ -120,7 +120,7 @@ tool,ADP,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,ADP,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,ADP,capex,wrong,status,mapped,not_presented,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,
 tool,ADP,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,ADP,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,ADP,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,ADP,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,ADP,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,ADP,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -561,7 +561,7 @@ tool,ARWR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,ARWR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,ARWR,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,ARWR,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,ARWR,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,ARWR,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,ARWR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,ARWR,dividends_paid,wrong,status,not_presented,combined,,us-gaap:InvestmentIncomeInterestAndDividend
 tool,ARWR,share_buybacks,correct,,not_presented,not_presented,,
@@ -645,7 +645,7 @@ tool,ATR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,ATR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,ATR,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,ATR,depreciation_and_amortization,wrong,status,mapped,component_sum,us-gaap:Depreciation,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization
-tool,ATR,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,ATR,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,ATR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,ATR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,ATR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -1769,7 +1769,7 @@ tool,CVS,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,CVS,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,CVS,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,CVS,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,CVS,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,CVS,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,CVS,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,CVS,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,CVS,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -1929,7 +1929,7 @@ tool,DAR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,DAR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,DAR,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,DAR,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,DAR,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,DAR,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,DAR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,DAR,dividends_paid,correct,,not_presented,not_presented,,
 tool,DAR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -2666,7 +2666,7 @@ tool,ESTC,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,ESTC,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,ESTC,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,ESTC,depreciation_and_amortization,wrong,status,mapped,not_presented,us-gaap:OtherDepreciationAndAmortization,
-tool,ESTC,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,ESTC,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,ESTC,sbc,wrong,tag,mapped,mapped,estc:ShareBasedPaymentArrangementExpenseNetOfCashAcquisitionSBC,us-gaap:AllocatedShareBasedCompensationExpense
 tool,ESTC,dividends_paid,correct,,not_presented,not_presented,,
 tool,ESTC,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -2719,7 +2719,7 @@ tool,ETSY,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,ETSY,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,ETSY,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,ETSY,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,ETSY,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,ETSY,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,ETSY,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,ETSY,dividends_paid,correct,,not_presented,not_presented,,
 tool,ETSY,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -2993,7 +2993,7 @@ tool,FR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsed
 tool,FR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,FR,capex,wrong,status,not_presented,combined,,us-gaap:PaymentsForLeasingCostsCommissionsAndTenantImprovements
 tool,FR,depreciation_and_amortization,wrong,status,mapped,not_presented,us-gaap:OtherDepreciationAndAmortization,
-tool,FR,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,FR,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,FR,sbc,correct,,not_presented,not_presented,,
 tool,FR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,FR,share_buybacks,correct,,not_presented,not_presented,,
@@ -3503,7 +3503,7 @@ tool,HSIC,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,HSIC,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,HSIC,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquireProductiveAssets,us-gaap:PaymentsToAcquireProductiveAssets
 tool,HSIC,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,HSIC,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,HSIC,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,HSIC,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,HSIC,dividends_paid,correct,,not_presented,not_presented,,
 tool,HSIC,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -4012,7 +4012,7 @@ tool,IREN,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,IREN,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,IREN,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,IREN,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,IREN,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,IREN,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,IREN,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,IREN,dividends_paid,correct,,not_presented,not_presented,,
 tool,IREN,share_buybacks,correct,,not_presented,not_presented,,
@@ -4574,7 +4574,7 @@ tool,LOW,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,LOW,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,LOW,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,LOW,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,LOW,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,LOW,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,LOW,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,LOW,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,LOW,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -4734,7 +4734,7 @@ tool,MCK,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,MCK,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,MCK,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,MCK,depreciation_and_amortization,wrong,status,mapped,component_sum,us-gaap:Depreciation,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization
-tool,MCK,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,MCK,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,MCK,sbc,wrong,status,not_presented,mapped,,us-gaap:ShareBasedCompensation
 tool,MCK,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,MCK,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -4970,7 +4970,7 @@ tool,MOD,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,MOD,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,MOD,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,MOD,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,MOD,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,MOD,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,MOD,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,MOD,dividends_paid,correct,,not_presented,not_presented,,
 tool,MOD,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -5616,7 +5616,7 @@ tool,OSK,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,OSK,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,OSK,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,OSK,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,OSK,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,OSK,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,OSK,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,OSK,dividends_paid,wrong,status,combined,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,OSK,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -5928,7 +5928,7 @@ tool,PLD,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,PLD,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,PLD,capex,wrong,status,component sum,not_presented,pld:PaymentForPropertyImprovements+us-gaap:PaymentsForLeasingCostsCommissionsAndTenantImprovements+us-gaap:PaymentsToDevelopRealEstateAssets,
 tool,PLD,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,PLD,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,PLD,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,PLD,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,PLD,dividends_paid,correct,,combined,combined,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,PLD,share_buybacks,correct,,not_presented,not_presented,,
@@ -6202,7 +6202,7 @@ tool,PSX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,PSX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,PSX,capex,wrong,status,combined,not_presented,psx:CapitalExpendituresAndInvestments,
 tool,PSX,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,PSX,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,PSX,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,PSX,sbc,wrong,status,not_presented,mapped,,us-gaap:ShareBasedCompensation
 tool,PSX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,PSX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -6362,7 +6362,7 @@ tool,RHP,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,RHP,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,RHP,capex,wrong,status,mapped,combined,us-gaap:PaymentsForCapitalImprovements,us-gaap:PaymentsForCapitalImprovements
 tool,RHP,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,RHP,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,RHP,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,RHP,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,RHP,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,RHP,share_buybacks,correct,,not_presented,not_presented,,
@@ -6750,7 +6750,7 @@ tool,SBUX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,SBUX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,SBUX,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,SBUX,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,SBUX,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,SBUX,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,SBUX,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,SBUX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,SBUX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -8210,7 +8210,7 @@ tool,WDC,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUse
 tool,WDC,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,WDC,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,WDC,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-tool,WDC,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,WDC,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,WDC,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 tool,WDC,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 tool,WDC,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -8575,7 +8575,7 @@ tool,WYNN,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUs
 tool,WYNN,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 tool,WYNN,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 tool,WYNN,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-tool,WYNN,amortization_of_intangibles,wrong,status,not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
+,WYNN,amortization_of_intangibles,key_error,key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13),not_presented,mapped,,us-gaap:AmortizationOfIntangibleAssets
 tool,WYNN,sbc,wrong,status,mapped,not_presented,us-gaap:AllocatedShareBasedCompensationExpense,
 tool,WYNN,dividends_paid,wrong,status,combined,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
 tool,WYNN,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
