@@ -47,11 +47,11 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R6.htm | Cash paid for interest expense | 7030000 | 7030000 | 16371000 | 16371000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001638826-26-000028 R6.htm period ..2026-01-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R6.htm | Cash paid for income taxes | 825000 | 825000 | 1726000 | 1726000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001638826-26-000028 R6.htm period ..2026-01-31 |
 | total_debt | component sum | us-gaap:ShortTermBorrowings+us-gaap:LongTermDebt | R2.htm | Short-term debt + Long-term debt, net | 0 | 0 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; no finance lease liability fact in the filing; operating leases never included |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 94601151 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-01-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 81956537 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-01-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
 - cash_and_equivalents: era 10-K 0000950170-25-048834 R2.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 441802000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-none beyond sign differences
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
