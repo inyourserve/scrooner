@@ -142,7 +142,8 @@ DP = [  # (data point, statement, tags in preference order, label regex)
                                         "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"], r"research and development"),
     ("operating_income", "IS", ["OperatingIncomeLoss"], r"^(total )?operating (income|profit|earnings)|income from operations"),
     ("interest_expense", "IS", ["InterestExpense", "InterestExpenseNonoperating", "InterestExpenseOperating",
-                                "InterestExpenseDebt", "InterestIncomeExpenseNonoperatingNet"], r"^interest expense"),
+                                "InterestAndDebtExpense", "InterestExpenseDebt", "InterestIncomeExpenseNonoperatingNet"],
+     r"^interest (and debt |and other financing )?(expense|costs?)"),
     ("income_before_tax", "IS", ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                  "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
                                  "IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic"],
@@ -187,10 +188,14 @@ DP = [  # (data point, statement, tags in preference order, label regex)
     ("cash_paid_for_interest", "CF", ["InterestPaidNet", "InterestPaid"], r"^interest paid|cash paid for interest"),
     ("cash_paid_for_income_taxes", "CF", ["IncomeTaxesPaidNet", "IncomeTaxesPaid"], r"income taxes paid|cash paid for income taxes"),
 ]
+REIT_CAPEX = ["PaymentsToDevelopRealEstateAssets", "PaymentsForCapitalImprovements",
+              "PaymentsForLeasingCostsCommissionsAndTenantImprovements", "PaymentsToAcquireAndDevelopRealEstate",
+              "PaymentsForConstructionInProcess"]
 DEBT_TAGS = ["ShortTermBorrowings", "CommercialPaper", "DebtCurrent", "LongTermDebtCurrent", "LongTermDebtNoncurrent",
              "LongTermDebt", "LongTermDebtAndCapitalLeaseObligations", "LongTermDebtAndCapitalLeaseObligationsCurrent",
              "OtherLongTermDebtNoncurrent", "LinesOfCreditCurrent", "SeniorNotes", "ConvertibleNotesPayable"]
-DA_PARTS = ["Depreciation", "AmortizationOfIntangibleAssets", "DepreciationAndAmortization"]
+DA_PARTS = ["Depreciation", "AmortizationOfIntangibleAssets", "DepreciationAndAmortization", "AdjustmentForAmortization",
+            "DepreciationNonproduction", "DepreciationDepletionAndAmortization"]
 STMT_RX = {
     "IS": r"(statements? of (consolidated )?(income|operations|earnings|comprehensive (income|loss))|income statements?|statements? of (net )?(income|earnings|operations))",
     "BS": r"(balance sheets?|statements? of financial (position|condition)|statements? of condition)",
@@ -305,8 +310,22 @@ EXCLUDE = {  # rule-based keying errors to avoid (Dhairya 2026-11-12)
 }
 
 
+def dedupe_coreg(rows: list[dict]) -> list[dict]:
+    """Co-registrant blocks print the same tag again on one page (e.g. Prologis, Inc. and Prologis, L.P.):
+    only the first (parent, consolidated) occurrence counts (Dhairya / Ritwik 2026-11-12, PLD 70,074 vs 35,037)."""
+    seen, out = set(), []
+    for r in rows:
+        if r["tag"] and r["tag"] in seen:
+            continue
+        seen.add(r["tag"])
+        out.append(r)
+    return out
+
+
 def _excluded(dp: str, r: dict) -> bool:
     ex = EXCLUDE.get(dp)
+    if dp == "dividends_paid" and re.search(r"common", r["label"], re.I):
+        return False  # a common + preferred line is kept and keyed combined, not excluded
     return bool(ex) and (bool(re.search(ex[0], r["tag"])) or bool(re.search(ex[1], r["label"], re.I)))
 
 
@@ -381,6 +400,9 @@ NOTE_FAMILY = {  # data point -> (tags that ARE the data point, tags that are on
 }
 
 
+NOTE_REJECT = (r"variable interest|\bVIEs?\b|subsidiar|merger|acquisition|segment|investee|equity method|"
+               r"joint venture|unconsolidated|discontinued|held for sale|guarantor|parent company|condensed financial information")
+
 OUT_FOR_FIN = {"cost_of_revenue", "gross_profit", "research_and_development", "inventory", "current_assets",
                "current_liabilities"}
 
@@ -432,7 +454,8 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
         t = tags.get(f"us-gaap_{local}")
         if not t:
             return []
-        rs = [role2r[x] for x in t.get("presentation", []) if x in role2r]
+        rs = [role2r[x] for x in t.get("presentation", []) if x in role2r
+              and not re.search(NOTE_REJECT, role2r[x][2], re.I)]
         return sorted(rs, key=lambda x: (x[1] == "statement", int(re.sub(r"\D", "", x[0]) or 0)))
 
     for r in todo:
@@ -444,6 +467,10 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
             t, rs = hit
             months = 12 if r.get("stmt") in ("IS", "CF") else None
             av = api_value(cf, f"us-gaap:{t}", accn, end, months) if end else None
+            if av is None:
+                # note values only from undimensioned consolidated facts: no such fact -> not a hit
+                hit = None
+        if hit:
             # the value printed on that R page (Dhairya: every mapped row's value must equal its R page)
             pv, plabel = None, ""
             for rr in rs[:3]:
@@ -515,6 +542,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     reps = find_reports(fs)
     meta["filings"].append((accn, tenks[0][0], {k: v[1] for k, v in reps.items()}))
     pages = {k: parse_r(get(base + fn, cache)) for k, (_, fn) in reps.items() if k in ("IS", "BS", "CF", "BSP")}
+    for _pg in pages.values():
+        _pg["rows"] = dedupe_coreg(_pg["rows"])
     out: list[dict] = []
     quirks: list[str] = []
     for dp, stmt, tags, rx in DP:
@@ -550,6 +579,18 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                          "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
                          "parts": parts, "opex_status": "component sum",
                          "opex_note": "SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12)"}
+        elif dp == "capex":
+            r = match_row(page, dp, tags, rx)
+            if r is None:
+                parts = [x for x in page["rows"] if _has(x) and x["tag"] and (
+                    x["tag"].split(":")[-1] in REIT_CAPEX
+                    or re.search(r"(property|building|capital) improvements|tenant improvements|leasing (costs|commissions)|^development", x["label"], re.I))
+                    and not re.search(r"proceeds|sale|disposition", x["label"], re.I)]
+                if parts:
+                    r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
+                         "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
+                         "parts": parts, "opex_status": "component sum",
+                         "opex_note": "REIT capex: development + improvements + TI/leasing commissions lines (Dhairya 2026-11-12, PLD); acquisitions excluded"}
         elif dp == "depreciation_and_amortization":
             r = match_row(page, dp, tags, rx)
             if r is None:
@@ -558,7 +599,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                     r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
                          "vals": [sum((p["vals"][i] or 0) for p in parts) if any(p["vals"][i] is not None for p in parts if i < len(p["vals"])) else None
                                   for i in range(max(len(p["vals"]) for p in parts))], "parts": parts}
-        elif dp != "sga_expense":
+        elif dp not in ("sga_expense", "capex"):
             r = match_row(page, dp, tags, rx)
             if dp == "accounts_receivable" and r is not None and r.get("by_label"):
                 n_recv = sum(1 for x in page["rows"] if re.search(r"receivable", x["label"], re.I)
@@ -590,6 +631,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                                         or r["tag"].split(":")[-1] in ("InterestIncomeExpenseNonoperatingNet", "InterestIncomeExpenseNet",
                                                                        "InterestRevenueExpenseNet", "InterestExpenseNet")):
             status, rule_note = "combined", "net interest line: interest_expense is the gross charge only, a net line is combined (Dhairya 2026-11-12)"
+        if dp == "dividends_paid" and re.search(r"common", r["label"], re.I) and re.search(r"preferred|preference|units|noncontrolling|non-controlling|minority", r["label"], re.I):
+            status, rule_note = "combined", "dividend line mixes common with preferred / units / NCI: combined (Dhairya 2026-11-12, PLD)"
         if dp == "depreciation_and_amortization" and (re.search(r"accretion", r["label"], re.I)
                                                       or r["tag"].endswith("DepreciationAmortizationAndAccretionNet")):
             status, rule_note = "combined", "D&A line includes accretion: combined (Dhairya 2026-11-12)"
