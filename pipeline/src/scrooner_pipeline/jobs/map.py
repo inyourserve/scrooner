@@ -167,6 +167,11 @@ def seed_company_tag_map_cmd(
     path: Path = typer.Argument(
         ..., help="CSV or JSONL of analytics.company_tag_map rows."
     ),
+    open_periods: Path = typer.Option(
+        None,
+        "--open-periods",
+        help="open_periods_*.csv: each OPEN period is loaded as a tagless not_presented row (same transaction).",
+    ),
     apply: bool = typer.Option(
         False,
         "--apply",
@@ -178,7 +183,7 @@ def seed_company_tag_map_cmd(
     from scrooner_pipeline.mapper.company_tag_map_seed import seed as seed_tag_map
 
     with get_connection() as conn:
-        stats = seed_tag_map(conn, path, apply=apply)
+        stats = seed_tag_map(conn, path, apply=apply, open_periods=open_periods)
     typer.echo(
         f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
         f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"

@@ -245,3 +245,21 @@ def test_two_units_two_values_same_tag_period_filing_is_a_blank_and_the_key_allo
         assert resolve(conn, {"0000000701"})["errored"] == 0
         assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == 0
         assert _one(conn, "select reason_code from analytics.cell_blank_reason where company_id = %s and data_point_name = 'tm_rev' and period_end = '2018-12-31'", co) == "conflicting_values_in_filing"
+
+
+@pytest.mark.integration
+def test_seeder_applies_open_periods_with_the_main_file_in_one_replace(isolated_database_url, tmp_path):
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed
+
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, *_ = x["company"]("0000000801", True)
+        conn.commit()
+        main = tmp_path / "m.csv"
+        main.write_text("company_id,taxonomy,tag,stmt,decision,canonical_concept,era_from,decided_by,rule_id\n" f"{co},us-gaap,Revenues,IS,concept,tm_rev,2015-01-01,t,tm.r@1\n")
+        op = tmp_path / "o.csv"
+        op.write_text(f'company_id,stmt,concept,period,why\n{co},IS,tm_rev,2020-12-31,"x"\n')
+        st = seed(conn, main, apply=True, open_periods=op)
+        assert st["errors"] == [] and st["applied"] and st["rows"] == 2
+        assert conn.execute("select decision, tag, rule_id, reason from analytics.company_tag_map where company_id = %s order by decision", (co,)).fetchall() == [
+            ("concept", "Revenues", "tm.r@1", None), ("not_presented", None, "tagmap.open_period@1", "not printed in this filing")]
