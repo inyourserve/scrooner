@@ -1,0 +1,47 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+PLD,revenue,mapped,us-gaap:Revenues,IS,R4.htm,Total revenues,8790127000,8790127000,8201610000,8201610000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cost_of_revenue,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,no cost-of-revenue line | accn 0001193125-26-051453
+PLD,gross_profit,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,operating_expenses,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,sga_expense,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,research_and_development,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,R4.htm,Operating income,4357864000,4357864000,4415920000,4415920000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,R4.htm,Interest expense,-1002344000,1002344000,-863932000,863932000,Y (sign differs: printed in parentheses/negated label),"chosen tag FY[2024, 2025]; ERA-CHECK others: {'InterestExpense': [2021, 2022, 2023], 'InterestCostsIncurred': [2021, 2022, 2023]}",FILING-CHECKED,accn 0001193125-26-051453
+PLD,interest_income,not_presented,,IS,R4.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,R4.htm,Total other income (expense),-588548000,-588548000,-301042000,-301042000,Y,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,R4.htm,Earnings before income taxes,3769316000,3769316000,4114878000,4114878000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,R4.htm,Income tax expense,-204017000,204017000,-166943000,166943000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,net_income,mapped,us-gaap:NetIncomeLoss,IS,R4.htm,Net earnings attributable to controlling interests,3328231000,3328231000,3731635000,3731635000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,R4.htm,Net earnings per share/unit attributable to common stockholders/unitholders - Basic,3.58,3.58,4.02,4.02,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,R4.htm,Net earnings per share/unit attributable to common stockholders/unitholders - Diluted,3.56,3.56,4.01,4.01,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,R4.htm,Weighted average common shares/units outstanding - Basic,928473000,928473000,926172000,926172000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,R4.htm,Weighted average common shares/units outstanding - Diluted,956832000,956832000,953590000,953590000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQP,R7.htm,Dividends per common share,4.04,4.04,3.84,3.84,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,R5.htm,Comprehensive income attributable to common unitholders,2772170000,2772170000,4125621000,4125621000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,R2.htm,Cash and cash equivalents,1145647000,1145647000,1318591000,1318591000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,accounts_receivable,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,inventory,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,current_assets,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,ppe_net,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,goodwill,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,total_assets,mapped,us-gaap:Assets,BS,R2.htm,Total assets,98724256000,98724256000,95328909000,95328909000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,accounts_payable,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,current_liabilities,not_presented,,BS,R2.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,total_liabilities,mapped,us-gaap:Liabilities,BS,R2.htm,Total liabilities,40970248000,40970248000,36712139000,36712139000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,total_debt,component sum,us-gaap:LongTermDebt+us-gaap:LongTermDebt,BS,R2.htm,Debt + Debt,70074146000,70074146000,61758526000,61758526000,Y,,FILING-CHECKED (debt lines); perimeter DATA-INFERRED,BS debt lines (the one instant sum allowed); check for double counts | accn 0001193125-26-051453
+PLD,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R2.htm,"Total Prologis, Inc. stockholders’ equity",53193178000,53193178000,53951138000,53951138000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,shares_outstanding,mapped,dei:EntityCommonStockSharesOutstanding,COVER,R1.htm,"Entity Common Stock, Shares Outstanding",929559000,929559000,,,Y,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R8.htm,Net cash provided by (used in) operating activities,5008434000,5008434000,4912209000,4912209000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R8.htm,Net cash provided by (used in) investing activities,-3630447000,-3630447000,-3099057000,-3099057000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R8.htm,Net cash provided by (used in) financing activities,-1563619000,-1563619000,-999957000,-999957000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,capex,component sum,pld:PaymentForPropertyImprovements+us-gaap:PaymentsForLeasingCostsCommissionsAndTenantImprovements+us-gaap:PaymentsToDevelopRealEstateAssets,CF,R8.htm,Property improvements + Tenant improvements and lease commissions on previously leased space + Real estate development,-327355,,,,no API fact (dimensioned or not in companyfacts for this accession),,FILING-CHECKED,"REIT capex (rule 24, doc 02 line 114): property improvements 327,355 + tenant improvements and lease commissions 562,197 + real estate development 2,781,260 (R8); acquisitions excluded | accn 0001193125-26-051453"
+PLD,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,R8.htm,Depreciation and amortization,2626028000,2626028000,2580519000,2580519000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,amortization_of_intangibles,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R8.htm,Equity-based compensation awards,185466000,185466000,231747000,231747000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001193125-26-051453
+PLD,dividends_paid,combined,us-gaap:PaymentsOfDividends,CF,R8.htm,Dividends/distributions paid on common and preferred stock/units,-3764745000,3764745000,-3570480000,3570480000,Y (sign differs: printed in parentheses/negated label),,FILING-CHECKED,label mixes common with preferred/NCI/units | accn 0001193125-26-051453
+PLD,share_buybacks,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cf_ar_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cf_inventory_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cf_ap_change,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,accn 0001193125-26-051453
+PLD,cash_paid_for_interest,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001193125-26-051453
+PLD,cash_paid_for_income_taxes,not_presented,,CF,R8.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001193125-26-051453

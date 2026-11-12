@@ -21,8 +21,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 171,ADP,CF,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,map,capex,1312,2606,51,'capital expenditures'
 171,ADP,CF,us-gaap:ProceedsFromSaleOfPropertyPlantAndEquipment,exclude,capex,1312,2606,46,proceeds
 171,ADP,IS,,not_presented,operating_income;gross_profit,,,51,no operating income line
-1185,SYK,IS,,not_presented,interest_expense,,,48,no face interest-expense line before the InterestExpenseNonoperating era (0000310764-26-000010 IS line 10 has it)
-1185,SYK,BS,,not_presented,total_liabilities,,,11,no total liabilities line in 11 filings
+1185,SYK,IS,,not_presented,interest_expense,,,48,no face interest-expense line before the InterestExpenseNonoperating era (0000310764-26-000010 IS line 10 has it); the latest 10-K (FY2025) prints 'Interest expense' (see the map row)
+1185,SYK,BS,,not_presented,total_liabilities,,,11,"no total liabilities line in 11 filings (older filings only; the latest 10-K prints 'Total liabilities', see the map row)"
 303,GLW,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,map,capex,1312,2003,26,face 'capital expenditures' tagged PaymentsForProceedsFromProductiveAssets
 303,GLW,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,2012,2606,23,face 'capital expenditures'
 303,GLW,CF,c:PaymentsToAcquirePropertyPlantAndEquipmentFromRelatedParty,exclude,capex,1809,1909,2,equipment bought for a related party (pass-through)
@@ -33,7 +33,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 671,LOW,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2410,2607,8,'interest - net'
 671,LOW,IS,c:InterestExpensePercent,exclude,interest_expense,2107,2510,18,percent-of-sales column on the face
 671,LOW,IS,us-gaap:ProfitLoss,map,net_income,1401,2301,10,FSN-checked 0000060667-23-000034 IS line 13 'Net earnings' with no NCI line (card rule 8 logic for NI)
-671,LOW,IS,,not_presented,operating_income,,,12,no operating income line in 12 filings
+671,LOW,IS,,not_presented,operating_income,,,12,no operating income line in 12 filings (store); the latest 10-K prints 'Operating income' (see the map row)
 1583,SBUX,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2209,2606,16,"Tag Expert correction 2026-11-11 (relayed by Mac Ritwik; TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md): a BS cash line tagged with the restricted-cash total is a combined line (cash + restricted cash), a blank with reason line_presented_combined_with_others, not cash. Supersedes card rule 9. Earlier: card rule 9 (only where no restricted-cash line)"
 1583,SBUX,IS,us-gaap:ProductionAndDistributionCosts,map,cost_of_revenue,,,25,"FSN-checked 0000829224-26-000130 IS line 14 'Product and distribution costs' (ProductionAndDistributionCosts): SBUX's face cost line as printed (store operating expenses are a separate line, not cost of revenue). Earlier eras use 'cost of sales including occupancy costs'"
 3982,SNOW,IS,,not_presented,interest_expense,,,16,only interest income printed
@@ -405,3 +405,6 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3030,URI,IS,us-gaap:Revenues,map,revenue,1709,2106,16,"conflict: 'total revenues' wins (URI also files jointly with United Rentals (North America), Inc.: take URI's statements only)"
 3030,URI,IS,us-gaap:CostOfRevenue,map,cost_of_revenue,1312,2606,39,conflict: 'total cost of revenues' wins
 3117,APO,IS,us-gaap:Revenues,map,revenue,1806,2606,33,conflict: 'total revenues' / 'total consolidated revenues' wins
+1185,SYK,IS,us-gaap:InterestExpenseNonoperating,map,interest_expense,2512,,,Document-first read 2026-11-12 (FILING-CHECKED; data-team/companies/reads/SYK-docmap-2026-11-12): FY2025 prints 'Interest expense' 607 (sign column)
+1185,SYK,BS,us-gaap:Liabilities,map,total_liabilities,,,,"Document-first read 2026-11-12 (FILING-CHECKED; data-team/companies/reads/SYK-docmap-2026-11-12): 'Total liabilities' printed (Liabilities, FY2016-FY2025 in companyfacts); the not_presented call was a store-scope gap"
+671,LOW,IS,us-gaap:OperatingIncomeLoss,map,operating_income,,,,"Document-first read 2026-11-12 (FILING-CHECKED): the latest 10-K prints 'Operating income' (OperatingIncomeLoss, FY2016-FY2025 in companyfacts)"
