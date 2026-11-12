@@ -32,3 +32,15 @@ def face_runs(filings, face, order):
             cur = [t, p, p]
             runs.append(cur)
     return [tuple(r) for r in runs], open_p
+
+
+# rows decided from a FILING-CHECKED full 10-K read or a ruling on one (often a note or a 10-K prior-year column, which the
+# face of the period's own filing does not print), and debt-lane rows: the face pass never re-decides them or their concept
+PROTECTED = ("read_verified", "ruling", "read_status", "debt_lane")
+
+
+def face_checked(groups, rows):
+    """The (company, stmt, concept) groups the face pass may re-decide: none holding a protected row of that company and concept."""
+    prot = {(r["company_id"], r["canonical_concept"] or r["parent_concept"]) for r in rows
+            if (r.get("decided_by") or "").split("+")[0] in PROTECTED}
+    return {k: v for k, v in groups.items() if (k[0], k[2]) not in prot}
