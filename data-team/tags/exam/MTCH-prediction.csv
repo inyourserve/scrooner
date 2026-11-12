@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MTCH,704,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,Accounts payable,9577000.0000,library map
+MTCH,704,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,"Accounts receivable, net of allowance of $304 and $379, respectively",303495000.0000,library map
+MTCH,704,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)
+MTCH,704,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000891103-26-000025,R5,Basic (USD per share),2.5300,library map
+MTCH,704,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Capital expenditures,56765000.0000,library map
+MTCH,704,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,Cash and cash equivalents,1027838000.0000,library map
+MTCH,704,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000891103-26-000025,R9,Net cash used in financing activities,-984894000.0000,library map
+MTCH,704,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000891103-26-000025,R9,Net cash used in investing activities,-46831000.0000,library map
+MTCH,704,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)
+MTCH,704,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)
+MTCH,704,cf_ap_change,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0000891103-26-000025,R9,Accounts receivable,-23624000.0000,library map
+MTCH,704,cf_inventory_change,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Net cash provided by operating activities,1080380000.0000,library map
+MTCH,704,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000891103-26-000025,R6,"Comprehensive income attributable to Match Group, Inc. shareholders",640437000.0000,library map
+MTCH,704,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Cost of revenue (exclusive of depreciation shown separately below),948374000.0000,library map
+MTCH,704,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,Total current assets,1427294000.0000,library map
+MTCH,704,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,Total current liabilities,1006545000.0000,library map
+MTCH,704,deposits,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,depreciation_and_amortization,combined,us-gaap:Depreciation,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Depreciation,67112000.0000,single component line
+MTCH,704,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000891103-26-000025,R5,Diluted (USD per share),2.3800,library map
+MTCH,704,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Dividends,186255000.0000,library map
+MTCH,704,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000891103-26-000025,R8,Dividends per share of common stock (USD per share),0.7600,library map
+MTCH,704,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,Goodwill,2339350000.0000,library map
+MTCH,704,gross_profit,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Income before income taxes,746003000.0000,library map
+MTCH,704,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Income tax provision,132542000.0000,library map
+MTCH,704,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000891103-26-000025,R5,Interest expense,147551000.0000,library map
+MTCH,704,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)
+MTCH,704,inventory,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,loans_net,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,net_income,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,net_interest_income,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,noninterest_expense,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,noninterest_income,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,operating_expenses,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Operating income,872529000.0000,library map
+MTCH,704,other_income_expense_net,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,"Property and equipment, net",131159000.0000,library map
+MTCH,704,provision_for_credit_losses,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Product development expense,449508000.0000,library map
+MTCH,704,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Revenue,3487197000.0000,library map
+MTCH,704,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Stock-based compensation expense,258202000.0000,library map
+MTCH,704,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000891103-26-000025,R5,Selling and marketing expense,625541000.0000,printed face components (duration sum; total_debt founder sum)
+MTCH,704,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000891103-26-000025,R9,Purchase of treasury stock,788810000.0000,library map
+MTCH,704,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000891103-26-000025,R4,Common stock outstanding (shares),232530646.0000,library map
+MTCH,704,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0000891103-26-000025,R3,"Total Match Group, Inc. shareholders equity",-253504000.0000,library map
+MTCH,704,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000891103-26-000025,R3,TOTAL ASSETS,4460811000.0000,library map
+MTCH,704,total_debt,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,total_interest_income,OUT,,,,,,,,0000891103-26-000025,,,,not a bank
+MTCH,704,total_liabilities,not_presented,,,,,,,,0000891103-26-000025,,,,no face line
+MTCH,704,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)
+MTCH,704,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000891103-26-000025,,,,note-sourced default tag (no face line)

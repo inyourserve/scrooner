@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+RHP,802,accounts_payable,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,accounts_receivable,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-019035,,,,note-sourced default tag (no face line)
+RHP,802,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-019035,R4,Basic income per share available to common stockholders,3.9400,library map
+RHP,802,capex,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,cash_and_equivalents,combined,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-019035,R2,Cash and cash equivalents - unrestricted,471421000.0000,combined line (library or label demote)
+RHP,802,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001104659-26-019035,R6,Net cash flows provided by (used in) financing activities,567295000.0000,library map
+RHP,802,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-019035,R6,Net cash flows used in investing activities,-1233972000.0000,library map
+RHP,802,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-019035,,,,note-sourced default tag (no face line)
+RHP,802,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-019035,,,,note-sourced default tag (no face line)
+RHP,802,cf_ap_change,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001104659-26-019035,R6,Trade receivables,-2162000.0000,library map
+RHP,802,cf_inventory_change,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001104659-26-019035,R6,Net cash flows provided by operating activities,590629000.0000,library map
+RHP,802,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001104659-26-019035,R5,Comprehensive income available to common stockholders,245488000.0000,library map
+RHP,802,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Total hotel operating expenses,1441052000.0000,library map
+RHP,802,current_assets,not_presented,,,,,,,,0001104659-26-019035,,,,unclassified balance sheet
+RHP,802,current_liabilities,not_presented,,,,,,,,0001104659-26-019035,,,,unclassified balance sheet
+RHP,802,deposits,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-019035,R6,Depreciation and amortization,278100000.0000,library map
+RHP,802,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-019035,R4,Diluted income per share available to common stockholders,3.7700,library map
+RHP,802,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001104659-26-019035,R6,Payment of distributions,285576000.0000,library map
+RHP,802,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001104659-26-019035,R9,Dividend amount for current period (in dollars per share),4.6500,library map
+RHP,802,goodwill,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,gross_profit,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Income before income taxes,254634000.0000,library map
+RHP,802,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,(Provision) benefit for income taxes,7324000.0000,library map
+RHP,802,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-019035,R4,Interest expense,241270000.0000,library map
+RHP,802,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Interest income,20299000.0000,library map
+RHP,802,inventory,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,loans_net,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Net income available to common stockholders,243425000.0000,library map
+RHP,802,net_interest_income,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,noninterest_expense,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,noninterest_income,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,operating_expenses,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Operating income,487012000.0000,library map
+RHP,802,other_income_expense_net,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-019035,R2,"Property and equipment, net",4970429000.0000,library map
+RHP,802,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,research_and_development,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Total revenues,2577061000.0000,library map
+RHP,802,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001104659-26-019035,R6,Equity-based compensation expense,14061000.0000,library map
+RHP,802,sga_expense,combined,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-019035,R4,Corporate,42771000.0000,single component line
+RHP,802,share_buybacks,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001104659-26-019035,R3,"Common stock, shares outstanding (in shares)",63006000.0000,library map
+RHP,802,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-019035,R2,Total stockholders' equity,750152000.0000,library map
+RHP,802,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-019035,R2,Total assets,6181183000.0000,library map
+RHP,802,total_debt,not_presented,,,,,,,,0001104659-26-019035,,,,no face line
+RHP,802,total_interest_income,OUT,,,,,,,,0001104659-26-019035,,,,not a bank
+RHP,802,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-019035,R2,Total liabilities,4969407000.0000,library map
+RHP,802,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001104659-26-019035,,,,note-sourced default tag (no face line)
+RHP,802,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001104659-26-019035,,,,note-sourced default tag (no face line)

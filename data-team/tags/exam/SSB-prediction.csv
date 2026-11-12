@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SSB,701,accounts_payable,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,accounts_receivable,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Amortization of intangibles,94722000.0000,library map
+SSB,701,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-017884,R4,Basic (in dollars per share),7.9000,library map
+SSB,701,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Purchases of premises and equipment,70255000.0000,library map
+SSB,701,cash_and_equivalents,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Net cash provided by financing activities,1458764000.0000,library map
+SSB,701,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Net cash provided by (used in) investing activities,20806000.0000,library map
+SSB,701,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Income taxes,170137000.0000,library map
+SSB,701,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Interest,1106157000.0000,library map
+SSB,701,cf_ap_change,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,cf_ar_change,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,cf_inventory_change,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Net cash provided by operating activities,300846000.0000,library map
+SSB,701,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001104659-26-017884,R5,Comprehensive income,1122207000.0000,library map
+SSB,701,cost_of_revenue,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,current_assets,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,current_liabilities,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,deposits,mapped,us-gaap:Deposits,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,Total deposits,55145797000.0000,bank template tag
+SSB,701,depreciation_and_amortization,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-017884,R4,Diluted (in dollars per share),7.8700,library map
+SSB,701,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Dividends paid,231303000.0000,library map
+SSB,701,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001104659-26-017884,R7,"Common stock cash dividends declared, per share (in dollars per share)",2.2800,library map
+SSB,701,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,Goodwill,3094059000.0000,library map
+SSB,701,gross_profit,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Income before provision for income taxes,1040210000.0000,library map
+SSB,701,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Provision for income taxes,241543000.0000,library map
+SSB,701,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-017884,R4,Total interest expense,1076191000.0000,library map
+SSB,701,interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Total interest income,3379498000.0000,library map
+SSB,701,inventory,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,loans_net,mapped,us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,+,-3,Y,LoansAndLeasesReceivableNetReportedAmount,sec_api,0001104659-26-017884,R2,"Loans, net",48013330000.0000,bank template tag
+SSB,701,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Net income,798667000.0000,library map
+SSB,701,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Net interest income,2303307000.0000,bank template tag
+SSB,701,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Total noninterest expense,1521084000.0000,bank template tag
+SSB,701,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Total noninterest income,377744000.0000,bank template tag
+SSB,701,operating_expenses,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,operating_income,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,other_income_expense_net,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,"Premises and equipment, net",994176000.0000,library map
+SSB,701,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLossesExpensed,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Provision for credit losses,119757000.0000,bank template tag
+SSB,701,research_and_development,OUT,,,,,,,,0001104659-26-017884,,,,sector template (bank/insurer)
+SSB,701,revenue,combined,us-gaap:NoninterestIncomeOther,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Other income,55284000.0000,single component line
+SSB,701,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Share-based compensation expense,37005000.0000,library map
+SSB,701,sga_expense,combined,us-gaap:MarketingAndAdvertisingExpense,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Advertising and marketing,12990000.0000,single component line
+SSB,701,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001104659-26-017884,R8,Common stock repurchases,235820000.0000,library map
+SSB,701,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001104659-26-017884,R3,"Common stock, shares outstanding",99138204.0000,library map
+SSB,701,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,Total shareholders' equity,9059108000.0000,library map
+SSB,701,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,Total assets,67197412000.0000,library map
+SSB,701,total_debt,not_presented,,,,,,,,0001104659-26-017884,,,,no face line
+SSB,701,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Total interest income,3379498000.0000,bank template tag
+SSB,701,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-017884,R2,Total liabilities,58138304000.0000,library map
+SSB,701,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Basic (in shares),101043000.0000,library map
+SSB,701,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001104659-26-017884,R4,Diluted (in shares),101499000.0000,library map

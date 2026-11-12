@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+WM,131,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Accounts payable,1867000000.0000,library map
+WM,131,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,"Accounts receivable, net of allowance for doubtful accounts of $87 and $165, respectively",3435000000.0000,library map
+WM,131,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)
+WM,131,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-012049,R4,Basic earnings per common share,6.7200,library map
+WM,131,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001104659-26-012049,R6,Capital expenditures,3227000000.0000,library map
+WM,131,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Cash and cash equivalents,201000000.0000,library map
+WM,131,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001104659-26-012049,R6,Net cash provided by (used in) financing activities,-2673000000.0000,library map
+WM,131,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001104659-26-012049,R6,Net cash used in investing activities,-3566000000.0000,library map
+WM,131,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)
+WM,131,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)
+WM,131,cf_ap_change,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,cf_ar_change,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,cf_inventory_change,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001104659-26-012049,R6,Net cash provided by operating activities,6043000000.0000,library map
+WM,131,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001104659-26-012049,R5,"Comprehensive income attributable to Waste Management, Inc.",2813000000.0000,library map
+WM,131,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Operating,15012000000.0000,library map
+WM,131,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Total current assets,4910000000.0000,library map
+WM,131,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Total current liabilities,5524000000.0000,library map
+WM,131,deposits,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001104659-26-012049,R6,"Depreciation, depletion and amortization",2863000000.0000,library map
+WM,131,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-012049,R4,Diluted earnings per common share,6.7000,library map
+WM,131,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001104659-26-012049,R6,Cash dividends,1334000000.0000,library map
+WM,131,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001104659-26-012049,R9,Cash dividends declared per common share,3.3000,library map
+WM,131,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Goodwill,13880000000.0000,library map
+WM,131,gross_profit,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Income before income taxes,3426000000.0000,library map
+WM,131,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Income tax expense,717000000.0000,library map
+WM,131,interest_expense,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)
+WM,131,inventory,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,loans_net,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,"Net income attributable to Waste Management, Inc.",2708000000.0000,library map
+WM,131,net_interest_income,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,noninterest_expense,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,noninterest_income,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,operating_expenses,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Income from operations,4308000000.0000,library map
+WM,131,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,"Other, net",20000000.0000,library map
+WM,131,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,"Property and equipment, net of accumulated depreciation and depletion of $25,096 and $23,777, respectively",20378000000.0000,library map
+WM,131,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,research_and_development,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Operating revenues,25204000000.0000,library map
+WM,131,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001104659-26-012049,R6,Equity-based compensation expense,169000000.0000,library map
+WM,131,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,"Selling, general and administrative",2722000000.0000,library map
+WM,131,share_buybacks,not_presented,,,,,,,,0001104659-26-012049,,,,no face line
+WM,131,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-5,N,,sec_api,0001104659-26-012049,R8,"Beginning balance, common shares",402900000.0000,library map
+WM,131,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,"Total Waste Management, Inc. stockholders' equity",9990000000.0000,library map
+WM,131,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Total assets,45835000000.0000,library map
+WM,131,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Current portion of long-term debt,711000000.0000,printed face components (duration sum; total_debt founder sum)
+WM,131,total_interest_income,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
+WM,131,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,Total liabilities,35844000000.0000,library map
+WM,131,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)
+WM,131,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001104659-26-012049,,,,note-sourced default tag (no face line)

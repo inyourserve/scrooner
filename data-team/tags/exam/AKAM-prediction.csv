@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+AKAM,603,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Accounts payable,125054000.0000,library map
+AKAM,603,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,"Accounts receivable, net of reserves of $7,706 and $3,522 at December 31, 2025 and 2024, respectively",793666000.0000,library map
+AKAM,603,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Amortization of acquired intangible assets,111066000.0000,library map
+AKAM,603,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001086222-26-000022,R5,Basic (in dollars per share),3.1100,library map
+AKAM,603,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Purchases of property and equipment,507786000.0000,library map
+AKAM,603,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Cash and cash equivalents,930231000.0000,library map
+AKAM,603,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001086222-26-000022,R8,Net cash (used in) provided by financing activities,-588036000.0000,library map
+AKAM,603,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001086222-26-000022,R8,Net cash used in investing activities,-540743000.0000,library map
+AKAM,603,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001086222-26-000022,,,,note-sourced default tag (no face line)
+AKAM,603,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Cash paid for interest expense,23293000.0000,library map
+AKAM,603,cf_ap_change,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Accounts receivable,59437000.0000,library map
+AKAM,603,cf_inventory_change,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Net cash provided by operating activities,1518765000.0000,library map
+AKAM,603,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001086222-26-000022,R6,Comprehensive income,513268000.0000,library map
+AKAM,603,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Cost of revenue (exclusive of amortization of acquired intangible assets shown below),1727513000.0000,library map
+AKAM,603,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Total current assets,2286680000.0000,library map
+AKAM,603,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Total current liabilities,967518000.0000,library map
+AKAM,603,deposits,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Depreciation and amortization,708611000.0000,library map
+AKAM,603,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001086222-26-000022,R5,Diluted (in dollars per share),3.0700,library map
+AKAM,603,dividends_paid,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001086222-26-000022,,,,note-sourced default tag (no face line)
+AKAM,603,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Goodwill,3206525000.0000,library map
+AKAM,603,gross_profit,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Income before provision for income taxes,602405000.0000,library map
+AKAM,603,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Provision for income taxes,150374000.0000,library map
+AKAM,603,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001086222-26-000022,R5,Interest expense,30759000.0000,library map
+AKAM,603,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001086222-26-000022,,,,note-sourced default tag (no face line)
+AKAM,603,inventory,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,loans_net,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Net income,452031000.0000,library map
+AKAM,603,net_interest_income,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,noninterest_expense,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,noninterest_income,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,operating_expenses,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Income from operations,566944000.0000,library map
+AKAM,603,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001086222-26-000022,R5,"Other expense, net",-4588000.0000,library map
+AKAM,603,ppe_net,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,provision_for_credit_losses,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Research and development,513560000.0000,library map
+AKAM,603,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Revenue,4208175000.0000,library map
+AKAM,603,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Stock-based compensation,459402000.0000,library map
+AKAM,603,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Sales and marketing,574302000.0000,printed face components (duration sum; total_debt founder sum)
+AKAM,603,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001086222-26-000022,R8,Repurchases of common stock,799963000.0000,library map
+AKAM,603,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001086222-26-000022,R4,"Common stock, shares outstanding (in shares)",144711094.0000,library map
+AKAM,603,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Total stockholders equity,4977371000.0000,library map
+AKAM,603,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Total assets,11479643000.0000,library map
+AKAM,603,total_debt,not_presented,,,,,,,,0001086222-26-000022,,,,no face line
+AKAM,603,total_interest_income,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
+AKAM,603,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001086222-26-000022,R3,Total liabilities,6502272000.0000,library map
+AKAM,603,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Basic (in shares),145402000.0000,library map
+AKAM,603,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Diluted (in shares),147023000.0000,library map

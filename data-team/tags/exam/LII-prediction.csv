@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+LII,608,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Accounts payable,438000000.0000,library map
+LII,608,accounts_receivable,not_presented,,,,,,,,0001069202-26-000028,,,,no face line
+LII,608,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001069202-26-000028,,,,note-sourced default tag (no face line)
+LII,608,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001069202-26-000028,R5,Basic Earnings (Loss) per Share (in usd per share),22.8900,library map
+LII,608,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,"Purchases of property, plant and equipment",118800000.0000,library map
+LII,608,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Cash and cash equivalents,34200000.0000,library map
+LII,608,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001069202-26-000028,R9,Net cash used in financing activities,-465700000.0000,library map
+LII,608,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001069202-26-000028,R9,Net cash used in investing activities,-655600000.0000,library map
+LII,608,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Income taxes paid (net of refunds),103800000.0000,library map
+LII,608,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Interest paid,46500000.0000,library map
+LII,608,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001069202-26-000028,R9,Accounts payable,-74200000.0000,library map
+LII,608,cf_ar_change,not_presented,,,,,,,,0001069202-26-000028,,,,no face line
+LII,608,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Inventories,228200000.0000,library map
+LII,608,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Net cash provided by operating activities,757600000.0000,library map
+LII,608,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001069202-26-000028,R6,Comprehensive income,851000000.0000,library map
+LII,608,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Cost of goods sold,3460500000.0000,library map
+LII,608,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Total current assets,1903800000.0000,library map
+LII,608,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Total current liabilities,1191800000.0000,library map
+LII,608,deposits,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Depreciation and amortization,112500000.0000,library map
+LII,608,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001069202-26-000028,R5,Diluted Earnings (Loss) per Share (in usd per share),22.7900,library map
+LII,608,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Cash dividends paid,173000000.0000,library map
+LII,608,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001069202-26-000028,R8,Dividends per share (in usd per share),5.0500,library map
+LII,608,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Goodwill,497200000.0000,library map
+LII,608,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Gross profit,1734800000.0000,library map
+LII,608,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Income before income taxes,996800000.0000,library map
+LII,608,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Provision for income taxes,191000000.0000,library map
+LII,608,interest_expense,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,"Interest expense, net",40900000.0000,combined line (library or label demote)
+LII,608,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001069202-26-000028,,,,note-sourced default tag (no face line)
+LII,608,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,"Inventories, net",1152600000.0000,library map
+LII,608,loans_net,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Net income,805800000.0000,library map
+LII,608,net_interest_income,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,noninterest_expense,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,noninterest_income,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,operating_expenses,combined,us-gaap:OtherOperatingIncomeExpenseNet,IS,-,5,N,,sec_api,0001069202-26-000028,R5,"Losses and other expenses, net",-12000000.0000,single component line
+LII,608,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Operating income,1041500000.0000,library map
+LII,608,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001069202-26-000028,R5,"Other expense, net",-3400000.0000,library map
+LII,608,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,"Total property, plant and equipment, net",887200000.0000,library map
+LII,608,provision_for_credit_losses,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,research_and_development,not_presented,,,,,,,,0001069202-26-000028,,,,no face line
+LII,608,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Revenues,5195300000.0000,library map
+LII,608,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Stock-based compensation expense,29100000.0000,library map
+LII,608,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,"Selling, general and administrative expenses",681400000.0000,library map
+LII,608,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001069202-26-000028,R9,Repurchases of common stock,482300000.0000,library map
+LII,608,shares_outstanding,not_presented,,,,,,,,0001069202-26-000028,,,,no face line
+LII,608,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Total stockholders' equity,1163100000.0000,library map
+LII,608,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Total assets,4081800000.0000,library map
+LII,608,total_debt,component_sum,us-gaap:CommercialPaper;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Commercial paper,226000000.0000,printed face components (duration sum; total_debt founder sum)
+LII,608,total_interest_income,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
+LII,608,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,Total liabilities,2918700000.0000,library map
+LII,608,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Basic (in shares),35200000.0000,library map
+LII,608,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Diluted (in shares),35400000.0000,library map

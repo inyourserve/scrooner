@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SEIC,605,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,Accounts payable,5404000.0000,library map
+SEIC,605,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,"Receivables, net of allowance for doubtful accounts of $1,916 and $1,435",709748000.0000,library map
+SEIC,605,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000350894-26-000013,,,,note-sourced default tag (no face line)
+SEIC,605,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000350894-26-000013,R5,Basic earnings per common share (in USD per share),5.7600,library map
+SEIC,605,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Additions to property and equipment,22644000.0000,library map
+SEIC,605,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,Cash and cash equivalents,399804000.0000,library map
+SEIC,605,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000350894-26-000013,R10,Net cash used in financing activities,-589498000.0000,library map
+SEIC,605,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000350894-26-000013,R10,Net cash used in investing activities,-399092000.0000,library map
+SEIC,605,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000350894-26-000013,,,,note-sourced default tag (no face line)
+SEIC,605,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Interest paid,578000.0000,library map
+SEIC,605,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000350894-26-000013,R10,Accounts payable,-7859000.0000,library map
+SEIC,605,cf_ar_change,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,cf_inventory_change,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Net cash provided by operating activities,607662000.0000,library map
+SEIC,605,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000350894-26-000013,R6,Comprehensive income attributable to SEI Investments Company,737775000.0000,library map
+SEIC,605,cost_of_revenue,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,Total Current Assets,1273337000.0000,library map
+SEIC,605,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,Total Current Liabilities,387211000.0000,library map
+SEIC,605,deposits,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,depreciation_and_amortization,combined,us-gaap:AdjustmentForAmortization,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Amortization,46641000.0000,single component line
+SEIC,605,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000350894-26-000013,R5,Diluted earnings per common share (in USD per share),5.6300,library map
+SEIC,605,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Payment of dividends,124198000.0000,library map
+SEIC,605,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,IS,+,32767,N,,sec_api,0000350894-26-000013,R5,Dividends declared per common share (in USD per share),1.0100,library map
+SEIC,605,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,"Goodwill, net",354989000.0000,library map
+SEIC,605,gross_profit,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Income before income taxes,916333000.0000,library map
+SEIC,605,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Income taxes,198783000.0000,library map
+SEIC,605,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000350894-26-000013,R5,Interest expense,609000.0000,library map
+SEIC,605,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000350894-26-000013,,,,note-sourced default tag (no face line)
+SEIC,605,inventory,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,loans_net,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Net income attributable to SEI Investments Company,715305000.0000,library map
+SEIC,605,net_interest_income,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,noninterest_expense,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,noninterest_income,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,operating_expenses,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Income from operations,627311000.0000,library map
+SEIC,605,other_income_expense_net,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,"Property and Equipment, net of accumulated depreciation of $468,700 and $493,219",150434000.0000,library map
+SEIC,605,provision_for_credit_losses,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,research_and_development,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Total revenue,2297381000.0000,library map
+SEIC,605,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0000350894-26-000013,,,,note-sourced default tag (no face line)
+SEIC,605,sga_expense,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000350894-26-000013,R10,Purchase and retirement of common stock,628135000.0000,library map
+SEIC,605,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000350894-26-000013,R4,"Common stock, shares outstanding (in shares)",122232251.0000,library map
+SEIC,605,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000350894-26-000013,R3,"Equity, Attributable to Parent, Total",2447784000.0000,library map
+SEIC,605,total_assets,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,total_debt,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,total_interest_income,OUT,,,,,,,,0000350894-26-000013,,,,not a bank
+SEIC,605,total_liabilities,not_presented,,,,,,,,0000350894-26-000013,,,,no face line
+SEIC,605,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000350894-26-000013,,,,note-sourced default tag (no face line)
+SEIC,605,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000350894-26-000013,R5,Shares used to compute diluted earnings per share (in shares),127076000.0000,library map

@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+WMB,146,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Accounts payable,2224000000.0000,library map
+WMB,146,accounts_receivable,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000107263-26-000006,,,,note-sourced default tag (no face line)
+WMB,146,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000107263-26-000006,R3,Net income (loss) available to common stockholders - Basic,2.1400,library map
+WMB,146,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Capital expenditures (1),4893000000.0000,library map
+WMB,146,cash_and_equivalents,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000107263-26-000006,R10,Net cash provided (used) by financing activities,-406000000.0000,library map
+WMB,146,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000107263-26-000006,R10,Net cash provided (used) by investing activities,-5489000000.0000,library map
+WMB,146,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000107263-26-000006,,,,note-sourced default tag (no face line)
+WMB,146,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000107263-26-000006,,,,note-sourced default tag (no face line)
+WMB,146,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Accounts payable,115000000.0000,library map
+WMB,146,cf_ar_change,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Inventories,45000000.0000,library map
+WMB,146,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Net cash provided (used) by operating activities,5898000000.0000,library map
+WMB,146,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000107263-26-000006,R4,"Comprehensive income (loss) attributable to The Williams Companies, Inc.",2640000000.0000,library map
+WMB,146,cost_of_revenue,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Total current assets,3244000000.0000,library map
+WMB,146,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Total current liabilities,6106000000.0000,library map
+WMB,146,deposits,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,"Depreciation, depletion, and amortization",2347000000.0000,library map
+WMB,146,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000107263-26-000006,R3,Net income (loss) available to common stockholders - Diluted,2.1400,library map
+WMB,146,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Common dividends paid,2442000000.0000,library map
+WMB,146,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000107263-26-000006,R9,"Common Stock, Dividends, Per Share, Declared",2.0000,library map
+WMB,146,goodwill,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,gross_profit,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Income (loss) before income taxes,3625000000.0000,library map
+WMB,146,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Less: Provision (benefit) for income taxes,857000000.0000,library map
+WMB,146,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Interest expense,1442000000.0000,library map
+WMB,146,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000107263-26-000006,,,,note-sourced default tag (no face line)
+WMB,146,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Inventories,314000000.0000,library map
+WMB,146,loans_net,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Net income,2618000000.0000,library map
+WMB,146,net_interest_income,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,noninterest_expense,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,noninterest_income,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,operating_expenses,combined,us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Other (income) expense  net,7000000.0000,single component line
+WMB,146,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Operating income (loss),4196000000.0000,library map
+WMB,146,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Other income (expense)  net,69000000.0000,library map
+WMB,146,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,"Property, Plant and Equipment, Net",41996000000.0000,library map
+WMB,146,provision_for_credit_losses,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,research_and_development,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,Revenues,11950000000.0000,library map
+WMB,146,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000107263-26-000006,R10,Amortization of stock-based awards,93000000.0000,library map
+WMB,146,sga_expense,combined,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,General and administrative expenses,721000000.0000,single component line
+WMB,146,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0000107263-26-000006,R10,Purchases of treasury stock,0.0000,library map
+WMB,146,shares_outstanding,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Total stockholders equity,12807000000.0000,library map
+WMB,146,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Total assets,58573000000.0000,library map
+WMB,146,total_debt,component_sum,us-gaap:CommercialPaper;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000107263-26-000006,R6,Commercial paper,700000000.0000,printed face components (duration sum; total_debt founder sum)
+WMB,146,total_interest_income,OUT,,,,,,,,0000107263-26-000006,,,,not a bank
+WMB,146,total_liabilities,not_presented,,,,,,,,0000107263-26-000006,,,,no face line
+WMB,146,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,"Weighted Average Number of Shares Outstanding, Basic",1221000000.0000,library map
+WMB,146,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000107263-26-000006,R3,"Weighted Average Number of Shares Outstanding, Diluted",1225000000.0000,library map

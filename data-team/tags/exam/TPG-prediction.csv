@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+TPG,510,accounts_payable,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,accounts_receivable,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001880661-26-000011,,,,note-sourced default tag (no face line)
+TPG,510,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001880661-26-000011,R5,Basic (in usd per share),0.8900,library map
+TPG,510,capex,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Cash and cash equivalents,826105000.0000,library map
+TPG,510,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001880661-26-000011,R7,Net cash used in financing activities,-750360000.0000,library map
+TPG,510,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001880661-26-000011,R7,Net cash used in investing activities,-263956000.0000,library map
+TPG,510,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001880661-26-000011,R7,Cash paid for income taxes,30286000.0000,library map
+TPG,510,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001880661-26-000011,R7,Cash paid for interest,92117000.0000,library map
+TPG,510,cf_ap_change,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,cf_ar_change,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,cf_inventory_change,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001880661-26-000011,R7,Net cash provided by operating activities,1032395000.0000,library map
+TPG,510,comprehensive_income,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,cost_of_revenue,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,current_assets,not_presented,,,,,,,,0001880661-26-000011,,,,unclassified balance sheet
+TPG,510,current_liabilities,not_presented,,,,,,,,0001880661-26-000011,,,,unclassified balance sheet
+TPG,510,deposits,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001880661-26-000011,R7,Depreciation and amortization,144542000.0000,library map
+TPG,510,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001880661-26-000011,R5,Diluted (in usd per share),0.4500,library map
+TPG,510,dividends_paid,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001880661-26-000011,,,,note-sourced default tag (no face line)
+TPG,510,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Goodwill,498188000.0000,library map
+TPG,510,gross_profit,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Income (loss) before income taxes,666578000.0000,library map
+TPG,510,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Income tax expense,66993000.0000,library map
+TPG,510,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Interest expense,112111000.0000,library map
+TPG,510,interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,"Interest, dividends and other",93620000.0000,library map
+TPG,510,inventory,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,loans_net,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Net income attributable to TPG Inc.,184588000.0000,library map
+TPG,510,net_interest_income,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,noninterest_expense,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,noninterest_income,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Total expenses,4094407000.0000,library map
+TPG,510,operating_income,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,other_income_expense_net,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,ppe_net,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,provision_for_credit_losses,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,research_and_development,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,Total revenues,4670212000.0000,library map
+TPG,510,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001880661-26-000011,,,,note-sourced default tag (no face line)
+TPG,510,sga_expense,combined,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001880661-26-000011,R5,"General, administrative and other",702173000.0000,single component line
+TPG,510,share_buybacks,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,shares_outstanding,not_presented,,,,,,,,0001880661-26-000011,,,,no face line
+TPG,510,stockholders_equity,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Total equity,4136375000.0000,library map
+TPG,510,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Total assets,13492935000.0000,library map
+TPG,510,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Debt obligations,1722547000.0000,printed face components (duration sum; total_debt founder sum)
+TPG,510,total_interest_income,OUT,,,,,,,,0001880661-26-000011,,,,not a bank
+TPG,510,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001880661-26-000011,R3,Total liabilities,9356560000.0000,library map
+TPG,510,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001880661-26-000011,R5,Basic (in shares),138879433.0000,library map
+TPG,510,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001880661-26-000011,R5,Diluted (in shares),374125608.0000,library map
