@@ -384,9 +384,9 @@ DPS: tuple[DP, ...] = (
         ("CF",),
         (
             "DepreciationDepletionAndAmortization",
-            "DepreciationAmortizationAndAccretionNet",
             "DepreciationAndAmortization",
             "DepreciationAmortizationAndOther",
+            "DepreciationAmortizationAndAccretionNet",  # last: includes accretion, so combined (Dhairya 2026-11-12)
         ),
         r"^depreciation(,| and) (depletion and )?amortization",
     ),
@@ -747,6 +747,310 @@ class Facts:
         return {y: a for y, (a, _) in out.items()}
 
 
+# ------------------------------------------------------------------------------------------------ the whole filing
+NS_PREFIX = (
+    ("fasb.org/us-gaap", "us-gaap"),
+    ("xbrl.sec.gov/dei", "dei"),
+    ("fasb.org/srt", "srt"),
+)
+
+
+class Instance:
+    """Every fact of the filing's XBRL instance: {prefix:Name: [{start,end,dim,value,unit}]}. The whole-filing
+    authority for 'absent' (Dhairya 2026-11-12: not_presented only when absent from face AND notes)."""
+
+    def __init__(self, path: Path):
+        from lxml import etree
+
+        root = etree.fromstring(
+            gzip.decompress(path.read_bytes()), etree.XMLParser(huge_tree=True)
+        )
+        self.name = path.name.removesuffix(".gz")
+        xbrli = "{http://www.xbrl.org/2003/instance}"
+        ctx: dict[str, tuple[str | None, str, bool]] = {}
+        for c in root.iter(f"{xbrli}context"):
+            per = c.find(f"{xbrli}period")
+            inst = per.findtext(f"{xbrli}instant")
+            start, end = (
+                per.findtext(f"{xbrli}startDate"),
+                per.findtext(f"{xbrli}endDate"),
+            )
+            dim = (
+                c.find(f"{xbrli}entity/{xbrli}segment") is not None
+                or c.find(f"{xbrli}scenario") is not None
+            )
+            ctx[c.get("id")] = (
+                None if inst else start,
+                (inst or end or "").strip()[:10],
+                dim,
+            )
+        custom = {uri: pfx for pfx, uri in (root.nsmap or {}).items() if pfx}
+        self.facts: dict[str, list[dict]] = {}
+        for el in root:
+            ref = el.get("contextRef") if isinstance(el.tag, str) else None
+            if not ref or ref not in ctx:
+                continue
+            uri, _, local = el.tag[1:].partition("}")
+            pfx = next((p for k, p in NS_PREFIX if k in uri), custom.get(uri, "x"))
+            start, end, dim = ctx[ref]
+            try:
+                v = Decimal((el.text or "").strip())
+            except InvalidOperation:
+                v = None
+            self.facts.setdefault(f"{pfx}:{local}", []).append(
+                {
+                    "start": start,
+                    "end": end,
+                    "dim": dim,
+                    "value": v,
+                    "unit": el.get("unitRef"),
+                }
+            )
+
+    def get(self, elem: str, end: date, dur: bool) -> tuple[Decimal | None, bool]:
+        """(undimensioned value at the period, any fact of the element anywhere in the filing)"""
+        lst = self.facts.get(elem, [])
+        for x in lst:
+            if (
+                x["dim"]
+                or x["end"] != end.isoformat()
+                or (x["start"] is not None) != dur
+                or x["value"] is None
+            ):
+                continue
+            if dur and not 340 <= (end - date.fromisoformat(x["start"])).days <= 380:
+                continue
+            return x["value"], True
+        return None, bool(lst)
+
+
+class MetaLinks:
+    """element -> R pages presenting it (MetaLinks.json: tag presentation roles -> report role -> R file)."""
+
+    def __init__(self, path: Path):
+        d = json.loads(gzip.decompress(path.read_bytes()))
+        inst = next(iter(d.get("instance", {}).values()), {})
+        role_file = {}
+        for rid, rep in inst.get("report", {}).items():
+            role_file.setdefault(rep.get("role"), []).append(
+                (
+                    f"{rid}.htm",
+                    rep.get("menuCat") or "",
+                    rep.get("shortName") or rep.get("longName") or "",
+                )
+            )
+        self.pages: dict[str, list[tuple[str, str, str]]] = {}
+        for key, t in inst.get("tag", {}).items():
+            elem = key.replace("_", ":", 1)
+            for role in t.get("presentation", []) or []:
+                self.pages.setdefault(elem, []).extend(role_file.get(role, []))
+
+    def note_page(self, elem: str) -> tuple[str, str] | None:
+        """The first non-statement page (Details first) that presents the element."""
+        pages = [
+            p for p in self.pages.get(elem, []) if p[1] not in ("Statements", "Cover")
+        ]
+        pages.sort(key=lambda p: (p[1] != "Details", int(re.sub(r"\D", "", p[0]) or 0)))
+        return (pages[0][0], pages[0][2]) if pages else None
+
+
+NOTE_COMPONENTS = {  # data point -> note elements that are a component of it (component_in_note)
+    "depreciation_and_amortization": ("AmortizationOfIntangibleAssets",),
+    "total_debt": (
+        "FinanceLeaseLiabilityCurrent",
+        "FinanceLeaseLiabilityNoncurrent",
+        "FinanceLeaseLiability",
+    ),
+}
+
+
+def read_note_value(
+    R, page_file: str, elem: str, d0: date, kind: str
+) -> tuple[Decimal | None, Decimal | None, str]:
+    """The printed FY0/FY1 value of the element on a note R page (undimensioned row = the first row with it)."""
+    path = R.base / R.cik / R.accn / page_file
+    if not path.exists():
+        return None, None, ""
+    p = parse_page(path, "NOTE")
+    for r in p.rows:
+        if r.elem != elem or r.is_header:
+            continue
+        cols = [i for i, (_, d) in enumerate(p.cols) if d == d0]
+        if not cols:
+            continue
+        v0 = scaled(p, r, cols[0], kind)
+        later = [i for i, (_, d) in enumerate(p.cols) if d and d < d0]
+        v1 = scaled(p, r, later[0], kind) if later else None
+        return v0, v1, r.label
+    return None, None, ""
+
+
+def note_pass(R, rows: list[dict], quirks: list[dict]) -> list[str]:
+    """Dhairya 2026-11-12, binding: a data point absent from the face is looked up in the whole filing (XBRL instance
+    + MetaLinks): found only in a note -> mapped, stmt NOTE, with the R page; a note component of a face-incomplete
+    point -> component_in_note; not_presented only when the instance has no candidate fact at all (the row cites
+    that check). Returns the note R pages still to fetch (the row is pending until they are read)."""
+    d = R.base / R.cik / R.accn
+    ip = next(iter(sorted(d.glob("*.xml.gz"))), None)
+    mp = d / "MetaLinks.json.gz"
+    need: list[str] = []
+    if ip is None:
+        for row in rows:
+            if row["status"] in ("not_presented", "OUT"):
+                row["note"] += (
+                    " | WHOLE-FILING CHECK PENDING (XBRL instance not fetched)"
+                )
+                row["evidence_class"] = "PENDING"
+        return need
+    inst = Instance(ip)
+    ml = MetaLinks(mp) if mp.exists() else None
+    fy0 = R.fy0
+    for row in rows:
+        dp = next(x for x in DPS if x.name == row["data_point"])
+        dur = dp.stmts[0] not in ("BS", "COVER", "PAR_BS")
+        kind = dp.kind
+        if row["status"] in ("not_presented", "OUT") and fy0 is not None:
+            cands = [
+                t if ":" in t else f"us-gaap:{t}"
+                for t in dp.tags + dp.combined + ERA_SETS.get(dp.name, ())
+            ]
+            if (
+                dp.name == "depreciation_and_amortization"
+                and "depreciation only" in row["note"]
+            ):
+                cands = []  # handled as a component below
+            hit = None
+            anywhere = []
+            for c in dict.fromkeys(cands):
+                v, seen = inst.get(c, fy0, dur)
+                if seen:
+                    anywhere.append(short(c))
+                if v is not None:
+                    hit = (c, v)
+                    break
+            if hit:
+                c, v = hit
+                pg = ml.note_page(c) if ml else None
+                page = pg[0] if pg else ""
+                p0, p1, label = (
+                    read_note_value(R, page, c, fy0, kind) if page else (None, None, "")
+                )
+                if page and p0 is None and not (d / page).exists():
+                    need.append(page)
+                comb = c.split(":")[1] in dp.combined
+                row.update(
+                    {
+                        "status": "combined" if comb else "mapped",
+                        "tags": c,
+                        "stmt": "NOTE",
+                        "r_page": page,
+                        "label": label or (pg[1] if pg else ""),
+                        "fy0_printed": fmt(p0),
+                        "fy0_api": fmt(R.api(c, fy0, dur)),
+                        "fy1_printed": fmt(p1),
+                        "match": combine_match(match_txt(p0, R.api(c, fy0, dur)), ""),
+                        "evidence_class": "FILING-CHECKED"
+                        if p0 is not None
+                        else "PENDING",
+                        "note": f"not on the face; in a note: {page} '{pg[1] if pg else '?'}', XBRL instance {inst.name} "
+                        f"value {fmt(v)}"
+                        + ("" if p0 is not None else " | R PAGE PENDING")
+                        + (
+                            f" | face printed {fmt(p0)} != instance {fmt(v)}"
+                            if p0 is not None and p0 != v
+                            else ""
+                        ),
+                    }
+                )
+                quirks.append(
+                    {
+                        "tag": c,
+                        "what": f"{dp.name} only in a note ({page}), not on the face",
+                        "where": page or inst.name,
+                    }
+                )
+            else:
+                row["note"] = (row["note"] + " | " if row["note"] else "") + (
+                    f"WHOLE-FILING CHECK: no undimensioned FY0 fact of {', '.join(short(c) for c in dict.fromkeys(cands)) or 'any candidate'} "
+                    f"in XBRL instance {inst.name} (face and notes)"
+                    + (
+                        f"; present only dimensioned or other periods: {', '.join(anywhere)}"
+                        if anywhere
+                        else "; absent in every context"
+                    )
+                )
+        # component_in_note: a note value that is a component of the data point
+        comps = NOTE_COMPONENTS.get(dp.name, ())
+        if (
+            comps
+            and fy0 is not None
+            and row["status"] in ("mapped", "component sum", "not_presented")
+            and row["stmt"] != "NOTE"
+        ):
+            have = set(row["tags"].split("+"))
+            if dp.name == "depreciation_and_amortization" and not (
+                "depreciation only" in row["note"]
+            ):
+                continue
+            if dp.name == "total_debt" and any("FinanceLease" in t for t in have):
+                continue
+            add_tags, add0 = [], Decimal(0)
+            for c in comps:
+                q = f"us-gaap:{c}"
+                v, _ = inst.get(q, fy0, dp.name != "total_debt")
+                if v is None or q in have:
+                    continue
+                if c == "FinanceLeaseLiability" and add_tags:
+                    continue  # the total of the two parts already added
+                pg = ml.note_page(q) if ml else None
+                page = pg[0] if pg else ""
+                p0, _, _ = (
+                    read_note_value(R, page, q, fy0, "money")
+                    if page
+                    else (None, None, "")
+                )
+                if page and p0 is None and not (d / page).exists():
+                    need.append(page)
+                add_tags.append(f"{q}@{page or '?'}")
+                add0 += p0 if p0 is not None else v
+            if add_tags:
+                base0 = (
+                    Decimal(row["fy0_printed"]) if row["fy0_printed"] else Decimal(0)
+                )
+                if (
+                    dp.name == "depreciation_and_amortization"
+                ):  # face prints depreciation only
+                    base0, row["tags"] = R_depr(R), "us-gaap:Depreciation"
+                row.update(
+                    {
+                        "status": "component_in_note",
+                        "tags": "+".join(
+                            t
+                            for t in [row["tags"]] + [a.split("@")[0] for a in add_tags]
+                            if t
+                        ),
+                        "fy0_printed": fmt(base0 + add0),
+                        "fy1_printed": "",
+                        "fy1_api": "",
+                        "fy0_api": "",
+                        "match": "",
+                        "note": (row["note"] + " | " if row["note"] else "")
+                        + "note components added: "
+                        + ", ".join(add_tags)
+                        + f" (XBRL instance {inst.name})",
+                        "evidence_class": "PENDING"
+                        if any(p in need for p in [a.split("@")[1] for a in add_tags])
+                        else "FILING-CHECKED",
+                    }
+                )
+    return sorted(set(need))
+
+
+def R_depr(R) -> Decimal:
+    h = R.find(("CF",), ("Depreciation",))
+    return (R.values(h, "money")[0] or Decimal(0)) if h else Decimal(0)
+
+
 # ------------------------------------------------------------------------------------------------ the read
 @dataclass
 class Hit:
@@ -1074,7 +1378,23 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                 note = (
                     note + " | " if note else ""
                 ) + f"label '{h.row.label}': check perimeter"
-            add(dp, "mapped", [h.elem], [h], p0, a0, p1, a1, note, period=period_s)
+            st = "mapped"
+            if dp.name == "interest_expense" and re.search(
+                r"\bnet\b", h.row.label, re.IGNORECASE
+            ):
+                st = "combined"  # Dhairya 2026-11-12: gross charge only; a net interest line is combined
+                note = (
+                    note + " | " if note else ""
+                ) + f"'{h.row.label}' is a NET interest line: combined, never mapped"
+            if dp.name == "depreciation_and_amortization" and (
+                "Accretion" in h.elem
+                or re.search(r"accretion", h.row.label, re.IGNORECASE)
+            ):
+                st = "combined"  # Dhairya 2026-11-12: D&A including accretion is combined
+                note = (
+                    note + " | " if note else ""
+                ) + f"'{h.row.label}' includes accretion: combined"
+            add(dp, st, [h.elem], [h], p0, a0, p1, a1, note, period=period_s)
             continue
         if dp.combined:
             h = R.find(dp.stmts, dp.combined)
@@ -1263,7 +1583,9 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                 + "+".join(p.file for k in have for p in R.by_kind[k]),
             )
 
+    pending = note_pass(R, rows, quirks)
     return {
+        "pending_pages": pending,
         "reader": R,
         "rows": rows,
         "quirks": quirks,

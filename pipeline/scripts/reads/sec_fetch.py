@@ -2,10 +2,14 @@
 from SEC_USER_AGENT (the repo secret, never typed here), at most 0.4 requests per second (founder 2026-11-12).
 
 usage: sec_fetch.py <requests.csv> <out_dir>
-  requests.csv columns: cik,ticker[,accession]
+  requests.csv columns: cik,ticker[,accession,statements,extras,pages]
     no accession -> the company's latest 10-K (from data.sec.gov submissions) plus submissions.json and
                     companyfacts.json(.gz)
     accession    -> that filing only (an era 10-K)
+    statements=0 -> skip FilingSummary + statement pages (already fetched)
+    extras=1     -> also index.json, MetaLinks.json and the XBRL instance (gzip on disk): the whole-filing check
+                    (Dhairya 2026-11-12: not_presented only when absent from face AND notes, checked in the XBRL)
+    pages=R12.htm;R40.htm -> those R pages too (note pages that print a data point)
   per filing: FilingSummary.xml and every R page in MenuCategory Statements / Cover / Parenthetical
   (the face statements, their parentheticals and the cover page). Writes <out_dir>/<cik10>/... and
   <out_dir>/fetch_log.jsonl. Resumable: a file already on disk is not fetched again.
@@ -78,6 +82,66 @@ def statement_pages(summary: bytes) -> list[str]:
     return out
 
 
+INSTANCE_SKIP = ("_cal.xml", "_def.xml", "_lab.xml", "_pre.xml", "FilingSummary.xml")
+
+
+def instance_name(index: dict) -> str | None:
+    items = index.get("directory", {}).get("item", [])
+    names = [
+        i["name"]
+        for i in items
+        if i["name"].endswith(".xml") and not i["name"].endswith(INSTANCE_SKIP)
+    ]
+    htm = [n for n in names if n.endswith("_htm.xml")]
+    if htm:
+        return htm[0]
+
+    def size(n):
+        it = next(i for i in items if i["name"] == n)
+        return int(it.get("size") or 0)
+
+    return max(names, key=size) if names else None
+
+
+def fetch_extras(client, cik: str, acc: str, out: Path, log) -> dict:
+    nodash = acc.replace("-", "")
+    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{nodash}/"
+    d = out / cik / acc
+    rec: dict = {}
+    ip = d / "index.json"
+    if not ip.exists():
+        body = get(client, base + "index.json", log)
+        if body is None:
+            return {"extras_error": "no index.json"}
+        save(ip, body)
+    name = instance_name(json.loads(ip.read_text()))
+    for fn in ("MetaLinks.json", name):
+        if not fn:
+            rec["extras_error"] = "no instance in index.json"
+            continue
+        target = d / (fn + ".gz")
+        if not target.exists():
+            body = get(client, base + fn, log)
+            if body is not None:
+                save(target, gzip.compress(body))
+    rec["instance"] = name
+    return rec
+
+
+def fetch_pages(
+    client, cik: str, acc: str, pages: list[str], out: Path, log
+) -> list[str]:
+    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{acc.replace('-', '')}/"
+    got = []
+    for p in pages:
+        if not (out / cik / acc / p).exists():
+            body = get(client, base + p, log)
+            if body is not None:
+                save(out / cik / acc / p, body)
+                got.append(p)
+    return got
+
+
 def fetch_filing(client, cik: str, acc: str, out: Path, log) -> dict:
     nodash = acc.replace("-", "")
     base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{nodash}/"
@@ -147,7 +211,15 @@ def main(argv: list[str]) -> None:
                     summary.append(rec)
                     continue
                 acc, rec["filed"] = found
-            rec.update(fetch_filing(client, cik, acc, out, log))
+            if (r.get("statements") or "1").strip() != "0":
+                rec.update(fetch_filing(client, cik, acc, out, log))
+            else:
+                rec["accession"] = acc
+            if (r.get("extras") or "").strip() == "1":
+                rec.update(fetch_extras(client, cik, acc, out, log))
+            pages = [p for p in (r.get("pages") or "").split(";") if p.strip()]
+            if pages:
+                rec["note_pages"] = fetch_pages(client, cik, acc, pages, out, log)
             summary.append(rec)
             print(json.dumps(rec)[:300], flush=True)
     logf.close()

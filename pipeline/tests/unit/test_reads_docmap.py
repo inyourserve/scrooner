@@ -308,3 +308,95 @@ def test_eras_reach_fy2015_and_each_needs_an_opened_10k(tmp_path):
         },
     )
     assert plan["verdict"]["covered"]
+
+
+INSTANCE = """<xbrli:xbrl xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:us-gaap="http://fasb.org/us-gaap/2025"
+ xmlns:xbrldi="http://xbrl.org/2006/xbrldi">
+<xbrli:context id="FY25"><xbrli:entity><xbrli:identifier scheme="x">1</xbrli:identifier></xbrli:entity>
+ <xbrli:period><xbrli:startDate>2025-01-01</xbrli:startDate><xbrli:endDate>2025-12-31</xbrli:endDate></xbrli:period></xbrli:context>
+<xbrli:context id="FY25seg"><xbrli:entity><xbrli:identifier scheme="x">1</xbrli:identifier><xbrli:segment>
+ <xbrldi:explicitMember dimension="us-gaap:StatementBusinessSegmentsAxis">x:A</xbrldi:explicitMember></xbrli:segment></xbrli:entity>
+ <xbrli:period><xbrli:startDate>2025-01-01</xbrli:startDate><xbrli:endDate>2025-12-31</xbrli:endDate></xbrli:period></xbrli:context>
+<us-gaap:Revenues contextRef="FY25" unitRef="usd" decimals="-6">1000000000</us-gaap:Revenues>
+<us-gaap:ResearchAndDevelopmentExpense contextRef="FY25" unitRef="usd" decimals="-6">70000000</us-gaap:ResearchAndDevelopmentExpense>
+<us-gaap:GrossProfit contextRef="FY25seg" unitRef="usd" decimals="-6">5</us-gaap:GrossProfit>
+</xbrli:xbrl>"""
+
+METALINKS = {
+    "instance": {
+        "x.htm": {
+            "report": {
+                "R2": {"role": "r/is", "menuCat": "Statements", "shortName": "IS"},
+                "R40": {
+                    "role": "r/rd",
+                    "menuCat": "Details",
+                    "shortName": "R&D (Details)",
+                },
+            },
+            "tag": {
+                "us-gaap_ResearchAndDevelopmentExpense": {"presentation": ["r/rd"]},
+                "us-gaap_Revenues": {"presentation": ["r/is"]},
+            },
+        }
+    }
+}
+
+
+def test_whole_filing_check_before_not_presented(tmp_path):
+    """Dhairya 2026-11-12, binding: a point only in a note is mapped, stmt NOTE, with its R page; not_presented only when
+    the XBRL instance has no undimensioned FY0 fact (and the row cites that check)"""
+    m = _mod()
+    page = IS_HEAD + _row("us-gaap_Revenues", "Revenue", "1,000", "900") + "</table>"
+    note = (
+        "<table class='report'><tr><th class='tl' rowspan='2'>R&D (Details) - USD ($) $ in Millions</th>"
+        "<th class='th' colspan='2'>12 Months Ended</th></tr><tr><th>Dec. 31, 2025</th><th>Dec. 31, 2024</th></tr>"
+        + _row(
+            "us-gaap_ResearchAndDevelopmentExpense",
+            "Research and development expense",
+            "70",
+            "60",
+        )
+        + "</table>"
+    )
+    acc = _filing(
+        tmp_path, [("R2.htm", "Statements", "STATEMENTS OF OPERATIONS", page)]
+    )
+    d = tmp_path / "0000000002" / acc
+    (d / "R40.htm").write_text(note)
+    (d / "x-20251231_htm.xml.gz").write_bytes(gzip.compress(INSTANCE.encode()))
+    (d / "MetaLinks.json.gz").write_bytes(gzip.compress(json.dumps(METALINKS).encode()))
+    res = m.read_company(tmp_path, "0000000002", "TS4", acc, "2026-02-01")
+    rows = {r["data_point"]: r for r in res["rows"]}
+    rd = rows["research_and_development"]
+    assert (rd["status"], rd["stmt"], rd["r_page"], rd["fy0_printed"]) == (
+        "mapped",
+        "NOTE",
+        "R40.htm",
+        "70000000",
+    )
+    assert rd["evidence_class"] == "FILING-CHECKED" and res["pending_pages"] == []
+    gp = rows["gross_profit"]
+    assert gp["status"] == "not_presented" and "WHOLE-FILING CHECK" in gp["note"]
+    assert "present only dimensioned or other periods: GrossProfit" in gp["note"]
+    assert "absent in every context" in rows["inventory"]["note"]
+
+
+def test_net_interest_and_accretion_lines_are_combined(tmp_path):
+    """Dhairya 2026-11-12: interest_expense is the gross charge; a net interest line is combined, never mapped"""
+    m = _mod()
+    page = (
+        IS_HEAD
+        + _row("us-gaap_Revenues", "Revenue", "1,000", "900")
+        + _row("us-gaap_InterestExpense", "Interest expense, net", "(20)", "(25)")
+        + "</table>"
+    )
+    acc = _filing(
+        tmp_path, [("R2.htm", "Statements", "STATEMENTS OF OPERATIONS", page)]
+    )
+    rows = {
+        r["data_point"]: r
+        for r in m.read_company(tmp_path, "0000000002", "TS5", acc, "2026-02-01")[
+            "rows"
+        ]
+    }
+    assert rows["interest_expense"]["status"] == "combined"
