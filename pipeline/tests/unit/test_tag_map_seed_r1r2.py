@@ -307,3 +307,127 @@ def test_eras_of_one_key_never_overlap():
     rows = m.expand_company(1, set(), groups, p, m.build_index(ents))[("us-gaap", "Assets", "BS")]["rows"]
     spans_ = sorted((a, b or date.max) for _, a, b, _ in rows)
     assert len(spans_) >= 2 and all(y[0] > x[1] for x, y in zip(spans_, spans_[1:]))
+
+
+# ---- pass 3: presentation pattern, aliases, rulings, free-text applies_to
+def test_applies_to_free_text_with_digits_is_all_not_a_company_id():
+    e = m.parse_source("fsn-x.csv", [dict(CARD[0], applies_to='bank "Total interest expense" (WTFC 1,503,981)')])[0]
+    assert m.applies(e, 1, set()) and m.applies(e, 503, set())
+    e2 = m.parse_source("fsn-x.csv", [dict(CARD[0], applies_to="503;sector:bank")])[0]
+    assert m.applies(e2, 503, set()) and not m.applies(e2, 1, set()) and m.applies(e2, 1, {"Bank"})
+
+
+PRES = [{"tag": "presentation elements: StatementTable, StatementLineItems, *Abstract, *Axis, *Domain, *Member",
+         "home_stmt": "BS/IS/CF/EQ", "decision": "excluded", "canonical_concept_key": "", "sign_rule": "none",
+         "applies_to": "all", "exceptions": "x", "era_from": "", "era_to": "", "evidence": "AAPL R5 AssetsCurrentAbstract"}]
+
+
+def pres_row(tag, datatype, abstract, stmt="BS"):
+    r = ap2(0, stmt, tag, P[0], "x")
+    return r[:4] + (abstract,) + r[5:] + (False, datatype)
+
+
+def test_presentation_pattern_keys_on_suffix_and_datatype():
+    assert m.presentation_match("AssetsAbstract", None, True)
+    assert m.presentation_match("StatementTable", None, True)
+    assert m.presentation_match("FooAxis", "axis", False)  # non-abstract flag but axis datatype: still structure
+    assert m.presentation_match("CustomMember", "member", False)
+    assert not m.presentation_match("OddAbstract", "monetary", False)  # suffix alone is not enough
+    assert not m.presentation_match("FooAxis", "monetary", False)
+    ents = m.parse_source("fsn-balance-sheet-assets.csv", PRES)
+    assert ents[0]["kind"] == "pattern" and ents[0]["source"] == "tag-card"
+    key = ("us-gaap", "AssetsAbstract", "BS")
+    r = (ap2(0, "BS", "AssetsAbstract", P[0], "x")[:4] + (True,) + ap2(0, "BS", "AssetsAbstract", P[0], "x")[5:] + (False, None))
+    res = m.expand_company(1, set(), {key: {P[0]: r}}, P, m.build_index(ents))[key]
+    (e, *_), = res["rows"]
+    assert m.library_row(e)["reason_class"] == "presentation_only" and m.library_row(e)["decision"] == "excluded"
+
+
+def test_alias_resolution_and_unknown_concepts_listed():
+    valid = {"depreciation_and_amortization_resolved", "cash_and_equivalents_resolved"}
+    ents = m.parse_source("companies-x.csv", [co(1, "CF", "A", "map", "d_and_a"), co(1, "BS", "B", "map", "cash"),
+                                              co(1, "BS", "C", "map", "made_up_key")])
+    unknown = m.resolve_concepts(ents, valid)
+    assert [e["concept"] for e in ents[:2]] == ["depreciation_and_amortization_resolved", "cash_and_equivalents_resolved"]
+    assert list(unknown) == ["made_up_key"]
+
+
+def test_ruling_ambiguity_goes_to_needs_detail():
+    rul = [{"tag": "us-gaap:PaymentsOfDividends", "home_stmt": "CF", "decision": "map", "concept": "dividends_paid_resolved",
+            "condition": "amb_label~preferred|noncontrolling", "reason_class": "", "reason": "r"}]
+    ents = m.parse_source("rulings_2026-11-12.csv", rul)
+    assert ents[0]["source"] == "ruling:dhairya-2026-11-12" and ents[0]["rule_id"] == m.RULE_RULING
+    key = ("us-gaap", "PaymentsOfDividends", "CF")
+    plain = {key: {P[0]: ap2(0, "CF", "PaymentsOfDividends", P[0], "Dividends paid")}}
+    pref = {key: {P[0]: ap2(0, "CF", "PaymentsOfDividends", P[0], "Dividends paid to preferred stockholders")}}
+    assert len(m.expand_company(1, set(), plain, P, m.build_index(ents))[key]["rows"]) == 1
+    res = m.expand_company(1, set(), pref, P, m.build_index(ents))[key]
+    assert res["rows"] == [] and res["needs_detail"]
+
+
+def test_company_row_with_several_concepts_or_tags():
+    rows = [dict(co(1, "IS", "A", "map", "basic_eps;diluted_eps"), tag="us-gaap:A|us-gaap:B"),
+            dict(co(1, "IS", "C", "map", "revenue"), tag="us-gaap:X|us-gaap:Y")]
+    ents = m.parse_source("companies-x.csv", rows)
+    assert [(e["tag"], e["decision"]) for e in ents] == [("A", "needs_detail"), ("B", "needs_detail"), ("X", "concept"), ("Y", "concept")]
+    assert "several concepts" in ents[0]["detail_note"]
+
+
+def test_needs_detail_answers_replace_the_entry_and_combined_members_are_display_only():
+    card = [{"tag": "us-gaap:NonoperatingIncomeExpense", "home_stmt": "IS", "decision": "combined",
+             "canonical_concept_key": "other_income_expense_net", "applies_to": "all", "evidence": "e"},
+            {"tag": "us-gaap:OtherNonoperatingExpense", "home_stmt": "IS", "decision": "component",
+             "canonical_concept_key": "other_income_expense_net", "applies_to": "all", "evidence": "e"}]
+    ents = m.parse_source("fsn-income-statement.csv", card)
+    ents[0]["source"] = ents[1]["source"] = "tag-card"
+    ans = [{"source": "tag-card", "tag": "NonoperatingIncomeExpense", "stmt": "IS", "decision": "combined",
+            "concept": "other_income_expense_net", "final_decision": "combined", "members": "interest_income:+1 ; x:-1",
+            "sign": "", "label_condition": "members only from this filing's own calc", "rule": "", "status": "closed"},
+           {"source": "tag-card", "tag": "OtherNonoperatingExpense", "stmt": "IS", "decision": "component",
+            "concept": "other_income_expense_net", "final_decision": "component", "members": "", "sign": "-1",
+            "label_condition": "", "rule": "debit: subtract", "status": "closed"}]
+    assert m.missing_detail(ents[0]) and m.missing_detail(ents[1])
+    assert m.apply_answers(ents, ans) == 2
+    assert m.missing_detail(ents[0]) is None and m.missing_detail(ents[1]) is None
+    row = m.library_row(ents[0])
+    assert row["canonical_concept"] == "other_income_expense_net" and row["components"] == "{interest_income:+1,x:-1}"
+    assert "own calc" in row["reason"] and m.library_row(ents[1])["combine_sign"] == "-1"
+
+
+def test_company_overrides_only_filing_checked_and_latest_scope():
+    rows = [{"company": "RTX", "cik": "0000101829", "tag": "ReceivablesNetCurrent", "stmt": "BS",
+             "concept": "accounts_receivable", "scope": "latest 10-K read era", "status": "FILING-CHECKED",
+             "evidence": "read", "note": "n"},
+            {"company": "X", "cik": "0000000001", "tag": "Foo", "stmt": "BS", "concept": "goodwill", "scope": "",
+             "status": "PENDING", "evidence": "", "note": ""}]
+    ents = m.parse_source("company-overrides.csv", rows, {"0000101829": 7, "0000000001": 8})
+    assert ents[0]["scale"] == 1
+    assert len(ents) == 1 and ents[0]["source"] == "company-override:company-overrides.csv" and ents[0]["company"] == 7 and ents[0]["scope_latest"] and ents[0]["prio"] == 0.3
+    key = ("us-gaap", "ReceivablesNetCurrent", "BS")
+    p = [date(2018, 12, 31), date(2019, 12, 31), date(2020, 12, 31), date(2021, 12, 31)]
+    groups = {key: {d: ap(i, "BS", "ReceivablesNetCurrent", d) for i, d in enumerate(p) if i != 1}}  # gap: two eras
+    res = m.expand_company(7, set(), groups, p, m.build_index(ents))[key]
+    assert [(a, b) for _, a, b, _ in res["rows"]] == [(p[2], None)]  # latest era only
+
+
+def test_scale_parsed_only_when_the_override_states_one():
+    assert m.parse_scale("scale fix \u00d71,000,000 (printed in millions, stored unscaled)") == 1000000
+    assert m.parse_scale("scale fix x1,000,000") == 1000000
+    assert m.parse_scale("sole cash line; no restricted cash") == 1
+    row = {"company": "MCD", "cik": "0000063908", "tag": "WeightedAverageNumberOfSharesOutstandingBasic", "stmt": "IS",
+           "concept": "weighted_basic_shares", "scope": "filings with the unscaled value", "status": "FILING-CHECKED",
+           "evidence": "e", "note": "scale fix \u00d71,000,000"}
+    (e,) = m.parse_source("company-overrides.csv", [row], {"0000063908": 9})
+    assert m.library_row(e)["scale"] == 1000000 and "scale" in m.COLUMNS
+    assert m.parse_source("fsn-x.csv", CARD)[0]["scale"] == 1  # tag-level rows never carry a scale
+
+
+def test_override_concept_column_notes():
+    base = {"company": "X", "cik": "0000000009", "tag": "T", "stmt": "CF", "scope": "FY2025", "status": "FILING-CHECKED",
+            "evidence": "e", "note": "n"}
+    rows = [dict(base, concept="(excluded)"), dict(base, concept='(served as printed, "includes restricted cash")',
+                                                   scope="2018+"), dict(base, concept="goodwill")]
+    a, b, c = m.parse_source("company-overrides.csv", rows, {"0000000009": 9})
+    assert (a["decision"], m.library_row(a)["reason_class"]) == ("excluded", "company_override_excluded")
+    assert b["decision"] == "needs_detail" and b["era"][0] == date(2018, 1, 1) and not b["scope_latest"]
+    assert c["decision"] == "concept"
