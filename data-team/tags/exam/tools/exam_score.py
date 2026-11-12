@@ -18,7 +18,7 @@ def line(rows, name):
     return f"| {name} | {n} | {100*(n-k)/max(n,1):.1f}% | {100*cp_upper(k,n):.1f}% |"
 print('## Blind exam (predictions committed before each docmap; graded by tools/grade.py)\n')
 tick = sorted({r['ticker'] for r in G}, key=lambda x: T.get(x, {}).get('docmap_first_commit', ''))
-print(f"Companies graded: {len(tick)}; rows graded {len(G)}; key errors set aside {sum(r['result']=='key_error' for r in R)}; no_prediction {sum(r['result']=='no_prediction' for r in R)}.\n")
+print(f"Companies graded: {len(tick)}; rows graded {len(G)}; key errors set aside {sum(r['result']=='key_error' for r in R)}; key rows not hand-verified by the reader (set aside) {sum(r['result']=='key_unverified' for r in R)}; no_prediction {sum(r['result']=='no_prediction' for r in R)}.\n")
 print('| Scope | Rows | Accuracy | Error upper bound (CP 95%) |\n|---|---|---|---|')
 print(line(G, 'All blind'))
 for i in range(0, len(tick), 100):

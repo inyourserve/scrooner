@@ -47,6 +47,8 @@ def main(pdir, ddir, *only):
             if pred is None: rows.append(dict(ticker=tk, data_point=dp, result='no_prediction', error_class='', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
             p = pred.get(dp)
             if p is None: rows.append(dict(ticker=tk, data_point=dp, result='wrong', error_class='missed', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
+            if 'not hand-verified' in (k.get('note') or '').lower():
+                rows.append(dict(ticker=tk, data_point=dp, result='key_unverified', error_class='key row marked not hand-verified by the reader', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             ks, ps = norm_status(k['status']), norm_status(p['status'])
             err = ''
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
@@ -60,6 +62,6 @@ def main(pdir, ddir, *only):
             rows.append(dict(ticker=tk, data_point=dp, result='correct' if not err else 'wrong', error_class=err, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags']))
     w = csv.DictWriter(sys.stdout, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
     g = [r for r in rows if r['result'] in ('correct', 'wrong')]; n = len(g); k = sum(r['result'] == 'wrong' for r in g)
-    print(f'graded {n} lines, wrong {k}, accuracy {100*(n-k)/max(n,1):.1f}%, error upper bound (CP 95%) {100*cp_upper(k,n):.1f}%; no_prediction {sum(r["result"]=="no_prediction" for r in rows)}; key_errors {sum(r["result"]=="key_error" for r in rows)}', file=sys.stderr)
+    print(f'graded {n} lines, wrong {k}, accuracy {100*(n-k)/max(n,1):.1f}%, error upper bound (CP 95%) {100*cp_upper(k,n):.1f}%; no_prediction {sum(r["result"]=="no_prediction" for r in rows)}; key_errors {sum(r["result"]=="key_error" for r in rows)}; key_unverified {sum(r["result"]=="key_unverified" for r in rows)}', file=sys.stderr)
 if __name__ == '__main__':
     main(*sys.argv[1:])
