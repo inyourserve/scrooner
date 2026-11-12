@@ -69,3 +69,196 @@ def excluded_company_ids(conn: Any) -> set[int]:
     if not enabled():
         return set()
     return company_ids(conn)
+
+
+# ---------------------------------------------------------------- the skip inside the writer commands
+#
+# Ritwik's PR #12 review (2026-11-12, data-team/tags/decisions/REVIEW-PR12-2026-11-12.md): the skip must live
+# in the writer commands themselves, so that every entry point (reprocess_recent_filers.sh,
+# pipeline-recompute.yml, reprocess_fiscal_year_relabel.sh, run_conflict_latest_filed.sh, a manual run) gets
+# it. `scrooner-normalize` and `scrooner-map` are built on GuardedGroup: before a WRITER command parses its
+# arguments, the new-path CIKs are taken out of its --ciks.
+#
+# What counts as a writer (founder 2026-11-11: the old path must not write canonical_fact for a new-path
+# company; "SEC FOR MAPPING": the tag-map mapper reads core.fact): the old path's canonical-value writers and
+# the normalizer stages that repair, derive or re-rank facts with old-path logic. The SEC ingestion stages
+# (identity, periods, units, facts, dedupe, restatements, instance-fallback) are NOT writers here: they write
+# the authoritative core.fact rows the tag-map mapper reads, so a new-path company keeps receiving its
+# filings' facts. Every command of the two CLIs is classified in exactly one of the two sets
+# (tests/unit/test_fsn_new_path_guard.py fails on an unclassified one).
+
+WRITER_COMMANDS: dict[str, frozenset[str]] = {
+    "scrooner-normalize": frozenset(
+        {
+            "conflict-latest-filed",
+            "conflicts",
+            "derive-interim-quarters",
+            "derive-q4",
+            "demote-coregistrant-facts",
+            "golden",
+        }
+    ),
+    "scrooner-map": frozenset(
+        {
+            "resolve-facts",
+            "split-rebase",
+            "split-rebase-restore",
+            "resolve-concept-fallbacks",
+            "resolve-statement-fallbacks",
+            "resolve-balance-sheet-fallback",
+            "resolve-revenue",
+            "resolve-dedup-holes",
+            "resolve-employee-count-fallback",
+            "resolve-conflict-fills",
+            "run-parser",
+            "resolve-parser-results",
+        }
+    ),
+}
+NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
+    "scrooner-normalize": frozenset(
+        {
+            # SEC ingestion: the authoritative core.fact rows the tag-map mapper reads
+            "identity",
+            "periods",
+            "units",
+            "facts",
+            "dedupe",
+            "restatements",
+            "instance-fallback",
+            # the new system's own stage, and a read-only report
+            "tagmap-authority",
+            "errors",
+        }
+    ),
+    "scrooner-map": frozenset(
+        {
+            # the new system (tag map seed and write path)
+            "seed-company-tag-map",
+            "tagmap-plan",
+            # derived metrics, recomputed from canonical_fact for every company
+            "calculate",
+            "growth",
+            "ttm-returns",
+            "ttm-margins",
+            "calculate-price-metrics",
+            "calculate-expanded-metrics",
+            "calculate-piotroski",
+            "calculate-quality-flags",
+            "calculate-reconciliation",
+            "calculate-tax-reconciliation",
+            "calculate-fcf-growth",
+            "calculate-dividend-streak",
+            # seeds, reports, coverage, tag library: no company values
+            "seed-concepts",
+            "seed-definitions",
+            "seed-statements",
+            "seed-expanded-concepts",
+            "seed-expanded-definitions",
+            "seed-sector-templates",
+            "coverage",
+            "unmapped-tags",
+            "balance-identity-dry-run",
+            "snapshot-coverage",
+            "errors",
+            "validate",
+            "parser-registry-summary",
+            "probe-filing-lines",
+            "build-coverage-matrix",
+            "company-coverage",
+            "company-coverage-report",
+            "corrected-coverage-report",
+            "build-tag-candidates",
+            "tag-candidate-report",
+            "build-tag-library",
+            "gap-tags",
+            "gap-report",
+            "record-verdict",
+            "record-finding",
+            "calculator-registry",
+        }
+    ),
+}
+
+
+class NewPathRefused(Exception):
+    """A writer command cannot run safely with HYBRID_NEW_PATH=on (no --ciks to filter)."""
+
+
+def guard_args(args: list[str], skip: Any) -> list[str] | None:
+    """A writer command's arguments with the new-path CIKs taken out of --ciks. None: nothing left to run.
+    `skip` returns the new-path CIKs (called only when there is something to filter). Without --ciks a writer
+    would run over its default company set, so it is refused (fail closed)."""
+    out = list(args)
+    idx = None
+    for i, a in enumerate(out):
+        if a == "--ciks" and i + 1 < len(out):
+            idx, value = i + 1, out[i + 1]
+            break
+        if a.startswith("--ciks="):
+            idx, value = i, a.split("=", 1)[1]
+            break
+    if idx is None:
+        raise NewPathRefused(
+            "HYBRID_NEW_PATH=on: an old-path writer needs --ciks so new-path companies can be left out"
+        )
+    new_path_ciks = {c.zfill(10) for c in skip()}
+    kept = [
+        c
+        for c in value.split(",")
+        if c.strip() and c.strip().zfill(10) not in new_path_ciks
+    ]
+    if not kept:
+        return None
+    joined = ",".join(kept)
+    out[idx] = joined if out[idx] == value else f"--ciks={joined}"
+    return out
+
+
+def _db_new_path_ciks() -> list[str]:
+    from scrooner_pipeline.db.connection import get_connection
+
+    with get_connection() as conn:
+        found = ciks(conn)
+        conn.rollback()
+    return found
+
+
+def guarded_group(program: str) -> type:
+    """A TyperGroup class for `program` whose writer subcommands leave new-path companies out."""
+    import typer
+    from typer.core import TyperGroup
+
+    writers = WRITER_COMMANDS[program]
+
+    class GuardedGroup(TyperGroup):
+        def resolve_command(self, ctx: Any, args: list[str]) -> Any:
+            name, cmd, rest = super().resolve_command(ctx, args)
+            if name in writers and enabled():
+                try:
+                    filtered = guard_args(rest, _db_new_path_ciks)
+                except NewPathRefused as exc:
+                    raise typer.BadParameter(str(exc)) from exc
+                if filtered is None:
+                    typer.echo(
+                        f"{program} {name}: every requested company is on the new path; skipped (HYBRID_NEW_PATH)"
+                    )
+                    ctx.exit(0)
+                rest = filtered
+            return name, cmd, rest
+
+    GuardedGroup.__name__ = f"GuardedGroup[{program}]"
+    return GuardedGroup
+
+
+def refuse_population_writer(conn: Any, writer: str) -> None:
+    """A population-wide old-path writer (one set-based pass over every company, no company list to filter)
+    must not run once any company is on the new path with HYBRID_NEW_PATH=on: it raises instead (fail closed).
+    Called at the top of mapper.concept_fallback.resolve_all_arithmetic_fallbacks,
+    mapper.conflict_resolution.resolve_all_conflict_fills and mapper.dedup_majority_resolver.
+    resolve_all_safe_concepts (pipeline-recompute.yml's population phase calls the first two directly)."""
+    if enabled() and company_ids(conn):
+        raise NewPathRefused(
+            f"HYBRID_NEW_PATH=on: {writer} is population-wide and would write new-path companies; "
+            "run it per company (--ciks) or not at all"
+        )

@@ -134,14 +134,8 @@ def test_hung_shard_is_killed_at_the_stage_cap_and_later_stages_still_run(tmp_pa
         'run_sharded prog hang || echo "STAGE-FAILED hang"\n'
         'run_sharded prog after || echo "STAGE-FAILED after"\n'
     )
-    env = {
-        **os.environ,
-        "PATH": f"{tmp_path}:{os.environ['PATH']}",
-        "FAKE_LOG": str(log),
-    }
-    out = subprocess.run(
-        ["bash", "-c", script], capture_output=True, text=True, env=env, timeout=40
-    )
+    env = {**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}", "FAKE_LOG": str(log)}
+    out = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=40)
     assert "STAGE-FAILED hang" in out.stdout
     assert "STAGE-FAILED after" not in out.stdout
     assert "exceeded 3s" in out.stderr
@@ -162,13 +156,7 @@ if [ "$2" = "python3" ]; then
   exit 0
 fi
 prog="$2"; stage="$3"
-if [ "$stage" = "new-path-ciks" ]; then
-  [ -n "${FAKE_NEWPATH_FAIL:-}" ] && exit 1
-  printf '%s' "${FAKE_NEWPATH:-}" > "$5"
-  exit 0
-fi
 echo "RUN $prog $stage" >> "$FAKE_LOG"
-echo "$stage ${5:-}" >> "$FAKE_LOG.ciks"
 if [ "$stage" = "build-tag-library" ] && [ -n "$FAKE_TAG_HANG" ]; then sleep 300; fi
 sleep "${FAKE_STAGE_SLEEP:-0}"
 [ "$stage" = "$FAKE_FAIL_STAGE" ] && exit 4
@@ -190,31 +178,17 @@ def _run_script(tmp_path, cwd, script_path, **env_extra):
         **env_extra,
     }
     out = subprocess.run(
-        ["bash", script_path],
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        env=env,
-        timeout=120,
+        ["bash", script_path], cwd=cwd, capture_output=True, text=True, env=env, timeout=120
     )
     return out, log.read_text().splitlines()
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "cwd,path",
-    [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)],
-)
-def test_full_run_without_budget_pressure_runs_all_24_stages_and_exits_zero(
-    tmp_path, cwd, path
-):
+@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
+def test_full_run_without_budget_pressure_runs_all_24_stages_and_exits_zero(tmp_path, cwd, path):
     out, calls = _run_script(tmp_path, cwd, path)
     assert out.returncode == 0, (out.stdout, out.stderr)
-    stages_run = [
-        c.split()[2]
-        for c in calls
-        if c.startswith("RUN scrooner-") and "update-status" not in c
-    ]
+    stages_run = [c.split()[2] for c in calls if c.startswith("RUN scrooner-") and "update-status" not in c]
     assert len(stages_run) == 24  # map:split-rebase added 2026-10-24 (SB-8)
     assert stages_run[-1] == "build-tag-library"
     assert out.stdout.count("took ") == 24  # one "took Ns" line per stage
@@ -222,27 +196,18 @@ def test_full_run_without_budget_pressure_runs_all_24_stages_and_exits_zero(
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "cwd,path",
-    [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)],
-)
-def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonzero(
-    tmp_path, cwd, path
-):
+@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
+def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonzero(tmp_path, cwd, path):
     out, calls = _run_script(
         tmp_path, cwd, path, REPROCESS_BUDGET_SECS="2", FAKE_STAGE_SLEEP="1.2"
     )
     assert out.returncode != 0
     assert out.stderr.count("budget exhausted") == 1
     line = next(l for l in out.stderr.splitlines() if "budget exhausted" in l)
-    ran = {
-        c.split()[2] for c in calls if "scrooner-normalize" in c or "scrooner-map" in c
-    }
+    ran = {c.split()[2] for c in calls if "scrooner-normalize" in c or "scrooner-map" in c}
     skipped_names = line.split("skipped: ")[1].split()
     assert skipped_names and skipped_names[-1] == "map:build-tag-library"
-    assert not (
-        {s.split(":")[1] for s in skipped_names} & ran
-    )  # skipped means never run
+    assert not ({s.split(":")[1] for s in skipped_names} & ran)  # skipped means never run
     # a "took" line for every stage: ran + skipped = all 24
     assert out.stdout.count("took ") == 24
     assert "FAILED stages" in out.stderr and "budget-skipped" in out.stderr
@@ -261,61 +226,9 @@ def test_a_failed_stage_does_not_hide_and_later_stages_still_run(tmp_path):
 @pytest.mark.unit
 def test_tag_library_is_killed_at_its_cap_and_reported(tmp_path):
     out, _ = _run_script(
-        tmp_path,
-        REPO_ROOT,
-        "pipeline/" + SCRIPT_REL,
-        FAKE_TAG_HANG="1",
-        TAG_LIBRARY_TIMEOUT_SECS="2",
+        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL,
+        FAKE_TAG_HANG="1", TAG_LIBRARY_TIMEOUT_SECS="2",
     )
     assert out.returncode == 1
     assert "exceeded 2s" in out.stderr
     assert "map:build-tag-library" in out.stderr
-
-
-WRITERS = ("identity", "facts", "derive-q4", "resolve-facts", "split-rebase", "resolve-concept-fallbacks")
-DERIVED = ("calculate", "growth", "ttm-margins", "calculate-dividend-streak")
-
-
-def _ciks_by_stage(tmp_path):
-    out = {}
-    for line in (tmp_path / "calls.log.ciks").read_text().splitlines():
-        stage, _, val = line.partition(" ")
-        out[stage] = val
-    return out
-
-
-@pytest.mark.unit
-def test_hybrid_new_path_companies_skip_every_old_path_writer_stage(tmp_path):
-    """HYBRID_NEW_PATH=on: a company an FSN write has landed for (scrooner-fsn new-path-ciks) is out of
-    every normalize:* and canonical-value stage; the derived-metric stages still run for all."""
-    out, _ = _run_script(tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL, HYBRID_NEW_PATH="on", FAKE_NEWPATH="0000000002")
-    assert out.returncode == 0, (out.stdout, out.stderr)
-    ciks = _ciks_by_stage(tmp_path)
-    for w in WRITERS:
-        assert ciks[w] == "0000000001,0000000003", w
-    for d in DERIVED:
-        assert ciks[d] == "0000000001,0000000002,0000000003", d
-
-
-@pytest.mark.unit
-def test_hybrid_new_path_is_off_by_default(tmp_path):
-    out, _ = _run_script(tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL, FAKE_NEWPATH="0000000002")
-    assert out.returncode == 0
-    assert _ciks_by_stage(tmp_path)["facts"] == "0000000001,0000000002,0000000003"
-    assert "HYBRID_NEW_PATH" not in out.stdout
-
-
-@pytest.mark.unit
-def test_hybrid_new_path_fails_closed_to_the_whole_cohort(tmp_path):
-    """The new-path set cannot be read: the writer stages skip the whole cohort, never write it."""
-    cohort = tmp_path / "cohort.csv"
-    cohort.write_text("company_id,cik,ticker\n2,0000000002,TWO\n3,0000000003,THREE\n")
-    out, _ = _run_script(
-        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL,
-        HYBRID_NEW_PATH="on", FAKE_NEWPATH_FAIL="1", HYBRID_COHORT_CSV=str(cohort),
-    )
-    assert "could not be read" in out.stderr
-    ciks = _ciks_by_stage(tmp_path)
-    for w in WRITERS:
-        assert ciks[w] == "0000000001", w
-    assert ciks["calculate"] == "0000000001,0000000002,0000000003"

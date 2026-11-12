@@ -274,50 +274,11 @@ STAGES=(
   map:calculate-fcf-growth map:calculate-dividend-streak
   map:build-tag-library
 )
-# The hybrid is the only writer for every company on the new nightly path (founder decisions relayed by
-# Dhairya 2026-11-09/11; data-team/strategy/team/FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md). With
-# HYBRID_NEW_PATH=on the stages that write facts or canonical values (every normalize:* stage,
-# map:resolve-facts, map:split-rebase, map:resolve-concept-fallbacks) skip those companies entirely:
-# a company is on the new path once an applied FSN cell write landed for it (`scrooner-fsn
-# new-path-ciks`, fsn_store/new_path.py). The derived-metric stages (map:calculate onwards) still run
-# for every company, recomputing from canonical_fact. If the set cannot be read, the writer stages
-# skip the whole cohort (fail closed). Off by default.
-ALL_CIKS="$CIKS"
-WRITER_CIKS="$CIKS"
-if [ "${HYBRID_NEW_PATH:-off}" = on ]; then
-  SKIP_FILE="$(mktemp)"
-  if uv run scrooner-fsn new-path-ciks --out "$SKIP_FILE" >/dev/null; then
-    SKIP_SOURCE="new path ($(tr ',' '\n' < "$SKIP_FILE" | awk 'NF' | wc -l | tr -d ' ') companies)"
-  else
-    COHORT_CSV="${HYBRID_COHORT_CSV:-data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv}"
-    [ -f "$COHORT_CSV" ] || COHORT_CSV="$SCRIPT_DIR/../../$COHORT_CSV"
-    echo "reprocess_recent_filers: HYBRID_NEW_PATH=on but the new-path set could not be read; writer stages skip the whole cohort" >&2
-    if [ -f "$COHORT_CSV" ]; then
-      python3 -c 'import csv, sys; print(",".join(r["cik"].zfill(10) for r in csv.DictReader(open(sys.argv[1]))))' "$COHORT_CSV" > "$SKIP_FILE"
-      SKIP_SOURCE="cohort (fail closed)"
-    else
-      echo "reprocess_recent_filers: and no cohort CSV either; writer stages skip every company" >&2
-      CIKS_SKIP_ALL=1
-      SKIP_SOURCE="every company (fail closed)"
-    fi
-  fi
-  if [ -n "${CIKS_SKIP_ALL:-}" ]; then
-    WRITER_CIKS=""
-  else
-    WRITER_CIKS=$(python3 -c '
-import sys
-skip = {c.strip().zfill(10) for c in open(sys.argv[1]).read().split(",") if c.strip()}
-print(",".join(c for c in sys.argv[2].split(",") if c and c.zfill(10) not in skip))' "$SKIP_FILE" "$CIKS")
-  fi
-  rm -f "$SKIP_FILE"
-  echo "reprocess_recent_filers: HYBRID_NEW_PATH=on, writer stages skip $(( $(echo "$CIKS" | tr ',' '\n' | awk 'NF' | wc -l) - $(echo "$WRITER_CIKS" | tr ',' '\n' | awk 'NF' | wc -l) )) of these companies (skip set: $SKIP_SOURCE)"
-fi
-is_writer_stage() {
-  case "$1" in
-    normalize:*|map:resolve-facts|map:split-rebase|map:resolve-concept-fallbacks) return 0 ;;
-    *) return 1 ;;
-  esac
-}
+# HYBRID_NEW_PATH (off by default; fsn_store/new_path.py): when on, the old-path writer commands themselves
+# (scrooner-normalize / scrooner-map, GuardedGroup) leave every company on the new nightly path out of their
+# --ciks, whichever entry point runs them (Ritwik's PR #12 review, 2026-11-12). The SEC ingestion stages and the
+# derived metrics still run for every company. Nothing to do here: the variable reaches each command through
+# the environment, and every stage below passes --ciks.
 SKIPPED=""
 for ((i = 0; i < ${#STAGES[@]}; i++)); do
   entry="${STAGES[$i]}"
@@ -353,14 +314,8 @@ for ((i = 0; i < ${#STAGES[@]}; i++)); do
     continue
   fi
   program="scrooner-$kind"
-  if is_writer_stage "$entry"; then CIKS="$WRITER_CIKS"; else CIKS="$ALL_CIKS"; fi
-  if [ -z "$CIKS" ]; then
-    echo "run_sharded: stage '$stage' took 0s (no non-cohort company)"
-    continue
-  fi
   run_sharded "$program" "$stage" || FAILED_STAGES="$FAILED_STAGES $kind:$stage"
 done
-CIKS="$ALL_CIKS"
 
 if [ -n "$FAILED_STAGES" ]; then
   echo "reprocess_recent_filers: FAILED stages:$FAILED_STAGES" >&2

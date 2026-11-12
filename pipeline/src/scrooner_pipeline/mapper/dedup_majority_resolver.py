@@ -385,6 +385,11 @@ def resolve_majority_vote_for_concept(
 
 
 def resolve_all_safe_concepts(conn: psycopg.Connection) -> dict:
+    from scrooner_pipeline.fsn_store import new_path
+
+    new_path.refuse_population_writer(
+        conn, "resolve_all_safe_concepts"
+    )  # HYBRID_NEW_PATH: fail closed
     results = {}
     for concept_name, resolved_name in active_safe_concepts():
         results[concept_name] = resolve_majority_vote_for_concept(

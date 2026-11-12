@@ -41,8 +41,8 @@ Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by D
 "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." Values now come from the SEC company API (`core.fact`, collected nightly by `scrooner-incremental`), selected only through `analytics.company_tag_map` (migration 0123, claimed). FSN tells the mapper which tag is which line. For this branch that means:
 
 - **The converter keeps its job, as the structure feed.** A new 10-K/10-Q's statement lines, calc tree and labels reach `fsn.*` the night it is filed, so the tag-map extraction can learn a new or changed tag (an extension, a re-tagged line) before the bulk FSN set arrives. The 23/23 equivalence is what lets the tag map trust EDGAR-built rows like FSN rows.
-- **The `write` stage moves to the new mapper.** Today `fsn_nightly_incremental.sh` writes FSN-selected values (`pilot` cells). Under the new method the write must be the company_tag_map mapper's write over `core.fact` for the companies with new filings. The `write` stage stays off until that mapper lands; then the stage calls it in place of `pilot` and `cells load`. `build` and `load` are unchanged.
-- **New-path membership follows the writer.** `fsn_store/new_path.py` counts a company as moved once an applied `fsn.*` write has landed (or a `company_value_owner` row exists; C5 keeps that table empty for now). When the company_tag_map writer lands, its rule id must be added to `NEW_PATH_SQL` so its companies move in the same step. That is a one-line change and its test.
+- **The `write` stage is the tag-map writer (done 2026-11-12, per Engineering).** For the night's companies that have `analytics.company_tag_map` rows, `fsn_nightly_incremental.sh` calls `scrooner-map tagmap-plan --company-ids … --apply --before-image-dir …` with `SCROONER_RULES_ENABLED=company_tag_map.select@1` for that call only. It writes with `scrooner.writer = 'company_tag_map'` (0123). Companies without a map are not written. The FSN cell write is gone from this script. `build` and `load` are unchanged.
+- **New-path membership follows the writer (done).** `fsn_store/new_path.py` counts a company as moved once an applied `company_tag_map.select@1` or `fsn.*` write has landed, or once a `company_value_owner` row exists. The tag-map writer adds owner `company_tag_map`.
 
 ## One writer for the cohort, and the backfill
 
@@ -52,19 +52,24 @@ Founder direction, relayed by Dhairya on 2026-11-09: once the hybrid is live it 
 2. this per-filing converter;
 3. `load --increment`;
 4. map, checks and select;
-5. the gate;
-6. the protected write;
+5. the tag-map write (`scrooner-map tagmap-plan --apply`, rule `company_tag_map.select@1`) for companies with a tag map;
+6. (the gate and protection are inside the tag-map writer);
 7. the derived metrics (`map:calculate` through `map:calculate-dividend-streak` in `reprocess_recent_filers.sh`), recomputed from `canonical_fact` for every company.
 
 - **Old pipeline: the flag-on rule** (founder decisions relayed 2026-11-11: move to the new system, skip at the writer, build no more protection logic).
-  - **Which companies.** A company is on the new path once an applied FSN cell write has landed for it: it holds `slot_protected_cell` rows of an `fsn.*` rule run in apply mode, or an `analytics.company_value_owner` row (`fsn_store/new_path.py`, `scrooner-fsn new-path-ciks`). The cell loader writes those rows in the same transaction as the cells. So for each company the top-100 or 1,000 write lands, the switch is on in the same step, with no extra list to maintain. A restore that removes the company's FSN rows sends it back to the old path.
-  - **What is skipped.** With the repository variable `HYBRID_NEW_PATH=on`, the old path skips those companies at every nightly writer of facts or canonical values:
-    - the `reprocess_recent_filers.sh` stages: every `normalize:*` stage, `map:resolve-facts`, `map:split-rebase` and `map:resolve-concept-fallbacks`;
-    - `scrooner-sanity investigate` (pipeline-sanity.yml), both its investigation and its `*_sanity_resolved` re-merge, which otherwise rewrites `revenue_sanity_resolved` for every company.
-  - **What still runs.** The derived-metric stages (`map:calculate` onwards) run for every company, recomputing from `canonical_fact`.
-  - **Fail closed.** If the set cannot be read, the reprocess writer stages skip the whole cohort and the sanity writer stops with an error. Neither writes.
+  - **Which companies.** A company is on the new path once an applied new-system write has landed for it. That means it holds `slot_protected_cell` rows of a `company_tag_map.select@1` or `fsn.*` rule run in apply mode, or an `analytics.company_value_owner` row (`fsn_store/new_path.py`, `scrooner-fsn new-path-ciks`). The cell loader writes those rows in the same transaction as the cells. So for each company the top-100 or 1,000 write lands, the switch is on in the same step, with no extra list to maintain. A restore that removes the company's FSN rows sends it back to the old path.
+  - **What is skipped, and where** (Ritwik's PR #12 review, 2026-11-12: in the writer commands, for every entry point).
+    - `scrooner-normalize` and `scrooner-map` are built on `new_path.GuardedGroup`. Before a writer subcommand parses its arguments, the new-path CIKs are taken out of its `--ciks`. Without `--ciks` a writer is refused. With only new-path CIKs it does not run.
+    - The writers are the old path's canonical-value writers (`resolve-*`, `split-rebase*`, the parser) and its fact repair or derivation stages (`conflict-latest-filed`, `conflicts`, `derive-interim-quarters`, `derive-q4`, `demote-coregistrant-facts`, `golden`). The lists are `new_path.WRITER_COMMANDS` and `NOT_WRITER_COMMANDS`; every command of both CLIs is classified, and a test fails on an unclassified one.
+    - The population-wide writers that `pipeline-recompute.yml` calls directly (`resolve_all_arithmetic_fallbacks`, `resolve_all_conflict_fills`, `resolve_all_safe_concepts`) refuse to run once any company is on the new path.
+    - `scrooner-sanity investigate` filters its investigation and its re-merge.
+    - **Deviation from the review, flagged:** the SEC ingestion stages (`identity`, `periods`, `units`, `facts`, `dedupe`, `restatements`, `instance-fallback`) are NOT skipped. They write the authoritative `core.fact` rows that the tag-map mapper reads ("SEC FOR MAPPING"), so skipping them would leave a new-path company without its new filings' facts.
+    - The flag reaches the commands through the environment: `pipeline-refresh.yml` (reprocess), `pipeline-sanity.yml` (investigate) and `pipeline-recompute.yml` set it from the repository variable. A manual run of `reprocess_fiscal_year_relabel.sh` or `run_conflict_latest_filed.sh` must export it.
+    - `tests/unit/test_fsn_new_path_guard.py` reads every entry point's stage lists. It invokes each writer they reach through the real CLI with a new-path CIK and fails if the command body ever sees it. All of it is mutation-checked.
+  - **What still runs.** The SEC ingestion stages and the derived-metric stages (`map:calculate` onwards, recomputed from `canonical_fact`) run for every company.
+  - **Fail closed.** If the new-path set cannot be read, the writer command or population writer stops with an error. It does not write.
   - **Default.** It is off by default, and it is switched on together with `FSN_NIGHTLY_STAGE=write` (founder's typed words).
-- **To verify before switching on:** that each derived-metric stage reads only `canonical_fact` for a new-path company and nothing that the skipped normalizer stages would have refreshed.
+- **To verify before switching on:** that each derived-metric stage reads only `canonical_fact` for a new-path company, and nothing that the skipped repair and derivation stages would have refreshed.
 - **Backfill.** The nightly window is not just 7 days. It reaches back to the day after the latest SEC FSN set in the store (`increment.since_last_set`: '2026m10' → from 2026-11-01). EDGAR-built filings do not move that date. So the first run is the one-time backfill of every filing published since the last set (MEASURED stake, from the data chief: the latest 10-Q of 319 companies, about 2,570 company/data-point pairs). Every later night is a catch-up as well, and a deferred filing is never lost.
 - **Running the backfill.** A dispatched run can set `fsn_nightly_since` and raise `fsn_nightly_max_minutes`; the step timeout becomes 170 minutes. At about 5 s per filing, the measured 319 filings take about 27 minutes.
 

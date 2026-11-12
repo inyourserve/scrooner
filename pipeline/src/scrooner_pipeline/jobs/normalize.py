@@ -21,7 +21,10 @@ from scrooner_pipeline.normalizer.conflict_latest_filed import resolve_latest_fi
 from scrooner_pipeline.normalizer.restatements import resolve_restatements
 from scrooner_pipeline.normalizer.units import normalize_units
 
-app = typer.Typer()
+# HYBRID_NEW_PATH: the writer subcommands leave new-path companies out of --ciks (fsn_store/new_path.py)
+from scrooner_pipeline.fsn_store.new_path import guarded_group  # noqa: E402
+
+app = typer.Typer(cls=guarded_group("scrooner-normalize"))
 logger = structlog.get_logger()
 
 GOLDEN_COMPANIES_PATH = (
