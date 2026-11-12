@@ -680,3 +680,70 @@ def test_no_calc_arcs_a_non_tie_concept_is_still_held():
     facts = {("us-gaap", "A"): {7: fact("1", 1)}, ("us-gaap", "B"): {7: fact("2", 2)}}
     cells, stats = run(rows, facts, {})
     assert cells == [] and stats["held"][0]["reason"] == "no_calc_evidence"
+
+
+def test_a_sum_with_a_custom_part_reads_every_part_from_that_filings_own_xbrl():
+    # MSFT FY2017: custom S&M (fsn_xbrl) next to us-gaap R&D (sec_api). The standard part is re-read from fsn.value
+    # of the same accession, and the opex then ties to the same filing's GP and OI by accession (fsn filing ids
+    # differ from core.filing ids).
+    rows = [
+        MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "R", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+        MapRow("msft", "SM", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+    ]
+    custom = Fact(Decimal("20"), 90, END, False, -5, "A-10", None, source="fsn_xbrl")
+    facts = {
+        ("us-gaap", "GrossProfit"): {7: fact("100", 1)},
+        ("us-gaap", "OperatingIncomeLoss"): {7: fact("50", 2)},
+        ("us-gaap", "R"): {7: fact("30", 3)},
+        ("msft", "SM"): {7: custom},
+    }
+    fsn_r = Fact(Decimal("30"), 91, END, False, -5, "A-10", None, source="fsn_xbrl")
+    arcs = {"A-10": {("OperatingIncomeLoss", "R"), ("OperatingIncomeLoss", "SM")}}
+    cells, stats = build_cells(
+        rows, facts, OPEX_INFO, arcs, {}, None, None, None, {}, {("us-gaap", "R"): {7: [fsn_r]}}
+    )
+    opex = [c for c in cells if c["canonical_concept_id"] == OPEX_ID]
+    assert stats["held"] == [] and opex[0]["value"] == Decimal("50") and opex[0]["value_source"] == "fsn_xbrl"
+    assert sorted(opex[0]["source_value_ids"]) == [90, 91]
+    cells, stats = build_cells(rows, facts, OPEX_INFO, arcs, {}, None, None, None, {}, {})
+    assert stats["held"][0]["reason"] == "mixed_value_sources"
+
+
+def test_opex_ties_to_gross_profit_and_operating_income_printed_in_its_own_filing():
+    # opex parts come from the 2016 filing; GP and OI's latest print is a 2018 re-print. The tie reads GP and OI
+    # as the 2016 filing printed them, never across filings.
+    rows = [
+        MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "R", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+        MapRow("us-gaap", "G", "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss"),
+    ]
+    d16, d18 = date(2016, 1, 28), date(2018, 2, 5)
+    gp16, oi16 = _vfact("100", 1, 16, d16), _vfact("50", 2, 16, d16)
+    gp18, oi18 = _vfact("101", 3, 18, d18), _vfact("51", 4, 18, d18)
+    r16, g16 = _vfact("30", 5, 16, d16), _vfact("20", 6, 16, d16)
+    facts = {
+        ("us-gaap", "GrossProfit"): {7: gp18},
+        ("us-gaap", "OperatingIncomeLoss"): {7: oi18},
+        ("us-gaap", "R"): {7: r16},
+        ("us-gaap", "G"): {7: g16},
+    }
+    arcs = {f"A-{n}": {("OperatingIncomeLoss", "R"), ("OperatingIncomeLoss", "G")} for n in (16, 18)}
+    vintages = {("us-gaap", "GrossProfit"): {7: [gp18, gp16]}, ("us-gaap", "OperatingIncomeLoss"): {7: [oi18, oi16]}}
+    cells, stats = build_cells(rows, facts, OPEX_INFO, arcs, {}, None, None, None, vintages)
+    assert stats["held"] == [] and {c["canonical_concept_id"]: c["value"] for c in cells}[OPEX_ID] == Decimal("50")
+    cells, stats = build_cells(rows, facts, OPEX_INFO, arcs, {}, None, None, None, {})
+    assert stats["held"][0]["reason"] == "opex_tie_needs_gross_profit_and_operating_income_of_the_filing"
+
+
+def test_a_sum_is_held_when_a_part_has_only_non_authoritative_facts_never_a_partial_total():
+    # MSFT sga FY2016: S&M's copies are all is_authoritative = false; G&A alone must never be served as sga
+    rows = [comp_row("SM"), comp_row("GA")]
+    facts = {("us-gaap", "GA"): {7: fact("4563", 1)}}
+    arcs = {"A-10": {("OperatingExpenses", "SM"), ("OperatingExpenses", "GA")}}
+    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {("us-gaap", "SM"): {7: 3}})
+    assert cells == [] and stats["held"][0]["reason"] == "component_without_authoritative_fact"
+    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {})  # no fact at all for the part: still held
+    assert cells == [] and stats["held"][0]["reason"] == "component_missing_for_period"

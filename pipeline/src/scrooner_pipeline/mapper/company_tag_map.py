@@ -349,6 +349,25 @@ def _load_fsn_facts(
     The latest ACCEPTED filing that prints the tag for the period wins; a value whose tag has no face line in that
     filing (fsn.line) is flagged on_face = False (the cell is held, never served from a note-only value)."""
     out: dict[tuple[str | None, str | None], dict[int, Fact]] = defaultdict(dict)
+    for key, by_period in _load_fsn_vintages(
+        conn, company_id, tags, periods, custom_only=True
+    ).items():
+        for pid, prints in by_period.items():
+            out[key][pid] = prints[0]
+    return out
+
+
+def _load_fsn_vintages(
+    conn: psycopg.Connection,
+    company_id: int,
+    tags: set[tuple[str | None, str | None]],
+    periods: dict[int, tuple[date, date, str]],
+    custom_only: bool = False,
+) -> dict[tuple[str | None, str | None], dict[int, list[Fact]]]:
+    """(taxonomy, tag) -> period_id -> one fsn_xbrl Fact per filing, latest accepted first (the rules of
+    _load_fsn_facts). custom_only=False also reads standard tags: the filing's own XBRL carries its us-gaap lines,
+    so a sum with a custom part can read every part from that one filing (_single_source_parts)."""
+    out: dict[tuple[str | None, str | None], dict[int, list[Fact]]] = defaultdict(dict)
     wanted = {(t, g) for t, g in tags if g is not None}
     if not wanted:
         return out
@@ -361,14 +380,14 @@ def _load_fsn_facts(
             from fsn.value v
             join fsn.tag t on t.id = v.tag_id
             join fsn.filing f on f.id = v.filing_id
-            where v.company_id = %s and t.custom and t.tag = any(%s)
+            where v.company_id = %s and (t.custom or not %s) and t.tag = any(%s)
               and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.value is not null
             order by f.accepted desc nulls last, v.id desc
             """,
-            (company_id, sorted(tax_of)),
+            (company_id, custom_only, sorted(tax_of)),
         )
         rows = cur.fetchall()
-    grouped: dict[tuple[str, int], list[tuple]] = defaultdict(list)
+    grouped: dict[tuple[str, int, int], list[tuple]] = defaultdict(list)
     for tag, vid, ddate, qtrs, value, fid, acc, accepted, on_face in rows:
         match = [
             pid
@@ -383,30 +402,32 @@ def _load_fsn_facts(
         ]
         if len(match) != 1:
             continue  # no unique core.period for it: never guess
-        grouped[(tag, match[0])].append(
+        grouped[(tag, match[0], fid)].append(
             (vid, ddate, Decimal(value), fid, acc, accepted, on_face)
         )
-    for (tag, pid), rs in grouped.items():
-        rs.sort(key=lambda r: (r[5] is not None, r[5], r[0]), reverse=True)
-        latest = rs[0]
-        same = [
-            r for r in rs if r[3] == latest[3]
-        ]  # the latest accepted filing printing it
+    for (tag, pid, _), same in sorted(
+        grouped.items(),
+        key=lambda kv: max((r[5] is not None, r[5], r[0]) for r in kv[1]),
+        reverse=True,
+    ):  # one filing's prints of the tag for the period; filings latest accepted first
+        same.sort(key=lambda r: r[0], reverse=True)
         on_face = any(r[6] for r in same)
         used = [r for r in same if r[6]] or same
         first = used[0]
         accepted = first[5]
-        out[(tax_of[tag], tag)][pid] = Fact(
-            first[2],
-            first[0],
-            periods[pid][1],
-            False,
-            -first[3],
-            first[4],
-            accepted.date() if accepted else None,
-            ambiguous=len({r[2] for r in used}) > 1,
-            source="fsn_xbrl",
-            on_face=on_face,
+        out[(tax_of[tag], tag)].setdefault(pid, []).append(
+            Fact(
+                first[2],
+                first[0],
+                periods[pid][1],
+                False,
+                -first[3],
+                first[4],
+                accepted.date() if accepted else None,
+                ambiguous=len({r[2] for r in used}) > 1,
+                source="fsn_xbrl",
+                on_face=on_face,
+            )
         )
     return out
 
@@ -663,6 +684,35 @@ def _one_filing_parts(
     return [(row, prints[best]) for (row, _), prints in zip(comps, by_filing)]
 
 
+def _single_source_parts(
+    comps: list[tuple[MapRow, Fact]],
+    fsn_vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]],
+    period_id: int,
+) -> list[tuple[MapRow, Fact]] | None:
+    """A sum with a custom (fsn_xbrl) part reads EVERY part from that filing's own XBRL: the standard parts are
+    re-read from fsn.value of the same accession (MSFT FY2016-17 opex: custom S&M next to us-gaap R&D and G&A).
+    None when the custom parts span several filings or a standard part is not printed in that filing."""
+    accs = {f.accession for _, f in comps if f.source == "fsn_xbrl"}
+    if len(accs) != 1:
+        return None
+    (acc,) = accs
+    out = []
+    for row, f in comps:
+        if f.source != "fsn_xbrl":
+            same = [
+                v
+                for v in fsn_vintages.get((row.taxonomy, row.tag), {}).get(
+                    period_id, []
+                )
+                if v.accession == acc
+            ]
+            if not same:
+                return None
+            f = same[0]
+        out.append((row, f))
+    return out
+
+
 def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[dict]:
     """An sga sum without calc arcs stands only when the same period's opex was built from components of the same
     filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line."""
@@ -683,7 +733,7 @@ def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[
         o = opex.get(c["period_id"])
         if (
             o is None
-            or o["_filing_id"] != c["_filing_id"]
+            or o["_accession"] != c["_accession"]
             or not set(c["_dcml_keys"]) <= set(o["_dcml_keys"])
         ):
             stats["held"].append(
@@ -708,12 +758,15 @@ def build_cells(
     alt_facts: dict[tuple[str | None, str | None], dict[int, Fact]] | None = None,
     no_auth: dict[tuple[str | None, str | None], dict[int, int]] | None = None,
     vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]] | None = None,
+    fsn_vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]]
+    | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
     vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
     prints sit in different filings can take ALL its parts from the newest filing that prints every one."""
     arcs = arcs or {}
     vintages = vintages or {}
+    fsn_vintages = fsn_vintages or {}
     dcml = dcml or {}
     periods = periods or {}
     stats: dict[str, Any] = {
@@ -805,6 +858,7 @@ def build_cells(
                     "serve_note": _note(d),
                     "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
+                    "_accession": ref.accession,
                     "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
                 }
             )
@@ -814,6 +868,32 @@ def build_cells(
             # D3 / doc 02: instants are never derived; the only instant component sum is total debt
             hold(key, "instant_component_sum_not_allowed")
             continue
+        # every part the map lists for the period must be present: a missing part is unknown, not zero, and
+        # summing the rest serves a partial total (MSFT sga FY2016 = G&A alone: S&M's copies were all
+        # non-authoritative, and its Q4 could not be derived). Eras are cut to where a line is printed.
+        present = {(r.taxonomy, r.tag) for r, _ in c}
+        end = c[0][1].end
+        missing = [
+            r
+            for r in rows
+            if r.decision == "component"
+            and r.parent_concept_id == key[0]
+            and (r.taxonomy, r.tag) not in present
+            and _in_era(r, end)
+        ]
+        if missing:
+            hold(
+                key,
+                "component_without_authoritative_fact"
+                if any(
+                    (no_auth or {}).get((r.taxonomy, r.tag), {}).get(key[1])
+                    for r in missing
+                )
+                else "component_missing_for_period",
+            )
+            continue
+        if len({f.source for _, f in c}) > 1:
+            c = _single_source_parts(c, fsn_vintages, key[1]) or c
         if len({f.filing_id for _, f in c}) > 1:
             c = _one_filing_parts(c, vintages, key[1]) or c
         reason = _check_components(c, arcs, _base(pname) == "total_debt")
@@ -830,12 +910,35 @@ def build_cells(
                 "serve_note": _note(c),
                 "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
+                "_accession": c[0][1].accession,
                 "_from_components": True,
                 "_needs_tie": needs_tie,
                 "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
             }
         )
-    cells = _opex_tie(cells, concept_info, dcml, stats)
+    # gross profit / operating income as printed in EACH filing (not only the latest print), so a sum read from
+    # an older filing ties to that filing's own face
+    tie_prints: dict[tuple[str, int, str], dict] = {}
+    for row in rows:
+        base = _base(concept_info.get(row.canonical_concept_id or -1, ("",))[0])
+        if row.decision != "concept" or base not in (
+            "gross_profit",
+            "operating_income",
+        ):
+            continue
+        for vs in (vintages, fsn_vintages):
+            for pid, prints in vs.get((row.taxonomy, row.tag), {}).items():
+                for f in prints:
+                    if _in_era(row, f.end) and not f.ambiguous:
+                        tie_prints.setdefault(
+                            (base, pid, f.accession),
+                            {
+                                "value": f.value * _mult(row),
+                                "_accession": f.accession,
+                                "_dcml_keys": [(f.accession, row.tag, f.end)],
+                            },
+                        )
+    cells = _opex_tie(cells, concept_info, dcml, stats, tie_prints)
     cells = _sga_inside_tied_opex(cells, concept_info, stats)
     cells = _scale_sanity(cells, concept_info, periods, stats)
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
@@ -1154,7 +1257,9 @@ def _scale_sanity(cells: list[dict], concept_info, periods, stats: dict) -> list
     return kept
 
 
-def _opex_tie(cells: list[dict], concept_info, dcml, stats: dict) -> list[dict]:
+def _opex_tie(
+    cells: list[dict], concept_info, dcml, stats: dict, tie_prints: dict | None = None
+) -> list[dict]:
     """operating_expenses built from component lines (no opex total printed) must tie, per filing, to the
     printed statement: gross profit - sum(components) = operating income within the rounding tolerance
     (checks.tol_of). No gross profit / operating income of the same filing, or no tie: the cell is HELD."""
@@ -1174,12 +1279,20 @@ def _opex_tie(cells: list[dict], concept_info, dcml, stats: dict) -> list[dict]:
             continue
         gp = by_name.get(("gross_profit", c["period_id"]))
         oi = by_name.get(("operating_income", c["period_id"]))
+        if gp is None or gp["_accession"] != c["_accession"]:
+            gp = (tie_prints or {}).get(
+                ("gross_profit", c["period_id"], c["_accession"]), gp
+            )
+        if oi is None or oi["_accession"] != c["_accession"]:
+            oi = (tie_prints or {}).get(
+                ("operating_income", c["period_id"], c["_accession"]), oi
+            )
         key = (c["canonical_concept_id"], c["period_id"])
         if (
             gp is None
             or oi is None
-            or gp["_filing_id"] != c["_filing_id"]
-            or oi["_filing_id"] != c["_filing_id"]
+            or gp["_accession"] != c["_accession"]
+            or oi["_accession"] != c["_accession"]
         ):
             stats["held"].append(
                 {
@@ -1253,18 +1366,59 @@ def resolve_for_company(
     vintages = _load_fact_vintages(
         conn, company_id, {k for k in comp_tags if not is_custom(k[0])}
     )
+    # standard parts of a sum that has a custom part are also read from the filings' own XBRL (one source a cell)
+    custom_parents = {
+        r.parent_concept_id
+        for r in rows
+        if r.decision == "component" and is_custom(r.taxonomy)
+    }
+    tie_tags = {
+        (r.taxonomy, r.tag)
+        for r in rows
+        if r.decision == "concept"
+        and r.tag is not None
+        and _base(concept_info.get(r.canonical_concept_id or -1, ("",))[0])
+        in ("gross_profit", "operating_income")
+    }
+    for k, by_period in _load_fact_vintages(
+        conn, company_id, {k for k in tie_tags if not is_custom(k[0])}
+    ).items():
+        vintages.setdefault(k, by_period)
+    fsn_vintages = _load_fsn_vintages(
+        conn,
+        company_id,
+        {
+            (r.taxonomy, r.tag)
+            for r in rows
+            if r.decision == "component"
+            and r.parent_concept_id in custom_parents
+            and not is_custom(r.taxonomy)
+        }
+        | (tie_tags if custom_parents else set()),
+        periods,
+    )
     accessions = {
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
     } | {
         f.accession
-        for by_period in vintages.values()
+        for vs in (vintages, fsn_vintages)
+        for by_period in vs.values()
         for fs in by_period.values()
         for f in fs
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
     no_auth = _load_no_authoritative(conn, company_id, used)
     cells, stats = build_cells(
-        rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth, vintages
+        rows,
+        facts,
+        concept_info,
+        arcs,
+        dcml,
+        periods,
+        alt_facts,
+        no_auth,
+        vintages,
+        fsn_vintages,
     )
     targets = set(managed_concept_ids)
     for r in rows:
