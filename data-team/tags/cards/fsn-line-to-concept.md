@@ -98,5 +98,5 @@ Guard: when a label would demote a line, check it against the calc position and 
 - `InvestmentIncomeNet` can be the face "Interest income" (MU 1,084M). `IncreaseDecreaseInAccountsAndOtherReceivables` is LLY's AR change line.
 - `ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest` is NOT comprehensive income attributable to the parent (PG 15,801M, PM).
 - CAT "interest expense excluding Financial Products" is a segment component, not consolidated interest expense.
-- Brokers (MS): "Total non-interest expenses" = operating expenses; "Customer and other receivables/payables" = combined; `PaymentsForProceedsFromProductiveAssets` on "premises, equipment and software" = capex.
+- Brokers (MS): "Total non-interest expenses" = operating expenses; "Customer and other receivables/payables" = combined (tags `OtherReceivables` and `Payables`, 0000895421-26-000086); `PaymentsForProceedsFromProductiveAssets` on "premises, equipment and software" = capex.
 - Never use a rounded note figure when the face prints the value under another tag: AMD amortization 2,254M on the CF (`AdjustmentForAmortization`) vs 2,300M in the note (the iprx/face rule, debt.md §8-9).

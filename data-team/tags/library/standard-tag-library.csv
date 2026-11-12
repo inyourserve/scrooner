@@ -335,7 +335,7 @@ IS,InterestExpenseDebt,component,,interest_expense_resolved,component_no_concept
 BS,AssetsOfDisposalGroupIncludingDiscontinuedOperationCurrent,excluded,,,component_no_concept,held for sale,,248,12,explicit
 BS,CommonStockValueOutstanding,component,,stockholders_equity_resolved,equity_component,,,248,8,explicit
 CF,PaymentsToAcquireBusinessesAndInterestInAffiliates,excluded,,,component_no_concept,cash-flow component without a concept,,246,10,pattern
-BS,OtherReceivables,excluded,,,component_no_concept,balance-sheet component without a concept,,244,6,pattern
+BS,OtherReceivables,excluded,,,component_no_concept,"balance-sheet component without a concept; broker ""Customer and other receivables"" at MS: combined (customer + other), never accounts_receivable/payable",MS 0000895421-26-000086 BS (FSN store; Dhairya full-10-K read 2026-11-11),244,6,pattern
 EQ,CommonStockDividendsPerShareDeclared,map,dividends_per_share_resolved,,,"EQ face/parenthetical DPS (MDT FY2019+, ~250 cos): FY = sum of quarters",shareholder-returns.md §3; MDT 0001613103-18-000024,242,14,pattern
 CF,ProvisionForLoanLeaseAndOtherLosses,excluded,,,component_no_concept,operating adjustment without a concept,,241,7,pattern
 CF,GainLossOnInvestments,excluded,,,component_no_concept,operating adjustment without a concept,,241,11,pattern
@@ -449,5 +449,5 @@ BS,IntangibleAssetsNetIncludingGoodwill,combined,,,line_presented_combined_with_
 BS,PublicUtilitiesPropertyPlantAndEquipmentNet,map,ppe_net_resolved,,,utility face PP&E net,fsn-balance-sheet-assets.md,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
 BS,AccountsPayableTradeCurrent,map,accounts_payable,,,"the face AP line when no AccountsPayableCurrent is printed (META 2021+, ABT, DHR); a component when beside AccountsPayableCurrent (META FY2019 ""Partners payable"" 886M)","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED); balance-sheet §8",,,explicit
 CF,IncreaseDecreaseInAccountsAndOtherReceivables,map,cf_ar_change,,,the AR change line (LLY); a wider-perimeter flag only when AccountsReceivable change is also printed,"Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit
-BS,CustomerAndOtherReceivables,combined,,,line_presented_combined_with_others,"broker ""Customer and other receivables"" (MS): combined","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit
 CF,PaymentsForProceedsFromProductiveAssets,map,capex_resolved,,,"net purchases of premises, equipment and software at MS = capex; check the label for disposals netted (""…, net"" = combined, SPG/TDG/CI)","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit
+BS,Payables,combined,,,line_presented_combined_with_others,"broker ""Customer and other payables"" at MS: combined (customer + other), never accounts_receivable/payable",MS 0000895421-26-000086 BS (FSN store; Dhairya full-10-K read 2026-11-11),,,explicit
