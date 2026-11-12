@@ -418,3 +418,18 @@ def test_bank_cash_is_the_cash_flow_ending_line_as_a_concept_row_not_a_balance_s
     rows, facts, arcs = _bs_comps(CASH, "CashA", "ShortTermInv")  # a BS cash sum is refused
     cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
     assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
+
+
+def test_status_rows_with_a_candidate_marker_still_load():
+    # a tagless status row records why the cell is blank; it never serves a value, so it is not held
+    from scrooner_pipeline.mapper.company_tag_map_seed import held_by_verifier
+
+    status = {
+        "decision": "not_presented",
+        "decided_by": "fy_status",
+        "rule_id": "tagmap.fy_status@1",
+        "reason_class": "held_read_verified_pass_of_note_sourced_candidate",
+    }
+    candidate = {"decision": "concept", "decided_by": "note_sourced"}
+    assert held_by_verifier(status) is False
+    assert held_by_verifier(candidate) is True
