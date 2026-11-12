@@ -558,3 +558,14 @@ def test_held_status_rows_are_defects_guard_hidden_never_not_presented():
         assert (b["state"], b["defect_class"], b["owner"], b["reason_code"]) == ("defect", "guard_hidden", owner, rc)
     _, stats = build_cells([st("not_in_template", "combined_line")], {}, INFO, {}, {}, periods)
     assert [(b["state"], b["reason_code"]) for b in stats["blanks"]] == [("not_in_template", "combined_line")]
+
+
+def test_total_debt_components_sum_by_the_founder_definition_without_calc_parents():
+    rows = [MapRow("us-gaap", t, "BS", "component", None, DEBT, 1, ERA, None) for t in ("DebtCurrent", "LongTermDebtNoncurrent")]  # no evidence_cal_parent
+    facts = {("us-gaap", "DebtCurrent"): {7: fact("999", 1)}, ("us-gaap", "LongTermDebtNoncurrent"): {7: fact("8000", 2)}}
+    cells, stats = build_cells(rows, facts, INST_INFO, {}, {})
+    assert [c["value"] for c in cells] == [Decimal("8999")] and stats["held"] == []
+    # the same set under any other instant concept stays refused
+    rows2 = [MapRow("us-gaap", t, "BS", "component", None, INV, 1, ERA, None) for t in ("DebtCurrent", "LongTermDebtNoncurrent")]
+    cells, stats = build_cells(rows2, facts, INST_INFO, {}, {})
+    assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"

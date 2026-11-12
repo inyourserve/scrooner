@@ -464,13 +464,19 @@ def _descendants(arcs: set[tuple[str, str]], tag: str) -> set[str]:
 
 
 def _check_components(
-    comps: list[tuple[MapRow, Fact]], arcs: dict[str, set[tuple[str, str]]]
+    comps: list[tuple[MapRow, Fact]],
+    arcs: dict[str, set[tuple[str, str]]],
+    founder_definition: bool = False,
 ) -> str | None:
-    """Reason code if the component set must not be summed (rules 2 and 3), else None."""
+    """Reason code if the component set must not be summed (rules 2 and 3), else None. total_debt is the
+    founder's definition (doc 02, 2026-11-04): its listed debt lines are summed as defined, not as one calc
+    parent's children, so only the single-filing and ambiguity checks apply."""
     if any(f.ambiguous for _, f in comps):
         return "ambiguous_values_in_filing"
     if len({f.filing_id for _, f in comps}) != 1:
         return "components_from_different_filings"
+    if founder_definition:
+        return None
     acc = comps[0][1].accession
     filing_arcs = arcs.get(acc, set())
     if not filing_arcs:
@@ -613,7 +619,7 @@ def build_cells(
             # D3 / doc 02: instants are never derived; the only instant component sum is total debt
             hold(key, "instant_component_sum_not_allowed")
             continue
-        reason = _check_components(c, arcs)
+        reason = _check_components(c, arcs, _base(pname) == "total_debt")
         if reason:
             hold(key, reason)
             continue
