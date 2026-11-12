@@ -23,6 +23,7 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.common import cell_store as cs
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import company_tag_map as ctm
 from scrooner_pipeline.mapper import resolve as resolve_mod
 
@@ -111,7 +112,10 @@ def protect(
     keys: dict[tuple[int, int], tuple[str, Any]] = {}
     if nullable:
         for b in blanks:
-            if b.get("canonical_concept_id") is not None:
+            if (
+                b.get("canonical_concept_id") is not None
+                and b.get("period_id") is not None
+            ):
                 keys[(b["canonical_concept_id"], b["period_id"])] = (
                     b["rule_id"] or ctm.RULE_ID,
                     None,
@@ -144,6 +148,170 @@ def protect(
     return len(keys)
 
 
+LIBRARY_STATUS_RULE_ID = "tagmap.library_status@1"
+
+
+def classify_status(status: str) -> tuple[str, str | None, str | None, str, str]:
+    """The tag library's status of an expected cell that carries no value -> (state, defect_class, owner,
+    reason_code, reason). Statements of fact, not guesses: held points are DEFECTS pending a definition; points off
+    the statements, combined lines and verified template-OUT points are not in this company's template; points not
+    printed on the face are not_presented. An unknown status is an open defect, never silently a reason."""
+    st = status.strip()
+    low = st.lower()
+    if low.startswith("held"):
+        code = "held_" + (
+            st.split()[1].lower() if len(st.split()) > 1 else "definition"
+        )
+        return (
+            "defect",
+            "definition_pending",
+            "standardization_lead",
+            code,
+            f"held by the library: {st}",
+        )
+    if low.startswith(("read: held", "read: dps_quarterly_only_pending_definition")):
+        return (
+            "defect",
+            "definition_pending",
+            "standardization_lead",
+            "held_read",
+            f"held by a full 10-K read: {st}",
+        )
+    if low.startswith("read-verified fail"):
+        return (
+            "defect",
+            "evidence_pending",
+            "verifier",
+            "read_verified_fail",
+            f"the Verifier read failed: {st}",
+        )
+    if low.startswith(("cover page", "tax note")):
+        return (
+            "not_in_template",
+            None,
+            None,
+            "off_statement",
+            f"off the statements: {st}",
+        )
+    if low.startswith(("combined", "read: combined")):
+        return (
+            "not_in_template",
+            None,
+            None,
+            "combined_line",
+            f"shown as the company's combined line ({st})",
+        )
+    if low.startswith("template seed: should be cond"):
+        return (
+            "not_in_template",
+            None,
+            None,
+            "conditional_point",
+            "conditional point, not in this company's template",
+        )
+    if "template-out" in low:
+        return (
+            "not_in_template",
+            None,
+            None,
+            "template_out_verified",
+            f"read-verified not in the template: {st}",
+        )
+    if "note-sourced" in low:
+        return (
+            "not_presented",
+            None,
+            None,
+            "note_sourced_verified",
+            f"not printed on the statement face; read-verified: {st}",
+        )
+    if low.startswith(("read: not_presented", "open:")):
+        return ("not_presented", None, None, "not_printed", st)
+    if low.startswith("excluded with point reason"):
+        return ("not_presented", None, None, "point_reason", st)
+    if low.startswith("read: "):
+        return ("not_presented", None, None, "read_status", f"full 10-K read: {st[6:]}")
+    return (
+        "defect",
+        "evidence_pending",
+        "tag_mapper",
+        "unknown_library_status",
+        f"unmapped library status: {st}",
+    )
+
+
+def library_status_blanks(
+    conn, cid: int, expected, stats: dict, concept_info
+) -> list[dict]:
+    """Every expected cell with no value whose library status is not 'served' becomes a written reason row (so each
+    expected cell is valued or carries a reason). A value wins; a reason the mapper already wrote is kept."""
+    names = {n: i for i, (n, _) in concept_info.items()}
+    with conn.cursor() as cur:
+        cur.execute(
+            "select end_date, period_type, start_date, id from core.period where company_id = %s",
+            (cid,),
+        )
+        periods = cur.fetchall()
+        cur.execute(
+            "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
+            (cid,),
+        )
+        valued = set(cur.fetchall())
+    have = {(b["concept_name"], b["grain"], b["period_end"]) for b in stats["blanks"]}
+    out: list[dict] = []
+    for dp, period, status in expected:
+        if status == "served":
+            continue
+        cands = [n for n in _candidates(dp) if n in names]
+        name = cands[0] if cands else dp
+        stmt = concept_info[names[cands[0]]][1] if cands else None
+        want = "I" if stmt == "balance_sheet" else "FY"
+        found = [
+            (pid, start, end)
+            for end, ptype, start, pid in periods
+            if fsn_end_matches(period, end)
+            and ("I" if ptype == "instant" else _grain(start, end, ptype)) == want
+        ]
+        if cands and any(
+            (names[n], pid) in valued for n in cands for pid, _, _ in found
+        ):
+            continue
+        pid, start, end = (
+            found[0]
+            if found
+            else (
+                None,
+                period if want == "I" else period.replace(year=period.year - 1),
+                period,
+            )
+        )
+        if not found and want == "FY":
+            from datetime import timedelta
+
+            start = period - timedelta(days=364)
+        if any((n, want, e) in have for n in (cands or [dp]) for e in {end, period}):
+            continue
+        state, dclass, owner, code, reason = classify_status(status)
+        out.append(
+            {
+                "canonical_concept_id": names.get(name),
+                "concept_name": name,
+                "period_id": pid,
+                "state": state,
+                "defect_class": dclass,
+                "owner": owner,
+                "reason_code": code,
+                "reason": reason,
+                "rule_id": LIBRARY_STATUS_RULE_ID,
+                "period_start": start,
+                "period_end": end,
+                "grain": want,
+            }
+        )
+        have.add((name, want, end))
+    return out
+
+
 def _report(
     conn,
     cid: int,
@@ -174,6 +342,7 @@ def _report(
         )
         blank_rows = cur.fetchall()
     blank_keys = {(n, g, e) for n, g, e, _, _ in blank_rows}
+    blank_list = [(n, g, e) for n, g, e, _, _ in blank_rows]
     reasons = Counter(f"{state}:{code}" for _, _, _, state, code in blank_rows)
     valued_n = blank_n = 0
     library_status: Counter = Counter()
@@ -188,15 +357,16 @@ def _report(
         pids = [
             (pid, g, end)
             for end, ptype, start, pid in periods
-            if abs((end - period).days) <= 10
+            if fsn_end_matches(period, end)
             and (g := "I" if ptype == "instant" else _grain(start, end, ptype)) == want
         ]
         if cands and any(
             (names[n], pid) in valued for n in cands for pid, _, _ in pids
         ):
             valued_n += 1
-        elif cands and any(
-            (n, g, e) in blank_keys for n in cands for _, g, e in pids if g
+        elif any(
+            n in (cands or [dp]) and g == want and fsn_end_matches(period, e)
+            for n, g, e in blank_list
         ):
             blank_n += 1
         elif status != "served":
@@ -208,7 +378,9 @@ def _report(
         "valued": valued_n,
         "reasoned_blank": blank_n,
         "blank_reasons": dict(reasons),
-        "library_status_only": sum(library_status.values()),
+        "library_status_only": sum(
+            library_status.values()
+        ),  # expected cells whose status is not written (must be 0)
         "library_status_by_kind": dict(library_status.most_common(8)),
         "neither": len(neither),
         "neither_cells": neither,
@@ -247,6 +419,11 @@ def run(
                 stats = ctm.resolve_for_company(
                     conn, cid, managed, concept_info, run_id, commit=False
                 )
+                lib = library_status_blanks(
+                    conn, cid, expected.get(cid, []), stats, concept_info
+                )
+                ctm._write_blanks(conn, cid, run_id, lib, concept_info)
+                stats["blanks"] = stats["blanks"] + lib
                 scope = sorted(
                     set(managed)
                     | {c["canonical_concept_id"] for c in stats["cells"]}

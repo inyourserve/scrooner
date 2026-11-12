@@ -511,3 +511,37 @@ def test_cash_flow_and_ci_rows_serve_their_catalog_concepts_sbc_da_comprehensive
     facts = {("us-gaap", r.tag): {7: fact("5", i + 1)} for i, r in enumerate(rows)}
     cells, stats = build_cells(rows, facts, info)
     assert {c["canonical_concept_id"] for c in cells} == {41, 42, 43} and stats["stmt_mismatch_rows"] == 0
+
+
+def test_eras_in_fsn_month_ends_match_true_52_53_week_period_ends():
+    single = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, date(2025, 10, 31), date(2025, 10, 31))  # AMAT-style one-period era
+    rng = MapRow("us-gaap", "U", "IS", "concept", 99, None, 1, date(2025, 10, 31), date(2026, 7, 31))
+    info = {**INFO, 99: ("other", "income_statement")}
+    facts = {("us-gaap", "T"): {7: Fact(Decimal("1"), 1, date(2025, 10, 26), False, 10, "A-10")},
+             ("us-gaap", "U"): {8: Fact(Decimal("2"), 2, date(2025, 10, 26), False, 10, "A-10"),
+                                9: Fact(Decimal("3"), 3, date(2025, 7, 27), False, 10, "A-10")}}
+    cells, _ = build_cells([single, rng], facts, info)
+    got = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
+    assert (OPEX, 7) in got and (99, 8) in got  # true end 2025-10-26 rounds to the era's 2025-10-31
+    assert (99, 9) not in got  # 2025-07-27 rounds to 2025-07-31: before the era
+
+
+def test_latest_filing_that_has_a_listed_tag_wins_not_a_newer_filing_without_it():
+    from datetime import date as d
+
+    a = MapRow("us-gaap", "TagA", "IS", "concept", OPEX, None, 1, ERA, None)
+    b = MapRow("us-gaap", "TagB", "IS", "concept", OPEX, None, 1, ERA, None)
+    facts = {("us-gaap", "TagA"): {7: Fact(Decimal("5"), 1, END, False, 20, "A-20", d(2021, 2, 1))},
+             ("us-gaap", "TagB"): {7: Fact(Decimal("5"), 2, END, False, 21, "A-21", d(2021, 3, 1))}}
+    cells, stats = build_cells([a, b], facts, INFO)  # filing 22 (newer) has neither tag: irrelevant
+    assert [c["source_fact_ids"] for c in cells] == [[2]] and stats["held"] == []
+
+
+def test_facts_that_exist_but_none_authoritative_give_a_reasoned_blank_never_a_value():
+    row = MapRow("us-gaap", "Assets", "IS", "concept", OPEX, None, 1, ERA, None)
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    cells, stats = build_cells([row], {}, INFO, {}, {}, periods, {}, {("us-gaap", "Assets"): {7: 5}})
+    assert cells == []
+    (b,) = stats["blanks"]
+    assert (b["state"], b["reason_code"], b["defect_class"], b["owner"]) == ("defect", "no_authoritative_fact", "ingestion", "data_engineer_l1")
+    assert "5 fact(s) under Assets" in b["reason"]

@@ -49,6 +49,7 @@ from typing import Any
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.fsn_dates import nearest_month_ends
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
 
@@ -304,6 +305,32 @@ def _merge_predecessor_facts(conn, company_id, tags, out) -> None:
                 out[(taxonomy, tag)][period_id] = new
 
 
+def _load_no_authoritative(
+    conn, company_id: int, tags: set[tuple[str | None, str | None]]
+):
+    """(taxonomy, tag) -> {period_id: fact count} for periods where the tag has facts but NONE is authoritative
+    (an unresolved cross-filing conflict, core.fact.is_authoritative = false on every copy). Read only to give the
+    cell a reason: a non-authoritative row is never a value."""
+    out: dict[tuple[str | None, str | None], dict[int, int]] = defaultdict(dict)
+    if not tags:
+        return out
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select c.taxonomy, c.tag, f.period_id, count(*)
+            from core.fact f join core.concept c on c.id = f.concept_id
+            where f.company_id = %s and c.tag = any(%s)
+            group by c.taxonomy, c.tag, f.period_id
+            having not bool_or(f.is_authoritative)
+            """,
+            (company_id, sorted({t for _, t in tags if t is not None})),
+        )
+        for taxonomy, tag, period_id, n in cur.fetchall():
+            if (taxonomy, tag) in tags:
+                out[(taxonomy, tag)][period_id] = n
+    return out
+
+
 def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):
     """(arcs, dcml): arcs[accession] = {(parent_tag, child_tag)} from fsn.calc_arc; dcml[(accession, tag, ddate)]
     = smallest decimals printed for that non-dimensional value (for the tie tolerance)."""
@@ -342,7 +369,11 @@ def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):
 
 
 def _in_era(row: MapRow, end: date) -> bool:
-    return row.era_from <= end <= (row.era_to or _FAR)
+    """The map's eras are FSN dates (rounded to the nearest month end); a fact's period end is the TRUE end (a
+    52/53-week year ends days off a month end). A true end is inside an era when it is, or its month-end
+    rounding is (common/fsn_dates.nearest_month_ends)."""
+    hi = row.era_to or _FAR
+    return any(row.era_from <= x <= hi for x in {end} | nearest_month_ends(end))
 
 
 def _sign(row: MapRow) -> int:
@@ -447,6 +478,7 @@ def build_cells(
     dcml: dict[tuple[str, str | None, date], int] | None = None,
     periods: dict[int, tuple[date, date, str]] | None = None,
     alt_facts: dict[tuple[str | None, str | None], dict[int, Fact]] | None = None,
+    no_auth: dict[tuple[str | None, str | None], dict[int, int]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement)."""
     arcs = arcs or {}
@@ -711,6 +743,53 @@ def build_cells(
                     }
                 )
                 held_now.add(key)
+    # A listed tag has facts for a period inside the row's era but none of them is authoritative: the cell is a
+    # reasoned blank (an open data defect upstream of the mapper), never a value from a non-authoritative copy.
+    value_now2 = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
+    held_now2 = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]} | {
+        (b["canonical_concept_id"], b["period_id"])
+        for b in stats["blanks"]
+        if b.get("canonical_concept_id")
+    }
+    for row in rows:
+        if row.decision not in ("concept", "component") or row.tag is None:
+            continue
+        target = (
+            row.parent_concept_id
+            if row.decision == "component"
+            else row.canonical_concept_id
+        )
+        if target is None or not stmt_ok(target, row.stmt):
+            continue
+        for period_id, n in sorted(
+            (no_auth or {}).get((row.taxonomy, row.tag), {}).items()
+        ):
+            key = (target, period_id)
+            if period_id not in periods or key in value_now2 or key in held_now2:
+                continue
+            start, end, ptype = periods[period_id]
+            if not _in_era(row, end):
+                continue
+            grain = _grain(start, end, ptype)
+            if grain is None:
+                continue
+            stats["blanks"].append(
+                {
+                    "canonical_concept_id": target,
+                    "concept_name": concept_info[target][0],
+                    "period_id": period_id,
+                    "state": "defect",
+                    "defect_class": "ingestion",
+                    "owner": "data_engineer_l1",
+                    "reason_code": "no_authoritative_fact",
+                    "reason": f"{n} fact(s) under {row.tag} for this period, none authoritative (unresolved cross-filing conflict)",
+                    "rule_id": RULE_ID,
+                    "period_start": start,
+                    "period_end": end,
+                    "grain": grain,
+                }
+            )
+            held_now2.add(key)
     for concept, period_id in sorted(conflicts):
         if period_id not in (periods or {}):
             continue
@@ -930,8 +1009,9 @@ def resolve_for_company(
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
     periods = _load_periods(conn, company_id)
+    no_auth = _load_no_authoritative(conn, company_id, used)
     cells, stats = build_cells(
-        rows, facts, concept_info, arcs, dcml, periods, alt_facts
+        rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth
     )
     targets = set(managed_concept_ids)
     for r in rows:
