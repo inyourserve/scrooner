@@ -14,3 +14,6 @@ Rules that apply to every row: map by face position and the filer's calc tree, n
 
 ## company-overrides.csv (2026-11-12)
 Company-scoped mappings that the library default does not allow (doc 02: a label may demote a line but never promote it). Only FILING-CHECKED rows are usable; PENDING-FILING-CHECK rows wait for an R-page read. Columns: company, cik, tag, stmt, concept, scope, status, evidence, note.
+
+## needs-detail-answers-r1r2.csv (2026-11-12)
+Answers to Engineering's data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv (168 rows, all closed). Added columns: final_decision, members (concept:sign, only from the filing's own calc children or same-filing facts; instants never by subtraction), sign (component contribution to its parent concept, on stored values), label_condition, rule, status. Concept keys use concepts_catalog.csv (_resolved keys where they exist).
