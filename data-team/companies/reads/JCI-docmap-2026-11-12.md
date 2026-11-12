@@ -110,3 +110,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - current_assets: mapped us-gaap:AssetsCurrent (R5.htm): 2026-11-12 R5.htm: 20% mapped sample: BS R5.htm 'Current assets' is the current_assets line, printed 11678000000 = filing XBRL 11678000000; agrees
 - ppe_net: mapped us-gaap:PropertyPlantAndEquipmentNet (R5.htm): 2026-11-12 R5.htm: 20% mapped sample: BS R5.htm 'Property, plant and equipment - net' is the ppe_net line, printed 2106000000 = filing XBRL 2106000000; agrees
 - sbc: mapped us-gaap:ShareBasedCompensation (R7.htm): 2026-11-12 R7.htm: 20% mapped sample: CF R7.htm 'Equity-based compensation expense' is the sbc line, printed 124000000 = filing XBRL 124000000; agrees
+- interest_expense: mapped via company-scope FILING-CHECKED override (Dhairya 2026-11-12, condition 2'): R74 'net of capitalized interest costs' 223, interest income (8) on its own line; InterestExpense is a debit, positive 223

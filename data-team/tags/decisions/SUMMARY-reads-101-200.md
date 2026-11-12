@@ -45,10 +45,10 @@ Hand checks on ranks 131-140 (WM CSX JCI EMR HOOD MRSH APP HWM CDNS SNPS), carry
   - CDNS cost of revenue = both printed cost-of-sales rows (722,249k);
   - net interest combined at APP, EMR, HWM;
   - HOOD interest not_presented (R51 securities-lending interest sits inside revenue);
-  - WM shares not_presented (R93 count is a rounded narrative);
+  - WM shares: first not_presented, then mapped 402,900,000 (R93, 2025-12-31) under the 0.1% precision rule;
   - APP total_debt adds finance leases (R59);
   - CDNS total_debt on the BS face;
-  - JCI interest on the NEM-style override (R74: net of capitalized only, interest income separate);
+  - JCI interest mapped via a company-scope override (Dhairya condition 2'; R74: net of capitalized only, interest income on its own line);
   - EMR gross profit mapped NOTE (R77 undimensioned rows are Emerson's own; ties to R3).
 - FCX total_debt: HELD as not_presented (finance_lease_total_not_disclosed; R82, R19, R14), per Dhairya's ruling.
 - blind-grade.csv: 0 key_error rows for these tickers.
