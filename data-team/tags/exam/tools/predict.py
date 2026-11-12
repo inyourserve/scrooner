@@ -220,7 +220,8 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         elif dp == 'accounts_receivable' and not maps and combs:
             PA = P['bs.accounts_receivable.single_line']; fired.append('bs.accounts_receivable.single_line')
             bsr = [l for l in L if l['st'] == 'BS' and not l['pth'] and l['val'] is not None and re.search(PA['receivable_label'], l['lab'] or '') and not re.search(PA['exclude_label'], l['lab'] or '')]
-            if len(bsr) == 1 and not re.search(PA['wider_label'], bsr[0]['lab'] or ''):
+            head = lambda x: re.split(PA['label_head_split'], x or '')[0] if PA.get('label_head_split') else (x or '')
+            if len(bsr) == 1 and not re.search(PA['wider_label'], head(bsr[0]['lab'])):
                 status, chosen, rule = 'mapped', bsr, 'single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)'
             else:
                 status, chosen, rule = 'combined', [pick(combs)], 'wider receivables tag beside other receivables lines or a wider label'
