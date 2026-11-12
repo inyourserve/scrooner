@@ -1,0 +1,71 @@
+# MDT document-first map, 2026-11-12 (read-only, built bottom-up from the 10-K)
+
+Latest 10-K: accession 0001628280-26-044354, period end 2026-04-24. Evidence: R pages of FilingSummary (face statements + notes opened: R1.htm, R3.htm, R4.htm, R5.htm, R6.htm, R7.htm, R8.htm, R9.htm, R53.htm, R54.htm, R56.htm, R57.htm, R68.htm, R72.htm, R73.htm, R74.htm, R84.htm, R86.htm, R89.htm, R92.htm, R97.htm, R98.htm, R101.htm, R103.htm, R105.htm, R118.htm, R121.htm, R122.htm, R123.htm, R124.htm), values compared with data.sec.gov companyfacts (undimensioned, same accession). Values below are scaled to full units (USD, shares, USD/share). match = printed vs API; Y(abs) = same magnitude, sign differs (expense/outflow printed negative, tag positive).  Custom (company-prefix) tags are not in companyfacts: match NA.
+
+Fiscal year ends the last Friday of April (FY0 = FY2026, ended 2026-04-24, 10-K filed 2026-06-18). Face statements: R3 income, R4 comprehensive income, R5 balance sheet, R9 cash flows. MDT is the one company whose canonical_fact cells are already written from the FSN store.
+
+| data_point | status | tags | page | label | fy0 printed | fy0 api | fy1 printed | fy1 api | match | note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | RevenueFromContractWithCustomerExcludingAssessedTax | R3.htm | Net sales | 36364000000 | 36364000000 | 33537000000 | 33537000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cost_of_revenue | mapped | CostOfGoodsAndServicesSold | R3.htm | Cost of products sold, excluding amortization of intangible  | 12721000000 | 12721000000 | 11632000000 | 11632000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| gross_profit | not_presented |  |  |  |  |  |  |  |  | IS prints Net sales, Cost of products sold, R&D, SG&A, amortization, restructuring, litigation, other operating, Operating profit; no gross profit line (agrees with Ritwik) |
+| operating_expenses | not_presented |  |  |  |  |  |  |  |  | no total operating expenses line on the IS (cost of products sold and operating items run straight to Operating profit) |
+| sga_expense | mapped | SellingGeneralAndAdministrativeExpense | R3.htm | Selling, general, and administrative expense | 11784000000 | 11784000000 | 10849000000 | 10849000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| research_and_development | mapped | ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R3.htm | Research and development expense | 2873000000 | 2873000000 | 2732000000 | 2732000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| operating_income | mapped | OperatingIncomeLoss | R3.htm | Operating profit | 6467000000 | 6467000000 | 5955000000 | 5955000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| interest_expense | combined | InterestExpenseNonoperating | R3.htm | Interest expense, net | 715000000 | 715000000 | 729000000 | 729000000 | Y/Y | 'Interest expense, net' 715: net caption (own line); tag InterestExpenseNonoperating. Interest income detail not opened separately / fy0=2026-04-24 fy1=2025-04-25 |
+| interest_income | not_presented |  |  |  |  |  |  |  |  | no separate interest income line on the IS (netted in 'Interest expense, net'); InvestmentIncomeInterest not on any opened page |
+| other_income_expense_net | mapped | OtherNonoperatingIncomeExpense | R3.htm | Other non-operating expense (income), net | -384000000 | 384000000 | -402000000 | 402000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| income_before_tax | mapped | IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R3.htm | Income before income taxes | 6136000000 | 6136000000 | 5628000000 | 5628000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| income_tax_expense | mapped | IncomeTaxExpenseBenefit | R3.htm | Income tax provision | 1299000000 | 1299000000 | 936000000 | 936000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| net_income | mapped | NetIncomeLoss | R3.htm | Net income attributable to Medtronic | 4801000000 | 4801000000 | 4662000000 | 4662000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| basic_eps | mapped | EarningsPerShareBasic | R3.htm | Basic earnings per share (in dollars per share) | 3.75 | 3.75 | 3.63 | 3.63 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| diluted_eps | mapped | EarningsPerShareDiluted | R3.htm | Diluted earnings per share (in dollars per share) | 3.73 | 3.73 | 3.61 | 3.61 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| weighted_basic_shares | mapped | WeightedAverageNumberOfSharesOutstandingBasic | R3.htm | Basic weighted average shares outstanding (in shares) | 1281800000 | 1281800000 | 1285600000 | 1285600000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| weighted_diluted_shares | mapped | WeightedAverageNumberOfDilutedSharesOutstanding | R3.htm | Diluted weighted average shares outstanding (in shares) | 1288100000 | 1288100000 | 1289900000 | 1289900000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| dividends_per_share | mapped | CommonStockDividendsPerShareDeclared | R8.htm | Dividends to shareholders (in dollars per share) | 2.84 | 2.84 | 2.8 | 2.8 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| comprehensive_income | mapped | ComprehensiveIncomeNetOfTax | R4.htm | Comprehensive income attributable to Medtronic | 4984000000 | 4984000000 | 3696000000 | 3696000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cash_and_equivalents | mapped | CashAndCashEquivalentsAtCarryingValue | R5.htm | Cash and cash equivalents | 1949000000 | 1949000000 | 2218000000 | 2218000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| accounts_receivable | mapped | AccountsReceivableNetCurrent | R5.htm | Accounts receivable, less allowance for credit losses of $19 | 6643000000 | 6643000000 | 6515000000 | 6515000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| inventory | mapped | InventoryNet | R5.htm | Inventories | 5951000000 | 5951000000 | 5476000000 | 5476000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| current_assets | mapped | AssetsCurrent | R5.htm | Total current assets | 24787000000 | 24787000000 | 23814000000 | 23814000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| ppe_net | mapped | PropertyPlantAndEquipmentNet | R5.htm | Property, plant, and equipment, net | 7417000000 | 7417000000 | 6837000000 | 6837000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| goodwill | mapped | Goodwill | R5.htm | Goodwill | 42587000000 | 42587000000 | 41737000000 | 41737000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| total_assets | mapped | Assets | R5.htm | Total assets | 93028000000 | 93028000000 | 91680000000 | 91680000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| accounts_payable | mapped | AccountsPayableCurrent | R5.htm | Accounts payable | 2644000000 | 2644000000 | 2449000000 | 2449000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| current_liabilities | mapped | LiabilitiesCurrent | R5.htm | Total current liabilities | 11658000000 | 11658000000 | 12879000000 | 12879000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| total_liabilities | mapped | Liabilities | R5.htm | Total liabilities | 42956000000 | 42956000000 | 43424000000 | 43424000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| total_debt | component sum | DebtCurrent;LongTermDebtAndCapitalLeaseObligations | R5.htm | Current debt obligations + Long-term debt | 27961000000 | 27961000000 | 28516000000 | 28516000000 | Y/Y | instant sum: 'Current debt obligations' + 'Long-term debt' (tag includes finance leases) / fy0=2026-04-24 fy1=2025-04-25 |
+| stockholders_equity | mapped | StockholdersEquity | R5.htm | Total shareholders’ equity | 49463000000 | 49463000000 | 48024000000 | 48024000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| shares_outstanding | mapped | dei:EntityCommonStockSharesOutstanding | R1.htm | Entity Common Stock, Shares Outstanding (cover, as of cover  | 1,280,045,190 | 1280045190 |  |  | Y/NA | cover dei / cover date not period end; dei facts in companyfacts lack the class dimension |
+| cfo | mapped | NetCashProvidedByUsedInOperatingActivities | R9.htm | Net cash provided by operating activities | 7330000000 | 7330000000 | 7044000000 | 7044000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | R9.htm | Net cash used in investing activities | -2934000000 | -2934000000 | -1937000000 | -1937000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | R9.htm | Net cash used in financing activities | -4751000000 | -4751000000 | -4361000000 | -4361000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| capex | mapped | PaymentsToAcquirePropertyPlantAndEquipment | R9.htm | Additions to property, plant, and equipment | -1904000000 | 1904000000 | -1859000000 | 1859000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| depreciation_and_amortization | mapped | DepreciationDepletionAndAmortization | R9.htm | Depreciation and amortization | 2958000000 | 2958000000 | 2861000000 | 2861000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| amortization_of_intangibles | mapped | AmortizationOfIntangibleAssets | R3.htm | Amortization of intangible assets | 1772000000 | 1772000000 | 1807000000 | 1807000000 | Y/Y | IS 'Amortization of intangible assets' 1,772 / fy0=2026-04-24 fy1=2025-04-25 |
+| sbc | mapped | ShareBasedCompensation | R9.htm | Stock-based compensation | 457000000 | 457000000 | 429000000 | 429000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| dividends_paid | mapped | PaymentsOfDividendsCommonStock | R9.htm | Dividends to shareholders | -3639000000 | 3639000000 | -3589000000 | 3589000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| share_buybacks | mapped | PaymentsForRepurchaseOfCommonStock | R9.htm | Repurchase of ordinary shares | -1035000000 | 1035000000 | -3235000000 | 3235000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cf_ar_change | mapped | IncreaseDecreaseInAccountsAndNotesReceivable | R9.htm | Accounts receivable, net | -200000000 | 200000000 | -433000000 | 433000000 | Y(abs)/Y(abs) | CF 'Accounts receivable, net' (tag IncreaseDecreaseInAccountsAndNotesReceivable) / fy0=2026-04-24 fy1=2025-04-25 |
+| cf_inventory_change | mapped | IncreaseDecreaseInInventories | R9.htm | Inventories | -404000000 | 404000000 | -292000000 | 292000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cf_ap_change | combined | IncreaseDecreaseInAccountsPayableAndAccruedLiabilities | R9.htm | Accounts payable and accrued liabilities | 46000000 | 46000000 | 209000000 | 209000000 | Y/Y | 'Accounts payable and accrued liabilities' combined change (own label) / fy0=2026-04-24 fy1=2025-04-25 |
+| cash_paid_for_interest | mapped | InterestPaidNet | R9.htm | Interest | 774000000 | 774000000 | 762000000 | 762000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+| cash_paid_for_income_taxes | mapped | IncomeTaxesPaidNet | R9.htm | Income taxes | 1942000000 | 1942000000 | 1819000000 | 1819000000 | Y/Y | auto: first candidate tag on face / fy0=2026-04-24 fy1=2025-04-25 |
+
+## Disagreements with cloud Ritwik (companies-51-100-exceptions-2026-11-11.csv)
+No disagreement. gross_profit not_presented agrees (R3 has no gross profit line). Open Ritwik item C6: MDT dividends_per_share needs a Verifier check against the filings: see the dividends_per_share row (DPS tag and value). Note FY2026 'Interest expense, net' on InterestExpenseNonoperating.
+
+## Era checks (older 10-K opened: tag on the same printed line?)
+Older 10-K opened: 0001613103-21-000027 (period 2021-04-30); face pages ['R2.htm', 'R3.htm', 'R4.htm', 'R5.htm', 'R6.htm', 'R7.htm', 'R8.htm']. Result: 43 mapped rows checked.
+- interest_expense: TAG CHANGED vs 0001613103-21-000027 (2021-04-30): old tag us-gaap:InterestExpense on 'Interest expense' (new 'Interest expense, net' us-gaap:InterestExpenseNonoperating)
+- income_before_tax: TAG CHANGED vs 0001613103-21-000027 (2021-04-30): old tag us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments on 'Income before income taxes' (new 'Income before income taxes' us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest)
+- (41 rows: same tag and same label on the older 10-K, no change)
+
+## Mismatches / unresolved
+- none
+
+## Method and untested scope
+- FILING-CHECKED = value read from the 10-K R page (MetaLinks used to locate tags/pages) and compared with companyfacts for the same accession; not_presented/OUT rows are FILING-CHECKED for the statements opened (all face statements plus the note pages that carry the candidate tags per MetaLinks); a note not opened could still hold an unprinted detail.
+- Era check: one older 10-K per company (statement pages only, via MetaLinks); same-tag / label comparison on the same statement type. Note-page values of the older filing were not opened.
+- Not covered: 10-Q-era tag history, quarterly values, segment-level data points, FSN store comparison (document-first read only).

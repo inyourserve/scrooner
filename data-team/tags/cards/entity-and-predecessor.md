@@ -13,3 +13,5 @@ These are not tag meanings but they decide whether ANY tag's value belongs to th
 ## Ritwik (cloud) notes 16, 21, 29 (2026-11-11)
 - Co-registrant statements inside one filing (PLD/Prologis L.P., SPG/Simon L.P., DUK + six utilities, CMCSA/NBCUniversal to 2019, URI/United Rentals (North America)): take coreg = '' only, for every data point. A UN statement is excluded only when its column carries a co-registrant/LegalEntityAxis member (Dhairya accepted 2026-11-11).
 - Pre-merger SPAC filings under the same CIK (VRT 2018-19, GS Acquisition Holdings): outside the history window. 10-K/As with 0 IS/BS/CF lines (MO, SCCO, NEM, TMUS, DIS): not expected filings. CB 2014-17 IS lines sit in a stmt=CI report (14 10-Qs).
+
+- Store statement-scope cases (Data Engineer 2026-11-12): WMB 10-Qs print a combined IS+CI report (stmt CI, R2) and a Transco legal-entity IS (stmt IS, R9): the parent face is R2 (0000107263-26-000026); ROST 10-Q 0000745732-24-000062 has a blank stmt on every pre.txt row (FSN data defect; 1 of 992 filings in 2024q4). Engineering-owned.
