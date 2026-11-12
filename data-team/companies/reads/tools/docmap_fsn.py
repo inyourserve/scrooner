@@ -230,7 +230,7 @@ DEBT_TAGS = {"ShortTermBorrowings", "CommercialPaper", "DebtCurrent", "LongTermD
              "FinanceLeaseLiabilityCurrent", "FinanceLeaseLiabilityNoncurrent", "FinanceLeaseLiability",
              "CapitalLeaseObligationsCurrent", "CapitalLeaseObligationsNoncurrent", "CapitalLeaseObligations",
              "DebtLongtermAndShorttermCombinedAmount", "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
-             "JuniorSubordinatedNotes", "SubordinatedLongTermDebt", "LongTermFederalHomeLoanBankAdvancesNoncurrent",
+             "JuniorSubordinatedNotes", "FederalHomeLoanBankAdvancesLongTerm", "FederalHomeLoanBankAdvancesShortTerm", "JuniorSubordinatedDebentureOwedToUnconsolidatedSubsidiaryTrust", "AdvancesFromFederalHomeLoanBanksShortTerm__", "FederalHomeLoanBankBorrowings", "SubordinatedBorrowing", "ShortTermDebtFairValue__never", "OtherLongTermDebt", "NotesPayableRelatedPartiesClassifiedCurrent", "NotesPayableRelatedPartiesNoncurrent", "LongTermDebtNoncurrentExcludingCurrentMaturities__", "SubordinatedLongTermDebt", "LongTermFederalHomeLoanBankAdvancesNoncurrent",
              "ShortTermBankLoansAndNotesPayable", "BankOverdrafts__never", "LoansPayable", "LoansPayableCurrent",
              "MortgageLoansOnRealEstate__never", "SecuredLongTermDebt", "UnsecuredLongTermDebt", "NotesPayableToBank",
              "TermLoan__never", "SeniorSubordinatedNotes", "OtherNotesPayable", "MediumTermNotes",
