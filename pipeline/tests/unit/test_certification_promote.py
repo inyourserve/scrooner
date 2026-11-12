@@ -225,7 +225,7 @@ PENDING_0124 = (
 
 @pytest.fixture
 def db(isolated_database_url):
-    """A throwaway copy of the migrated test DB. 0124 is held in migrations/pending/ until 0122 and 0123 exist on
+    """A throwaway copy of the migrated test DB. 0124 is held in migrations/pending/ until 0123 exists on
     main (contiguity check), so CI's migration loop does not apply it: apply it here to the copy."""
     psycopg = pytest.importorskip("psycopg")
     conn = psycopg.connect(isolated_database_url)

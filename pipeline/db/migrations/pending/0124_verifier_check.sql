@@ -7,9 +7,9 @@
 -- in markdown reports, which no code can read.
 -- A verdict that a later fix makes obsolete is closed by setting superseded_at and
 -- superseded_reason once; rows are never deleted.
--- Written 2026-11-09 (work/certification-lead/promote) as 0122; renumbered 0124 on 2026-11-11 (doc 53: 0122 and 0123
--- are claimed on main). HELD in migrations/pending/ until files 0122 and 0123 exist (scripts/check_migrations.py
--- requires a contiguous sequence); then move it up to pipeline/db/migrations/. NOT applied; applying it needs the
+-- Written 2026-11-09 (work/certification-lead/promote) as 0122; renumbered 0124 (doc 53, 2026-11-12: 0122 company_tag_map,
+-- 0123 company_value_owner_tag_map_writer, 0125 the EQ change). HELD in migrations/pending/ until file 0123 exists on
+-- main (scripts/check_migrations.py requires a contiguous sequence); then move it up to pipeline/db/migrations/. NOT applied; applying it needs the
 -- founder's typed words.
 create table if not exists analytics.verifier_check (
     id                 bigint generated always as identity primary key,
