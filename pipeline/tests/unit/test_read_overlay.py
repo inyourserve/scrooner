@@ -127,33 +127,12 @@ def test_a_fy_ruling_cuts_the_serving_row_to_tagless_status_rows_or_swaps_the_ta
     assert cost == [("PaymentsOfDividends", "2026-01-01", "2026-08-31"), ("PaymentsOfDividendsCommonStock", "2025-08-31", "2025-12-31")]
 
 
-def test_an_extension_tag_never_serves_and_a_sum_with_one_is_withdrawn_only_over_that_parts_era():
+
+def test_extension_tags_are_served_from_the_filings_own_xbrl_and_standard_tags_from_the_sec_api():
     import importlib.util
-    spec = importlib.util.spec_from_file_location("standard_only", D / "standard_only.py")
+    spec = importlib.util.spec_from_file_location("value_source", D / "value_source.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    base = {**{k: "" for k in TM}, "company_id": "1", "cik": "1", "rank": "1", "ticker": "X", "stmt": "IS", "decision": "component",
-            "parent_concept": "operating_expenses_resolved", "combine_sign": "1", "decided_by": "library"}
-    rows = [{**base, "taxonomy": "us-gaap", "tag": "ResearchAndDevelopmentExpense", "era_from": "2015-03-31", "era_to": "2026-09-30"},
-            {**base, "taxonomy": "custom", "tag": "ImpairmentAndRestructuringExpenses", "era_from": "2018-06-30", "era_to": "2018-06-30"}]
-    out, n = mod.apply(rows)
-    serving = sorted((r["tag"], r["era_from"], r["era_to"]) for r in out if r["decision"] == "component")
-    assert serving == [("ResearchAndDevelopmentExpense", "2015-03-31", "2018-06-29"), ("ResearchAndDevelopmentExpense", "2018-07-01", "2026-09-30")]
-    blank = [(r["era_from"], r["era_to"], r["reason_class"], r["tag"]) for r in out if r["decision"] == "not_presented"]
-    assert blank == [("2018-06-30", "2018-06-30", "held_custom_extension_no_fact", "")]
-    assert mod.apply(out)[1] == 0  # rerun-safe
-
-
-def test_a_read_verified_standard_tag_replaces_the_extension_blank_only_over_its_dates():
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("standard_only", D / "standard_only.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    blank = {**{k: "" for k in TM}, "company_id": "5", "cik": "1", "rank": "1", "ticker": "AVGO", "stmt": "IS", "decision": "not_presented",
-             "canonical_concept": "amortization_of_intangibles", "reason_class": "held_custom_extension_no_fact", "decided_by": "standard_only",
-             "era_from": "2018-07-31", "era_to": "2026-07-31", "reason": "x"}
-    out, added = mod.apply_verified([blank])
-    got = sorted((r["decision"], r["tag"], r["era_from"], r["era_to"]) for r in out)
-    assert added == 1 and got == [("concept", "AmortizationOfIntangibleAssets", "2024-10-31", "2025-10-31"),
-                                  ("not_presented", "", "2018-07-31", "2024-10-30"), ("not_presented", "", "2025-11-01", "2026-07-31")]
-    assert mod.apply_verified(out)[1] == 0
+    got = [mod.source({"decision": d, "taxonomy": t}) for d, t in
+           (("concept", "us-gaap"), ("component", "custom"), ("concept", "avgo"), ("combined", "ge"), ("excluded", "custom"), ("not_presented", ""))]
+    assert got == ["sec_api", "fsn_xbrl", "fsn_xbrl", "fsn_xbrl", "", ""]
