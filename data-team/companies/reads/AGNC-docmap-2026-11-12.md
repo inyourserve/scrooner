@@ -81,7 +81,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | current_liabilities | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | capex | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | depreciation_and_amortization | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| share_buybacks | not_presented | DISAGREE | element(s) present in the filing: PaymentsForRepurchaseOfCommonStock |
+| share_buybacks | not_presented | agree | PaymentsForRepurchaseOfCommonStock presented but with no 2025-12-31 value on any presenting page: nothing to read for this period |
 | cash_paid_for_interest | combined | agree | page value 2793000000 vs printed 2793000000 |
 | total_debt | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | shares_outstanding | mapped-sample | agree | page value 1107600000 vs printed 1107600000 |

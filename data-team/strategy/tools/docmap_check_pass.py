@@ -323,7 +323,8 @@ def check_company(rank):
     mdt = open(md).read()
     m = re.search(r"- 10-K (\d{10}-\d{2}-\d{6}) \(CIK \d+, filed", mdt)
     accn = m[1] if m else ""
-    end = next((r["note"].split("period ..")[-1][:10] for r in recs if "period .." in r["note"]), "")
+    ends = [r["note"].split("period ..")[-1][:10] for r in recs if "period .." in r["note"]]
+    end = max(set(ends), key=lambda e: (ends.count(e) if e[:4] == max(ends)[:4] else -1, e)) if ends else ""
     st = {"rank": rank, "ticker": tic, "ok": bool(recs and accn and end), "rows": len(recs), "checked": 0,
           "by_class": {}, "mapped_sample": 0, "mapped_disagree": 0, "other_disagree": 0}
     if not st["ok"]:
@@ -339,7 +340,12 @@ def check_company(rank):
     sample = set(id(r) for r in random.Random(tic).sample(mapped, math.ceil(len(mapped) * 0.1))) if mapped else set()
     log = []
     tpl = TEMPLATES.get(cik.zfill(10), "")
+    end_c = end_d
     for r in recs:
+        # each row is checked at its own period end (a row's note carries it; e.g. a transition-year filer)
+        own = r["note"].split("period ..")[-1][:10] if "period .." in r["note"] else ""
+        end_d = dt.date.fromisoformat(own) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", own) else end_c
+        end = end_d.isoformat()
         r["check"] = "check: machine-full-filing"
         if tpl in OUT_GROUP and r["data_point"] in OUT_DPS and r["status"] == "not_presented":
             r["status"] = "OUT"
@@ -390,6 +396,9 @@ def check_company(rank):
                         st["notpres_fixed"] = st.get("notpres_fixed", 0) + 1
                     elif not [t for t in full if t in present]:
                         ok, why = True, "only component element(s) present: " + ", ".join(present) + " (not the data point)"
+                    else:
+                        ok, why = True, (f"{', '.join(present)} presented but with no {end} value on any presenting page: "
+                                         "nothing to read for this period")
         elif r["status"] == "component_in_note":
             p = D.parse_r(D.get(base + r["r_page"].split("+")[0], cache))
             ok = any(x["tag"] in tags for x in p["rows"])

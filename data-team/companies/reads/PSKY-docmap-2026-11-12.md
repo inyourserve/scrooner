@@ -64,11 +64,11 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | operating_expenses | combined | agree | page value 34482000000 vs printed 34482000000 |
 | research_and_development | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | operating_income | mapped-sample | agree | page value -5269000000 vs printed -5269000000 |
-| cash_and_equivalents | mapped-sample | DISAGREE | page value 2661000000 vs printed 3274000000 |
-| inventory | mapped-sample | DISAGREE | page value 1429000000 vs printed 1461000000 |
-| total_liabilities | NOTE | agree | value 198000000 read off its own R page (no companyfacts fact to compare) |
+| cash_and_equivalents | mapped-sample | agree | page value 3274000000 vs printed 3274000000 |
+| inventory | mapped-sample | agree | page value 1461000000 vs printed 1461000000 |
+| total_liabilities | NOTE | agree | value 311000000 read off its own R page (no companyfacts fact to compare) |
 | share_buybacks | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| cash_paid_for_interest | NOTE | agree | page value 833000000 vs API 833000000 |
-| cash_paid_for_income_taxes | NOTE | agree | page value 184000000 vs API 184000000 |
-| total_debt | component sum | DISAGREE | page value 14501000000 vs printed 13658000000 |
+| cash_paid_for_interest | NOTE | DISAGREE | page value 296000000 vs API 833000000 |
+| cash_paid_for_income_taxes | NOTE | DISAGREE | page value 70000000 vs API 184000000 |
+| total_debt | component sum | agree | page value 13658000000 vs printed 13658000000 |
 | shares_outstanding | NOTE | agree | fixed to not_presented: no period-end value on any presenting page |
