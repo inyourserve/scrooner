@@ -112,3 +112,5 @@ New or re-scored sources:
 3. **Yearly** (taxonomy release, December): FASB release-notes appendix (new, deprecated, redefined elements) diffed against the cards; DQC rules for the new taxonomy (DQC_0181 was the 2024 one).
 4. **Research**: accounting-data-quality literature (Du-Huddart-Jiang 2023; follow its citations), XBRL US and XBRL International guidance (ESEF anchoring is ESMA-only; no SEC anchoring rule found this run).
 5. **Open-source libraries** (edgartools, OpenBB, FAC): re-score on release against the filing-checked set; use their counts as leads, never their mappings.
+
+- 2026-11-12: read in full from the public DQC repository (raw.githubusercontent.com/DataQualityCommittee/dqc_us_rules/master/docs/...): DQC_0065 (interest paid net) and DQC_0181 (2024 interest elements); findings in cards/interest.md §10 and the library. Rule list scanned for later reading: 0013-0015 negative values, 0043-0049/0057/0061/0062/0145 cash flow, 0081/0099/0118/0126/0167/0213/0214/0227 calculation, 0206 DISE caption axis, 0228/0230/0231 "Other" concepts.
