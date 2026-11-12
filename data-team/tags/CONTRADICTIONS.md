@@ -30,3 +30,5 @@ One row per contradiction between sources (readers, cards, library, store). Fact
 | C-2026-11-12-06 | 2026-11-12 | TOP-TAGS #349 vs library | library correction (7 companies) | §R, §T |
 | C-2026-11-12-07 | 2026-11-12 | JPM bank cash sum vs doc 02 | doc 02 item 4; Dhairya accepted | §P; cash.md |
 | C-2026-11-12-08 | 2026-11-12 | companyfacts covers custom tags | KLAC companyfacts keys | §P (corrected) |
+| C-2026-11-13-01 | 2026-11-13 | Bank/insurer current assets/liabilities: reader not_presented vs predictor OUT | SYF docmap; Dhairya ruling 2026-11-13 | OUT wins (outside the template); grade.py key_error |
+| C-2026-11-13-02 | 2026-11-13 | Opex as a difference of two totals (WYNN CostsAndExpenses − COGS) | WYNN docmap; Dhairya ruling 2026-11-13 | key = component_sum of the printed face lines between COGS and OI; the difference is a tie-out check only |

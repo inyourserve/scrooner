@@ -147,12 +147,12 @@ hand,AFG,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 hand,AFG,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,AFG,accounts_receivable,correct,,not_presented,not_presented,,
 hand,AFG,inventory,wrong,status,not_presented,OUT,,
-hand,AFG,current_assets,wrong,status,not_presented,OUT,,
+,AFG,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 hand,AFG,ppe_net,correct,,not_presented,not_presented,,
 hand,AFG,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 hand,AFG,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,AFG,accounts_payable,correct,,not_presented,not_presented,,
-hand,AFG,current_liabilities,wrong,status,not_presented,OUT,,
+,AFG,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 hand,AFG,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 hand,AFG,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 hand,AFG,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -1179,44 +1179,44 @@ machine,CZR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNe
 machine,CZR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
 machine,CZR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 machine,CZR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
-hand,DLB,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
-hand,DLB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
-hand,DLB,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
-hand,DLB,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-hand,DLB,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
-hand,DLB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
-hand,DLB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-,DLB,interest_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,DLB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,DLB,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,DLB,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,DLB,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,DLB,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,DLB,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,DLB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,DLB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,DLB,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
-hand,DLB,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
-hand,DLB,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,DLB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,DLB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,DLB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,DLB,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,DLB,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-hand,DLB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,DLB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,DLB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,DLB,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,DLB,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,DLB,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,DLB,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-hand,DLB,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,DLB,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
-hand,DLB,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-,DLB,cash_paid_for_interest,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,DLB,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
-,DLB,total_debt,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,DLB,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
+machine,DLB,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+machine,DLB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
+machine,DLB,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
+machine,DLB,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
+machine,DLB,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+machine,DLB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
+machine,DLB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+hand,DLB,interest_expense,correct,,not_presented,not_presented,,
+machine,DLB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,DLB,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,DLB,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,DLB,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,DLB,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,DLB,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,DLB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,DLB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,DLB,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
+machine,DLB,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
+machine,DLB,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,DLB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,DLB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,DLB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,DLB,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,DLB,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+machine,DLB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,DLB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,DLB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,DLB,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,DLB,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,DLB,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,DLB,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
+machine,DLB,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,DLB,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
+machine,DLB,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+hand,DLB,cash_paid_for_interest,correct,,not_presented,not_presented,,
+machine,DLB,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
+hand,DLB,total_debt,correct,,not_presented,not_presented,,
+machine,DLB,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
 machine,DLTR,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,DLTR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,DLTR,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
@@ -1407,44 +1407,44 @@ machine,EPAM,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidN
 machine,EPAM,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
 machine,EPAM,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtNoncurrent
 machine,EPAM,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
-,ESNT,revenue,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:Revenues
-,ESNT,cost_of_revenue,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,ESNT,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,ESNT,operating_expenses,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:BenefitsLossesAndExpenses
-,ESNT,sga_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,ESNT,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,ESNT,operating_income,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,ESNT,interest_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:InterestExpenseOperating
-,ESNT,income_before_tax,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-,ESNT,income_tax_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:IncomeTaxExpenseBenefit
-,ESNT,net_income,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:NetIncomeLoss
-,ESNT,basic_eps,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:EarningsPerShareBasic
-,ESNT,diluted_eps,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:EarningsPerShareDiluted
-,ESNT,weighted_basic_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-,ESNT,weighted_diluted_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,ESNT,cash_and_equivalents,correct,,mapped,mapped,us-gaap:Cash,us-gaap:Cash
-,ESNT,accounts_receivable,key_error,key: interest/notes/financing receivables keyed as accounts receivable (sector-faces card),mapped,not_presented,us-gaap:NotesReceivableNet,
-,ESNT,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,ESNT,current_assets,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-hand,ESNT,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
-hand,ESNT,goodwill,wrong,status,mapped,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,us-gaap:IntangibleAssetsNetIncludingGoodwill
-hand,ESNT,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-,ESNT,accounts_payable,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,ESNT,current_liabilities,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-hand,ESNT,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,ESNT,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,ESNT,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,ESNT,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,ESNT,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,ESNT,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,ESNT,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-hand,ESNT,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,ESNT,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
-hand,ESNT,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-hand,ESNT,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
-hand,ESNT,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-hand,ESNT,total_debt,wrong,status,component sum,not_presented,us-gaap:SeniorNotes,
-hand,ESNT,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,ESNT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
+hand,ESNT,cost_of_revenue,wrong,status,not_presented,OUT,,
+hand,ESNT,gross_profit,wrong,status,not_presented,OUT,,
+hand,ESNT,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:BenefitsLossesAndExpenses
+hand,ESNT,sga_expense,correct,,not_presented,not_presented,,
+hand,ESNT,research_and_development,wrong,status,not_presented,OUT,,
+hand,ESNT,operating_income,correct,,not_presented,not_presented,,
+machine,ESNT,interest_expense,wrong,tag,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseOperating
+machine,ESNT,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,ESNT,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,ESNT,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,ESNT,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,ESNT,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,ESNT,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,ESNT,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,ESNT,cash_and_equivalents,correct,,mapped,mapped,us-gaap:Cash,us-gaap:Cash
+hand,ESNT,accounts_receivable,correct,,not_presented,not_presented,,
+hand,ESNT,inventory,wrong,status,not_presented,OUT,,
+,ESNT,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+machine,ESNT,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
+machine,ESNT,goodwill,wrong,status,mapped,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,us-gaap:IntangibleAssetsNetIncludingGoodwill
+machine,ESNT,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+hand,ESNT,accounts_payable,correct,,not_presented,not_presented,,
+,ESNT,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+machine,ESNT,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,ESNT,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,ESNT,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,ESNT,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,ESNT,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,ESNT,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,ESNT,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
+machine,ESNT,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,ESNT,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
+machine,ESNT,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,ESNT,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,ESNT,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,ESNT,total_debt,wrong,status,component sum,not_presented,us-gaap:SeniorNotes,
+machine,ESNT,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,ETSY,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 hand,ETSY,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,ETSY,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
@@ -1661,12 +1661,12 @@ machine,FNB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAvera
 machine,FNB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,FNB,accounts_receivable,correct,,not_presented,not_presented,,
 hand,FNB,inventory,wrong,status,not_presented,OUT,,
-hand,FNB,current_assets,wrong,status,not_presented,OUT,,
+,FNB,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,FNB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
 machine,FNB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,FNB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,FNB,accounts_payable,correct,,not_presented,not_presented,,
-hand,FNB,current_liabilities,wrong,status,not_presented,OUT,,
+,FNB,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,FNB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,FNB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,FNB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -1887,44 +1887,44 @@ hand,GLW,cf_inventory_change,correct,,mapped,mapped,us-gaap:IncreaseDecreaseInIn
 hand,GLW,cf_ap_change,wrong,status,combined,not_presented,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,
 hand,GLW,cash_paid_for_interest,wrong,status,not_presented,mapped,,us-gaap:InterestPaidNet
 hand,GLW,cash_paid_for_income_taxes,wrong,status,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
-hand,HOMB,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
-,HOMB,cost_of_revenue,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,HOMB,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,HOMB,operating_expenses,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:NoninterestExpense
-,HOMB,sga_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,HOMB,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,HOMB,operating_income,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,HOMB,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
-hand,HOMB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,HOMB,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,HOMB,net_income,wrong,status,mapped,not_presented,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,
-hand,HOMB,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,HOMB,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-,HOMB,weighted_basic_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-,HOMB,weighted_diluted_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,HOMB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-,HOMB,accounts_receivable,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,HOMB,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-,HOMB,current_assets,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-hand,HOMB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,HOMB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,HOMB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-,HOMB,accounts_payable,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,HOMB,current_liabilities,key_unverified,key row marked not hand-verified by the reader,not_presented,OUT,,
-hand,HOMB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,HOMB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,HOMB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,HOMB,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,HOMB,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,HOMB,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-,HOMB,depreciation_and_amortization,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,HOMB,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,HOMB,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
-hand,HOMB,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-,HOMB,cash_paid_for_interest,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:InterestPaidNet
-,HOMB,cash_paid_for_income_taxes,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
-,HOMB,total_debt,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,HOMB,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,HOMB,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
+hand,HOMB,cost_of_revenue,wrong,status,not_presented,OUT,,
+hand,HOMB,gross_profit,wrong,status,not_presented,OUT,,
+hand,HOMB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+hand,HOMB,sga_expense,correct,,not_presented,not_presented,,
+hand,HOMB,research_and_development,wrong,status,not_presented,OUT,,
+hand,HOMB,operating_income,correct,,not_presented,not_presented,,
+machine,HOMB,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
+machine,HOMB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,HOMB,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,HOMB,net_income,wrong,status,mapped,not_presented,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,
+machine,HOMB,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,HOMB,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,HOMB,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,HOMB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,HOMB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+hand,HOMB,accounts_receivable,correct,,not_presented,not_presented,,
+hand,HOMB,inventory,wrong,status,not_presented,OUT,,
+,HOMB,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+machine,HOMB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,HOMB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,HOMB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+hand,HOMB,accounts_payable,correct,,not_presented,not_presented,,
+,HOMB,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+machine,HOMB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,HOMB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,HOMB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,HOMB,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,HOMB,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,HOMB,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,HOMB,depreciation_and_amortization,wrong,status,mapped,not_presented,us-gaap:DepreciationAndAmortization,
+machine,HOMB,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,HOMB,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
+machine,HOMB,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,HOMB,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,HOMB,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,HOMB,total_debt,wrong,status,mapped,not_presented,us-gaap:LongTermDebt,
+machine,HOMB,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,HR,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,HR,cost_of_revenue,wrong,status,not_presented,combined,,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment
 hand,HR,gross_profit,correct,,not_presented,not_presented,,
@@ -2057,12 +2057,12 @@ machine,HWC,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAvera
 machine,HWC,cash_and_equivalents,wrong,status,mapped,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents
 hand,HWC,accounts_receivable,correct,,not_presented,not_presented,,
 hand,HWC,inventory,wrong,status,not_presented,OUT,,
-hand,HWC,current_assets,wrong,status,not_presented,OUT,,
+,HWC,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,HWC,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,HWC,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,HWC,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,HWC,accounts_payable,correct,,not_presented,not_presented,,
-hand,HWC,current_liabilities,wrong,status,not_presented,OUT,,
+,HWC,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,HWC,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,HWC,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,HWC,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -2475,12 +2475,12 @@ machine,L,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverage
 machine,L,cash_and_equivalents,correct,,mapped,mapped,us-gaap:Cash,us-gaap:Cash
 machine,L,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNet,us-gaap:AccountsReceivableNet
 hand,L,inventory,wrong,status,not_presented,OUT,,
-hand,L,current_assets,wrong,status,not_presented,OUT,,
+,L,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,L,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,L,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,L,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,L,accounts_payable,correct,,not_presented,not_presented,,
-hand,L,current_liabilities,wrong,status,not_presented,OUT,,
+,L,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,L,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,L,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,L,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -2647,44 +2647,44 @@ hand,LII,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,u
 hand,LII,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
 hand,LII,total_debt,correct,,component sum,component_sum,us-gaap:CommercialPaper+us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations,us-gaap:CommercialPaper;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations
 hand,LII,shares_outstanding,correct,,not_presented,not_presented,,
-hand,LOAR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
-hand,LOAR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
-hand,LOAR,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
-,LOAR,operating_expenses,key_unverified,key row marked not hand-verified by the reader,not_presented,component_sum,,us-gaap:SellingGeneralAndAdministrativeExpense;custom:TransactionExpenses;us-gaap:OtherOperatingIncomeExpenseNet
-hand,LOAR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-,LOAR,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LOAR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-,LOAR,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpense,us-gaap:InterestExpense
-hand,LOAR,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,LOAR,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,LOAR,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,LOAR,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,LOAR,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,LOAR,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,LOAR,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,LOAR,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,LOAR,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
-hand,LOAR,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
-hand,LOAR,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,LOAR,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,LOAR,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,LOAR,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,LOAR,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,LOAR,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-hand,LOAR,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,LOAR,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,LOAR,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,LOAR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,LOAR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,LOAR,capex,wrong,status,mapped,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,us-gaap:PaymentsForProceedsFromProductiveAssets
-hand,LOAR,depreciation_and_amortization,wrong,status,component sum,not_presented,us-gaap:Depreciation,
-hand,LOAR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-,LOAR,dividends_paid,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,LOAR,share_buybacks,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LOAR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
-hand,LOAR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-hand,LOAR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
-hand,LOAR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,LOAR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+machine,LOAR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
+machine,LOAR,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
+hand,LOAR,operating_expenses,wrong,status,not_presented,component_sum,,us-gaap:SellingGeneralAndAdministrativeExpense;custom:TransactionExpenses;us-gaap:OtherOperatingIncomeExpenseNet
+machine,LOAR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
+machine,LOAR,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
+machine,LOAR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,LOAR,interest_expense,correct,,combined,combined,us-gaap:InterestExpense,us-gaap:InterestExpense
+machine,LOAR,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,LOAR,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,LOAR,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,LOAR,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,LOAR,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,LOAR,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,LOAR,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,LOAR,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,LOAR,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
+machine,LOAR,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
+machine,LOAR,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,LOAR,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,LOAR,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,LOAR,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,LOAR,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,LOAR,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+machine,LOAR,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,LOAR,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,LOAR,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,LOAR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,LOAR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,LOAR,capex,wrong,status,mapped,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,us-gaap:PaymentsForProceedsFromProductiveAssets
+machine,LOAR,depreciation_and_amortization,wrong,status,component sum,not_presented,us-gaap:Depreciation,
+machine,LOAR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+hand,LOAR,dividends_paid,correct,,not_presented,not_presented,,
+hand,LOAR,share_buybacks,correct,,not_presented,not_presented,,
+machine,LOAR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,LOAR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,LOAR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+machine,LOAR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,LOW,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 hand,LOW,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,LOW,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
@@ -2731,43 +2731,43 @@ hand,LOW,cf_inventory_change,correct,,mapped,mapped,us-gaap:IncreaseDecreaseInIn
 hand,LOW,cf_ap_change,wrong,status,mapped,not_presented,us-gaap:IncreaseDecreaseInAccountsPayableTrade,
 hand,LOW,cash_paid_for_interest,wrong,status,not_presented,mapped,,us-gaap:InterestPaidNet
 hand,LOW,cash_paid_for_income_taxes,wrong,status,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
-hand,LSTR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
-,LSTR,cost_of_revenue,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,LSTR,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LSTR,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
-hand,LSTR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-,LSTR,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LSTR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-,LSTR,interest_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LSTR,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,LSTR,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,LSTR,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
-hand,LSTR,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,LSTR,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,LSTR,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,LSTR,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,LSTR,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,LSTR,accounts_receivable,wrong,status,mapped,combined,us-gaap:ReceivablesNetCurrent,us-gaap:ReceivablesNetCurrent
-,LSTR,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LSTR,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,LSTR,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,LSTR,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,LSTR,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,LSTR,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,LSTR,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-,LSTR,total_liabilities,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,LSTR,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,LSTR,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,LSTR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,LSTR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,LSTR,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,LSTR,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
-hand,LSTR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,LSTR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
-hand,LSTR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-,LSTR,cash_paid_for_interest,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:InterestPaid
-,LSTR,cash_paid_for_income_taxes,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
-,LSTR,total_debt,key_unverified,key row marked not hand-verified by the reader,not_presented,combined,,us-gaap:FinanceLeaseLiabilityCurrent
+machine,LSTR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+hand,LSTR,cost_of_revenue,correct,,not_presented,not_presented,,
+hand,LSTR,gross_profit,correct,,not_presented,not_presented,,
+machine,LSTR,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
+machine,LSTR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
+hand,LSTR,research_and_development,correct,,not_presented,not_presented,,
+machine,LSTR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,LSTR,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpense,
+machine,LSTR,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,LSTR,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,LSTR,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
+machine,LSTR,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,LSTR,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,LSTR,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,LSTR,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,LSTR,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,LSTR,accounts_receivable,wrong,status,mapped,combined,us-gaap:ReceivablesNetCurrent,us-gaap:ReceivablesNetCurrent
+hand,LSTR,inventory,correct,,not_presented,not_presented,,
+machine,LSTR,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,LSTR,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,LSTR,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,LSTR,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,LSTR,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,LSTR,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+hand,LSTR,total_liabilities,correct,,not_presented,not_presented,,
+machine,LSTR,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,LSTR,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,LSTR,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,LSTR,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,LSTR,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,LSTR,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAndAmortization,us-gaap:DepreciationAndAmortization
+machine,LSTR,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,LSTR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-gaap:PaymentsOfDividends
+machine,LSTR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,LSTR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaid,us-gaap:InterestPaid
+machine,LSTR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,LSTR,total_debt,wrong,status,mapped,combined,us-gaap:LongTermDebt,us-gaap:FinanceLeaseLiabilityCurrent
 hand,LSTR,shares_outstanding,correct,,not_presented,not_presented,,
 machine,LYFT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,LYFT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
@@ -2985,12 +2985,12 @@ hand,MKL,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 machine,MKL,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 machine,MKL,accounts_receivable,wrong,status,mapped,not_presented,us-gaap:PremiumsAndOtherReceivablesNet,
 hand,MKL,inventory,wrong,status,mapped,OUT,us-gaap:InventoryNet,
-hand,MKL,current_assets,wrong,status,not_presented,OUT,,
+,MKL,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 hand,MKL,ppe_net,wrong,status,mapped,not_presented,us-gaap:PropertyPlantAndEquipmentNet,
 machine,MKL,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,MKL,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,MKL,accounts_payable,correct,,not_presented,not_presented,,
-hand,MKL,current_liabilities,wrong,status,not_presented,OUT,,
+,MKL,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,MKL,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,MKL,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,MKL,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -3005,44 +3005,44 @@ hand,MKL,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaid,us-g
 hand,MKL,cash_paid_for_income_taxes,wrong,status,mapped,not_presented,us-gaap:IncomeTaxesPaid,
 hand,MKL,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebt,us-gaap:LongTermDebt
 hand,MKL,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStockSharesOutstanding,
-hand,MKTX,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
-,MKTX,cost_of_revenue,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,MKTX,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,MKTX,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-hand,MKTX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingAndAdvertisingExpense;us-gaap:GeneralAndAdministrativeExpense
-,MKTX,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,MKTX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-hand,MKTX,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
-hand,MKTX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,MKTX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,MKTX,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,MKTX,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,MKTX,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,MKTX,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,MKTX,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,MKTX,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-,MKTX,accounts_receivable,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,MKTX,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-,MKTX,current_assets,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,MKTX,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,MKTX,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,MKTX,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,MKTX,accounts_payable,wrong,status,mapped,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent
-,MKTX,current_liabilities,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,MKTX,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,MKTX,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,MKTX,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,MKTX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,MKTX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,MKTX,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,MKTX,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
-hand,MKTX,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,MKTX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfOrdinaryDividends,us-gaap:PaymentsOfOrdinaryDividends
-hand,MKTX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-hand,MKTX,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
-hand,MKTX,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-hand,MKTX,total_debt,correct,,component sum,component_sum,us-gaap:ShortTermBorrowings,us-gaap:ShortTermBorrowings
-hand,MKTX,shares_outstanding,wrong,status,component sum,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,MKTX,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+hand,MKTX,cost_of_revenue,correct,,not_presented,not_presented,,
+hand,MKTX,gross_profit,correct,,not_presented,not_presented,,
+machine,MKTX,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
+machine,MKTX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingAndAdvertisingExpense;us-gaap:GeneralAndAdministrativeExpense
+hand,MKTX,research_and_development,correct,,not_presented,not_presented,,
+machine,MKTX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,MKTX,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+machine,MKTX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,MKTX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,MKTX,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,MKTX,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,MKTX,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,MKTX,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,MKTX,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,MKTX,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+hand,MKTX,accounts_receivable,correct,,not_presented,not_presented,,
+hand,MKTX,inventory,correct,,not_presented,not_presented,,
+hand,MKTX,current_assets,correct,,not_presented,not_presented,,
+machine,MKTX,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,MKTX,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,MKTX,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,MKTX,accounts_payable,wrong,status,mapped,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent
+hand,MKTX,current_liabilities,correct,,not_presented,not_presented,,
+machine,MKTX,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,MKTX,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,MKTX,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,MKTX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,MKTX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,MKTX,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,MKTX,depreciation_and_amortization,wrong,status,combined,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
+machine,MKTX,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,MKTX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfOrdinaryDividends,us-gaap:PaymentsOfOrdinaryDividends
+machine,MKTX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,MKTX,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,MKTX,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,MKTX,total_debt,correct,,component sum,component_sum,us-gaap:ShortTermBorrowings,us-gaap:ShortTermBorrowings
+machine,MKTX,shares_outstanding,wrong,status,component sum,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,MOD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 hand,MOD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,MOD,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
@@ -3533,12 +3533,12 @@ hand,PFG,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 machine,PFG,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,PFG,accounts_receivable,correct,,not_presented,not_presented,,
 hand,PFG,inventory,wrong,status,not_presented,OUT,,
-hand,PFG,current_assets,wrong,status,not_presented,OUT,,
+,PFG,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,PFG,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
 machine,PFG,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,PFG,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,PFG,accounts_payable,correct,,not_presented,not_presented,,
-hand,PFG,current_liabilities,wrong,status,not_presented,OUT,,
+,PFG,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,PFG,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,PFG,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,PFG,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -3967,12 +3967,12 @@ machine,RF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverag
 hand,RF,cash_and_equivalents,wrong,status,mapped,not_presented,us-gaap:CashAndDueFromBanks,
 hand,RF,accounts_receivable,correct,,not_presented,not_presented,,
 hand,RF,inventory,wrong,status,not_presented,OUT,,
-hand,RF,current_assets,wrong,status,not_presented,OUT,,
+,RF,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,RF,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,RF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,RF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,RF,accounts_payable,correct,,not_presented,not_presented,,
-hand,RF,current_liabilities,wrong,status,not_presented,OUT,,
+,RF,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 machine,RF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,RF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,RF,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -4147,44 +4147,44 @@ machine,ROKU,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidN
 machine,ROKU,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
 hand,ROKU,total_debt,correct,,not_presented,not_presented,,
 hand,ROKU,shares_outstanding,wrong,status,component sum,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
-hand,RYN,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,RYN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
-,RYN,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,RYN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet
-hand,RYN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-,RYN,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,RYN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-,RYN,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
-hand,RYN,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,RYN,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,RYN,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,RYN,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,RYN,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-,RYN,weighted_basic_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-,RYN,weighted_diluted_shares,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,RYN,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,RYN,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
-hand,RYN,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
-hand,RYN,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,RYN,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-,RYN,goodwill,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,RYN,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,RYN,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,RYN,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-,RYN,total_liabilities,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,RYN,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,RYN,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,RYN,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,RYN,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,RYN,capex,wrong,status,mapped,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,us-gaap:PaymentsToDevelopRealEstateAssets
-hand,RYN,depreciation_and_amortization,wrong,status,mapped,not_presented,ryn:DepreciationDepletionAndAmortizationExcludingLargeDispositionsContinuingOperations,
-hand,RYN,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,RYN,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
-hand,RYN,share_buybacks,wrong,status,mapped,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-,RYN,cash_paid_for_interest,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,RYN,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-hand,RYN,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
-hand,RYN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,RYN,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
+machine,RYN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
+hand,RYN,gross_profit,correct,,not_presented,not_presented,,
+machine,RYN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet
+machine,RYN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
+hand,RYN,research_and_development,correct,,not_presented,not_presented,,
+machine,RYN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,RYN,interest_expense,correct,,combined,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+machine,RYN,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,RYN,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,RYN,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,RYN,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,RYN,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,RYN,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,RYN,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,RYN,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,RYN,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
+machine,RYN,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
+machine,RYN,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,RYN,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+hand,RYN,goodwill,correct,,not_presented,not_presented,,
+machine,RYN,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,RYN,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,RYN,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+hand,RYN,total_liabilities,correct,,not_presented,not_presented,,
+machine,RYN,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,RYN,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,RYN,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,RYN,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,RYN,capex,wrong,status,mapped,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,us-gaap:PaymentsToDevelopRealEstateAssets
+machine,RYN,depreciation_and_amortization,wrong,status,mapped,not_presented,ryn:DepreciationDepletionAndAmortizationExcludingLargeDispositionsContinuingOperations,
+machine,RYN,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,RYN,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
+machine,RYN,share_buybacks,wrong,status,mapped,combined,ryn:ProceedsUsedForShareBuybacks,us-gaap:PaymentsForRepurchaseOfCommonStock
+hand,RYN,cash_paid_for_interest,correct,,not_presented,not_presented,,
+machine,RYN,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,RYN,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+machine,RYN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,RYTM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,RYTM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,RYTM,gross_profit,correct,,not_presented,not_presented,,
@@ -4591,12 +4591,12 @@ hand,SYF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 machine,SYF,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,SYF,accounts_receivable,correct,,not_presented,not_presented,,
 hand,SYF,inventory,wrong,status,not_presented,OUT,,
-hand,SYF,current_assets,wrong,status,not_presented,OUT,,
+,SYF,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 hand,SYF,ppe_net,correct,,not_presented,not_presented,,
 machine,SYF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,SYF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,SYF,accounts_payable,correct,,not_presented,not_presented,,
-hand,SYF,current_liabilities,wrong,status,not_presented,OUT,,
+,SYF,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
 hand,SYF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,SYF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,SYF,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -4695,44 +4695,44 @@ hand,SYM,cash_paid_for_interest,correct,,not_presented,not_presented,,
 hand,SYM,cash_paid_for_income_taxes,correct,,not_presented,not_presented,,
 hand,SYM,total_debt,correct,,not_presented,not_presented,,
 hand,SYM,shares_outstanding,wrong,status,component sum,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
-hand,TEX,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,TEX,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
-hand,TEX,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
-hand,TEX,operating_expenses,correct,,component sum,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-hand,TEX,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-,TEX,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TEX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-hand,TEX,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
-hand,TEX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,TEX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,TEX,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
-hand,TEX,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,TEX,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,TEX,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,TEX,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,TEX,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,TEX,accounts_receivable,wrong,status,mapped,combined,us-gaap:ReceivablesNetCurrent,us-gaap:ReceivablesNetCurrent
-hand,TEX,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
-hand,TEX,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,TEX,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,TEX,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,TEX,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,TEX,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,TEX,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-hand,TEX,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,TEX,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest
-hand,TEX,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,TEX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,TEX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,TEX,capex,wrong,status,mapped,not_presented,tex:PaymentstoAcquireProductiveAssetsincludingdiscontinuedoperations,
-hand,TEX,depreciation_and_amortization,wrong,status,mapped,not_presented,tex:DepreciationDepletionandAmortizationincludingdiscontinuedoperations,
-hand,TEX,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,TEX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
-hand,TEX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-,TEX,cash_paid_for_interest,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:InterestPaid
-,TEX,cash_paid_for_income_taxes,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
-hand,TEX,total_debt,correct,,component sum,component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations
-hand,TEX,shares_outstanding,correct,,not_presented,not_presented,,
+machine,TEX,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
+machine,TEX,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
+machine,TEX,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
+machine,TEX,operating_expenses,correct,,component sum,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
+machine,TEX,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
+machine,TEX,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
+machine,TEX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,TEX,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
+machine,TEX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,TEX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,TEX,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
+machine,TEX,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,TEX,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,TEX,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,TEX,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,TEX,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,TEX,accounts_receivable,wrong,status,mapped,combined,us-gaap:ReceivablesNetCurrent,us-gaap:ReceivablesNetCurrent
+machine,TEX,inventory,correct,,mapped,mapped,us-gaap:InventoryNet,us-gaap:InventoryNet
+machine,TEX,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,TEX,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,TEX,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,TEX,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,TEX,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,TEX,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+machine,TEX,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,TEX,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest
+machine,TEX,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,TEX,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,TEX,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,TEX,capex,wrong,status,mapped,not_presented,tex:PaymentstoAcquireProductiveAssetsincludingdiscontinuedoperations,
+machine,TEX,depreciation_and_amortization,wrong,status,mapped,not_presented,tex:DepreciationDepletionandAmortizationincludingdiscontinuedoperations,
+machine,TEX,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+machine,TEX,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
+machine,TEX,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,TEX,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaid,us-gaap:InterestPaid
+machine,TEX,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+machine,TEX,total_debt,correct,,component sum,component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations
+machine,TEX,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStockSharesOutstanding,
 machine,TLN,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,TLN,cost_of_revenue,correct,,not_presented,not_presented,,
 machine,TLN,gross_profit,correct,,not_presented,not_presented,,
@@ -4885,44 +4885,44 @@ machine,TTAN,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidN
 machine,TTAN,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
 machine,TTAN,total_debt,correct,,component sum,component_sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebt,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt
 machine,TTAN,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
-hand,TTD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
-hand,TTD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
-,TTD,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense
-hand,TTD,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
-hand,TTD,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
-hand,TTD,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-,TTD,interest_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
-hand,TTD,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,TTD,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,TTD,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,TTD,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,TTD,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,TTD,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,TTD,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,TTD,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
-,TTD,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,TTD,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-,TTD,goodwill,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,TTD,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,TTD,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-hand,TTD,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,TTD,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,TTD,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
-hand,TTD,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,TTD,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,TTD,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,TTD,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
-hand,TTD,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-,TTD,dividends_paid,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-hand,TTD,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
-hand,TTD,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-,TTD,total_debt,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,TTD,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
+machine,TTD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+machine,TTD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
+hand,TTD,gross_profit,correct,,not_presented,not_presented,,
+machine,TTD,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense
+machine,TTD,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+machine,TTD,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
+machine,TTD,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,TTD,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseNonoperating,
+machine,TTD,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+machine,TTD,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,TTD,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,TTD,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,TTD,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,TTD,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,TTD,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,TTD,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,TTD,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
+hand,TTD,inventory,correct,,not_presented,not_presented,,
+machine,TTD,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,TTD,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+hand,TTD,goodwill,correct,,not_presented,not_presented,,
+machine,TTD,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,TTD,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,TTD,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+machine,TTD,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,TTD,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,TTD,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
+machine,TTD,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,TTD,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,TTD,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,TTD,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
+machine,TTD,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+hand,TTD,dividends_paid,correct,,not_presented,not_presented,,
+machine,TTD,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,TTD,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,TTD,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
+hand,TTD,total_debt,correct,,not_presented,not_presented,,
+machine,TTD,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
 machine,TTMI,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,TTMI,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 machine,TTMI,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
@@ -5349,44 +5349,44 @@ hand,WTS,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,u
 hand,WTS,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
 hand,WTS,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtNoncurrent
 hand,WTS,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
-hand,WULF,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,WULF,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
-,WULF,gross_profit,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,WULF,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
-hand,WULF,sga_expense,wrong,status,mapped,not_presented,us-gaap:SellingGeneralAndAdministrativeExpense,
-,WULF,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,WULF,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-hand,WULF,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
-hand,WULF,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
-hand,WULF,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
-hand,WULF,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
-hand,WULF,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
-hand,WULF,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
-hand,WULF,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
-hand,WULF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
-hand,WULF,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
-hand,WULF,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
-,WULF,inventory,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,WULF,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
-hand,WULF,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
-hand,WULF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
-hand,WULF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
-hand,WULF,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
-hand,WULF,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
-hand,WULF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
-hand,WULF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
-hand,WULF,cfo,wrong,tag,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations
-hand,WULF,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
-hand,WULF,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,WULF,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-hand,WULF,depreciation_and_amortization,wrong,status,component sum,not_presented,us-gaap:Depreciation,
-hand,WULF,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-,WULF,dividends_paid,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-hand,WULF,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
-hand,WULF,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
-hand,WULF,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
-hand,WULF,total_debt,wrong,status,component sum,combined,us-gaap:OtherLongTermDebtNoncurrent,us-gaap:ConvertibleDebtNoncurrent
-hand,WULF,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
+machine,WULF,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
+machine,WULF,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
+machine,WULF,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
+machine,WULF,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
+machine,WULF,sga_expense,wrong,status,mapped,not_presented,us-gaap:SellingGeneralAndAdministrativeExpense,
+hand,WULF,research_and_development,correct,,not_presented,not_presented,,
+machine,WULF,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
+machine,WULF,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+machine,WULF,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
+machine,WULF,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
+machine,WULF,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
+machine,WULF,basic_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareBasic,us-gaap:EarningsPerShareBasic
+machine,WULF,diluted_eps,correct,,mapped,mapped,us-gaap:EarningsPerShareDiluted,us-gaap:EarningsPerShareDiluted
+machine,WULF,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+machine,WULF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+machine,WULF,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
+machine,WULF,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNetCurrent,us-gaap:AccountsReceivableNetCurrent
+hand,WULF,inventory,correct,,not_presented,not_presented,,
+machine,WULF,current_assets,correct,,mapped,mapped,us-gaap:AssetsCurrent,us-gaap:AssetsCurrent
+machine,WULF,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
+machine,WULF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
+machine,WULF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
+machine,WULF,accounts_payable,correct,,mapped,mapped,us-gaap:AccountsPayableCurrent,us-gaap:AccountsPayableCurrent
+machine,WULF,current_liabilities,correct,,mapped,mapped,us-gaap:LiabilitiesCurrent,us-gaap:LiabilitiesCurrent
+machine,WULF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
+machine,WULF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
+machine,WULF,cfo,wrong,tag,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations
+machine,WULF,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
+machine,WULF,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
+machine,WULF,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
+machine,WULF,depreciation_and_amortization,wrong,status,component sum,not_presented,us-gaap:Depreciation,
+machine,WULF,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
+hand,WULF,dividends_paid,correct,,not_presented,not_presented,,
+machine,WULF,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
+machine,WULF,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
+machine,WULF,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
+machine,WULF,total_debt,wrong,status,component sum,combined,us-gaap:OtherLongTermDebtNoncurrent,us-gaap:ConvertibleDebtNoncurrent
+machine,WULF,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,WYNN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax
 hand,WYNN,cost_of_revenue,wrong,status,mapped,not_presented,us-gaap:CostOfGoodsAndServicesSold,
 hand,WYNN,gross_profit,correct,,not_presented,not_presented,,

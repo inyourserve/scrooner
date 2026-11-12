@@ -212,3 +212,9 @@ Guard: when a label would demote a line, check it against the calc position and 
 - A lone CF `Depreciation` / `OtherDepreciationAndAmortization` line is the D&A line; two or more CF D&A component lines are a duration sum.
 - New library rows: `IncreaseDecreaseInAccountsPayableTrade` → cf_ap_change; unclassified `AccountsReceivableNet` → accounts_receivable; `AccountsPayableCurrentAndNoncurrent` → accounts_payable.
 - Reader keys graded as key errors under existing rulings: tax-withholding or `ProceedsFromRepurchaseOfEquity` keyed as buybacks (founder 2026-11-04 item 4); NCI or preferred dividends keyed as common dividends; interest, notes or financing receivables keyed as accounts receivable.
+
+## §AD Rulings 2026-11-13 (Dhairya)
+
+1. **OUT vs not_presented.** A data point outside the company's template group is OUT. A data point inside the template that the filing does not print is not_presented. Banks and insurers present no classified balance sheet, so current_assets and current_liabilities are OUT (SYF). tools/grade.py grades a reader key of not_presented on those rows as a key error.
+2. **Opex as a difference of two totals** (WYNN: CostsAndExpenses − COGS). Status component_sum, tags = the printed face lines between COGS and operating income. The difference of the two totals is only a cross-check, and it must tie to that sum. The predictor still returns `mapped CostsAndExpenses` there. The fix is queued for the backtest (rules/inbox), with no rule change before exam/tools/backtest.py is on main.
+3. **Headline.** Hand-verified rows stay the headline, and graduation counts hand rows only, until exam/results/key-adjudication-2026-11-13.csv (the Verifier's 30 + 30 filing check) decides hand against machine.
