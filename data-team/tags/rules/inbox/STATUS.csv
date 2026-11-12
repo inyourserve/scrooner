@@ -1,2 +1,2 @@
 proposal_file,rule_id,status,backtest_delta,date,note
-2026-11-13-opex-ce-minus-cogs.csv,is.operating_expenses.procedure,waiting_backtest,,2026-11-13,no rule change before exam/tools/backtest.py is on main
+2026-11-13-opex-ce-minus-cogs.csv,is.operating_expenses.procedure,accepted v2,"hand net +1 (r->w 0, w->r 1; 3415 rows, 190 tickers); all rows net 0; exit 0; report exam/results/backtests/2026-11-13-opex-member-only-cos.md",2026-11-13,"narrowed to cost of revenue printed by member only (WYNN XBRL: COGS by ProductOrServiceAxis only, 4 members sum 4180918k); ASTS/TMUS keys map a total containing COS: flagged for adjudication"

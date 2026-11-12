@@ -165,6 +165,17 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                     status, rule = 'not_presented', 'opex lines do not tie to GP - OI'
             elif incl and cor is not None:
                 status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue'
+            elif incl and PO.get('dim_cos_component_sum') and (lambda t0: [l for l in IS_ if l['r'] == t0['r'] and l['ln'] < t0['ln'] and l['val'] is None and l['tag'] in PO['dim_cos_tags']])(incl[0]):
+                # Dhairya 2026-11-13 (WYNN): cost of revenue printed only by product/service member inside a one-step total ->
+                # opex = component_sum of the valued face lines after the cost line, up to the total
+                t0 = incl[0]
+                cl = max(l['ln'] for l in IS_ if l['r'] == t0['r'] and l['ln'] < t0['ln'] and l['val'] is None and l['tag'] in PO['dim_cos_tags'])
+                band = [l for l in IS_ if l['r'] == t0['r'] and cl < l['ln'] < t0['ln'] and l['val'] is not None and l['tag'] not in PO['band_exclude'] and not l['tag'].endswith('Abstract')]
+                cosb = [l for l in band if re.search(PO['cos_label_regex'], l['lab'] or '') or l['tag'].startswith(tuple(PO['cos_tag_prefixes'])) or re.search(r'(?i)interest', l['tag'])]
+                if band and not cosb:
+                    status, chosen, rule = 'component_sum', band, 'cost of revenue printed by member only inside the total: opex = face lines after it (WYNN ruling 2026-11-13)'
+                else:
+                    status, chosen, rule = 'combined', [t0], 'total contains a member-only cost-of-revenue line and other cost lines'
             elif incl:
                 # ruling 5 (refined 2026-11-12): no cost-of-revenue line anywhere; total maps unless a cost-of-sales-type line sits inside it
                 t0 = incl[0]
