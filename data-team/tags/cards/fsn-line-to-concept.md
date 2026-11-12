@@ -108,7 +108,10 @@ Guard: when a label would demote a line, check it against the calc position and 
 - JNJ latest 10-K: the incl-NCI equity and comprehensive-income tags are the only lines (no parent and no NCI line): equity maps by the rule in TOP-TAGS row 70.
 - GE `AllocatedShareBasedCompensationExpense` is after tax (R126): never SBC at GE.
 - GE prints no consolidated cost of revenue; Equipment and Services cost lines only (R3): cost of revenue = their sum under ruling (a) (printed duration components, same section).
-- JPM: "cash and due from banks" + "deposits with banks" = CF ending cash 343,338M. Serving the BS sum would be a derived instant (doc 02 item 4); the CF ending-cash line is a PRINTED instant with the same value: proposal = serve it, labelled. Ruling asked of Dhairya.
+- JPM: "cash and due from banks" + "deposits with banks" = CF ending cash 343,338M. Serving the BS sum would be a derived instant (doc 02 item 4); the CF ending-cash line is a PRINTED instant with the same value: serve it, labelled (ACCEPTED by Dhairya 2026-11-12, for every bank that splits cash across BS lines).
 - DELL, GOOG, INTC "Interest and other, net" / other income and expense totals include interest: combined.
 - HD's latest 10-K uses `IncomeTaxesPaidNet` (R68), not `IncomeTaxesPaid`.
 - Tooling: the SEC companyconcept API returns 404 for custom prefixes; use companyfacts for custom tags.
+
+## Q. Sums rule (Dhairya 2026-11-12, D3 narrowed to doc 02)
+- Durations: printed face-line sums allowed (opex, cost of revenue, interest, capex, D&A, NI = ProfitLoss − NCI). Instants: never summed, except total_debt (founder definition, doc 02 2026-11-04 item 5). Total liabilities, inventory or shares with no printed total = not_presented.

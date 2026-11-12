@@ -131,3 +131,5 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - Dhairya confirmed: "no NI-attributable line" = no parent `NetIncomeLoss` line; an "attributable to common" line after preferred does not block NI = ProfitLoss − NCI (PNC 6,936M stands).
 - Allowed face computations seen: AVGO NI 2019-08..2020-10 = ProfitLoss − NCI (both on the face); TMO pre-2018 cost of revenue = product + service cost lines (ruling (a)).
 - `IncomeLossIncludingPortionAttributableToNoncontrollingInterest` as pretax: PG 2024+, DELL 2019-2021, MCK, PSX (calc +1 beside the tax line).
+
+- Shares outstanding printed only per class (GOOGL A/B/C on the cover; per-class BS parentheticals): not_presented, never summed (Dhairya 2026-11-12).
