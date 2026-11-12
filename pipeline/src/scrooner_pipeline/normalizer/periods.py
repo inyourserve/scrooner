@@ -34,6 +34,7 @@ from scrooner_pipeline.collector.storage import (
 )
 from scrooner_pipeline.common.errors import log_error
 from scrooner_pipeline.common.history_floor import is_before_floor
+from scrooner_pipeline.normalizer.predecessors import predecessor_routes
 
 logger = structlog.get_logger()
 
@@ -353,10 +354,28 @@ def classify_period(
     }
 
 
-def upsert_periods(conn: psycopg.Connection, company_id: int, rows: list[dict]) -> int:
+def upsert_periods(
+    conn: psycopg.Connection,
+    company_id: int,
+    rows: list[dict],
+    keep_existing: bool = False,
+) -> int:
+    """`keep_existing` (predecessor routing): never overwrite the successor's own fiscal labels."""
     if not rows:
         return 0
+    if keep_existing:
+        sql = """
+            insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period)
+            values (%(company_id)s, %(start_date)s, %(end_date)s, %(period_type)s, %(fiscal_year)s, %(fiscal_period)s)
+            on conflict (company_id, start_date, end_date, period_type) do nothing
+            """
+    else:
+        sql = None
     with conn.cursor() as cur:
+        if sql:
+            cur.executemany(sql, [{"company_id": company_id, **row} for row in rows])
+            conn.commit()
+            return len(rows)
         cur.executemany(
             """
             insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period)
@@ -371,14 +390,28 @@ def upsert_periods(conn: psycopg.Connection, company_id: int, rows: list[dict]) 
     return len(rows)
 
 
+def _periods_rows(payload: dict, fiscal_year_end: str | None) -> list[dict]:
+    distinct_periods = extract_distinct_periods(payload)
+    fy_tagged_spans = extract_fy_tagged_spans(payload)
+    anchors = build_fye_anchors(distinct_periods, fy_tagged_spans)
+    nominal_month_day = _parse_fiscal_year_end(fiscal_year_end)
+    # The floor is applied AFTER anchors are built from the full payload:
+    # fiscal-year labels of the retained periods depend on older anchors.
+    return [
+        classify_period(end, start, anchors, nominal_month_day)
+        for end, start in distinct_periods
+        if not is_before_floor(_parse_date(end))
+    ]
+
+
 def normalize_periods_for_cik(
     storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
 ) -> dict:
     company = _get_company(conn, cik)
-    if company is None:
+    routes = predecessor_routes(conn, cik)
+    if company is None and not routes:
         logger.warning("periods.no_company_for_cik", cik=cik)
         return {"cik": cik, "status": "no_company"}
-    company_id, fiscal_year_end = company
 
     cf_row = _latest_companyfacts_object(conn, cik)
     if cf_row is None:
@@ -387,29 +420,29 @@ def normalize_periods_for_cik(
     _raw_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
 
-    distinct_periods = extract_distinct_periods(payload)
-    fy_tagged_spans = extract_fy_tagged_spans(payload)
-    anchors = build_fye_anchors(distinct_periods, fy_tagged_spans)
-    nominal_month_day = _parse_fiscal_year_end(fiscal_year_end)
-
-    # The floor is applied AFTER anchors are built from the full payload:
-    # fiscal-year labels of the retained periods depend on older anchors.
-    rows = [
-        classify_period(end, start, anchors, nominal_month_day)
-        for end, start in distinct_periods
-        if not is_before_floor(_parse_date(end))
-    ]
-    count = upsert_periods(conn, company_id, rows)
-
-    logger.info(
-        "periods.normalized",
-        cik=cik,
-        company_id=company_id,
-        periods=count,
-        fye_anchors=len(anchors),
-        unclassified=sum(1 for r in rows if r["fiscal_period"] is None),
-    )
-    return {"cik": cik, "status": "ok", "company_id": company_id, "periods": count}
+    result: dict = {"cik": cik, "status": "ok"}
+    if company is not None:
+        company_id, fiscal_year_end = company
+        rows = _periods_rows(payload, fiscal_year_end)
+        count = upsert_periods(conn, company_id, rows)
+        logger.info(
+            "periods.normalized",
+            cik=cik,
+            company_id=company_id,
+            periods=count,
+            unclassified=sum(1 for r in rows if r["fiscal_period"] is None),
+        )
+        result.update({"company_id": company_id, "periods": count})
+    # Predecessor windows: period rows for the successor, classified on the predecessor's own
+    # fiscal calendar, only inside the window, never overwriting the successor's existing rows.
+    routed = 0
+    for r in routes:
+        rows = [
+            row for row in _periods_rows(payload, None) if r.contains(row["end_date"])
+        ]
+        routed += upsert_periods(conn, r.company_id, rows, keep_existing=True)
+    result["predecessor_periods"] = routed
+    return result
 
 
 def normalize_periods(conn: psycopg.Connection, ciks: set[str]) -> dict:

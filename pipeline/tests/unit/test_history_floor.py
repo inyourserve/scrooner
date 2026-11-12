@@ -82,6 +82,7 @@ def _patch_facts(monkeypatch):
             n += 1
             all_keys[key] = n
     monkeypatch.setattr(facts_mod, "_get_company_id", lambda c, k: 1)
+    monkeypatch.setattr(facts_mod, "predecessor_routes", lambda c, k: [])
     monkeypatch.setattr(facts_mod, "_latest_companyfacts_object", lambda c, k: (5, "raw/x.json"))
     monkeypatch.setattr(facts_mod, "_load_json", lambda s, p: PAYLOAD)
     monkeypatch.setattr(facts_mod, "_load_filing_lookup", lambda c, i: {"A1": 1, "A2": 2})
@@ -119,6 +120,7 @@ def test_periods_filtered_after_anchors_and_labels_unchanged(monkeypatch):
     ] + [{"start": "2014-01-01", "end": "2014-03-31", "val": 1, "accn": "A", "fp": "Q1"}]}}}}}
     captured = {}
     monkeypatch.setattr(periods_mod, "_get_company", lambda c, k: (1, "1231"))
+    monkeypatch.setattr(periods_mod, "predecessor_routes", lambda c, k: [])
     monkeypatch.setattr(periods_mod, "_latest_companyfacts_object", lambda c, k: (5, "raw/x.json"))
     monkeypatch.setattr(periods_mod, "_load_json", lambda s, p: payload)
     monkeypatch.setattr(periods_mod, "upsert_periods", lambda c, i, rows: captured.setdefault("rows", rows) and len(rows))
