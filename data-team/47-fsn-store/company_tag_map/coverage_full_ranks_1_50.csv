@@ -1345,7 +1345,7 @@ company_id,ticker,template,data_point,status
 1807,MS,broker_am,revenue_sanity,sourced
 1807,MS,broker_am,sbc,sourced
 1807,MS,broker_am,sga_expense,read-verified pass of: template-OUT candidate (Verifier draw)
-1807,MS,broker_am,share_buybacks,not_presented (held_custom_extension_no_fact)
+1807,MS,broker_am,share_buybacks,combined (reasoned blank)
 1807,MS,broker_am,shares_outstanding,sourced
 1807,MS,broker_am,stockholders_equity,sourced
 1807,MS,broker_am,total_assets,sourced
@@ -1465,7 +1465,7 @@ company_id,ticker,template,data_point,status
 2726,CRWD,general,cost_of_revenue,sourced
 2726,CRWD,general,current_assets,sourced
 2726,CRWD,general,current_liabilities,sourced
-2726,CRWD,general,depreciation_and_amortization,not_presented (held_custom_extension_no_fact)
+2726,CRWD,general,depreciation_and_amortization,sourced
 2726,CRWD,general,diluted_eps,sourced
 2726,CRWD,general,dividends_paid,read-verified pass of: template-OUT candidate (Verifier draw)
 2726,CRWD,general,dividends_per_share,held C6 (0122)
@@ -2344,7 +2344,7 @@ company_id,ticker,template,data_point,status
 5761,PM,general,inventory,sourced
 5761,PM,general,net_income,sourced
 5761,PM,general,net_lease_revenue,template seed: should be COND
-5761,PM,general,operating_expenses,not_presented (held_custom_extension_no_fact)
+5761,PM,general,operating_expenses,sourced
 5761,PM,general,operating_income,sourced
 5761,PM,general,other_income_expense_net,read-verified pass of: template-OUT candidate (Verifier draw) /
 5761,PM,general,ppe_net,sourced
