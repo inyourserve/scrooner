@@ -431,3 +431,43 @@ def test_override_concept_column_notes():
     assert (a["decision"], m.library_row(a)["reason_class"]) == ("excluded", "company_override_excluded")
     assert b["decision"] == "needs_detail" and b["era"][0] == date(2018, 1, 1) and not b["scope_latest"]
     assert c["decision"] == "concept"
+
+
+def test_standard_tag_library_pattern_and_explicit_rows_decide_a_ci_tag():
+    lib = [{"stmt": "CI", "tag": "ComprehensiveIncomeNetOfTax", "decision": "map", "concept": "comprehensive_income",
+            "parent_concept": "", "reason_class": "", "caveat": "c", "evidence": "e", "lines_top100": "9",
+            "companies_top100": "5", "source": "pattern"},
+           {"stmt": "BS", "tag": "OtherAssetsNoncurrent", "decision": "excluded", "concept": "", "parent_concept": "",
+            "reason_class": "component_no_concept", "caveat": "no concept", "evidence": "", "lines_top100": "1",
+            "companies_top100": "1", "source": "explicit"},
+           {"stmt": "IS", "tag": "SellingAndMarketingExpense", "decision": "component", "concept": "",
+            "parent_concept": "sga_expense", "reason_class": "", "caveat": "", "evidence": "", "lines_top100": "1",
+            "companies_top100": "1", "source": "pattern"}]
+    ents = m.parse_source("standard-tag-library.csv", lib)
+    assert [e["source"] for e in ents] == ["tag-library:pattern", "tag-library:explicit", "tag-library:pattern"]
+    assert ents[0]["decision"] == "concept" and ents[0]["prio"] == 1
+    assert m.missing_detail(ents[2]) == "sign"  # no sign column: needs_detail, never guessed
+    key = ("us-gaap", "ComprehensiveIncomeNetOfTax", "CI")
+    groups = {key: {p: ap(i, "CI", "ComprehensiveIncomeNetOfTax", p) + (True,) for i, p in enumerate(P)}}
+    res = m.expand_company(1, set(), groups, P, m.build_index(ents))[key]
+    assert [m.library_row(e)["canonical_concept"] for e, *_ in res["rows"]] == ["comprehensive_income"]
+    # a company row still wins over a library pattern row
+    comp = m.parse_source("companies-x.csv", [co(1, "CI", "ComprehensiveIncomeNetOfTax", "exclude", "")])
+    res2 = m.expand_company(1, set(), groups, P, m.build_index(ents + comp))[key]
+    assert [e["decision"] for e, *_ in res2["rows"]] == ["excluded"]
+
+
+def test_value_source_follows_the_taxonomy():
+    assert m.value_source("us-gaap") == "sec_api" and m.value_source("dei") == "sec_api"
+    assert m.value_source("srt") == "sec_api" and m.value_source("ifrs-full") == "sec_api"
+    assert m.value_source("custom") == "fsn_xbrl" and "value_source" in m.COLUMNS
+
+
+def test_override_component_concept_and_description_tag():
+    base = {"company": "IBM", "cik": "0000000009", "stmt": "CF", "scope": "latest 10-K", "status": "FILING-CHECKED",
+            "evidence": "e", "note": "capitalised software is IN capex: printed duration sum", "value_source": "fsn_xbrl"}
+    a, b = m.parse_source("company-overrides.csv", [dict(base, tag="(custom) investment in software",
+                                                         concept="capex_resolved component"),
+                                                    dict(base, tag="X", concept="capex_resolved component")], {"0000000009": 9})
+    assert a["decision"] == "needs_detail" and "description" in a["detail_note"]
+    assert (b["decision"], b["concept"], b["sign"], b["value_source"]) == ("component", "capex_resolved", "+1", "fsn_xbrl")

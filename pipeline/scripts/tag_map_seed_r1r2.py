@@ -46,6 +46,7 @@ DEFAULT_GLOBS = [
     str(REPO / "data-team/tags/decisions/companies-*-exceptions-*.csv"),
     str(REPO / "data-team/tags/decisions/std-tags-rank-*.csv"),
     str(REPO / "data-team/tags/library/fsn-*.csv"),
+    str(REPO / "data-team/tags/library/standard-tag-library.csv"),
     str(REPO / "data-team/tags/library/needs-detail-answers-*.csv"),
     str(REPO / "data-team/tags/library/company-overrides.csv"),
 ]
@@ -78,7 +79,7 @@ PLUS_REASON = re.compile(r"\bsum\b|component sum|capex =|INCLUDE in capex", re.I
 COLUMNS = [
     "company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept",
     "combine_sign", "components", "reason_class", "reason", "era_from", "era_to", "evidence_adsh",
-    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id", "scale",
+    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id", "scale", "value_source",
 ]
 
 
@@ -128,7 +129,7 @@ def _tag(raw: str) -> tuple[str | None, str]:
 def _entry(**kw) -> dict:
     base = {"taxonomy": None, "company": None, "decision": "", "concept": "", "sign": "", "components": [],
             "applies_to": "", "era": (None, None), "reason": "", "exceptions": [], "source": "", "rule_id": RULE_LIBRARY,
-            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scale": 1, "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
+            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scale": 1, "value_source": "", "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
     base.update(kw)
     return base
 
@@ -207,6 +208,26 @@ def parse_tag_rows(rows: list[dict], source: str) -> list[dict]:
     return out
 
 
+def parse_catalog_rows(rows: list[dict], source: str) -> list[dict]:
+    """library/standard-tag-library.csv (stmt, tag, decision, concept, parent_concept, reason_class, caveat, evidence,
+    source = explicit | pattern | reconcile notes). Tag-level, same precedence as the cards; 'pattern' rows are
+    decisions too (the Tag Expert wrote them per tag/statement). decided_by 'tag-library:<source>'. A component row
+    has no sign column, so it stays needs_detail until an answer gives one; a combined row without a concept too."""
+    out = []
+    for raw in rows:
+        r = {_hk(k): (v or "").strip() for k, v in raw.items() if k}
+        if not r.get("tag") or not r.get("stmt"):
+            continue
+        tx, tag = _tag(r["tag"])
+        dec = r.get("decision", "").lower()
+        concept = r.get("parent_concept", "") if DECISION_MAP.get(dec) == "component" else r.get("concept", "")
+        out.append(_entry(
+            taxonomy=tx, tag=tag, home_stmts=[r["stmt"].upper()], decision=dec, concept=concept,
+            reason=" | ".join(x for x in (r.get("caveat", ""), r.get("evidence", "")) if x),
+            reason_class=r.get("reason_class", ""), source="tag-library:" + (r.get("source") or "explicit"), prio=1))
+    return out
+
+
 def parse_ranks_rows(rows: list[dict], source: str) -> list[dict]:
     """Ritwik's per-company map (company_tag_map/ranks_1_50.csv), already in the contract columns. A blank decision is
     an undecided row ('review': loads nothing, blocks tag-level rows). Company-specific, so it wins."""
@@ -250,10 +271,19 @@ def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]
                 dec, concept = "excluded", ""
             else:
                 dec, note = "needs_detail", f"override concept column holds a note, not a concept key: {concept}"
+        mc = re.fullmatch(r"(\S+)\s+component", concept)
+        sign = ""
+        if mc:  # 'capex_resolved component': a component of that concept; additive when the note says it is a sum
+            dec, concept = "component", mc.group(1)
+            sign = "+1" if PLUS_REASON.search(r.get("note", "") + " " + r.get("evidence", "")) or re.search(
+                r"\bsum\b", r.get("note", ""), re.I) else ""
+        if tag.startswith("("):  # a description of a line, not a tag name: it can never match an FSN tag
+            dec, note = "needs_detail", f"override names no tag, only a description: {r['tag']}"
         scope = r.get("scope", "")
         yr = re.fullmatch(r"(\d{4})\+", scope.strip())
         out.append(_entry(
-            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision=dec, concept=concept, detail_note=note,
+            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision=dec, concept=concept, detail_note=note, sign=sign,
+            value_source=r.get("value_source", ""),
             home_stmts=[r["stmt"].upper()], reason=f"{r.get('evidence', '')}; {r.get('note', '')}".strip("; "),
             source="company-override:" + source, rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
             reason_class="company_override_excluded" if dec == "excluded" else "",
@@ -289,6 +319,11 @@ def apply_answers(entries: list[dict], answers: list[dict]) -> int:
 
 def parse_source(name: str, rows: list[dict], cik_to_id: dict | None = None) -> list[dict]:
     head = {_hk(k) for k in (rows[0] if rows else {})}
+    if {"parent_concept", "caveat", "lines_top100"} <= head and "company_id" not in head:
+        ents = parse_catalog_rows(rows, name)
+        for e in ents:
+            e["decision"] = DECISION_MAP.get(e["decision"], e["decision"])
+        return ents
     if {"company", "scope", "status"} <= head and "cik" in head:
         return parse_override_rows(rows, name, cik_to_id or {})
     if "company_id" in head and "evidence_adsh" in head:
@@ -758,6 +793,12 @@ def load_sources(patterns: list[str], cik_to_id: dict | None = None) -> tuple[li
     return entries, [Path(p).name for p in files]
 
 
+def value_source(taxonomy: str) -> str:
+    """Founder decision 2026-11-12: standard-taxonomy tags take their value from the SEC API (companyfacts);
+    extension (custom) tags take it from the filing's own XBRL in the FSN store."""
+    return "sec_api" if taxonomy in STD_TAXONOMIES else "fsn_xbrl"
+
+
 def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, stats):
     """rows: appearance tuples of one company. Returns (csv rows, key info)."""
     rows = relabel_un(relabel_ci(rows))  # CI-as-IS first, then UN to its effective role; amendments without any IS/BS/CF/CI line have no rows at all, so they never count
@@ -803,6 +844,7 @@ def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, st
             "evidence_report": rr[12], "evidence_line": rr[13], "evidence_plabel": rr[14] or "",
             "evidence_cal_parent": parents.get((rr[5], rr[15]), ""), "decided_by": e["source"],
             "rule_id": e["rule_id"],
+            "value_source": e["value_source"] or value_source(tx),
         }
         row.update(library_row(e))
         if e["kind"] == "condition":
@@ -873,6 +915,7 @@ def cmd_seed(args) -> None:
                 row = dict(e["raw"])
                 row["decided_by"], row["rule_id"] = e["source"], RULE_COMPANY
                 row["scale"] = 1
+                row["value_source"] = value_source(row.get("taxonomy", ""))
                 w.writerow(row)
                 passthrough += 1
                 by_decision[e["decision"]] += 1
@@ -890,6 +933,12 @@ def cmd_seed(args) -> None:
         nw.writerow(["source", "tag", "stmt", "decision", "concept", "missing", "companies_affected"])
         for k, cs in sorted(stats["needs_detail"].items(), key=lambda kv: -len(kv[1])):
             nw.writerow([*k, len(cs)])
+    with open(out_path.with_suffix(".needs_detail.csv"), "a", newline="") as f:
+        nw = csv.writer(f)
+        for e in entries:  # override rows that can never match a tag: surfaced, not silently dropped
+            if e["source"].startswith("company-override") and e["detail_note"] and e["tag"].startswith("("):
+                nw.writerow([e["source"], e["tag"], "/".join(e["home_stmts"]), e["decision"], e["concept"],
+                             e["detail_note"], 1])
     ranked = sorted(undecided.items(), key=lambda kv: -kv[1])
     total = sum(c["fy2023_statement_tags"] for c in per_company.values())
     dec_total = sum(c["decided"] for c in per_company.values())
