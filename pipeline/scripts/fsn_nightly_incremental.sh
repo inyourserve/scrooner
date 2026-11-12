@@ -6,7 +6,8 @@
 #   off   (default) nothing
 #   build fetch + convert the day's new 10-K/10-Q filings of the cohort; local files only
 #   load  + `scrooner-fsn load --increment` and `pilot` (map, checks, select): writes fsn.* only
-#   write + before-image, done gate, protected cell write to analytics.canonical_fact
+#   write + the tag-map write (`scrooner-map tagmap-plan --apply`, rule company_tag_map.select@1) for the
+#         night's companies that have a company_tag_map; values come from the SEC company facts
 # load and write are production writes: they need the founder's typed words before the variable
 # is set (CLAUDE.md). This script never fails the night: every failure is a ::warning and exit 0,
 # and a filing that did not make it is picked up by the next night's lookback (it is still not in
@@ -16,7 +17,6 @@ set -uo pipefail
 STAGE="${FSN_NIGHTLY_STAGE:-off}"
 OUT="${FSN_NIGHTLY_OUT:-out-fsn-nightly}"
 MAX_BACKENDS="${MAX_BACKENDS:-60}"
-DATA_POINTS="${FSN_NIGHTLY_DATA_POINTS:-revenue_sanity_resolved,net_income_resolved,operating_income_resolved,gross_profit_resolved,cost_of_revenue_resolved,income_before_tax_resolved,income_tax_expense_resolved,interest_expense_resolved,cfo_resolved,share_buybacks_resolved,dividends_paid_resolved,basic_eps_resolved,diluted_eps_resolved,dividends_per_share_resolved,shares_outstanding_resolved}"
 FSN="uv run --project pipeline scrooner-fsn"
 
 case "$STAGE" in
@@ -59,21 +59,26 @@ if ! timeout 30m $FSN pilot --ciks "$CIKS" --out "$OUT/pilot"; then
 fi
 [ "$STAGE" = load ] && exit 0
 
-if ! [ -f "$OUT/pilot/report.json" ]; then
-  warn "no pilot report; nothing written"
+# write: the tag-map write path (founder 2026-11-11 "FSN FOR LEARNING - which tag is what. SEC FOR MAPPING";
+# Engineering 2026-11-12): rule company_tag_map.select@1 over the SEC company facts (core.fact) for the night's
+# companies that have analytics.company_tag_map rows. It writes with scrooner.writer = 'company_tag_map' (0123),
+# protects every written key and records ownership, all in one transaction per company, with a before-image.
+# Companies without a tag map are not written (they stay on the old path until their map exists).
+IDS=$(python3 - "$OUT/nightly.json" <<'PY'
+import json, sys
+print(",".join(sorted({str(f["company_id"]) for f in json.load(open(sys.argv[1]))["filings"]})))
+PY
+)
+[ -n "$IDS" ] || { echo "fsn nightly: no company to write"; exit 0; }
+MAPPED=$(psql "$DATABASE_URL" -tAc "set statement_timeout = '15s'; select string_agg(distinct company_id::text, ',') from analytics.company_tag_map where company_id = any('{${IDS}}'::bigint[])" 2>/dev/null | tail -1)
+if [ -z "$MAPPED" ]; then
+  echo "fsn nightly: none of tonight's companies has a tag map; nothing written"
   exit 0
 fi
-timeout 10m $FSN pilot-prod --pilot-out "$OUT/pilot" || { warn "before-image failed; nothing written"; exit 0; }
-timeout 5m $FSN done-gate --pilot-out "$OUT/pilot" --data-points "$DATA_POINTS" || { warn "done gate failed; nothing written"; exit 0; }
-for d in "$OUT"/pilot/cells/*/; do
-  [ -f "$d/cells.jsonl.gz" ] || continue
-  fam=$(basename "$d")
-  [ "$fam" = unowned ] && continue
-  mkdir -p "$OUT/write/$fam"
-  python3 pipeline/scripts/fsn_filter_done_cells.py "$d/cells.jsonl.gz" "$OUT/write/$fam/cells.jsonl.gz" "$DATA_POINTS" "$OUT/pilot/done_companies.txt" || continue
-  [ "$(zcat "$OUT/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ] && continue
-  timeout 15m uv run --project pipeline scrooner-cells load "$OUT/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
-    --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
-    --report "$OUT/write-$fam.json" || warn "cell write $fam failed"
-done
+if ! SCROONER_RULES_ENABLED="${SCROONER_RULES_ENABLED:+$SCROONER_RULES_ENABLED,}company_tag_map.select@1" \
+  timeout 30m uv run --project pipeline scrooner-map tagmap-plan --company-ids "$MAPPED" --apply \
+  --before-image-dir "$OUT/before_image" > "$OUT/tagmap-plan.txt" 2>&1; then
+  warn "tag-map write failed or reported NEITHER cells (see $OUT/tagmap-plan.txt); each company is its own transaction"
+fi
+cat "$OUT/tagmap-plan.txt"
 exit 0

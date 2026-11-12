@@ -109,9 +109,8 @@ jobs:
             out-fsn-nightly/load.json
             out-fsn-nightly/pilot/report.json
             out-fsn-nightly/pilot/failed.json
-            out-fsn-nightly/pilot/done_companies.txt
-            out-fsn-nightly/pilot/not_done.json
-            out-fsn-nightly/write-*.json
+            out-fsn-nightly/tagmap-plan.txt
+            out-fsn-nightly/before_image/
           if-no-files-found: ignore
           retention-days: 30
       - name: Reprocess Normalizer + Mapper for recently-filed companies

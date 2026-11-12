@@ -3,10 +3,12 @@
 Founder decisions relayed by Dhairya 2026-11-11: once a company is written from the FSN store its nightly
 updates come from the hybrid path only, and the old path skips it entirely, at the writer, not cell by cell.
 
-A company is on the new path once an applied FSN cell write has landed for it: it holds
-analytics.slot_protected_cell rows whose run is an `fsn.*` rule run in apply mode (the protection rows are
-written in the same transaction as the cells, cell_loader.protect_cells, so the switch happens in the same
-step as the write), or it has an analytics.company_value_owner row (migration 0119) where that table exists.
+A company is on the new path once an applied new-system write has landed for it: it holds
+analytics.slot_protected_cell rows whose run is in apply mode and is either the tag-map writer
+(company_tag_map.select@1, mapper/company_tag_map_plan.py; the write path after the founder's 2026-11-11
+methodology change) or an `fsn.*` FSN cell write. Both writers save those rows in the same transaction as the
+cells, so the switch happens in the same step as the write. A company with an analytics.company_value_owner
+row (0119; the tag-map writer adds owner 'company_tag_map', 0123) is on the new path too, where that table exists.
 A restore that removes the company's FSN protection rows takes it back to the old path.
 
 The skip is behind HYBRID_NEW_PATH (off by default). With it on, a failure to read the set fails closed:
@@ -25,7 +27,7 @@ NEW_PATH_SQL = """
 select distinct p.company_id
 from analytics.slot_protected_cell p
 join analytics.rule_run r on r.run_id::text = p.run_id
-where r.rule_id like 'fsn.%%' and r.mode = 'apply'
+where (r.rule_id like 'fsn.%%' or r.rule_id = 'company_tag_map.select@1') and r.mode = 'apply'
 """
 
 

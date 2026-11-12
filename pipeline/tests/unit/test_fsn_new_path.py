@@ -77,20 +77,24 @@ def test_flag_is_off_by_default(monkeypatch):
 
 @pytest.mark.integration
 def test_a_company_is_on_the_new_path_once_an_applied_fsn_write_landed(conn, monkeypatch):
-    fsn_co, release_co, dry_co, plain = (_company(conn, c) for c in ("0000000011", "0000000012", "0000000013", "0000000014"))
+    fsn_co, release_co, dry_co, plain, tagmap_co = (
+        _company(conn, c) for c in ("0000000011", "0000000012", "0000000013", "0000000014", "0000000015")
+    )
     concept = _concept(conn, "revenue_sanity_resolved")
     fsn_run, release_run, dry_run = _run(conn, "fsn.select@1"), _run(conn, "is.revenue@1"), _run(conn, "fsn.select@1", "dry_run")
     _protect(conn, fsn_co, concept, _period(conn, fsn_co), fsn_run, "fsn.select@1")
     _protect(conn, release_co, concept, _period(conn, release_co), release_run, "is.revenue@1")  # an old patch package
     _protect(conn, dry_co, concept, _period(conn, dry_co), dry_run, "fsn.select@1")
     _period(conn, plain)
+    # the tag-map writer (Engineering, 2026-11-12: rule company_tag_map.select@1, mapper/company_tag_map_plan.py)
+    _protect(conn, tagmap_co, concept, _period(conn, tagmap_co), _run(conn, "company_tag_map.select@1"), "company_tag_map.select@1")
     conn.commit()
-    assert new_path.company_ids(conn) == {fsn_co}
-    assert new_path.ciks(conn) == ["0000000011"]
+    assert new_path.company_ids(conn) == {fsn_co, tagmap_co}
+    assert new_path.ciks(conn) == ["0000000011", "0000000015"]
     monkeypatch.delenv(new_path.FLAG, raising=False)
     assert new_path.excluded_company_ids(conn) == set()  # off: the old path skips nothing
     monkeypatch.setenv(new_path.FLAG, "on")
-    assert new_path.excluded_company_ids(conn) == {fsn_co}
+    assert new_path.excluded_company_ids(conn) == {fsn_co, tagmap_co}
 
 
 @pytest.mark.integration
