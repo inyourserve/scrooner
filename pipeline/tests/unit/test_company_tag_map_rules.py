@@ -571,6 +571,8 @@ def test_total_debt_components_sum_by_the_founder_definition_without_calc_parent
     assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
 
 
+
+
 def test_status_rows_with_a_candidate_marker_still_load():
     # a tagless status row records why the cell is blank; it never serves a value, so it is not held
     from scrooner_pipeline.mapper.company_tag_map_seed import held_by_verifier
@@ -616,3 +618,5 @@ def test_a_component_sum_never_mixes_sources_and_an_fsn_value_must_be_on_the_fac
     row = MapRow("custom", "OperatingExpensesExclAmort", "IS", "concept", OPEX, None, 1, ERA, None)
     cells, stats = build_cells([row], off, INFO)
     assert cells == [] and stats["held"][0]["reason"] == "fsn_value_not_on_face_line"
+
+
