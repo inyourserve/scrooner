@@ -1,0 +1,35 @@
+name: SEC document fetch for filing reads
+
+# Raw SEC documents for document-first reads (ranks 301-400, founder order 2026-11-12). Runs when the request file
+# changes on the reads branch. sec.gov hosts only, the repo's SEC_USER_AGENT secret, at most 0.4 requests per second
+# (sec_fetch.py). No database, no bucket: the documents are uploaded as an artifact and read elsewhere.
+on:
+  push:
+    branches: [work/reads/301-400]
+    paths: [pipeline/scripts/reads/fetch_request.csv]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sec-reads-fetch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --project pipeline --locked
+      - name: Fetch (0.4 requests per second)
+        run: uv run --project pipeline python pipeline/scripts/reads/sec_fetch.py pipeline/scripts/reads/fetch_request.csv sec_docs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sec-docs-${{ github.sha }}
+          path: sec_docs/
+          retention-days: 30
