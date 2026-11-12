@@ -29,3 +29,9 @@ Hand checks on ranks 121-130 (APH CEG ADBE DUK PWR GD MELI ELV USB ICE):
 - USB: 6 template rows set to OUT (bank).
 - Corrections to my own 111-120 rows: BNY opex = NoninterestExpense 13,054 (bank precedent C, SCHW); HCA SG&A not_presented (Dhairya).
 - blind-grade.csv: 0 key_error rows for these tickers.
+
+Finance-lease sweep of ranks 101-130 (founder 2026-11-04 item 5): every total_debt row was checked for finance leases.
+- 2 re-keys: CME +50.7 (note R82) and GD +392 (R79, leases in other liabilities).
+- Leases already inside the debt lines, no change: DUK (R138/R139), HCA (R65), MELI (R105), EQIX (explicit lines), and every row whose debt tag is LongTermDebtAndCapitalLeaseObligations*.
+- No finance-lease facts in the filing: ABNB, ADBE, ADP, BNY, ELV, ICE, NET, PLD, SBUX, SNOW, SYK, TT, WDC.
+- Open: FCX, where only per-asset rounded lease amounts are tagged (R82).

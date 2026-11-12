@@ -108,3 +108,4 @@ none beyond sign differences
 - cash_paid_for_interest: mapped us-gaap:InterestPaidNet (R8.htm): 2026-11-12 R8.htm: 20% mapped sample: CF R8.htm 'Interest payments' is the cash_paid_for_interest line, printed 2207000000 = filing XBRL 2207000000; agrees
 - sga_expense (review resolved, Dhairya relay 2026-11-12): mapped us-gaap:GeneralAndAdministrativeExpense (R40.htm): decided by the filing: R40 prints total G&A 548,000,000 (FY2024 421,000,000); HCA prints no selling line, so G&A is the whole SG&A; fact only in a note -> mapped NOTE
 - sga_expense: corrected to not_presented (Dhairya 2026-11-12, card AD.7): R40 548M is corporate-office costs only, a slice
+- total_debt: finance-lease ruling (founder 2026-11-04 item 5, Dhairya 2026-11-12): R65 places finance leases (133 + 625) inside 'Short-term borrowings and long-term debt due within one year' and 'Long-term debt', so no lease is added

@@ -105,3 +105,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - accounts_payable: combined us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent (R3.htm): 2026-11-12 R3.htm: sample DISAGREES: 'Accounts payable and accrued expenses' bundles accrued expenses: combined
 - total_liabilities: mapped us-gaap:Liabilities (R3.htm): 2026-11-12 R3.htm: 20% mapped sample: BS R3.htm 'Total liabilities' is the total_liabilities line, printed 35919000000 = filing XBRL 35919000000; agrees
 - share_buybacks: mapped us-gaap:PaymentsForRepurchaseOfCommonStock (R8.htm): 2026-11-12 R8.htm: 20% mapped sample: CF R8.htm 'Common Stock repurchased' is the share_buybacks line, printed -1000000 = filing XBRL 1000000; agrees
+- total_debt: finance-lease ruling (founder 2026-11-04 item 5, Dhairya 2026-11-12): R105 places finance leases (48 + 82) inside 'Loans payable and other financial liabilities', so no lease is added
