@@ -12,7 +12,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| revenue | mapped | us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax | R5.htm | Service charges | 40168000 |  | 39223000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001331520-26-000051 R5.htm period ..2025-12-31 |
+| revenue | component sum | us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax[member: Service charges]+us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax[member: Service charges] | R5.htm | Service charges + Service charges | 86778000 |  | 82232000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001331520-26-000051 R5.htm period ..2025-12-31 |
 | cost_of_revenue | OUT |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | check: machine-full-filing / OUT: outside the bank template (SIC 6022; Dhairya OUT ruling main @020ebb29); was: not_presented |
 | gross_profit | OUT |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | check: machine-full-filing / OUT: outside the bank template (SIC 6022; Dhairya OUT ruling main @020ebb29); was: not_presented |
 | operating_expenses | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingExpenses in MetaLinks.json (1100 tags across all 118 R pages, face and notes) of 0001331520-26-000051; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:OtherCostAndExpenseOperating 'Other operating expenses / Total other operating expenses / ' R5,R100,R118 |
@@ -85,4 +85,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cash_paid_for_income_taxes: era 10-K 0001193125-18-059851 R8.htm read; no row matched (auto)
 
 ## Mismatches (printed vs API)
-- revenue: API missing (us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax)
+- revenue: API missing (us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax[member: Service charges]+us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax[member: Service charges])
