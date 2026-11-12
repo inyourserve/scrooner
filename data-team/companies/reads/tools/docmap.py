@@ -183,6 +183,7 @@ DP = [  # (data point, statement, tags in preference order, label regex)
     ("sbc", "CF", ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"], r"(stock|share)-based compensation"),
     ("dividends_paid", "CF", ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends"], r"dividends paid|cash dividends"),
     ("share_buybacks", "CF", ["PaymentsForRepurchaseOfCommonStock"], r"repurchase|purchases? of (common|treasury)"),
+    # InterestPaidNet = net of capitalized interest (DQC_0065)
     ("cash_paid_for_interest", "CF", ["InterestPaidNet", "InterestPaid"], r"^interest paid|cash paid for interest"),
     ("cash_paid_for_income_taxes", "CF", ["IncomeTaxesPaidNet", "IncomeTaxesPaid"], r"income taxes paid|cash paid for income taxes"),
 ]
@@ -297,14 +298,26 @@ def pick_cols(page: dict, stmt: str) -> list[int]:
     return idx[:2]
 
 
+EXCLUDE = {  # rule-based keying errors to avoid (Dhairya 2026-11-12)
+    "share_buybacks": (r"TaxWithholding|SharesPaidForTaxWithholding", r"withh?old|tax(es)? (paid )?(related to|for|on) (net share|share-based|stock-based|vesting)|net share settlement"),
+    "dividends_paid": (r"MinorityInterest|NoncontrollingInterest|PreferredStock|PreferenceStock", r"noncontrolling|non-controlling|minority|preferred|preference"),
+    "accounts_receivable": (r"InterestReceivable|NotesReceivable|FinancingReceivable|LoansAndLeasesReceivable|LoansReceivable", r"interest receivable|notes? receivable|financing receivable|loans? receivable|loans and leases"),
+}
+
+
+def _excluded(dp: str, r: dict) -> bool:
+    ex = EXCLUDE.get(dp)
+    return bool(ex) and (bool(re.search(ex[0], r["tag"])) or bool(re.search(ex[1], r["label"], re.I)))
+
+
 def match_row(page: dict, dp: str, tags: list[str], rx: str) -> dict | None:
     for t in tags:
         for r in page["rows"]:
-            if r["tag"] == f"us-gaap:{t}" and any(v is not None for v in r["vals"]):
+            if r["tag"] == f"us-gaap:{t}" and any(v is not None for v in r["vals"]) and not _excluded(dp, r):
                 return r
     if rx and rx != "^$":
         for r in page["rows"]:
-            if r["tag"] and re.search(rx, r["label"], re.I) and any(v is not None for v in r["vals"]):
+            if r["tag"] and re.search(rx, r["label"], re.I) and any(v is not None for v in r["vals"]) and not _excluded(dp, r):
                 return dict(r, by_label=True)  # matched by printed label (custom extension or an unlisted tag)
     return None
 
