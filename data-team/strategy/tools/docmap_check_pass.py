@@ -119,7 +119,7 @@ def sga_rule(r, base, end_d, cf, accn):
         return None
     pg = r["r_page"].split("+")[0]
     p = D.parse_r(D.get(base + pg, cache))
-    sm = [x for x in p["rows"] if x["tag"] != r["tags"] and any(v is not None for v in x["vals"])
+    sm = [x for x in p["rows"] if x["tag"] and x["tag"] != r["tags"] and any(v is not None for v in x["vals"])
           and (x["tag"] in SM_TAGS or (re.search(r"marketing|selling", x["label"], re.I)
                                        and not re.search(r"general|cost of|total|ancillary|operating|home", x["label"], re.I)))]
     if not sm:

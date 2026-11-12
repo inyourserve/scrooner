@@ -62,7 +62,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 
 | data point | class | verdict | detail |
 |---|---|---|---|
-| sga_expense | component sum | DISAGREE | page value 1131018000 vs printed 1828694000 |
+| sga_expense | component sum | agree | page value 1131018000 vs printed 1131018000 |
 | research_and_development | mapped-sample | agree | page value 1029700000 vs printed 1029700000 |
 | interest_expense | NOTE | agree | page value 62200000 vs API 62200000 |
 | inventory | not_presented | agree | none of the candidate elements in MetaLinks.json |
