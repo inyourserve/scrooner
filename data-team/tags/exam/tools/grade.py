@@ -19,6 +19,9 @@ def cp_upper(k, n, a=0.05):
         if p <= 0: lo = 1e-12; continue
         lo, hi = (p, hi) if cdf(p) > a / 2 else (lo, p)
     return hi
+def cp_upper_one(k, n, a=0.05):
+    """One-sided 95% Clopper-Pearson upper bound on the error rate (graduation bar, Dhairya/NOW.md 2026-11-12)."""
+    return cp_upper(k, n, 2 * a)
 def main(pdir, ddir, *only):
     rows = []; keyed = {}
     adj = {}
