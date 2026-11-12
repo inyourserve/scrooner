@@ -31,26 +31,31 @@ TIERS = {
     ("IS", "basic_eps_resolved"): ["EarningsPerShareBasic", "IncomeLossFromContinuingOperationsPerBasicShare"],
     ("IS", "diluted_eps_resolved"): ["EarningsPerShareDiluted", "IncomeLossFromContinuingOperationsPerDilutedShare"],
     ("IS", "revenue_sanity_resolved"): ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax",
-                                         "RevenuesNetOfInterestExpense", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes", "SalesRevenueNet"],
+                                         "RevenuesNetOfInterestExpense", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes", "SalesRevenueNet", "OilAndGasRevenue"],
     ("IS", "income_before_tax_resolved"): ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
                                             "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
                                             "IncomeLossFromContinuingOperationsBeforeIncomeTaxes",
                                             "IncomeLossIncludingPortionAttributableToNoncontrollingInterest"],  # '...before Tax' (PG, MCK, PSX)
-    ("CF", "capex_resolved"): ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
+    ("CF", "capex_resolved"): ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets", "PaymentsToAcquireOtherPropertyPlantAndEquipment",
+                               "PaymentsForProceedsFromProductiveAssets"],
+    ("CF", "dividends_paid_resolved"): ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends"],
+    ("IS", "interest_expense_resolved"): ["InterestExpense", "InterestExpenseNonoperating", "InterestAndDebtExpense", "InterestExpenseOperating"],
+    ("IS", "cost_of_revenue_resolved"): ["CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold",
+                                         "CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization"],
     ("BS", "goodwill"): ["Goodwill"],
     ("BS", "ppe_net_resolved"): ["PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"],
     ("BS", "shares_outstanding_resolved"): ["CommonStockSharesOutstanding"],
     ("IS", "sga_expense"): ["SellingGeneralAndAdministrativeExpense"],
     ("IS", "research_and_development"): ["ResearchAndDevelopmentExpense", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"],
     ("IS", "operating_expenses_resolved"): ["OperatingExpenses"],
-    ("IS", "interest_income"): ["InvestmentIncomeInterest", "InvestmentIncomeInterestAndDividend"],
+    ("IS", "interest_income"): ["InvestmentIncomeInterest", "InvestmentIncomeInterestAndDividend", "InvestmentIncomeNet"],
     ("IS", "other_income_expense_net"): ["OtherNonoperatingIncomeExpense", "NonoperatingIncomeExpense"],
     ("CF", "sbc"): ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"],
     ("CF", "depreciation_and_amortization_resolved"): ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
                                                         "DepreciationAmortizationAndAccretionNet"],
-    ("CF", "amortization_of_intangibles"): ["AmortizationOfIntangibleAssets"],
+    ("CF", "amortization_of_intangibles"): ["AmortizationOfIntangibleAssets", "AdjustmentForAmortization"],
     ("CF", "cf_ar_change"): ["IncreaseDecreaseInAccountsReceivable", "IncreaseDecreaseInReceivables"],
-    ("CF", "cf_inventory_change"): ["IncreaseDecreaseInInventories"],
+    ("CF", "cf_inventory_change"): ["IncreaseDecreaseInInventories", "IncreaseDecreaseInRetailRelatedInventories"],
     ("CF", "cf_ap_change"): ["IncreaseDecreaseInAccountsPayable", "IncreaseDecreaseInAccountsPayableTrade"],
     ("CF", "cash_flow_investing_resolved"): ["NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations"],
     ("CF", "cash_flow_financing_resolved"): ["NetCashProvidedByUsedInFinancingActivities", "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations"],
@@ -68,9 +73,9 @@ NOT = {
     ("IS", "CostsAndExpenses"): ("total_costs_incl_cost_of_revenue", "the printed total (often labelled 'Total operating expenses') includes cost of sales: not operating_expenses"),
     ("IS", "GeneralAndAdministrativeExpense"): None,  # decided by SGA_PARTS / tier below, never as sga alone
     ("IS", "InterestIncomeExpenseNet"): ("net_interest", "net interest income/expense (bank NII or net financing cost): not other_income_expense_net, not interest_income"),
-    ("IS", "InterestIncomeExpenseNonoperatingNet"): ("net_interest", "net nonoperating interest: not other_income_expense_net"),
+    ("IS", "InterestIncomeExpenseNonoperatingNet"): None,  # combined below: 'Interest expense, net' (RTX 1,749)
 }
-SGA_PARTS = ["SellingAndMarketingExpense", "GeneralAndAdministrativeExpense"]
+SGA_PARTS = ["SellingAndMarketingExpense", "MarketingExpense", "GeneralAndAdministrativeExpense"]
 OVERRIDES = {  # (ticker, stmt, custom tag) -> (concept, evidence)
     ("GE", "BS", "CashAndEquivalentsExcludingAssetsHeldForSale"): ("cash_and_equivalents_resolved", "GE face line 'Cash and equivalents' 2015-2017 (custom tag; held-for-sale cash shown apart)"),
     ("XOM", "IS", "SalesAndOtherOperatingRevenueIncludingSalesBasedTaxes"): ("revenue_sanity_resolved", "XOM face top line 'Sales and other operating revenue' 2015-2018 (custom tag); 'Total revenues and other income' adds other income"),
@@ -88,6 +93,11 @@ COMBINED_CO = {  # (ticker, stmt, custom tag) -> (spanned concepts, evidence)
     ("MSFT", "CF", "DepreciationAmortizationAndOther"): (["depreciation_and_amortization", "other_noncash"], "MSFT CF line 'Depreciation, amortization, and other' (custom tag): D&A plus other non-cash items"),
 }
 NOT_CO = {
+    ("V", "BS", "CommonStockSharesOutstanding"): ("shares_per_class_only", "V prints shares outstanding per class only; instants never summed: not presented (ruling 2026-11-12)"),
+    ("PG", "EQ", "CommonStockSharesOutstanding"): ("shares_member_column_only", "PG shares outstanding only under an EQ member column: not presented (ruling 2026-11-12)"),
+    ("GE", "IS", "AllocatedShareBasedCompensationExpense"): ("sbc_after_tax", "GE's AllocatedShareBasedCompensationExpense is after tax: never SBC; the CF SBC line serves (ruling e)"),
+    ("GE", "CF", "AllocatedShareBasedCompensationExpense"): ("sbc_after_tax", "GE's AllocatedShareBasedCompensationExpense is after tax: never SBC; the CF SBC line serves (ruling e)"),
+    ("CRWD", "BS", "CommonStockSharesOutstanding"): ("shares_per_class_only", "CRWD prints shares outstanding per class only; instants are never summed: not presented"),
     ("GOOG", "CF", "Depreciation"): ("d_and_a_not_presented", "GOOG prints depreciation only (2023-12+): D&A is not presented (ruling 2026-11-11: a component sum only when D and A are both printed)"),
     ("WMT", "IS", "FinanceLeaseAndFinancingObligationInterestExpense"): ("alternate_tag_overlapping", "WMT custom finance-lease interest inside the era of the standard FinanceLeaseInterestExpense line: never added twice"),
     ("ORCL", "IS", "CostOfServices"): ("component_of_unprinted_total", "ORCL 'Services' is one cost line beside cloud/license, hardware and other costs; no cost-of-revenue total is printed (template-OUT candidate)"),
@@ -135,6 +145,7 @@ ASK_DEFAULT = {  # Tag Expert questions: a decision now, re-decided on the rulin
 FLAG = {  # Tag Expert rulings 2026-11-11 (docs/tag-expert-playbooks 08ab3ed7): visible flags carried in the reason
     ("BS", "ReceivablesNetCurrent"): "plain 'accounts receivable, net' label only (Tag Expert correction (d))",
     ("BS", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"): "flag includes_finance_lease_rou",
+    ("IS", "CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization"): "flag excludes_d_and_a (cost of sales exclusive of D&A, LIN)",
     ("BS", "CommonStockSharesOutstanding"): "period-end parenthetical only; never the EQ column or the dei cover count; several classes: per class, NEVER summed (an instant is never derived; Tag Expert correction 2026-11-11)",
 }
 
@@ -217,6 +228,10 @@ for cid, rs in by_co.items():
         elif NOT.get((st, tag)):
             rc, why = NOT[(st, tag)]
             r.update(decision="excluded", canonical_concept="", reason_class=rc, reason=why, decided_by="library")
+        elif (st, tag) in tier_of and tier_of[(st, tag)][0] == "revenue_sanity_resolved" and re.search(r"(?i)other income", r.get("evidence_plabel") or ""):
+            # before tags compete: a revenue total that includes other income never wins (ruling f, CVX/COP)
+            r.update(decision="excluded", canonical_concept="", reason_class="revenue_incl_other_income",
+                     reason="revenue total includes other income: the sales/operating-revenue line is the revenue (ruling f, CVX/COP)", decided_by="library")
         elif (st, tag) in tier_of:
             r.update(decision="concept", canonical_concept=tier_of[(st, tag)][0], reason_class="", reason=FLAG.get((st, tag), ""), decided_by="library")
     for r in rs:
@@ -388,29 +403,74 @@ for cid, rs in by_co.items():
                 or (r["tag"] == "ReceivablesNetCurrent" and not plain_ar)):
             r.update(decision="combined", canonical_concept="", components="accounts_receivable;other_receivables",
                      reason_class="line_presented_combined_with_others", reason="receivables line includes other or notes receivable (label); shown as the company line (BS card)", decided_by="library")
-        if r.get("decision") == "concept" and r["canonical_concept"] == "interest_expense_resolved" and re.search(r"(?i)\bnet\b", lab):
+        if (r.get("decision") == "concept" and r["canonical_concept"] == "interest_expense_resolved" and re.search(r"(?i)\bnet\b", lab)
+                and not re.search(r"(?i)net of (the )?(portion )?capitali[sz]ed", lab)):  # JNJ 'net of portion capitalized' is clean (ruling d)
             r.update(decision="combined", canonical_concept="", components="interest_expense;interest_income",
                      reason_class="line_presented_combined_with_others", reason="'interest expense, net' is net of interest income (label); shown as the company line (IS card)", decided_by="library")
         if r.get("reason_class") == "nonoperating_total_incl_interest":
             r.update(decision="combined", components="other_income_expense_net;interest_expense;interest_income", reason_class="line_presented_combined_with_others",
                      reason="total non-operating income incl. interest: shown as the company line; never other_income_expense_net (double counts interest)")
+        if r["stmt"] == "BS" and re.search(r"(?i)customer and other (receivables|payables)|accrued interest and accounts receivable", lab):
+            r.update(decision="combined", canonical_concept="", components=("accounts_receivable;other_receivables" if "receivable" in lab.lower() else "accounts_payable;other_payables"),
+                     reason_class="line_presented_combined_with_others", reason="bank/broker customer and other receivables/payables: shown as the company line (ruling 2026-11-12)", decided_by="library")
+        if r.get("decision") == "concept" and r["canonical_concept"] == "revenue_sanity_resolved" and re.search(r"(?i)other income", lab):
+            r.update(decision="excluded", canonical_concept="", reason_class="revenue_incl_other_income",
+                     reason="revenue total includes other income: the sales/operating-revenue line is the revenue (ruling f, CVX/COP)", decided_by="library")
+    # instants are never summed (doc 02; Dhairya's D3 correction 2026-11-12): inventory with no printed total is not presented
     if not any(r.get("decision") == "concept" and r["canonical_concept"] == "inventory" for r in rs):
         for r in rs:
             if (r["stmt"] == "BS" and re.search(r"Inventor", r["tag"]) and "Noncurrent" not in r["tag"] and not re.search(r"(Abstract|Table|LineItems|Axis|Domain|Member|RollForward)$", r["tag"])
-                    and "AssetsCurrent" in (r.get("evidence_cal_parent") or "").split(";")):
-                r.update(decision="component", canonical_concept="", parent_concept="inventory", combine_sign="1", reason_class="",
-                         reason="no inventory total printed: inventory = the printed inventory lines (BS card)", decided_by="library")
-    cf_due = ("CF", "CashAndDueFromBanks") in idx
-    if cf_due and ("BS", "CashAndDueFromBanks") in idx:
+                    and "AssetsCurrent" in (r.get("evidence_cal_parent") or "").split(";") and r.get("decision") != "combined"):
+                r.update(decision="excluded", canonical_concept="", parent_concept="", combine_sign="", reason_class="inventory_total_not_printed",
+                         reason="no inventory total is printed; instants are never summed (doc 02): inventory is not presented", decided_by="library")
+    # bank cash split across BS lines: serve the CF's PRINTED ending-cash line (a printed instant), labelled (ruling c, corrected)
+    bs_cash = [r for r in rs if r["stmt"] == "BS" and r.get("decision") == "concept" and r["canonical_concept"] == "cash_and_equivalents_resolved"]
+    if ("BS", "CashAndDueFromBanks") in idx:
+        CF_CASH = ("CashAndDueFromBanks", "CashAndCashEquivalentsAtCarryingValue", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "Cash")
+        for e in [r for r in rs if r["stmt"] == "CF" and r["tag"] in CF_CASH and r.get("decision") != "concept"]:
+            part = era_outside(e, bs_cash)  # only where the BS prints no plain cash line: never two cash sources per period
+            if part:
+                e.update(decision="concept", canonical_concept="cash_and_equivalents_resolved", reason_class="", era_from=part[0], era_to=part[1],
+                         reason="the BS splits cash (cash and due from banks, deposits with banks): the CF's printed ending-cash line is served, labelled (ruling c)", decided_by="library")
         due = idx[("BS", "CashAndDueFromBanks")]
+        due.update(decision="excluded", canonical_concept="", parent_concept="", combine_sign="", reason_class="bank_cash_split_line",
+                   reason="one of the BS cash lines; cash is served from the CF printed ending cash (instants never summed)", decided_by="library")
         dep = idx.get(("BS", "InterestBearingDepositsInBanks"))
-        if ("CF", "InterestBearingDepositsInBanks") in idx and dep:
-            for x in (due, dep):
-                x.update(decision="component", canonical_concept="", parent_concept="cash_and_equivalents_resolved", combine_sign="1", reason_class="",
-                         reason="bank/broker cash = the BS lines the CF uses as ending cash (BS card)", decided_by="library")
+        if dep:
+            dep.update(decision="excluded", canonical_concept="", parent_concept="", combine_sign="", reason_class="bank_cash_split_line",
+                       reason="one of the BS cash lines; cash is served from the CF printed ending cash", decided_by="library")
+    # D&A = depreciation + intangible amortization printed on the CF face, when no D&A total is printed (durations; ruling b)
+    da_tot = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "depreciation_and_amortization_resolved"]
+    dep_l, am_l = idx.get(("CF", "Depreciation")), idx.get(("CF", "AmortizationOfIntangibleAssets"))
+    if dep_l and am_l and shares_filing(dep_l, am_l) and not any(shares_filing(dep_l, t) for t in da_tot) and dep_l.get("decided_by") != "company_override":
+        for x in (dep_l, am_l):
+            e = dict(x)
+            e.update(decision="component", canonical_concept="", parent_concept="depreciation_and_amortization_resolved", combine_sign="1", reason_class="",
+                     reason="depreciation and intangible amortization printed on the CF face, no D&A total: a printed component sum (ruling b)", decided_by="library")
+            pending_extra.append(e)
+    # amortization of intangibles: the CF line wins over an opex-only IS line in shared filings (CSCO 1,863 vs 916; ruling g)
+    cf_am = [r for r in rs if r["stmt"] == "CF" and r.get("decision") == "concept" and r["canonical_concept"] == "amortization_of_intangibles"]
+    for r in rs:
+        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "amortization_of_intangibles" and any(shares_filing(r, k) for k in cf_am):
+            r.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping", reason="the CF amortization line (total) wins over the IS line (often opex-only)", decided_by="library")
+    # comprehensive income = attributable to the company (ruling 2026-11-12)
+    ci_p, ci_t = idx.get(("CI", "ComprehensiveIncomeNetOfTax")), idx.get(("CI", "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest"))
+    ci_n = idx.get(("CI", "ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest"))
+    if ci_t:
+        if ci_p and shares_filing(ci_t, ci_p):
+            ci_t.update(decision="excluded", canonical_concept="", reason_class="ci_incl_nci", reason="CI incl. NCI: the attributable CI line is printed and served", decided_by="library")
+        elif ci_n and shares_filing(ci_t, ci_n):
+            for x, sg in ((ci_t, "1"), (ci_n, "-1")):
+                x.update(decision="component", canonical_concept="", parent_concept="comprehensive_income", combine_sign=sg, reason_class="",
+                         reason="CI attributable = CI incl. NCI - NCI, both printed on the face (ruling 2026-11-12; a duration)", decided_by="library")
         else:
-            due.update(decision="concept", canonical_concept="cash_and_equivalents_resolved", reason_class="",
-                       reason="bank cash: the BS line equals the CF ending cash line (BS card)", decided_by="library")
+            ci_t.update(decision="concept", canonical_concept="comprehensive_income", reason_class="", reason="no NCI CI line printed: the incl.-NCI total is the company's (ruling)", decided_by="library")
+    # other income: a single 'other income (expense)' line with no separate interest line on the face is a combined total (ruling a)
+    has_int = [r for r in rs if r["stmt"] == "IS" and r.get("decision") in ("concept", "component") and (r["canonical_concept"] or r["parent_concept"]) in ("interest_expense_resolved", "interest_income")]
+    for r in rs:
+        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "other_income_expense_net" and not any(shares_filing(r, k) for k in has_int):
+            r.update(decision="combined", canonical_concept="", components="other_income_expense_net;interest_income;interest_expense",
+                     reason_class="line_presented_combined_with_others", reason="non-operating total with no separate interest line on the face: includes interest/gains; shown as the company line (ruling a)", decided_by="library")
     # product + service cost lines printed side by side with no cost-of-revenue total: a printed component sum (D3, TMO)
     COR_TOTALS = ("CostOfRevenue", "CostOfGoodsAndServicesSold")
     prod, serv = idx.get(("IS", "CostOfGoodsSold")), idx.get(("IS", "CostOfServices"))
@@ -467,19 +527,49 @@ for cid, rs in by_co.items():
             ied.update(decision="combined", canonical_concept="", components="interest_expense;interest_income", reason_class="line_presented_combined_with_others",
                        reason="'interest expense, net' on InterestExpenseDebt: net of interest income (IS card)", decided_by="library")
         elif not others and re.search(r"(?i)interest", lab):
-            ied.update(decision="concept", canonical_concept="interest_expense_resolved", reason_class="",
-                       reason="sole-line rule: InterestExpenseDebt is the only interest-expense line, labelled interest (label_unverified until the Verifier checks it)", decided_by="library")
+            ied.update(decision="component", canonical_concept="", parent_concept="interest_expense_resolved", combine_sign="1", reason_class="",
+                       reason="InterestExpenseDebt is the only printed interest line: a printed face component, never the total by itself (ruling 2026-11-12)", decided_by="library")
     for t in ("InterestAndOtherIncome",):
         x = idx.get(("IS", t))
         if x and re.search(r"(?i)and other", x.get("evidence_plabel") or ""):
             x.update(decision="combined", canonical_concept="", components="interest_income;other_income_expense_net", reason_class="line_presented_combined_with_others",
                      reason="'interest income and other' spans interest income and other income (COST)", decided_by="library")
-    if cid_is_bank(rs) or ("IS", "InterestAndDividendIncomeOperating") in idx:
+    bii = idx.get(("IS", "InterestAndDividendIncomeOperating"))
+    if bii and (cid_is_bank(rs) or bii.get("decision") != "concept"):
+        bii.update(decision="concept", canonical_concept="interest_income", reason_class="", reason="bank: face 'Interest income' (interest and dividend income) maps to interest_income (BAC 138,566; GS/JPM)", decided_by="library")
+    if False:
         bank_ii = dict(rs[0])
         bank_ii.update(tag="(bank interest income lines)", stmt="IS", decision="excluded", canonical_concept="", parent_concept="", components="",
                        reason_class="bank_interest_income_component", reason="bank: interest income lines are components of net interest income (bank template); no single industrial interest_income",
                        era_from=min(r["era_from"] for r in rs), era_to=max(r["era_to"] for r in rs), decided_by="library", taxonomy="note", lines="0", filings="0")
         pending_extra.append(bank_ii)
+    if rs and rs[0]["ticker"] in ("MS", "GS"):  # broker template: total non-interest expenses are the operating expenses (read MS 2026-11-12)
+        x = idx.get(("IS", "NoninterestExpense"))
+        if x:
+            x.update(decision="concept", canonical_concept="operating_expenses_resolved", reason_class="",
+                     reason="broker: 'Total non-interest expenses' is the operating-expenses total (MS read 2026-11-12)", decided_by="company_override")
+    x = idx.get(("IS", "InterestIncomeExpenseNonoperatingNet"))
+    if x:
+        x.update(decision="combined", canonical_concept="", components="interest_expense;interest_income", reason_class="line_presented_combined_with_others",
+                 reason="'Interest expense, net' (InterestIncomeExpenseNonoperatingNet): net of interest income; shown as the company line (group 4 reads, RTX)", decided_by="library")
+    for r in rs:
+        if r["stmt"] == "IS" and r.get("decision") == "concept" and r["canonical_concept"] == "interest_income" and re.search(r"(?i)and other income|investment and other", r.get("evidence_plabel") or ""):
+            r.update(decision="combined", canonical_concept="", components="interest_income;other_income_expense_net", reason_class="line_presented_combined_with_others",
+                     reason="'investment and other income': interest income combined with other income (UNH)", decided_by="library")
+    # D&A = CF depreciation + capitalised software amortization when no D&A total is printed (TXN 1,918 + 81)
+    sw = idx.get(("CF", "CapitalizedComputerSoftwareAmortization1"))
+    dep_c = idx.get(("CF", "Depreciation"))
+    if sw and dep_c and shares_filing(sw, dep_c) and not any(shares_filing(dep_c, t) for t in da_tot):
+        for xx in (dep_c, sw):
+            e = dict(xx)
+            e.update(decision="component", canonical_concept="", parent_concept="depreciation_and_amortization_resolved", combine_sign="1", reason_class="",
+                     reason="CF depreciation + capitalised software amortization, no D&A total printed: a duration component sum (TXN read)", decided_by="library")
+            pending_extra.append(e)
+    if rs and rs[0]["ticker"] == "XOM":  # XOM cash interest paid = InterestPaid (total), not InterestPaidNet (operating only)
+        a_, b_ = idx.get(("CF", "InterestPaid")), idx.get(("CF", "InterestPaidNet"))
+        if a_ and b_:
+            a_.update(decision="concept", canonical_concept="cash_paid_for_interest", reason_class="", reason="XOM: InterestPaid is the total (1,752); InterestPaidNet is operating only (group 4 read)", decided_by="company_override")
+            b_.update(decision="excluded", canonical_concept="", reason_class="alternate_tag_overlapping", reason="XOM InterestPaidNet is operating-only cash interest; InterestPaid is the total", decided_by="company_override")
     extra = list(pending_extra)
     opex_total = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "OperatingExpenses" and r.get("decision") == "concept"]
     gp = [r for r in rs if r["stmt"] == "IS" and r["tag"] == "GrossProfit"]
@@ -487,7 +577,7 @@ for cid, rs in by_co.items():
         for r in rs:
             par = (r.get("evidence_cal_parent") or "").split(";")
             if (r["stmt"] == "IS" and r["taxonomy"] in ("us-gaap", "custom") and "OperatingIncomeLoss" in par and r["tag"] not in ("GrossProfit", "OperatingIncomeLoss")
-                    and not re.search(r"(?i)\b(gain|income)\b|^(total )?(net )?(revenues?|sales)$", r.get("evidence_plabel") or "")
+                    and not re.match(r"(?i)\s*(gains?\b|income\b|interest income|(total )?(net )?(revenues?|sales)\s*$)", r.get("evidence_plabel") or "")
                     and not re.search(r"(Revenue|Sales|GrossProfit|CostOf)", r["tag"])):
                 e = dict(r)
                 e.update(decision="component", canonical_concept="", parent_concept="operating_expenses_resolved", combine_sign="1",

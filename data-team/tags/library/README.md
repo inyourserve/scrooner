@@ -11,3 +11,6 @@ Columns (agreed with Ritwik, Mac session): `stmt, tag, decision, concept, parent
 Coverage of the first cut (2026-11-11): 445 (stmt, tag) rows; 443,032 of the 907,399 top-100 statement lines (49%; the rest are custom extensions, abstracts, axes/members and the long tail). Explicit rows: 217.
 
 Rules that apply to every row: map by face position and the filer's calc tree, not by tag name; a parenthetical (inpth) line is never a balance line; non-dimensional means `dim_id = 0` and `coreg = ''`; take the `iprx = 0` copy (rounded note copies exist); FSN `ddate` is month-end rounded (`datp` = days).
+
+## company-overrides.csv (2026-11-12)
+Company-scoped mappings that the library default does not allow (doc 02: a label may demote a line but never promote it). Only FILING-CHECKED rows are usable; PENDING-FILING-CHECK rows wait for an R-page read. Columns: company, cik, tag, stmt, concept, scope, status, evidence, note.

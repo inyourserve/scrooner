@@ -17,7 +17,7 @@ span, eras, rc, tick = {}, collections.defaultdict(list), collections.defaultdic
 for r in rows:
     c = r["company_id"]
     tick[c] = r["ticker"]
-    if r["era_from"]:
+    if r["era_from"] and r.get("decided_by") not in ("debt_lane", "read_verified", "read_overlay"):  # span = the company's own FSN rows
         lo, hi = span.get(c, (r["era_from"], r["era_to"]))
         span[c] = (min(lo, r["era_from"]), max(hi, r["era_to"]))
     con = r["canonical_concept"] if r["decision"] == "concept" else r["parent_concept"] if r["decision"] == "component" else ""

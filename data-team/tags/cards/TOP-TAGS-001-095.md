@@ -33,8 +33,8 @@ Worklist: data-team/tags/TAG-PRIORITY-2026-11-11.csv on main (Dhairya; ranked by
 | 27 | PaymentsForRepurchaseOfCommonStock | 609 | D | C | share_buybacks_resolved | credit-typed payment; stored positive = outflow | PaymentsForRepurchaseOfEquity second line at 13 of 16 coexisting filers; excise-inclusive customs | not cumulative program-to-date durations (AZO); not withholding or preferred redemptions |
 | 28 | IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | 605 | D | C | income_before_tax_resolved | credit; negative = pre-tax loss | pair with …MinorityInterestAndIncomeLossFromEquityMethodInvestments (MSFT switched Q2 FY2022) | if both printed they differ by equity-method income: check calc |
 | 29 | ShareBasedCompensation | 605 | D | D | sbc | debit; CF add-back, positive | AllocatedShareBasedCompensationExpense is the note twin | not "Amortization of stock-based compensation" lines that net other items |
-| 30 | WeightedAverageNumberOfDilutedSharesOutstanding | 598 | D | — | excluded: per_share_detail (no catalog concept; propose weighted_shares_diluted) | shares, duration | scale ×1000 errors (RPAY TBLA) | never shares_outstanding (period-end count) |
-| 31 | WeightedAverageNumberOfSharesOutstandingBasic | 597 | D | — | excluded: per_share_detail (propose weighted_shares_basic) | shares, duration | …BasicAndDiluted single line | as diluted |
+| 30 | WeightedAverageNumberOfDilutedSharesOutstanding | 598 | D | — | weighted_diluted_shares (live since 0122) | shares, duration | scale ×1000 errors (RPAY TBLA) | never shares_outstanding (period-end count) |
+| 31 | WeightedAverageNumberOfSharesOutstandingBasic | 597 | D | — | weighted_basic_shares (live since 0122) | shares, duration | …BasicAndDiluted single line | as diluted |
 | 32 | AssetsCurrent | 597 | I | D | current_assets_resolved | debit, positive | TXT prints it only for the Manufacturing group (no consolidated total) | unclassified balance sheets (banks, insurers) have none: reason, not a value |
 | 33 | LiabilitiesCurrent | 597 | I | C | current_liabilities_resolved | credit, positive |  | as current assets |
 | 34 | Goodwill | 593 | I | D | goodwill | debit, positive |  | face line only; not a segment-note fact |
@@ -54,7 +54,7 @@ Worklist: data-team/tags/TAG-PRIORITY-2026-11-11.csv on main (Dhairya; ranked by
 | 48 | PaymentsToAcquireBusinessesNetOfCashAcquired | 492 | D | C | excluded: component_no_concept (acquisitions) | credit-typed payment |  | never capex |
 | 49 | AccountsPayableCurrent | 478 | I | C | accounts_payable | credit, positive |  | not AccountsPayableAndAccruedLiabilities (combined) |
 | 50 | PaymentsForProceedsFromOtherInvestingActivities | 473 | D | C | excluded: component_no_concept | signed |  | never capex or a total |
-| 51 | InterestPaidNet | 473 | D | C | excluded: supplemental (cash paid) | credit-typed payment | InterestPaid (gross of capitalised) | never interest_expense |
+| 51 | InterestPaidNet | 473 | D | C | cash_paid_for_interest only when InterestPaid is not printed (label check: XOM operating portion) | credit-typed payment | InterestPaid (gross of capitalised) | never interest_expense |
 | 52 | ProceedsFromPaymentsForOtherFinancingActivities | 467 | D | D | excluded: component_no_concept | signed |  | never buybacks/dividends |
 | 53 | SupplementalCashFlowInformationAbstract | 465 | — | — | abstract (structure) | — |  | abstract heading: no value ever; structural (leave unmapped with status "abstract") |
 | 54 | InterestExpense | 462 | D | D | interest_expense_resolved | debit, positive | banks: pair with InterestExpenseOperating (2024+); DIS 10-K FY value NEGATIVE vs positive 10-Qs | "…, net" label (net of interest income: DAL); DQC_0181 position tests; no Q4 derivation across a sign flip |
@@ -78,7 +78,7 @@ Worklist: data-team/tags/TAG-PRIORITY-2026-11-11.csv on main (Dhairya; ranked by
 | 72 | AdditionalPaidInCapitalCommonStock | 380 | I | C | component of stockholders_equity | credit | AdditionalPaidInCapital alternative | never |
 | 73 | SellingGeneralAndAdministrativeExpense | 376 | D | D | sga_expense | debit, positive | G&A + S&M printed separately (components) | not when only G&A is printed (that is a component) |
 | 74 | CostOfGoodsAndServicesSold | 375 | D | D | cost_of_revenue_resolved | debit, positive | …ExcludingDepreciationDepletionAndAmortization (36: ruling pending) | not CostsAndExpenses; not a single component line (TSLA automotive) |
-| 75 | IncomeTaxesPaidNet | 366 | D | C | excluded: supplemental (cash paid) | credit-typed payment | IncomeTaxesPaid | never income_tax_expense |
+| 75 | IncomeTaxesPaidNet | 366 | D | C | cash_paid_for_income_taxes (wins when both printed) | credit-typed payment | IncomeTaxesPaid | never income_tax_expense |
 | 76 | TreasuryStockCommonShares | 362 | I | — | excluded: per_share_detail; input to issued − treasury | shares |  | never |
 | 77 | OperatingLeaseLiabilityNoncurrent | 358 | I | C | excluded: component_no_concept | credit |  | never debt |
 | 78 | PreferredStockParOrStatedValuePerShare | 355 | I | — | excluded: per_share_detail | per share |  | never |
