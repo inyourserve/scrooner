@@ -3,6 +3,8 @@ per data point: data_point, status, tags, stmt, r_page, label, era_from_note, ev
 analytics.company_tag_map rows (decided_by 'docmap', rule company_tag_map.docmap@1, evidence_adsh = the 10-K read,
 evidence_report = its R page). Learning reaches the screen with no hand step: load -> tagmap-plan -> cell proof -> guard.
 
+Only verified rows load: evidence_class FILING-CHECKED and no machine-pick marker in the notes (UNVERIFIED_RE);
+anything else is rejected as 'unverified'. A fact found only in a note is 'mapped' with stmt NOTE (lands on UN).
 Status vocabulary (anything else is rejected and listed, never guessed):
   mapped             -> 'concept' row (the tag IS the data point)
   component_in_note  -> 'concept' row on stmt UN (printed in a note, not on a face)
@@ -62,6 +64,11 @@ TAGLESS_STATUS = {
 FACE_CODES = {"IS", "BS", "CF", "CI", "EQ"}
 # docmap data points are catalog names; the screen serves the resolved concept where one exists (the library's names)
 SERVED_ALIAS = {"revenue": "revenue_sanity_resolved"}
+# a machine pick nobody checked on the filing (Dhairya 2026-11-12): 'auto:' / 'AUTO;' / 'auto)', 'not hand-verified',
+# 'no face row matched'. 'auto-reader: manual override' is a hand decision and loads.
+UNVERIFIED_RE = re.compile(
+    r"\bauto\s*[:;)]|not hand-verified|no face row mat", re.IGNORECASE
+)
 ACCN_RE = re.compile(r"\d{10}-\d{2}-\d{6}")
 DATE_RE = r"\d{4}-\d{2}-\d{2}"
 
@@ -190,6 +197,13 @@ def parse_docmap(
 
         if status not in STATUSES:
             reject(f"unknown status {r['status']!r}")
+            continue
+        if not r.get("evidence_class", "").startswith(
+            "FILING-CHECKED"
+        ) or UNVERIFIED_RE.search(
+            " ".join(r.get(k, "") for k in ("note", "era_from_note", "evidence_class"))
+        ):
+            reject("unverified")
             continue
         if r["data_point"] in seen:
             reject("duplicate data_point in file")
