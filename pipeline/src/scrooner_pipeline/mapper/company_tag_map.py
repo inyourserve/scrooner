@@ -206,6 +206,25 @@ def _load_facts(
     """(taxonomy, tag) -> period_id -> Fact of the latest authoritative filing. Authoritative only:
     is_authoritative=false is a hard filter."""
     out: dict[tuple[str | None, str | None], dict[int, Fact]] = defaultdict(dict)
+    for key, by_period in _load_fact_vintages(
+        conn, company_id, tags, latest_only=True
+    ).items():
+        for period_id, prints in by_period.items():
+            out[key][period_id] = prints[0]
+    if tags:
+        _merge_predecessor_facts(conn, company_id, tags, out)
+    return out
+
+
+def _load_fact_vintages(
+    conn: psycopg.Connection,
+    company_id: int,
+    tags: set[tuple[str | None, str | None]],
+    latest_only: bool = False,
+) -> dict[tuple[str | None, str | None], dict[int, list[Fact]]]:
+    """(taxonomy, tag) -> period_id -> one Fact per authoritative filing, newest filing first (the same source
+    filters as _load_facts; predecessor windows are not included)."""
+    out: dict[tuple[str | None, str | None], dict[int, list[Fact]]] = defaultdict(dict)
     if not tags:
         return out
     with conn.cursor() as cur:
@@ -236,32 +255,33 @@ def _load_facts(
                         and coalesce(fl.period_of_report, p.end_date) between h.valid_from and h.valid_to)
                   and c.tag = any(%s)
             ) t
-            where rk = 1
-            order by taxonomy, tag, period_id, id desc
+            where rk = 1 or not %s
+            order by taxonomy, tag, period_id, filing_date desc nulls last, filing_id desc, id desc
             """,
-            (company_id, sorted({t for _, t in tags if t is not None})),
+            (company_id, sorted({t for _, t in tags if t is not None}), latest_only),
         )
         rows = cur.fetchall()
-    # core.fact is unique per (company, tag, unit, period, filing): two values for one tag and period in the
-    # latest filing can only come from two units. Never pick one: mark the fact ambiguous (blank downstream).
+    # core.fact is unique per (company, tag, unit, period, filing): two values for one tag and period in one
+    # filing can only come from two units. Never pick one: mark the fact ambiguous (blank downstream).
     grouped: dict[tuple, list[tuple]] = defaultdict(list)
     for r in rows:
-        grouped[(r[0], r[1], r[2])].append(r)
-    for (taxonomy, tag, period_id), rs in grouped.items():
+        grouped[(r[0], r[1], r[2], r[7])].append(r)
+    for (taxonomy, tag, period_id, _), rs in grouped.items():
         if (taxonomy, tag) not in tags:
             continue
         first = rs[0]
-        out[(taxonomy, tag)][period_id] = Fact(
-            Decimal(first[3]),
-            first[4],
-            first[5],
-            first[6],
-            first[7],
-            first[8],
-            first[9],
-            ambiguous=len({Decimal(x[3]) for x in rs}) > 1,
+        out[(taxonomy, tag)].setdefault(period_id, []).append(
+            Fact(
+                Decimal(first[3]),
+                first[4],
+                first[5],
+                first[6],
+                first[7],
+                first[8],
+                first[9],
+                ambiguous=len({Decimal(x[3]) for x in rs}) > 1,
+            )
         )
-    _merge_predecessor_facts(conn, company_id, tags, out)
     return out
 
 
@@ -612,6 +632,72 @@ def _grain(start: date, end: date, ptype: str) -> str | None:
     return None
 
 
+# A filing with no calculation arcs (MSFT FY2024 10-K, Q1 FY2025 10-Q) gives no parent/child evidence for a sum.
+# The statement face still proves it: operating expenses must tie gross profit - opex = operating income of the
+# same filing (_opex_tie), and an SG&A sum is accepted only when all its lines are parts of that tied opex.
+TIE_EVIDENCE = {"operating_expenses", "sga_expense"}
+
+
+def _one_filing_parts(
+    comps: list[tuple[MapRow, Fact]],
+    vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]],
+    period_id: int,
+) -> list[tuple[MapRow, Fact]] | None:
+    """All parts of one sum from the newest filing that prints every one of them (never a restated part next to
+    an unrestated one). None when no single filing prints them all, or a part is not a sec_api vintage."""
+    by_filing: list[dict[int, Fact]] = []
+    for row, f in comps:
+        if f.source != "sec_api":
+            return None
+        prints = {
+            v.filing_id: v
+            for v in vintages.get((row.taxonomy, row.tag), {}).get(period_id, [])
+        }
+        if not prints:
+            return None
+        by_filing.append(prints)
+    common = set.intersection(*(set(p) for p in by_filing))
+    if not common:
+        return None
+    best = max(common, key=lambda fid: (by_filing[0][fid].filed or date.min, fid))
+    return [(row, prints[best]) for (row, _), prints in zip(comps, by_filing)]
+
+
+def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[dict]:
+    """An sga sum without calc arcs stands only when the same period's opex was built from components of the same
+    filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line."""
+    opex = {
+        c["period_id"]: c
+        for c in cells
+        if c.get("_from_components")
+        and _base(concept_info[c["canonical_concept_id"]][0]) == "operating_expenses"
+    }
+    kept = []
+    for c in cells:
+        if not (
+            c.get("_needs_tie")
+            and _base(concept_info[c["canonical_concept_id"]][0]) == "sga_expense"
+        ):
+            kept.append(c)
+            continue
+        o = opex.get(c["period_id"])
+        if (
+            o is None
+            or o["_filing_id"] != c["_filing_id"]
+            or not set(c["_dcml_keys"]) <= set(o["_dcml_keys"])
+        ):
+            stats["held"].append(
+                {
+                    "canonical_concept_id": c["canonical_concept_id"],
+                    "period_id": c["period_id"],
+                    "reason": "no_calc_evidence",
+                }
+            )
+            continue
+        kept.append(c)
+    return kept
+
+
 def build_cells(
     rows: list[MapRow],
     facts: dict[tuple[str | None, str | None], dict[int, Fact]],
@@ -621,9 +707,13 @@ def build_cells(
     periods: dict[int, tuple[date, date, str]] | None = None,
     alt_facts: dict[tuple[str | None, str | None], dict[int, Fact]] | None = None,
     no_auth: dict[tuple[str | None, str | None], dict[int, int]] | None = None,
+    vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]] | None = None,
 ) -> tuple[list[dict], dict]:
-    """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement)."""
+    """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
+    vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
+    prints sit in different filings can take ALL its parts from the newest filing that prints every one."""
     arcs = arcs or {}
+    vintages = vintages or {}
     dcml = dcml or {}
     periods = periods or {}
     stats: dict[str, Any] = {
@@ -724,8 +814,11 @@ def build_cells(
             # D3 / doc 02: instants are never derived; the only instant component sum is total debt
             hold(key, "instant_component_sum_not_allowed")
             continue
+        if len({f.filing_id for _, f in c}) > 1:
+            c = _one_filing_parts(c, vintages, key[1]) or c
         reason = _check_components(c, arcs, _base(pname) == "total_debt")
-        if reason:
+        needs_tie = reason == "no_calc_evidence" and _base(pname) in TIE_EVIDENCE
+        if reason and not needs_tie:
             hold(key, reason)
             continue
         cells.append(
@@ -738,10 +831,12 @@ def build_cells(
                 "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
                 "_from_components": True,
+                "_needs_tie": needs_tie,
                 "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
             }
         )
     cells = _opex_tie(cells, concept_info, dcml, stats)
+    cells = _sga_inside_tied_opex(cells, concept_info, stats)
     cells = _scale_sanity(cells, concept_info, periods, stats)
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
     held_keys = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
@@ -1155,13 +1250,21 @@ def resolve_for_company(
         conn, company_id, alt_tags
     )  # read only to detect winner-tag gaps, never a value
     comp_tags = {(r.taxonomy, r.tag) for r in rows if r.decision == "component"}
+    vintages = _load_fact_vintages(
+        conn, company_id, {k for k in comp_tags if not is_custom(k[0])}
+    )
     accessions = {
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
+    } | {
+        f.accession
+        for by_period in vintages.values()
+        for fs in by_period.values()
+        for f in fs
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
     no_auth = _load_no_authoritative(conn, company_id, used)
     cells, stats = build_cells(
-        rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth
+        rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth, vintages
     )
     targets = set(managed_concept_ids)
     for r in rows:

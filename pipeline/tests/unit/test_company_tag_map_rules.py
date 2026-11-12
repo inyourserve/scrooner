@@ -620,3 +620,63 @@ def test_a_component_sum_never_mixes_sources_and_an_fsn_value_must_be_on_the_fac
     assert cells == [] and stats["held"][0]["reason"] == "fsn_value_not_on_face_line"
 
 
+
+
+def _vfact(value, fid, filing, filed):
+    return Fact(Decimal(value), fid, END, False, filing, f"A-{filing}", filed)
+
+
+def test_sum_parts_come_from_the_newest_filing_that_prints_every_part():
+    # NFLX Q4 2015: Marketing's latest print is a 2018 10-K (restated), G&A's the 2016 10-K. Never mix them: take
+    # both parts from the newest filing that prints both (2016), or hold when no filing prints them all.
+    rows = [comp_row("M"), comp_row("G")]
+    old_m, old_g = _vfact("224", 1, 16, date(2016, 1, 28)), _vfact("109", 2, 16, date(2016, 1, 28))
+    new_m = _vfact("230", 3, 18, date(2018, 2, 5))
+    facts = {("us-gaap", "M"): {7: new_m}, ("us-gaap", "G"): {7: old_g}}
+    arcs = {f"A-{n}": {("OperatingExpenses", "M"), ("OperatingExpenses", "G")} for n in (16, 18)}
+    vintages = {("us-gaap", "M"): {7: [new_m, old_m]}, ("us-gaap", "G"): {7: [old_g]}}
+    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, None, vintages)
+    assert [(c["value"], c["source_fact_ids"]) for c in cells] == [(Decimal("333"), [1, 2])] and stats["held"] == []
+    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, None, {})
+    assert cells == [] and stats["held"][0]["reason"] == "components_from_different_filings"
+
+
+SGA_ID = 14
+SGA_INFO = {**OPEX_INFO, SGA_ID: ("sga_expense", "income_statement")}
+
+
+def _no_arcs(gp, oi):
+    # MSFT FY2024 10-K: no calculation arcs at all; the face ties GP - (R&D + S&M + G&A) = OI
+    rows = [
+        MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
+        *(MapRow("us-gaap", t, "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss") for t in "RSG"),
+        *(MapRow("us-gaap", t, "IS", "component", None, SGA_ID, 1, ERA, None, "SellingGeneralAndAdministrativeExpense") for t in "SG"),
+    ]
+    facts = {
+        ("us-gaap", "GrossProfit"): {7: fact(gp, 1)},
+        ("us-gaap", "OperatingIncomeLoss"): {7: fact(oi, 2)},
+        ("us-gaap", "R"): {7: fact("29510", 3)},
+        ("us-gaap", "S"): {7: fact("24456", 4)},
+        ("us-gaap", "G"): {7: fact("7609", 5)},
+    }
+    return build_cells(rows, facts, SGA_INFO, {}, {})
+
+
+def test_no_calc_arcs_opex_and_sga_stand_on_the_face_tie_only():
+    cells, stats = _no_arcs("171008", "109433")  # 171,008 - 61,575 = 109,433
+    got = {c["canonical_concept_id"]: c["value"] for c in cells}
+    assert got[OPEX_ID] == Decimal("61575") and got[SGA_ID] == Decimal("32065") and stats["held"] == []
+    cells, stats = _no_arcs("171008", "109000")  # no tie: opex held, and sga falls with it
+    assert {OPEX_ID, SGA_ID}.isdisjoint(c["canonical_concept_id"] for c in cells)
+    assert sorted(h["reason"] for h in stats["held"]) == [
+        "no_calc_evidence",
+        "opex_components_do_not_tie_gross_profit_to_operating_income",
+    ]
+
+
+def test_no_calc_arcs_a_non_tie_concept_is_still_held():
+    rows = [comp_row("A"), comp_row("B")]
+    facts = {("us-gaap", "A"): {7: fact("1", 1)}, ("us-gaap", "B"): {7: fact("2", 2)}}
+    cells, stats = run(rows, facts, {})
+    assert cells == [] and stats["held"][0]["reason"] == "no_calc_evidence"
