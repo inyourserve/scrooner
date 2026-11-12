@@ -19,8 +19,8 @@ BS,Goodwill,map,goodwill,,,face line only,fsn-line-to-concept.md §A,4224,87,exp
 BS,PropertyPlantAndEquipmentNet,map,ppe_net_resolved,,,,,4218,88,explicit
 BS,LiabilitiesCurrent,map,current_liabilities_resolved,,,,,4192,86,explicit
 BS,AssetsCurrent,map,current_assets_resolved,,,co-registrant blocks (PEG R5: three rows): scope to the registrant,balance-sheet-equity-inventory-other.md §2,4192,86,explicit
-IS,WeightedAverageNumberOfDilutedSharesOutstanding,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,4030,85,explicit
-IS,WeightedAverageNumberOfSharesOutstandingBasic,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,3992,85,explicit
+IS,WeightedAverageNumberOfDilutedSharesOutstanding,map,weighted_diluted_shares,,,"scale guard: EPS × weighted shares ≈ NI to common (RPAY/TBLA ×1000 errors); never shares_outstanding; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)",net-income-and-shares.md §7,4030,85,explicit
+IS,WeightedAverageNumberOfSharesOutstandingBasic,map,weighted_basic_shares,,,"scale guard: EPS × weighted shares ≈ NI to common (RPAY/TBLA ×1000 errors); never shares_outstanding; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)",net-income-and-shares.md §7,3992,85,explicit
 CF,PaymentsForRepurchaseOfCommonStock,map,share_buybacks_resolved,,,"duration filter (AZO cumulative); printed 0 is a value (Brixmor); label adding excise tax or withholding = COMBINED, never buybacks (founder 2026-11-04 item 4; LRCX 0000707549-25-000014 R6 l17; 33 excise / 55 withholding labels)",shareholder-returns.md §1; fsn-cash-flow.md,3909,86,explicit
 BS,OtherAssetsNoncurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,3879,81,pattern
 CF,CashAndCashEquivalentsAtCarryingValue,excluded,,,identity_check_line,opening/closing cash and net change: identity lines,,3864,82,explicit
@@ -98,9 +98,9 @@ CF,IncreaseDecreaseInOtherOperatingCapitalNet,excluded,,,movement_line,working-c
 CI,OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,1527,39,pattern
 BS,DeferredIncomeTaxLiabilitiesNet,excluded,,,component_no_concept,,,1522,51,explicit
 CF,IncreaseDecreaseInOtherOperatingAssets,excluded,,,movement_line,working-capital change without a concept,,1474,33,pattern
-CF,InterestPaidNet,excluded,,,supplemental,"InterestPaid is cash, not expense; XOM: InterestPaidNet = the OPERATING portion only and InterestPaid = total cash interest (R109): the net/gross reading is filer-specific; read the label","interest.md §6; Dhairya full 10-K reads (13 cos) 2026-11-12, FILING-CHECKED",1430,63,explicit
+CF,InterestPaidNet,map,cash_paid_for_interest,,,"only when InterestPaid is NOT printed; label check: XOM uses it for the operating portion only (R109); net of capitalised at JNJ; never sum with InterestPaid; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)","interest.md §6; Dhairya full 10-K reads (13 cos) 2026-11-12, FILING-CHECKED",1430,63,explicit
 CF,PaymentsRelatedToTaxWithholdingForShareBasedCompensation,excluded,,,supplemental,buyback EXCLUSION (founder perimeter): reason only_excluded_lines_presented,shareholder-returns.md §1,1397,35,explicit
-CF,IncomeTaxesPaidNet,excluded,,,supplemental,"InterestPaid is cash, not expense; HD latest 10-K uses IncomeTaxesPaidNet, not IncomeTaxesPaid (R68)","interest.md §6; Dhairya full 10-K reads (12 cos) 2026-11-12, FILING-CHECKED",1389,46,explicit
+CF,IncomeTaxesPaidNet,map,cash_paid_for_income_taxes,,,"net of refunds = the cash actually paid: WINS when both printed (TXN 296M net vs 556M gross, R57); ASU 2023-09 era: often in the tax note, same tag (AAPL BAC LRCX WFC CSCO); HD R68; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)","interest.md §6; Dhairya full 10-K reads (12 cos) 2026-11-12, FILING-CHECKED",1389,46,explicit
 CI,OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,1362,36,pattern
 CF,EffectOfExchangeRateOnCashAndCashEquivalents,excluded,,,identity_check_line,FX: sum every FX-family calc child (CSCO twin),shareholder-returns.md §6,1354,62,explicit
 CF,IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets,excluded,,,movement_line,working-capital change without a concept,,1320,31,pattern
@@ -166,7 +166,7 @@ CF,NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,map,cash_flow_
 EQ,MinorityInterestDecreaseFromDistributionsToNoncontrollingInterestHolders,excluded,,,movement_line,equity roll-forward line,,765,24,pattern
 IS,SellingAndMarketingExpense,component,,sga_expense,component_no_concept,,,751,17,explicit
 EQ,AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation,excluded,,,movement_line,equity roll-forward line,,750,25,pattern
-IS,InterestIncomeExpenseNet,component,,,combined_perimeter,"BANK net interest income (no NII concept yet); at non-banks a net financing line (ANDE, AAON): never interest expense",interest.md §6,745,18,explicit
+IS,InterestIncomeExpenseNet,map,net_interest_income,,,"BANK template only (bank face ""Net interest income""); at non-banks a net financing line (ANDE, AAON; TJX +121M): combined, never net_interest_income or interest expense; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)",interest.md §6,745,18,explicit
 BS,MarketableSecuritiesCurrent,excluded,,,component_no_concept,balance-sheet component without a concept,,734,17,pattern
 EQ,StockRepurchasedAndRetiredDuringPeriodValue,excluded,,,movement_line,equity-statement buyback value: YTD on 3-month contexts (AMD); never a buyback fallback without duration check,shareholder-returns.md §1,730,29,pattern
 CF,AmortizationOfIntangibleAssets,component,,depreciation_and_amortization_resolved,component_no_concept,"D&A by composition (AMD 750 + 2,254)",capex-and-da.md §2,727,18,explicit
@@ -188,7 +188,7 @@ IS,LaborAndRelatedExpense,excluded,,,component_no_concept,income-statement compo
 BS,AccountsPayableAndAccruedLiabilitiesCurrent,excluded,,,combined_perimeter,AP + accrued combined: never accounts_payable,,620,14,explicit
 CF,RepaymentsOfDebt,excluded,,,component_no_concept,cash-flow component without a concept,,618,17,pattern
 CF,IncreaseDecreaseInDeferredRevenue,excluded,,,movement_line,working-capital change without a concept,,611,24,pattern
-CF,IncomeTaxesPaid,excluded,,,supplemental,"InterestPaid is cash, not expense",interest.md §6,607,28,explicit
+CF,IncomeTaxesPaid,map,cash_paid_for_income_taxes,,,"only when IncomeTaxesPaidNet is NOT printed; gross of refunds (TXN 556M); switched to IncomeTaxesPaidNet at ABBV LIN NFLX PG TSLA; never sum; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)",interest.md §6,607,28,explicit
 BS,ReceivablesNetCurrent,combined,,,line_presented_combined_with_others,"label adding notes/other/premiums = combined (XOM R5 44,562M; MRSH; AMZN R6); plain ""Accounts receivable, net"" label = accounts_receivable; never with AccountsReceivableNetCurrent (its calc parent)",fsn-balance-sheet-assets.md,591,13,explicit
 CF,DeferredIncomeTaxesAndTaxCredits,excluded,,,component_no_concept,operating adjustment without a concept,,570,18,pattern
 IS,IncomeLossFromDiscontinuedOperationsNetOfTax,excluded,,,subtotal_not_in_catalog,"IncomeLossAttributableToParent is mis-tagged ""before income taxes"" at 12 gap filers: check label",operating-income.md §7,552,20,explicit
@@ -225,7 +225,7 @@ EQ,StockIssuedDuringPeriodValueStockOptionsExercised,excluded,,,movement_line,eq
 EQ,SharesPaidForTaxWithholdingForShareBasedCompensation,excluded,,,movement_line,equity roll-forward line,,459,17,pattern
 BS,OtherLiabilities,excluded,,,component_no_concept,balance-sheet component without a concept,,456,11,pattern
 IS,NoninterestExpense,component,,,component_no_concept,"bank lines (safe tags, 29-30/30); at brokers ""Total non-interest expenses"" = the operating-expense total (MS); no bank/broker concept yet: sector template","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED); interest.md",455,9,explicit
-CF,InterestPaid,excluded,,,supplemental,"InterestPaid is cash, not expense; XOM InterestPaid = total cash interest paid (R109)","interest.md §6; Dhairya full 10-K reads (13 cos) 2026-11-12, FILING-CHECKED",454,35,explicit
+CF,InterestPaid,map,cash_paid_for_interest,,,"total cash interest paid: WINS when printed (JNJ 617M vs InterestPaidNet 515M net of capitalised; XOM 1,752M vs operating portion 218M); supplemental cash, never interest expense; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)","interest.md §6; Dhairya full 10-K reads (13 cos) 2026-11-12, FILING-CHECKED",454,35,explicit
 CF,ProvisionForDoubtfulAccounts,excluded,,,component_no_concept,operating adjustment without a concept,,452,12,pattern
 CF,ProceedsFromSaleOfProductiveAssets,excluded,,,component_no_concept,cash-flow component without a concept,,448,12,pattern
 CF,AssetImpairmentCharges,excluded,,,component_no_concept,operating adjustment without a concept,,448,15,pattern
@@ -391,7 +391,7 @@ BS,TradingSecurities,excluded,,,component_no_concept,balance-sheet component wit
 IS,ForeignCurrencyTransactionGainLossBeforeTax,excluded,,,component_no_concept,income-statement component without a concept,,159,4,pattern
 IS,RevenueFromContractWithCustomerIncludingAssessedTax,map,revenue_sanity_resolved,,,"often a COMPONENT next to a Revenues total (calc child): component then; can be larger than the face total (MA, WMB gross); never a REIT/bank total; Including vs Excluding assessed tax = excise perimeter",revenue.md §7; WMT 0000104169-26-000055 R3,158,10,explicit
 BS,IndefiniteLivedLicenseAgreements,excluded,,,component_no_concept,,,158,3,explicit
-IS,WeightedAverageNumberDilutedSharesOutstandingAdjustment,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,154,3,explicit
+IS,WeightedAverageNumberDilutedSharesOutstandingAdjustment,excluded,,,per_share_detail,"the dilution increment, not a share count: never weighted_diluted_shares",net-income-and-shares.md §7,154,3,explicit
 IS,PreferredStockDividendsAndOtherAdjustments,excluded,,,nci_component,between NI and NI-to-common; its presence blocks the NIACSB rule,net_income playbook,153,5,explicit
 IS,AssetImpairmentCharges,excluded,,,component_no_concept,income-statement component without a concept,,153,6,pattern
 IS,TaxesExcludingIncomeAndExciseTaxes,excluded,,,component_no_concept,income-statement component without a concept,,150,3,pattern
@@ -424,7 +424,7 @@ IS,OtherInterestAndDividendIncome,component,,interest_income,component_no_concep
 IS,BrokerageCommissionsRevenue,component,,revenue_sanity_resolved,component_no_concept,broker/bank revenue components,revenue playbook,102,2,explicit
 IS,NoninterestIncomeOther,component,,revenue_sanity_resolved,component_no_concept,broker/bank revenue components,revenue playbook,102,2,explicit
 IS,PrincipalTransactionsRevenue,component,,revenue_sanity_resolved,component_no_concept,broker/bank revenue components,revenue playbook,102,2,explicit
-IS,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,excluded,,,per_share_detail,weighted shares: no catalog concept (propose one; never shares_outstanding); scale errors RPAY/TBLA ×1000,net-income-and-shares.md §7,102,4,explicit
+IS,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,map,weighted_basic_shares,,,"one printed line feeds BOTH weighted_basic_shares and weighted_diluted_shares (no dilution: loss years); scale guard: EPS × weighted shares ≈ NI to common (RPAY/TBLA ×1000 errors); never shares_outstanding; concept live since migration 0122 (analytics.canonical_concept, checked 2026-11-12)",net-income-and-shares.md §7,102,4,explicit
 IS,Depreciation,component,,depreciation_and_amortization_resolved,component_no_concept,"ArcBest labels ""D&A"" on Depreciation",capex-and-da.md §2,101,2,explicit
 IS,InterestAndOtherIncome,excluded,,,component_no_concept,income-statement component without a concept,,98,3,pattern
 IS,GainLossOnSaleOfBusiness,excluded,,,component_no_concept,income-statement component without a concept,,95,5,pattern
