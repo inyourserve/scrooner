@@ -25,7 +25,7 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 ## Founder direction 2026-11-13: the predictor is how the master scales
 
 The founder, typed in Dhairya's session: the blind exam is "important -> to make master world class". The Tag Expert's predictor (`data-team/tags/exam/tools/predict.py`) becomes the automatic mapper for new filings, and reading becomes random spot-checks.
-- **Graduation, per data-point class:** blind accuracy at or above 99% over the last 200 unseen companies, with a Clopper-Pearson upper error at or below 1.5%. Graded only on hand-verified, FILING-CHECKED key rows; AUTO rows are key_unverified.
+- **Graduation, per data-point class and template group (corporate, bank, insurer, REIT, utility, energy, ...):** at least 200 unseen companies in that group, blind accuracy at or above 99%, and a one-sided 95% Clopper-Pearson upper error at or below 1.5%. So 0 errors in 200, or 1 error in 315 or more. A two-sided bound can't pass at n = 200 (Dhairya, 2026-11-13). A group with fewer than 200 companies stays on reading plus samples. Graded only on hand-verified, FILING-CHECKED key rows; AUTO rows are key_unverified.
 - **A graduated class:** in the nightly path, a new or changed tag in a new 10-Q or 10-K is mapped by the predictor, then goes through tagmap-plan, cell_proof and the proof guard. Every other class goes to the reading queue.
 - **Demotion:** random filing-checked samples keep grading each graduated class, and a drop below the bar demotes it.
 - **Today:** blind 89.1% on hand-verified rows (85.9% on all rows); dev score by version 82.4 → 87.7 → 88.1 → 89.8 (v4).
