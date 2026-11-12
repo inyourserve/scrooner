@@ -465,3 +465,6 @@ IS,AmortizationOfAboveAndBelowMarketLeases,excluded,,,component_no_concept,"MISU
 CF,PaymentsToAcquireEquipmentOnLease,component,,capex_resolved,component_no_concept,"leased fleets are IN capex (founder 2026-11-04 item 3): DE ""Cost of equipment on operating leases acquired"" 2,868 + ""Purchases of property and equipment"" 1,360 (0001104659-25-122321 R6): printed duration sum","Data Verifier docmaps ranks 51-67, 2026-11-12, FILING-CHECKED",,,explicit
 BS,CommonStockParOrStatedValuePerShare,excluded,,,share_terms_parenthetical,share terms in the BS parenthetical: never a value cell,Dhairya / Engineering expander request 2026-11-12,,,explicit
 BS,PreferredStockSharesAuthorized,excluded,,,share_terms_parenthetical,share terms in the BS parenthetical: never a value cell,Dhairya / Engineering expander request 2026-11-12,,,explicit
+CF,IncreaseDecreaseInAccountsPayableTrade,map,cf_ap_change,,,trade payables change line,blind/dev reads 2026-11-12 (keyed mapped by readers),,,explicit
+BS,AccountsReceivableNet,map,accounts_receivable,,,unclassified BS receivables line (AXP-type card-member receivables excluded: bank template),blind/dev reads 2026-11-12 (keyed mapped by readers),,,explicit
+BS,AccountsPayableCurrentAndNoncurrent,map,accounts_payable,,,"unclassified BS payables line (AXP, NEE)",blind/dev reads 2026-11-12 (keyed mapped by readers),,,explicit

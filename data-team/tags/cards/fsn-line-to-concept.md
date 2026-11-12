@@ -206,3 +206,9 @@ Guard: when a label would demote a line, check it against the calc position and 
 - The fact is nowhere in the filing (face or notes, checked in the filing's XBRL and its R pages) → **not_presented**, with the evidence of absence.
 - **component_in_note** only when the note value is a COMPONENT of the data point, not the data point itself.
 - A face miss alone is never not_presented. Rows a reader marks "AUTO / not hand-verified" are not answer key (graded key_unverified; Engineering's loader rejects them).
+
+## AC. Exam-driven fixes (v6, 2026-11-12; 120 graded companies)
+- Net income without a parent line: `NetIncomeLossAvailableToCommonStockholdersBasic` when no preferred line is printed; `ProfitLoss` when no NCI line is printed (net-income card rules, now in predict.py).
+- A lone CF `Depreciation` / `OtherDepreciationAndAmortization` line is the D&A line; two or more CF D&A component lines are a duration sum.
+- New library rows: `IncreaseDecreaseInAccountsPayableTrade` → cf_ap_change; unclassified `AccountsReceivableNet` → accounts_receivable; `AccountsPayableCurrentAndNoncurrent` → accounts_payable.
+- Reader keys graded as key errors under existing rulings: tax-withholding or `ProceedsFromRepurchaseOfEquity` keyed as buybacks (founder 2026-11-04 item 4); NCI or preferred dividends keyed as common dividends; interest, notes or financing receivables keyed as accounts receivable.

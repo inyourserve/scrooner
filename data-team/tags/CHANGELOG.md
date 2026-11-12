@@ -101,3 +101,4 @@ Every Tag Expert run adds an entry: what was added, what was CORRECTED (and what
 - 2026-11-12 (Tag Expert): CARDED Dhairya's note-only status convention (fsn-line-to-concept.md §AB): note fact = mapped (stmt NOTE, R page); absent from the filing = not_presented with evidence; component_in_note only for components; a face miss alone is never not_presented; AUTO rows are not key.
 - 2026-11-12 (Tag Expert): graduation recoded to the NOW.md bar (Dhairya): one-sided 95% CP upper <= 1.5% on hand rows, >= 200 unseen companies per data point x template group; FLAG column kept.
 - 2026-11-12 (Tag Expert): PUBLIC SOURCES: DQC_0065 corrects my cash-interest rule (InterestPaidNet wins; InterestPaid includes capitalized interest); DQC_0181 explains the 2024 interest elements and era switches (interest.md §10; library 5 rows).
+- 2026-11-12 (Tag Expert): predictor v6 (91.0% on 120 cos); blind 70 cos 90.4% hand-verified; §AC fixes; unread re-predicted.

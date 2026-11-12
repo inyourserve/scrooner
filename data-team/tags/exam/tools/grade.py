@@ -62,6 +62,13 @@ def main(pdir, ddir, *only):
                 rk = 'net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12)'
             if dp == 'depreciation_and_amortization' and norm_status(k['status']) == 'mapped' and _re.search(r'(?i)accretion|impair|nuclear', k.get('label') or ''):
                 rk = 'D&A line incl. accretion/impairment keyed as D&A (capex-and-da card; Dhairya DUK ruling 2026-11-12)'
+            kt = tagset(k['tags'])
+            if dp == 'share_buybacks' and norm_status(k['status']) == 'mapped' and ({'paymentsrelatedtotaxwithholdingforsharebasedcompensation', 'proceedsfromrepurchaseofequity'} & kt):
+                rk = 'withholding or non-repurchase tag keyed as buybacks (founder 2026-11-04 item 4)'
+            if dp == 'dividends_paid' and norm_status(k['status']) == 'mapped' and ({'paymentsofdividendsminorityinterest', 'paymentsofdividendspreferredstockandpreferencestock'} & kt):
+                rk = 'NCI or preferred dividends keyed as common dividends (shareholder-returns card)'
+            if dp == 'accounts_receivable' and norm_status(k['status']) == 'mapped' and ({'interestreceivable', 'notesreceivablenet', 'financingreceivableexcludingaccruedinterestafterallowanceforcreditloss'} & kt):
+                rk = 'interest/notes/financing receivables keyed as accounts receivable (sector-faces card)'
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):

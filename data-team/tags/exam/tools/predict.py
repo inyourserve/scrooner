@@ -5,7 +5,7 @@ Output: one prediction per data point, in the docmap's vocabulary.
 Usage: predict.py LINES.jsonl TICKER RANK LIBRARY_DIR > TICKER-prediction.csv
 """
 import csv, json, re, sys
-VERSION = "v5"
+VERSION = "v6"
 DPS = ['accounts_payable','accounts_receivable','amortization_of_intangibles','basic_eps','capex','cash_and_equivalents','cash_flow_financing',
  'cash_flow_investing','cash_paid_for_income_taxes','cash_paid_for_interest','cf_ap_change','cf_ar_change','cf_inventory_change','cfo',
  'comprehensive_income','cost_of_revenue','current_assets','current_liabilities','deposits','depreciation_and_amortization','diluted_eps',
@@ -133,7 +133,7 @@ def main(lines_path, ticker, rank, libdir, notes_path=None):
         maps = [l for d, l in c if d == 'map']
         comps = [l for d, l in c if d == 'component']
         combs = [l for d, l in c if d == 'combined']
-        PREF = {'stockholders_equity': 'StockholdersEquity', 'net_income': 'NetIncomeLoss', 'comprehensive_income': 'ComprehensiveIncomeNetOfTax'}
+        PREF = {'stockholders_equity': 'StockholdersEquity', 'net_income': 'NetIncomeLoss', 'comprehensive_income': 'ComprehensiveIncomeNetOfTax', 'cash_paid_for_interest': 'InterestPaidNet', 'cash_paid_for_income_taxes': 'IncomeTaxesPaidNet'}
         def pick(ls):
             same = [l for l in ls if l['st'] == h] or ls
             if dp in PREF and any(l['tag'] == PREF[dp] for l in same): same = [l for l in same if l['tag'] == PREF[dp]]
@@ -207,6 +207,26 @@ def main(lines_path, ticker, rank, libdir, notes_path=None):
             elif comps or combs:
                 cs = [l for d, l in cand['interest_expense'] if d in ('component', 'combined')]
                 status, chosen, rule = 'combined', [pick(cs)], 'net or partial interest line'
+        elif dp == 'net_income' and not maps:
+            ISn = [l for l in L if l['st'] == 'IS' and not l['pth'] and l['val'] is not None]
+            tags_ = {l['tag'] for l in ISn}
+            pref_line = any(re.search(r'(?i)preferred', l['lab'] or '') for l in ISn)
+            nci_line = any('NoncontrollingInterest' in l['tag'] or 'MinorityInterest' in l['tag'] for l in ISn)
+            na = [l for l in ISn if l['tag'] == 'NetIncomeLossAvailableToCommonStockholdersBasic']
+            pl = [l for l in ISn if l['tag'] == 'ProfitLoss']
+            if na and not pref_line:
+                status, chosen, rule = 'mapped', na[:1], 'available-to-common = NI with no NetIncomeLoss and no preferred line (net-income card)'
+            elif pl and not nci_line:
+                status, chosen, rule = 'mapped', pl[:1], 'ProfitLoss = NI with no NetIncomeLoss and no NCI line'
+            elif comps or combs:
+                status, chosen, rule = 'combined', [pick([l for d, l in cand[dp]])], 'incl. NCI or after preferred'
+        elif dp == 'depreciation_and_amortization' and not maps and comps:
+            dep = [l for l in comps if l['tag'] in ('Depreciation', 'OtherDepreciationAndAmortization') and l['st'] == 'CF']
+            others = [l for l in comps if l not in dep and l['st'] == 'CF']
+            if dep and not others:
+                status, chosen, rule = 'mapped', dep[:1], 'lone CF depreciation line = the D&A line'
+            elif len([l for l in comps if l['st'] == 'CF']) >= 2:
+                status, chosen, rule = 'component_sum', [l for l in comps if l['st'] == 'CF'], 'CF D&A components (duration sum)'
         elif maps and dp == 'capex' and comps and any(l['st'] == 'CF' for l in comps):
             status, chosen, rule = 'component_sum', [pick(maps)] + [l for l in comps if l['st'] == 'CF'], 'capex = sum of printed CF capex lines (founder 2026-11-04 item 3)'
         elif maps:
