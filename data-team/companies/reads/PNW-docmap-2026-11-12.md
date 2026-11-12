@@ -102,6 +102,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | goodwill | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | accounts_payable | mapped-sample | agree | page value 680203000 vs printed 680203000 |
 | total_liabilities | not_presented | agree | none of the candidate elements in MetaLinks.json |
+| depreciation_and_amortization | combined | agree | page value 969615000 vs printed 969615000 |
 | share_buybacks | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | cash_paid_for_interest | NOTE | agree | page value 388540000 vs API 388540000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 22754000 vs API 22754000 |

@@ -16,6 +16,11 @@ import docmap as D  # noqa: E402
 rows = list(csv.DictReader(open(cohort)))
 os.makedirs(out_dir, exist_ok=True)
 BS_DP = {d[0] for d in D.DP if d[1] == "BS"}
+TEMPLATES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "docmap_templates.json")))
+# Dhairya OUT ruling (main @020ebb29): for banks and insurers (and the lender template, per the SYF CA/CL key) these
+# data points are outside the template: OUT, not not_presented
+OUT_GROUP = {"bank", "insurer", "lender"}
+OUT_DPS = {"cost_of_revenue", "gross_profit", "research_and_development", "inventory", "current_assets", "current_liabilities"}
 CHECK_STATUSES = {"not_presented", "combined", "component sum", "component_in_note"}
 
 
@@ -96,7 +101,7 @@ RULES = [  # (data point, predicate on (tags, label), ruling, replacement candid
      "net interest line: interest_expense is the gross charge only (Dhairya 2026-11-12)", "combined"),
     ("operating_expenses", lambda t, l: "CostsAndExpenses" in t,
      "CostsAndExpenses includes cost of revenue: combined, never opex (Dhairya 2026-11-12)", "combined"),
-    ("depreciation_and_amortization", lambda t, l: re.search(r"Accretion|Impairment", t) or re.search(r"accretion|impairment", l, re.I),
+    ("depreciation_and_amortization", lambda t, l: re.search(r"Accretion|Impairment", t) or re.search(r"accretion|impairment|nuclear fuel", l, re.I),
      "D&A including accretion/impairment is combined (Dhairya 2026-11-12)", "combined"),
     ("cash_paid_for_interest", lambda t, l: t.endswith(":InterestPaid") or ":InterestPaid+" in t,
      "cash interest paid = InterestPaidNet, net of capitalized interest (DQC_0065)", ["InterestPaidNet"]),
@@ -168,8 +173,13 @@ def check_company(rank):
     mapped = [r for r in recs if r["status"] == "mapped" and r["stmt"] != "NOTE"]
     sample = set(id(r) for r in random.Random(tic).sample(mapped, math.ceil(len(mapped) * 0.1))) if mapped else set()
     log = []
+    tpl = TEMPLATES.get(cik.zfill(10), "")
     for r in recs:
         r["check"] = "check: machine-full-filing"
+        if tpl in OUT_GROUP and r["data_point"] in OUT_DPS and r["status"] == "not_presented":
+            r["status"] = "OUT"
+            r["note"] = f"OUT of the {tpl} template (Dhairya OUT ruling, main @020ebb29); " + r["note"]
+            st["out_rekeyed"] = st.get("out_rekeyed", 0) + 1
         ruled = apply_rules(r, base, end_d)
         if ruled:
             st["rule_fixes"] = st.get("rule_fixes", 0) + 1

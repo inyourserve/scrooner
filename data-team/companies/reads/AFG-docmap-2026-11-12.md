@@ -85,18 +85,12 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 
 | data point | class | verdict | detail |
 |---|---|---|---|
-| cost_of_revenue | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| gross_profit | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| research_and_development | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | operating_income | mapped-sample | agree | page value 1073000000 vs printed 1073000000 |
 | diluted_eps | mapped-sample | agree | page value 10.08 vs printed 10.08 |
 | weighted_basic_shares | mapped-sample | agree | page value 83500000 vs printed 83500000 |
 | accounts_receivable | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| inventory | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| current_assets | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | ppe_net | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | accounts_payable | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| current_liabilities | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | capex | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | depreciation_and_amortization | combined | agree | page value 86000000 vs printed 86000000 |
 | sbc | NOTE | agree | page value 18000000 vs API 18000000 |
