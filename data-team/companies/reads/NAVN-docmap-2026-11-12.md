@@ -5,7 +5,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Filings opened
 - 10-K 0001628280-26-023250 (CIK 0001639723, filed 2026-04-02): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
 - 10-K 0001628280-26-023250 (CIK 0001639723, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
-- companyfacts CIK0001639723.json (one call).
+- companyfacts CIK0001639723.json (one call); submissions CIK0001639723.json (SIC 7372).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -14,7 +14,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | mapped | us-gaap:CostOfRevenue | R5.htm | Cost of revenue | 201794000 | 201794000 | 169815000 | 169815000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
 | gross_profit | mapped | us-gaap:GrossProfit | R5.htm | Gross profit | 500471000 | 500471000 | 367022000 | 367022000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R5.htm | Total operating expenses | 697348000 | 697348000 | 474660000 | 474660000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line excludes cost of revenue (= GP - OI) / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R5.htm | General and administrative | 203444000 | 203444000 | 133552000 | 133552000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R5.htm | General and administrative + Sales and marketing | 546111000 | 546111000 | 352274000 | 352274000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R5.htm | Research and development | 151237000 | 151237000 | 122386000 | 122386000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Loss from operations | -196877000 | -196877000 | -107638000 | -107638000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
 | interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R5.htm | Interest expense | -51299000 | 51299000 | -75997000 | 75997000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R5.htm period ..2026-01-31 |
@@ -47,11 +47,11 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Cash paid for interest | 25575000 | 25575000 | 29547000 | 29547000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R8.htm period ..2026-01-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R8.htm | Cash paid for income taxes | 17188000 | 17188000 | 8539000 | 8539000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-023250 R8.htm period ..2026-01-31 |
 | total_debt | component sum | us-gaap:LinesOfCreditCurrent | R3.htm | Trade loan facility | 0 | 0 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares, outstanding (in shares) | 249174777 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-01-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares, outstanding (in shares) | 0 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-01-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
 - cash_and_equivalents: era 10-K 0001628280-26-023250 R3.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 583516000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-none beyond sign differences
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

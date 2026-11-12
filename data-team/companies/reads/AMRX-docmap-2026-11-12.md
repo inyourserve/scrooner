@@ -5,7 +5,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Filings opened
 - 10-K 0001723128-26-000011 (CIK 0001723128, filed 2026-02-27): COVER R1.htm, IS R3.htm, CI R4.htm, BS R6.htm, BSP R7.htm, CF R10.htm
 - 10-K 0001723128-19-000028 (CIK 0001723128, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R7.htm
-- companyfacts CIK0001723128.json (one call).
+- companyfacts CIK0001723128.json (one call); submissions CIK0001723128.json (SIC 2834).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -47,7 +47,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R10.htm | Cash paid for interest | 197848000 | 197848000 | 263518000 | 263518000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001723128-26-000011 R10.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R10.htm | Cash paid, net for income taxes | 21327000 | 21327000 | 15220000 | 15220000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001723128-26-000011 R10.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:LinesOfCreditCurrent+us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent | R6.htm | Revolving credit facility + Current portion of long-term debt, net + Long-term debt, net | 2571876000 | 2571876000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R8.htm | Shares ending balance (in shares) at Dec. 31, 2023 | 306565000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R8.htm 'Consolidated Statement of Changes in Stockholders’ Equity (Deficiency)' (MetaLinks.json presentation) |
+| shares_outstanding | not_presented |  | R6.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CommonStockSharesOutstanding in MetaLinks.json (1201 tags across all 127 R pages, face and notes) of 0001723128-26-000011; HAND REVIEW: 6 label candidate(s) incl. custom tags: us-gaap:CommonStockSharesIssued 'Common stock, shares issued (in shares) / Common Stock, Shar' R7; us-gaap:CommonStockSharesOutstanding 'Shares beginning balance (in shares) / Shares ending balance' R8,R113; dei:EntityCommonStockSharesOutstanding 'Entity Common Stock, Shares Outstanding / Entity Common Stoc' R1; us-gaap:ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber 'Shares outstanding and unvested (in shares) / Non-vested beg' R115,R117; us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding 'Diluted (in shares) / Weighted-average shares outstanding - ' R3,R84; us-gaap:WeightedAverageNumberOfSharesOutstandingBasic 'Basic (in shares) / Weighted-average shares outstanding - ba' R3,R84 |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -58,4 +58,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - accounts_receivable: API missing (us-gaap:AccountsReceivableNetCurrent)
 - accounts_payable: API missing (us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent)
 - depreciation_and_amortization: API missing (amrx:DepreciationDepletionAndAmortizationExcludingAmortizationOfDebtIssuanceCosts)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
