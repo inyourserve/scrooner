@@ -770,19 +770,14 @@ def _proof_guard(
         return cells
     kept = []
     for c in cells:
-        start, end, ptype = periods.get(c["period_id"], (None, None, None))
-        shown = (
-            proof_disagree.get(
-                (
-                    concept_info[c["canonical_concept_id"]][0],
-                    _proof_grain(start, end, ptype),
-                    start,
-                    end,
-                )
+        period = periods.get(c["period_id"])
+        shown = None
+        if period is not None:
+            start, end, ptype = period
+            name = concept_info[c["canonical_concept_id"]][0]
+            shown = proof_disagree.get(
+                (name, _proof_grain(start, end, ptype), start, end)
             )
-            if start is not None
-            else None
-        )
         if shown is not None and shown == c["value"]:
             stats["held"].append(
                 {
