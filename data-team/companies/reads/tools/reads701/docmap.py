@@ -39,8 +39,8 @@ DP = [
     ('weighted_diluted_shares', 'IS', ['WeightedAverageNumberOfDilutedSharesOutstanding', 'WeightedAverageNumberOfShareOutstandingBasicAndDiluted'], 'first'),
     ('dividends_per_share', '*', ['CommonStockDividendsPerShareDeclared', 'CommonStockDividendsPerShareCashPaid'], 'first'),
     ('comprehensive_income', 'CI', ['ComprehensiveIncomeNetOfTax', 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest'], 'first'),
-    ('cash_and_equivalents', 'BS', ['CashAndCashEquivalentsAtCarryingValue', 'CashAndDueFromBanks', 'Cash', 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'CashAndCashEquivalentsAtCarryingValueIncludingDiscontinuedOperations'], 'first'),
-    ('accounts_receivable', 'BS', ['AccountsReceivableNetCurrent', 'ReceivablesNetCurrent', 'AccountsNotesAndLoansReceivableNetCurrent', 'AccountsAndOtherReceivablesNetCurrent', 'AccountsReceivableNet'], 'first'),
+    ('cash_and_equivalents', 'BS', ['CashAndCashEquivalentsAtCarryingValue', 'CashAndDueFromBanks', 'Cash', 'CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents', 'CashAndCashEquivalentsAtCarryingValueIncludingDiscontinuedOperations', 'CashCashEquivalentsAndShortTermInvestments'], 'first'),
+    ('accounts_receivable', 'BS', ['AccountsReceivableNetCurrent', 'ReceivablesNetCurrent', 'AccountsNotesAndLoansReceivableNetCurrent', 'AccountsAndOtherReceivablesNetCurrent', 'AccountsReceivableNet', 'PremiumsAndOtherReceivablesNet'], 'first'),
     ('inventory', 'BS', ['InventoryNet', 'InventoryFinishedGoodsNetOfReserves', 'InventoryGross'], 'first'),
     ('current_assets', 'BS', ['AssetsCurrent'], 'first'),
     ('ppe_net', 'BS', ['PropertyPlantAndEquipmentNet', 'PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization', 'RealEstateInvestmentPropertyNet'], 'first'),
@@ -58,8 +58,8 @@ DP = [
     ('cash_flow_investing', 'CF', ['NetCashProvidedByUsedInInvestingActivities', 'NetCashProvidedByUsedInInvestingActivitiesContinuingOperations'], 'first'),
     ('cash_flow_financing', 'CF', ['NetCashProvidedByUsedInFinancingActivities', 'NetCashProvidedByUsedInFinancingActivitiesContinuingOperations'], 'first'),
     ('capex', 'CF', ['PaymentsToAcquirePropertyPlantAndEquipment', 'PaymentsToAcquireProductiveAssets', 'PaymentsForCapitalImprovements', 'PaymentsToAcquireOilAndGasPropertyAndEquipment', 'PaymentsToAcquireRealEstate', 'PaymentsToDevelopRealEstateAssets'], 'first'),
-    ('depreciation_and_amortization', 'CF', ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization', 'DepreciationAmortizationAndAccretionNet', 'DepreciationAmortizationAndOther'], 'first'),
-    ('sbc', 'CF', ['ShareBasedCompensation', 'AllocatedShareBasedCompensationExpense'], 'first'),
+    ('depreciation_and_amortization', 'CF', ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization', 'DepreciationAmortizationAndAccretionNet', 'OtherDepreciationAndAmortization', 'DepreciationAmortizationAndOther'], 'first'),
+    ('sbc', 'CF', ['ShareBasedCompensation', 'AllocatedShareBasedCompensationExpense', 'EmployeeBenefitsAndShareBasedCompensationNoncash'], 'first'),
     ('dividends_paid', 'CF', ['PaymentsOfDividendsCommonStock', 'PaymentsOfDividends', 'PaymentsOfOrdinaryDividends'], 'first'),
     ('share_buybacks', 'CF', ['PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity'], 'first'),
     ('amortization_of_intangibles', 'CF', ['AmortizationOfIntangibleAssets'], 'first'),
@@ -79,7 +79,7 @@ DEBT = ['ShortTermBorrowings', 'CommercialPaper', 'DebtCurrent', 'LongTermDebtCu
         'SecuredOvernightFinancingRateSofrOvernightIndexSwapRateMember', 'ShortTermDebtAndCurrentPortionOfLongTermDebt',
         'DebtNoncurrent', 'OperatingLeaseLiability', 'LongTermDebtNoncurrentAndFinanceLease', 'UnsecuredLongTermDebt', 'SecuredLongTermDebt', 'ConvertibleLongTermNotesPayable', 'OtherLongTermDebtNoncurrent', 'OtherLongTermDebtCurrent', 'LongTermNotesPayableCurrent', 'NotesPayableRelatedPartiesClassifiedCurrent', 'NotesPayableRelatedPartiesNoncurrent', 'DebtLongtermAndShorttermCombinedAmount', 'LongTermDebtAndFinanceLeasesNoncurrent', 'LongTermDebtAndFinanceLeasesCurrent']
 DEBT = [t for t in DEBT if t not in ('LongTermDebtFairValue', 'DebtInstrumentCarryingAmount', 'SecuredOvernightFinancingRateSofrOvernightIndexSwapRateMember', 'OperatingLeaseLiability')]
-DA_PARTS = ['Depreciation', 'AmortizationOfIntangibleAssets', 'DepreciationNonproduction', 'AmortizationOfDeferredCharges', 'DepreciationAndAmortizationExcludingAmortizationOfIntangibles', 'DepletionOfOilAndGasProperties', 'AmortizationOfFinancingCosts']
+DA_PARTS = ['Depreciation', 'AmortizationOfIntangibleAssets', 'DepreciationNonproduction', 'AmortizationOfDeferredCharges', 'DepreciationAndAmortizationExcludingAmortizationOfIntangibles', 'DepletionOfOilAndGasProperties']
 COMBINED = {'AccountsPayableAndAccruedLiabilitiesCurrent': 'accounts_payable', 'AccountsPayableAndOtherAccruedLiabilitiesCurrent': 'accounts_payable',
             'IncreaseDecreaseInAccountsPayableAndAccruedLiabilities': 'cf_ap_change', 'AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent': 'accounts_payable',
             'SellingGeneralAndAdministrativeExpenseIncludingResearchAndDevelopment': 'sga_expense', 'CostOfGoodsAndServicesSoldIncludingDepreciation': 'cost_of_revenue'}

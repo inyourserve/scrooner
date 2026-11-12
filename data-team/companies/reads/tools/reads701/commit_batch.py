@@ -15,14 +15,14 @@ for fn in glob.glob(os.path.join(R, 'b*.log')):
             pass
 dst = os.path.join(WT, 'data-team/companies/reads')
 inbox = os.path.join(WT, 'data-team/tags/feedback-inbox-701-800.md')
-if not os.path.exists(inbox):
+if True:   # regenerated from every committed rank on each run (reruns must not duplicate rows)
     open(inbox, 'w').write('# Tag feedback inbox: document-first reads, ranks 701-800 (append-only)\n\n'
                            'Same format as feedback-inbox.md. Every row comes from a docmap in data-team/companies/reads/ (FILING-CHECKED R pages vs SEC companyfacts; era rows from companyfacts by 10-K, DATA-INFERRED).\n\n'
                            '| date | from | tag | what was learned | evidence | class | status |\n|---|---|---|---|---|---|---|\n')
 def ts(s): return {t.split(':')[-1] for t in s.replace('+', ';').split(';') if t.strip()}
 def norm(s): return (s or '').strip().lower().replace(' ', '_')
 done = []
-for rank in range(lo, hi + 1):
+for rank in range(701, hi + 1):
     tk = ranks[rank]['ticker']
     md = os.path.join(R, 'out', f'{tk}-docmap-{DATE}.md'); cv = os.path.join(R, 'out', f'{tk}-docmap-{DATE}.csv')
     if not os.path.exists(md):
@@ -52,6 +52,8 @@ for rank in range(lo, hi + 1):
     shutil.copy(cv, os.path.join(dst, os.path.basename(cv)))
     # inbox rows
     q = json.load(open(os.path.join(R, 'out', 'quirks', tk + '.json')))
+    mq = os.path.join(R, 'manual_quirks', tk + '.json')
+    if os.path.exists(mq): q += json.load(open(mq))
     with open(inbox, 'a') as f:
         for x in q:
             what = f"{x['ticker']} (rank {x['rank']}) [{x['kind']}] {x['data_point']}: '{x['label'][:90]}' — {x['note']}"
@@ -86,7 +88,7 @@ open(summ, 'w').write('\n'.join([
     '# Ranks 701-800 document-first reads: summary (numbers only)', '',
     f'| item | value |', '|---|---|',
     f'| companies read | {len(rows)} |', f'| statement R pages read (latest 10-K) | {s("statements")} |', f'| era 10-Ks opened | {s("era_10k")} |',
-    f'| sec.gov + data.sec.gov requests | {s("sec_requests")} |', f'| face lines with an FY0 value | {s("face_lines")} |',
+    f'| sec.gov + data.sec.gov requests (this reader + the shared reader used for the hand check; cumulative) | {sum(1 for _ in open(os.path.join(R, "requests.log")))} |', f'| face lines with an FY0 value | {s("face_lines")} |',
     f'| face lines equal to companyfacts | {s("face_api_equal")} |', f'| face lines differing from companyfacts | {s("face_api_differ")} |',
     f'| face lines without a companyfacts fact | {s("face_api_none")} |', f'| custom-tag face lines | {s("face_custom")} |', f'| dimensional face lines | {s("face_dimensional")} |',
     f'| data-point rows | {sum(v for k, v in cnt.items() if not k.startswith("era_"))} |',

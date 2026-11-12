@@ -14,6 +14,7 @@ def get(url, binary=False):
         wait = 2.5 - (time.time() - _last[0])
         if wait > 0: time.sleep(wait)
         _last[0] = time.time(); COUNT[0] += 1
+        open(os.path.join(os.path.dirname(CACHE), 'requests.log'), 'a').write(url + '\n')
         try:
             req = urllib.request.Request(url, headers={'User-Agent': UA})
             with urllib.request.urlopen(req, timeout=180) as r: b = r.read()

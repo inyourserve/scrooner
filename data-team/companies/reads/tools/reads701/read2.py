@@ -72,13 +72,20 @@ def pick(lines, sic):
         if not c: continue
         l = max(c, key=lambda l: abs(l['fy0'])) if how == 'max' else sorted(c, key=lambda l: (tags.index(l['tag']), l['order']))[0]
         res[name] = dict(status='mapped', lines=[l])
-    rp = [l for l in lines if l['member'] and re.search(r'(RelatedParty|NonrelatedParty)Member$', l['member']) and l['stmt'] in ('IS', 'BS', 'CF') and l['fy0'] is not None]
+    # a data point printed only as member lines (related party / affiliate / asset class ...): component sum of the members,
+    # never for members that repeat across a whole statement (co-registrant or segment copies of the statement)
+    mem = [l for l in lines if l['member'] and l['stmt'] in ('IS', 'BS', 'CF') and l['fy0'] is not None]
+    share = {}
+    for st in ('IS', 'BS', 'CF'):
+        n = max(1, sum(1 for l in lines if l['stmt'] == st and not l['member']))
+        for m in {l['member'] for l in mem if l['stmt'] == st}:
+            share[(st, m)] = sum(1 for l in mem if l['stmt'] == st and l['member'] == m) / n
     for name, st, tags, how in DP:
         if name in res or st not in ('IS', 'BS', 'CF'): continue
-        c = [l for l in rp if l['tag'] in tags and l['stmt'] == st]
+        c = [l for l in mem if l['tag'] in tags and l['stmt'] == st and share.get((st, l['member']), 1) <= 0.3]
         c = [l for l in c if l['tag'] == c[0]['tag']] if c else c
         if len({l['member'] for l in c}) >= 2:
-            res[name] = dict(status='component sum', lines=c, note='printed only as related-party and non-related-party member lines (no undimensioned total on the face)')
+            res[name] = dict(status='component sum', lines=c, note='printed only as member lines (' + ', '.join(sorted({l['member'] for l in c})) + '); no undimensioned total on the face')
     if 'accounts_receivable' in res and res['accounts_receivable']['lines'][0]['tag'] != 'AccountsReceivableNetCurrent':
         recv = [l for l in face if l['stmt'] == 'BS' and 'Receivable' in l['tag'] and 'Financing' not in l['tag'] and 'Loans' not in l['tag'] and l['fy0'] is not None]
         if len(recv) != 1:
@@ -103,7 +110,7 @@ def pick(lines, sic):
     elif res['depreciation_and_amortization']['lines'][0]['tag'] == 'DepreciationAmortizationAndOther':
         res['depreciation_and_amortization']['status'] = 'combined'
     if 'depreciation_and_amortization' in res and res['depreciation_and_amortization']['lines'][0]['tag'] in ('Depreciation',) + tuple(DA_PARTS):
-        extra = [l for l in face if l['stmt'] == 'CF' and l['custom'] and re.search(r'amortization', l['label'], flags=re.I) and not re.search(r'(debt|financing|lease|deferred)', l['label'], flags=re.I) and l['fy0'] is not None]
+        extra = [l for l in face if l['stmt'] == 'CF' and l['custom'] and re.search(r'amortization', l['label'], flags=re.I) and not re.search(r'(debt|financing|lease|deferred|investment|premium|discount|accretion|contract cost)', l['label'], flags=re.I) and l['fy0'] is not None]
         if extra:
             d = res['depreciation_and_amortization']
             d['lines'] = d['lines'] + extra
@@ -112,13 +119,17 @@ def pick(lines, sic):
     if 'sga_expense' not in res:
         parts = [l for l in face if l['stmt'] == 'IS' and l['tag'] in ('SellingAndMarketingExpense', 'GeneralAndAdministrativeExpense', 'SellingExpense') and l['fy0'] is not None]
         if len(parts) >= 2: res['sga_expense'] = dict(status='component sum', lines=parts)
+    if 'goodwill' not in res:
+        g = [l for l in face if l['stmt'] == 'BS' and l['tag'] == 'IntangibleAssetsNetIncludingGoodwill' and l['fy0'] is not None]
+        if g: res['goodwill'] = dict(status='combined', lines=g[:1], note='goodwill printed in one line with intangible assets')
     for tag, dp in COMBINED.items():
         c = [l for l in face if l['tag'] == tag and l['fy0'] is not None]
         if c and dp not in res: res[dp] = dict(status='combined', lines=c[:1])
-    lab = {'depreciation_and_amortization': r'depreciation', 'capex': r'(capital expenditure|purchases? of property|additions to property|purchases? of plant)',
+    lab = {'depreciation_and_amortization': r'depreciation', 'capex': r'^(capital expenditures?|purchases? of property|additions to property|purchases? of plant)',
            'revenue': r'^(total )?(net )?(operating )?(revenues?|sales|net sales)( net)?$', 'operating_income': r'^(total )?operating (income|profit|earnings)',
            'interest_expense': r'^interest expense', 'net_income': r'^net (income|earnings)( \(loss\))?$', 'sbc': r'(stock|share|equity)[- ]based compensation',
-           'dividends_paid': r'dividends paid', 'cash_and_equivalents': r'^cash and cash equivalents$', 'share_buybacks': r'(repurchase|purchase)s? of (common )?(stock|shares)', 'cost_of_revenue': r'^(total )?cost of (revenues?|sales|goods sold)'}
+           'dividends_paid': r'dividends paid', 'cash_and_equivalents': r'^cash and cash equivalents$', 'sga_expense': r'^selling, general,? and administrative',
+           'cash_paid_for_income_taxes': r'income taxes paid', 'cash_paid_for_interest': r'^(cash paid for )?interest( paid)?', 'share_buybacks': r'(repurchase|purchase)s? of (common )?(stock|shares)', 'cost_of_revenue': r'^(total )?cost of (revenues?|sales|goods sold)'}
     for dp, rx in lab.items():
         if dp in res: continue
         c = [l for l in face if l['custom'] and re.search(rx, l['label'], flags=re.I) and l['fy0'] is not None]
