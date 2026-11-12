@@ -18,4 +18,4 @@ Company-scoped mappings that the library default does not allow (doc 02: a label
 ## needs-detail-answers-r1r2.csv (2026-11-12)
 Answers to Engineering's data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv (168 rows, all closed). Added columns: final_decision, members (concept:sign, only from the filing's own calc children or same-filing facts; instants never by subtraction), sign (component contribution to its parent concept, on stored values), label_condition, rule, status. Concept keys use concepts_catalog.csv (_resolved keys where they exist).
 
-- company-overrides.csv column `value_source` (2026-11-12, founder decision relayed by Dhairya): `fsn_xbrl` = value from the filing's own XBRL via SEC FSN data, checked against the printed R page (custom tags); `sec_api` = SEC API (standard tags).
+- company-overrides.csv column `value_source` (2026-11-12, doc 02 "Founder decision of 2026-11-12: value source for custom-tag lines" (doc/foundational/02_Scrooner_Decision_Register.md, main fcf1425d)): `fsn_xbrl` = value from the filing's own XBRL via SEC FSN data, checked against the printed R page (custom tags); `sec_api` = SEC API (standard tags).

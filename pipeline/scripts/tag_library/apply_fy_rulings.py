@@ -10,13 +10,14 @@ import sys
 FY_RULINGS = {
     # IS prints interest expense only by segment (ME&T line; Financial Products line is dimensioned only): no consolidated line
     ("CAT", "interest_expense_resolved"): ("status", "not_presented", "interest_expense_printed_by_segment_only"),
-    # D&A sits on the CF face under a custom extension tag; companyfacts carries no extension facts
-    ("CRWD", "depreciation_and_amortization_resolved"): ("status", "not_presented", "held_custom_extension_no_fact"),
+    # (CRWD D&A on its custom CF face tag is served from the filing's own XBRL: founder decision 2026-11-12, value_source.py)
     # 'Depreciation, amortization and impairment': D&A combined with impairment on one custom line
     ("TSLA", "depreciation_and_amortization_resolved"): ("status", "not_in_template", "line_presented_combined_with_others"),
     # printed per class only on the BS parenthetical; instants are never summed (D3)
     ("MA", "shares_outstanding_resolved"): ("status", "not_presented", "shares_per_class_only"),
     ("META", "shares_outstanding_resolved"): ("status", "not_presented", "shares_per_class_only"),
+    # "Repurchases of common stock and employee tax withholdings": a buyback line with withholding wording is combined (read, ruling)
+    ("MS", "share_buybacks_resolved"): ("combined", "share_buybacks;tax_withholding_share_based_payments"),
     # the 10-Ks switched to PaymentsOfDividendsCommonStock from FY2024 (full 10-K read)
     ("COST", "dividends_paid_resolved"): ("tag", "us-gaap", "PaymentsOfDividendsCommonStock"),
 }
@@ -40,7 +41,11 @@ def apply(rows, fy):
             out.append({**r, "era_to": day(a, -1)})
         if r["era_to"] > b:
             out.append({**r, "era_from": day(b, 1)})
-        if rule[0] == "tag":  # per serving row: never widened beyond its own era
+        if rule[0] == "combined":  # the same printed line, shown as the company's line, feeding no concept
+            out.append({**r, "decision": "combined", "canonical_concept": "", "parent_concept": "", "combine_sign": "", "components": rule[1],
+                        "reason_class": "line_presented_combined_with_others", "era_from": max(r["era_from"], a), "era_to": min(r["era_to"], b),
+                        "decided_by": "fy_ruling", "reason": "FY ruling 2026-11-12: the printed line spans more than this concept"})
+        elif rule[0] == "tag":  # per serving row: never widened beyond its own era
             out.append({**r, "taxonomy": rule[1], "tag": rule[2], "era_from": max(r["era_from"], a), "era_to": min(r["era_to"], b), "decided_by": "fy_ruling",
                         "reason": f"FY ruling 2026-11-12: the 10-K's printed line is tagged {rule[2]} for these periods"})
         elif (r["company_id"], con) not in done:
