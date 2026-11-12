@@ -73,3 +73,12 @@ def test_fy_check_flags_a_sourced_cell_with_no_row_and_no_reason(tmp_path):
     subprocess.run([sys.executable, "-I", str(D / "coverage_fy.py"), *(str(p[k]) for k in ("tm", "cov", "fy", "open", "out"))], check=True, capture_output=True)
     got = {r["fy"]: r["status"] for r in csv.DictReader(open(p["out"]))}
     assert got == {"FY0": "GAP", "FY-1": "served"}
+
+
+def test_operating_lease_rou_in_the_ppe_line_is_combined_never_ppe_net(tmp_path):
+    old = {"tag": "PropertyPlantAndEquipmentNet", "stmt": "BS", "decision": "concept", "canonical_concept": "ppe_net_resolved",
+           "era_from": "2015-03-31", "era_to": "2020-12-31", "ticker": "GE"}
+    got, _ = _overlay(tmp_path, [old], [])
+    ge = [r for r in got if r["tag"] == "PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAsset"]
+    assert [(r["decision"], r["canonical_concept"], r["components"], r["era_from"], r["era_to"]) for r in ge] == [
+        ("combined", "", "ppe_net;operating_lease_rou_asset", "2024-12-31", "2025-12-31")]
