@@ -1,4 +1,5 @@
 source,tag,stmt,decision,concept,missing,companies_affected
+ruling:dhairya-2026-11-12,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,CF,concept,cash_and_equivalents_resolved,"ambiguous per-filing condition (label wording, a neighbouring label, or a same-filing co-presence the rule cannot decide)",883
 tag-library:explicit,MinorityInterest,BS,component,,"parent concept, sign",573
 tag-library:explicit,GeneralAndAdministrativeExpense,IS,component,sga_expense,sign,356
 tag-library:explicit,LongTermDebtNoncurrent,BS,component,total_debt_resolved,sign,346
@@ -6,7 +7,6 @@ tag-library:explicit,LongTermDebtAndCapitalLeaseObligations,BS,component,total_d
 tag-library:explicit,ShortTermBorrowings,BS,component,total_debt_resolved,sign,235
 tag-library:explicit,NonoperatingIncomeExpense,IS,combined,,member tags / concept,218
 tag-library:explicit,LongTermDebtCurrent,BS,component,total_debt_resolved,sign,208
-tag-library:explicit,Depreciation,CF,component,depreciation_and_amortization_resolved,sign,189
 tag-library:explicit,DebtCurrent,BS,component,total_debt_resolved,sign,177
 tag-library:explicit,RedeemableNoncontrollingInterestEquityCarryingAmount,BS,component,,"parent concept, sign",177
 tag-library:explicit,LongTermDebtAndCapitalLeaseObligationsCurrent,BS,component,total_debt_resolved,sign,172
@@ -15,14 +15,13 @@ tag-library:explicit,LongTermDebt,BS,component,total_debt_resolved,sign,148
 tag-library:pattern,OtherComprehensiveIncomeLossNetOfTax,CI,component,comprehensive_income,sign,147
 tag-library:explicit,NetIncomeLossAvailableToCommonStockholdersBasic,IS,component,net_income_resolved,sign,136
 tag-library:pattern,OtherOperatingIncomeExpenseNet,IS,component,operating_expenses_resolved,sign,134
-tag-library:explicit,AmortizationOfIntangibleAssets,CF,component,depreciation_and_amortization_resolved,sign,128
+ruling:dhairya-2026-11-12,InterestExpense,IS,concept,interest_expense_resolved,"ambiguous per-filing condition (label wording, a neighbouring label, or a same-filing co-presence the rule cannot decide)",128
 tag-library:explicit,SalesRevenueGoodsNet,IS,component,revenue_sanity_resolved,sign,99
 tag-library:pattern,OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,CI,component,comprehensive_income,sign,93
 tag-library:pattern,OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentNetOfTax,CI,component,comprehensive_income,sign,85
 tag-library:explicit,IncreaseDecreaseInAccountsAndOtherReceivables,CF,combined,,member tags / concept,77
 tag-library:explicit,NotesReceivableNet,BS,component,,"parent concept, sign",72
 tag-library:explicit,NetIncomeLossAttributableToNoncontrollingInterest,IS,component,net_income_resolved,sign,72
-tag-library:explicit,AdjustmentForAmortization,CF,component,depreciation_and_amortization_resolved,sign,71
 tag-library:explicit,LoansAndLeasesReceivableNetReportedAmount,BS,component,,"parent concept, sign",62
 tag-library:explicit,PaymentsForProceedsFromProductiveAssets,CF,combined,,member tags / concept,60
 tag-library:explicit,Deposits,BS,component,,"parent concept, sign",58
@@ -51,21 +50,21 @@ tag-library:pattern,OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjust
 tag-library:explicit,ProvisionForLoanLeaseAndOtherLosses,IS,component,,"parent concept, sign",40
 std-tags-rank-360-744-2026-11-11.csv,PaymentsForSoftware,CF,component,capex,sign,40
 std-tags-rank-360-744-2026-11-11.csv,ConvertibleLongTermNotesPayable,BS,component,total_debt,sign,40
-tag-library:explicit,CashAndDueFromBanks,BS,component,cash_and_equivalents_resolved,sign,38
 std-tags-rank-360-744-2026-11-11.csv,SecuredDebt,BS,component,total_debt,sign,38
 std-tags-rank-360-744-2026-11-11.csv,ConvertibleDebtCurrent,BS,component,total_debt,sign,38
+tag-library:explicit,AmortizationOfIntangibleAssets,CF,component,depreciation_and_amortization_resolved,sign,37
 std-tags-rank-360-744-2026-11-11.csv,InterestExpenseDeposits,IS,component,interest_expense,sign,37
+tag-library:explicit,CashAndDueFromBanks,BS,component,cash_and_equivalents_resolved,sign,36
 tag-library:explicit,InvestmentIncomeInterestAndDividend,IS,combined,,member tags / concept,36
 tag-library:explicit,NotesAndLoansReceivableNetNoncurrent,BS,component,,"parent concept, sign",35
-tag-library:explicit,InterestBearingDepositsInBanks,BS,component,cash_and_equivalents_resolved,sign,34
 tag-library:explicit,MarketingAndAdvertisingExpense,IS,component,sga_expense,sign,34
 std-tags-rank-360-744-2026-11-11.csv,PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,component,capex,sign,33
 std-tags-rank-360-744-2026-11-11.csv,CommunicationsAndInformationTechnology,IS,component,operating_expenses,sign,31
+tag-library:explicit,InterestBearingDepositsInBanks,BS,component,cash_and_equivalents_resolved,sign,31
 tag-library:explicit,PaymentsToAcquireOtherProductiveAssets,CF,component,capex_resolved,sign,31
 std-tags-rank-360-744-2026-11-11.csv,UnsecuredDebt,BS,component,total_debt,sign,31
 tag-library:explicit,CommercialPaper,BS,component,total_debt_resolved,sign,30
 std-tags-rank-360-744-2026-11-11.csv,OtherShortTermBorrowings,BS,component,total_debt,sign,30
-tag-library:explicit,Depreciation,IS,component,depreciation_and_amortization_resolved,sign,30
 tag-library:explicit,NoninterestIncomeOtherOperatingIncome,IS,component,revenue_sanity_resolved,sign,30
 std-tags-rank-360-744-2026-11-11.csv,DirectCostsOfLeasedAndRentedPropertyOrEquipment,IS,component,cost_of_revenue,sign,30
 tag-library:explicit,AccumulatedOtherComprehensiveIncomeLossNetOfTax,BS,component,stockholders_equity_resolved,sign,29
@@ -75,6 +74,7 @@ companies-301-400-exceptions-2026-11-12.csv,InterestIncomeExpenseNonoperatingNet
 tag-library:pattern,OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,CI,component,comprehensive_income,sign,26
 std-tags-rank-360-744-2026-11-11.csv,InformationTechnologyAndDataProcessing,IS,component,operating_expenses,sign,26
 std-tags-rank-360-744-2026-11-11.csv,DepreciationNonproduction,CF/IS,component,depreciation_and_amortization,sign,26
+ruling:dhairya-2026-11-12,PaymentsOfDividends,CF,concept,dividends_paid_resolved,"ambiguous per-filing condition (label wording, a neighbouring label, or a same-filing co-presence the rule cannot decide)",26
 tag-library:explicit,DeferredPolicyAcquisitionCostAmortizationExpense,IS,component,,"parent concept, sign",24
 std-tags-rank-360-744-2026-11-11.csv,InterestExpenseLongTermDebt,IS,component,interest_expense,sign,23
 tag-library:explicit,RetainedEarningsAccumulatedDeficit,BS,component,stockholders_equity_resolved,sign,23
@@ -96,12 +96,16 @@ tag-library:explicit,OtherSalesRevenueNet,IS,component,revenue_sanity_resolved,s
 companies-101-200-exceptions-2026-11-11.csv,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,combined,cash_and_equivalents_resolved,member tags / concept,13
 companies-201-300-exceptions-2026-11-11.csv,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,combined,cash_and_equivalents_resolved,member tags / concept,12
 tag-library:explicit,AdditionalPaidInCapitalCommonStock,BS,component,stockholders_equity_resolved,sign,12
+tag-library:explicit,Depreciation,CF,component,depreciation_and_amortization_resolved,sign,11
+tag-library:explicit,AdjustmentForAmortization,CF,component,depreciation_and_amortization_resolved,sign,10
 tag-library:explicit,BrokerageCommissionsRevenue,IS,component,revenue_sanity_resolved,sign,10
 tag-library:explicit,TreasuryStockValue,BS,component,stockholders_equity_resolved,sign,10
 companies-301-400-exceptions-2026-11-12.csv,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,combined,cash_and_equivalents_resolved,member tags / concept,10
+ruling:dhairya-2026-11-12,DepreciationAndAmortization,CF,concept,depreciation_and_amortization_resolved,"ambiguous per-filing condition (label wording, a neighbouring label, or a same-filing co-presence the rule cannot decide)",10
 tag-library:explicit,AdditionalPaidInCapital,BS,component,stockholders_equity_resolved,sign,10
 companies-101-200-exceptions-2026-11-11.csv,InterestIncomeExpenseNet,IS,combined,interest_expense,member tags / concept,9
 ranks_1_50.csv:library,AccountsPayableAndAccruedLiabilitiesCurrent,BS,combined,,member tags / concept,8
+tag-library:explicit,Depreciation,IS,component,depreciation_and_amortization_resolved,sign,8
 tag-library:explicit,InventoryFinishedGoodsNetOfReserves,BS,component,inventory,sign,6
 ranks_1_50.csv:library,ReceivablesNetCurrent,BS,combined,,member tags / concept,6
 ranks_1_50.csv:library,OtherNonoperatingIncomeExpense,IS,combined,,member tags / concept,6
@@ -166,6 +170,7 @@ companies-301-400-exceptions-2026-11-12.csv,DepreciationDepletionAndAmortization
 companies-301-400-exceptions-2026-11-12.csv,DepreciationandDepletionContinuingandDiscontinuedOperations,CF,combined,depreciation_and_amortization_resolved,member tags / concept,1
 companies-201-300-exceptions-2026-11-11.csv,TreasuryStockValueAcquired,CF,combined,share_buybacks,member tags / concept,1
 companies-201-300-exceptions-2026-11-11.csv,TreasuryStockValueAcquiredCostMethod,CF,combined,share_buybacks,member tags / concept,1
+ruling:dhairya-2026-11-12,Depreciation,CF,concept,depreciation_and_amortization_resolved,"ambiguous per-filing condition (label wording, a neighbouring label, or a same-filing co-presence the rule cannot decide)",1
 ranks_1_50.csv:read_verified,InterestAndOtherFinancialCharges,IS,combined,,member tags / concept,1
 companies-301-400-exceptions-2026-11-12.csv,IncomeLossFromContinuingOperationsPerBasicAndDilutedShare,IS,needs_detail,basic_eps;diluted_eps,one decision names several concepts (basic_eps;diluted_eps); a company_tag_map key carries one concept,1
 companies-301-400-exceptions-2026-11-12.csv,NonoperatingIncomeExpense,IS,combined,interest_expense,member tags / concept,1
@@ -228,7 +233,6 @@ companies-301-400-exceptions-2026-11-12.csv,DepreciationFromContinuingAndDiscont
 companies-301-400-exceptions-2026-11-12.csv,DepreciationDepletionAndAmortizationIncludingDiscontinuedOperations,CF,combined,depreciation_and_amortization_resolved,member tags / concept,1
 companies-201-300-exceptions-2026-11-11.csv,AmortizationOfIntangibleAssetsExcludingAmortizationIncludedInPropertyPlantAndEquipment,CF,component,depreciation_and_amortization_resolved,sign,1
 companies-201-300-exceptions-2026-11-11.csv,DepreciationAndAmortizationOfIntangibleAssetsIncludedInPropertyPlantAndEquipment,CF,component,depreciation_and_amortization_resolved,sign,1
-companies-201-300-exceptions-2026-11-11.csv,Depreciation,CF,component,depreciation_and_amortization_resolved,sign,1
 companies-201-300-exceptions-2026-11-11.csv,InterestIncomeExpenseAndOtherNonoperatingIncomeExpense,IS,combined,interest_expense,member tags / concept,1
 companies-301-400-exceptions-2026-11-12.csv,PaymentsForDistributionsToShareholdersAndUnitholders,CF,combined,dividends_paid,member tags / concept,1
 companies-51-100-exceptions-2026-11-11.csv,CurrentAndRoyaltyTaxes,IS,component,income_tax_expense,sign,1
