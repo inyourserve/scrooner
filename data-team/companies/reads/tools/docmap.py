@@ -536,6 +536,20 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 out.append(rec)
                 continue
             r = dict(r, opex_status=opex_status, opex_note=opex_note)
+        elif dp == "sga_expense":
+            r = match_row(page, dp, tags, rx)
+            if r is not None and not r["tag"].endswith(":SellingGeneralAndAdministrativeExpense"):
+                # SG&A is never G&A alone when a selling or marketing line is printed (Dhairya 2026-11-12):
+                # component sum of the G&A line and every printed selling / marketing line
+                sm = [x for x in page["rows"] if _has(x) and x is not r and (
+                    re.search(r"Selling(And)?Marketing|SellingExpense|MarketingExpense|MarketingAndAdvertising", x["tag"])
+                    or re.search(r"^(sales|selling)( and | & )marketing|^selling\b|^marketing\b", x["label"], re.I))]
+                if sm and re.search(r"GeneralAndAdministrative", r["tag"]) or (sm and re.search(r"general and administrative", r["label"], re.I)):
+                    parts = [r] + sm
+                    r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
+                         "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
+                         "parts": parts, "opex_status": "component sum",
+                         "opex_note": "SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12)"}
         elif dp == "depreciation_and_amortization":
             r = match_row(page, dp, tags, rx)
             if r is None:
@@ -544,7 +558,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                     r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
                          "vals": [sum((p["vals"][i] or 0) for p in parts) if any(p["vals"][i] is not None for p in parts if i < len(p["vals"])) else None
                                   for i in range(max(len(p["vals"]) for p in parts))], "parts": parts}
-        else:
+        elif dp != "sga_expense":
             r = match_row(page, dp, tags, rx)
             if dp == "accounts_receivable" and r is not None and r.get("by_label"):
                 n_recv = sum(1 for x in page["rows"] if re.search(r"receivable", x["label"], re.I)
