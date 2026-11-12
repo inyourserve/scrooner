@@ -11,18 +11,23 @@ REASONS = {"stockholders_equity_resolved": {"parent_equity_not_printed", "equity
            "net_income_resolved": {"ni_incl_nci"},
            "cash_and_equivalents_resolved": {"bank_cash_perimeter", "cash_incl_short_term_investments"},
            "revenue_sanity_resolved": {"catalog_gap_bank_nii"}}
+# a bank's revenue hole is explained where its template headline (net interest income, 0122) is served
+EXPLAINED_BY = {"revenue_sanity_resolved": "net_interest_income"}
 FEEDS_BOTH = {"EarningsPerShareBasicAndDiluted": ("basic_eps_resolved", "diluted_eps_resolved")}
 rows = list(csv.DictReader(open(sys.argv[1])))
 span, eras, rc, tick = {}, collections.defaultdict(list), collections.defaultdict(set), {}
 for r in rows:
     c = r["company_id"]
     tick[c] = r["ticker"]
-    if r["era_from"]:
+    if r["era_from"] and r.get("decided_by") not in ("debt_lane", "read_verified", "read_overlay"):  # span = the company's own FSN rows
         lo, hi = span.get(c, (r["era_from"], r["era_to"]))
         span[c] = (min(lo, r["era_from"]), max(hi, r["era_to"]))
     con = r["canonical_concept"] if r["decision"] == "concept" else r["parent_concept"] if r["decision"] == "component" else ""
     if con:
         eras[(c, con)].append((r["era_from"], r["era_to"]))
+        for k, v in EXPLAINED_BY.items():
+            if con == v:
+                eras[(c, k)].append((r["era_from"], r["era_to"]))
     if r["decision"] == "concept" and r["tag"] in FEEDS_BOTH:
         for k in FEEDS_BOTH[r["tag"]]:
             eras[(c, k)].append((r["era_from"], r["era_to"]))

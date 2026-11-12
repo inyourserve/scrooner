@@ -387,3 +387,34 @@ def test_open_period_rows_load_as_tagless_not_presented_rows(tmp_path):
     assert (n["decision"], n["tag"], n["taxonomy"], n["canonical_concept_id"], n["stmt"]) == ("not_presented", None, None, 77, "BS")
     assert (n["era_from"], n["era_to"], n["reason"], n["rule_id"]) == (date(2020, 3, 31), date(2020, 3, 31), OPEN_PERIOD_REASON, OPEN_PERIOD_RULE_ID)
     assert check_overlaps([n]) == []
+
+
+INV, DEBT, CASH = 21, 22, 23
+INST_INFO = {INV: ("inventory", "balance_sheet"), DEBT: ("total_debt_resolved", "balance_sheet"), CASH: ("cash_and_equivalents_resolved", "balance_sheet")}
+
+
+def _bs_comps(parent, a="Raw", b="Wip"):
+    rows = [
+        MapRow("us-gaap", a, "BS", "component", None, parent, 1, ERA, None, "Root"),
+        MapRow("us-gaap", b, "BS", "component", None, parent, 1, ERA, None, "Root"),
+    ]
+    facts = {("us-gaap", a): {7: fact("5", 1)}, ("us-gaap", b): {7: fact("6", 2)}}
+    return rows, facts, {"A-10": {("Root", a), ("Root", b)}}
+
+
+def test_instant_component_sum_is_refused_except_total_debt():
+    rows, facts, arcs = _bs_comps(INV)
+    cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
+    assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"  # inventory pair
+    rows, facts, arcs = _bs_comps(DEBT)
+    cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
+    assert [c["value"] for c in cells] == [Decimal("11")] and stats["held"] == []  # total debt: founder definition
+
+
+def test_bank_cash_is_the_cash_flow_ending_line_as_a_concept_row_not_a_balance_sheet_sum():
+    row = MapRow("us-gaap", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "CF", "concept", CASH, None, 1, ERA, None, serve_note="cash incl. restricted, as printed")
+    cells, stats = build_cells([row], {("us-gaap", row.tag): {7: fact("900", 1)}}, INST_INFO, {}, {})
+    assert [(c["value"], c["serve_note"]) for c in cells] == [(Decimal("900"), "cash incl. restricted, as printed")]
+    rows, facts, arcs = _bs_comps(CASH, "CashA", "ShortTermInv")  # a BS cash sum is refused
+    cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
+    assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"

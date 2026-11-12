@@ -263,3 +263,22 @@ def test_seeder_applies_open_periods_with_the_main_file_in_one_replace(isolated_
         assert st["errors"] == [] and st["applied"] and st["rows"] == 2
         assert conn.execute("select decision, tag, rule_id, reason from analytics.company_tag_map where company_id = %s order by decision", (co,)).fetchall() == [
             ("concept", "Revenues", "tm.r@1", None), ("not_presented", None, "tagmap.open_period@1", "not printed in this filing")]
+
+
+@pytest.mark.integration
+def test_seeder_refuses_instant_component_rows_except_total_debt(isolated_database_url, tmp_path):
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed
+
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        inv = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_inventory','balance_sheet','first_match') returning id")
+        conn.execute("insert into analytics.canonical_concept (name, statement, combination_mode) values ('total_debt_resolved','balance_sheet','first_match') on conflict (name) do nothing")
+        co, *_ = x["company"]("0000000901", True)
+        conn.commit()
+        f = tmp_path / "m.csv"
+        head = "company_id,taxonomy,tag,stmt,decision,parent_concept,sign,era_from,decided_by,rule_id\n"
+        f.write_text(head + f"{co},us-gaap,Raw,BS,component,tm_inventory,1,2015-01-01,t,tm.r@1\n" + f"{co},us-gaap,Notes,BS,component,total_debt_resolved,1,2015-01-01,t,tm.r@1\n" + f"{co},us-gaap,Opex1,IS,component,tm_rev,1,2015-01-01,t,tm.r@1\n")
+        st = seed(conn, f)
+        assert [r["parent_concept"] for r in st["refused_instant_components"]] == ["tm_inventory"]
+        assert len(st["errors"]) == 1 and "instant component sum refused" in st["errors"][0]
+        assert inv

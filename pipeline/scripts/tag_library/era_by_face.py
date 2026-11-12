@@ -24,29 +24,40 @@ for i, r in enumerate(rows):
     if r["decision"] == "concept" and r["canonical_concept"]:
         groups[(r["company_id"], r["stmt"], r["canonical_concept"])].append(i)
 alt = collections.defaultdict(list)
+LOW_PRIORITY = {"cash_incl_restricted": "cash_and_equivalents_resolved"}  # the face's only cash line serves where printed alone (rule 3)
+for i, r in enumerate(rows):
+    if r["decision"] == "excluded" and r["reason_class"] in LOW_PRIORITY:
+        k = (r["company_id"], r["stmt"], LOW_PRIORITY[r["reason_class"]])
+        if k in groups:
+            alt[k].append(i)
 for i, r in enumerate(rows):
     if r["decision"] == "excluded" and r["reason_class"] == "alternate_tag_overlapping":
         for (c, st, con) in groups:
             if c == r["company_id"] and st == r["stmt"] and f"concept {con} " in r["reason"]:
                 alt[(c, st, con)].append(i)
-contested = {k: v for k, v in groups.items() if k in alt}
+# Dhairya's guard applies to EVERY concept row, not only contested ones: a period inside a row's era whose own latest filing
+# does not print the tag is open (CRWD buybacks FY2026, PG accrued liabilities FY2026; 10-K reads 2026-11-12)
+from era_face import face_checked, face_runs  # noqa: E402
 
-from era_face import face_runs  # noqa: E402
+contested = face_checked(groups, rows)
 
 new_rows, drop, opens = [], set(), []
+CACHE = {}
 with psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=20) as conn:
     conn.execute("set statement_timeout = '60s'")
     for (c, st, con), kept in contested.items():
         kept_rows = sorted([rows[i] for i in kept], key=lambda r: r["era_from"])
-        alt_rows = sorted([rows[i] for i in alt[(c, st, con)]], key=lambda r: -int(r["filings"] or 0))
+        alt_rows = sorted([rows[i] for i in alt[(c, st, con)]], key=lambda r: (r["reason_class"] in LOW_PRIORITY, -int(r["filings"] or 0)))
         order = []
         for r in kept_rows + alt_rows:  # priority: the library's kept tags first, then alternates
             if r["tag"] not in order:
                 order.append(r["tag"])
-        q = """select f.id, f.period, f.accepted, t.tag from fsn.line l join fsn.filing f on f.id = l.filing_id join fsn.tag t on t.id = l.tag_id
-               where f.company_id = %s and l.stmt = %s and f.period >= '2015-01-01'"""
+        if (c, st) not in CACHE:  # one query per (company, statement), not per concept
+            q = """select f.id, f.period, f.accepted, t.tag from fsn.line l join fsn.filing f on f.id = l.filing_id join fsn.tag t on t.id = l.tag_id
+                   where f.company_id = %s and l.stmt = %s and f.period >= '2015-01-01'"""
+            CACHE[(c, st)] = conn.execute(q, (int(c), st)).fetchall()
         filings, face = {}, collections.defaultdict(set)
-        for fid, period, accepted, tag in conn.execute(q, (int(c), st)).fetchall():
+        for fid, period, accepted, tag in CACHE[(c, st)]:
             filings[fid] = (str(period), accepted)
             if tag in order:
                 face[fid].add(tag)

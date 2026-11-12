@@ -35,7 +35,9 @@ POINT_REASON = {"nonoperating_total_incl_interest": "other_income_expense_net", 
                 "catalog_gap_bank_nii": "interest_income", "total_costs_incl_cost_of_revenue": "operating_expenses",
                 "not_sga_broad_operating_costs": "sga_expense", "cost_of_products_not_total_cor": "cost_of_revenue",
                 "component_of_unprinted_total": "cost_of_revenue", "d_and_a_not_presented": "depreciation_and_amortization",
-                "bank_interest_income_component": "interest_income"}
+                "bank_interest_income_component": "interest_income",
+                "inventory_total_not_printed": "inventory", "ci_incl_nci": "comprehensive_income", "shares_per_class_only": "shares_outstanding",
+                "shares_member_column_only": "shares_outstanding", "revenue_incl_other_income": "revenue_sanity", "bank_cash_split_line": "cash_and_equivalents"}
 for r in m:
     if r["decision"] == "excluded" and r["reason_class"] in POINT_REASON:
         st[r["company_id"]].setdefault(POINT_REASON[r["reason_class"]], "excluded with point reason (" + r["reason_class"] + ")")
@@ -43,6 +45,15 @@ for r in csv.DictReader(open(nc)):
     st[r["company_id"]].setdefault(r["concept"], "note-sourced candidate (Verifier draw)")
 for r in csv.DictReader(open(oc)):
     st[r["company_id"]].setdefault(r["data_point"], "template-OUT candidate (Verifier draw)")
+if len(sys.argv) > 7:  # per-company full 10-K reads: the source of every note-sourced and OUT status (Dhairya 2026-11-12)
+    tick_id = {v: k for k, v in tick.items()}
+    for r in csv.DictReader(open(sys.argv[7])):
+        c = r["company_id"] or tick_id.get(r["ticker"], "")
+        dp = ALIAS.get(base(r["data_point"]), base(r["data_point"]))
+        if c and not r["verdict"].startswith(("PASS", "ERA")):
+            st[c].setdefault(dp, "read-verified " + r["verdict"].lower())
+        elif c and r["verdict"].startswith("PASS") and r["our_status"] and not r["our_status"].startswith(("mapped", "component", "combined")):
+            st[c].setdefault(dp, "read-verified pass of: " + r["our_status"][:60])
 rows, seen = [], set()
 for r in csv.DictReader(open(tp)):
     if r["data_point"] not in cat:

@@ -177,3 +177,13 @@ def test_cf_d_and_a_wins_over_is_only_while_it_is_pure(tmp_path):
     got = _run(tmp_path, rows, catalog=("depreciation_and_amortization_resolved",))
     assert got[("CF", "DepreciationDepletionAndAmortization")]["decision"] == "combined"
     assert got[("IS", "DepreciationAndAmortization")]["decision"] == "concept"
+
+
+def test_bank_face_net_interest_income_and_gross_interest_income_are_concepts_once_the_catalog_has_them(tmp_path):
+    bank = [{"stmt": "IS", "tag": "InterestIncomeExpenseNet"}, {"stmt": "IS", "tag": "InterestIncomeOperating"},
+            {"stmt": "IS", "tag": "NoninterestIncome"}, {"stmt": "IS", "tag": "NoninterestExpense"}]
+    got = _run(tmp_path, bank, catalog=("net_income", "net_interest_income", "interest_income"))
+    assert got[("IS", "InterestIncomeExpenseNet")]["canonical_concept"] == "net_interest_income"
+    assert got[("IS", "InterestIncomeOperating")]["canonical_concept"] == "interest_income"
+    got = _run(tmp_path, bank, catalog=("net_income", "interest_income"))
+    assert got[("IS", "InterestIncomeExpenseNet")]["reason_class"] == "catalog_gap_bank_nii"
