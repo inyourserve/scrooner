@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001171843-16-007861 (CIK 0001361113, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001171843-18-001113 (CIK 0001361113, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001628280-21-001677 (CIK 0001361113, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0001361113.json (one call).
+- companyfacts CIK0001361113.json (one call); submissions CIK0001361113.json (SIC 7372).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,10 +16,10 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | mapped | us-gaap:CostOfRevenue | R5.htm | Cost of revenues | 131974000 | 131974000 | 93847000 | 93847000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | gross_profit | mapped | us-gaap:GrossProfit | R5.htm | Gross profit | 491558000 | 491558000 | 457103000 | 457103000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R5.htm | Total operating expenses | 638072000 | 638072000 | 574754000 | 574754000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line excludes cost of revenue (= GP - OI) / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R5.htm | General and administrative | 98916000 | 98916000 | 89220000 | 89220000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R5.htm | General and administrative + Sales and marketing | 400258000 | 400258000 | 377989000 | 377989000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R5.htm | Research and development | 237814000 | 237814000 | 196765000 | 196765000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Operating loss | -146514000 | -146514000 | -117651000 | -117651000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
-| interest_expense | mapped | us-gaap:InterestExpenseDebt | R58.htm | Total | 9533000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R58.htm 'Convertible Senior Notes and Capped Call Transactions - Interest Expense (Detail' (MetaLinks.json presentation) |
+| interest_expense | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of InterestExpense, InterestExpenseNonoperating, InterestExpenseOperating, InterestAndDebtExpense, InterestExpenseDebt, InterestIncomeExpenseNonoperatingNet in MetaLinks.json (806 tags across all 81 R pages, face and notes) of 0001628280-26-005450; HAND REVIEW: 3 label candidate(s) incl. custom tags: us-gaap:InterestExpenseDebt 'Total / Interest Expense, Debt / Amount of the cost of borro' R58; us-gaap:InterestExpenseDebtExcludingAmortization 'Contractual interest expense / Interest expenses, principall' R58,R77; us-gaap:UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense 'Unrecognized tax benefits, income tax penalties and interest' R70 |
 | income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R5.htm | Loss before income taxes | -116320000 | -116320000 | -83007000 | -83007000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R5.htm | Income taxes | -13004000 | 13004000 | -12758000 | 12758000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
 | net_income | mapped | us-gaap:NetIncomeLoss | R5.htm | Net loss | -129324000 | -129324000 | -95765000 | -95765000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-005450 R5.htm period ..2025-12-31 |
@@ -59,7 +59,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - sga_expense: FY2015 10-K 0001171843-16-007861 R4.htm prints 'General and administrative' on us-gaap:GeneralAndAdministrativeExpense = 16106000 (FILING-CHECKED)
 - research_and_development: FY2015 10-K 0001171843-16-007861 R4.htm prints 'Research and development' on us-gaap:ResearchAndDevelopmentExpense = 31792000 (FILING-CHECKED)
 - operating_income: FY2015 10-K 0001171843-16-007861 R4.htm prints 'Operating loss' on us-gaap:OperatingIncomeLoss = -19074000 (FILING-CHECKED)
-- interest_expense: FY2015 10-K 0001171843-16-007861 R4.htm read; no row matched (auto)
 - income_before_tax: FY2015 10-K 0001171843-16-007861 R4.htm prints 'Loss before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = -20597000 (FILING-CHECKED)
 - income_tax_expense: FY2015 10-K 0001171843-16-007861 R4.htm prints 'Income taxes' on us-gaap:IncomeTaxExpenseBenefit = -686000 (FILING-CHECKED)
 - net_income: FY2015 10-K 0001171843-16-007861 R4.htm prints 'Net loss' on us-gaap:NetIncomeLoss = -21283000 (FILING-CHECKED)
@@ -90,4 +89,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - diluted_eps: era 10-K 0001628280-21-001677 R4.htm prints 'Net loss per share of common stock, basic and diluted (in USD per share)' on us-gaap:EarningsPerShareBasicAndDiluted = -2.99 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- interest_expense: API missing (us-gaap:InterestExpenseDebt)
+none beyond sign differences

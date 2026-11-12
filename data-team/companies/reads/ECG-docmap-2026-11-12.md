@@ -4,7 +4,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Filings opened
 - 10-K 0002015845-26-000010 (CIK 0002015845, filed 2026-02-25): COVER R1.htm, IS R3.htm, CI R4.htm, BS R6.htm, BSP R7.htm, CF R9.htm
-- companyfacts CIK0002015845.json (one call).
+- companyfacts CIK0002015845.json (one call); submissions CIK0002015845.json (SIC 1531).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -41,7 +41,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | capex | mapped | us-gaap:PaymentsToAcquireProductiveAssets | R9.htm | Capital expenditures | -66836000 | 66836000 | -48278000 | 48278000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0002015845-26-000010 R9.htm period ..2025-12-31 |
 | depreciation_and_amortization | component sum | us-gaap:Depreciation+us-gaap:AmortizationOfIntangibleAssets | R9.htm | Depreciation + Amortization of intangible assets | 28800000 | 28800000 | 25272000 | 25272000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0002015845-26-000010 R9.htm period ..2025-12-31 |
 | sbc | mapped | us-gaap:ShareBasedCompensation | R9.htm | Stock-based compensation costs | 6311000 | 6311000 | 1559000 | 1559000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0002015845-26-000010 R9.htm period ..2025-12-31 |
-| dividends_paid | mapped | us-gaap:PaymentsOfDividends | R90.htm | Payment of dividend | 60000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R90.htm 'Related Party Transactions (Details)' (MetaLinks.json presentation) |
+| dividends_paid | not_presented |  | R9.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends in MetaLinks.json (811 tags across all 90 R pages, face and notes) of 0002015845-26-000010; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:PaymentsOfDividends 'Payment of dividend / Payments of Dividends / Cash outflow i' R90 |
 | share_buybacks | not_presented |  | R9.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsForRepurchaseOfCommonStock in MetaLinks.json (811 tags across all 90 R pages, face and notes) of 0002015845-26-000010; HAND REVIEW: 7 label candidate(s) incl. custom tags: us-gaap:CommonStockSharesIssued 'Common stock, issued (in shares) / Common Stock, Shares, Iss' R41,R7,R71; us-gaap:CommonStockValueOutstanding 'Common stock, 300,000,000 shares authorized, $0.01 par value' R6; us-gaap:PreferredStockSharesIssued 'Preferred stock, shares issued (in shares) / Preferred Stock' R7; us-gaap:PreferredStockSharesOutstanding 'Preferred stock, shares outstanding (in shares) / Preferred ' R7; us-gaap:PreferredStockValueOutstanding 'Preferred stock, 10,000,000 shares authorized, $0.01 par val' R6; us-gaap:StockRepurchasedAndRetiredDuringPeriodShares 'Retirement of historical common stock in connection with the' R8; us-gaap:StockRepurchasedAndRetiredDuringPeriodValue 'Retirement of historical common stock in connection with the' R8 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R9.htm | Interest paid | 19709000 | 19709000 | 14800000 | 14800000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0002015845-26-000010 R9.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R9.htm | Income taxes paid, net | 77819000 | 77819000 | 50207000 | 50207000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0002015845-26-000010 R9.htm period ..2025-12-31 |
@@ -52,4 +52,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
 
 ## Mismatches (printed vs API)
-- dividends_paid: API missing (us-gaap:PaymentsOfDividends)
+none beyond sign differences

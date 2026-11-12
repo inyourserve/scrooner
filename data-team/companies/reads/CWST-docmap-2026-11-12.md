@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001193125-16-490223 (CIK 0000911177, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R6.htm, CF R8.htm
 - 10-K 0000911177-24-000005 (CIK 0000911177, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
 - 10-K 0000911177-18-000007 (CIK 0000911177, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0000911177.json (one call).
+- companyfacts CIK0000911177.json (one call); submissions CIK0000911177.json (SIC 4953).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Interest | 58969000 | 58969000 | 61217000 | 61217000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000911177-26-000008 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Income tax (refunds) payments, net | -154000 | -154000 | 6776000 | 6776000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000911177-26-000008 R8.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations | R3.htm | Current maturities of debt + Debt, less current portion | 1154662000 | 1154662000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 63514000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 62526000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001193125-16-490223 R4.htm prints 'Revenues' on us-gaap:Revenues = 546500000 (FILING-CHECKED)
@@ -87,4 +87,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - diluted_eps: era 10-K 0000911177-18-000007 R4.htm prints 'Net loss per common share (in dollars per share)' on us-gaap:EarningsPerShareBasicAndDiluted = -0.52 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-none beyond sign differences
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

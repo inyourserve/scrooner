@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0000885550-16-000083 (CIK 0000885550, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0000885550-23-000023 (CIK 0000885550, era filing): COVER R1.htm, BS R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0000885550-21-000034 (CIK 0000885550, era filing): COVER R1.htm, BS R2.htm, IS R3.htm, CI R4.htm, CF R6.htm
-- companyfacts CIK0000885550.json (one call).
+- companyfacts CIK0000885550.json (one call); submissions CIK0000885550.json (SIC 6141).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,7 +16,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CostOfRevenue, CostOfGoodsAndServicesSold, CostOfGoodsSold, CostOfServices in MetaLinks.json (821 tags across all 92 R pages, face and notes) of 0000885550-26-000047; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:OperatingExpenses 'Operating Expenses / Operating Expenses / Generally recurrin' R4 |
 | gross_profit | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (821 tags across all 92 R pages, face and notes) of 0000885550-26-000047; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R4.htm | Operating Expenses | 599900000 | 599900000 | 501500000 | 501500000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line; no cost-of-revenue line above it / accn 0000885550-26-000047 R4.htm period ..2025-12-31 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R4.htm | General and administrative | 161400000 | 161400000 | 97900000 | 97900000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000885550-26-000047 R4.htm period ..2025-12-31 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R4.htm | General and administrative + Sales and marketing | 262800000 | 262800000 | 192300000 | 192300000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0000885550-26-000047 R4.htm period ..2025-12-31 |
 | research_and_development | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (821 tags across all 92 R pages, face and notes) of 0000885550-26-000047; label search over every tag in the filing (custom included) found no candidate |
 | operating_income | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingIncomeLoss in MetaLinks.json (821 tags across all 92 R pages, face and notes) of 0000885550-26-000047; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:LossContingencyAccrualProvision 'Loss Contingency Accrual, Provision / Loss Contingency Accru' R90 |
 | interest_expense | mapped | us-gaap:InterestExpense | R4.htm | Interest | 462900000 | 462900000 | 419500000 | 419500000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000885550-26-000047 R4.htm period ..2025-12-31 |
