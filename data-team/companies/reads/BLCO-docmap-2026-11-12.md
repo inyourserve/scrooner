@@ -1,0 +1,57 @@
+# BLCO document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is the tool finding no matching face line, not a by-hand verdict.
+
+## Filings opened
+- 10-K 0001860742-26-000007 (CIK 0001860742, filed 2026-02-18): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
+- 10-K 0001860742-24-000004 (CIK 0001860742, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
+- companyfacts CIK0001860742.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R5.htm | Total revenues | 5101000000 | 5101000000 | 4791000000 | 4791000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Cost of goods sold (excluding amortization and impairments of intangible assets) and Cost of other revenues | 2045000000 |  | 1868000000 |  | API missing | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| gross_profit | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R5.htm read; no face row matched the gross_profit tag/label rules; not hand-verified |
+| operating_expenses | combined | us-gaap:CostsAndExpenses | R5.htm | Total expenses | 4988000000 | 4988000000 | 4629000000 | 4629000000 | Y | FILING-CHECKED | CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R5.htm | Selling, general and administrative (Note 3) | 2234000000 | 2234000000 | 2082000000 | 2082000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R5.htm | Research and development | 371000000 | 371000000 | 343000000 | 343000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Operating income | 113000000 | 113000000 | 162000000 | 162000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| interest_expense | mapped | us-gaap:InterestExpenseDebt | R5.htm | Interest expense | -421000000 | 421000000 | -399000000 | 399000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R5.htm | Loss before provision for income taxes | -317000000 | -317000000 | -234000000 | -234000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R5.htm | Provision for income taxes | -35000000 | 35000000 | -71000000 | 71000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R5.htm | Net loss attributable to Bausch + Lomb Corporation | -360000000 | -360000000 | -317000000 | -317000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R5.htm | Basic loss per share attributable to Bausch + Lomb Corporation (in usd per share) | -1.02 | -1.02 | -0.9 | -0.9 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R5.htm | Diluted loss per share attributable to Bausch + Lomb Corporation (in usd per share) | -1.02 | -1.02 | -0.9 | -0.9 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R5.htm | Basic weighted-average common shares (in shares) | 353800000 | 353800000 | 351800000 | 351800000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R5.htm | Diluted weighted-average common shares (in shares) | 353800000 | 353800000 | 351800000 | 351800000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R3.htm | Cash and cash equivalents | 383000000 | 383000000 | 305000000 | 305000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| accounts_receivable | mapped | us-gaap:ReceivablesNetCurrent | R3.htm | Trade receivables, net | 1221000000 | 1221000000 | 1026000000 | 1026000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| inventory | mapped | us-gaap:InventoryNet | R3.htm | Inventories, net | 976000000 | 976000000 | 1036000000 | 1036000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R3.htm | Total current assets | 2977000000 | 2977000000 | 2788000000 | 2788000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R3.htm | Property, plant and equipment, net | 1762000000 | 1762000000 | 1485000000 | 1485000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| goodwill | mapped | us-gaap:Goodwill | R3.htm | Goodwill | 4758000000 | 4758000000 | 4523000000 | 4523000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| total_assets | mapped | us-gaap:Assets | R3.htm | Total assets | 14022000000 | 14022000000 | 13469000000 | 13469000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R3.htm | Accounts payable (Note 3) | 388000000 | 388000000 | 389000000 | 389000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R3.htm | Total current liabilities | 1920000000 | 1920000000 | 1738000000 | 1738000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total liabilities | 7503000000 | 7503000000 | 6925000000 | 6925000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R3.htm | Total Bausch + Lomb Corporation shareholders’ equity | 6448000000 | 6448000000 | 6473000000 | 6473000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R3.htm period ..2025-12-31 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by (used in) operating activities | 283000000 | 283000000 | 232000000 | 232000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash used in investing activities | -455000000 | -455000000 | -412000000 | -412000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash provided by financing activities | 225000000 | 225000000 | 178000000 | 178000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R8.htm | Purchases of property, plant and equipment | -349000000 | 349000000 | -291000000 | 291000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationAndAmortization | R8.htm | Depreciation and amortization of intangible assets | 421000000 | 421000000 | 436000000 | 436000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Share-based compensation | 149000000 | 149000000 | 92000000 | 92000000 | Y | FILING-CHECKED | accn 0001860742-26-000007 R8.htm period ..2025-12-31 |
+| dividends_paid | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R8.htm read; no face row matched the dividends_paid tag/label rules; not hand-verified |
+| share_buybacks | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R8.htm read; no face row matched the share_buybacks tag/label rules; not hand-verified |
+| cash_paid_for_interest | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R8.htm read; no face row matched the cash_paid_for_interest tag/label rules; not hand-verified |
+| cash_paid_for_income_taxes | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R8.htm read; no face row matched the cash_paid_for_income_taxes tag/label rules; not hand-verified |
+| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: no standard debt line on the BS face; not hand-verified |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common shares, outstanding (in shares) | 354209319 | 354209319 |  |  | Y | FILING-CHECKED | balance-sheet date 2025-12-31; single row |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
+- cash_and_equivalents: era 10-K 0001860742-24-000004 R3.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 331000000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)

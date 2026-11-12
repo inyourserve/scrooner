@@ -1,0 +1,83 @@
+# HWC document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is the tool finding no matching face line, not a by-hand verdict.
+
+## Filings opened
+- 10-K 0001193125-26-077903 (CIK 0000750577, filed 2026-02-27): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- 10-K 0001193125-16-482143 (CIK 0000750577, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- 10-K 0000950170-24-022252 (CIK 0000750577, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- companyfacts CIK0000750577.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax | R4.htm | Service charges on deposit accounts | 99180000 |  | 91105000 |  | API missing | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| cost_of_revenue | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no face row matched the cost_of_revenue tag/label rules; not hand-verified |
+| gross_profit | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no face row matched the gross_profit tag/label rules; not hand-verified |
+| operating_expenses | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no total opex line and no gross profit / operating income pair to tie components; not hand-verified |
+| sga_expense | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no face row matched the sga_expense tag/label rules; not hand-verified |
+| research_and_development | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no face row matched the research_and_development tag/label rules; not hand-verified |
+| operating_income | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R4.htm read; no face row matched the operating_income tag/label rules; not hand-verified |
+| interest_expense | mapped | us-gaap:InterestExpenseOperating | R4.htm | Total interest expense | 505848000 | 505848000 | 611070000 | 611070000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R4.htm | Income before income taxes | 612395000 | 612395000 | 573973000 | 573973000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R4.htm | Income tax expense | 126322000 | 126322000 | 113158000 | 113158000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic | R4.htm | Net income | 486073000 | 486073000 | 460815000 | 460815000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R4.htm | Earnings per common share - basic | 5.7 | 5.7 | 5.3 | 5.3 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R4.htm | Earnings per common share - diluted | 5.67 | 5.67 | 5.28 | 5.28 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R4.htm | Weighted average shares outstanding - basic | 84905000 | 84905000 | 86346000 | 86346000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R4.htm | Weighted average shares outstanding - diluted | 85440000 | 85440000 | 86648000 | 86648000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R4.htm period ..2025-12-31 |
+| cash_and_equivalents | mapped | us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents | R2.htm | Cash and due from banks | 562995000 | 562995000 | 574910000 | 574910000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| accounts_receivable | mapped | us-gaap:InterestReceivable | R2.htm | Accrued interest receivable | 138509000 | 138509000 | 143237000 | 143237000 | Y | FILING-CHECKED | matched by printed label (tag outside the usual set) / accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| inventory | not_presented |  | R2.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R2.htm read; no face row matched the inventory tag/label rules; not hand-verified |
+| current_assets | not_presented |  | R2.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R2.htm read; no face row matched the current_assets tag/label rules; not hand-verified |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R2.htm | Property and equipment, net of accumulated depreciation of $370,818 and $345,962 | 261181000 | 261181000 | 279767000 | 279767000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| goodwill | mapped | us-gaap:Goodwill | R2.htm | Goodwill | 925404000 | 925404000 | 855453000 | 855453000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| total_assets | mapped | us-gaap:Assets | R2.htm | Total assets | 35472762000 | 35472762000 | 35081785000 | 35081785000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| accounts_payable | not_presented |  | R2.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R2.htm read; no face row matched the accounts_payable tag/label rules; not hand-verified |
+| current_liabilities | not_presented |  | R2.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R2.htm read; no face row matched the current_liabilities tag/label rules; not hand-verified |
+| total_liabilities | mapped | us-gaap:Liabilities | R2.htm | Total liabilities | 31012645000 | 31012645000 | 30954149000 | 30954149000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R2.htm | Total stockholders' equity | 4460117000 | 4460117000 | 4127636000 | 4127636000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R2.htm period ..2025-12-31 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by operating activities | 541778000 | 541778000 | 625742000 | 625742000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash provided by (used in) investing activities | -314356000 | -314356000 | 274756000 | 274756000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash used in financing activities | -239337000 | -239337000 | -886790000 | -886790000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R8.htm | Purchases of property and equipment | -18720000 | 18720000 | -10237000 | 10237000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R8.htm | Depreciation and amortization | 27314000 | 27314000 | 32301000 | 32301000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock-based compensation expense | 24444000 | 24444000 | 22703000 | 22703000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| dividends_paid | mapped | us-gaap:PaymentsOfDividendsCommonStock | R8.htm | Dividends paid | -153803000 | 153803000 | -130840000 | 130840000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Other repurchases of common stock | -246874000 | 246874000 | -37690000 | 37690000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Interest paid | 511358000 | 511358000 | 635770000 | 635770000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R8.htm | Income taxes paid (net of refunds received) | 103142000 | 103142000 | 66111000 | 66111000 | Y | FILING-CHECKED | accn 0001193125-26-077903 R8.htm period ..2025-12-31 |
+| total_debt | component sum | us-gaap:ShortTermBorrowings+us-gaap:LongTermDebt | R2.htm | Short-term borrowings + Long-term debt | 1216699000 | 1216699000 |  |  | Y | FILING-CHECKED | sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R2.htm | Common shares outstanding | 82259000 | 82259000 |  |  | Y | FILING-CHECKED | balance-sheet date 2025-12-31; single row |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- revenue: FY2015 10-K 0001193125-16-482143 R4.htm read; no row matched (auto)
+- interest_expense: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Total interest expense' on us-gaap:InterestExpense = 54472000 (FILING-CHECKED)
+- income_before_tax: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Income before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = 169765000 (FILING-CHECKED)
+- income_tax_expense: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Income taxes' on us-gaap:IncomeTaxExpenseBenefit = 38304000 (FILING-CHECKED)
+- net_income: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Net income' on us-gaap:NetIncomeLoss = 131461000 (FILING-CHECKED)
+- basic_eps: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Earnings per common share-basic' on us-gaap:EarningsPerShareBasic = 1.64 (FILING-CHECKED)
+- diluted_eps: FY2015 10-K 0001193125-16-482143 R4.htm prints 'Earnings per common share-diluted' on us-gaap:EarningsPerShareDiluted = 1.64 (FILING-CHECKED)
+- weighted_basic_shares: FY2015 10-K 0001193125-16-482143 R4.htm read; no row matched (auto)
+- weighted_diluted_shares: FY2015 10-K 0001193125-16-482143 R4.htm read; no row matched (auto)
+- cash_and_equivalents: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Cash and due from banks' on us-gaap:CashAndDueFromBanks = 303874000 (FILING-CHECKED)
+- accounts_receivable: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Accrued interest receivable' on us-gaap:InterestReceivable = 54068000 (FILING-CHECKED)
+- ppe_net: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Property and equipment, net of accumulated depreciation of $209,763 and $193,527' on us-gaap:PropertyPlantAndEquipmentNet = 377015000 (FILING-CHECKED)
+- goodwill: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Goodwill' on us-gaap:Goodwill = 621193000 (FILING-CHECKED)
+- total_assets: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Total assets' on us-gaap:Assets = 22839459000 (FILING-CHECKED)
+- total_liabilities: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Total liabilities' on us-gaap:Liabilities = 20426316000 (FILING-CHECKED)
+- stockholders_equity: FY2015 10-K 0001193125-16-482143 R2.htm prints 'Total stockholders' equity' on us-gaap:StockholdersEquity = 2413143000 (FILING-CHECKED)
+- cfo: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Net cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations = 232345000 (FILING-CHECKED)
+- cash_flow_investing: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Net cash provided by (used in) investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations = -2276431000 (FILING-CHECKED)
+- cash_flow_financing: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Net cash provided by (used in) financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations = 1991505000 (FILING-CHECKED)
+- capex: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Purchases of property, equipment and intangible assets' on us-gaap:PaymentsToAcquirePropertyPlantAndEquipment = -23804000 (FILING-CHECKED)
+- depreciation_and_amortization: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Depreciation and amortization' on us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization = 28763000 (FILING-CHECKED)
+- sbc: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Stock-based compensation expense' on us-gaap:ShareBasedCompensation = 12944000 (FILING-CHECKED)
+- dividends_paid: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Dividends paid' on us-gaap:PaymentsOfDividends = -77013000 (FILING-CHECKED)
+- share_buybacks: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Repurchase of common stock' on us-gaap:PaymentsForRepurchaseOfCommonStock = -95613000 (FILING-CHECKED)
+- cash_paid_for_interest: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Interest paid' on us-gaap:InterestPaid = 51201000 (FILING-CHECKED)
+- cash_paid_for_income_taxes: FY2015 10-K 0001193125-16-482143 R8.htm prints 'Income taxes paid' on us-gaap:IncomeTaxesPaidNet = 31896000 (FILING-CHECKED)
+- interest_expense: era 10-K 0000950170-24-022252 R4.htm prints 'Total interest expense' on us-gaap:InterestExpense = 522898000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+- revenue: API missing (us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax)
