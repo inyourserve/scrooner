@@ -36,7 +36,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | total_assets | mapped | us-gaap:Assets | R5.htm | TOTAL ASSETS | 48476000000 | 48476000000 | 44598000000 | 44598000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R5.htm period ..2025-12-31 |
 | accounts_payable | mapped | us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent | R5.htm | Accounts and wages payable | 1254000000 | 1254000000 | 1059000000 | 1059000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R5.htm period ..2025-12-31 |
 | current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R5.htm | Total current liabilities | 3907000000 | 3907000000 | 3413000000 | 3413000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R5.htm period ..2025-12-31 |
-| total_liabilities | mapped | us-gaap:Liabilities | R123.htm | Total liabilities | 4472000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R123.htm 'Schedule I - Condensed Financial Information Of Parent (Balance Sheet) (Details)' (MetaLinks.json presentation) |
+| total_liabilities | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of Liabilities in MetaLinks.json (1341 tags across all 126 R pages, face and notes) of 0001002910-26-000009; label search over every tag in the filing (custom included) found no candidate |
 | stockholders_equity | mapped | us-gaap:StockholdersEquity | R5.htm | Total shareholders' equity | 13401000000 | 13401000000 | 12114000000 | 12114000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R5.htm period ..2025-12-31 |
 | cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R11.htm | Net cash provided by operating activities | 3353000000 | 3353000000 | 2763000000 | 2763000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R11.htm period ..2025-12-31 |
 | cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R11.htm | Net cash used in investing activities | -4145000000 | -4145000000 | -4456000000 | -4456000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002910-26-000009 R11.htm period ..2025-12-31 |
@@ -72,7 +72,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - total_assets: FY2015 10-K 0001002910-16-000205 R6.htm prints 'TOTAL ASSETS' on us-gaap:Assets = 23640000000 (FILING-CHECKED)
 - accounts_payable: FY2015 10-K 0001002910-16-000205 R6.htm prints 'Accounts and wages payable' on us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent = 777000000 (FILING-CHECKED)
 - current_liabilities: FY2015 10-K 0001002910-16-000205 R6.htm prints 'Total current liabilities' on us-gaap:LiabilitiesCurrent = 2093000000 (FILING-CHECKED)
-- total_liabilities: FY2015 10-K 0001002910-16-000205 R6.htm read; no row matched (auto)
 - stockholders_equity: FY2015 10-K 0001002910-16-000205 R6.htm prints 'Total stockholders' equity' on us-gaap:StockholdersEquity = 6946000000 (FILING-CHECKED)
 - cfo: FY2015 10-K 0001002910-16-000205 R8.htm prints 'Net cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 2017000000 (FILING-CHECKED)
 - cash_flow_investing: FY2015 10-K 0001002910-16-000205 R8.htm prints 'Net cash used in investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivities = -1976000000 (FILING-CHECKED)
@@ -89,4 +88,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Mismatches (printed vs API)
 - net_income: API missing (us-gaap:NetIncomeLoss)
-- total_liabilities: API missing (us-gaap:Liabilities)
