@@ -20,8 +20,9 @@ company_id,ticker,template,data_point,status
 1,JPM,bank,income_before_tax,sourced
 1,JPM,bank,income_tax_expense,sourced
 1,JPM,bank,interest_expense,sourced
-1,JPM,bank,interest_income,excluded with point reason (catalog_gap_bank_nii)
+1,JPM,bank,interest_income,sourced
 1,JPM,bank,net_income,sourced
+1,JPM,bank,net_interest_income,sourced
 1,JPM,bank,net_lease_revenue,template seed: should be COND
 1,JPM,bank,other_income_expense_net,read-verified pass of: template-OUT candidate (Verifier draw)
 1,JPM,bank,ppe_net,sourced
@@ -539,6 +540,7 @@ company_id,ticker,template,data_point,status
 716,BAC,bank,interest_expense,sourced
 716,BAC,bank,interest_income,sourced
 716,BAC,bank,net_income,sourced
+716,BAC,bank,net_interest_income,sourced
 716,BAC,bank,net_lease_revenue,template seed: should be COND
 716,BAC,bank,other_income_expense_net,read-verified pass of: template-OUT candidate (Verifier draw)
 716,BAC,bank,ppe_net,sourced
@@ -575,6 +577,7 @@ company_id,ticker,template,data_point,status
 1010,WFC,bank,interest_expense,sourced
 1010,WFC,bank,interest_income,sourced
 1010,WFC,bank,net_income,sourced
+1010,WFC,bank,net_interest_income,sourced
 1010,WFC,bank,net_lease_revenue,template seed: should be COND
 1010,WFC,bank,other_income_expense_net,read-verified pass of: template-OUT candidate (Verifier draw) /
 1010,WFC,bank,ppe_net,sourced

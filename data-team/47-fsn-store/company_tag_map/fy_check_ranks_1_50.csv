@@ -41,10 +41,12 @@ company_id,ticker,data_point,fy,period,status
 1,JPM,income_tax_expense,FY-1,2024-12-31,served
 1,JPM,interest_expense,FY0,2025-12-31,served
 1,JPM,interest_expense,FY-1,2024-12-31,served
-1,JPM,interest_income,FY0,2025-12-31,excluded with point reason (catalog_gap_bank_nii)
-1,JPM,interest_income,FY-1,2024-12-31,excluded with point reason (catalog_gap_bank_nii)
+1,JPM,interest_income,FY0,2025-12-31,served
+1,JPM,interest_income,FY-1,2024-12-31,served
 1,JPM,net_income,FY0,2025-12-31,served
 1,JPM,net_income,FY-1,2024-12-31,served
+1,JPM,net_interest_income,FY0,2025-12-31,served
+1,JPM,net_interest_income,FY-1,2024-12-31,served
 1,JPM,net_lease_revenue,FY0,2025-12-31,template seed: should be COND
 1,JPM,net_lease_revenue,FY-1,2024-12-31,template seed: should be COND
 1,JPM,other_income_expense_net,FY0,2025-12-31,read-verified pass of: template-OUT candidate (Verifier draw)
@@ -1079,6 +1081,8 @@ company_id,ticker,data_point,fy,period,status
 716,BAC,interest_income,FY-1,2024-12-31,served
 716,BAC,net_income,FY0,2025-12-31,served
 716,BAC,net_income,FY-1,2024-12-31,served
+716,BAC,net_interest_income,FY0,2025-12-31,served
+716,BAC,net_interest_income,FY-1,2024-12-31,served
 716,BAC,net_lease_revenue,FY0,2025-12-31,template seed: should be COND
 716,BAC,net_lease_revenue,FY-1,2024-12-31,template seed: should be COND
 716,BAC,other_income_expense_net,FY0,2025-12-31,read-verified pass of: template-OUT candidate (Verifier draw)
@@ -1151,6 +1155,8 @@ company_id,ticker,data_point,fy,period,status
 1010,WFC,interest_income,FY-1,2024-12-31,served
 1010,WFC,net_income,FY0,2025-12-31,served
 1010,WFC,net_income,FY-1,2024-12-31,served
+1010,WFC,net_interest_income,FY0,2025-12-31,served
+1010,WFC,net_interest_income,FY-1,2024-12-31,served
 1010,WFC,net_lease_revenue,FY0,2025-12-31,template seed: should be COND
 1010,WFC,net_lease_revenue,FY-1,2024-12-31,template seed: should be COND
 1010,WFC,other_income_expense_net,FY0,2025-12-31,read-verified pass of: template-OUT candidate (Verifier draw) /
