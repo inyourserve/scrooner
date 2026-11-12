@@ -32,6 +32,7 @@ Scope, decided by checking the golden-8's real data before writing this
 import json
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Any
 
 import psycopg
 import structlog
@@ -192,7 +193,7 @@ def normalize_facts_for_cik(
         return {"cik": cik, "status": "no_companyfacts"}
     raw_object_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
-    result = {"cik": cik, "status": "ok"}
+    result: dict[str, Any] = {"cik": cik, "status": "ok"}
     if company_id is not None:
         result = normalize_payload(conn, company_id, cik, payload, raw_object_id)
     # Predecessor windows: the same payload, attributed to each successor company.
