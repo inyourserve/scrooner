@@ -1,7 +1,11 @@
-"""Hand-check helper (Dhairya 2026-11-12): for each ticker, show the filing's own R-page rows behind every row that
-must be hand-checked (every not_presented, combined, component, NOTE row, plus a seeded random 10% of mapped rows),
-so the reader can judge it against the filing. usage: handcheck.py <reads_out> <tool_cache> TICKER [...]
-Prints missing R pages as 'NEED cik accn page' lines (fetch them, then rerun)."""
+"""Hand-check view (Dhairya 2026-11-12): for each ticker, every docmap row with its check class, then the filing's own
+R pages printed once (face statements, every page a row cites, the page presenting finance lease liabilities), so a
+reader can judge each row against the filing.
+
+Check classes: CHECK = must be hand-checked (every not_presented, combined, component, NOTE row, and mapped rows the
+machine itself flags: no API value, extension tag, label match); SAMPLE = the seeded random 10% of the other mapped
+rows (the disagreement rate is measured on these only).
+usage: handcheck.py <reads_out> <tool_cache> TICKER [...]"""
 
 import csv
 import json
@@ -10,16 +14,21 @@ import re
 import sys
 from pathlib import Path
 
-out, cache = Path(sys.argv[1]), Path(sys.argv[2])
+from bs4 import BeautifulSoup
+
+FACE = re.compile(r"^R\d+\.htm$")
+LEASE = (
+    "FinanceLeaseLiabilityCurrent",
+    "FinanceLeaseLiabilityNoncurrent",
+    "FinanceLeaseLiability",
+)
 
 
-def key(url):
+def key(url: str) -> str:
     return re.sub(r"\W", "_", url)[-150:]
 
 
-def rows_of(page):
-    from bs4 import BeautifulSoup
-
+def rows_of(page: str) -> list[tuple[str, list[str]]]:
     soup = BeautifulSoup(page, "lxml")
     t = soup.find("table", class_="report") or soup.find("table")
     res = []
@@ -31,49 +40,101 @@ def rows_of(page):
     return res
 
 
-def sample(rows, tic):
-    must = [r for r in rows if r["status"] != "mapped" or r["stmt"] == "NOTE"]
-    mapped = [r for r in rows if r["status"] == "mapped" and r["stmt"] != "NOTE"]
-    k = max(1, round(len(mapped) * 0.10)) if mapped else 0
-    pick = random.Random(f"301-400:{tic}").sample(mapped, k) if k else []
+def risky(r: dict) -> bool:
+    return (
+        r["match"] == "API missing"
+        or "extension tag" in r["note"]
+        or "matched by printed label" in r["note"]
+    )
+
+
+def classes(rows: list[dict], tic: str) -> tuple[set[str], set[str]]:
+    must = {
+        r["data_point"]
+        for r in rows
+        if r["status"] != "mapped" or r["stmt"] == "NOTE" or risky(r)
+    }
+    pool = [r for r in rows if r["data_point"] not in must]
+    k = max(1, round(len(pool) * 0.10)) if pool else 0
+    pick = (
+        {r["data_point"] for r in random.Random(f"301-400:{tic}").sample(pool, k)}
+        if k
+        else set()
+    )
     return must, pick
 
 
-for tic in sys.argv[3:]:
-    p = out / f"{tic}-docmap-2026-11-12.csv"
-    rows = list(csv.DictReader(p.open()))
-    md = (out / f"{tic}-docmap-2026-11-12.md").read_text()
-    m = re.search(r"10-K (\d{10}-\d\d-\d{6}) \(CIK (\d{10}), filed", md)
-    if not m:
-        print(f"=== {tic}: no latest filing in md")
-        continue
-    accn, cik = m.group(1), m.group(2)
-    base = (
-        f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accn.replace('-', '')}/"
-    )
-    must, pick = sample(rows, tic)
-    print(
-        f"=== {tic} cik {cik} accn {accn} | must {len(must)} sample {len(pick)} of {sum(r['status'] == 'mapped' for r in rows)} mapped"
-    )
-    for kind, r in [("MUST", x) for x in must] + [("SAMPLE", x) for x in pick]:
-        print(
-            f"-- {kind} {r['data_point']} [{r['status']}] tags={r['tags'][:150]} page={r['r_page']} fy0={r['fy0_printed']} api={r['fy0_api']} match={r['match'][:40]}"
+def face_pages(md: str) -> list[str]:
+    m = re.search(r"\(CIK \d{10}, filed [^)]*\): (.*)", md)
+    return re.findall(r"\b(?:IS|BS|CF|BSP|CI|EQ) (R\d+\.htm)", m.group(1)) if m else []
+
+
+def lease_page(ml: Path) -> tuple[str | None, str]:
+    if not ml.exists():
+        return None, "MetaLinks not cached"
+    try:
+        inst = next(iter(json.loads(ml.read_text())["instance"].values()))
+    except (ValueError, KeyError, StopIteration):
+        return None, "MetaLinks unreadable"
+    tags = [k for k in inst.get("tag", {}) if "FinanceLease" in k and "Liabilit" in k]
+    role2r = {
+        v.get("role"): (k, v.get("menuCat", ""), v.get("shortName", ""))
+        for k, v in inst.get("report", {}).items()
+    }
+    for tg in LEASE:
+        t = inst.get("tag", {}).get(f"us-gaap_{tg}") or {}
+        rs = sorted(
+            (role2r[x] for x in t.get("presentation", []) if x in role2r),
+            key=lambda x: (x[1] != "Details", int(re.sub(r"\D", "", x[0]) or 0)),
         )
-        print(f"   note: {r['note'][:300]}")
-        pages = [x for x in dict.fromkeys(r["r_page"].split("+")) if x]
-        for pg in pages:
+        if rs:
+            return (
+                f"{rs[0][0]}.htm",
+                f"finance-lease tags {tags}; {tg} presented on {[x[0] for x in rs]}",
+            )
+    return None, f"finance-lease liability tags in filing: {tags or 'none'}"
+
+
+def main(out: Path, cache: Path, tickers: list[str]) -> None:
+    for tic in tickers:
+        rows = list(csv.DictReader((out / f"{tic}-docmap-2026-11-12.csv").open()))
+        md = (out / f"{tic}-docmap-2026-11-12.md").read_text()
+        m = re.search(r"10-K (\d{10}-\d\d-\d{6}) \(CIK (\d{10}), filed", md)
+        if not m:
+            print(f"=== {tic}: no latest filing in md")
+            continue
+        accn, cik = m.groups()
+        base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accn.replace('-', '')}/"
+        must, pick = classes(rows, tic)
+        print(f"=== {tic} cik {cik} accn {accn} | CHECK {len(must)} SAMPLE {len(pick)}")
+        for r in rows:
+            flag = (
+                "CHECK "
+                if r["data_point"] in must
+                else ("SAMPLE" if r["data_point"] in pick else "      ")
+            )
+            print(
+                f"{flag} {r['data_point']} | {r['status']} | {r['tags'][:160]} | {r['stmt']} {r['r_page']} | "
+                f"fy0 {r['fy0_printed']} api {r['fy0_api']} fy1 {r['fy1_printed']} | {r['match'][:30]} | {r['note'][:150]}"
+            )
+        lp, why = lease_page(cache / key(base + "MetaLinks.json"))
+        print(f"## leases: {why}")
+        pages = (
+            face_pages(md)
+            + [p for r in rows for p in r["r_page"].split("+") if FACE.match(p)]
+            + ([lp] if lp else [])
+        )
+        for pg in dict.fromkeys(pages):
             f = cache / key(base + pg)
             if not f.exists():
-                print(f"   NEED {cik} {accn} {pg}")
+                print(f"## {pg}: NOT FETCHED")
                 continue
             prs = rows_of(f.read_text(encoding="utf8", errors="ignore"))
-            head = [t for e, t in prs[:2]]
-            print(f"   {pg} head: {json.dumps(head)[:200]}")
-            tags = set(r["tags"].split("+"))
-            words = [w for w in re.split(r"_", r["data_point"]) if len(w) > 3]
-            full = r["status"] != "mapped"
+            print(f"## {pg}: {' / '.join(' | '.join(t) for _, t in prs[:2])[:200]}")
             for e, t in prs[2:]:
-                if e in tags:
-                    print(f"   > {e} | {' | '.join(t)[:200]}")
-                elif full and len(t) > 1 and any(x for x in t[1:]):
-                    print(f"     {e} | {' | '.join(t)[:110]}")
+                if len(t) > 1 and any(x for x in t[1:]):
+                    print(f"   {e} | {' | '.join(t)[:150]}")
+
+
+if __name__ == "__main__":
+    main(Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3:])

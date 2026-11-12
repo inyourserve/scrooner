@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 out, cache = Path(sys.argv[1]), Path(sys.argv[2])
-ranks = list(csv.DictReader(open(sys.argv[3])))
+ranks = list(csv.DictReader(Path(sys.argv[3]).read_text().splitlines()))
 key = lambda u: re.sub(r"\W", "_", u)[-150:]
 LEASE = (
     "FinanceLeaseLiabilityCurrent",
