@@ -15,6 +15,7 @@ import docmap as D  # noqa: E402
 
 rows = list(csv.DictReader(open(cohort)))
 os.makedirs(out_dir, exist_ok=True)
+BS_DP = {d[0] for d in D.DP if d[1] == "BS"}
 CHECK_STATUSES = {"not_presented", "combined", "component sum", "component_in_note"}
 
 
@@ -83,7 +84,7 @@ def relocate(base, cands, end, dp):
 
 
 RULES = [  # (data point, predicate on (tags, label), ruling, replacement candidates or a status)
-    ("share_buybacks", lambda t, l: re.search(r"TaxWithholding|SharesPaidForTax|Withh|Proceeds", t) or re.search(r"withh|tax", l, re.I),
+    ("share_buybacks", lambda t, l: re.search(r"TaxWithholding|SharesPaidForTax|Withh|Proceeds", t) or re.search(r"withh", l, re.I),
      "withholding-tax payment is not a buyback (founder 2026-11-04 item 4)", ["PaymentsForRepurchaseOfCommonStock"]),
     ("dividends_paid", lambda t, l: re.search(r"MinorityInterest|Noncontrolling|Preferred", t) or re.search(r"noncontrolling|minority|preferred", l, re.I),
      "NCI or preferred dividends are not common dividends (shareholder-returns card)", ["PaymentsOfDividendsCommonStock"]),
@@ -133,11 +134,12 @@ def apply_rules(r, base, end_d):
 
 
 def metalinks_tags(base):
-    txt = D.get(base + "MetaLinks.json", cache)
-    try:
-        return set(next(iter(json.loads(txt)["instance"].values())).get("tag", {}))
-    except Exception:
+    """Elements presented on at least one rendered R page (a role with no R page carries no fact in this filing)."""
+    ml = metalinks(base)
+    if ml is None:
         return None
+    tags, role2r = ml
+    return {k for k, v in tags.items() if any(x in role2r for x in v.get("presentation", []))}
 
 
 def check_company(rank):
@@ -160,6 +162,8 @@ def check_company(rank):
         write(tic, recs, mdt, [], st)
         return st
     end_d = dt.date.fromisoformat(end)
+    cft = D.get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik.zfill(10)}.json", cache)
+    cf = json.loads(cft) if cft.startswith("{") else {}
     base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accn.replace('-', '')}/"
     mapped = [r for r in recs if r["status"] == "mapped" and r["stmt"] != "NOTE"]
     sample = set(id(r) for r in random.Random(tic).sample(mapped, math.ceil(len(mapped) * 0.1))) if mapped else set()
@@ -190,6 +194,23 @@ def check_company(rank):
                 ok = not present
                 why = ("none of the candidate elements in MetaLinks.json" if ok
                        else "element(s) present in the filing: " + ", ".join(present))
+                if present and r["data_point"] != "shares_outstanding":
+                    # ruling (2)/(3): found in the filing -> read it off its own R page instead of not_presented
+                    hit = relocate(base, [t for t in full if t in present], end_d, r["data_point"])
+                    if hit:
+                        t, pg, v, grp, name = hit
+                        r.update(status="mapped", tags=f"us-gaap:{t}", stmt="NOTE" if grp != "statement" else "FACE",
+                                 r_page=pg, label=name[:120], fy0_printed=D.fmt(v), match="")
+                        a = D.api_value(cf, f"us-gaap:{t}", accn, end_d, None if r["data_point"] in BS_DP else 12) if cf else None
+                        r["fy0_api"] = D.fmt(a)
+                        if a is not None:
+                            r["match"] = "Y" if close(v, a) else "N"
+                        r["note"] = (f"re-check: the machine pass said not_presented, but us-gaap:{t} is presented on {pg} "
+                                     f"('{name[:60]}', MetaLinks.json); value read off that page")
+                        ok, why = True, f"fixed: {t} read off {pg} ({D.fmt(v)})"
+                        st["notpres_fixed"] = st.get("notpres_fixed", 0) + 1
+                    elif not [t for t in full if t in present]:
+                        ok, why = True, "only component element(s) present: " + ", ".join(present) + " (not the data point)"
         elif r["status"] == "component_in_note":
             p = D.parse_r(D.get(base + r["r_page"].split("+")[0], cache))
             ok = any(x["tag"] in tags for x in p["rows"])

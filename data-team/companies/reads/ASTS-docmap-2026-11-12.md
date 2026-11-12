@@ -70,7 +70,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | interest_expense | combined | agree | page value -114408000 vs printed -114408000 |
 | weighted_basic_shares | mapped-sample | agree | page value 255982592 vs printed 255982592 |
 | ppe_net | mapped-sample | agree | page value 1398761000 vs printed 1398761000 |
-| goodwill | not_presented | DISAGREE | element(s) present in the filing: Goodwill |
+| goodwill | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | total_assets | mapped-sample | agree | page value 5014387000 vs printed 5014387000 |
 | sbc | mapped-sample | agree | page value 47490000 vs printed 47490000 |
 | dividends_paid | not_presented | agree | none of the candidate elements in MetaLinks.json |
