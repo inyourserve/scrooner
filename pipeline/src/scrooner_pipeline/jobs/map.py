@@ -188,7 +188,7 @@ def seed_company_tag_map_cmd(
         f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
         f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"
     )
-    for cik, c in sorted(stats["completeness"].items()):
+    for cik, c in sorted(stats["completeness"].items(), key=lambda kv: str(kv[0])):
         typer.echo(
             f"  {cik}: statement tags decided {c['decided']}/{c['statement_tags']} "
             f"(undecided {c['undecided']}) {c['by_decision']}"
