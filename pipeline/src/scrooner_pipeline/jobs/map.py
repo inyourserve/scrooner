@@ -222,10 +222,10 @@ def tagmap_plan_cmd(
         "--before-image-dir",
         help="Required with --apply: before-image csv.gz directory.",
     ),
-    template_points: Path = typer.Option(
-        Path("data-team/47-fsn-store/company_tag_map/template_points_ranks_1_50.csv"),
-        "--template-points",
-        help="CSV company_id,template,data_point: each company's template data points.",
+    fy_check: Path = typer.Option(
+        Path("data-team/47-fsn-store/company_tag_map/fy_check_ranks_1_50.csv"),
+        "--fy-check",
+        help="CSV company_id,ticker,data_point,fy,period,status: the tag library's expected cells (FY0/FY-1).",
     ),
     statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
 ) -> None:
@@ -239,7 +239,7 @@ def tagmap_plan_cmd(
         raise typer.Exit(2)
     with get_connection() as conn:
         conn.execute(f"set statement_timeout = '{statement_timeout}'")
-        tpl = plan.template_points_from_csv(template_points, ids)
+        tpl = plan.expected_cells_from_fy_check(fy_check, ids)
         if apply:
             typer.echo(
                 f"before-image: {plan.write_before_image(conn, ids, before_image_dir)} -> {before_image_dir}"
@@ -251,13 +251,16 @@ def tagmap_plan_cmd(
             typer.echo(f"  {cid}: ERROR {r['error']}")
             continue
         typer.echo(
-            f"  {cid}: template {r['template_cells']} valued {r['valued']} blank {r['reasoned_blank']} "
-            f"NEITHER {r['neither']} (in tag-map scope {r['neither_in_map_scope']}) combined_lines {r['combined_lines']} holds {r['holds']} "
-            f"conflicts {r['conflict_cells']} protected {r['protected_keys']} blanks {r['blank_reasons']} neither_top {dict(list(r['neither_by_data_point'].items())[:6])}"
+            f"  {cid}: expected {r['template_cells']} valued {r['valued']} blank {r['reasoned_blank']} "
+            f"library-status {r['library_status_only']} NEITHER {r['neither']} combined_lines {r['combined_lines']} "
+            f"holds {r['holds']} conflicts {r['conflict_cells']} protected {r['protected_keys']} "
+            f"neither_top {dict(list(r['neither_by_data_point'].items())[:6])}"
         )
+        for dp, period in r["neither_cells"][:40]:
+            typer.echo(f"      NEITHER {dp} {period}")
     bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
     if bad:
-        typer.echo(f"template cells with neither value nor reason: {bad}")
+        typer.echo(f"expected cells with neither value nor reason: {bad}")
 
 
 @app.command("split-rebase")

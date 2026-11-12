@@ -28,7 +28,10 @@ from scrooner_pipeline.mapper import resolve as resolve_mod
 
 BEFORE_TABLES = ("canonical_fact", "cell_blank_reason", "slot_protected_cell")
 DATA_WINDOW_START = date(2015, 1, 1)  # invariant I11
-CONCEPT_ALIASES = {"revenue": ["revenue_sanity_resolved"]}
+CONCEPT_ALIASES = {
+    "revenue": ["revenue_sanity_resolved"],
+    "revenue_sanity": ["revenue_sanity_resolved"],
+}
 
 
 class _PlanRollback(Exception):
@@ -62,36 +65,21 @@ def write_before_image(
     return counts
 
 
-def template_points_from_csv(path: Path, company_ids: list[int]) -> dict[int, set[str]]:
-    """template_points_*.csv (company_id, template, data_point): the library's per-company template data points."""
+def expected_cells_from_fy_check(
+    path: Path, company_ids: list[int]
+) -> dict[int, list[tuple[str, date, str]]]:
+    """fy_check_*.csv (company_id, ticker, data_point, fy, period, status): the tag library's expected keys, the
+    same ones its coverage check uses (in-template concept x FY0/FY-1 period end, with the library's status)."""
     import csv
 
     wanted = set(company_ids)
-    out: dict[int, set[str]] = defaultdict(set)
+    out: dict[int, list[tuple[str, date, str]]] = defaultdict(list)
     with path.open(newline="") as fh:
         for r in csv.DictReader(fh):
             if int(r["company_id"]) in wanted:
-                out[int(r["company_id"])].add(r["data_point"])
-    return out
-
-
-def template_points(
-    conn: psycopg.Connection, company_ids: list[int], templates: Path, cohort: Path
-) -> dict[int, set[str]]:
-    """In-template data points per company: the sector templates file plus company overrides (the same plan
-    `seed-sector-templates` builds), so the plan does not depend on that table being seeded."""
-    from scrooner_pipeline.mapper import sector_templates as st
-
-    parsed = st.parse_templates(templates.read_text(encoding="utf-8"))
-    companies = st.load_cohort(cohort)
-    if not st.cohort_has_sic(cohort):
-        companies = st.fill_sic_from_db(conn, companies)
-    wanted = set(company_ids)
-    rows = st.build_plan(parsed, [c for c in companies if c.company_id in wanted])
-    out: dict[int, set[str]] = defaultdict(set)
-    for r in rows:
-        if r.in_template:
-            out[r.company_id].add(r.data_point)
+                out[int(r["company_id"])].append(
+                    (r["data_point"], date.fromisoformat(r["period"]), r["status"])
+                )
     return out
 
 
@@ -157,13 +145,22 @@ def protect(
 
 
 def _report(
-    conn, cid: int, run_id: str, stats: dict, template: set[str], concept_info
+    conn,
+    cid: int,
+    run_id: str,
+    stats: dict,
+    expected: list[tuple[str, date, str]],
+    concept_info,
 ) -> dict[str, Any]:
+    """Expected cells = the tag library's FY check: every in-template statement concept at the company's last two
+    10-K period ends (FY0, FY-1). A key is VALUED (canonical_fact), a written REASONED BLANK (cell_blank_reason of
+    this run), covered by a LIBRARY STATUS that is not materialized as a row yet (held, off-statement, read-verified
+    ...), or NEITHER (status 'served' expected, but no value and no reason: must be 0)."""
     names = {n: i for i, (n, _) in concept_info.items()}
     with conn.cursor() as cur:
         cur.execute(
-            "select start_date, end_date, period_type, id from core.period where company_id = %s and end_date >= %s",
-            (cid, DATA_WINDOW_START),
+            "select end_date, period_type, start_date, id from core.period where company_id = %s",
+            (cid,),
         )
         periods = cur.fetchall()
         cur.execute(
@@ -177,59 +174,42 @@ def _report(
         )
         blank_rows = cur.fetchall()
     blank_keys = {(n, g, e) for n, g, e, _, _ in blank_rows}
-    with conn.cursor() as cur:
-        cur.execute(
-            """select c.name from analytics.company_tag_map m
-               join analytics.canonical_concept c on c.id in (m.canonical_concept_id, m.parent_concept_id)
-               where m.company_id = %s""",
-            (cid,),
-        )
-        in_map = {r[0] for r in cur.fetchall()}
-        cur.execute(
-            "select components from analytics.company_tag_map where company_id = %s and components is not null",
-            (cid,),
-        )
-        for (comps,) in cur.fetchall():
-            in_map.update(comps)
     reasons = Counter(f"{state}:{code}" for _, _, _, state, code in blank_rows)
-    template_cells = valued_n = blank_n = 0
-    neither: Counter = Counter()
-    neither_in_map: Counter = Counter()
-    metric_points = []
-    for dp in sorted(template):
+    valued_n = blank_n = 0
+    library_status: Counter = Counter()
+    neither: list[tuple[str, str]] = []
+    for dp, period, status in expected:
         cands = [n for n in _candidates(dp) if n in names]
-        if not cands:
-            metric_points.append(dp)
-            continue
-        statement = concept_info[names[cands[0]]][1]
-        for start, end, ptype, pid in periods:
-            if (ptype == "instant") != (statement == "balance_sheet"):
-                continue
-            grain = _grain(start, end, ptype)
-            if grain is None:
-                continue
-            template_cells += 1
-            if any((names[n], pid) in valued for n in cands):
-                valued_n += 1
-            elif any((n, grain, end) in blank_keys for n in cands):
-                blank_n += 1
-            else:
-                neither[dp] += 1
-                if any(n in in_map for n in cands):
-                    neither_in_map[dp] += 1
+        pids = [
+            (pid, "I" if ptype == "instant" else _grain(start, end, ptype))
+            for end, ptype, start, pid in periods
+            if end == period
+        ]
+        stmt = concept_info[names[cands[0]]][1] if cands else None
+        if cands and any((names[n], pid) in valued for n in cands for pid, _ in pids):
+            valued_n += 1
+        elif cands and any(
+            (n, g, period) in blank_keys for n in cands for _, g in pids if g
+        ):
+            blank_n += 1
+        elif status != "served":
+            library_status[status.split(" (")[0]] += 1
+        else:
+            neither.append((dp, period.isoformat()))
+        del stmt
     return {
-        "template_cells": template_cells,
+        "template_cells": len(expected),
         "valued": valued_n,
         "reasoned_blank": blank_n,
         "blank_reasons": dict(reasons),
-        "neither": sum(neither.values()),
-        "neither_in_map_scope": sum(neither_in_map.values()),
-        "neither_in_map_scope_by_data_point": dict(neither_in_map.most_common(15)),
-        "neither_by_data_point": dict(neither.most_common(15)),
+        "library_status_only": sum(library_status.values()),
+        "library_status_by_kind": dict(library_status.most_common(8)),
+        "neither": len(neither),
+        "neither_cells": neither,
+        "neither_by_data_point": dict(Counter(d for d, _ in neither).most_common(15)),
         "combined_lines": len(stats["combined_lines"]),
         "holds": dict(Counter(h["reason"] for h in stats["held"])),
         "conflict_cells": stats["conflict_cells"],
-        "metric_data_points_not_mapper_cells": len(metric_points),
         "written_rows": stats["resolved"],
     }
 
@@ -237,7 +217,7 @@ def _report(
 def run(
     conn: psycopg.Connection,
     company_ids: list[int],
-    templates: dict[int, set[str]],
+    expected: dict[int, list[tuple[str, date, str]]],
     *,
     apply: bool,
 ) -> dict[int, dict]:
@@ -280,7 +260,7 @@ def run(
                         (cid,),
                     )
                 rep = _report(
-                    conn, cid, run_id, stats, templates.get(cid, set()), concept_info
+                    conn, cid, run_id, stats, expected.get(cid, []), concept_info
                 )
                 rep["protected_keys"] = protected
                 out[cid] = rep

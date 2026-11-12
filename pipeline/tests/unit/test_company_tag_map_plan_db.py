@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gzip
+from datetime import date
 from decimal import Decimal
 
 import psycopg
@@ -27,9 +28,10 @@ def _setup(conn):
 def test_plan_rolls_back_and_apply_writes_protects_owns_and_blocks_other_writers(isolated_database_url, tmp_path):
     with psycopg.connect(isolated_database_url) as conn:
         x, co, per = _setup(conn)
-        tpl = {co: {"tm_rev"}}
+        tpl = {co: [("tm_rev", date(2018, 12, 31), "served"), ("tm_rev", date(2020, 12, 31), "served"), ("tm_rev", date(2019, 12, 31), "held C8")]}
         rep = plan.run(conn, [co], tpl, apply=False)
-        assert rep[co]["valued"] == 1 and rep[co]["neither"] == 1  # the 2020 period has no value and no reason
+        assert "error" not in rep[co], rep[co]
+        assert rep[co]["valued"] == 1 and rep[co]["neither"] == 1 and rep[co]["library_status_only"] == 1  # 2020: no value, no reason
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s", co) == Decimal("1")  # rolled back
         assert _one(conn, "select count(*) from analytics.slot_protected_cell where company_id = %s", co) == 0
         counts = plan.write_before_image(conn, [co], tmp_path / "before")
