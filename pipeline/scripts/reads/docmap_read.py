@@ -173,7 +173,7 @@ def scaled(v: Decimal | None, page: dict, unit: str) -> Decimal | None:
 # (data point, statements, unit, candidate standard tags in order, label regex fallback)
 DP = [
     ("revenue", ("IS",), "USD", ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "RevenueFromContractWithCustomerIncludingAssessedTax", "SalesRevenueNet", "SalesRevenueGoodsNet", "RegulatedAndUnregulatedOperatingRevenue", "RevenuesNetOfInterestExpense"], r"^(total )?(net )?(revenues?|sales)\b"),
-    ("cost_of_revenue", ("IS",), "USD", ["CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices"], r"^(total )?costs? of (net )?(revenues?|sales|goods|products)"),
+    ("cost_of_revenue", ("IS",), "USD", ["CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices", "CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization"], r"^(total )?costs? of (net )?(revenues?|sales|goods|products)"),
     ("gross_profit", ("IS",), "USD", ["GrossProfit"], r"^gross (profit|margin)"),
     ("operating_income", ("IS",), "USD", ["OperatingIncomeLoss"], r"^(total )?(operating (income|profit|loss)|income from operations)"),
     ("interest_expense", ("IS",), "USD", ["InterestExpense", "InterestExpenseNonoperating", "InterestExpenseDebt", "InterestAndDebtExpense", "InterestExpenseOperating"], r"^interest expense"),
@@ -200,7 +200,7 @@ DP = [
     ("operating_expenses", ("IS",), "USD", ["OperatingExpenses", "CostsAndExpenses"], r"^total (operating )?(costs and )?expenses"),
     ("sga_expense", ("IS",), "USD", ["SellingGeneralAndAdministrativeExpense", "GeneralAndAdministrativeExpense"], r"selling, general|general and administrative"),
     ("research_and_development", ("IS",), "USD", ["ResearchAndDevelopmentExpense", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"], r"research and development"),
-    ("interest_income", ("IS",), "USD", ["InvestmentIncomeInterest", "InterestIncomeOther", "InvestmentIncomeInterestAndDividend", "InterestAndOtherIncome"], r"^interest (and other )?income"),
+    ("interest_income", ("IS",), "USD", ["InvestmentIncomeInterest", "InterestIncomeOther", "InvestmentIncomeInterestAndDividend", "InterestAndOtherIncome", "InterestIncomeOperating", "InterestIncomeNonoperating"], r"^interest (and other )?income"),
     ("other_income_expense_net", ("IS",), "USD", ["OtherNonoperatingIncomeExpense", "NonoperatingIncomeExpense"], r"^other (income|expense)"),
     ("amortization_of_intangibles", ("CF", "IS"), "USD", ["AmortizationOfIntangibleAssets"], r"^amortization of (acquired )?intangible"),
     ("cf_ar_change", ("CF",), "USD", ["IncreaseDecreaseInAccountsReceivable", "IncreaseDecreaseInReceivables", "IncreaseDecreaseInAccountsAndOtherReceivables"], r"receivable"),
@@ -352,10 +352,47 @@ def era_accession(facts: dict, tag: str, unit: str) -> str | None:
     return best[1] if best else None
 
 
+def metalinks(base: str) -> dict[str, list[str]]:
+    """{element (prefix:Local): [R files whose role presents it]} from the filing's MetaLinks.json (one request):
+    every element the filing uses, face and notes."""
+    try:
+        d = json.loads(get(base + "MetaLinks.json"))
+    except Exception:  # noqa: BLE001
+        return {}
+    inst = next(iter(d.get("instance", {}).values()), {})
+    role_r = {v.get("role"): k + ".htm" for k, v in inst.get("report", {}).items()}
+    out: dict[str, list[str]] = {}
+    for k, v in inst.get("tag", {}).items():
+        pre, _, loc = k.partition("_")
+        out[f"{pre}:{loc}"] = [role_r[r] for r in v.get("presentation", []) if r in role_r]
+    return out
+
+
+def note_value(base: str, rfile: str, tag: str, unit: str, want: Decimal | None):
+    """The printed value of `tag` on a note R page: the column equal to the API value when there is one (notes print
+    many columns), else the first. (printed, page label) or (None, None)."""
+    try:
+        page = parse_r(get(base + rfile).decode("utf-8", "replace"))
+    except Exception:  # noqa: BLE001
+        return None, None
+    for row in page["rows"]:
+        if row[1] == tag:
+            vals = [scaled(v, page, unit) for v in row[2] if v is not None]
+            if not vals:
+                continue
+            if want is not None:
+                for v in vals:
+                    if abs(v) == abs(want):
+                        return v, row[0]
+            return vals[0], row[0]
+    return None, None
+
+
+
 def read_statements(cik: int, acc: str, kinds: tuple[str, ...] | None = None) -> dict:
     """The filing's statement pages; only `kinds` when given (an era 10-K needs one page, not all)."""
     base, reps = filing_reports(cik, acc)
-    stmts = {}
+    stmts = {"_base": base}
     for kind, short, rfile in reps:
         if kinds is not None and kind not in kinds:
             continue
@@ -441,6 +478,7 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
     filed, acc, form, period = max(tenks)
     stmts = read_statements(cik, acc)
     facts = json.loads(get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"))
+    ml = metalinks(stmts["_base"])
     ends = fy_ends(facts, acc)
     acc15 = fy2015_accession(facts)
     stmts15, ends15 = {}, []
@@ -494,8 +532,8 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
         return {"fy2015_accession": acc15, "fy2015_status": "face_line", "fy2015_tag": rr[1], "fy2015_r_page": stmts15.get(k, {}).get("rfile", ""),
                 "fy2015_printed": pv[0] if pv else "", "fy2015_api": av if av is not None else "", "fy2015_match": m}
 
-    def row(dp_name, status, kind, r, fy0p, fy0a, fy1p, fy1a, note, era="", tags=""):
-        page = stmts.get(kind, {}) if kind else {}
+    def row(dp_name, status, kind, r, fy0p, fy0a, fy1p, fy1a, note, era="", tags="", review=""):
+        page = stmts.get(kind, {}) if kind and kind != "NOTE" else {}
         if fy0p is not None and fy0a is not None:
             if fy0p == fy0a:
                 match = "Y"
@@ -511,7 +549,9 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
                      "fy1_printed": fy1p if fy1p is not None else "", "fy1_api": fy1a if fy1a is not None else "",
                      "match": match, "era_from_note": era, "evidence_class": "FILING-CHECKED" if kind else "FILING-CHECKED (absence on the opened statement pages)",
                      "note": (note + " | " if note else "") + f"accn {acc} FY0 {fy0}" + (f" FY1 {fy1}" if fy1 else ""),
-                     **read15(dp_name)})
+                     "review": review, **read15(dp_name)})
+        if match == "N" and not review:
+            rows[-1]["review"] = "printed vs API differ"
         r15 = rows[-1]
         # era coverage FY2015 .. latest (Dhairya 2026-11-12: a docmap loads only when every data point's eras cover it)
         if status not in ("not_presented", "OUT") and dp_name in DPMAP and fy0:
@@ -561,12 +601,41 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
             continue
         hit = pick(stmts, dp)
         if hit is None:
-            note = f"no {name} line on {'/'.join(k for k in kinds if k in stmts) or 'the statements found'}"
+            dur_ = kinds[0] not in ("BS",)
+            found = None
             for t in cands:
-                if api_value(facts, f"us-gaap:{t}", acc, fy0, kinds[0] not in ("BS",), unit) is not None:
-                    note += f"; companyfacts carries {t} for this accession (a note fact, not a face line)"
+                a = api_value(facts, f"us-gaap:{t}", acc, fy0, dur_, unit)
+                if a is not None:
+                    found = (t, a)
                     break
-            row(name, "not_presented", None, None, None, None, None, None, note)
+            if found:
+                t, a = found
+                rps = ml.get(f"us-gaap:{t}", [])
+                pv, plabel = (None, None)
+                for rf in rps[:3]:
+                    pv, plabel = note_value(stmts["_base"], rf, f"us-gaap:{t}", unit, a)
+                    if pv is not None:
+                        rp = rf
+                        break
+                if pv is not None:
+                    row(name, "mapped", "NOTE", (plabel, f"us-gaap:{t}", []), pv, a, None,
+                        api_value(facts, f"us-gaap:{t}", acc, fy1, dur_, unit) if fy1 else None,
+                        f"no face line; the fact is in a note, R page {rp} (Dhairya rule 2026-11-12: note-only -> mapped, stmt NOTE)")
+                    rows[-1]["r_page"] = rp
+                else:
+                    row(name, "mapped", "NOTE", ("", f"us-gaap:{t}", []), None, a, None, None,
+                        f"no face line; companyfacts has {t} for this accession; MetaLinks presents it on {rps[:3] or 'no report'} but no R page row was read",
+                        review="note value not read from an R page")
+                continue
+            in_ml = [t for t in cands if f"us-gaap:{t}" in ml]
+            if in_ml:
+                row(name, "not_presented", None, None, None, None, None, None,
+                    f"no face line; {in_ml[0]} is in the filing (MetaLinks: {ml[f'us-gaap:{in_ml[0]}'][:3]}) but has no undimensioned fact for FY0 (member or other-period values only)",
+                    review="element in the filing only dimensioned / other period: hand-check")
+                continue
+            row(name, "not_presented", None, None, None, None, None, None,
+                f"absent from the whole filing: none of {', '.join(cands[:6])} in the filing's element list (MetaLinks.json, face and notes) "
+                f"or in companyfacts for accession {acc}; statements opened: {'/'.join(k for k in kinds if k in stmts)}")
             continue
         status, kind, r = hit
         page = stmts[kind]
@@ -577,6 +646,9 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
         a0 = api_value(facts, r[1], acc, fy0, dur, unit)
         a1 = api_value(facts, r[1], acc, fy1, dur, unit) if fy1 else None
         note = ""
+        review = ""
+        if status in ("mapped_custom", "mapped_other"):
+            review = f"picked by label, not by a candidate tag: confirm '{r[0][:60]}' is the {name} line"
         if status == "mapped_custom":
             note = f"custom tag {r[1]}: no companyfacts series"
             quirks.append((name, r[1], f"the face line '{r[0][:70]}' uses a custom tag", kind))
@@ -619,6 +691,12 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
                         quirks.append((name, f"us-gaap:{t}", f"era change: {t} in 10-K {eacc} -> {chosen} in {acc}", ehit[0]))
                     else:
                         era += f" | era 10-K {eacc}: {t} not on its face pages (note-only fact)"
+        if name == "interest_expense" and (re.search(r"\bnet\b", r[0], re.I) or re.search(r"Net$|IncomeExpense", r[1].split(":")[-1])):
+            row(name, "combined", kind, r, p0, a0, p1, a1, f"'{r[0][:70]}' ({r[1]}) is a NET interest line: combined, never the gross charge (Dhairya ruling 2026-11-12)", era)
+            continue
+        if name == "depreciation_and_amortization" and (re.search(r"accretion", r[0], re.I) or "Accretion" in r[1]):
+            row(name, "combined", kind, r, p0, a0, p1, a1, f"'{r[0][:70]}' ({r[1]}) includes accretion: combined (Dhairya ruling 2026-11-12)", era)
+            continue
         if name == "cf_ap_change" and (r[1].endswith("AndAccruedLiabilities") or re.search(r"\band\b|accrued|other", r[0], re.I)):
             row(name, "combined", kind, r, p0, a0, p1, a1, f"'{r[0][:70]}' = combined", era)
             continue
@@ -634,7 +712,7 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
                     add(p0, av[0] if av else None), add(a0, aa0), add(p1, av[1] if len(av) > 1 else None), add(a1, aa1),
                     f"two printed CF lines: {r[0][:40]} {p0} + {am[0][:40]} {av[0] if av else ''}", era, tags=f"{r[1]};{am[1]}")
                 continue
-        row(name, "mapped" if status.startswith("mapped") else status, kind, r, p0, a0, p1, a1, note, era)
+        row(name, "mapped" if status.startswith("mapped") else status, kind, r, p0, a0, p1, a1, note, era, review=review)
 
     # total debt: the printed debt lines of the balance sheet, summed (instants never derived beyond the printed lines)
     bs = stmts.get("BS")
@@ -671,8 +749,28 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
             row("shares_outstanding", "mapped", k, x, vals[0] if vals else None, a0, vals[1] if len(vals) > 1 else None,
                 api_value(facts, x[1], acc, fy1, False, "shares") if fy1 else None, note)
     else:
-        row("shares_outstanding", "not_presented", None, None, None, None, None, None,
-            "no CommonStockSharesOutstanding at the balance-sheet date on the BS or its parenthetical (the dei cover count is never used)")
+        t = "us-gaap:CommonStockSharesOutstanding"
+        a = api_value(facts, t, acc, fy0, False, "shares")
+        rps = ml.get(t, [])
+        pv = plabel = rp = None
+        for rf in rps[:3]:
+            pv, plabel = note_value(stmts["_base"], rf, t, "shares", a)
+            if pv is not None:
+                rp = rf
+                break
+        if pv is not None or a is not None:
+            row("shares_outstanding", "mapped", "NOTE", (plabel or "", t, []), pv, a, None, None,
+                f"no BS-date count on the BS face or its parenthetical; the balance-sheet-date count is in a note, R page {rp or rps[:3]} (never the dei cover count)",
+                review="" if pv is not None else "note value not read from an R page")
+            if rp:
+                rows[-1]["r_page"] = rp
+        elif rps:
+            row("shares_outstanding", "not_presented", None, None, None, None, None, None,
+                f"CommonStockSharesOutstanding is in the filing (MetaLinks {rps[:3]}) but has no undimensioned value at {fy0} (class members only?)",
+                review="element in the filing only dimensioned / other period: hand-check")
+        else:
+            row("shares_outstanding", "not_presented", None, None, None, None, None, None,
+                f"absent from the whole filing: CommonStockSharesOutstanding not in the filing's element list (MetaLinks.json) nor in companyfacts for {acc}; the dei cover count is never used")
     write(out, ticker, rank, cik, acc, filed, fy0, fy1, stmts, rows)
     n = len(rows)
     summ = {"rank": rank, "ticker": ticker, "cik": f"{cik:010d}", "accession": acc, "rows": n,
@@ -685,13 +783,14 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
             "fy2015_match_n": sum(r.get("fy2015_match") == "N" for r in rows),
             "points_covered_2015_latest": sum(str(r.get("era_coverage", "")).endswith("covered") for r in rows),
             "points_uncovered": sum(str(r.get("era_coverage", "")).startswith("uncovered") for r in rows),
+            "note_mapped": sum(r["stmt"] == "NOTE" for r in rows), "review": sum(bool(r.get("review")) for r in rows),
             "quirks": [{"data_point": q[0], "tag": q[1], "quirk": q[2], "stmt": q[3]} for q in quirks]}
     print(json.dumps(summ, default=str))
 
 
 FIELDS = ["ticker", "data_point", "status", "tags", "stmt", "r_page", "label", "fy0_printed", "fy0_api", "fy1_printed", "fy1_api",
           "match", "era_from_note", "evidence_class", "note", "fy2015_accession", "fy2015_status", "fy2015_tag", "fy2015_r_page",
-          "fy2015_printed", "fy2015_api", "fy2015_match", "fy2015_note", "era_coverage"]
+          "fy2015_printed", "fy2015_api", "fy2015_match", "fy2015_note", "era_coverage", "review"]
 
 
 def write(out: Path, ticker, rank, cik, acc, filed, fy0, fy1, stmts, rows) -> None:
@@ -699,7 +798,7 @@ def write(out: Path, ticker, rank, cik, acc, filed, fy0, fy1, stmts, rows) -> No
         w = csv.DictWriter(f, FIELDS)
         w.writeheader()
         w.writerows(rows)
-    pages = "; ".join(f"{k} {p['rfile']} ({p['short'][:60]})" for k, p in stmts.items())
+    pages = "; ".join(f"{k} {p['rfile']} ({p['short'][:60]})" for k, p in stmts.items() if not k.startswith("_"))
     lines = [f"# {ticker} document-first map {DATE} (read-only, bottom-up; rank {rank})", "",
              "Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing, tags from the R-page element "
              "references; API = SEC companyfacts, undimensioned, same accession, same period). Printed values are the page's "
