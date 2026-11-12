@@ -81,12 +81,45 @@ def apply(rows):
     return keep + new, n
 
 
+# a standard tag that the full 10-K read shows carries the printed line's value for these dates (Engineering's rule
+# 2026-11-12: a note total maps only where the read ties it to the face lines)
+VERIFIED = {
+    # R95 AmortizationOfIntangibleAssets 8,062 / 9,267 = the two printed IS face lines 6,031 + 2,031 / 6,023 + 3,244 (read)
+    ("AVGO", "amortization_of_intangibles"): ("IS", "AmortizationOfIntangibleAssets", "2024-10-31", "2025-10-31",
+                                              "R95 total = sum of the two printed IS amortization lines (full 10-K read)"),
+}
+
+
+def apply_verified(rows):
+    out, added = list(rows), 0
+    for (tk, con), (st, tag, a, b, why) in VERIFIED.items():
+        if any(r["ticker"] == tk and r["decision"] == "concept" and r["canonical_concept"] == con and r["tag"] == tag and r["era_from"] == a for r in out):
+            continue
+        nxt = []
+        for r in out:
+            if r["ticker"] == tk and r["decision"] == "not_presented" and r["canonical_concept"] == con and r["stmt"] == st and r["decided_by"] == "standard_only" \
+                    and not (r["era_to"] < a or b < r["era_from"]):
+                nxt += [{**r, "era_from": x, "era_to": y} for x, y in free_pieces(r["era_from"], r["era_to"], [(a, b)])]
+                meta = r
+            else:
+                nxt.append(r)
+        out = nxt
+        e = {k: "" for k in meta}
+        e.update(company_id=meta["company_id"], cik=meta["cik"], rank=meta["rank"], ticker=tk, taxonomy="us-gaap", tag=tag, stmt=st,
+                 decision="concept", canonical_concept=con, era_from=a, era_to=b, decided_by="standard_verified", rule_id="tagmap.standard_verified@1",
+                 reason=f"standard tag in place of the extension lines: {why}", lines="1", filings="1")
+        out.append(e)
+        added += 1
+    return out, added
+
+
 if __name__ == "__main__":
     src, dst = sys.argv[1:3]
     rows = list(csv.DictReader(open(src)))
     out, n = apply(rows)
+    out, v = apply_verified(out)
     with open(dst, "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(out)
-    print("extension rows withdrawn", n, "| tagless rows", sum(1 for r in out if r["decided_by"] == "standard_only" and r["decision"] == "not_presented"))
+    print("extension rows withdrawn", n, "| verified standard rows", v, "| tagless rows", sum(1 for r in out if r["decided_by"] == "standard_only" and r["decision"] == "not_presented"))

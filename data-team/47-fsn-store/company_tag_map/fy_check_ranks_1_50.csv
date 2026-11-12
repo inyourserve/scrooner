@@ -4245,8 +4245,8 @@ company_id,ticker,data_point,fy,period,status
 5116,AVGO,accounts_payable,FY-1,2024-10-31,served
 5116,AVGO,accounts_receivable,FY0,2025-10-31,served
 5116,AVGO,accounts_receivable,FY-1,2024-10-31,served
-5116,AVGO,amortization_of_intangibles,FY0,2025-10-31,read: held_custom_extension_no_fact
-5116,AVGO,amortization_of_intangibles,FY-1,2024-10-31,read: held_custom_extension_no_fact
+5116,AVGO,amortization_of_intangibles,FY0,2025-10-31,served
+5116,AVGO,amortization_of_intangibles,FY-1,2024-10-31,served
 5116,AVGO,basic_eps,FY0,2025-10-31,served
 5116,AVGO,basic_eps,FY-1,2024-10-31,served
 5116,AVGO,capex,FY0,2025-10-31,served
