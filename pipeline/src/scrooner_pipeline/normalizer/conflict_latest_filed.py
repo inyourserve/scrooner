@@ -71,6 +71,9 @@ logger = structlog.get_logger()
 RULE = "latest_filed_fy_v1"
 RULE_QUARTER = "latest_filed_quarter_v1"
 RULE_TAGMAP = "latest_filed_tagmap_v1"
+# Same flag as the mapper (mapper/company_tag_map.py): off by default, so the old mapper never sees
+# is_authoritative flips for tag-map companies before the switch-over.
+RULE_COMPANY_TAG_MAP = "company_tag_map.select@1"
 
 # The tags the rule was validated against (taxonomy, tag).
 VALIDATED_TAGS: list[tuple[str, str]] = [
@@ -238,6 +241,8 @@ PROMOTE_TAGMAP_SQL = """
 with candidates as (
     select f.id, f.company_id, f.value, f.is_authoritative,
            fl.filing_date,
+           coalesce(ff.accepted, fl.filing_date::timestamptz) as accepted_at,
+           fl.is_amendment,
            (   fl.form = any(%(forms)s)
            and not (fl.is_amendment and not exists (
                    select 1 from fsn.filing ff join fsn.line l on l.filing_id = ff.id
@@ -246,6 +251,7 @@ with candidates as (
            f.concept_id, f.unit_id, f.period_id
     from core.fact f
     join core.filing fl on fl.id = f.filing_id
+    left join fsn.filing ff on ff.accession = fl.accession_number
     where f.company_id = any(%(company_ids)s)
       and not f.is_derived
 ),
@@ -262,7 +268,7 @@ ranked as (
            max(abs(c.value)) over w as amax
     from candidates c
     window w as (partition by c.company_id, c.concept_id, c.unit_id, c.period_id
-                 order by c.eligible desc, c.filing_date desc, c.id desc
+                 order by c.eligible desc, c.accepted_at desc, c.filing_date desc, c.is_amendment asc, c.id desc
                  rows between unbounded preceding and unbounded following)
 ),
 winners as (
@@ -286,7 +292,10 @@ on conflict (fact_id) do update
 
 
 def tag_map_company_ids(conn: psycopg.Connection, company_ids: list[int]) -> list[int]:
-    """The subset of company_ids with analytics.company_tag_map rows ([] when the table is absent)."""
+    """The subset of company_ids with analytics.company_tag_map rows. [] unless rule company_tag_map.select@1
+    is ON (SCROONER_RULES_ENABLED), and [] when the table is absent."""
+    if not rule_enabled(RULE_COMPANY_TAG_MAP):
+        return []
     if conn.execute("select to_regclass('analytics.company_tag_map')").fetchone()[0] is None:
         return []
     rows = conn.execute(

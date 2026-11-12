@@ -12,6 +12,11 @@ from scrooner_pipeline.normalizer import conflict_latest_filed as clf
 TAG = ("us-gaap", "Assets")
 
 
+@pytest.fixture(autouse=True)
+def _flag_on(monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+
+
 def _build(conn, cik, tag_map, copies):
     """copies: [(accession, form, filing_date, value)] -> one period, all copies NON-authoritative
     (the state Stage 2e leaves a disagreeing group in). Returns {accession: fact_id}."""
@@ -69,3 +74,37 @@ def test_non_tag_map_company_keeps_the_six_tag_rule(isolated_database_url):
         ids = _build(conn, "0000000013", False, [("X1", "10-K", "2015-02-20", 100), ("X2", "10-K", "2016-02-20", 98)])
         clf.resolve_latest_filed(conn, {"0000000013"})
         assert _auth(conn, ids) == []  # Assets is outside the six validated tags: unchanged, still unresolved
+
+
+@pytest.mark.integration
+def test_flag_off_a_tag_map_company_keeps_the_six_tag_behaviour(isolated_database_url, monkeypatch):
+    monkeypatch.delenv("SCROONER_RULES_ENABLED", raising=False)
+    with psycopg.connect(isolated_database_url) as conn:
+        for taxonomy, tag in clf.VALIDATED_TAGS:
+            conn.execute("insert into core.concept (taxonomy, tag) values (%s, %s) on conflict do nothing", (taxonomy, tag))
+        ids = _build(conn, "0000000014", True, [("X1", "10-K", "2015-02-20", 100), ("X2", "10-K", "2016-02-20", 98)])
+        clf.resolve_latest_filed(conn, {"0000000014"})
+        assert _auth(conn, ids) == []  # tag-map rows exist but the flag is off: nothing flips
+
+
+@pytest.mark.integration
+def test_fsn_accepted_orders_ahead_of_filing_date(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(conn, "0000000015", True, [("X1", "10-K", "2016-02-20", 100), ("X2", "10-K", "2016-02-20", 98)])
+        for accn, ts in (("X1", "2016-02-20 18:00+00"), ("X2", "2016-02-20 09:00+00")):  # X1 accepted LATER, same filing_date
+            conn.execute("insert into fsn.filing (accession, cik, form, fsn_set, accepted) values (%s, '0000000015', '10-K', 't', %s)", (accn, ts))
+        conn.commit()
+        clf.resolve_latest_filed(conn, {"0000000015"})
+        assert _auth(conn, ids) == ["X1"]  # without accepted the fact-id tiebreak would pick X2
+
+
+@pytest.mark.integration
+def test_same_day_original_beats_amendment_when_both_carry_statements(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(conn, "0000000016", True, [("X1", "10-K", "2016-02-20", 100), ("X2", "10-K/A", "2016-02-20", 98)])
+        fid = conn.execute("insert into fsn.filing (accession, cik, form, fsn_set, amendment) values ('X2', '0000000016', '10-K/A', 't', true) returning id").fetchone()[0]
+        tid = conn.execute("insert into fsn.tag (tag, version) values ('Assets', 't') returning id").fetchone()[0]
+        conn.execute("insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s, 2, 1, 'BS', %s)", (fid, tid))
+        conn.commit()
+        clf.resolve_latest_filed(conn, {"0000000016"})
+        assert _auth(conn, ids) == ["X1"]  # equal day, no accepted: original periodic form, then (not reached) higher fact id
