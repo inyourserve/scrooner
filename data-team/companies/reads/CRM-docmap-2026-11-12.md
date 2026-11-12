@@ -69,3 +69,7 @@ Auto scan flagged interest_income (InvestmentIncomeInterest FY2023-FY2026 only) 
 
 ## Mismatches (printed vs API)
 none beyond sign differences (income tax provision printed (2,063) with the fact positive).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

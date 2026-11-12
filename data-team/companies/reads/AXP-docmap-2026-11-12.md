@@ -61,7 +61,7 @@ FY0 = 2025-12-31; FY1 = prior year. Values in full USD (printed value x the R-pa
 | total_interest_income | mapped | InterestAndDividendIncomeOperating | IS R3.htm | Total interest income | 25598000000 | 25598000000 | 23795000000 | 23795000000 | Y | FILING-CHECKED |  | accn 0000004962-26-000080 period 2025-01-01..2025-12-31 |
 | noninterest_income | mapped | NoninterestIncome | IS R3.htm | Total non-interest revenues | 54865000000 | 54865000000 | 50406000000 | 50406000000 | Y | FILING-CHECKED |  | accn 0000004962-26-000080 period 2025-01-01..2025-12-31 |
 | noninterest_expense | mapped | NoninterestExpense | IS R3.htm | Total expenses | 53178000000 | 53178000000 | 47869000000 | 47869000000 | Y | FILING-CHECKED |  | accn 0000004962-26-000080 period 2025-01-01..2025-12-31 |
-| provision_for_credit_losses | not_presented |  |   |  |  |  |  |  |  | FILING-CHECKED | no such line on the face statements (R pages read) and no consolidated fact in the fetched detail pages; auto: no tagged row on the face statements or fetched detail pages |
+| provision_for_credit_losses | mapped | ProvisionForLoanLossesExpensed |   |  | 5256000000 | 5256000000 | 5185000000 | 5185000000 | Y (hand) | FILING-CHECKED | check: hand R3 (IS) 'Provisions for credit losses' 5,256 / 5,185 on ProvisionForLoanLossesExpensed = companyfacts (same accession); also R8 CF; the AUTO not_presented was wrong | 2026-11-12 |
 | deposits | mapped | Deposits | BS R6.htm | Customer deposits | 152488000000 | 152488000000 | 139413000000 | 139413000000 | Y | FILING-CHECKED |  | accn 0000004962-26-000080 period ..2025-12-31 |
 | loans_net | not_presented |  | BS R6.htm |  |  |  |  |  |  | FILING-CHECKED | AXP BS prints Card Member receivables and Card Member loans as separate lines; no loans-net total; instants are never summed |
 
@@ -80,3 +80,7 @@ Auto scan: interest_expense tag InterestExpenseOperating covers FY2022-FY2025; o
 
 ## Mismatches (printed vs API)
 none beyond sign differences (printed parentheses / negated labels). Interest paid R93 is a rounded note figure (8,000.0 / 8,200.0 millions): flagged.
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- provision_for_credit_losses: check: hand -> mapped | check: hand R3 (IS) 'Provisions for credit losses' 5,256 / 5,185 on ProvisionForLoanLossesExpensed = companyfacts (same accession); also R8 
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

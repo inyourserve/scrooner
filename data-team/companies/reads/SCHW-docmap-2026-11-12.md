@@ -49,7 +49,7 @@ Caveats: companyfacts holds only undimensioned us-gaap/dei facts: custom-namespa
 | total_liabilities | mapped | us-gaap:Liabilities | R5 | Total liabilities | 441570000000 | 441570000000 | 431468000000 | 431468000000 | Y/Y | printed | api ev: us-gaap:Liabilities@0000316709-26-000009|2025-12-31 us-gaap:Liabilities@0000316709-26-000009|2024-12-31 |
 | total_debt | component_sum | us-gaap:OtherShortTermBorrowings;us-gaap:AdvancesFromFederalHomeLoanBanks;us-gaap:LongTermDebtAndCapitalLeaseObligations | R5;R5;R5 | Other short-term borrowings + Federal Home Loan Bank borrowi | 30962000000 | 30962000000 | 45127000000 | 45127000000 | Y/Y | 'Other short-term borrowings' + 'Federal Home Loan Bank borrowings' + 'Long-term debt' (tag includes finance leases); FHLB inclusion is a perimeter call (bank deposits excluded) | api ev: us-gaap:Othe |
 | stockholders_equity | mapped | us-gaap:StockholdersEquity | R5 | Total stockholders’ equity | 49425000000 | 49425000000 | 48375000000 | 48375000000 | Y/Y | 'Total stockholders equity' (includes 6,763 preferred; no parent-common-only line) | api ev: us-gaap:StockholdersEquity@0000316709-26-000009|2025-12-31 us-gaap:StockholdersEquity@0000316709-26-000009| |
-| shares_outstanding | mapped | dei:EntityCommonStockSharesOutstanding | R1 | Entity Common Stock, Shares Outstanding (shares) | 1752210425 | 1752210425 |  |  | Y/n/a | cover | api ev: dei:EntityCommonStockSharesOutstanding@0000316709-26-000009|2026-01-30 |
+| shares_outstanding | not_presented |  | BS R5.htm |  |  |  |  |  |  | FILING-CHECKED | check: hand R6 prints issued 2,074,188,875 and treasury 315,863,800; R7 equity statement's CommonStockSharesOutstanding 'Ending balance' 2,074 million = the issued count (common column), not outstanding; no BS-date outstanding count printed; instants never summed; dei never used | 2026-11-12 |
 | cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R9 | Net cash provided by (used for) operating activities | 9311000000 | 9311000000 | 2670000000 | 2670000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInOperatingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInOperatingActivities@0000316709-26-000009|2024-12-31 |
 | cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R9 | Net cash provided by (used for) investing activities | 24538000000 | 24538000000 | 35431000000 | 35431000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInInvestingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInInvestingActivities@0000316709-26-000009|2024-12-31 |
 | cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R9 | Net cash provided by (used for) financing activities | 29702000000 | 29702000000 | 47060000000 | 47060000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInFinancingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInFinancingActivities@0000316709-26-000009|2024-12-31 |
@@ -99,3 +99,14 @@ Caveats: companyfacts holds only undimensioned us-gaap/dei facts: custom-namespa
 - share_buybacks: api FY coverage PaymentsForRepurchaseOfCommonStock:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
 - cash_paid_for_interest: api FY coverage InterestPaidNet:2016-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
 - cash_paid_for_income_taxes: api FY coverage IncomeTaxesPaidNet:2023-2025 | FY-4 10-K same-label tag: tag_not_in_old:
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- cost_of_revenue: not_presented -> OUT (bank/insurer template)
+- gross_profit: not_presented -> OUT (bank/insurer template)
+- research_and_development: not_presented -> OUT (bank/insurer template)
+- inventory: not_presented -> OUT (bank/insurer template)
+- current_assets: not_presented -> OUT (bank/insurer template)
+- current_liabilities: not_presented -> OUT (bank/insurer template)
+- shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> not_presented  | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
+- shares_outstanding: check: hand -> not_presented | check: hand R6 prints issued 2,074,188,875 and treasury 315,863,800; R7 equity statement's CommonStockSharesOutstanding 'Ending balance' 2,0
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

@@ -42,7 +42,7 @@ FY0 = 2025-12-31; FY1 = prior year. Values in full USD (printed value x the R-pa
 | total_liabilities | not_presented |  | BS R7.htm |  |  |  |  |  |  | FILING-CHECKED | no total liabilities line |
 | total_debt | component sum | LongTermDebtCurrent+LongTermDebtNoncurrent | BS R7.htm+R7.htm | Current portion of long-term debt + Long-term debt | 12929000000 | 12929000000 | 14125000000 | 14125000000 | Y | FILING-CHECKED | BS 'Current portion of long-term debt' + 'Long-term debt'; no short-term borrowings line this year; no finance lease liability fact found in fetched pages | accn 0001628280-26-010185 period ..2025-12-31 |
 | stockholders_equity | mapped | StockholdersEquity | BS R7.htm | Total Abbott Shareholders’ Investment | 52130000000 | 52130000000 | 47664000000 | 47664000000 | Y | FILING-CHECKED |  | accn 0001628280-26-010185 period ..2025-12-31 |
-| shares_outstanding | mapped | dei:EntityCommonStockSharesOutstanding | COVER R1.htm | Entity Common Stock, Shares Outstanding (cover) | 1737682887 | 1737682887 |  |  | Y | FILING-CHECKED | R8 prints issued 1,996,795,525 and treasury 260,196,074 only (instants never summed): outstanding = cover | accn 0001628280-26-010185 period 2026-01-31 |
+| shares_outstanding | not_presented |  | BS R7.htm |  |  |  |  |  |  | FILING-CHECKED | check: hand R8 (BS parenthetical) prints shares issued 1,996,795,525 and treasury 260,196,074 only; no BS-date outstanding count is printed (instants never summed); dei never used | 2026-11-12 |
 | cfo | mapped | NetCashProvidedByUsedInOperatingActivities | CF R6.htm | Net Cash From Operating Activities | 9566000000 | 9566000000 | 8558000000 | 8558000000 | Y | FILING-CHECKED |  | accn 0001628280-26-010185 period 2025-01-01..2025-12-31 |
 | cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | CF R6.htm | Net Cash From (Used in) Investing Activities | -2422000000 | -2422000000 | -2338000000 | -2338000000 | Y | FILING-CHECKED |  | accn 0001628280-26-010185 period 2025-01-01..2025-12-31 |
 | cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | CF R6.htm | Net Cash From (Used in) Financing Activities | -6309000000 | -6309000000 | -5404000000 | -5404000000 | Y | FILING-CHECKED |  | accn 0001628280-26-010185 period 2025-01-01..2025-12-31 |
@@ -68,3 +68,8 @@ No other ABT rows in the cloud file.
 
 ## Mismatches (printed vs API)
 none beyond sign differences (R3 prints interest income and other (income) as negatives within expense).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> not_presented  | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
+- shares_outstanding: check: hand -> not_presented | check: hand R8 (BS parenthetical) prints shares issued 1,996,795,525 and treasury 260,196,074 only; no BS-date outstanding count is printed 
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

@@ -14,7 +14,7 @@ FY0 = 2026-06-30; FY1 = prior year. Values in full USD (printed value x the R-pa
 | revenue | mapped | RevenueFromContractWithCustomerExcludingAssessedTax | IS R5.htm | Total revenues | 13579476000 | 13579476000 | 12156162000 | 12156162000 | Y | FILING-CHECKED |  | accn 0000319201-26-000027 period 2025-07-01..2026-06-30 |
 | cost_of_revenue | mapped | CostOfRevenue | IS R5.htm | Costs of revenues | 5255060000 | 5255060000 | 4751867000 | 4751867000 | Y | FILING-CHECKED |  | accn 0000319201-26-000027 period 2025-07-01..2026-06-30 |
 | gross_profit | not_presented |  |   |  |  |  |  |  |  | FILING-CHECKED | no such line on the face statements (R pages read) and no consolidated fact in the fetched detail pages; auto: no tagged row on the face statements or fetched detail pages |
-| operating_expenses | component sum | ResearchAndDevelopmentExpense+SellingGeneralAndAdministrativeExpense+AssetImpairmentCharges | IS R5.htm+R5.htm+R5.htm | Research and development + Selling, general and administrati | 2663636000 | 2663636000 | 2629168000 | 2629168000 | Y | FILING-CHECKED | R5 prints no operating-expense subtotal; sum of the printed operating lines R&D + SG&A + impairment (duration sum allowed); perimeter (impairment in) needs Tag Expert confirmation | accn 0000319201-26-000027 period 2025-07-01..2026-06-30 |
+| operating_expenses | not_presented |  | IS R5.htm |  |  |  |  |  |  | FILING-CHECKED | check: hand: KLAC prints revenues then costs and expenses with no gross profit line: no GP - OI tie: blank (Dhairya per-ticker list) | 2026-11-12 |
 | sga_expense | mapped | SellingGeneralAndAdministrativeExpense | IS R5.htm | Selling, general and administrative | 1131518000 | 1131518000 | 1029734000 | 1029734000 | Y | FILING-CHECKED |  | accn 0000319201-26-000027 period 2025-07-01..2026-06-30 |
 | research_and_development | mapped | ResearchAndDevelopmentExpense | IS R5.htm | Research and development | 1532118000 | 1532118000 | 1360334000 | 1360334000 | Y | FILING-CHECKED |  | accn 0000319201-26-000027 period 2025-07-01..2026-06-30 |
 | operating_income | not_presented |  | IS R5.htm |  |  |  |  |  |  | FILING-CHECKED | R5 prints no operating income subtotal; no OperatingIncomeLoss element in the filing |
@@ -70,3 +70,8 @@ Auto scan of companyfacts: every chosen tag has 10-K annual facts for all of the
 
 ## Mismatches (printed vs API)
 none: every mapped row matches the API value for FY0 and FY1 (sign differences are printed-parentheses only).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- operating_expenses: component sum us-gaap:ResearchAndDevelopmentExpense+us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:AssetImpairmentCharges -> not_presented  | opex never includes cost of revenue (Dhairya ruling 2026-11-12; expected not_presented)
+- operating_expenses: check: hand -> not_presented | check: hand: KLAC prints revenues then costs and expenses with no gross profit line: no GP - OI tie: blank (Dhairya per-ticker list)
+- 1 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately
