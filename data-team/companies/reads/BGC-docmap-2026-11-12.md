@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Cash paid during the period for interest | 109418000 | 109418000 | 88392000 | 88392000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013162 R7.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R7.htm | Cash paid during the period for taxes | 148137000 | 148137000 | 103524000 | 103524000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013162 R7.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability(note) | R3.htm | Short-term borrowings from related parties + Notes payable and other borrowings + finance lease liabilities (note) | 1797649000 | 1797649000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; finance lease liabilities 1944000 from the lease note (no face line carries them); operating leases never included |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 363175091 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
+| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 472628044 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001193125-16-484938 R4.htm prints 'Total revenues' on us-gaap:Revenues = 2575437000 (FILING-CHECKED)
@@ -85,4 +85,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cash_flow_financing: era 10-K 0001564590-21-009638 R6.htm prints 'Net cash provided by (used in) financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations = -13101000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
+none beyond sign differences
