@@ -128,3 +128,35 @@ def test_amendments_without_statements_are_not_expected_filings(conn):
             for f in load_filings(cur, cid).values()
         }
     assert got == {"k1", "q1a", "q2a", "q3"}
+
+
+def test_wmb_ci_report_with_net_income_beside_an_is_report_without_it(conn):
+    # WMB 2026 10-Qs (0000107263-26-000017/-000026): report 2 = combined IS+CI (stmt CI, net income, tax);
+    # report 9 = a Transco legal-entity statement (stmt IS: revenues, operating income, pre-tax income, NO
+    # NetIncomeLoss/ProfitLoss). The face is report 2; the store's line_map made on 2026-11-09 mapped report 9 only
+    r = _filing(
+        conn,
+        "a4",
+        [
+            (2, "CI", "Revenues"),
+            (2, "CI", "IncomeTaxExpenseBenefit"),
+            (2, "CI", "ProfitLoss"),
+            (2, "CI", "NetIncomeLoss"),
+            (2, "CI", "ComprehensiveIncomeNetOfTax"),
+            (9, "IS", "Revenues"),
+            (9, "IS", "OperatingIncomeLoss"),
+            (
+                9,
+                "IS",
+                "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            ),
+        ],
+    )
+    assert (
+        r[(2, "Revenues")]
+        == r[(2, "IncomeTaxExpenseBenefit")]
+        == r[(2, "NetIncomeLoss")]
+        == "IS"
+    )
+    assert r[(2, "ComprehensiveIncomeNetOfTax")] == "IS"
+    assert r[(9, "Revenues")] == "IS"

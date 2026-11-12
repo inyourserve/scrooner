@@ -32,7 +32,7 @@ Rule used: the filing and the founder decisions in doc 02 win over any card, min
 
 ## My earlier answers CORRECTED by this reconcile
 - TAG-EXPERT-ANSWERS-RITWIK-CLOUD-2026-11-11: **CB cash = 2,470 − 198** and **VZ/T/MO/COP equity = incl-NCI total − MinorityInterest** derive INSTANTS: withdrawn; both are not_presented with reason (doc 02 item 4). **GILD/DHR combined cash tag "map with flag"**: withdrawn; it is a combined line shown under its own label (doc 02 item 2; founder 2026-11-01 sector ruling item 3).
-- TAG-EXPERT-ANSWERS-RITWIK-RANKS-1-50: (a) "several classes: sum the classes" withdrawn (instant derivation): show per class or not_presented; (d) "ReceivablesNetCurrent sole line → AR with flag" withdrawn: combined unless the label is plain trade AR; (e) stands (same line, flagged).
+- TAG-EXPERT-ANSWERS-RITWIK-RANKS-1-50: (a) "several classes: sum the classes" withdrawn (instant derivation): not_presented (Dhairya 2026-11-12); (d) "ReceivablesNetCurrent sole line → AR with flag" withdrawn: combined unless the label is plain trade AR; (e) stands (same line, flagged).
 
 ## Update 2026-11-11 (later): Dhairya rulings, open items settled, Ritwik card notes 1-30 absorbed
 **Dhairya accepted fixes (1)-(3)** (UN scope, PGR not_presented, PNC CashAndDueFromBanks component).
@@ -45,3 +45,9 @@ Rule used: the filing and the founder decisions in doc 02 win over any card, min
 - C13 DUK FY2025 10-K 0001326160-26-000014: IS l15 `CostDepreciationAmortizationAndDepletion` "Depreciation and amortization" 6,324M (2024 5,793; 2023 5,253) vs CF l4 `DepreciationDepletionAndAmortization` "Depreciation, amortization and accretion (including amortization of nuclear fuel)" 7,704M: the CF line is COMBINED; serve the IS line (the Verifier's utility ruling confirmed).
 **GILD/DHR reinstated** (Ritwik note 9): BS l3 `CashCashEquivalentsRestrictedCash…` with plain labels "Cash and cash equivalents" (GILD 0000882095-26-000006, = CF ending 7,564M) and "Cash and equivalents" (DHR 0000313616-26-000062, 4,615M), no restricted line: the sole cash line with no restricted wording = cash (the C7 rule). My withdrawal of these two is reversed; no flag needed. CB (note 18, Dhairya): served as printed, labelled "includes restricted cash".
 **Ritwik (cloud) card notes 1-30** (data-team/tags/decisions/card-notes-51-100 and -101-200-2026-11-11.md on work/ritwik-cloud/tag-decisions-2026-11-11 35e120ba; DATA-INFERRED from fsn.*) agree with the cards after this reconcile; folded as below. No conflicts except note 22 (see ruling (b) reading).
+
+## Update 2026-11-12: D3 narrowed to doc 02 (Dhairya)
+- Sums of printed face lines are allowed for DURATIONS only: operating expenses, cost of revenue, interest, capex, D&A, NI = ProfitLoss − NCI (ruling (b) conditions).
+- INSTANTS: no sums, with one exception: total_debt, which the founder defined as a sum including finance leases (doc 02, 2026-11-04 item 5).
+- So: total liabilities with no printed line = not_presented; inventory with no printed total = not_presented; shares outstanding printed only per class = not_presented.
+- Bank cash split across BS lines (JPM "cash and due from banks" + "deposits with banks" = 343,338M): serve the CF statement's PRINTED ending-cash line (343,338M), labelled. Accepted.

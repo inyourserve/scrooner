@@ -108,6 +108,15 @@ RULES: dict[str, Rule] = {
             "(mapper/slot_is_not_presented.py)",
             dry_run=True,
         ),
+        # ---- per-company tag map (migration 0122): the only tag route for companies with rows
+        _r(
+            "company_tag_map.select@1",
+            "-",
+            "mapper",
+            "resolve-facts selects facts for companies that have analytics.company_tag_map rows only "
+            "through that map (no concept_mapping, no preference, no fallback); others keep the old path "
+            "(mapper/company_tag_map.py)",
+        ),
         # ---- lane 2: metric-stage guards
         _r(
             "ttm.consecutive_window@1",
