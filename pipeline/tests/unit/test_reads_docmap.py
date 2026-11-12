@@ -199,3 +199,58 @@ def test_shares_are_the_balance_sheet_class_sum_never_the_cover(tmp_path):
         "not_presented",
         "OUT",
     }
+
+
+IS_HEAD = (
+    "<table class='report'><tr><th class='tl' rowspan='2'>STATEMENTS OF OPERATIONS - USD ($) $ in Millions</th>"
+    "<th class='th' colspan='2'>12 Months Ended</th></tr><tr><th>Dec. 31, 2025</th><th>Dec. 31, 2024</th></tr>"
+)
+
+
+def _opex(tmp_path, body):
+    m = _mod()
+    page = IS_HEAD + body + "</table>"
+    acc = _filing(
+        tmp_path, [("R2.htm", "Statements", "STATEMENTS OF OPERATIONS", page)]
+    )
+    rows = {
+        r["data_point"]: r
+        for r in m.read_company(tmp_path, "0000000002", "TS3", acc, "2026-02-01")[
+            "rows"
+        ]
+    }
+    return rows["operating_expenses"]
+
+
+def test_opex_is_every_line_between_gross_profit_and_operating_income(tmp_path):
+    """Dhairya 2026-11-12: opex never includes cost of revenue; component sum tied exactly to GP - OI"""
+    r = _opex(
+        tmp_path,
+        _row("us-gaap_Revenues", "Revenue", "1,000", "900")
+        + _row("us-gaap_CostOfRevenue", "Cost of revenue", "600", "500")
+        + _row("us-gaap_GrossProfit", "Gross profit", "400", "400")
+        + _row("us-gaap_SellingGeneralAndAdministrativeExpense", "SG&A", "150", "140")
+        + _row("abc_RestructuringCustom", "Restructuring", "50", "10")
+        + _row("us-gaap_OperatingIncomeLoss", "Operating income", "200", "250"),
+    )
+    assert (r["status"], r["fy0_printed"], r["fy1_printed"]) == (
+        "component sum",
+        "200000000",
+        "150000000",
+    )
+    assert (
+        r["tags"]
+        == "us-gaap:SellingGeneralAndAdministrativeExpense+abc:RestructuringCustom"
+    )
+
+
+def test_costs_and_expenses_with_cost_of_revenue_is_combined_never_opex(tmp_path):
+    r = _opex(
+        tmp_path,
+        _row("us-gaap_Revenues", "Revenue", "1,000", "900")
+        + _row("us-gaap_CostOfRevenue", "Cost of revenue", "600", "500")
+        + _row("us-gaap_SellingGeneralAndAdministrativeExpense", "SG&A", "200", "150")
+        + _row("us-gaap_CostsAndExpenses", "Total costs and expenses", "800", "650")
+        + _row("us-gaap_OperatingIncomeLoss", "Operating income", "200", "250"),
+    )
+    assert r["status"] == "combined" and r["tags"] == "us-gaap:CostsAndExpenses"

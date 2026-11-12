@@ -963,6 +963,9 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
         if dp.name == "total_debt":
             read_debt(R, dp, add, quirks)
             continue
+        if dp.name == "operating_expenses":
+            read_opex(R, dp, add, found, quirks)
+            continue
         h = R.find(dp.stmts, dp.tags)
         if h:
             found[dp.name] = h
@@ -1088,27 +1091,6 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                     R.api(h.elem, d1, dur),
                     f"'{h.row.label}' = combined line",
                     period=period(dur, d0),
-                )
-                continue
-        if dp.name == "operating_expenses":
-            ce = R.find(("IS",), ("CostsAndExpenses", "BenefitsLossesAndExpenses"))
-            cor = found.get("cost_of_revenue")
-            if ce:
-                p0, p1, d0, d1 = R.values(ce, "money")
-                note = f"no operating-expenses total; '{ce.row.label}' ({short(ce.elem)}) printed"
-                if cor:
-                    note += " and includes cost of revenue: opex = total less cost of revenue is a perimeter call for the Tag Expert"
-                add(
-                    dp,
-                    "not_presented",
-                    [],
-                    [],
-                    None,
-                    None,
-                    None,
-                    None,
-                    note + f" (R {ce.page.file})",
-                    "FILING-CHECKED",
                 )
                 continue
         if dp.name == "sga_expense":
@@ -1334,6 +1316,184 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
         "accession": accn,
         "filed": filed,
     }
+
+
+def read_opex(R: Reader, dp: DP, add, found: dict, quirks: list) -> None:
+    """Dhairya 2026-11-12: operating expenses never include cost of revenue. The printed total when it excludes COGS;
+    else the component sum of EVERY face line between gross profit and operating income, tied exactly to GP - OI;
+    CostsAndExpenses (or a total) that includes COGS is combined, never opex."""
+    ox = R.find(("IS",), ("OperatingExpenses",))
+    gp = R.find(("IS",), ("GrossProfit",))
+    oi = R.find(("IS",), ("OperatingIncomeLoss",))
+    rev, cor = found.get("revenue"), found.get("cost_of_revenue")
+
+    def val(h):
+        return R.values(h, "money")
+
+    def gp_less_oi():
+        if gp and oi:
+            g, o = val(gp), val(oi)
+            return (
+                g[0] - o[0] if None not in (g[0], o[0]) else None,
+                g[1] - o[1] if None not in (g[1], o[1]) else None,
+            )
+        return None, None
+
+    tie0, tie1 = gp_less_oi()
+    if ox:
+        p0, p1, d0, d1 = val(ox)
+        a0, a1 = R.api(ox.elem, d0, True), R.api(ox.elem, d1, True)
+        r0 = val(rev)[0] if rev else None
+        o0 = val(oi)[0] if oi else None
+        if cor and None not in (r0, o0, p0) and p0 == r0 - o0:
+            add(
+                dp,
+                "combined",
+                [ox.elem],
+                [ox],
+                p0,
+                a0,
+                p1,
+                a1,
+                f"'{ox.row.label}' = revenue less operating income: includes cost of revenue, so never opex "
+                "(Dhairya 2026-11-12)",
+                period=f"FY ending {d0}",
+            )
+            quirks.append(
+                {
+                    "tag": ox.elem,
+                    "what": f"OperatingExpenses printed as a total that includes cost of revenue ('{ox.row.label}' {fmt(p0)})",
+                    "where": ox.page.file,
+                }
+            )
+            return
+        note = "printed total excludes cost of revenue"
+        if tie0 is not None:
+            note += (
+                f"; ties GP - OI ({fmt(tie0)})"
+                if tie0 == p0
+                else f"; GP - OI = {fmt(tie0)} differs (other lines between)"
+            )
+        add(
+            dp,
+            "mapped",
+            [ox.elem],
+            [ox],
+            p0,
+            a0,
+            p1,
+            a1,
+            note,
+            period=f"FY ending {d0}",
+        )
+        return
+    if gp and oi and gp.page is oi.page:
+        page = gp.page
+        i, j = page.rows.index(gp.row), page.rows.index(oi.row)
+        between = [r for r in page.rows[i + 1 : j] if not r.is_header]
+        yc = year_cols(page)
+        if between and yc:
+
+            def at(r, k):
+                return scaled(page, r, yc[k], "money") if len(yc) > k else None
+
+            single = [r for r in between if at(r, 0) == tie0 and len(between) > 1]
+            if single:  # an opex subtotal printed with a non-standard element
+                r = single[0]
+                h = Hit(page, r, r.elem)
+                d0 = page.cols[yc[0]][1]
+                d1 = page.cols[yc[1]][1] if len(yc) > 1 else None
+                add(
+                    dp,
+                    "mapped",
+                    [r.elem],
+                    [h],
+                    at(r, 0),
+                    R.api(r.elem, d0, True),
+                    at(r, 1),
+                    R.api(r.elem, d1, True),
+                    f"opex subtotal '{r.label}' ({r.elem}) ties GP - OI exactly",
+                    period=f"FY ending {d0}",
+                )
+                if not r.elem.startswith("us-gaap:"):
+                    quirks.append(
+                        {
+                            "tag": r.elem,
+                            "what": f"custom element for the operating expenses total '{r.label}' {fmt(at(r, 0))}",
+                            "where": page.file,
+                        }
+                    )
+                return
+            s0 = sum((at(r, 0) or 0 for r in between), Decimal(0))
+            s1 = (
+                sum((at(r, 1) or 0 for r in between), Decimal(0))
+                if len(yc) > 1
+                else None
+            )
+            if s0 == tie0 and (tie1 is None or s1 == tie1):
+                hits = [Hit(page, r, r.elem) for r in between]
+                d0 = page.cols[yc[0]][1]
+                d1 = page.cols[yc[1]][1] if len(yc) > 1 else None
+                a0s = [R.api(r.elem, d0, True) for r in between]
+                a1s = [R.api(r.elem, d1, True) for r in between]
+                add(
+                    dp,
+                    "component sum",
+                    [r.elem for r in between],
+                    hits,
+                    s0,
+                    sum(a0s, Decimal(0)) if None not in a0s else None,
+                    s1,
+                    sum(a1s, Decimal(0)) if None not in a1s else None,
+                    f"every face line between gross profit and operating income ({len(between)}); ties GP - OI exactly "
+                    "(Dhairya 2026-11-12)",
+                    period=f"FY ending {d0}",
+                )
+                return
+            add(
+                dp,
+                "not_presented",
+                [],
+                [],
+                None,
+                None,
+                None,
+                None,
+                f"the {len(between)} face lines between gross profit and operating income sum to {fmt(s0)}, GP - OI = "
+                f"{fmt(tie0)}: no exact tie, so no component sum ({page.file})",
+            )
+            return
+    ce = R.find(("IS",), ("CostsAndExpenses", "BenefitsLossesAndExpenses"))
+    if ce:
+        p0, p1, d0, d1 = val(ce)
+        add(
+            dp,
+            "combined",
+            [ce.elem],
+            [ce],
+            p0,
+            R.api(ce.elem, d0, True),
+            p1,
+            R.api(ce.elem, d1, True),
+            f"'{ce.row.label}' is total costs and expenses"
+            + (" including cost of revenue" if cor else "")
+            + ": combined, never opex (Dhairya 2026-11-12)",
+            period=f"FY ending {d0}",
+        )
+        return
+    pages = "+".join(p.file for p in R.by_kind.get("IS", []))
+    add(
+        dp,
+        "not_presented",
+        [],
+        [],
+        None,
+        None,
+        None,
+        None,
+        f"no operating-expenses total and no gross profit + operating income pair on {pages or 'any IS page'}",
+        "FILING-CHECKED" if pages else "DATA-INFERRED",
+    )
 
 
 def read_debt(R: Reader, dp: DP, add, quirks) -> None:
