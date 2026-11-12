@@ -51,11 +51,16 @@ def classify(status):
     return "not_presented", "held_" + slug  # cover page, tax note, COND template seed, a read under review: held, never a value
 
 
-new, seen = [], set()
+new = []
+held = {}  # tagless rows already in the map: a cell inside one of their eras is already reasoned
+for r in rows:
+    if r["decision"] in ("not_presented", "not_in_template"):
+        held.setdefault((r["company_id"], r["canonical_concept"].removesuffix("_resolved")), []).append((r["era_from"], r["era_to"]))
+seen = set()
 for r in csv.DictReader(open(fy)):
     c, dp, p = r["company_id"], r["data_point"], r["period"]
     k = classify(r["status"])
-    if not k or (c, dp, p) in opens or (c, dp, p) in seen:
+    if not k or (c, dp, p) in opens or (c, dp, p) in seen or any(x <= p <= y for x, y in held.get((c, dp), [])):
         continue
     seen.add((c, dp, p))
     con = name(dp)

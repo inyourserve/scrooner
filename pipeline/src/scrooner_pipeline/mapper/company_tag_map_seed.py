@@ -51,6 +51,11 @@ HELD_MARKERS = ("note_sourced", "note-sourced", "template_out", "template-out")
 
 
 def held_by_verifier(raw: dict) -> bool:
+    """A note-sourced / template-OUT CANDIDATE row that would serve a value (the Verifier sample failed for those).
+    Status rows (not_presented / not_in_template, tagless) never serve a value, so they always load: they are the
+    cell's reason, e.g. reason_class held_read_verified_pass_of_note_sourced_candidate."""
+    if str(raw.get("decision") or "").strip() in ("not_presented", "not_in_template"):
+        return False
     text = " ".join(
         str(raw.get(k) or "") for k in ("decided_by", "rule_id", "reason_class")
     ).lower()
