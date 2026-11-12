@@ -115,7 +115,7 @@ Guard: when a label would demote a line, check it against the calc position and 
 - JPM: "cash and due from banks" + "deposits with banks" = CF ending cash 343,338M. Serving the BS sum would be a derived instant (doc 02 item 4); the CF ending-cash line is a PRINTED instant with the same value: serve it, labelled (ACCEPTED by Dhairya 2026-11-12, for every bank that splits cash across BS lines).
 - DELL, GOOG, INTC "Interest and other, net" / other income and expense totals include interest: combined.
 - HD's latest 10-K uses `IncomeTaxesPaidNet` (R68), not `IncomeTaxesPaid`.
-- Tooling: the SEC companyconcept API returns 404 for custom prefixes; use companyfacts for custom tags.
+- Tooling (CORRECTED 2026-11-12, Data Verifier): companyconcept returns 404 for custom prefixes AND companyfacts carries only the us-gaap, dei, ecd and ffd namespaces: every extension-prefix fact and every dimensioned fact is absent. Custom and dimensioned rows can be checked only against the R page (the filing's own XBRL).
 
 ## Q. Sums rule (Dhairya 2026-11-12, D3 narrowed to doc 02)
 - Durations: printed face-line sums allowed (opex, cost of revenue, interest, capex, D&A, NI = ProfitLoss − NCI). Instants: never summed, except total_debt (founder definition, doc 02 2026-11-04 item 5). Total liabilities, inventory or shares with no printed total = not_presented.
@@ -170,3 +170,15 @@ Guard: when a label would demote a line, check it against the calc position and 
 - NEM SBC on `EmployeeBenefitsAndShareBasedCompensation` (override; library default combined).
 - LMT cost moved `CostOfGoodsAndServicesSold` → `CostOfRevenue` (the line above gross profit); LMT D&A → `DepreciationAmortizationAndAccretionNet`.
 - VLO capex = PP&E + capital improvements (turnarounds, founder perimeter); VLO has no undimensioned companyfacts after FY2018 (read the face/FSN).
+
+## Y. Document-first reads, ranks 51-67 (Data Verifier docmaps, 2026-11-12; FILING-CHECKED; feedback-inbox lines processed)
+- COP `Revenues` moved lines in FY2022: the total ("Revenues and Other Income") until FY2021, then "Sales and other operating revenues" (78,494), with the total on custom `cop:RevenuesAndOtherIncome`. Map per filing; the "and other income" caption demotes.
+- `CostsAndExpenses` perimeter varies on one tag: MRVL excludes COGS (= gross profit − OI); QCOM, ABT, GILD, VZ include cost of revenue; DE includes interest. Map operating_expenses only after the value check (library row); both map cases (V: revenue − OI with no cost line; MRVL: gross profit − OI) confirmed structural by Dhairya.
+- PEP "Net interest expense and other" on `InterestExpense`: combined (the label demotes). DIS "Interest expense, net" on the net tag. MRVL "Interest income and other, net" 1,926.3 on `OtherNonoperatingIncomeExpense` inside the `NonoperatingIncomeExpense` subtotal 1,723.7.
+- CRM misuses `AmortizationOfAboveAndBelowMarketLeases` for intangibles amortization (override: excluded); CF D&A 3,631 is CRM's only face amortization line.
+- DIS, VZ, DE: face cost lines exist only as dimensioned rows (ProductOrServiceAxis); each is a printed face line: DIS cost of services 52,677 + products 6,089, VZ 27,789 + 28,976 = allowed duration sums; DE "Cost of sales" 28,159 on the Net Sales member.
+- SNDK AP only by related-party axis: not_presented (an instant is never summed).
+- DPS: C prints only the quarterly rate (0.60 / 0.56), CRM 0.416 quarterly, DIS per-payment instants: never read a parenthetical rate as annual. RULED (Dhairya 2026-11-12): annual DPS = the sum of the four quarterly DPS facts printed in the same 10-K (same declared/paid basis, each on its own quarter context, no unflagged special dividend), served "sum of printed quarterly dividends"; else not_presented (C 2.32, COF, CRM 1.664, DIS dated payments). EPS stays never derived.
+- GILD/DHR CCRC plain-label cash: handled by the FILING-CHECKED company overrides (the library default stays combined, doc 02: no label promotion). KLAC's latest BS uses the pure cash tag. Banks: the CF printed ending cash (C 349,579; AXP).
+- BLK amortization era change: pure 151 (FY2023) → custom amortization-and-impairment 775 (FY2025, combined). BLK dividends/buybacks combined with Subco units; note "Aggregate dividends" 3,265 vs CF 3,347.
+- Capex needs two printed CF lines at DE (PP&E 1,360 + equipment on operating leases 2,868) and IBM (PP&E 1,091 + investment in software 647): printed duration sums under the founder perimeter.
