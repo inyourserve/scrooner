@@ -68,3 +68,7 @@ Auto scan: no chosen tag flagged (all cover the last 5 FY). Cloud's QCOM rows ar
 
 ## Mismatches (printed vs API)
 none beyond sign differences (R4 prints interest expense in parentheses; income tax benefit 4,214 printed positive, fact -4,214).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+
+- 1 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

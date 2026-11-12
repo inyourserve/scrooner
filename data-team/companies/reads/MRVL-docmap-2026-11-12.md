@@ -21,7 +21,7 @@ FY0 = 2026-01-31; FY1 = prior year. Values in full USD (printed value x the R-pa
 | interest_expense | mapped | InterestExpenseNonoperating | IS R5.htm | Interest expense | -202600000 | 202600000 | -189400000 | 189400000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED |  | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
 | interest_income | combined | OtherNonoperatingIncomeExpense | IS R5.htm | Interest income and other, net | 1926300000 | 1926300000 | 15000000 | 15000000 | Y | FILING-CHECKED | R5 own line 'Interest income and other, net' 1,926.3 (interest income + other): combined; interest income not separately printed on the face | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
 | other_income_expense_net | combined | NonoperatingIncomeExpense | IS R5.htm | Interest and other income (loss), net | 1723700000 | 1723700000 | -174400000 | -174400000 | Y | FILING-CHECKED | R5 'Interest and other income (loss), net' 1,723.7 = 'Interest income and other, net' 1,926.3 less 'Interest expense' 202.6: contains interest, combined (own line) | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
-| income_before_tax | not_presented |  |   |  |  |  |  |  |  | FILING-CHECKED | no such line on the face statements (R pages read) and no consolidated fact in the fetched detail pages; auto: no tagged row on the face statements or fetched detail pages |
+| income_before_tax | mapped | IncomeLossAttributableToParent | IS R5.htm | Income (loss) before income taxes | 3046600000 | 3046600000 | -894700000 | -894700000 | Y | FILING-CHECKED | check: hand R5 'Income (loss) before income taxes' 3,046.6 on IncomeLossAttributableToParent (a pretax tag, card rule 1) = filing XBRL 3,046,600,000; the AUTO not_presented was wrong | 2026-11-12 |
 | income_tax_expense | mapped | IncomeTaxExpenseBenefit | IS R5.htm | Provision (benefit) for income taxes | 376500000 | 376500000 | -9700000 | -9700000 | Y | FILING-CHECKED |  | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
 | net_income | mapped | NetIncomeLoss | IS R5.htm | Net income (loss) | 2670100000 | 2670100000 | -885000000 | -885000000 | Y | FILING-CHECKED |  | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
 | basic_eps | mapped | EarningsPerShareBasic | IS R5.htm | Net income (loss) per share — basic (in dollars per share) | 3.1 | 3.1 | -1.02 | -1.02 | Y | FILING-CHECKED |  | accn 0001835632-26-000011 period 2025-02-02..2026-01-31 |
@@ -68,3 +68,8 @@ Auto scan flagged interest_expense: InterestExpenseNonoperating covers FY2023-FY
 
 ## Mismatches (printed vs API)
 none beyond sign differences (interest expense printed (202.6) with fact value positive).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- income_before_tax: not_presented -> mapped us-gaap:IncomeLossAttributableToParent | AUTO row replaced by the filing re-read (was not_presented )
+- income_before_tax: check: hand -> mapped | check: hand R5 'Income (loss) before income taxes' 3,046.6 on IncomeLossAttributableToParent (a pretax tag, card rule 1) = filing XBRL 3,046
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

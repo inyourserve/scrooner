@@ -87,7 +87,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2895,ZTS,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1812,2512,8,restricted-cash total on the cash line (rule 9)
 2895,ZTS,IS,,not_presented,operating_income;gross_profit,,,51,no operating income or gross profit line
 2895,ZTS,CF,,not_presented,share_buybacks,,,5,no buyback line in 5 filings
-4239,OKTA,CF,c:DepreciationAmortizationandAccretionExcludingAmortizationofDeferredSalesCommissions|c:DepreciationAmortizationAndAccretionExcludingAmortizationOfDeferredSalesCommissions,map,d_and_a,1704,2501,32,"custom CF 'depreciation, amortization and accretion' (same meaning as library DepreciationAmortizationAndAccretionNet; commissions on their own line)"
+4239,OKTA,CF,c:DepreciationAmortizationandAccretionExcludingAmortizationofDeferredSalesCommissions|c:DepreciationAmortizationAndAccretionExcludingAmortizationOfDeferredSalesCommissions,combined,d_and_a,1704,2501,32,"Dhairya ruling 2026-11-12: D&A that includes accretion is combined. Was: custom CF 'depreciation, amortization and accretion' (same meaning as library DepreciationAmortizationAndAccretionNet; commissions on their own line)"
 4239,OKTA,CF,us-gaap:ProceedsFromStockOptionsExercised|us-gaap:RepaymentsOfConvertibleDebt|c:StockIssuedRepurchaseofConvertibleDebt|c:StockIssuedRepurchaseOfConvertibleDebt,exclude,share_buybacks,1704,2510,35,option proceeds / convertible debt
 4239,OKTA,CF,,not_presented,dividends_paid;share_buybacks,,,38,none
 4239,OKTA,IS,,not_presented,interest_expense,,,7,no interest line in 7 filings
@@ -216,7 +216,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3385,TDY,IS,,not_presented,gross_profit,,,51,no gross profit line
 3385,TDY,CF,,not_presented,dividends_paid,,,51,no dividends
 3385,TDY,CF,,not_presented,share_buybacks,,,30,no buyback line in 30 filings
-1355,ATO,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,2103,2106,2,"face 'Interest charges' (the FY2021 10-K R4 prints the same row on InterestExpense, 83,554); serve the face amount (rule 33 sign column)"
+1355,ATO,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,2103,2106,2,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: face 'Interest charges' (the FY2021 10-K R4 prints the same row on InterestExpense, 83,554); serve the face amount (rule 33 sign column)"
 1355,ATO,IS,us-gaap:IncomeLossFromContinuingOperations,map,net_income,2009,2109,2,"FILING-CHECKED 0000731802-21-000040 R4: 'Net Income' 665,563 on IncomeLossFromContinuingOperations; no discontinued or NCI line (first column = consolidated)"
 1355,ATO,CF,c:PaymentsToRepurchaseCommonStock,map,share_buybacks,1409,1409,1,custom CF 'repurchase of common stock'
 1355,ATO,CF,us-gaap:PaymentsForRepurchaseOfOtherEquity|c:RepurchaseOfEquityAwards|us-gaap:PaymentsForProceedsFromHedgeFinancingActivities,exclude,share_buybacks,1312,1803,18,equity-award withholding / treasury lock settlement
