@@ -230,3 +230,13 @@ Guard: when a label would demote a line, check it against the calc position and 
 6. **Bank capex** "Purchases of premises and equipment, net", net of disposals → combined, as before (DEMOTE net of proceeds).
 7. **Capex perimeter** (doc 02 line 119) includes turnarounds (PBF: key and prediction both wrong) and purchased real property used in operations (GKOS second line).
 8. **total_debt** includes finance leases disclosed in the notes (RL).
+
+## AF. Machine docmap errors caught by hand checks, ranks 101-110 (relayed 2026-11-13; fixes proposed in data-team/tags/decisions/NOTES-TAG-EXPERT-reads-101-110-2026-11-12.md on work/ritwik-cloud/tag-decisions-2026-11-11 @26564cdf)
+
+The predictor (v7 engine, rules as of ee1a40ec) already gets each case right. The errors live in the docmap tool:
+- **PLD dividends.** "Dividends on common and preferred stock/units" is combined, not mapped (PaymentsOfDividends covers preferred stock and OP units).
+- **PLD debt.** Count debt once. The co-registrant (Prologis LP) repeats the parent's debt: 70,074M is the double count, 35,037M is right. A fact with coreg ≠ '' is never consolidated (the same as the note-only rule in AE.2).
+- **MCK and SYK D&A.** The CF D&A is the sum of Depreciation and AdjustmentForAmortization.
+- **MCK and PSX notes.** Values from VIE notes (total liabilities, AR) belong to the VIE, not the company. Take note values only from undimensioned, consolidated facts (AE.2). exam/tools/NOTES.sql enforces this with dim_id=0 and coreg=''.
+- **PSX.** The face line "Interest and debt expense" is InterestAndDebtExpense, which maps to interest_expense.
+- **PLD capex.** A REIT's capex lines (development, acquisitions of real estate) need a perimeter check. The predictor keys PaymentsToDevelopRealEstateAssets as combined. Pending Dhairya's capex perimeter (doc 02 line 119) for REITs.
