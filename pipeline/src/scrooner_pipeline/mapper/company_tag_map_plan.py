@@ -177,9 +177,24 @@ def _report(
         )
         blank_rows = cur.fetchall()
     blank_keys = {(n, g, e) for n, g, e, _, _ in blank_rows}
+    with conn.cursor() as cur:
+        cur.execute(
+            """select c.name from analytics.company_tag_map m
+               join analytics.canonical_concept c on c.id in (m.canonical_concept_id, m.parent_concept_id)
+               where m.company_id = %s""",
+            (cid,),
+        )
+        in_map = {r[0] for r in cur.fetchall()}
+        cur.execute(
+            "select components from analytics.company_tag_map where company_id = %s and components is not null",
+            (cid,),
+        )
+        for (comps,) in cur.fetchall():
+            in_map.update(comps)
     reasons = Counter(f"{state}:{code}" for _, _, _, state, code in blank_rows)
     template_cells = valued_n = blank_n = 0
     neither: Counter = Counter()
+    neither_in_map: Counter = Counter()
     metric_points = []
     for dp in sorted(template):
         cands = [n for n in _candidates(dp) if n in names]
@@ -200,12 +215,16 @@ def _report(
                 blank_n += 1
             else:
                 neither[dp] += 1
+                if any(n in in_map for n in cands):
+                    neither_in_map[dp] += 1
     return {
         "template_cells": template_cells,
         "valued": valued_n,
         "reasoned_blank": blank_n,
         "blank_reasons": dict(reasons),
         "neither": sum(neither.values()),
+        "neither_in_map_scope": sum(neither_in_map.values()),
+        "neither_in_map_scope_by_data_point": dict(neither_in_map.most_common(15)),
         "neither_by_data_point": dict(neither.most_common(15)),
         "combined_lines": len(stats["combined_lines"]),
         "holds": dict(Counter(h["reason"] for h in stats["held"])),
@@ -229,6 +248,8 @@ def run(
     for cid in company_ids:
         try:
             with conn.transaction():
+                # first statement of the transaction: one snapshot, a concurrent re-seed cannot split it
+                conn.execute("set transaction isolation level repeatable read")
                 cik = conn.execute(
                     "select cik from core.company where id = %s", (cid,)
                 ).fetchone()[0]

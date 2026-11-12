@@ -252,8 +252,8 @@ def tagmap_plan_cmd(
             continue
         typer.echo(
             f"  {cid}: template {r['template_cells']} valued {r['valued']} blank {r['reasoned_blank']} "
-            f"NEITHER {r['neither']} combined_lines {r['combined_lines']} holds {r['holds']} "
-            f"conflicts {r['conflict_cells']} protected {r['protected_keys']} blanks {r['blank_reasons']}"
+            f"NEITHER {r['neither']} (in tag-map scope {r['neither_in_map_scope']}) combined_lines {r['combined_lines']} holds {r['holds']} "
+            f"conflicts {r['conflict_cells']} protected {r['protected_keys']} blanks {r['blank_reasons']} neither_top {dict(list(r['neither_by_data_point'].items())[:6])}"
         )
     bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
     if bad:
