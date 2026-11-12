@@ -245,7 +245,9 @@ DP: list[tuple[str, tuple[str, ...], tuple[str, ...]]] = [
             "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
         ),
     ),
-    ("shares_outstanding", ("COVER",), ("EntityCommonStockSharesOutstanding",)),
+    # Dhairya ruling 2026-11-12: CommonStockSharesOutstanding (or its class sum) at the balance-sheet date; the dei
+    # cover count is never used; no BS-date count printed -> not_presented
+    ("shares_outstanding", ("BS", "PAR_BS"), ("CommonStockSharesOutstanding",)),
     (
         "cfo",
         ("CF",),
@@ -362,8 +364,12 @@ BANK_DP: list[tuple[str, tuple[str, ...], tuple[str, ...]]] = [
 COMBINED = {
     "AccountsPayableAndAccruedLiabilitiesCurrent",
     "IncreaseDecreaseInAccountsPayableAndAccruedLiabilities",
-    "AccountsAndOtherReceivablesNetCurrent",
 }
+# Dhairya ruling 2026-11-12: a wider receivables tag maps to AR only when the BS face prints it as the single
+# receivables line (the R page is cited)
+WIDER_AR = {"ReceivablesNetCurrent", "AccountsAndOtherReceivablesNetCurrent"}
+# Dhairya ruling 2026-11-12, docmap status vocabulary
+STATUSES = ("mapped", "combined", "component sum", "component_in_note", "not_presented", "OUT")
 NET_INCL_NCI = {
     "ProfitLoss",
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
@@ -570,11 +576,11 @@ def statements(base: str) -> dict[str, tuple[str, str]]:
     return out
 
 
-def read_filing(cik: str, acc: str) -> dict:
+def read_filing(cik: str, acc: str, kinds: tuple[str, ...] = ("IS", "CI", "BS", "PAR_BS", "CF", "PAR", "EQ", "COVER")) -> dict:
     base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{acc.replace('-', '')}"
     st = statements(base)
     pages = {}
-    for kind in ("IS", "CI", "BS", "CF", "PAR", "EQ", "COVER"):
+    for kind in kinds:
         if kind in st and st[kind][0] not in [p["file"] for p in pages.values()]:
             p = parse_r(get(base + "/" + st[kind][0]))
             p["file"], p["name"] = st[kind]
@@ -614,48 +620,6 @@ def api_value(
     return None
 
 
-def fy_years(facts: dict, tag: str, unit: str, last: int = 5) -> list[str]:
-    ends = set()
-    for prefix in ("us-gaap",):
-        for u, entries in facts.get(prefix, {}).get(tag, {}).get("units", {}).items():
-            if u != unit:
-                continue
-            for e in entries:
-                if (
-                    e.get("form", "").startswith("10-K")
-                    and e.get("fp") == "FY"
-                    and e.get("start")
-                ):
-                    d = (
-                        date.fromisoformat(e["end"]) - date.fromisoformat(e["start"])
-                    ).days
-                    if 330 <= d <= 400:
-                        ends.add(e["end"])
-                elif (
-                    e.get("form", "").startswith("10-K")
-                    and e.get("fp") == "FY"
-                    and not e.get("start")
-                ):
-                    ends.add(e["end"])
-    return sorted(ends)[-last:]
-
-
-def latest_10k_with(facts: dict, tag: str, unit: str, fy_end: str) -> str | None:
-    accs = []
-    for u, entries in facts.get("us-gaap", {}).get(tag, {}).get("units", {}).items():
-        if u != unit:
-            continue
-        accs += [
-            (e.get("filed", ""), e["accn"])
-            for e in entries
-            if e.get("end") == fy_end
-            and e.get("form", "").startswith("10-K")
-            and e.get("fp") == "FY"
-        ]
-    return max(accs)[1] if accs else None
-
-
-# --------------------------------------------------------------------------- mapping
 def unit_of(dp: str) -> str:
     return UNITS.get(dp, "USD")
 
@@ -685,9 +649,112 @@ def find_row(pages: dict, kinds, tags) -> tuple[str, tuple] | None:
     return None
 
 
-def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
+OPEX_TOTALS = ("OperatingExpenses", "OperatingCostsAndExpenses")
+NOT_COMPONENTS = {"OperatingExpenses", "OperatingCostsAndExpenses", "CostsAndExpenses", "GrossProfit",
+                  "OperatingIncomeLoss"}
+ONE_STEP_TOTALS = ("OperatingExpenses", "CostsAndExpenses", "OperatingCostsAndExpenses", "NoninterestExpense",
+                   "BenefitsLossesAndExpenses")
+
+
+def _blank(dp: str) -> dict:
+    return {"data_point": dp, "status": "not_presented", "tags": "", "stmt": "", "r_page": "", "label": "",
+            "fy0_printed": "", "fy0_api": "", "fy1_printed": "", "fy1_api": "", "match": "", "note": "",
+            "era_from_note": "", "fy0_end": "", "era_tags": []}
+
+
+def opex_rec(pages: dict, facts: dict, acc: str, tpl_in: set[str]) -> dict:
+    """Dhairya ruling 2026-11-12: operating_expenses never includes cost of revenue.
+    1. a printed total opex line that excludes COGS (it equals GP - OI, or revenue - COR - OI) -> mapped;
+    2. else the component sum of EVERY face line between gross profit (or cost of revenue) and operating income, tied
+       exactly to GP - OI -> component sum;
+    3. CostsAndExpenses (or a total) that includes COGS -> combined, never opex;
+    4. a one-step IS with no COGS line: the sector template decides (cost of revenue OUT of the template -> the total
+       expense line is opex; cost of revenue IN -> combined)."""
+    rec = _blank("operating_expenses")
+    p = pages.get("IS")
+    if not p:
+        rec["note"] = "no income statement read"
+        return rec
+    rows, cols = p["rows"], fy_columns(p, "IS")
+    rec.update(stmt="IS", r_page=p["file"])
+    if cols:
+        rec["fy0_end"] = p["dates"][cols[0]].isoformat() if cols[0] < len(p["dates"]) and p["dates"][cols[0]] else ""
+
+    def idx(tags) -> int | None:
+        return next((i for i, r in enumerate(rows) if r[2] in tags and any(v is not None for v in r[3])), None)
+
+    def val(i: int, j: int) -> float | None:
+        return scaled(p, rows[i], cols[j], "operating_expenses") if j < len(cols) else None
+
+    def apiv(i: int, j: int) -> float | None:
+        if j >= len(cols) or rows[i][1] not in ("us-gaap",):
+            return None
+        end = p["dates"][cols[j]] if cols[j] < len(p["dates"]) else None
+        return api_value(facts, rows[i][2], "USD", acc, end, True)
+
+    cor_tags = next(t for d, _k, t in DP if d == "cost_of_revenue")
+    rev_tags = next(t for d, _k, t in DP if d == "revenue")
+    i_rev, i_cor, i_gp, i_oi = idx(rev_tags), idx(cor_tags), idx(("GrossProfit",)), idx(("OperatingIncomeLoss",))
+    target: list[float | None] = []
+    for j in range(min(2, len(cols))):
+        if i_gp is not None and i_oi is not None and val(i_gp, j) is not None and val(i_oi, j) is not None:
+            target.append(val(i_gp, j) - val(i_oi, j))
+        elif None not in (i_rev, i_cor, i_oi) and None not in (val(i_rev, j), val(i_cor, j), val(i_oi, j)):
+            target.append(val(i_rev, j) - val(i_cor, j) - val(i_oi, j))
+        else:
+            target.append(None)
+
+    def eq(a: float | None, b: float | None) -> bool:
+        return a is not None and b is not None and abs(a - b) < 1e-6 * max(1.0, abs(b))
+
+    def fill(idxs: list[int], status: str, note: str) -> dict:
+        for j, key in ((0, "fy0"), (1, "fy1")):
+            pv = [val(i, j) for i in idxs]
+            av = [apiv(i, j) for i in idxs]
+            rec[f"{key}_printed"] = _fmt(sum(pv)) if pv and None not in pv else ""
+            rec[f"{key}_api"] = _fmt(sum(av)) if av and None not in av else ""
+        rec.update(status=status, tags="+".join(f"{rows[i][1]}:{rows[i][2]}" for i in idxs),
+                   label=" + ".join(rows[i][0] for i in idxs)[:160], note=note)
+        rec["match"] = _match(rec)
+        return rec
+
+    i_tot = idx(OPEX_TOTALS)
+    if i_tot is not None and target and eq(val(i_tot, 0), target[0]):
+        return fill([i_tot], "mapped", f"printed total excludes cost of revenue (= {'GP' if i_gp is not None else 'revenue - COR'} - OI)")
+    start = i_gp if i_gp is not None else i_cor
+    if start is not None and i_oi is not None and start < i_oi and target and target[0] is not None:
+        comps = [i for i in range(start + 1, i_oi) if rows[i][2] not in NOT_COMPONENTS
+                 and not re.match(r"\s*total\b", rows[i][0], re.I) and val(i, 0) is not None]
+        if comps and all(eq(sum(val(i, j) or 0 for i in comps), target[j]) for j in range(len(target))
+                         if target[j] is not None):
+            return fill(comps, "component sum",
+                        f"every face line between {'gross profit' if i_gp is not None else 'cost of revenue'} and operating "
+                        f"income, tied exactly to {'GP' if i_gp is not None else 'revenue - COR'} - OI")
+        if comps:
+            rec["note"] = (f"the {len(comps)} face lines between {'gross profit' if i_gp is not None else 'cost of revenue'}"
+                           " and operating income do not tie to GP - OI: not mapped")
+    i_ce = idx(("CostsAndExpenses",) + OPEX_TOTALS)
+    if i_cor is not None and i_ce is not None:
+        return fill([i_ce], "combined", f"'{rows[i_ce][0]}' includes cost of revenue: combined, never opex" +
+                    (f"; {rec['note']}" if rec["note"] else ""))
+    if i_cor is None:
+        i_one = idx(ONE_STEP_TOTALS)
+        if i_one is not None:
+            if "cost_of_revenue" not in tpl_in and "cost_of_revenue_resolved" not in tpl_in:
+                return fill([i_one], "mapped", "one-step income statement; the sector template has no cost of revenue, "
+                                               "so the total expense line is opex (Dhairya ruling 2026-11-12)")
+            return fill([i_one], "combined", "one-step income statement; the sector template keeps cost of revenue, so "
+                                             "the total may include it: combined, not opex (Dhairya ruling 2026-11-12)")
+    rec["note"] = rec["note"] or f"no opex total and no tied component lines on IS {p['file']}"
+    return rec
+
+
+def map_company(pages: dict, facts: dict, acc: str, bank: bool, tpl_in: set[str] | None = None) -> list[dict]:
     out = []
     for dp, kinds, tags in DP + (BANK_DP if bank else []):
+        if dp == "operating_expenses":
+            out.append(opex_rec(pages, facts, acc, tpl_in or set()))
+            continue
         rec = {
             "data_point": dp,
             "status": "not_presented",
@@ -706,8 +773,20 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
             "era_tags": [],
         }
         hits: list[tuple[str, tuple]] = []
+        ext = label_matched = False
+        wider_note = ""
         status = "mapped"
-        if dp == "total_debt":
+        if dp == "shares_outstanding":
+            seen = set()
+            for k in kinds:
+                p = pages.get(k)
+                if p and p["file"] not in seen:
+                    seen.add(p["file"])
+                    hits += [(k, r) for r in p["rows"] if r[2] == "CommonStockSharesOutstanding"
+                             and any(v is not None for v in r[3])]
+            if len(hits) > 1:
+                status = "component sum"  # share classes
+        elif dp == "total_debt":
             for k in kinds:
                 p = pages.get(k)
                 if p:
@@ -734,10 +813,21 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
                             and re.search(LABEL_FALLBACK[dp], row[0], re.I)
                             and any(v is not None for v in row[3])
                         ):
-                            hits, status = [(k, row)], "custom (label-matched)"
+                            hits, label_matched = [(k, row)], True
                             break
                     if hits:
                         break
+        if dp == "accounts_receivable" and hits and hits[0][1][2] in WIDER_AR:
+            k, row = hits[0]
+            recv = [r[0] for r in pages[k]["rows"] if re.search(r"receivable", r[0], re.I)
+                    and any(v is not None for v in r[3])]
+            if len(recv) == 1:
+                wider_note = (f"wider tag {row[2]} is the single receivables line on the BS face ({pages[k]['file']}): "
+                              "mapped as AR (Dhairya ruling 2026-11-12)")
+            else:
+                wider_note = (f"wider tag {row[2]} is not the single receivables line on the BS face "
+                              f"({pages[k]['file']} prints {len(recv)}: {'; '.join(recv)[:120]}): not mapped as AR")
+                hits = []
         if not hits:
             present = [k for k in kinds if k in pages]
             rec["stmt"] = "+".join(present)
@@ -746,6 +836,10 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
                 ", ".join(f"{k} {pages[k]['file']}" for k in present)
                 or "any statement read"
             )
+            if wider_note:
+                rec["note"] = wider_note
+            if dp == "shares_outstanding":
+                rec["note"] += "; no balance-sheet-date CommonStockSharesOutstanding printed (the dei cover count is never used)"
             out.append(rec)
             continue
         k0, row0 = hits[0]
@@ -794,7 +888,7 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
         if status == "mapped" and row0[2] in COMBINED:
             status = "combined"
         if status == "mapped" and row0[1] not in ("us-gaap", "dei", "srt"):
-            status = "custom"
+            ext = True  # an extension tag: status stays mapped (vocabulary ruling), the note says so
         rec.update(
             status=status,
             tags="+".join(f"{r[1]}:{r[2]}" for _k, r in hits),
@@ -847,8 +941,10 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
             notes.append(f"{row0[2]} includes noncontrolling interest")
         if status == "combined":
             notes.append(f"'{row0[0]}' is a combined line")
-        if status.startswith("custom"):
-            notes.append("extension tag: companyfacts carries no extension facts")
+        if ext or label_matched:
+            notes.append(("label-matched " if label_matched else "") + "extension tag: companyfacts carries no extension facts")
+        if wider_note:
+            notes.append(wider_note)
         if dp == "operating_expenses" and row0[2] == "CostsAndExpenses":
             notes.append(
                 "CostsAndExpenses total includes cost of revenue: opex = the total less the cost-of-revenue line"
@@ -858,26 +954,6 @@ def map_company(pages: dict, facts: dict, acc: str, bank: bool) -> list[dict]:
         if dp == "interest_expense" and re.search(r",\s*net\b", row0[0], re.I):
             notes.append("', net' label: a net perimeter (Tag Expert 2026-11-11)")
         rec["note"] = "; ".join(notes)
-        # era check: other candidate tags carrying FY values in the last 5 FY
-        if status == "mapped" and tags:
-            chosen = fy_years(facts, row0[2], unit)
-            others = {t: fy_years(facts, t, unit) for t in tags if t != row0[2]}
-            others = {t: [y for y in ys if y not in chosen] for t, ys in others.items()}
-            others = {t: ys for t, ys in others.items() if ys}
-            if others:
-                rec["era_from_note"] = (
-                    f"ERA-CHECK: chosen tag {chosen[:1] + chosen[-1:]} ; others in 5y: "
-                    + "; ".join(
-                        f"{t}: {ys[0]}..{ys[-1]}({len(ys)})" for t, ys in others.items()
-                    )
-                )
-                rec["era_tags"] = [(t, ys[-1]) for t, ys in others.items()]
-            else:
-                rec["era_from_note"] = (
-                    "tag covers last 5 FY in companyfacts"
-                    if len(chosen) >= 5
-                    else f"tag FY coverage in companyfacts: {len(chosen)}"
-                )
         out.append(rec)
     return out
 
@@ -919,6 +995,7 @@ def template_of(
         from scrooner_pipeline.mapper import sector_templates as st  # noqa: PLC0415
 
         rows = st.build_plan(st.parse_templates(seed_text), st.load_cohort(cohort_file))
+        _TPL["all"] = {r.data_point for r in rows}
         by_cik: dict[str, tuple[str, set[str]]] = {}
         ciks = {c.company_id: c.cik for c in st.load_cohort(cohort_file)}
         for r in rows:
@@ -995,6 +1072,11 @@ def write(
     ]
     for e in era_reads:
         lines.append(f"- Era 10-K {e['acc']} (FY {e['fy']}): {e['summary']}")
+    lines.append(
+        "- Era coverage FY2015 (or first 10-K) to latest: "
+        + ("**complete** for every printed data point." if meta["eras_complete"]
+           else f"**GAP** on {meta['era_gaps']} data point(s); this docmap cannot be loaded until closed.")
+    )
     lines += [
         "",
         f"Sector template: **{meta['template'] or 'not in the seed cohort'}**. "
@@ -1035,7 +1117,7 @@ def quirks(
                     loc,
                 )
             )
-        if r["status"].startswith("custom"):
+        if "extension tag" in r["note"]:
             out.append(
                 (
                     tag,
@@ -1064,19 +1146,160 @@ def quirks(
                     loc,
                 )
             )
-    for e in era_reads:
-        out.append(
-            (
-                e["tag"],
-                f"{ticker} {e['data_point']}: tag changed across eras; era 10-K FY {e['fy']} prints "
-                f"'{e['label'][:60]}' on {e['tag']} (latest 10-K: {e['latest_tag']})",
-                f"{ticker} {e['acc']} {e['page']}",
+    for r in recs:
+        runs = r.get("era_runs") or []
+        tagged = [(a, b, t) for a, b, t in runs if t]
+        if len({t for _a, _b, t in tagged}) > 1:
+            out.append(
+                (
+                    tagged[0][2],
+                    f"{ticker} {r['data_point']}: tag changed across eras: "
+                    + "; ".join(f"FY{a}-{b} {t}" for a, b, t in tagged),
+                    f"{ticker} {meta['acc']} {r['r_page']}",
+                )
             )
-        )
     return [
         f"| {day} | certification lead (docmap 601-700) | {t or '-'} | {w} | {l} | FILING-CHECKED | new |"
         for t, w, l in out
     ]
+
+
+ERA_KINDS = ("IS", "PAR", "BS", "PAR_BS", "CF", "EQ")
+MAX_ERA_FILINGS = 5
+FIRST_YEAR = 2015
+
+
+def tenk_by_year(facts: dict) -> dict[int, str]:
+    """Fiscal-year-end year -> the original 10-K accession reporting that year as its current period: the earliest-filed
+    10-K FY fact ending in that year (a later 10-K only re-prints it as a comparative)."""
+    best: dict[int, tuple[str, str]] = {}
+    for ns in facts.values():
+        for t in ns.values():
+            for es in t.get("units", {}).values():
+                for e in es:
+                    if e.get("form") not in ("10-K", "10-KT") or e.get("fp") != "FY":
+                        continue
+                    if e.get("start"):
+                        d = (date.fromisoformat(e["end"]) - date.fromisoformat(e["start"])).days
+                        if not 330 <= d <= 400:
+                            continue
+                    y = int(e["end"][:4])
+                    if e.get("fy") and int(e["fy"]) != y and abs(int(e["fy"]) - y) > 1:
+                        continue
+                    cand = (e.get("filed", ""), e["accn"])
+                    if y not in best or cand < best[y]:
+                        best[y] = cand
+    return {y: a for y, (_f, a) in best.items()}
+
+
+def years_by_tag(facts: dict, tag: str, unit: str) -> set[int]:
+    out = set()
+    for u, es in facts.get("us-gaap", {}).get(tag, {}).get("units", {}).items():
+        if u != unit:
+            continue
+        for e in es:
+            if e.get("form") in ("10-K", "10-KT") and e.get("fp") == "FY":
+                if e.get("start"):
+                    d = (date.fromisoformat(e["end"]) - date.fromisoformat(e["start"])).days
+                    if not 330 <= d <= 400:
+                        continue
+                out.add(int(e["end"][:4]))
+    return out
+
+
+def printed_tag(pages: dict, dp: str) -> tuple[str, str, str] | None:
+    """(tag, label, R file) of the face line of a data point in one filing: candidate tags first, then the label rule."""
+    kinds, tags = next((k, t) for d, k, t in DP + BANK_DP if d == dp)
+    h = find_row(pages, kinds, tags) if tags else None
+    if h is None and dp in LABEL_FALLBACK:
+        for k in kinds:
+            for row in (pages.get(k) or {}).get("rows", []):
+                if re.search(LABEL_FALLBACK[dp], row[0], re.I) and any(v is not None for v in row[3]):
+                    h = (k, row)
+                    break
+            if h:
+                break
+    if h is None:
+        return None
+    k, row = h
+    return f"{row[1]}:{row[2]}", row[0], pages[k]["file"]
+
+
+def era_coverage(cik: str, facts: dict, recs: list[dict], acc: str, fy0: str) -> tuple[list[dict], bool, int]:
+    """Read the FY2015 10-K (or the first 10-K after 2015) and the latest 10-K of every earlier tag era, at most
+    MAX_ERA_FILINGS; give every printed data point an era line covering FY2015 (or the first year) to the latest year.
+    A year is covered when companyfacts carries a candidate tag for it, or when an era 10-K read in its run prints the
+    line (a custom tag there is assumed for the whole run, and the note says so)."""
+    by_year = tenk_by_year(facts)
+    last = int(fy0[:4]) if fy0 else max(by_year, default=FIRST_YEAR)
+    years = [y for y in range(FIRST_YEAR, last + 1) if y in by_year] or [last]
+    first = years[0]
+    plans: dict[str, list[tuple[int, int, str | None]]] = {}
+    wanted: dict[int, str] = {first: by_year.get(first, "")}
+    for x in recs:
+        if x["status"] in ("not_presented", "OUT") or not x["tags"]:
+            continue
+        kinds_tags = next((t for d, _k, t in DP + BANK_DP if d == x["data_point"]), ())
+        chosen = x["tags"].split("+")[0].split(":")[-1]
+        cands = [chosen] + [t for t in kinds_tags if t != chosen]
+        unit = unit_of(x["data_point"])
+        ys = {t: years_by_tag(facts, t, unit) for t in cands}
+        runs: list[tuple[int, int, str | None]] = []
+        for y in years:
+            t = next((t for t in cands if y in ys[t]), None)
+            if runs and runs[-1][2] == t and runs[-1][1] == years[years.index(y) - 1]:
+                runs[-1] = (runs[-1][0], y, t)
+            else:
+                runs.append((y, y, t))
+        plans[x["data_point"]] = runs
+        for a, b, t in runs[:-1]:  # every run but the latest one gets a read of its last year
+            if b in by_year:
+                wanted.setdefault(b, by_year[b])
+    reads: dict[int, dict] = {}
+    era_reads: list[dict] = []
+    for y in sorted(wanted)[:MAX_ERA_FILINGS]:
+        a = wanted[y]
+        if not a or a == acc:
+            continue
+        try:
+            reads[y] = read_filing(cik, a, ERA_KINDS)
+            era_reads.append({"acc": a, "fy": str(y), "summary": "read (IS, IS parenthetical, BS, BS parenthetical, CF, equity)"})
+        except Exception as exc:  # noqa: BLE001
+            era_reads.append({"acc": a, "fy": str(y), "summary": f"read failed: {exc!r}"[:120]})
+    complete, gaps = True, 0
+    for x in recs:
+        runs = plans.get(x["data_point"])
+        if not runs:
+            continue
+        parts, uncovered = [], []
+        for a, b, t in runs:
+            seen = None
+            for y in range(a, b + 1):
+                if y in reads:
+                    seen = printed_tag(reads[y], x["data_point"])
+                    if seen:
+                        x.setdefault("era_seen", []).append((y, by_year.get(y, ""), seen))
+                        break
+            if t is None and seen is None:
+                uncovered.append(f"{a}-{b}" if a != b else str(a))
+                parts.append(f"FY{a}-{b} UNKNOWN")
+            else:
+                tag = t or seen[0].split(":")[-1]
+                src = f" (era 10-K {by_year.get(y)} {seen[2]}: '{seen[1][:40]}')" if seen else ""
+                assumed = (
+                    ""
+                    if t is not None
+                    else " [custom tag assumed for the run]"
+                    if not seen[0].startswith("us-gaap")
+                    else " [printed tag assumed for the run; companyfacts has no FY value for it there]"
+                )
+                parts.append(f"FY{a}-{b} {tag}{src}{assumed}")
+        if uncovered:
+            complete, gaps = False, gaps + 1
+        x["era_from_note"] = ("ERA FY{}..FY{} {}: ".format(first, last, "covered" if not uncovered else "GAP " + ",".join(uncovered))
+                              + "; ".join(parts))
+        x["era_runs"] = runs
+    return era_reads, complete, gaps
 
 
 def read_company(
@@ -1105,53 +1328,17 @@ def read_company(
     pages = read_filing(cik, acc)
     template, tpl_in = template_of(seed_text, cohort_file, cik, sys_path)
     bank = template in ("bank", "lender") or 6020 <= sic <= 6036
-    recs = map_company(pages, facts, acc, bank)
+    recs = map_company(pages, facts, acc, bank, tpl_in)
     fy0 = next((x["fy0_end"] for x in recs if x["fy0_end"]), "")
-    # era reads: one 10-K per distinct other-tag era (latest FY of the other tag), at most 2
-    era_targets: dict[str, list[tuple[dict, str]]] = {}
+    # era reads (Dhairya 2026-11-12): every data point's eras must cover FY2015 to the latest year
+    era_reads, eras_complete, era_gaps = era_coverage(cik, facts, recs, acc, fy0)
+    # OUT (vocabulary ruling 2026-11-12): a data point the filing does not print that is out of the company's template
     for x in recs:
-        for t, fy in x["era_tags"]:
-            a = latest_10k_with(facts, t, unit_of(x["data_point"]), fy)
-            if a and a != acc:
-                era_targets.setdefault(a, []).append((x, t))
-    era_reads = []
-    for a, items in sorted(era_targets.items(), reverse=True)[:2]:
-        try:
-            ep = read_filing(cik, a)
-        except Exception as exc:  # noqa: BLE001
-            era_reads.append(
-                {
-                    "acc": a,
-                    "fy": "",
-                    "summary": f"read failed: {exc!r}"[:120],
-                    "data_point": "",
-                    "tag": "",
-                    "label": "",
-                    "page": "",
-                    "latest_tag": "",
-                }
-            )
-            continue
-        for x, t in items:
-            dp_kinds = next(k for d, k, _ in DP + BANK_DP if d == x["data_point"])
-            h = find_row(ep, dp_kinds, (t,))
-            if h:
-                k, row = h
-                era_reads.append(
-                    {
-                        "acc": a,
-                        "fy": ep[k]["dates"][0].isoformat() if ep[k]["dates"] else "",
-                        "summary": f"{x['data_point']} printed as '{row[0][:50]}' on {t} ({ep[k]['file']})",
-                        "data_point": x["data_point"],
-                        "tag": t,
-                        "label": row[0],
-                        "page": ep[k]["file"],
-                        "latest_tag": x["tags"],
-                    }
-                )
-                x["note"] = (
-                    x["note"] + "; " if x["note"] else ""
-                ) + f"era 10-K {a} prints it on {t} ({ep[k]['file']})"
+        dp = x["data_point"]
+        known = {dp, f"{dp}_resolved"} & _TPL.get("all", set())
+        if x["status"] == "not_presented" and known and not (known & tpl_in) and template:
+            x["status"] = "OUT"
+            x["note"] = f"OUT of the {template} template; " + x["note"]
     tpl_missing = []
     names = {x["data_point"] for x in recs if x["status"] == "not_presented"}
     for dp in sorted(names):
@@ -1165,6 +1352,8 @@ def read_company(
         "pages": pages,
         "template": template,
         "tpl_missing": tpl_missing,
+        "eras_complete": eras_complete,
+        "era_gaps": era_gaps,
     }
     write(out_dir, day, ticker, meta, recs, era_reads)
     return {
@@ -1216,6 +1405,8 @@ def main() -> None:
                     for m in {x["match"] for x in res["recs"]}
                 },
                 "era_reads": len(res["era"]),
+                "eras_complete": res["meta"]["eras_complete"],
+                "era_gaps": res["meta"]["era_gaps"],
                 "quirks": len(res["quirks"]),
                 "template": res["meta"]["template"],
                 "template_missing": len(res["meta"]["tpl_missing"]),
