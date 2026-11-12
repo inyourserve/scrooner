@@ -158,7 +158,18 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 start = gpl or corl
                 band = [l for l in IS_ if l['r'] == oil['r'] and start is not None and l['r'] == start['r'] and start['ln'] < l['ln'] < oil['ln']
                         and l['val'] is not None and l['tag'] not in PO['band_exclude'] and not l['tag'].endswith('Abstract')]
-                if band and near(sum((-fv(l) if l.get('cr') == 'C' else fv(l)) for l in band), gp - oi):
+                def dtol(ls):
+                    # Dhairya 2026-11-13 (TMO): tie within half the printed unit x number of printed components (from each line's dcml)
+                    t = 0.0
+                    for l in ls:
+                        try: d = int(l.get('dc') or 0)
+                        except (TypeError, ValueError): d = 0
+                        if -20 < d <= 0: t += 0.5 * 10 ** (-d)
+                    return t * PO.get('dcml_tolerance_factor', 1)
+                anchors = [x for x in (gpl or corl, oil) if x is not None]
+                bsum = sum((-fv(l) if l.get('cr') == 'C' else fv(l)) for l in band) if band else None
+                tie_ok = band and (abs(bsum - (gp - oi)) <= dtol(band + anchors) if PO.get('dcml_tolerance') else near(bsum, gp - oi))
+                if tie_ok:
                     status, chosen, rule = 'component_sum', band, 'every face line between GP/COR and OI; ties to GP - OI'
                 elif incl:
                     status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue: combined, never opex'
