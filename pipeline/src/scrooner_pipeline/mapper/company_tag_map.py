@@ -61,6 +61,9 @@ FAMILY = "company_tag_map"
 # the income or equity statement although the concept row says cash_flow (DPS-EQUITY-STATEMENT proposal).
 STATEMENT_CODE = {"income_statement": "IS", "balance_sheet": "BS", "cash_flow": "CF"}
 EXTRA_STMT = {
+    # bank cash: where the BS splits cash, cash = the cash-flow statement's printed ending-cash line (a concept row)
+    "cash_and_equivalents": {"CF"},
+    "cash_and_equivalents_resolved": {"CF"},
     "dividends_per_share": {"IS", "EQ"},
     "dividends_per_share_resolved": {"IS", "EQ"},
 }
@@ -488,6 +491,11 @@ def build_cells(
                     "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
                 }
             )
+            continue
+        pname, pstmt = concept_info[key[0]]
+        if pstmt == "balance_sheet" and _base(pname) != "total_debt":
+            # D3 / doc 02: instants are never derived; the only instant component sum is total debt
+            hold(key, "instant_component_sum_not_allowed")
             continue
         reason = _check_components(c, arcs)
         if reason:
