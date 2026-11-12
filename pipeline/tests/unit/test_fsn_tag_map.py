@@ -252,3 +252,36 @@ def test_guards_run_inside_the_filing_pass(monkeypatch):
     monkeypatch.setattr(tm, "_arcs", lambda conn, fid: {})
     (rec,) = tm.filing_decisions(None, 1, {"positional": []}, [], {})
     assert rec["disposition"] == "combined" and rec["decided_by"] == "guard"
+
+
+def test_sums_rule_instant_components_are_never_summable_except_debt():
+    """Dhairya 2026-11-12 (fsn-line-to-concept.md sec. Q): a balance-sheet component row would invite a summed
+    total; it is emitted as excluded unless the parent is total_debt (durations keep their components)"""
+    liab = _rec("BS", "AccruedLiabilitiesCurrent", "Accrued liabilities", "combined", "total_liabilities_resolved")
+    debt = _rec("BS", "CommercialPaper", "Commercial paper", "combined", "total_debt_resolved")
+    opex = _rec("IS", "SellingGeneralAndAdministrativeExpense", "SG&A", "combined", "operating_income_resolved")
+    for r in (liab, debt, opex):
+        r["combine_role"] = "component_of"
+        r["sign"] = 1
+    tag_map.apply_guards([liab, debt, opex])
+    assert liab["disposition"] == "excluded" and "never summed" in liab["reason"]
+    assert debt["disposition"] == "combined" and opex["disposition"] == "combined"
+
+
+def test_bank_cash_split_across_bs_lines_takes_the_cf_ending_cash_line():
+    """JPM: cash and due from banks plus deposits with banks, no single cash line on the balance sheet; the
+    cash-flow statement's printed ending cash line is the cash fact"""
+    out = [
+        _rec("BS", "CashAndDueFromBanks", "Cash and due from banks", "mapped", "us-gaap:CashAndDueFromBanks"),
+        _rec("BS", "InterestBearingDepositsInBanks", "Deposits with banks", "mapped", "us-gaap:InterestBearingDepositsInBanks"),
+        _rec("CF", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "Cash and due from banks and deposits with banks at end", "excluded", None),
+    ]
+    tag_map.apply_guards(out)
+    assert out[2]["disposition"] == "mapped" and out[2]["concept"] == "cash_and_equivalents_resolved"
+    # a balance sheet that prints its cash line keeps it; the CF identity line stays excluded
+    out2 = [
+        _rec("BS", "CashAndCashEquivalentsAtCarryingValue", "Cash", "mapped", "cash_and_equivalents_resolved"),
+        _rec("CF", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "Cash at end", "excluded", None),
+    ]
+    tag_map.apply_guards(out2)
+    assert out2[1]["disposition"] == "excluded"

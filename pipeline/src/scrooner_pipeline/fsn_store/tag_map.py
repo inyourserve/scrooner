@@ -483,6 +483,56 @@ def _guard(
     )
 
 
+# Sums rule (Dhairya 2026-11-12, fsn-line-to-concept.md sec. Q): printed face lines may be SUMMED for durations only;
+# an instant is never summed except total_debt (founder definition). A balance-sheet component row would invite a sum,
+# so it is emitted as excluded (the parent concept named in the reason): total liabilities, inventory, current assets
+# with no printed total stay not_presented. Bank cash split across BS lines (JPM): the cash-flow statement's printed
+# ending-cash line is the cash fact.
+SUMMABLE_INSTANT = {"total_debt_resolved"}
+CF_ENDING_CASH_TAGS = (
+    "CashAndCashEquivalentsAtCarryingValue",
+    "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+)
+CASH = "cash_and_equivalents_resolved"
+
+
+def _sums_rule(out: list[dict[str, Any]], face: list[dict[str, Any]]) -> None:
+    for rec in out:
+        if (
+            rec["stmt"] == "BS"
+            and rec["disposition"] == "combined"
+            and rec["combine_role"] == "component_of"
+            and rec["concept"] not in SUMMABLE_INSTANT
+        ):
+            _guard(
+                rec,
+                "excluded",
+                f"instant component of {rec['concept'] or 'a total with no catalog concept'}: never summed (sums rule)",
+            )
+    if any(
+        r["stmt"] == "BS" and r["disposition"] == "mapped" and r["concept"] == CASH
+        for r in face
+    ):
+        return
+    if not any(r["stmt"] == "BS" for r in face):
+        return
+    for tag in (
+        CF_ENDING_CASH_TAGS
+    ):  # the plain cash line first, else the total including restricted cash
+        ending = [
+            r for r in face if r["stmt"] == "CF" and r["tag"] == tag and not r["custom"]
+        ]
+        if ending:
+            for r in ending:
+                _guard(
+                    r,
+                    "mapped",
+                    "cash split across balance-sheet lines: the cash-flow ending-cash line",
+                    CASH,
+                )
+            return
+
+
 def apply_guards(out: list[dict[str, Any]]) -> None:
     face = [r for r in out if not r["inpth"] and not r["abstract"]]
     bs_tags = {r["tag"] for r in face if r["stmt"] == "BS"}
@@ -550,6 +600,7 @@ def apply_guards(out: list[dict[str, Any]]) -> None:
                     "no parent equity line and no NCI line",
                     "stockholders_equity_resolved",
                 )
+    _sums_rule(out, face)
 
 
 def company_tag_map(
