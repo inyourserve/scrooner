@@ -67,6 +67,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         if l.get('val') == '': l['val'] = None
     cik = L[0]['cik'] if L else ''
     NF = None  # note facts of this filing: tag -> {qtrs: value}
+    LOC = {}  # IncomeStatementLocationAxis member facts (exam/tools/LOCATION.sql): tag -> {undim, msum, mtot, nm, dc}
     if notes_path:
         NF = {}
         for ln_ in open(notes_path):
@@ -76,6 +77,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 if '=' not in kv: continue
                 t_, rest = kv.split('=', 1); q_, v_ = rest.split(':', 1)
                 NF.setdefault(t_, {})[int(q_)] = v_
+            LOC.update(o_.get('loc') or {})
     tags = {l['tag'] for l in L}
     def det(g):
         w = KB['DETECT'][g][0]
@@ -320,6 +322,22 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         else:
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
+    PLm = KB['P'].get('notes.location_member_total')
+    if PLm and LOC:
+        # Dhairya 2026-11-13 (CSCO): an undimensioned fact that is only an income-statement-location slice (the location members
+        # sum to more) -> component_sum of the location members, value_source fsn_xbrl; a printed location total must tie (dcml tolerance)
+        for o in out:
+            for tg in PLm['tags'].get(o['data_point'], []):
+                x = LOC.get(tg)
+                if not x or x.get('msum') is None or (x.get('nm') or 0) < 2: continue
+                tol = 0.5 * 10 ** (-(x.get('dc') or 0)) * ((x.get('nm') or 0) + 1)
+                if x.get('mtot') is not None and abs(x['msum'] - x['mtot']) > tol: continue
+                if x.get('undim') is not None and x['msum'] <= x['undim'] + tol: continue
+                if x.get('undim') is None and o['status'] != 'not_presented': continue
+                o.update(status='component_sum', tags='us-gaap:' + tg + '{IncomeStatementLocation members}', stmt='NOTE', sign='+', value_source='fsn_xbrl',
+                         r_page='', label='', fy0_value='%.4f' % x['msum'], rule='sum of income-statement-location members (CSCO ruling 2026-11-13)',
+                         rule_ids='notes.location_member_total')
+                break
     if memcos and 'is.cost_of_revenue.member_only' in KB['PT']:
         # Dhairya 2026-11-13 (WYNN): cost of revenue printed only by ProductOrServiceAxis member -> component_sum of the
         # printed member facts (duration sum of printed face lines); companyfacts has no dimensioned facts -> fsn_xbrl
