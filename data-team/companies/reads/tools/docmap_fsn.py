@@ -154,7 +154,7 @@ SPEC: dict[str, tuple[list[str], list[str], list[str]]] = {
                                                                "CommonStockDividendsPerShareCashPaid"], []),
     "comprehensive_income": (["CI", "IS"], ["ComprehensiveIncomeNetOfTax"], []),
     "cash_and_equivalents": (["BS"], ["CashAndCashEquivalentsAtCarryingValue", "Cash"],
-                             ["CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "CashCashEquivalentsAndFederalFundsSold",
+                             ["CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents", "CashCashEquivalentsAndFederalFundsSold", "CashCashEquivalentsAndShortTermInvestments",
                               "CashAndCashEquivalentsAtCarryingValueIncludingDiscontinuedOperations"]),
     "accounts_receivable": (["BS"], ["AccountsReceivableNetCurrent", "AccountsReceivableNet", "AccountsReceivableGrossCurrent"], []),
     "inventory": (["BS"], ["InventoryNet", "InventoryGross", "InventoryFinishedGoodsNetOfReserves"], []),
@@ -192,7 +192,7 @@ SPEC: dict[str, tuple[list[str], list[str], list[str]]] = {
     "cf_ap_change": (["CF"], ["IncreaseDecreaseInAccountsPayable", "IncreaseDecreaseInAccountsPayableTrade"],
                      ["IncreaseDecreaseInAccountsPayableAndAccruedLiabilities",
                       "IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities"]),
-    "cash_paid_for_interest": (["CF"], ["InterestPaidNet", "InterestPaid", "InterestPaidCapitalized__never"], []),
+    "cash_paid_for_interest": (["CF"], ["InterestPaidNet"], ["InterestPaid"]),
     "cash_paid_for_income_taxes": (["CF"], ["IncomeTaxesPaidNet", "IncomeTaxesPaid"], []),
 }
 # extension-tag lines are matched only by these printed-label patterns (a label never promotes a wider us-gaap tag)
@@ -579,7 +579,7 @@ def decide(dp: str, st: dict, tmpl: str) -> dict:
                     return res
             if dp == "stockholders_equity":
                 p = [x for x in rows if x["tag"] == "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"]
-                nci = [x for x in rows if x["tag"] == "MinorityInterest"]
+                nci = [x for x in rows if x["tag"].startswith("MinorityInterest")]
                 if p and not nci:
                     res.update(status="mapped", parts=p, key=key, note="only the equity-including-NCI total printed; no NCI line on the face")
                     return res
