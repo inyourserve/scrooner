@@ -373,3 +373,17 @@ def test_two_distinct_values_for_one_tag_and_period_in_the_latest_filing_is_a_bl
     cells, stats = build_cells([row], {("us-gaap", "Revenues"): {7: amb}}, INFO, {}, {}, {7: (date(2020, 1, 1), END, "duration")})
     assert cells == [] and stats["held"][0]["reason"] == "conflicting_values_in_filing"
     assert [b["reason_code"] for b in stats["blanks"]] == ["conflicting_values_in_filing"]
+
+
+def test_open_period_rows_load_as_tagless_not_presented_rows(tmp_path):
+    from scrooner_pipeline.mapper.company_tag_map_seed import (
+        OPEN_PERIOD_REASON, OPEN_PERIOD_RULE_ID, check_overlaps, normalize, read_open_periods,
+    )
+
+    f = tmp_path / "open.csv"
+    f.write_text('company_id,stmt,concept,period,why\n9,BS,ppe_net_resolved,2020-03-31,"open, not filled"\n')
+    (raw,) = read_open_periods(f)
+    n = normalize(raw, {}, {"ppe_net_resolved": 77})
+    assert (n["decision"], n["tag"], n["taxonomy"], n["canonical_concept_id"], n["stmt"]) == ("not_presented", None, None, 77, "BS")
+    assert (n["era_from"], n["era_to"], n["reason"], n["rule_id"]) == (date(2020, 3, 31), date(2020, 3, 31), OPEN_PERIOD_REASON, OPEN_PERIOD_RULE_ID)
+    assert check_overlaps([n]) == []

@@ -81,6 +81,33 @@ def read_rows(path: Path) -> list[dict]:
     return out
 
 
+OPEN_PERIOD_RULE_ID = "tagmap.open_period@1"
+OPEN_PERIOD_REASON = "not printed in this filing"
+
+
+def read_open_periods(path: Path) -> list[dict]:
+    """open_periods_*.csv (company_id, stmt, concept, period, why): each OPEN period becomes a tagless
+    'not_presented' row (company, stmt, concept, era = that period) with the library's reason and rule."""
+    with path.open(newline="") as fh:
+        raw = list(csv.DictReader(fh))
+    return [
+        {
+            "company_id": r["company_id"],
+            "stmt": r["stmt"],
+            "decision": "not_presented",
+            "canonical_concept": r["concept"],
+            "era_from": r["period"],
+            "era_to": r["period"],
+            "reason": OPEN_PERIOD_REASON,
+            "reason_class": "open_period",
+            "rule_id": OPEN_PERIOD_RULE_ID,
+            "decided_by": "open_period",
+            "evidence_plabel": r.get("why"),
+        }
+        for r in raw
+    ]
+
+
 def _date(v):
     return v if v is None or isinstance(v, date) else date.fromisoformat(v)
 
@@ -269,6 +296,7 @@ def seed(
     path: Path,
     apply: bool = False,
     default_rule_id: str = DEFAULT_RULE_ID,
+    open_periods: Path | None = None,
 ) -> dict:
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company")
@@ -280,7 +308,10 @@ def seed(
     held_verifier = 0
     errors: list[str] = []
     warnings: list[str] = []
-    for i, raw in enumerate(read_rows(path), start=1):
+    all_rows = read_rows(path) + (
+        read_open_periods(open_periods) if open_periods else []
+    )
+    for i, raw in enumerate(all_rows, start=1):
         if held_by_verifier(raw):
             held_verifier += 1
             undecided.append(
@@ -323,7 +354,7 @@ def seed(
         "errors": errors,
         "applied": False,
     }
-    stats["winner_tag_gaps"] = winner_tag_gaps(
+    stats["winner_tag_gaps"], stats["winner_tag_gap_details"] = winner_tag_gaps(
         conn,
         [r for rs in by_company.values() for r in rs],
         {i: n for n, i in concept_by_name.items()},
@@ -344,7 +375,7 @@ def seed(
 
 def winner_tag_gaps(
     conn: psycopg.Connection, rows: list[dict], concept_names: dict[int, str]
-) -> dict:
+) -> tuple[dict, list[dict]]:
     """Read-only count of winner-tag gaps per (company, concept): periods inside a concept row's era where an
     excluded alternate tag of the same concept (reason_class alternate_tag_overlapping) has an authoritative
     core.fact but the winner tag has none. The mapper blanks these ("no fact under <tag> for this period")."""
@@ -352,6 +383,7 @@ def winner_tag_gaps(
     for r in rows:
         by_company[r["company_id"]].append(r)
     out: dict = {}
+    details: list[dict] = []
     for company_id, rs in by_company.items():
         wins = [r for r in rs if r["decision"] == "concept"]
         alts = [
@@ -365,14 +397,20 @@ def winner_tag_gaps(
             continue
         with conn.cursor() as cur:
             cur.execute(
-                """select c.tag, p.end_date from core.fact f join core.concept c on c.id = f.concept_id
+                """select c.tag, p.end_date, fl.accession_number from core.fact f
+                   join core.concept c on c.id = f.concept_id
                    join core.period p on p.id = f.period_id
-                   where f.company_id = %s and f.is_authoritative and c.tag = any(%s)""",
+                   join core.filing fl on fl.id = f.filing_id
+                   where f.company_id = %s and f.is_authoritative and c.tag = any(%s)
+                   order by fl.filing_date desc nulls last""",
                 (company_id, tags),
             )
             ends: dict[str, set] = defaultdict(set)
-            for tag, end in cur.fetchall():
+            held_in: dict[tuple[str, date], str] = {}
+            for tag, end, acc in cur.fetchall():
                 ends[tag].add(end)
+                held_in.setdefault((tag, end), acc)  # the latest filing holding it
+        open_rows = [r for r in rs if r["decision"] == "not_presented"]
         for w in wins:
             cname = concept_names.get(w["canonical_concept_id"], "")
             for a in alts:
@@ -389,7 +427,25 @@ def winner_tag_gaps(
                     if w["era_from"] <= e <= (w["era_to"] or date.max)
                     and a["era_from"] <= e <= (a["era_to"] or date.max)
                     and e not in ends.get(w["tag"], set())
+                    # an OPEN period (tagless not_presented row) is already a reasoned blank
+                    and not any(
+                        o["canonical_concept_id"] == w["canonical_concept_id"]
+                        and o["stmt"] == w["stmt"]
+                        and o["era_from"] <= e <= (o["era_to"] or date.max)
+                        for o in open_rows
+                    )
                 }
                 if gap:
                     out[(company_id, cname, w["tag"], a["tag"])] = len(gap)
-    return out
+                    for e in sorted(gap):
+                        details.append(
+                            {
+                                "company_id": company_id,
+                                "concept": cname,
+                                "period_end": e,
+                                "winner_tag": w["tag"],
+                                "fact_exists_under": a["tag"],
+                                "filing": held_in.get((a["tag"], e)),
+                            }
+                        )
+    return out, details
