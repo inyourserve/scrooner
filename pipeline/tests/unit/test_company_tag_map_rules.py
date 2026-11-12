@@ -460,3 +460,46 @@ def test_scale_sanity_blocks_a_share_count_far_below_the_companys_other_share_fa
     cells, stats = _scale("713400000", so="7134")  # shares outstanding 100000x too small vs the weighted count
     assert SO not in {c["canonical_concept_id"] for c in cells} and SH in {c["canonical_concept_id"] for c in cells}
     assert [b["reason_code"] for b in stats["blanks"]] == ["filer_scale_error"]
+
+
+def _scaled_rows(scale, decided_by):
+    rows = _scale_rows()
+    w = rows[0]
+    rows[0] = MapRow(w.taxonomy, w.tag, w.stmt, w.decision, w.canonical_concept_id, None, 1, ERA, None, scale=Decimal(scale),
+                     decided_by=decided_by, evidence_adsh="0000063908-26-000035", evidence_report=3)
+    return rows
+
+
+def _run_scaled(scale, decided_by, shares="713.4"):
+    facts = {("us-gaap", "WASO"): {7: fact(shares, 1)}, ("us-gaap", "Eps"): {7: fact("11.5", 2)},
+             ("us-gaap", "NetIncomeLoss"): {7: fact("8200000000", 3)}}
+    return build_cells(_scaled_rows(scale, decided_by), facts, dict(SCALE_INFO), {}, {}, {7: (date(2020, 1, 1), END, "duration")})
+
+
+def test_scale_from_a_company_override_is_applied_in_decimal_with_provenance():
+    cells, stats = _run_scaled("1000000", "company_override")  # MCD weighted_basic_shares x1,000,000
+    sh = [c for c in cells if c["canonical_concept_id"] == SH][0]
+    assert sh["value"] == Decimal("713400000") and isinstance(sh["value"], Decimal)
+    assert "scale x1,000,000 from override 0000063908-26-000035 R3" in sh["serve_note"]
+    assert stats["held"] == []
+    # an explicit override scale is exempt from the sanity block (the override owns the claim)
+    cells, stats = _run_scaled("1000", "company_override")
+    assert SH in {c["canonical_concept_id"] for c in cells} and stats["held"] == []
+
+
+def test_scale_from_a_non_override_source_is_ignored_by_the_mapper_and_refused_by_the_seeder():
+    from scrooner_pipeline.mapper.company_tag_map_seed import normalize
+
+    cells, stats = _run_scaled("1000000", "library")  # not an override: served unscaled, then the sanity block fires
+    assert SH not in {c["canonical_concept_id"] for c in cells}
+    assert [b["reason_code"] for b in stats["blanks"]] == ["filer_scale_error"]
+    raw = {"company_id": 1, "taxonomy": "us-gaap", "tag": "WASO", "stmt": "IS", "decision": "concept",
+           "canonical_concept": "weighted_basic_shares", "era_from": "2015-01-01", "scale": "1000000",
+           "decided_by": "library", "rule_id": "tm.r@1", "evidence_adsh": "0000063908-26-000035"}
+    import pytest as _pt
+    with _pt.raises(ValueError, match="scale .* refused"):
+        normalize(raw, {}, {"weighted_basic_shares": 5})
+    ok = normalize({**raw, "decided_by": "company_override"}, {}, {"weighted_basic_shares": 5})
+    assert ok["scale"] == Decimal("1000000")
+    with _pt.raises(ValueError, match="evidence_adsh"):
+        normalize({**raw, "decided_by": "company_override", "evidence_adsh": None}, {}, {"weighted_basic_shares": 5})

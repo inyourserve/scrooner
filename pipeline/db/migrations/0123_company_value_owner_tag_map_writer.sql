@@ -1,5 +1,5 @@
 -- 0123: the tag-map writer may write owned companies, and tag-map companies can be owned by it.
--- ROLLBACK: restore the 0119 function body (writer 'fsn_cells' only) and the owner check ('fsn_cells' only);
+-- ROLLBACK: alter table analytics.company_tag_map drop column scale; restore the 0119 function body (writer 'fsn_cells' only) and the owner check ('fsn_cells' only);
 --   delete the company_value_owner rows with owner 'company_tag_map' first.
 -- 0119: once a company is owned, every analytics.canonical_fact write that is not made by the fsn cell writer
 -- (session setting scrooner.writer = 'fsn_cells') is skipped and logged. The tag-map write path
@@ -39,3 +39,8 @@ begin
     return new;
 end;
 $$;
+
+-- company_tag_map.scale: served value = sign x scale x STORED companyfacts value. Valid ONLY on a row from a
+-- filing-checked company override (decided_by 'company_override...'); the seeder refuses any other source and the
+-- mapper ignores a scale on any other row. The scale-sanity check (filer_scale_error) runs everywhere else.
+alter table analytics.company_tag_map add column if not exists scale numeric not null default 1 check (scale > 0);

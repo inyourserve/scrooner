@@ -97,6 +97,10 @@ class MapRow:
     serve_note: str | None = None
     map_id: int | None = None
     reason_class: str | None = None
+    scale: Decimal = Decimal(1)
+    decided_by: str | None = None
+    evidence_adsh: str | None = None
+    evidence_report: int | None = None
 
 
 @dataclass(frozen=True)
@@ -132,9 +136,17 @@ def load_tag_map_company_ids(
 def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
     with conn.cursor() as cur:
         cur.execute(
-            """
+            "select count(*) from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'company_tag_map' and column_name = 'scale'"
+        )
+        scale_col = (
+            "scale" if cur.fetchone()[0] else "1::numeric"
+        )  # 0123 adds the column
+        cur.execute(
+            f"""
             select taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign,
-                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class
+                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class,
+                   {scale_col} as scale, decided_by, evidence_adsh, evidence_report
             from analytics.company_tag_map where company_id = %s
             """,
             (company_id,),
@@ -158,6 +170,10 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
                 serve_note=r[14],
                 map_id=r[15],
                 reason_class=r[16],
+                scale=Decimal(r[17]),
+                decided_by=r[18],
+                evidence_adsh=r[19],
+                evidence_report=r[20],
             )
             for r in cur.fetchall()
         ]
@@ -326,10 +342,36 @@ def _sign(row: MapRow) -> int:
     return int(row.sign or 1)
 
 
+def _is_override(row: MapRow) -> bool:
+    return (
+        (row.decided_by or "").lower().replace("-", "_").startswith("company_override")
+    )
+
+
+def _mult(row: MapRow) -> Decimal:
+    """served value = sign x scale x STORED value (Decimal). A scale other than 1 is valid only on a row from a
+    filing-checked company override; any other row is served unscaled (and the seeder refuses to load it)."""
+    scale = row.scale if row.scale == 1 or _is_override(row) else Decimal(1)
+    return Decimal(_sign(row)) * scale
+
+
+def _scaled(row: MapRow) -> bool:
+    return row.scale != 1 and _is_override(row)
+
+
 def _note(pairs) -> str | None:
     """The label note of the rows that built a cell (e.g. 'face line including restricted cash, as printed').
     canonical_fact has no per-cell note column: the note is returned with the cell and stays on the map row."""
-    notes = sorted({r.serve_note for r, _ in pairs if r.serve_note})
+    notes_set = {r.serve_note for r, _ in pairs if r.serve_note}
+    for r, _ in pairs:
+        if _scaled(
+            r
+        ):  # provenance of a filing-checked scale: what the filer printed, what is stored, the source
+            notes_set.add(
+                f"filer printed in scaled units, stored unscaled; scale x{r.scale:,} from override "
+                f"{r.evidence_adsh} R{r.evidence_report}"
+            )
+    notes = sorted(notes_set)
     return "; ".join(notes) or None
 
 
@@ -460,7 +502,7 @@ def build_cells(
             # tag order. Two listed tags printing different values in that same latest filing: reasoned blank.
             newest = max((f.filed or date.min, f.filing_id) for _, f in d)
             d = [(r, f) for r, f in d if (f.filed or date.min, f.filing_id) == newest]
-            if len({f.value * _sign(r) for r, f in d}) > 1 or any(
+            if len({f.value * _mult(r) for r, f in d}) > 1 or any(
                 f.ambiguous for _, f in d
             ):
                 stats["conflict_cells"] += 1
@@ -468,11 +510,11 @@ def build_cells(
                 conflicts.add(key)
                 continue
             ref = d[0][1]
-            ref_value = ref.value * _sign(d[0][0])
+            ref_value = ref.value * _mult(d[0][0])
             # rule 1: the printed concept wins; components of the SAME filing must still tie (rule 2)
             same = [(r, f) for r, f in c if f.filing_id == ref.filing_id]
             if same:
-                total = sum(f.value * _sign(r) for r, f in same)
+                total = sum(f.value * _mult(r) for r, f in same)
                 tol = tol_of(
                     [dcml.get((f.accession, r.tag, f.end)) for r, f in same]
                     + [dcml.get((ref.accession, d[0][0].tag, ref.end))]
@@ -487,6 +529,7 @@ def build_cells(
                     "value": ref_value,
                     "source_fact_ids": sorted({f.fact_id for _, f in d}),
                     "serve_note": _note(d),
+                    "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
                     "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
                 }
@@ -505,9 +548,10 @@ def build_cells(
             {
                 "canonical_concept_id": key[0],
                 "period_id": key[1],
-                "value": sum((f.value * _sign(r) for r, f in c), Decimal(0)),
+                "value": sum((f.value * _mult(r) for r, f in c), Decimal(0)),
                 "source_fact_ids": sorted({f.fact_id for _, f in c}),
                 "serve_note": _note(c),
+                "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
                 "_from_components": True,
                 "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
@@ -541,7 +585,7 @@ def build_cells(
                         "tag": row.tag,
                         "plabel": row.evidence_plabel or row.tag,
                         "components": list(row.components or ()),
-                        "value": fact.value * _sign(row),
+                        "value": fact.value * _mult(row),
                         "source_fact_ids": [fact.fact_id],
                         "tag_map_id": row.map_id,
                     }
@@ -710,7 +754,10 @@ def _scale_sanity(cells: list[dict], concept_info, periods, stats: dict) -> list
     blocked: dict[int, str] = {}  # id(cell) -> reason
 
     def block(cell: dict, why: str) -> None:
-        blocked.setdefault(id(cell), why)
+        if not cell.get(
+            "_scaled"
+        ):  # an explicit filing-checked override scale is exempt from the sanity block
+            blocked.setdefault(id(cell), why)
 
     eps_of = {
         "weighted_basic_shares": "basic_eps",
