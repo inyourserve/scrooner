@@ -25,7 +25,15 @@ for i in range(0, len(tick), 100):
     ts = set(tick[i:i+100]); print(line([r for r in G if r['ticker'] in ts], f'Companies {i+1}-{i+len(ts)} (in grading order)'))
 for s in ('BS', 'IS', 'CF', 'NOTE-type'):
     print(line([r for r in G if stmt(r['data_point']) == s], f'Statement {s}'))
+sp = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'inputs', 'sectors.csv')
+if os.path.exists(sp):
+    SEC = {r['ticker']: r for r in csv.DictReader(open(sp))}
+    for key, name in (('sector', 'Sector'), ('template_group', 'Template group')):
+        vals = sorted({SEC.get(r['ticker'], {}).get(key, '(none)') for r in G})
+        for v in vals:
+            rows_ = [r for r in G if SEC.get(r['ticker'], {}).get(key, '(none)') == v]
+            print(line(rows_, f'{name}: {v} ({len({r["ticker"] for r in rows_})} cos)'))
 if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
     D = [r for r in csv.DictReader(open(sys.argv[3])) if r['result'] in ('correct', 'wrong')]
     print(line(D, 'Dev set (ranks 51-100, current predictor; not blind)'))
-print('\nBar: 99% line accuracy on unseen companies over the last 200 companies, no sector at or below 95%. Sector split pending a sector field in the cohort file.')
+print('\nBar: 99% line accuracy on unseen companies over the last 200 companies, no sector at or below 95%. Sector = core.company.sector; template group = data-team/strategy/data/s2_group_audit/sample.csv (unmapped where the audit has no row).')
