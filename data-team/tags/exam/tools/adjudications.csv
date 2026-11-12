@@ -7,3 +7,9 @@ DHR,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the fa
 MDT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
 LMT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
 BA,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+TMUS,operating_expenses,"Dhairya 2026-11-13: total contains member-only cost of services -> never opex; component_sum ties (0001283699-26-000010: 70,030,000k = printed lines 37,256,000k + COGS members 32,774,000k)"
+ASTS,operating_expenses,"Dhairya 2026-11-13: total contains member-only cost of revenues -> component_sum; tie 0001780312-26-000006: 358,631k = 323,415k + members 35,216k"
+BLCO,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001860742-26-000007: 4,988,000k = 2,938,000k + COGS members 2,050,000k"
+CZR,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001590895-26-000011: 9,628,000k = 3,885,000k + COGS members 5,743,000k"
+HST,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001070750-26-000054: 5,259,000k = 895,000k + COGS members 4,364,000k"
+DE,operating_expenses,"Dhairya 2026-11-13: Financial Services interest sits inside the total -> combined; component-sum key is a key error"
