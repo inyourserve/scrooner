@@ -368,6 +368,25 @@ NOTE_FAMILY = {  # data point -> (tags that ARE the data point, tags that are on
 }
 
 
+KEYWORDS = {  # label search (any tag, custom included) for the by-hand review of not_presented rows
+    "revenue": r"\b(revenues?|net sales|sales)\b", "cost_of_revenue": r"cost of (revenue|sales|goods|products|services)",
+    "gross_profit": r"gross (profit|margin)", "operating_expenses": r"operating (costs and )?expenses",
+    "sga_expense": r"selling|general and administrative", "research_and_development": r"research",
+    "operating_income": r"operating (income|profit|earnings)|income from operations",
+    "interest_expense": r"interest expense", "income_before_tax": r"before (income )?tax",
+    "income_tax_expense": r"income tax (expense|provision)|provision for income tax", "net_income": r"net (income|earnings|loss)",
+    "inventory": r"inventor", "goodwill": r"goodwill", "ppe_net": r"property.*(net|equipment)", "accounts_receivable": r"receivable",
+    "accounts_payable": r"accounts payable", "current_assets": r"current assets", "current_liabilities": r"current liabilities",
+    "total_liabilities": r"^total liabilities$|^liabilities$", "total_debt": r"\b(debt|borrowings|notes payable)\b",
+    "capex": r"capital expenditure|purchases? of property|additions to property",
+    "depreciation_and_amortization": r"depreciation", "sbc": r"(stock|share)-based compensation|share based compensation",
+    "dividends_paid": r"dividends? paid|payments? of dividends", "share_buybacks": r"repurchase|treasury stock acquired",
+    "cash_paid_for_interest": r"interest paid|cash paid for interest", "cash_paid_for_income_taxes": r"income taxes paid|taxes paid",
+    "shares_outstanding": r"shares,? outstanding", "basic_eps": r"basic", "diluted_eps": r"diluted",
+    "cash_and_equivalents": r"cash and cash equivalents",
+}
+
+
 def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str, quirks: list[str], tic: str) -> None:
     """Dhairya ruling 2026-11-12: no AUTO rows. Every face miss is checked against the WHOLE filing (MetaLinks.json:
     every tag in the filing's presentation, face statements and notes, with the R pages that show it):
@@ -409,9 +428,37 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
             t, rs = hit
             months = 12 if r.get("stmt") in ("IS", "CF") else None
             av = api_value(cf, f"us-gaap:{t}", accn, end, months) if end else None
+            # the value printed on that R page (Dhairya: every mapped row's value must equal its R page)
+            pv, plabel = None, ""
+            for rr in rs[:3]:
+                pg = parse_r(get(b + f"{rr[0]}.htm", cache))
+                cand = [x for x in pg["rows"] if x["tag"] == f"us-gaap:{t}" and any(v is not None for v in x["vals"])]
+                cand.sort(key=lambda x: (bool(re.search(r"beginning|opening", x["label"], re.I)),
+                                         not re.search(r"ending|end of|outstanding|balance", x["label"], re.I)))
+                row_ = cand[0] if cand and not re.search(r"beginning|opening", cand[0]["label"], re.I) else None
+                if row_:
+                    ci = next((i for i, (m, e) in enumerate(pg["cols"]) if e == end and i < len(row_["vals"])
+                               and row_["vals"][i] is not None), None)
+                    if ci is None:
+                        ci = next((i for i, v in enumerate(row_["vals"]) if v is not None), None)
+                    if ci is not None:
+                        sc = pg["shares_scale"] if dp == "shares_outstanding" else pg["scale"]
+                        pv, plabel, rs = row_["vals"][ci] * sc, row_["label"], [rr] + [x for x in rs if x != rr]
+                        break
+            if pv is None:
+                m = ""
+            elif av is None:
+                m = "API missing"
+            elif abs(pv - av) < 0.5:
+                m = "Y"
+            elif abs(abs(pv) - abs(av)) < 0.5:
+                m = "Y (sign differs: printed in parentheses/negated label)"
+            else:
+                m = f"N (printed {fmt(pv)} vs API {fmt(av)})"
             r.update(status="mapped", stmt="NOTE" if rs[0][1] != "statement" else rs[0][1], r_page=f"{rs[0][0]}.htm",
-                     tags=f"us-gaap:{t}", label=rs[0][2][:120], fy0_printed="", fy0_api=fmt(av),
-                     match="", note=f"not on the face statement; shown in {rs[0][0]}.htm '{rs[0][2][:80]}' (MetaLinks.json presentation); value from companyfacts same accession" + ("" if av is not None else " (no undimensioned companyfacts fact: read the R page)"))
+                     tags=f"us-gaap:{t}", label=(plabel or rs[0][2])[:120], fy0_printed=fmt(pv), fy0_api=fmt(av),
+                     match=m, note=f"not on the face statement; shown in {rs[0][0]}.htm '{rs[0][2][:80]}' (MetaLinks.json presentation)"
+                     + ("" if pv is not None else "; HAND REVIEW: no period-end value row found on the R page (only roll-forward or dimensioned rows)"))
             quirks.append(f"| new | {tic} | {dp} | us-gaap:{t} | not on the face; reported in a note/other page {rs[0][0]}.htm '{rs[0][2][:60]}' | {accn} | FILING-CHECKED (MetaLinks) |")
             continue
         chit = [(t, where(t)) for t in comp if where(t)]
@@ -420,8 +467,18 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
             r.update(status="component_in_note", stmt="NOTE", r_page=f"{rs[0][0]}.htm", tags="+".join(f"us-gaap:{c[0]}" for c in chit),
                      label=rs[0][2][:120], note=f"only component tag(s) {', '.join(c[0] for c in chit)} in the filing ({rs[0][0]}.htm '{rs[0][2][:60]}'); the data point itself is not reported")
             continue
+        kw = KEYWORDS.get(dp)
+        cands = []
+        if kw:
+            for key, t in tags.items():
+                labels = " / ".join(t.get("lang", {}).get("en-us", {}).get("role", {}).values())
+                if re.search(kw, labels, re.I) and not re.search(r"(Abstract|Axis|Member|Domain|Policy|TextBlock|Table)$", key):
+                    rs = [role2r[x][0] for x in t.get("presentation", []) if x in role2r]
+                    cands.append(f"{key.replace('_', ':', 1)} '{labels[:60]}' {','.join(rs[:3])}")
         r.update(status="not_presented", evidence_class="FILING-CHECKED",
-                 note=f"whole-filing check: none of {', '.join(full + comp)} in MetaLinks.json ({ntags} tags across all {len(role2r)} R pages, face and notes) of {accn}; no face row matched")
+                 note=f"whole-filing check: none of {', '.join(full + comp)} in MetaLinks.json ({ntags} tags across all {len(role2r)} R pages, face and notes) of {accn}; "
+                 + (f"HAND REVIEW: {len(cands)} label candidate(s) incl. custom tags: " + "; ".join(cands[:8]) if cands
+                    else "label search over every tag in the filing (custom included) found no candidate"))
 
 
 def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
@@ -498,6 +555,14 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 av = api_value(cf, r["tag"], accn, end, months)
             vals.append((pv, av, end))
         status = r.get("opex_status") or ("component sum" if "parts" in r else "mapped")
+        rule_note = ""
+        if dp == "interest_expense" and (re.search(r"\bnet\b|deductions|net of", r["label"], re.I)
+                                        or r["tag"].split(":")[-1] in ("InterestIncomeExpenseNonoperatingNet", "InterestIncomeExpenseNet",
+                                                                       "InterestRevenueExpenseNet", "InterestExpenseNet")):
+            status, rule_note = "combined", "net interest line: interest_expense is the gross charge only, a net line is combined (Dhairya 2026-11-12)"
+        if dp == "depreciation_and_amortization" and (re.search(r"accretion", r["label"], re.I)
+                                                      or r["tag"].endswith("DepreciationAmortizationAndAccretionNet")):
+            status, rule_note = "combined", "D&A line includes accretion: combined (Dhairya 2026-11-12)"
         how = ("company extension tag, matched by printed label" if not r["tag"].startswith("us-gaap")
                else ("matched by printed label (tag outside the usual set)" if r.get("by_label") else ""))
         rec.update(status=status, tags=r["tag"], label=r["label"][:120], evidence_class="FILING-CHECKED")
@@ -518,6 +583,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         if vals:
             if r.get("opex_note"):
                 how = r["opex_note"] + ("; " + how if how else "")
+            if rule_note:
+                how = rule_note + ("; " + how if how else "")
             rec["note"] = (how + " | " if how else "") + f"accn {accn} {reps[stmt][1]} period ..{vals[0][2].isoformat()}"
         if any(v.startswith("N") for v in verdicts):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | printed vs companyfacts mismatch: {'; '.join(v for v in verdicts if v.startswith('N'))} | {accn} {reps[stmt][1]} | FILING-CHECKED |")
@@ -659,6 +726,9 @@ COLS = ["ticker", "data_point", "status", "tags", "stmt", "r_page", "label", "fy
 
 def write_company(out: list[dict], meta: dict, out_dir: str) -> None:
     tic = meta["ticker"]
+    for r in out:
+        if "check:" not in str(r.get("note", "")):
+            r["note"] = "check: machine-full-filing | " + str(r.get("note", ""))
     with open(os.path.join(out_dir, f"{tic}-docmap-{DATE}.csv"), "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=COLS, extrasaction="ignore")
         w.writeheader()
