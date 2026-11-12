@@ -47,7 +47,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | dividends_paid | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends in MetaLinks.json (1133 tags across all 105 R pages, face and notes) of 0001552275-26-000021; label search over every tag in the filing (custom included) found no candidate |
 | share_buybacks | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsForRepurchaseOfCommonStock in MetaLinks.json (1133 tags across all 105 R pages, face and notes) of 0001552275-26-000021; HAND REVIEW: 3 label candidate(s) incl. custom tags: us-gaap:PaymentsForRepurchaseOfPreferredStockAndPreferenceStock 'Preferred units redemption / Payments for Repurchase of Pref' R8; us-gaap:PreferredStockValueOutstanding 'Preferred Stock, Value, Outstanding / Preferred Stock, Value' R3; us-gaap:ProceedsFromRepurchaseOfRedeemablePreferredStock 'Proceeds from (Repurchase of) Redeemable Preferred Stock / P' R58 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R61.htm | Interest Paid, Excluding Capitalized Interest, Operating Activity | 434000000 | 434000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R61.htm 'Cash and Cash Equivalents (Details)' (MetaLinks.json presentation) |
-| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R86.htm | Income Taxes Paid, Net | 3000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R86.htm 'Income Tax Expense (Components of Tax Expense) (Details)' (MetaLinks.json presentation) |
+| cash_paid_for_income_taxes | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of IncomeTaxesPaidNet, IncomeTaxesPaid in MetaLinks.json (1133 tags across all 105 R pages, face and notes) of 0001552275-26-000021; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:IncomeTaxesPaidNet 'Income Taxes Paid, Net / Income Taxes Paid, Net / Amount, af' R86 |
 | total_debt | component sum | us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent+us-gaap:LongTermDebt | R3.htm | Current maturities of long-term debt + Long-term debt, net | 13389000000 | 13389000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
 | shares_outstanding | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CommonStockSharesOutstanding in MetaLinks.json (1133 tags across all 105 R pages, face and notes) of 0001552275-26-000021; HAND REVIEW: 1 label candidate(s) incl. custom tags: dei:EntityCommonStockSharesOutstanding 'Entity Common Stock, Shares Outstanding / Entity Common Stoc' R1 |
 
@@ -80,16 +80,13 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - depreciation_and_amortization: FY2015 10-K 0001564590-16-013451 R6.htm prints 'Depreciation, amortization and accretion' on us-gaap:DepreciationAmortizationAndAccretionNet = 201019000 (FILING-CHECKED)
 - sbc: FY2015 10-K 0001564590-16-013451 R6.htm prints 'Non-cash unit based compensation expense' on us-gaap:ShareBasedCompensation = 5703000 (FILING-CHECKED)
 - cash_paid_for_interest: FY2015 10-K 0001564590-16-013451 R6.htm prints 'Interest paid' on us-gaap:InterestPaidNet = 59916000 (FILING-CHECKED)
-- cash_paid_for_income_taxes: FY2015 10-K 0001564590-16-013451 R6.htm prints 'Income taxes paid' on us-gaap:IncomeTaxesPaid = 50732000 (FILING-CHECKED)
 - cost_of_revenue: era 10-K 0001552275-18-000013 R4.htm prints 'Total cost of sales' on us-gaap:CostOfRevenue = 10615000000 (FILING-CHECKED)
 - operating_expenses: era 10-K 0001552275-18-000013 R4.htm prints 'Total operating expenses' on us-gaap:OperatingExpenses = 879000000 (FILING-CHECKED)
 - cfo: era 10-K 0001552275-18-000013 R6.htm prints 'Net cash provided by continuing operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 303000000 (FILING-CHECKED)
 - income_before_tax: era 10-K 0001552275-19-000011 R4.htm prints 'Income (loss) from continuing operations before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments = 92000000 (FILING-CHECKED)
 - capex: era 10-K 0001552275-19-000011 R6.htm prints 'Capital expenditures' on us-gaap:PaymentsToAcquirePropertyPlantAndEquipment = -103000000 (FILING-CHECKED)
-- cash_paid_for_income_taxes: era 10-K 0001552275-19-000011 R6.htm prints 'Income taxes paid (refunded), net' on us-gaap:IncomeTaxesPaidNet = 501000000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
 - basic_eps: API missing (sun:NetIncomeLossAvailableToCommonUnits)
 - accounts_receivable: API missing (us-gaap:AccountsReceivableNetCurrent)
 - accounts_payable: API missing (us-gaap:AccountsPayableCurrent)
-- cash_paid_for_income_taxes: API missing (us-gaap:IncomeTaxesPaidNet)

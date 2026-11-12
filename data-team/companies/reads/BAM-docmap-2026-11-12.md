@@ -35,7 +35,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | accounts_payable | mapped | us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent | R3.htm | Accounts payable and accrued liabilities | 2459000000 | 2459000000 | 1349000000 | 1349000000 | Y | FILING-CHECKED | check: machine-full-filing / matched by printed label (tag outside the usual set) / accn 0001628280-26-013098 R3.htm period ..2025-12-31 |
 | current_liabilities | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of LiabilitiesCurrent in MetaLinks.json (927 tags across all 104 R pages, face and notes) of 0001628280-26-013098; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:LineOfCredit 'Corporate borrowings / Long-Term Line of Credit / The carryi' R98,R3,R70 |
 | total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total liabilities | 6737000000 | 6737000000 | 2966000000 | 2966000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R3.htm period ..2025-12-31 |
-| stockholders_equity | mapped | us-gaap:StockholdersEquity | R61.htm | Capital | 81798000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R61.htm 'INVESTMENTS - Summarized Financial Information (Details)' (MetaLinks.json presentation) |
+| stockholders_equity | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of StockholdersEquity in MetaLinks.json (927 tags across all 104 R pages, face and notes) of 0001628280-26-013098; label search over every tag in the filing (custom included) found no candidate |
 | cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Cash provided by (used in) operating activities | 2101000000 | 2101000000 | 1612000000 | 1612000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Cash provided by (used in) investing activities | -339000000 | -339000000 | -1744000000 | -1744000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Cash provided by (used in) financing activities | -590000000 | -590000000 | -2119000000 | -2119000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
@@ -47,7 +47,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Interest paid | 87000000 | 87000000 | 22000000 | 22000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Total income taxes paid | 426000000 | 426000000 | 449000000 | 449000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | total_debt | component_in_note | us-gaap:SeniorNotes | R70.htm | CORPORATE BORROWINGS - Schedule of Borrowings (Details) |  |  |  |  |  | FILING-CHECKED | check: machine-full-filing / only component tag(s) SeniorNotes in the filing (R70.htm 'CORPORATE BORROWINGS - Schedule of Borrowings (Details)'); the data point itself is not reported |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 1608492642 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 1608492642 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -59,4 +59,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - weighted_basic_shares: API missing (us-gaap:WeightedAverageNumberOfSharesOutstandingBasic)
 - weighted_diluted_shares: API missing (us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding)
 - accounts_receivable: API missing (bam:AccountsReceivableAndOtherNet)
-- stockholders_equity: API missing (us-gaap:StockholdersEquity)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

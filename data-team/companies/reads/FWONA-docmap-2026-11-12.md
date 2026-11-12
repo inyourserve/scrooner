@@ -25,8 +25,8 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | net_income | mapped | us-gaap:NetIncomeLoss | R4.htm | Net earnings (loss) attributable to Liberty stockholders | 555000000 | 555000000 | -2063000000 | -2063000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
 | basic_eps | mapped | us-gaap:IncomeLossFromContinuingOperationsPerBasicShare | R4.htm | Basic net earnings (loss) from continuing operations attributable to Liberty stockholders per common share | 2.41 |  | -0.13 |  | API missing | FILING-CHECKED | check: machine-full-filing / matched by printed label (tag outside the usual set) / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
 | diluted_eps | mapped | us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare | R4.htm | Diluted net earnings (loss) from continuing operations attributable to Liberty stockholders per common share | 2.17 |  | -0.13 |  | API missing | FILING-CHECKED | check: machine-full-filing / matched by printed label (tag outside the usual set) / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
-| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R59.htm | Basic WASO | 250000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R59.htm 'Summary of Significant Accounting Policies - EPS (Details)' (MetaLinks.json presentation) |
-| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R59.htm | Diluted WASO | 258000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R59.htm 'Summary of Significant Accounting Policies - EPS (Details)' (MetaLinks.json presentation) |
+| weighted_basic_shares | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of WeightedAverageNumberOfSharesOutstandingBasic in MetaLinks.json (954 tags across all 91 R pages, face and notes) of 0001104659-26-020653; label search over every tag in the filing (custom included) found no candidate |
+| weighted_diluted_shares | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of WeightedAverageNumberOfDilutedSharesOutstanding in MetaLinks.json (954 tags across all 91 R pages, face and notes) of 0001104659-26-020653; label search over every tag in the filing (custom included) found no candidate |
 | cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R2.htm | Cash and cash equivalents | 1055000000 | 1055000000 | 2631000000 | 2631000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-020653 R2.htm period ..2025-12-31 |
 | accounts_receivable | mapped | us-gaap:ReceivablesNetCurrent | R2.htm | Trade and other receivables, net | 115000000 | 115000000 | 114000000 | 114000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-020653 R2.htm period ..2025-12-31 |
 | inventory | not_presented |  | R2.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of InventoryNet in MetaLinks.json (954 tags across all 91 R pages, face and notes) of 0001104659-26-020653; label search over every tag in the filing (custom included) found no candidate |
@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R60.htm | Cash paid for interest, net of amounts capitalized | 232000000 | 232000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Supplemental Disclosures to Consolidated Statements of Cash Flows (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R60.htm | Total cash paid for income taxes, net | 123000000 | 123000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Supplemental Disclosures to Consolidated Statements of Cash Flows (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent | R2.htm | Current portion of debt + Long-term debt, including $597 million and $588 million measured at fair value, respectively | 5100000000 | 5100000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 250474288 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 23991058 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001558370-16-003609 R4.htm prints 'Total Revenue' on us-gaap:SalesRevenueNet = 4795000000 (FILING-CHECKED)
@@ -63,8 +63,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - net_income: FY2015 10-K 0001558370-16-003609 R4.htm prints 'Net earnings (loss) attributable to Liberty stockholders' on us-gaap:NetIncomeLoss = 64000000 (FILING-CHECKED)
 - basic_eps: FY2015 10-K 0001558370-16-003609 R4.htm prints 'Series A, B and C common stock, basic' on us-gaap:EarningsPerShareBasic = 0.19 (FILING-CHECKED)
 - diluted_eps: FY2015 10-K 0001558370-16-003609 R4.htm prints 'Series A, B and C common stock, diluted' on us-gaap:EarningsPerShareDiluted = 0.19 (FILING-CHECKED)
-- weighted_basic_shares: FY2015 10-K 0001558370-16-003609 R4.htm read; no row matched (auto)
-- weighted_diluted_shares: FY2015 10-K 0001558370-16-003609 R4.htm read; no row matched (auto)
 - cash_and_equivalents: FY2015 10-K 0001558370-16-003609 R2.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 201000000 (FILING-CHECKED)
 - accounts_receivable: FY2015 10-K 0001558370-16-003609 R2.htm prints 'Trade and other receivables, net' on us-gaap:ReceivablesNetCurrent = 247000000 (FILING-CHECKED)
 - current_assets: FY2015 10-K 0001558370-16-003609 R2.htm prints 'Total current assets' on us-gaap:AssetsCurrent = 691000000 (FILING-CHECKED)
@@ -91,5 +89,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization)
 - basic_eps: API missing (us-gaap:IncomeLossFromContinuingOperationsPerBasicShare)
 - diluted_eps: API missing (us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare)
-- weighted_basic_shares: API missing (us-gaap:WeightedAverageNumberOfSharesOutstandingBasic)
-- weighted_diluted_shares: API missing (us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
