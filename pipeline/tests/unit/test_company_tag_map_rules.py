@@ -584,3 +584,35 @@ def test_status_rows_with_a_candidate_marker_still_load():
     candidate = {"decision": "concept", "decided_by": "note_sourced"}
     assert held_by_verifier(status) is False
     assert held_by_verifier(candidate) is True
+
+
+def _fsn(value, vid, on_face=True, filing=-5, acc="A-5"):
+    return Fact(Decimal(value), vid, END, False, filing, acc, None, source="fsn_xbrl", on_face=on_face)
+
+
+def test_custom_tag_cell_is_fsn_xbrl_with_value_ids_and_a_standard_tag_is_sec_api():
+    custom = MapRow("custom", "OperatingExpensesExclAmort", "IS", "concept", OPEX, None, 1, ERA, None)
+    std = MapRow("us-gaap", "OperatingExpenses", "IS", "concept", 99, None, 1, ERA, None)
+    info = {**INFO, 99: ("other", "income_statement")}
+    facts = {("custom", "OperatingExpensesExclAmort"): {7: _fsn("40", 900)}, ("us-gaap", "OperatingExpenses"): {7: fact("50", 3)}}
+    cells, _ = build_cells([custom, std], facts, info)
+    by = {c["canonical_concept_id"]: c for c in cells}
+    assert (by[OPEX]["value_source"], by[OPEX]["source_value_ids"], by[OPEX]["source_fact_ids"]) == ("fsn_xbrl", [900], [])
+    assert (by[99]["value_source"], by[99]["source_fact_ids"], by[99]["source_value_ids"]) == ("sec_api", [3], [])
+
+
+def test_a_component_sum_never_mixes_sources_and_an_fsn_value_must_be_on_the_face():
+    a = comp_row("OpA")
+    b = MapRow("custom", "OpB", "IS", "component", None, OPEX, 1, ERA, None, "Root")
+    arcs = {"A-10": {("Root", "OpA"), ("Root", "OpB")}}
+    facts = {("us-gaap", "OpA"): {7: fact("5", 1)}, ("custom", "OpB"): {7: _fsn("6", 901, filing=-10, acc="A-10")}}
+    cells, stats = build_cells([a, b], facts, INFO, arcs, {})
+    assert cells == [] and stats["held"][0]["reason"] == "mixed_value_sources"
+    both = {("custom", "OpA"): {7: _fsn("5", 902, filing=-10, acc="A-10")}, ("custom", "OpB"): {7: _fsn("6", 901, filing=-10, acc="A-10")}}
+    a2 = MapRow("custom", "OpA", "IS", "component", None, OPEX, 1, ERA, None, "Root")
+    cells, stats = build_cells([a2, b], both, INFO, arcs, {})  # single-source fsn sum is fine
+    assert [(c["value"], c["value_source"], c["source_value_ids"]) for c in cells] == [(Decimal("11"), "fsn_xbrl", [901, 902])]
+    off = {("custom", "OperatingExpensesExclAmort"): {7: _fsn("40", 903, on_face=False)}}
+    row = MapRow("custom", "OperatingExpensesExclAmort", "IS", "concept", OPEX, None, 1, ERA, None)
+    cells, stats = build_cells([row], off, INFO)
+    assert cells == [] and stats["held"][0]["reason"] == "fsn_value_not_on_face_line"

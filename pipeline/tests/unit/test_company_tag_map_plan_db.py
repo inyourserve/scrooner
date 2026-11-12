@@ -89,3 +89,28 @@ def test_non_authoritative_only_facts_end_to_end_blank_not_value(isolated_databa
         assert resolve(conn, {"0000001201"})["errored"] == 0
         assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["rev"]) == 0
         assert _one(conn, "select reason_code from analytics.cell_blank_reason where company_id = %s and data_point_name = 'tm_rev'", co) == "no_authoritative_fact"
+
+
+@pytest.mark.integration
+def test_custom_tag_is_read_from_the_fsn_store_with_value_id_lineage(isolated_database_url, monkeypatch):
+    from scrooner_pipeline.mapper.resolve import resolve
+
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001301", True)
+        fact("Revenues", "in", "new", "100")  # a standard tag: SEC companyfacts
+        conn.execute("insert into core.period (company_id, start_date, end_date, period_type) values (%s,'2018-01-01','2018-12-31','duration') on conflict do nothing", (co,))
+        fid = _one(conn, "insert into fsn.filing (accession, cik, form, fsn_set, company_id, accepted) values ('0000001301-new','0000001301','10-K','t',%s,'2019-03-01 10:00+00') returning id", co)
+        tid = _one(conn, "insert into fsn.tag (tag, version, custom) values ('OpexExclAmort','0000001301-new',true) returning id")
+        conn.execute("insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s,4,9,'IS',%s)", (fid, tid))
+        vid = _one(conn, "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, iprx, coreg, value) values (%s,%s,%s,'2018-12-31',4,'USD',0,0,'',40) returning id", fid, co, tid)
+        opex = x["opex"]
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,%s,%s,'IS','concept',%s,'2015-01-01','t','tm.r@1')"
+        conn.execute(ins, (co, "us-gaap", "Revenues", x["rev"]))
+        conn.execute(ins, (co, "custom", "OpexExclAmort", opex))
+        conn.commit()
+        assert resolve(conn, {"0000001301"})["errored"] == 0
+        rows = {r[0]: r[1:] for r in conn.execute("select canonical_concept_id, value, source_fact_ids, source_value_ids, family from analytics.canonical_fact where company_id = %s", (co,))}
+        assert rows[opex] == (Decimal("40"), [], [vid], "company_tag_map:fsn_xbrl")  # filing's own XBRL, fsn lineage
+        assert rows[x["rev"]][0] == Decimal("100") and rows[x["rev"]][3] == "company_tag_map" and rows[x["rev"]][2] == []

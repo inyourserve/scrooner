@@ -49,7 +49,7 @@ from typing import Any
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.fsn_dates import nearest_month_ends
+from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
 
@@ -121,6 +121,19 @@ class Fact:
     accession: str
     filed: date | None = None
     ambiguous: bool = False  # two distinct values (other units) for this tag and period in the latest filing
+    # Value source (founder decision 2026-11-12): standard-taxonomy tags are read from SEC companyfacts (core.fact,
+    # 'sec_api'); CUSTOM tags from the filing's own XBRL via the FSN store (fsn.value, 'fsn_xbrl': undimensioned,
+    # coreg empty, iprx 0), accepted only when the tag sits on that filing's face (fsn.line). For an fsn_xbrl fact
+    # fact_id is the fsn.value id and filing_id is NEGATIVE (-fsn.filing.id) so it never equals a core.filing id.
+    source: str = "sec_api"
+    on_face: bool = True
+
+
+STANDARD_TAXONOMIES = {"us-gaap", "ifrs-full", "dei", "srt"}
+
+
+def is_custom(taxonomy: str | None) -> bool:
+    return taxonomy is not None and taxonomy not in STANDARD_TAXONOMIES
 
 
 def enabled(environ=None) -> bool:
@@ -305,6 +318,79 @@ def _merge_predecessor_facts(conn, company_id, tags, out) -> None:
                 out[(taxonomy, tag)][period_id] = new
 
 
+def _load_fsn_facts(
+    conn: psycopg.Connection,
+    company_id: int,
+    tags: set[tuple[str | None, str | None]],
+    periods: dict[int, tuple[date, date, str]],
+):
+    """Custom-tag facts from the filing's own XBRL (fsn.value) mapped onto the company's core.period by the SEC's
+    month-end rounding of ddate and the quarter count (qtrs 0 = instant, else a duration of ~qtrs x 91 days).
+    The latest ACCEPTED filing that prints the tag for the period wins; a value whose tag has no face line in that
+    filing (fsn.line) is flagged on_face = False (the cell is held, never served from a note-only value)."""
+    out: dict[tuple[str | None, str | None], dict[int, Fact]] = defaultdict(dict)
+    wanted = {(t, g) for t, g in tags if g is not None}
+    if not wanted:
+        return out
+    tax_of = {g: t for t, g in wanted}
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select t.tag, v.id, v.ddate, v.qtrs, v.value, f.id, f.accession, f.accepted,
+                   exists (select 1 from fsn.line l where l.filing_id = v.filing_id and l.tag_id = v.tag_id)
+            from fsn.value v
+            join fsn.tag t on t.id = v.tag_id
+            join fsn.filing f on f.id = v.filing_id
+            where v.company_id = %s and t.custom and t.tag = any(%s)
+              and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.value is not null
+            order by f.accepted desc nulls last, v.id desc
+            """,
+            (company_id, sorted(tax_of)),
+        )
+        rows = cur.fetchall()
+    grouped: dict[tuple[str, int], list[tuple]] = defaultdict(list)
+    for tag, vid, ddate, qtrs, value, fid, acc, accepted, on_face in rows:
+        match = [
+            pid
+            for pid, (start, end, ptype) in periods.items()
+            if fsn_end_matches(ddate, end)
+            and (
+                ptype == "instant"
+                if qtrs == 0
+                else ptype == "duration"
+                and qtrs * 91 - 20 <= (end - start).days <= qtrs * 91 + 20
+            )
+        ]
+        if len(match) != 1:
+            continue  # no unique core.period for it: never guess
+        grouped[(tag, match[0])].append(
+            (vid, ddate, Decimal(value), fid, acc, accepted, on_face)
+        )
+    for (tag, pid), rs in grouped.items():
+        rs.sort(key=lambda r: (r[5] is not None, r[5], r[0]), reverse=True)
+        latest = rs[0]
+        same = [
+            r for r in rs if r[3] == latest[3]
+        ]  # the latest accepted filing printing it
+        on_face = any(r[6] for r in same)
+        used = [r for r in same if r[6]] or same
+        first = used[0]
+        accepted = first[5]
+        out[(tax_of[tag], tag)][pid] = Fact(
+            first[2],
+            first[0],
+            periods[pid][1],
+            False,
+            -first[3],
+            first[4],
+            accepted.date() if accepted else None,
+            ambiguous=len({r[2] for r in used}) > 1,
+            source="fsn_xbrl",
+            on_face=on_face,
+        )
+    return out
+
+
 def _load_no_authoritative(
     conn, company_id: int, tags: set[tuple[str | None, str | None]]
 ):
@@ -431,6 +517,18 @@ def _scaled(row: MapRow) -> bool:
     return row.scale != 1 and _is_override(row)
 
 
+def _lineage(pairs) -> dict:
+    """value_source and lineage of a cell: core.fact ids (source_fact_ids) for sec_api, fsn.value ids
+    (source_value_ids) for fsn_xbrl. canonical_fact has no value_source column: the family carries it."""
+    src = "fsn_xbrl" if any(f.source == "fsn_xbrl" for _, f in pairs) else "sec_api"
+    ids = sorted({f.fact_id for _, f in pairs if f.source == src})
+    return {
+        "value_source": src,
+        "source_fact_ids": ids if src == "sec_api" else [],
+        "source_value_ids": ids if src == "fsn_xbrl" else [],
+    }
+
+
 def _note(pairs) -> str | None:
     """The label note of the rows that built a cell (e.g. 'face line including restricted cash, as printed').
     canonical_fact has no per-cell note column: the note is returned with the cell and stays on the map row."""
@@ -471,6 +569,10 @@ def _check_components(
     """Reason code if the component set must not be summed (rules 2 and 3), else None. total_debt is the
     founder's definition (doc 02, 2026-11-04): its listed debt lines are summed as defined, not as one calc
     parent's children, so only the single-filing and ambiguity checks apply."""
+    if len({f.source for _, f in comps}) > 1:
+        return "mixed_value_sources"  # a cell is single-source: SEC companyfacts or the filing's own XBRL
+    if any(not f.on_face for _, f in comps):
+        return "fsn_value_not_on_face_line"
     if any(f.ambiguous for _, f in comps):
         return "ambiguous_values_in_filing"
     if len({f.filing_id for _, f in comps}) != 1:
@@ -581,6 +683,9 @@ def build_cells(
             # tag order. Two listed tags printing different values in that same latest filing: reasoned blank.
             newest = max((f.filed or date.min, f.filing_id) for _, f in d)
             d = [(r, f) for r, f in d if (f.filed or date.min, f.filing_id) == newest]
+            if any(not f.on_face for _, f in d):
+                hold(key, "fsn_value_not_on_face_line")
+                continue
             if len({f.value * _mult(r) for r, f in d}) > 1 or any(
                 f.ambiguous for _, f in d
             ):
@@ -606,7 +711,7 @@ def build_cells(
                     "canonical_concept_id": key[0],
                     "period_id": key[1],
                     "value": ref_value,
-                    "source_fact_ids": sorted({f.fact_id for _, f in d}),
+                    **_lineage(d),
                     "serve_note": _note(d),
                     "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
@@ -628,7 +733,7 @@ def build_cells(
                 "canonical_concept_id": key[0],
                 "period_id": key[1],
                 "value": sum((f.value * _mult(r) for r, f in c), Decimal(0)),
-                "source_fact_ids": sorted({f.fact_id for _, f in c}),
+                **_lineage(c),
                 "serve_note": _note(c),
                 "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
@@ -665,7 +770,9 @@ def build_cells(
                         "plabel": row.evidence_plabel or row.tag,
                         "components": list(row.components or ()),
                         "value": fact.value * _mult(row),
-                        "source_fact_ids": [fact.fact_id],
+                        "source_fact_ids": [fact.fact_id]
+                        if fact.source == "sec_api"
+                        else [],
                         "tag_map_id": row.map_id,
                     }
                 )
@@ -1030,7 +1137,11 @@ def resolve_for_company(
         for r in rows
         if r.tag is not None and r.decision != "excluded"
     }
-    facts = _load_facts(conn, company_id, used)
+    periods = _load_periods(conn, company_id)
+    facts = _load_facts(conn, company_id, {k for k in used if not is_custom(k[0])})
+    custom_used = {k for k in used if is_custom(k[0])}
+    for k, by_period in _load_fsn_facts(conn, company_id, custom_used, periods).items():
+        facts[k] = by_period
     alt_tags: set[tuple[str | None, str | None]] = set()
     for r in rows:
         if (
@@ -1048,7 +1159,6 @@ def resolve_for_company(
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
-    periods = _load_periods(conn, company_id)
     no_auth = _load_no_authoritative(conn, company_id, used)
     cells, stats = build_cells(
         rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth
@@ -1067,8 +1177,8 @@ def resolve_for_company(
             cur.executemany(
                 """
                 insert into analytics.canonical_fact
-                    (company_id, canonical_concept_id, period_id, value, source_fact_ids, family, rule_run_id)
-                values (%s, %s, %s, %s, %s, %s, %s::uuid)
+                    (company_id, canonical_concept_id, period_id, value, source_fact_ids, source_value_ids, family, rule_run_id)
+                values (%s, %s, %s, %s, %s, %s, %s, %s::uuid)
                 """,
                 [
                     (
@@ -1077,7 +1187,10 @@ def resolve_for_company(
                         c["period_id"],
                         c["value"],
                         c["source_fact_ids"],
-                        FAMILY,
+                        c["source_value_ids"],
+                        FAMILY
+                        if c["value_source"] == "sec_api"
+                        else FAMILY + ":fsn_xbrl",
                         run_id,
                     )
                     for c in cells
