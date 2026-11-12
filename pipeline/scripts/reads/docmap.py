@@ -1263,51 +1263,6 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                 + "+".join(p.file for k in have for p in R.by_kind[k]),
             )
 
-    # era scan: chosen single tags vs the last five fiscal years of 10-K facts
-    if facts and R.fy0:
-        last5 = set(range(R.fy0.year - 4, R.fy0.year + 1))
-        for row in rows:
-            if (
-                row["status"] not in ("mapped", "combined")
-                or "+" in row["tags"]
-                or not row["tags"].startswith("us-gaap:")
-            ):
-                continue
-            dp = next(d for d in DPS if d.name == row["data_point"])
-            dur = dp.stmts[0] not in ("BS", "COVER")
-            tag = row["tags"]
-            have = facts.fy_years(tag, dur)
-            miss = sorted(last5 - set(have))
-            if not miss:
-                row["era_from_note"] = "tag covers last 5 FY in companyfacts"
-                continue
-            alt = []
-            for t in dp.tags + dp.combined:
-                q = f"us-gaap:{t}"
-                if q == tag:
-                    continue
-                o = facts.fy_years(q, dur)
-                cov = sorted(set(o) & set(miss))
-                if cov:
-                    alt.append((q, cov, o[max(cov)]))
-            if alt:
-                q, cov, acc = alt[0]
-                row["era_from_note"] = (
-                    f"ERA-CHECK: {short(tag)} from FY{min(have) if have else '?'}; FY{min(cov)}-{max(cov)} on {short(q)} (10-K {acc})"
-                )
-                eras.append(
-                    {
-                        "data_point": row["data_point"],
-                        "tag_now": tag,
-                        "tag_then": q,
-                        "years": cov,
-                        "accession": acc,
-                    }
-                )
-            else:
-                row["era_from_note"] = (
-                    f"tag missing FY{','.join(map(str, miss))} in companyfacts, no candidate tag fills them"
-                )
     return {
         "reader": R,
         "rows": rows,
@@ -1635,7 +1590,7 @@ def write(
     ]
     for e in era_results:
         md.append(
-            f"- Era 10-K {e['accession']} (FY{min(e['years'])}-{max(e['years'])}, {short(e['tag_then'])} era for {e['data_point']})."
+            f"- Era 10-K {e['accession']} (FY{e['fy']}, FY0 {e['fy0']}, filed {e['filed']}): full face read."
         )
     md += [
         "",
@@ -1672,21 +1627,7 @@ def write(
             )
             + " |"
         )
-    md += ["", "## Era checks (tag changes in the last ~5 years)"]
-    if not res["eras"]:
-        md.append(
-            "No tag change found for the single-tag rows in the last five fiscal years of companyfacts 10-K facts."
-        )
-    for e in res["eras"]:
-        conf = next(
-            (x for x in era_results if x["data_point"] == e["data_point"]), None
-        )
-        line = f"- {e['data_point']}: {short(e['tag_now'])} now; FY{min(e['years'])}-{max(e['years'])} on {short(e['tag_then'])} (10-K {e['accession']})."
-        if conf:
-            line += f" Era 10-K face: {conf['verdict']}"
-        else:
-            line += " Era 10-K not opened (DATA-INFERRED from companyfacts)."
-        md.append(line)
+    md += era_md(res.get("era_plan"))
     md += [
         "",
         "## Disagreements with cloud Ritwik",
@@ -1717,24 +1658,200 @@ def write(
     (out / f"{ticker}-docmap-{day}.md").write_text("\n".join(md) + "\n")
 
 
-def era_check(base: Path, cik: str, e: dict, facts: Facts | None) -> dict | None:
-    d = base / cik / e["accession"]
-    if not (d / "FilingSummary.xml").exists():
-        return None
-    R = Reader(base, cik, e["accession"], facts)
-    dp = next(x for x in DPS if x.name == e["data_point"])
-    h = R.find(dp.stmts, (e["tag_then"],))
-    if not h:
-        return {
-            **e,
-            "verdict": f"{short(e['tag_then'])} NOT on the face of that filing (DATA-INFERRED era)",
-        }
-    dur = dp.stmts[0] not in ("BS", "COVER")
-    p0, _, d0, _ = R.values(h, dp.kind)
-    a0 = R.api(h.elem, d0, dur)
+# ------------------------------------------------------------------------------------------------ eras FY2015 -> latest
+# Dhairya 2026-11-12: a docmap loads only when every data point's eras cover FY2015 to the latest year. An era is a
+# run of fiscal years with the same companyfacts tag signature (the tag the 10-K for that year files for the line;
+# for summed points the set of component tags); each era needs one opened 10-K whose face shows it. The FY2015 10-K
+# is always opened.
+START_FY = 2015
+ERA_SETS: dict[str, tuple[str, ...]] = {
+    "total_debt": tuple(t for t in DEBT_TAGS if t not in DEBT_NOTE_ONLY),
+    "depreciation_and_amortization": DA_PARTS
+    + ("DepreciationAmortizationAndAccretionNet", "DepreciationAmortizationAndOther"),
+    "operating_expenses": (
+        "OperatingExpenses",
+        "CostsAndExpenses",
+        "GrossProfit",
+        "OperatingIncomeLoss",
+    ),
+    "sga_expense": (
+        "SellingGeneralAndAdministrativeExpense",
+        "GeneralAndAdministrativeExpense",
+        "SellingAndMarketingExpense",
+    ),
+}
+
+
+def tenks(facts: Facts) -> dict[int, tuple[str, date, str]]:
+    """{fiscal year (companyfacts fy): (accession, FY0 end, filed)} for original 10-K / 10-KT filings."""
+    by_acc: dict[str, list] = {}
+    for node in facts.d.get("us-gaap", {}).values():
+        for lst in node.get("units", {}).values():
+            for x in lst:
+                # annual duration facts only: an instant can postdate the year end (subsequent events)
+                if (
+                    x.get("form") not in ("10-K", "10-KT")
+                    or not x.get("fy")
+                    or "start" not in x
+                ):
+                    continue
+                e = date.fromisoformat(x["end"])
+                if not 340 <= (e - date.fromisoformat(x["start"])).days <= 380:
+                    continue
+                cur = by_acc.setdefault(x["accn"], [x["fy"], e, x["filed"]])
+                cur[1] = max(cur[1], e)
+    out: dict[int, tuple[str, date, str]] = {}
+    for acc, (fy, end, filed) in by_acc.items():
+        if fy not in out or filed < out[fy][2]:
+            out[fy] = (acc, end, filed)
+    return out
+
+
+def _has(facts: Facts, elem: str, end: date, dur: bool, accn: str) -> bool:
+    for x in facts.units(elem):
+        if (
+            x.get("accn") != accn
+            or x.get("end") != end.isoformat()
+            or dur != ("start" in x)
+        ):
+            continue
+        if dur and not 340 <= (end - date.fromisoformat(x["start"])).days <= 380:
+            continue
+        return True
+    return False
+
+
+def year_sig(facts: Facts, dp: DP, end: date, accn: str, first: str = "") -> str:
+    dur = dp.stmts[0] not in ("BS", "COVER", "PAR_BS")
+    if dp.name in ERA_SETS:
+        present = [
+            t for t in ERA_SETS[dp.name] if _has(facts, f"us-gaap:{t}", end, dur, accn)
+        ]
+        return "+".join(sorted(present)) or "-"
+    order = ([first] if first else []) + [
+        t for t in dp.tags + dp.combined if t != first
+    ]
+    for t in order:
+        q = t if ":" in t else f"us-gaap:{t}"
+        if _has(facts, q, end, dur, accn):
+            return short(q)
+    return "-"
+
+
+def plan_eras(facts: Facts | None, latest: dict) -> dict:
+    if facts is None:
+        return {"error": "no companyfacts"}
+    tk = tenks(facts)
+    lat_fy = next(
+        (fy for fy, v in tk.items() if v[0] == latest["accession"]),
+        max(tk) if tk else None,
+    )
+    if lat_fy is None:
+        return {"error": "no 10-K in companyfacts"}
+    years = [y for y in sorted(tk) if START_FY <= y <= lat_fy]
+    if not years:
+        years = [lat_fy]
+    gaps = [y for y in range(years[0], lat_fy + 1) if y not in tk]
+    rows = {r["data_point"]: r for r in latest["rows"]}
+    eras: dict[str, list[dict]] = {}
+    need: dict[int, str] = {lat_fy: tk[lat_fy][0], years[0]: tk[years[0]][0]}
+    for dp in DPS:
+        first = (
+            rows[dp.name]["tags"].split(":", 1)[-1]
+            if "+" not in rows[dp.name]["tags"]
+            else ""
+        )
+        runs: list[dict] = []
+        for y in years:
+            sig = year_sig(facts, dp, tk[y][1], tk[y][0], first)
+            if runs and runs[-1]["sig"] == sig:
+                runs[-1]["to"] = y
+            else:
+                runs.append({"sig": sig, "from": y, "to": y})
+        for r in runs:
+            if not any(r["from"] <= y <= r["to"] for y in need):
+                need[r["to"]] = tk[r["to"]][0]
+        eras[dp.name] = runs
     return {
-        **e,
-        "verdict": f"FILING-CHECKED: {h.page.file} '{h.row.label}' {fmt(p0)} (API {fmt(a0)}, {match_txt(p0, a0)})",
+        "latest_fy": lat_fy,
+        "first_fy": years[0],
+        "reaches_2015": years[0] == START_FY,
+        "gaps": gaps,
+        "eras": eras,
+        "need": {
+            y: {"accession": a, "fy0": str(tk[y][1]), "filed": tk[y][2]}
+            for y, a in sorted(need.items())
+        },
+    }
+
+
+def era_md(plan: dict | None) -> list[str]:
+    out = [
+        "",
+        f"## Eras FY{START_FY} to latest (Dhairya 2026-11-12: every data point must cover FY{START_FY}-latest)",
+    ]
+    if not plan or plan.get("error"):
+        return out + [f"Era plan not possible: {(plan or {}).get('error', 'not run')}."]
+    v = plan["verdict"]
+    out.append(
+        f"Coverage verdict: {'COVERED' if v['covered'] else 'NOT COVERED'} FY{plan['first_fy']}-FY{plan['latest_fy']}"
+        + (
+            ""
+            if plan["reaches_2015"]
+            else f"; no FY{START_FY} 10-K in companyfacts (first 10-K FY{plan['first_fy']})"
+        )
+        + (
+            f"; fiscal years with no 10-K in companyfacts: {plan['gaps']}"
+            if plan["gaps"]
+            else ""
+        )
+        + (
+            f"; data points with an era not yet opened: {', '.join(v['uncovered'])}"
+            if v["uncovered"]
+            else ""
+        )
+        + "."
+    )
+    out += [
+        "",
+        "| data point | era | companyfacts tag(s) | opened 10-K face (FILING-CHECKED) | covered |",
+        "|---|---|---|---|---|",
+    ]
+    for dp, runs in plan["eras"].items():
+        for r in runs:
+            ev = "; ".join(r.get("evidence", [])) or "not opened"
+            out.append(
+                f"| {dp} | FY{r['from']}-{r['to']} | {r['sig']} | {ev.replace('|', '/')} | {'Y' if r.get('evidence') else 'N'} |"
+            )
+    return out
+
+
+def era_evidence(plan: dict, reads: dict[int, dict]) -> None:
+    """Attach each opened 10-K's face read to the eras it falls in; set the coverage verdict."""
+    unc = []
+    for dp, runs in plan["eras"].items():
+        for r in runs:
+            r["evidence"] = []
+            for fy, rd in sorted(reads.items()):
+                if not r["from"] <= fy <= r["to"]:
+                    continue
+                row = next(x for x in rd["rows"] if x["data_point"] == dp)
+                face = row["tags"].replace("us-gaap:", "") or "-"
+                agree = (
+                    ""
+                    if face == r["sig"]
+                    or row["status"] in ("not_presented", "OUT")
+                    and r["sig"] == "-"
+                    else " (face differs from companyfacts: the face stands)"
+                )
+                r["evidence"].append(
+                    f"FY{fy} {rd['accession']} {row['r_page'] or '-'}: {row['status']} {face} FY0 {row['fy0_printed'] or '-'} [{row['match'] or '-'}]{agree}"
+                )
+            if not r["evidence"]:
+                unc.append(dp)
+    plan["verdict"] = {
+        "covered": not unc and plan["reaches_2015"] and not plan["gaps"],
+        "uncovered": sorted(set(unc)),
     }
 
 
@@ -1747,14 +1864,53 @@ def main(argv: list[str]) -> None:
     )
     res = read_company(base, cik, ticker, rec["accession"], rec["filed"])
     facts = res["reader"].facts
-    era_results = [
-        x for x in (era_check(base, cik, e, facts) for e in res["eras"]) if x
-    ]
+    plan = plan_eras(facts, res)
+    res["era_plan"] = plan
+    reads: dict[int, dict] = {}
+    era_results: list[dict] = []
+    missing: list[dict] = []
+    if not plan.get("error"):
+        for fy, n in plan["need"].items():
+            if n["accession"] == rec["accession"]:
+                reads[fy] = res
+                continue
+            if not (base / cik / n["accession"] / "FilingSummary.xml").exists():
+                missing.append(
+                    {
+                        "cik": cik,
+                        "ticker": ticker,
+                        "accession": n["accession"],
+                        "fy": fy,
+                    }
+                )
+                continue
+            reads[fy] = read_company(base, cik, ticker, n["accession"], n["filed"])
+            era_results.append(
+                {
+                    "accession": n["accession"],
+                    "fy": fy,
+                    "fy0": n["fy0"],
+                    "filed": n["filed"],
+                }
+            )
+            res["quirks"] += [
+                {**q, "where": f"{n['accession']} {q['where']}"}
+                for q in reads[fy]["quirks"]
+            ]
+        era_evidence(plan, reads)
+        for row in res["rows"]:
+            runs = plan["eras"][row["data_point"]]
+            row["era_from_note"] = "; ".join(
+                f"FY{r['from']}-{r['to']} {r['sig']}{'' if r['evidence'] else ' [not opened]'}"
+                for r in runs
+            )
+    if "--plan" in argv:
+        print(json.dumps({"ticker": ticker, "missing": missing}))
+        return
     write(res, cik, ticker, out, day, era_results)
     counts: dict[str, int] = {}
     for r in res["rows"]:
         counts[r["status"]] = counts.get(r["status"], 0) + 1
-    mism = sum(1 for r in res["rows"] if is_mismatch(r["match"]))
     print(
         json.dumps(
             {
@@ -1763,10 +1919,26 @@ def main(argv: list[str]) -> None:
                 "accession": rec["accession"],
                 "fy0": str(res["reader"].fy0),
                 "status": counts,
-                "mismatch_rows": mism,
+                "mismatch_rows": sum(1 for r in res["rows"] if is_mismatch(r["match"])),
                 "quirks": res["quirks"],
-                "eras": res["eras"],
-                "era_checked": [x["verdict"] for x in era_results],
+                "era": {
+                    k: plan.get(k)
+                    for k in (
+                        "first_fy",
+                        "latest_fy",
+                        "reaches_2015",
+                        "gaps",
+                        "verdict",
+                        "error",
+                    )
+                },
+                "era_filings": [e["accession"] for e in era_results],
+                "missing": missing,
+                "eras_changed": {
+                    k: [f"FY{r['from']}-{r['to']} {r['sig']}" for r in v]
+                    for k, v in plan.get("eras", {}).items()
+                    if len(v) > 1
+                },
             },
             default=str,
         )

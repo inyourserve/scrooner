@@ -254,3 +254,57 @@ def test_costs_and_expenses_with_cost_of_revenue_is_combined_never_opex(tmp_path
         + _row("us-gaap_OperatingIncomeLoss", "Operating income", "200", "250"),
     )
     assert r["status"] == "combined" and r["tags"] == "us-gaap:CostsAndExpenses"
+
+
+def test_eras_reach_fy2015_and_each_needs_an_opened_10k(tmp_path):
+    """Dhairya 2026-11-12: every data point's eras must cover FY2015 to the latest year, each era seen on a face"""
+    m = _mod()
+
+    def fact(fy, val):
+        return {
+            "start": f"{fy}-01-01",
+            "end": f"{fy}-12-31",
+            "val": val,
+            "accn": f"A-{fy}",
+            "fy": fy,
+            "form": "10-K",
+            "filed": f"{fy + 1}-02-01",
+        }
+
+    facts = {
+        "facts": {
+            "us-gaap": {
+                "SalesRevenueNet": {"units": {"USD": [fact(2015, 10), fact(2016, 11)]}},
+                "Revenues": {"units": {"USD": [fact(2017, 12)]}},
+            }
+        }
+    }
+    p = tmp_path / "cf.json.gz"
+    p.write_bytes(gzip.compress(json.dumps(facts).encode()))
+    f = m.Facts(p)
+    rows = [
+        {
+            "data_point": dp.name,
+            "tags": "us-gaap:Revenues" if dp.name == "revenue" else "",
+            "status": "mapped",
+            "r_page": "R2.htm",
+            "fy0_printed": "12",
+            "match": "Y",
+        }
+        for dp in m.DPS
+    ]
+    plan = m.plan_eras(f, {"accession": "A-2017", "rows": rows})
+    assert plan["reaches_2015"] and plan["latest_fy"] == 2017
+    rev = [(r["sig"], r["from"], r["to"]) for r in plan["eras"]["revenue"]]
+    assert rev == [("SalesRevenueNet", 2015, 2016), ("Revenues", 2017, 2017)]
+    assert sorted(plan["need"]) == [2015, 2017]  # FY2016 is inside the FY2015 era
+    m.era_evidence(plan, {2017: {"accession": "A-2017", "rows": rows}})
+    assert not plan["verdict"]["covered"] and "revenue" in plan["verdict"]["uncovered"]
+    m.era_evidence(
+        plan,
+        {
+            2015: {"accession": "A-2015", "rows": rows},
+            2017: {"accession": "A-2017", "rows": rows},
+        },
+    )
+    assert plan["verdict"]["covered"]
