@@ -28,6 +28,8 @@ for r in rows:
         for k, v in EXPLAINED_BY.items():
             if con == v:
                 eras[(c, k)].append((r["era_from"], r["era_to"]))
+    if r["decision"] in ("not_presented", "not_in_template") and r["reason"]:  # a tagless status row (0122): the hole is explained
+        eras[(c, r["canonical_concept"])].append((r["era_from"], r["era_to"]))
     if r["decision"] == "concept" and r["tag"] in FEEDS_BOTH:
         for k in FEEDS_BOTH[r["tag"]]:
             eras[(c, k)].append((r["era_from"], r["era_to"]))
