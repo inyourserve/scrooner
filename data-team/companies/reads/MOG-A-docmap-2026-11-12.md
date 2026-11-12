@@ -106,5 +106,5 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | depreciation_and_amortization | component sum | agree | page value 94013000 vs printed 94013000 |
 | share_buybacks | mapped-sample | agree | page value -142707000 vs printed -142707000 |
 | cash_paid_for_interest | mapped-sample | agree | page value 70977000 vs printed 70977000 |
-| total_debt | component sum | agree | page value 945686000 vs printed 945686000 |
+| total_debt | component sum | agree | page value 1079761000 vs printed 1079761000 |
 | shares_outstanding | component sum | agree | page value 31662305 vs printed 31662305 |

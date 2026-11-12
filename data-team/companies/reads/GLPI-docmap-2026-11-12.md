@@ -111,4 +111,4 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | share_buybacks | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | cash_paid_for_interest | NOTE | agree | page value 357025000 vs API 357025000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 2228000 vs API 2228000 |
-| total_debt | component sum | agree | page value 7203731000 vs printed 7203731000 |
+| total_debt | component sum | agree | page value 7264950000 vs printed 7264950000 |

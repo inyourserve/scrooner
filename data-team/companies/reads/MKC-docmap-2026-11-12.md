@@ -109,5 +109,5 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | cfo | mapped-sample | agree | page value 962200000 vs printed 962200000 |
 | cash_paid_for_interest | NOTE | agree | page value 192800000 vs API 192800000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 239600000 vs API 239600000 |
-| total_debt | component sum | agree | page value 3996300000 vs printed 3996300000 |
+| total_debt | component sum | agree | page value 4091300000 vs printed 4091300000 |
 | shares_outstanding | component sum | agree | page value 268400000 = printed 2.684e+08 at 4 significant digits; fy0_printed restored to the page value |

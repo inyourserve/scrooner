@@ -97,5 +97,5 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | accounts_receivable | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | accounts_payable | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | cfo | mapped-sample | agree | page value 628000000 vs printed 628000000 |
-| total_debt | component sum | agree | page value 3254000000 vs printed 3254000000 |
-| shares_outstanding | mapped-sample | DISAGREE | us-gaap:CommonStockSharesOutstanding not found with a value in the 2025-12-31 column on R6.htm |
+| total_debt | component sum | agree | page value 3256000000 vs printed 3256000000 |
+| shares_outstanding | mapped-sample | agree | value 484825395 read off its own R page (no companyfacts fact to compare) |

@@ -74,4 +74,4 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | dividends_paid | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | cash_paid_for_interest | NOTE | agree | page value 161300000 vs API 161300000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 145000000 vs API 145000000 |
-| total_debt | component sum | agree | page value 3946300000 vs printed 3946300000 |
+| total_debt | component sum | agree | page value 3973200000 vs printed 3973200000 |

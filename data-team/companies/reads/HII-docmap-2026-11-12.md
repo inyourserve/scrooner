@@ -108,4 +108,4 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | cash_flow_investing | mapped-sample | agree | page value -521000000 vs printed -521000000 |
 | depreciation_and_amortization | component sum | agree | page value 329000000 vs printed 329000000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 96000000 vs API 96000000 |
-| total_debt | component sum | DISAGREE | us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent not found with a value in the 2025-12-31 column on R4.htm |
+| total_debt | component sum | agree | page value 2700000000 vs printed 2700000000; us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent blank in the 2025-12-31 column on R4.htm (0) |

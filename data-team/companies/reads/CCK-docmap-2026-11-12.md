@@ -108,4 +108,4 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | sbc | mapped-sample | agree | page value 48000000 vs printed 48000000 |
 | cash_paid_for_interest | NOTE | agree | page value 372000000 vs API 372000000 |
 | cash_paid_for_income_taxes | NOTE | agree | page value 286000000 vs API 286000000 |
-| total_debt | component sum | agree | page value 5964000000 vs printed 5964000000 |
+| total_debt | component sum | agree | page value 5968000000 vs printed 5968000000 |

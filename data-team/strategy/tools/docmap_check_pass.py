@@ -32,6 +32,7 @@ def page_value(base, rpage, tags, end, stmt, dp, sum_rows=False):
     """Sum of the FY0 values of the rows carrying these elements on these R pages (one tag per page or all on one)."""
     pages = rpage.split("+")
     total, found = 0.0, 0
+    zero_rows = []
     for t in tags:
         hit = None
         for pg in dict.fromkeys(pages):
@@ -47,6 +48,11 @@ def page_value(base, rpage, tags, end, stmt, dp, sum_rows=False):
                             break
                     if vals and not sum_rows:
                         break
+            if not vals and len(tags) > 1:
+                row = next((r for r in p["rows"] if r["tag"] == t and any(v is not None for v in r["vals"])), None)
+                if row is not None and idx:
+                    vals = [0.0]  # the line is printed but blank for this period: a zero component
+                    zero_rows.append(f"{t} blank in the {end} column on {pg} (0)")
             if vals:
                 hit = (sum(vals), pg)
             if hit:
@@ -55,7 +61,7 @@ def page_value(base, rpage, tags, end, stmt, dp, sum_rows=False):
             return None, f"{t} not found with a value in the {end} column on {rpage}"
         total += hit[0]
         found += 1
-    return total, ""
+    return total, "; ".join(zero_rows)
 
 
 # ---------------------------------------------------------------- rule checks (Dhairya / Tag Expert, 2026-11-12)
@@ -140,12 +146,119 @@ def sga_rule(r, base, end_d, cf, accn):
     return "sga"
 
 
+# founder 2026-11-04 item 5 (Dhairya, binding): total_debt includes finance lease liabilities, current and noncurrent,
+# never operating leases; not added again when the debt line carries leases (tag or label) or the debt note
+# reconciles with leases inside; the note total is used only when no face line carries finance leases
+FL_FACE = ("us-gaap:FinanceLeaseLiabilityCurrent", "us-gaap:FinanceLeaseLiabilityNoncurrent", "us-gaap:FinanceLeaseLiability")
+
+
+def lease_rule(r, base, end_d, cf, accn):
+    if r["data_point"] != "total_debt" or r["status"] not in ("mapped", "component sum") or not r["r_page"]:
+        return None
+    if re.search(r"Lease", r["tags"]) or re.search(r"lease", r["label"], re.I):
+        r["note"] = "finance leases already inside the debt line(s) (tag or label): not added; " + r["note"]
+        return None
+    pg = r["r_page"].split("+")[0]
+    p = D.parse_r(D.get(base + pg, cache))
+    tags = [t for t in r["tags"].split("+") if t]
+    face = [x for x in p["rows"] if x["tag"] and any(v is not None for v in x["vals"])
+            and x["tag"] not in tags and not re.search(r"Asset|RightOfUse|Operating", x["tag"])
+            and (x["tag"] in FL_FACE or (re.search(r"financ(e|ing) lease", x["label"], re.I)
+                                         and re.search(r"liabilit|obligation", x["label"], re.I)
+                                         and not re.search(r"operating|asset|right|property|excluding", x["label"], re.I)))]
+    face = [x for x in face if x["tag"] != "us-gaap:FinanceLeaseLiability" or len(face) == 1]
+    added, src = [], ""
+    if face and r["stmt"] != "BS":
+        # the keyed debt line is a note total and the same note prints finance leases: reconciled inside, not added
+        r["note"] = (f"finance leases are printed in the same debt note as the keyed total ({pg}): the debt note reconciles "
+                     "with leases inside, not added; " + r["note"])
+        return None
+    if face:
+        added = list(dict.fromkeys(x["tag"] for x in face))
+        v, why = page_value(base, "+".join([r["r_page"]]), tags + added, end_d, "BS", "total_debt")
+        src = f"face finance-lease line(s) {', '.join(x['label'][:40] for x in face)} on {pg}"
+    else:
+        ml = metalinks(base)
+        if ml is None:
+            return None
+        mtags, role2r = ml
+        def pages_of(t):
+            node = mtags.get(t.replace(":", "_"), {})
+            return {role2r[x][0] for x in node.get("presentation", []) if x in role2r and role2r[x][1] != "statement"}
+        fl = [t for t in ("us-gaap:FinanceLeaseLiability",) if pages_of(t)] or              [t for t in ("us-gaap:FinanceLeaseLiabilityCurrent", "us-gaap:FinanceLeaseLiabilityNoncurrent") if pages_of(t)]
+        if not fl:
+            return None
+        debt_notes = set().union(*(pages_of(t) for t in tags)) if tags else set()
+        if debt_notes & set().union(*(pages_of(t) for t in fl)):
+            r["note"] = (f"finance leases are presented inside the debt note ({', '.join(sorted(debt_notes & set().union(*(pages_of(t) for t in fl))))}.htm): "
+                         "the debt note reconciles with leases inside, not added; " + r["note"])
+            return None
+        parts = []
+        for t in fl:
+            hit = relocate(base, [t.split(":")[-1]], end_d, "total_debt")
+            if not hit:
+                return None
+            parts.append(hit)
+        base_v, _w = page_value(base, r["r_page"], tags, end_d, "BS", "total_debt")
+        if base_v is None:
+            return None
+        v = base_v + sum(h[2] for h in parts)
+        added = [f"us-gaap:{h[0]}" for h in parts]
+        src = "note total " + ", ".join(f"{h[0]} on {h[1]}" for h in parts) + " (no face line carries finance leases)"
+    if v is None:
+        return None
+    old = f"was {r['status']} {r['tags']} = {r['fy0_printed'] or r['fy0_api']}"
+    api = [D.api_value(cf, t, accn, end_d, None) for t in tags + added]
+    if not face:
+        r["r_page"] = "+".join(dict.fromkeys(r["r_page"].split("+") + [h[1] for h in parts]))
+    r.update(status="component sum", tags="+".join(tags + added), fy0_printed=D.fmt(v),
+             fy0_api=D.fmt(sum(api)) if None not in api else "", fy1_printed="", fy1_api="")
+    r["match"] = ("Y" if close(v, sum(api)) else "N") if None not in api else ""
+    r["note"] = f"RULE: total_debt includes finance lease liabilities (founder 2026-11-04 item 5): added {src}; {old}"
+    return "lease"
+
+
+def capex_rule(r, base, end_d, cf, accn):
+    """Dhairya 2026-11-13: capex includes turnaround spending only when the turnaround line is printed inside
+    investing activities (a turnaround line in operating activities is never added)."""
+    if r["data_point"] != "capex" or r["status"] != "mapped" or not r["r_page"] or "urnaround" in r["tags"]:
+        return None
+    pg = r["r_page"].split("+")[0]
+    p = D.parse_r(D.get(base + pg, cache))
+    rows = p["rows"]
+    start = next((i for i, x in enumerate(rows) if re.search(r"investing activities", x["label"], re.I)), None)
+    end = next((i for i, x in enumerate(rows) if start is not None and i > start and not x["tag"].endswith("Abstract")
+                and x["tag"].startswith("us-gaap:NetCashProvidedByUsedInInvestingActivities")), None)
+    if start is None or end is None:
+        return None
+    turn = [x for x in rows[start:end] if x["tag"] and x["tag"] != r["tags"] and re.search(r"turnaround", x["label"] + x["tag"], re.I)
+            and any(v is not None for v in x["vals"])]
+    if not turn:
+        return None
+    tags = [r["tags"]] + [x["tag"] for x in turn]
+    v, why = page_value(base, pg, tags, end_d, "CF", "capex")
+    if v is None:
+        return None
+    old = f"was mapped {r['tags']} = {r['fy0_printed']}"
+    api = [D.api_value(cf, t, accn, end_d, 12) for t in tags]
+    r.update(status="component sum", tags="+".join(tags), label=" + ".join([r["label"][:50]] + [x["label"][:50] for x in turn]),
+             fy0_printed=D.fmt(v), fy0_api=D.fmt(sum(api)) if None not in api else "", fy1_printed="", fy1_api="")
+    r["match"] = ("Y" if close(v, sum(api)) else "N") if None not in api else ""
+    r["note"] = (f"RULE: capex includes turnarounds printed inside investing activities (Dhairya 2026-11-13): added "
+                 f"{', '.join(x['label'][:50] for x in turn)} on {pg}; {old}")
+    return "capex"
+
+
 def apply_rules(r, base, end_d, cf=None, accn=""):
     """Returns a note when a rule changed the row (the row is then re-checked as class 'rule')."""
     if r["status"] not in ("mapped", "component sum"):
         return None
     if cf is not None and sga_rule(r, base, end_d, cf, accn):
         return "sga"
+    if cf is not None and lease_rule(r, base, end_d, cf, accn):
+        return "lease"
+    if cf is not None and capex_rule(r, base, end_d, cf, accn):
+        return "capex"
     for dp, pred, why, fix in RULES:
         if r["data_point"] != dp or not pred(r["tags"], r["label"]):
             continue
@@ -286,7 +399,17 @@ def check_company(rank):
         else:
             v, why = page_value(base, r["r_page"], tags, end_d, r["stmt"], r["data_point"],
                               sum_rows=r["status"] == "component sum" and len(tags) == 1)
+            zr = why if v is not None else ""
             ref = r["fy0_printed"] or r["fy0_api"]
+            if v is None and r["data_point"] == "shares_outstanding":
+                p = D.parse_r(D.get(base + r["r_page"].split("+")[0], cache))
+                vals = [x for row in p["rows"] if row["tag"] in tags and D.parse_date(row["label"]) == end_d
+                        for x in row["vals"] if x is not None]
+                if vals:
+                    v = sum(vals) * p["shares_scale"]
+                    why = f"equity statement row 'Ending balance ... at {end}' on {r['r_page']}: {D.fmt(v)}"
+                    if not r["fy0_printed"]:
+                        r["fy0_printed"] = D.fmt(v)
             if v is None and r["stmt"] == "NOTE":
                 # the cited note page has no period-end value (e.g. a subsequent-events date): look on every page
                 # that presents the element; none -> not_presented (shares: balance-sheet-date count only)
@@ -316,7 +439,7 @@ def check_company(rank):
                     st["format_fixes"] = st.get("format_fixes", 0) + 1
             else:
                 ok = close(v, float(ref))
-                why = f"page value {D.fmt(v)} vs {'printed' if r['fy0_printed'] else 'API'} {ref}"
+                why = f"page value {D.fmt(v)} vs {'printed' if r['fy0_printed'] else 'API'} {ref}" + (f"; {zr}" if zr else "")
             if v is not None and r["stmt"] == "NOTE" and not r["fy0_printed"]:
                 r["fy0_printed"] = D.fmt(v)  # NOTE value read off its own R page
                 if r["fy0_api"]:

@@ -108,4 +108,4 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | current_liabilities | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | stockholders_equity | mapped-sample | agree | page value 3320638000 vs printed 3320638000 |
 | cash_flow_financing | mapped-sample | agree | page value 817241000 vs printed 817241000 |
-| total_debt | NOTE | agree | value 549761000 read off its own R page (no companyfacts fact to compare) |
+| total_debt | NOTE | agree | page value 583663000 vs printed 583663000 |

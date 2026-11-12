@@ -106,5 +106,5 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | cfo | mapped-sample | agree | page value 402000000 vs printed 402000000 |
 | depreciation_and_amortization | component sum | agree | page value 56800000 = printed 5.68e+07 at 4 significant digits; fy0_printed restored to the page value |
 | dividends_paid | not_presented | agree | none of the candidate elements in MetaLinks.json |
-| total_debt | component sum | agree | page value 197700000 vs printed 197700000 |
+| total_debt | component sum | agree | page value 200300000 vs printed 200300000 |
 | shares_outstanding | component sum | agree | page value 33342823 vs printed 33342823 |
