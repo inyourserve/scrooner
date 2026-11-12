@@ -222,8 +222,9 @@ def _load_fact_vintages(
     tags: set[tuple[str | None, str | None]],
     latest_only: bool = False,
 ) -> dict[tuple[str | None, str | None], dict[int, list[Fact]]]:
-    """(taxonomy, tag) -> period_id -> one Fact per authoritative filing, newest filing first (the same source
-    filters as _load_facts; predecessor windows are not included)."""
+    """(taxonomy, tag) -> period_id -> one Fact per filing, newest filing first: the authoritative copy, plus (not
+    latest_only) every other filing's copy of the same value. Same source filters as _load_facts; predecessor
+    windows are not included."""
     out: dict[tuple[str | None, str | None], dict[int, list[Fact]]] = defaultdict(dict)
     if not tags:
         return out
@@ -240,7 +241,13 @@ def _load_fact_vintages(
                 join core.concept c on c.id = f.concept_id
                 join core.period p on p.id = f.period_id
                 join core.filing fl on fl.id = f.filing_id
-                where f.company_id = %s and f.is_authoritative
+                where f.company_id = %s
+                  -- the authoritative copy; for vintages also every other filing's copy of the SAME value (the
+                  -- same number as printed in that filing: a sum can then take all parts from one filing)
+                  and (f.is_authoritative or (not %s and exists (
+                      select 1 from core.fact a
+                      where a.company_id = f.company_id and a.concept_id = f.concept_id and a.unit_id = f.unit_id
+                        and a.period_id = f.period_id and a.is_authoritative and a.value = f.value)))
                   -- a filing in which THIS company is only a co-registrant (or quarantined) carries the filer's
                   -- statements, not its own: never a source (core.filing_registrant, rule
                   -- entity.shared_accession_primary_filer@1)
@@ -258,7 +265,12 @@ def _load_fact_vintages(
             where rk = 1 or not %s
             order by taxonomy, tag, period_id, filing_date desc nulls last, filing_id desc, id desc
             """,
-            (company_id, sorted({t for _, t in tags if t is not None}), latest_only),
+            (
+                company_id,
+                latest_only,
+                sorted({t for _, t in tags if t is not None}),
+                latest_only,
+            ),
         )
         rows = cur.fetchall()
     # core.fact is unique per (company, tag, unit, period, filing): two values for one tag and period in one

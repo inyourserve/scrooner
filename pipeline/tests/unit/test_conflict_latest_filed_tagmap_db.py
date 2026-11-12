@@ -137,3 +137,22 @@ def test_rounding_class_the_more_precise_older_copy_wins_over_a_later_rounded_pr
             "select rule from core.fact_conflict_resolution where fact_id = %s", (ids["X1"],)
         ).fetchone()[0]
         assert rule == clf.RULE_TAGMAP_PRECISION
+
+
+@pytest.mark.integration
+def test_mapper_vintages_carry_same_value_copies_never_a_different_value(isolated_database_url):
+    # A sum may take every part from one filing: that filing's copy counts only when it equals the authoritative
+    # value. latest_only (the served value) stays the authoritative copy alone.
+    from scrooner_pipeline.mapper import company_tag_map as ctm
+
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(
+            conn, "0000000016", True,
+            [("X0", "10-K", "2015-02-20", 100), ("X1", "10-K", "2016-02-20", 98), ("X2", "10-K", "2017-02-20", 98)],
+        )
+        conn.execute("update core.fact set is_authoritative = (id = %s) where id = any(%s)", (ids["X1"], list(ids.values())))
+        cid = conn.execute("select id from core.company where cik = '0000000016'").fetchone()[0]
+        got = ctm._load_fact_vintages(conn, cid, {TAG})
+        assert sorted(f.accession for fs in got[TAG].values() for f in fs) == ["X1", "X2"]
+        latest = ctm._load_fact_vintages(conn, cid, {TAG}, latest_only=True)
+        assert [f.accession for fs in latest[TAG].values() for f in fs] == ["X1"]

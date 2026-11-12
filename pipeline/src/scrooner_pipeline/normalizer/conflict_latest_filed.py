@@ -298,7 +298,9 @@ class TagMapCopy:
     filing_date: object
     is_amendment: bool
     eligible: bool
-    dcml: int | None = None  # decimals the filing printed for this value (fsn.value); None = unknown
+    dcml: int | None = (
+        None  # decimals the filing printed for this value (fsn.value); None = unknown
+    )
 
 
 def choose_tag_map_winner(copies: Sequence[TagMapCopy]) -> tuple[int, str] | None:
@@ -382,7 +384,9 @@ def plan_tag_map_promotions(
     out = []
     for key, rs in groups.items():
         copies = [
-            TagMapCopy(r[0], Decimal(r[5]), r[6], r[7], r[8], r[9], r[10], dcml.get(r[0]))
+            TagMapCopy(
+                r[0], Decimal(r[5]), r[6], r[7], r[8], r[9], r[10], dcml.get(r[0])
+            )
             for r in rs
         ]
         chosen = choose_tag_map_winner(copies)
@@ -457,7 +461,9 @@ def tag_map_company_ids(conn: psycopg.Connection, company_ids: list[int]) -> lis
 def promote_tag_map_companies(conn: psycopg.Connection, company_ids: list[int]) -> int:
     if not company_ids:
         return 0
-    promoted = apply_tag_map_promotions(conn, plan_tag_map_promotions(conn, company_ids))
+    promoted = apply_tag_map_promotions(
+        conn, plan_tag_map_promotions(conn, company_ids)
+    )
     conn.commit()
     return promoted
 
