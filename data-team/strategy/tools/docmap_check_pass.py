@@ -48,6 +48,84 @@ def page_value(base, rpage, tags, end, stmt, dp):
     return total, ""
 
 
+# ---------------------------------------------------------------- rule checks (Dhairya / Tag Expert, 2026-11-12)
+def metalinks(base):
+    txt = D.get(base + "MetaLinks.json", cache)
+    try:
+        inst = next(iter(json.loads(txt)["instance"].values()))
+    except Exception:
+        return None
+    role2r = {v.get("role"): (k, v.get("groupType", ""), v.get("shortName", "")) for k, v in inst.get("report", {}).items()}
+    return inst.get("tag", {}), role2r
+
+
+def relocate(base, cands, end, dp):
+    """First candidate element presented anywhere in the filing -> (tag, R page, value read off that page)."""
+    ml = metalinks(base)
+    if ml is None:
+        return None
+    tags, role2r = ml
+    for t in cands:
+        node = tags.get(f"us-gaap_{t}")
+        if not node:
+            continue
+        rs = sorted((role2r[x] for x in node.get("presentation", []) if x in role2r),
+                    key=lambda x: (x[1] != "statement", int(re.sub(r"\D", "", x[0]) or 0)))
+        for fn, grp, name in rs:
+            v, _why = page_value(base, f"{fn}.htm", [f"us-gaap:{t}"], end, "CF" if grp == "statement" else "NOTE", dp)
+            if v is not None:
+                return t, f"{fn}.htm", v, grp, name
+    return None
+
+
+RULES = [  # (data point, predicate on (tags, label), ruling, replacement candidates or a status)
+    ("share_buybacks", lambda t, l: re.search(r"TaxWithholding|SharesPaidForTax|Withh|Proceeds", t) or re.search(r"withh|tax", l, re.I),
+     "withholding-tax payment is not a buyback (founder 2026-11-04 item 4)", ["PaymentsForRepurchaseOfCommonStock"]),
+    ("dividends_paid", lambda t, l: re.search(r"MinorityInterest|Noncontrolling|Preferred", t) or re.search(r"noncontrolling|minority|preferred", l, re.I),
+     "NCI or preferred dividends are not common dividends (shareholder-returns card)", ["PaymentsOfDividendsCommonStock"]),
+    ("accounts_receivable", lambda t, l: re.search(r"Interest|Notes|Financing|Loans|Lease", t) or re.search(r"interest|notes|financing|loans?\b", l, re.I),
+     "interest, notes or financing receivables are not accounts receivable (sector-faces card)", ["AccountsReceivableNetCurrent"]),
+    ("interest_expense", lambda t, l: re.search(r"Net\b|Net$|IncomeExpense", t) or re.search(r",\s*net\b(?!\s+of)|net interest|interest.*\bnet\b(?!\s+of)", l, re.I),
+     "net interest line: interest_expense is the gross charge only (Dhairya 2026-11-12)", "combined"),
+    ("operating_expenses", lambda t, l: "CostsAndExpenses" in t,
+     "CostsAndExpenses includes cost of revenue: combined, never opex (Dhairya 2026-11-12)", "combined"),
+    ("depreciation_and_amortization", lambda t, l: re.search(r"Accretion|Impairment", t) or re.search(r"accretion|impairment", l, re.I),
+     "D&A including accretion/impairment is combined (Dhairya 2026-11-12)", "combined"),
+    ("cash_paid_for_interest", lambda t, l: t.endswith(":InterestPaid") or ":InterestPaid+" in t,
+     "cash interest paid = InterestPaidNet, net of capitalized interest (DQC_0065)", ["InterestPaidNet"]),
+]
+
+
+def apply_rules(r, base, end_d):
+    """Returns a note when a rule changed the row (the row is then re-checked as class 'rule')."""
+    if r["status"] not in ("mapped", "component sum"):
+        return None
+    for dp, pred, why, fix in RULES:
+        if r["data_point"] != dp or not pred(r["tags"], r["label"]):
+            continue
+        old = f"was {r['status']} {r['tags']} '{r['label'][:50]}' on {r['r_page']}"
+        if fix == "combined":
+            r["status"] = "combined"
+            r["note"] = f"RULE: {why}; {old}; " + r["note"]
+            return why
+        hit = relocate(base, fix, end_d, dp)
+        if hit:
+            t, pg, v, grp, name = hit
+            r.update(status="mapped", tags=f"us-gaap:{t}", stmt="CF" if grp == "statement" else "NOTE", r_page=pg,
+                     label=name[:120] if grp != "statement" else r["label"], fy0_printed=D.fmt(v), fy0_api="", fy1_printed="",
+                     fy1_api="", match="")
+            r["note"] = f"RULE: {why}; {old}; replaced by us-gaap:{t} read off {pg} ('{name[:60]}')"
+        elif dp == "cash_paid_for_interest":
+            r["status"] = "combined"
+            r["note"] = f"RULE: {why}; InterestPaidNet not in the filing (MetaLinks.json): InterestPaid is gross of capitalized interest; {old}"
+        else:
+            r.update(status="not_presented", tags="", stmt="", r_page="", label="", fy0_printed="", fy0_api="",
+                     fy1_printed="", fy1_api="", match="")
+            r["note"] = f"RULE: {why}; {old}; none of {', '.join(fix)} in MetaLinks.json (whole filing): not_presented"
+        return why
+    return None
+
+
 def metalinks_tags(base):
     txt = D.get(base + "MetaLinks.json", cache)
     try:
@@ -82,6 +160,10 @@ def check_company(rank):
     log = []
     for r in recs:
         r["check"] = "check: machine-full-filing"
+        ruled = apply_rules(r, base, end_d)
+        if ruled:
+            st["rule_fixes"] = st.get("rule_fixes", 0) + 1
+            st["by_class"]["rule"] = st["by_class"].get("rule", 0) + 1
         cls = ("NOTE" if r["stmt"] == "NOTE" else r["status"]) if (r["status"] in CHECK_STATUSES or r["stmt"] == "NOTE") \
             else ("mapped-sample" if id(r) in sample else None)
         if cls is None:
