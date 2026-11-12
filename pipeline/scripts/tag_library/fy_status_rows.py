@@ -51,7 +51,8 @@ def classify(status):
     return "not_presented", "held_" + slug  # cover page, tax note, COND template seed, a read under review: held, never a value
 
 
-new, seen = [], set()
+new = []
+seen = {(r["company_id"], r["canonical_concept"].removesuffix("_resolved"), r["era_from"]) for r in rows if r["decision"] in ("not_presented", "not_in_template")}
 for r in csv.DictReader(open(fy)):
     c, dp, p = r["company_id"], r["data_point"], r["period"]
     k = classify(r["status"])

@@ -609,8 +609,8 @@ company_id,ticker,data_point,fy,period,status
 251,CAT,income_before_tax,FY-1,2024-12-31,served
 251,CAT,income_tax_expense,FY0,2025-12-31,served
 251,CAT,income_tax_expense,FY-1,2024-12-31,served
-251,CAT,interest_expense,FY0,2025-12-31,served
-251,CAT,interest_expense,FY-1,2024-12-31,served
+251,CAT,interest_expense,FY0,2025-12-31,read: interest_expense_printed_by_segment_only
+251,CAT,interest_expense,FY-1,2024-12-31,read: interest_expense_printed_by_segment_only
 251,CAT,interest_income,FY0,2025-12-31,row: not_in_template_read_verified
 251,CAT,interest_income,FY-1,2024-12-31,row: not_in_template_read_verified
 251,CAT,inventory,FY0,2025-12-31,served
@@ -2931,8 +2931,8 @@ company_id,ticker,data_point,fy,period,status
 2726,CRWD,current_assets,FY-1,2025-01-31,served
 2726,CRWD,current_liabilities,FY0,2026-01-31,served
 2726,CRWD,current_liabilities,FY-1,2025-01-31,served
-2726,CRWD,depreciation_and_amortization,FY0,2026-01-31,served
-2726,CRWD,depreciation_and_amortization,FY-1,2025-01-31,served
+2726,CRWD,depreciation_and_amortization,FY0,2026-01-31,row: held_custom_extension_no_fact
+2726,CRWD,depreciation_and_amortization,FY-1,2025-01-31,row: held_custom_extension_no_fact
 2726,CRWD,diluted_eps,FY0,2026-01-31,served
 2726,CRWD,diluted_eps,FY-1,2025-01-31,served
 2726,CRWD,dividends_paid,FY0,2026-01-31,row: not_in_template_read_verified
@@ -3653,8 +3653,8 @@ company_id,ticker,data_point,fy,period,status
 3932,MA,sga_expense,FY-1,2024-12-31,served
 3932,MA,share_buybacks,FY0,2025-12-31,served
 3932,MA,share_buybacks,FY-1,2024-12-31,served
-3932,MA,shares_outstanding,FY0,2025-12-31,served
-3932,MA,shares_outstanding,FY-1,2024-12-31,served
+3932,MA,shares_outstanding,FY0,2025-12-31,read: shares_per_class_only
+3932,MA,shares_outstanding,FY-1,2024-12-31,read: shares_per_class_only
 3932,MA,stockholders_equity,FY0,2025-12-31,served
 3932,MA,stockholders_equity,FY-1,2024-12-31,served
 3932,MA,total_assets,FY0,2025-12-31,served
@@ -3891,8 +3891,8 @@ company_id,ticker,data_point,fy,period,status
 4945,TSLA,current_assets,FY-1,2024-12-31,served
 4945,TSLA,current_liabilities,FY0,2025-12-31,served
 4945,TSLA,current_liabilities,FY-1,2024-12-31,served
-4945,TSLA,depreciation_and_amortization,FY0,2025-12-31,served
-4945,TSLA,depreciation_and_amortization,FY-1,2024-12-31,served
+4945,TSLA,depreciation_and_amortization,FY0,2025-12-31,read: line_presented_combined_with_others
+4945,TSLA,depreciation_and_amortization,FY-1,2024-12-31,read: line_presented_combined_with_others
 4945,TSLA,diluted_eps,FY0,2025-12-31,served
 4945,TSLA,diluted_eps,FY-1,2024-12-31,served
 4945,TSLA,dividends_paid,FY0,2025-12-31,row: not_in_template_read_verified
@@ -4133,8 +4133,8 @@ company_id,ticker,data_point,fy,period,status
 5050,META,sga_expense,FY-1,2024-12-31,served
 5050,META,share_buybacks,FY0,2025-12-31,served
 5050,META,share_buybacks,FY-1,2024-12-31,served
-5050,META,shares_outstanding,FY0,2025-12-31,served
-5050,META,shares_outstanding,FY-1,2024-12-31,served
+5050,META,shares_outstanding,FY0,2025-12-31,read: shares_per_class_only
+5050,META,shares_outstanding,FY-1,2024-12-31,read: shares_per_class_only
 5050,META,stockholders_equity,FY0,2025-12-31,served
 5050,META,stockholders_equity,FY-1,2024-12-31,served
 5050,META,total_assets,FY0,2025-12-31,served

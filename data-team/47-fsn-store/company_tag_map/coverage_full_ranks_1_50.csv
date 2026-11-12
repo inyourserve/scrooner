@@ -1465,7 +1465,7 @@ company_id,ticker,template,data_point,status
 2726,CRWD,general,cost_of_revenue,sourced
 2726,CRWD,general,current_assets,sourced
 2726,CRWD,general,current_liabilities,sourced
-2726,CRWD,general,depreciation_and_amortization,sourced
+2726,CRWD,general,depreciation_and_amortization,read-verified new-found
 2726,CRWD,general,diluted_eps,sourced
 2726,CRWD,general,dividends_paid,read-verified pass of: template-OUT candidate (Verifier draw)
 2726,CRWD,general,dividends_per_share,held C6 (0122)
