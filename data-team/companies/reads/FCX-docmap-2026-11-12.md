@@ -107,3 +107,4 @@ none beyond sign differences
 - sbc: mapped us-gaap:ShareBasedCompensation (R5.htm): 2026-11-12 R5.htm: 20% mapped sample: CF R5.htm 'Stock-based compensation' is the sbc line, printed 121000000 = filing XBRL 121000000; agrees
 - share_buybacks: mapped us-gaap:PaymentsForRepurchaseOfCommonStock (R5.htm): 2026-11-12 R5.htm: 20% mapped sample: CF R5.htm 'Treasury stock purchases' is the share_buybacks line, printed -107000000 = filing XBRL 107000000; agrees
 - interest_expense: combined us-gaap:InterestIncomeExpenseNet (R3.htm): net line; map via override only if the note shows net of capitalized interest alone
+- interest_expense: override test failed: the filing shows no gross interest minus capitalized interest tie (R14 DEBT note has no interest breakdown; R48 'Capitalized interest' 342 is a PP&E balance, not the year's capitalized amount); stays combined (Dhairya condition 2026-11-12)

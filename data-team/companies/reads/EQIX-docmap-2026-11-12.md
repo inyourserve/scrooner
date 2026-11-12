@@ -104,3 +104,4 @@ none beyond sign differences
 - goodwill: mapped us-gaap:Goodwill (R3.htm): 2026-11-12 R3.htm: 20% mapped sample: BS R3.htm 'Goodwill' is the goodwill line, printed 5984000000 = filing XBRL 5984000000; agrees
 - stockholders_equity: mapped us-gaap:StockholdersEquity (R3.htm): 2026-11-12 R3.htm: 20% mapped sample: BS R3.htm 'Total common stockholders' equity' is the stockholders_equity line, printed 14156000000 = filing XBRL 14156000000; agrees
 - dividends_paid: mapped us-gaap:PaymentsOfDividends (R9.htm): 2026-11-12 R9.htm: 20% mapped sample: CF R9.htm 'Payment of dividends' is the dividends_paid line, printed -1856000000 = filing XBRL 1856000000; agrees
+- total_debt: lease note R88.htm: finance lease liabilities total 2,355 = 168 + 2,187 (BS R3), so the sum includes finance leases, never operating leases (1,459); founder decision 2026-11-04 doc 02, confirmed by Dhairya 2026-11-12
