@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001376139-16-000084 (CIK 0001376139, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R9.htm
 - 10-K 0001376139-18-000016 (CIK 0001376139, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R9.htm
 - 10-K 0001376139-21-000021 (CIK 0001376139, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
-- companyfacts CIK0001376139.json (one call).
+- companyfacts CIK0001376139.json (one call); submissions CIK0001376139.json (SIC 2911).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R100.htm | Cash paid for interest | 142000000 | 142000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R100.htm 'Supplemental Cash Flow Information (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R89.htm | Total income taxes paid (refunded) | -11000000 | -11000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R89.htm 'Income Taxes - Schedule of Income Taxes Paid (Net of Refunds Received) (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:LongTermDebtAndCapitalLeaseObligations | R3.htm | Long-term debt and finance lease obligations, net of current portion (including $569 and $568, respectively, of VIE) | 1751000000 | 1751000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R6.htm | Ending balance (in shares) at Dec. 31, 2023 | 100629209 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R6.htm 'CONSOLIDATED STATEMENTS OF CHANGES IN EQUITY' (MetaLinks.json presentation) |
+| shares_outstanding | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CommonStockSharesOutstanding in MetaLinks.json (892 tags across all 105 R pages, face and notes) of 0001376139-26-000014; HAND REVIEW: 5 label candidate(s) incl. custom tags: us-gaap:CommonStockSharesIssued 'Common stock, issued (in shares) / Common Stock, Shares, Iss' R4; us-gaap:CommonStockSharesOutstanding 'Beginning balance (in shares) / Ending balance (in shares) /' R6; dei:EntityCommonStockSharesOutstanding 'Entity Common Stock, Shares Outstanding / Entity Common Stoc' R1; us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding 'Diluted (in shares) / Weighted Average Number of Shares Outs' R5; us-gaap:WeightedAverageNumberOfSharesOutstandingBasic 'Basic (in shares) / Weighted Average Number of Shares Outsta' R5 |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001376139-16-000084 R4.htm prints 'Net sales' on us-gaap:SalesRevenueGoodsNet = 5432500000 (FILING-CHECKED)
@@ -91,4 +91,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - diluted_eps: era 10-K 0001376139-21-000021 R4.htm prints 'Basic and diluted (loss) earnings per share (in dollars per share)' on us-gaap:EarningsPerShareBasicAndDiluted = -2.54 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
+none beyond sign differences

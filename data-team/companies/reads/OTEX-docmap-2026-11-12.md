@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001002638-15-000026 (CIK 0001002638, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001002638-18-000022 (CIK 0001002638, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001002638-19-000014 (CIK 0001002638, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R9.htm
-- companyfacts CIK0001002638.json (one call).
+- companyfacts CIK0001002638.json (one call); submissions CIK0001002638.json (SIC 7373).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,7 +16,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Total cost of revenues | 1377940000 | 1377940000 | 1434118000 | 1434118000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
 | gross_profit | mapped | us-gaap:GrossProfit | R5.htm | Gross profit | 3868461000 | 3868461000 | 3734287000 | 3734287000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R5.htm | Total operating expenses | 2785864000 | 2785864000 | 2841598000 | 2841598000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line excludes cost of revenue (= GP - OI) / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R5.htm | General and administrative | 436566000 | 436566000 | 427811000 | 427811000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R5.htm | General and administrative + Sales and marketing | 1572596000 | 1572596000 | 1487308000 | 1487308000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R5.htm | Research and development | 647707000 | 647707000 | 755936000 | 755936000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Income from operations | 1082597000 | 1082597000 | 892689000 | 892689000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |
 | interest_expense | combined | us-gaap:InterestIncomeExpenseNonoperatingNet | R5.htm | Interest and other related expense, net | -309595000 | -309595000 | -327831000 | -327831000 | Y | FILING-CHECKED | check: machine-full-filing / net interest line: interest_expense is the gross charge only, a net line is combined (Dhairya 2026-11-12) / accn 0001002638-26-000068 R5.htm period ..2026-06-30 |

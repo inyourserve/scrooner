@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001628280-15-003946 (CIK 0001169561, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001169561-17-000014 (CIK 0001169561, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001169561-18-000018 (CIK 0001169561, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0001169561.json (one call).
+- companyfacts CIK0001169561.json (one call); submissions CIK0001169561.json (SIC 7372).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,7 +16,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Total cost of revenues | 223120000 | 223120000 | 179035000 | 179035000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
 | gross_profit | mapped | us-gaap:GrossProfit | R5.htm | Gross margin | 960570000 | 960570000 | 816584000 | 816584000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R5.htm | Total operating expenses | 886580000 | 886580000 | 742846000 | 742846000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line excludes cost of revenue (= GP - OI) / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R5.htm | General and administrative | 162722000 | 162722000 | 138375000 | 138375000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R5.htm | General and administrative + Sales and marketing | 682410000 | 682410000 | 572492000 | 572492000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R5.htm | Research and development | 162213000 | 162213000 | 146286000 | 146286000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Income from operations | 73990000 | 73990000 | 73738000 | 73738000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
 | interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R5.htm | Interest expense | -3795000 | 3795000 | -416000 | 416000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R5.htm period ..2026-03-31 |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Repurchase of common stock | -446106000 | 446106000 | -165015000 | 165015000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R8.htm period ..2026-03-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R89.htm | Interest paid | 665000 | 665000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R89.htm 'Debt - Additional Information (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Income taxes paid | 13612000 | 13612000 | 42185000 | 42185000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001169561-26-000017 R8.htm period ..2026-03-31 |
-| total_debt | mapped | us-gaap:LongTermDebt | R90.htm | Net carrying amount | 880863000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R90.htm 'Debt - Schedule of Carrying Amount of the Notes (Details)' (MetaLinks.json presentation) |
+| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of LongTermDebt, DebtLongtermAndShorttermCombinedAmount, DebtInstrumentCarryingAmount, LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities, LongTermDebtNoncurrent, LongTermDebtCurrent, ShortTermBorrowings, CommercialPaper, SeniorNotes, NotesPayable, LinesOfCreditCurrent in MetaLinks.json (835 tags across all 91 R pages, face and notes) of 0001169561-26-000017; HAND REVIEW: 31 label candidate(s) incl. custom tags: us-gaap:AmortizationOfFinancingCosts 'Amortization of debt issuance costs / Amortization of debt i' R8,R89,R91; us-gaap:ConvertibleDebtFairValueDisclosures 'Fair value of the Notes / Convertible Debt, Fair Value Discl' R43; us-gaap:ConvertibleLongTermNotesPayable 'Convertible notes, net / Convertible Notes Payable, Noncurre' R3; us-gaap:DebtInstrumentBasisSpreadOnVariableRate1 'Basis spread on variable rate / Debt Instrument, Basis Sprea' R89; us-gaap:DebtInstrumentCarryingAmount 'Principal amount / Long-Term Debt, Gross / Amount, before un' R90; us-gaap:DebtInstrumentConvertibleConversionPrice1 'Conversion price (in dollars per share) / Debt Instrument, C' R89; us-gaap:DebtInstrumentConvertibleConversionRatio1 'Conversion ratio / Debt Instrument, Convertible, Conversion ' R89; us-gaap:DebtInstrumentConvertibleThresholdConsecutiveTradingDays1 'Threshold consecutive trading days / Debt Instrument, Conver' R89 |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 41255000 | 41255000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-03-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
@@ -91,4 +91,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cash_paid_for_interest: era 10-K 0001169561-18-000018 R7.htm prints 'Interest paid' on us-gaap:InterestPaid = 592000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- total_debt: API missing (us-gaap:LongTermDebt)
+none beyond sign differences

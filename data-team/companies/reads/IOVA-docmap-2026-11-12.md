@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001144204-16-087506 (CIK 0001425205, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R6.htm, CF R9.htm
 - 10-K 0001144204-19-010702 (CIK 0001425205, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001558370-23-002419 (CIK 0001425205, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0001425205.json (one call).
+- companyfacts CIK0001425205.json (one call); submissions CIK0001425205.json (SIC 2836).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -19,7 +19,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R4.htm | Selling, general, and administrative | 152322000 | 152322000 | 152269000 | 152269000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R4.htm | Research and development | 300270000 | 300270000 | 276228000 | 276228000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R4.htm | Loss from operations | -403356000 | -403356000 | -395278000 | -395278000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
-| interest_expense | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of InterestExpense, InterestExpenseNonoperating, InterestExpenseOperating, InterestExpenseDebt, InterestIncomeExpenseNonoperatingNet in MetaLinks.json (806 tags across all 82 R pages, face and notes) of 0001104659-26-018899; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:IncomeTaxExaminationPenaltiesAndInterestExpense 'Income Tax Examination, Penalties and Interest Expense / Int' R74,R46 |
+| interest_expense | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of InterestExpense, InterestExpenseNonoperating, InterestExpenseOperating, InterestAndDebtExpense, InterestExpenseDebt, InterestIncomeExpenseNonoperatingNet in MetaLinks.json (806 tags across all 82 R pages, face and notes) of 0001104659-26-018899; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:IncomeTaxExaminationPenaltiesAndInterestExpense 'Income Tax Examination, Penalties and Interest Expense / Int' R74,R46 |
 | income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R4.htm | Net Loss before income taxes | -393049000 | -393049000 | -375005000 | -375005000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
 | income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R4.htm | Income tax (expense) benefit | 2071000 | -2071000 | 2828000 | -2828000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
 | net_income | mapped | us-gaap:NetIncomeLoss | R4.htm | Net Loss | -390978000 | -390978000 | -372177000 | -372177000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-018899 R4.htm period ..2025-12-31 |
