@@ -22,6 +22,13 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - Owners: Engineering, end to end (migration, mapper change, writes). Mapping builder: the FSN-to-map extraction. Ritwik x2 plus the Tag Expert: the tags the extraction can't decide. Verifier: clears writes against filings.
 - Metrics: companies with a complete tag map, and companies written.
 
+## Reading lanes and the blind exam (Dhairya, 2026-11-12)
+
+- Nine readers do document-first reads of ranks 101-1000. Ranks come from `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Branches: `work/reads/<lo>-<hi>` (101-200, ..., 901-1000). Each docmap goes to `data-team/companies/reads/<TICKER>-docmap-2026-11-12.{md,csv}`. Readers commit every 10 companies in strict rank order.
+- **Readers never wait for predictions.** Read, commit and push as you go. Blindness is enforced by commit time: a prediction counts only if it reached origin before the first commit of that ticker's docmap. A company read before it was predicted is scored "no prediction".
+- The Tag Expert's blind predictions go to `data-team/tags/exam/<TICKER>-prediction.csv`, made by `data-team/tags/exam/predict.py`, on branch `docs/tag-expert-playbooks` and on main. Run the frozen predictor over all ranks 101-1000 up front. Re-predict only tickers not yet read.
+- Readers without DB access use companyfacts and R pages from sec.gov, at most 0.4 requests per second each, with a disk cache.
+
 ## Tag map (Engineering, 2026-11-12)
 
 - Migration 0122 applied 2026-11-11 21:31:56 UTC (analytics.company_tag_map, analytics.company_combined_line, 5 new catalog concepts; 83 concepts in total).
