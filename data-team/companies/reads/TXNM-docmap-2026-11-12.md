@@ -13,7 +13,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | revenue | mapped | us-gaap:Revenues | R3.htm | Electric Operating Revenues | 2165606000 | 2165606000 | 1971199000 | 1971199000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001108426-26-000006 R3.htm period ..2025-12-31 |
-| cost_of_revenue | component sum | us-gaap:CostOfGoodsAndServicesSold[member: Cost of energy]+us-gaap:CostOfGoodsAndServicesSold[member: Cost of energy] | R3.htm | Cost of energy + Cost of energy | 814376000 |  | 677732000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001108426-26-000006 R3.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R3.htm | Cost of energy | 716005000 |  | 583984000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001108426-26-000006 R3.htm period ..2025-12-31 |
 | gross_profit | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1688 tags across all 169 R pages, face and notes) of 0001108426-26-000006; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | mapped | us-gaap:UtilitiesOperatingExpense | R3.htm | Total operating expenses | 1724427000 | 1724427000 | 1517713000 | 1517713000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line; no cost-of-revenue line above it / accn 0001108426-26-000006 R3.htm period ..2025-12-31 |
 | sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R3.htm | Administrative and general | 274453000 | 274453000 | 247116000 | 247116000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001108426-26-000006 R3.htm period ..2025-12-31 |
@@ -91,4 +91,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - diluted_eps: era 10-K 0001108426-25-000014 R3.htm prints 'Diluted (in dollars per share)' on us-gaap:EarningsPerShareDiluted = 2.67 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold[member: Cost of energy]+us-gaap:CostOfGoodsAndServicesSold[member: Cost of energy])
+- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)
