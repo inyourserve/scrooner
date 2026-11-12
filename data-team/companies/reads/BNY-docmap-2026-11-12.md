@@ -106,3 +106,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - capex: mapped us-gaap:PaymentsToAcquirePropertyPlantAndEquipment (R8.htm): 2026-11-12 R8.htm: 20% mapped sample: CF R8.htm 'Purchases of premises and equipment/capitalized so' is the capex line, printed -1553000000 = filing XBRL 1553000000; agrees
 - share_buybacks: mapped us-gaap:PaymentsForRepurchaseOfCommonStock (R8.htm): 2026-11-12 R8.htm: 20% mapped sample: CF R8.htm 'Treasury stock acquired' is the share_buybacks line, printed -3535000000 = filing XBRL 3535000000; agrees
 - sbc (review resolved, Dhairya relay 2026-11-12): mapped us-gaap:AllocatedShareBasedCompensationExpense (R119.htm): decided by the filing: R119 total stock-based compensation cost 508,000,000 (FY2024 386,000,000); the 1,000,000 row the tool took is a single award-plan member
+- operating_expenses: corrected to mapped NoninterestExpense 13,054 (R3), bank precedent C/SCHW
