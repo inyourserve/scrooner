@@ -62,6 +62,13 @@ FAMILY = "company_tag_map"
 STATEMENT_CODE = {"income_statement": "IS", "balance_sheet": "BS", "cash_flow": "CF"}
 EXTRA_STMT = {
     # bank cash: where the BS splits cash, cash = the cash-flow statement's printed ending-cash line (a concept row)
+    # catalog concepts filed under income_statement whose library rows sit on another face (found in the 18-company
+    # plan: sbc and D&A are cash-flow lines, comprehensive income has its own statement)
+    "sbc": {"CF", "EQ"},
+    "depreciation_and_amortization": {"CF"},
+    "depreciation_and_amortization_resolved": {"CF"},
+    "amortization_of_intangibles": {"CF"},
+    "comprehensive_income": {"CI"},
     "cash_and_equivalents": {"CF"},
     "cash_and_equivalents_resolved": {"CF"},
     "dividends_per_share": {"IS", "EQ"},

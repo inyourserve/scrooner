@@ -503,3 +503,11 @@ def test_scale_from_a_non_override_source_is_ignored_by_the_mapper_and_refused_b
     assert ok["scale"] == Decimal("1000000")
     with _pt.raises(ValueError, match="evidence_adsh"):
         normalize({**raw, "decided_by": "company_override", "evidence_adsh": None}, {}, {"weighted_basic_shares": 5})
+
+
+def test_cash_flow_and_ci_rows_serve_their_catalog_concepts_sbc_da_comprehensive_income():
+    info = {41: ("sbc", "income_statement"), 42: ("depreciation_and_amortization_resolved", "income_statement"), 43: ("comprehensive_income", "income_statement")}
+    rows = [MapRow("us-gaap", t, st, "concept", c, None, 1, ERA, None) for t, st, c in (("ShareBasedCompensation", "CF", 41), ("DepreciationAndAmortization", "CF", 42), ("ComprehensiveIncomeNetOfTax", "CI", 43))]
+    facts = {("us-gaap", r.tag): {7: fact("5", i + 1)} for i, r in enumerate(rows)}
+    cells, stats = build_cells(rows, facts, info)
+    assert {c["canonical_concept_id"] for c in cells} == {41, 42, 43} and stats["stmt_mismatch_rows"] == 0
