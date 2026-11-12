@@ -134,7 +134,7 @@ def test_coverage_gate_applies_a_full_window_map_and_rolls_back_a_short_one(isol
         assert not rep[co].get("gated")
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s", co) == Decimal("110")
         # the 2018 period ends before the 2019 era: the 2018 value would go, so the company is rolled back
-        assert short["era_short"] == {"tm_rev": "2019-01-01"} and short["fy01_after"] < short["fy01_before"]
+        assert short["era_short"] == {"tm_rev": "2018-12-31"} and short["fy01_after"] < short["fy01_before"]
         assert rep[co2]["gated"] is True
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co2, per2["in"]) == Decimal("7")
         assert _one(conn, "select count(*) from analytics.company_value_owner where company_id = %s", co2) == 0

@@ -403,17 +403,22 @@ def _fy_valued(expected, valued: set, periods, names: dict[str, int]) -> int:
 
 
 def era_shortfall(map_rows, period_ends: list[date]) -> dict[int, date]:
-    """Concept id -> its earliest era start, for every concept of the map whose eras do not reach back over the data
-    window (I11: a company period ends in [2015-01-01, earliest era start) and no row covers it). Pure."""
-    first: dict[int, date] = {}
-    for concept_id, era_from in map_rows:
+    """Concept id -> the first company period end in the data window (I11, from 2015-01-01) that no era of the
+    MERGED map (library and docmap rows, value or reason) covers; concepts fully covered are absent. Eras are
+    (concept_id, era_from, era_to); a gap between two eras counts. Pure."""
+    eras: dict[int, list[tuple[date, date]]] = defaultdict(list)
+    for concept_id, era_from, era_to in map_rows:
         if concept_id is not None:
-            first[concept_id] = min(era_from, first.get(concept_id, era_from))
-    return {
-        c: start
-        for c, start in first.items()
-        if any(DATA_WINDOW_START <= e < start for e in period_ends)
-    }
+            eras[concept_id].append((era_from, era_to or date.max))
+    out: dict[int, date] = {}
+    window = sorted(e for e in period_ends if e >= DATA_WINDOW_START)
+    for c, spans in eras.items():
+        miss = next(
+            (e for e in window if not any(lo <= e <= hi for lo, hi in spans)), None
+        )
+        if miss is not None:
+            out[c] = miss
+    return out
 
 
 def coverage_gate_ok(cov: dict) -> bool:
@@ -449,7 +454,7 @@ def coverage(
         )
         reasoned = set(cur.fetchall())
         cur.execute(
-            "select coalesce(canonical_concept_id, parent_concept_id), era_from from analytics.company_tag_map where company_id = %s",
+            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to from analytics.company_tag_map where company_id = %s",
             (cid,),
         )
         map_rows = cur.fetchall()
@@ -466,7 +471,7 @@ def coverage(
     )
     short = era_shortfall(map_rows, [e for e, _, _, _ in periods])
     return {
-        "era_from_min": min((e for _, e in map_rows), default=None),
+        "era_from_min": min((e for _, e, _ in map_rows), default=None),
         "era_short": {
             concept_info[c][0]: s.isoformat()
             for c, s in short.items()
