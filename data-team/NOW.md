@@ -22,6 +22,13 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - Owners: Engineering, end to end (migration, mapper change, writes). Mapping builder: the FSN-to-map extraction. Ritwik x2 plus the Tag Expert: the tags the extraction can't decide. Verifier: clears writes against filings.
 - Metrics: companies with a complete tag map, and companies written.
 
+## Tag map (Engineering, 2026-11-12)
+
+- Migration 0122 applied 2026-11-11 21:31:56 UTC (analytics.company_tag_map, analytics.company_combined_line, 5 new catalog concepts; 83 concepts in total).
+- analytics.company_tag_map seeded LIVE for 18 companies (ranks 1-50 read-PASS: AAPL ABBV AMAT AMGN ANET BAC CAT COST CRWD MA META MRK MSFT NFLX NVDA PANW PLTR TSLA) from ranks_1_50.csv at e58e4a8: 6,816 rows incl. 651 open periods. AVGO waits for the predecessor-companyfacts backfill. Nothing is served from it until the mapper rule company_tag_map.select@1 is switched on.
+- The live catalog analytics.canonical_concept (83 concepts) is the authority; validate concept keys against the DB. concepts_catalog.csv is left as the tag library maintains it (its coverage test treats every listed concept as required, so the bank-only net_interest_income needs a template condition there first).
+- data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv: 168 decision rows the 1,000-company expander could not apply (columns source, tag, stmt, decision, concept, missing, companies_affected), for the Tag Expert to complete.
+
 ## Live numbers 2026-11-11 ~07:30 UTC
 
 - Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).
