@@ -131,7 +131,9 @@ def test_committed_ranks_1_50_map_has_a_decision_and_a_reason_for_every_row():
     csv_path = ROOT / "data-team" / "47-fsn-store" / "company_tag_map" / "ranks_1_50.csv"
     rows = list(csv.DictReader(open(csv_path)))
     assert rows
-    assert not [r for r in rows if r["decision"] not in ("concept", "component", "combined", "excluded")]
+    assert not [r for r in rows if r["decision"] not in ("concept", "component", "combined", "excluded", "not_presented", "not_in_template")]
+    # tagless status rows (0122): a concept and a reason, no tag
+    assert not [r for r in rows if r["decision"] in ("not_presented", "not_in_template") and (r["tag"] or r["taxonomy"] or not r["canonical_concept"] or not r["reason"])]
     assert not [r for r in rows if r["decision"] == "excluded" and not (r["reason_class"] and r["reason"])]
     assert not [r for r in rows if r["decision"] == "combined" and r["canonical_concept"]]
 

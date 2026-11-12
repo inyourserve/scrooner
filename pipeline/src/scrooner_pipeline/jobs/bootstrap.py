@@ -18,6 +18,7 @@ import structlog
 import typer
 
 from scrooner_pipeline.collector.companyfacts import bootstrap_companyfacts
+from scrooner_pipeline.normalizer.predecessors import predecessor_source_ciks
 from scrooner_pipeline.collector.retry import (
     finish_run,
     reap_stale_runs,
@@ -41,6 +42,18 @@ GOLDEN_COMPANIES_PATH = (
 def _load_golden_ciks() -> set[str]:
     companies = json.loads(GOLDEN_COMPANIES_PATH.read_text())
     return {c["cik"] for c in companies}
+
+
+def _with_predecessors(
+    only_ciks: set[str] | None, include: bool, only: bool
+) -> set[str] | None:
+    """--include-predecessors adds the core.company_history_source predecessor source CIKs to an
+    explicit --ciks set; --predecessors-only (or --include-predecessors without --ciks) is just them."""
+    if not (include or only):
+        return only_ciks
+    with get_connection() as conn:
+        preds = predecessor_source_ciks(conn)
+    return preds if (only or not only_ciks) else only_ciks | preds
 
 
 def _parse_ciks(ciks: str | None) -> set[str] | None:
@@ -90,12 +103,22 @@ def companyfacts(
     fresh: bool = typer.Option(
         False, help="Ignore any resumable run and start a brand-new one."
     ),
+    include_predecessors: bool = typer.Option(
+        False,
+        help="Also fetch the source CIKs of core.company_history_source predecessor windows "
+        "(with --ciks: those CIKs plus the predecessors; alone-with --predecessors-only: just them).",
+    ),
+    predecessors_only: bool = typer.Option(
+        False,
+        help="Fetch ONLY the predecessor source CIKs (implies --include-predecessors).",
+    ),
 ) -> None:
     """Bootstrap raw.sec_companyfacts from the bulk companyfacts.zip archive.
     Rerunning after a kill mid-run resumes the same run automatically
     (same ciks/limit => same job) rather than re-storing companies already
     done -- see collector/retry.py."""
     only_ciks = _parse_ciks(ciks)
+    only_ciks = _with_predecessors(only_ciks, include_predecessors, predecessors_only)
     with get_connection() as conn:
         ctx = start_or_resume_run(
             conn,
@@ -128,10 +151,14 @@ def submissions(
     fresh: bool = typer.Option(
         False, help="Ignore any resumable run and start a brand-new one."
     ),
+    include_predecessors: bool = typer.Option(False, help="As for `companyfacts`."),
+    predecessors_only: bool = typer.Option(False, help="As for `companyfacts`."),
 ) -> None:
     """Bootstrap raw.sec_submissions from the bulk submissions.zip archive.
     Same resume behavior as `companyfacts`."""
-    only_ciks = _parse_ciks(ciks)
+    only_ciks = _with_predecessors(
+        _parse_ciks(ciks), include_predecessors, predecessors_only
+    )
     with get_connection() as conn:
         ctx = start_or_resume_run(
             conn, job="submissions", only_ciks=only_ciks, limit=limit, force_fresh=fresh
