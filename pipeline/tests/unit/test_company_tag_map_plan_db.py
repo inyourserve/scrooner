@@ -39,8 +39,8 @@ def test_plan_rolls_back_and_apply_writes_protects_owns_and_blocks_other_writers
         assert gzip.open(tmp_path / "before/canonical_fact.csv.gz", "rt").readline().startswith("id,")
         rep = plan.run(conn, [co], tpl, apply=True)
         assert rep[co]["valued"] == 1 and rep[co]["protected_keys"] == 1
-        # the library status of the 2019 cell (held C8) is WRITTEN as a reason row: defect, definition_pending, library rule
-        assert conn.execute("select state, defect_class, owner, reason_code, rule_id from analytics.cell_blank_reason where company_id = %s and reason_code = 'held_c8'", (co,)).fetchall() == [("defect", "definition_pending", "standardization_lead", "held_c8", "tagmap.library_status@1")]
+        # the library status of the 2019 cell (held C8) is WRITTEN as a reason row: defect, guard_hidden, library rule
+        assert conn.execute("select state, defect_class, owner, reason_code, rule_id from analytics.cell_blank_reason where company_id = %s and reason_code = 'held_c8'", (co,)).fetchall() == [("defect", "guard_hidden", "verifier", "held_c8", "tagmap.library_status@1")]
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s", co) == Decimal("110")
         assert _one(conn, "select value from analytics.slot_protected_cell where company_id = %s", co) == Decimal("110")
         assert _one(conn, "select owner from analytics.company_value_owner where company_id = %s", co) == "company_tag_map"

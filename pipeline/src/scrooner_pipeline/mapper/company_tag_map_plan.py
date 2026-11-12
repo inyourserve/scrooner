@@ -162,17 +162,15 @@ def classify_status(status: str) -> tuple[str, str | None, str | None, str, str]
         code = "held_" + (
             st.split()[1].lower() if len(st.split()) > 1 else "definition"
         )
-        return (
-            "defect",
-            "definition_pending",
+        owner = next(
+            (o for pre, o in ctm.HELD_OWNERS if code.startswith(pre)),
             "standardization_lead",
-            code,
-            f"held by the library: {st}",
         )
+        return ("defect", "guard_hidden", owner, code, f"held by the library: {st}")
     if low.startswith(("read: held", "read: dps_quarterly_only_pending_definition")):
         return (
             "defect",
-            "definition_pending",
+            "guard_hidden",
             "standardization_lead",
             "held_read",
             f"held by a full 10-K read: {st}",
