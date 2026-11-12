@@ -326,7 +326,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     fs = get(base + "FilingSummary.xml", cache)
     reps = find_reports(fs)
     meta["filings"].append((accn, tenks[0][0], {k: v[1] for k, v in reps.items()}))
-    pages = {k: parse_r(get(base + fn, cache)) for k, (_, fn) in reps.items() if k in ("IS", "BS", "CF", "COVER")}
+    pages = {k: parse_r(get(base + fn, cache)) for k, (_, fn) in reps.items() if k in ("IS", "BS", "CF", "BSP")}
     out: list[dict] = []
     quirks: list[str] = []
     for dp, stmt, tags, rx in DP:
@@ -335,8 +335,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                "r_page": reps.get(stmt, ("", ""))[1], "label": "", "fy0_printed": "", "fy0_api": "",
                "fy1_printed": "", "fy1_api": "", "match": "", "era_from_note": "", "evidence_class": "", "note": ""}
         if not page or not page["rows"]:
-            rec.update(status="statement_not_found", evidence_class="FILING-CHECKED",
-                       note="statement page not identified in FilingSummary (auto)")
+            rec.update(status="not_presented", evidence_class="FILING-CHECKED",
+                       note="AUTO: statement page not identified in FilingSummary; not hand-verified")
             out.append(rec)
             continue
         r = None
@@ -350,9 +350,14 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                                   for i in range(max(len(p["vals"]) for p in parts))], "parts": parts}
         else:
             r = match_row(page, dp, tags, rx)
+            if dp == "accounts_receivable" and r is not None and r.get("by_label"):
+                n_recv = sum(1 for x in page["rows"] if re.search(r"receivable", x["label"], re.I)
+                             and any(v is not None for v in x["vals"]))
+                if n_recv != 1:
+                    r = None  # wider receivables tag only when it is the single receivables line on the face
         if r is None:
-            rec.update(status="not_found_auto", evidence_class="FILING-CHECKED",
-                       note=f"{reps[stmt][1]} read; no face row matched the {dp} tag/label rules (check by hand before calling it not_presented)")
+            rec.update(status="not_presented", evidence_class="FILING-CHECKED",
+                       note=f"AUTO: {reps[stmt][1]} read; no face row matched the {dp} tag/label rules; not hand-verified")
             out.append(rec)
             continue
         cols = pick_cols(page, stmt)
@@ -369,8 +374,9 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
             else:
                 av = api_value(cf, r["tag"], accn, end, months)
             vals.append((pv, av, end))
-        status = "component sum" if "parts" in r else ("custom_extension" if not r["tag"].startswith("us-gaap")
-                                                       else ("mapped (by label)" if r.get("by_label") else "mapped"))
+        status = "component sum" if "parts" in r else "mapped"
+        how = ("company extension tag, matched by printed label" if not r["tag"].startswith("us-gaap")
+               else ("matched by printed label (tag outside the usual set)" if r.get("by_label") else ""))
         rec.update(status=status, tags=r["tag"], label=r["label"][:120], evidence_class="FILING-CHECKED")
         verdicts = []
         for k, (pv, av, end) in enumerate(vals):
@@ -387,12 +393,12 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 verdicts.append(f"N (printed {fmt(pv)} vs API {fmt(av)})")
         rec["match"] = next((v for v in verdicts if v.startswith("N") or v == "API missing"), verdicts[0] if verdicts else "")
         if vals:
-            rec["note"] = f"accn {accn} period ..{vals[0][2].isoformat()}"
+            rec["note"] = (how + " | " if how else "") + f"accn {accn} {reps[stmt][1]} period ..{vals[0][2].isoformat()}"
         if any(v.startswith("N") for v in verdicts):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | printed vs companyfacts mismatch: {'; '.join(v for v in verdicts if v.startswith('N'))} | {accn} {reps[stmt][1]} | FILING-CHECKED |")
-        if status == "mapped (by label)":
+        if how and r["tag"].startswith("us-gaap"):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | face line '{r['label'][:80]}' carries a us-gaap tag outside the usual {dp} set | {accn} {reps[stmt][1]} | FILING-CHECKED |")
-        if status == "custom_extension":
+        if how and not r["tag"].startswith("us-gaap"):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | face line '{r['label'][:80]}' on a company extension tag, not us-gaap | {accn} {reps[stmt][1]} | FILING-CHECKED |")
         if any(v == "API missing" for v in verdicts):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | printed face value has no companyfacts fact for the same accession/period | {accn} {reps[stmt][1]} | FILING-CHECKED |")
@@ -414,22 +420,35 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                        match="Y" if av0 is not None and abs(pv0 - av0) < 0.5 else ("API missing" if av0 is None else "N"),
                        note="sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check)")
         else:
-            rec.update(status="not_found_auto", note="no standard debt line on the BS face (auto)")
+            rec.update(status="not_presented", note="AUTO: no standard debt line on the BS face; not hand-verified")
         out.append(rec)
-    # shares outstanding from the cover page
-    cov = pages.get("COVER")
-    rec = {"ticker": tic, "data_point": "shares_outstanding", "stmt": "COVER", "r_page": reps.get("COVER", ("", ""))[1],
-           "evidence_class": "FILING-CHECKED", "era_from_note": ""}
-    if cov:
-        sh = [x for x in cov["rows"] if x["tag"] == "dei:EntityCommonStockSharesOutstanding"]
-        vals = [next((v for v in x["vals"] if v is not None), None) for x in sh]
-        vals = [v for v in vals if v is not None]
-        if vals:
-            rec.update(status="mapped" if len(vals) == 1 else "component sum", tags="dei:EntityCommonStockSharesOutstanding",
-                       label="Entity Common Stock, Shares Outstanding (cover)", fy0_printed=fmt(sum(vals)),
-                       note="cover page" + ("; classes summed" if len(vals) > 1 else ""))
-        else:
-            rec.update(status="not_found_auto", note="no cover shares row (auto)")
+    # shares outstanding: us-gaap:CommonStockSharesOutstanding (or its class sum) at the balance-sheet date,
+    # from the BS face or the BS parenthetical; the dei cover count is never used (Dhairya ruling 2026-11-12)
+    rec = {"ticker": tic, "data_point": "shares_outstanding", "evidence_class": "FILING-CHECKED", "era_from_note": ""}
+    found = None
+    for key in ("BS", "BSP"):
+        pg = pages.get(key)
+        if not pg:
+            continue
+        sh = [x for x in pg["rows"] if x["tag"] == "us-gaap:CommonStockSharesOutstanding"
+              and any(v is not None for v in x["vals"])]
+        if sh:
+            found = (key, pg, sh)
+            break
+    if found:
+        key, pg, sh = found
+        cols = pick_cols(pg, "BS") or [0]
+        ci = cols[0]
+        end = pg["cols"][ci][1] if ci < len(pg["cols"]) else None
+        pv = sum((x["vals"][ci] or 0) for x in sh if ci < len(x["vals"])) * pg["shares_scale"]
+        av = api_value(cf, "us-gaap:CommonStockSharesOutstanding", accn, end, None) if end and len(sh) == 1 else None
+        rec.update(status="mapped" if len(sh) == 1 else "component sum", tags="us-gaap:CommonStockSharesOutstanding",
+                   stmt=key, r_page=reps[key][1], label=sh[0]["label"][:120], fy0_printed=fmt(pv), fy0_api=fmt(av),
+                   match=("Y" if av is not None and abs(pv - av) < 0.5 else ("" if len(sh) > 1 else "API missing")),
+                   note=f"balance-sheet date {end}; " + ("classes summed (printed rows)" if len(sh) > 1 else "single row"))
+    else:
+        rec.update(status="not_presented", stmt="BS", r_page=reps.get("BS", ("", ""))[1],
+                   note="no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical (auto); dei cover count not used")
     out.append(rec)
     # era check: a different tag carried the data point in an earlier fiscal year
     era_lines = []
@@ -437,7 +456,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     for rec in out:
         dp = rec["data_point"]
         spec = next((d for d in DP if d[0] == dp), None)
-        if not spec or rec.get("status") not in ("mapped", "custom_extension") or not rec["tags"].startswith("us-gaap"):
+        if not spec or rec.get("status") != "mapped" or not rec["tags"].startswith("us-gaap"):
             continue
         cur = rec["tags"].split(":", 1)[1]
         hist = annual_tag_history(cf, spec[2])
@@ -486,7 +505,8 @@ def write_company(out: list[dict], meta: dict, out_dir: str) -> None:
     L = [f"# {tic} document-first map {DATE} (read-only, bottom-up)", "",
          "Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element "
          "references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: "
-         "rows marked (auto) are tool output that a person has not re-read; `not_found_auto` is NOT a not_presented verdict.", "",
+         "status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is "
+         "the tool finding no matching face line, not a by-hand verdict.", "",
          "## Filings opened"]
     if meta.get("error"):
         L.append(f"- none: {meta['error']} (CIK {meta['cik']}, {meta['name']})")
