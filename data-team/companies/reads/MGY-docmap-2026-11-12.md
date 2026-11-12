@@ -6,7 +6,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001698990-26-000005 (CIK 0001698990, filed 2026-02-12): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CF R8.htm
 - 10-K 0001698990-20-000004 (CIK 0001698990, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
 - 10-K 0001698990-19-000006 (CIK 0001698990, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
-- companyfacts CIK0001698990.json (one call).
+- companyfacts CIK0001698990.json (one call); submissions CIK0001698990.json (SIC 1311).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -40,7 +40,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by operating activities | 878639000 | 878639000 | 920850000 | 920850000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash used in investing activities | -540747000 | -540747000 | -655122000 | -655122000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash used in financing activities | -331156000 | -331156000 | -406800000 | -406800000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
-| capex | mapped | us-gaap:PaymentsToAcquireProductiveAssets | R46.htm | Payments to acquire assets | 6.66e+07 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R46.htm 'Acquisitions (Details)' (MetaLinks.json presentation) |
+| capex | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsToAcquirePropertyPlantAndEquipment, PaymentsToAcquireProductiveAssets, PaymentsForCapitalImprovements in MetaLinks.json (685 tags across all 77 R pages, face and notes) of 0001698990-26-000005; HAND REVIEW: 3 label candidate(s) incl. custom tags: mgy:AccruedCapitalExpendituresCurrent 'Accrued capital expenditures / Accrued Capital Expenditures,' R49; us-gaap:CapitalExpendituresIncurredButNotYetPaid 'Accrued capital expenditures / Capital Expenditures Incurred' R76; us-gaap:PaymentsToAcquireProductiveAssets 'Payments to acquire assets / Payments to Acquire Productive ' R46 |
 | depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R8.htm | Depreciation, depletion and amortization | 437757000 | 437757000 | 414487000 | 414487000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock based compensation | 27256000 | 27256000 | 18663000 | 18663000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | dividends_paid | mapped | us-gaap:PaymentsOfDividendsCommonStock | R8.htm | Dividends paid | -113096000 | 113096000 | -97620000 | 97620000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R76.htm | Cash paid for interest | 29669000 | 29669000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R76.htm 'Supplemental Cash Flow Information (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R60.htm | Total cash paid for taxes (net of refunds) | 7782000 | 7782000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Income Taxes - Schedule of Income Taxes Paid (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:LongTermDebt | R3.htm | Long-term debt, net | 393251000 | 393251000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 186753000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 181230000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -60,5 +60,5 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Mismatches (printed vs API)
 - basic_eps: API missing (us-gaap:EarningsPerShareBasic)
 - diluted_eps: API missing (us-gaap:EarningsPerShareDiluted)
-- capex: API missing (us-gaap:PaymentsToAcquireProductiveAssets)
 - share_buybacks: API missing (us-gaap:PaymentsForRepurchaseOfCommonStock)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

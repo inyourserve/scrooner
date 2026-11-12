@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001564590-16-013299 (CIK 0001575515, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
 - 10-K 0001564590-18-002782 (CIK 0001575515, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001564590-19-003562 (CIK 0001575515, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
-- companyfacts CIK0001575515.json (one call).
+- companyfacts CIK0001575515.json (one call); submissions CIK0001575515.json (SIC 5411).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Repurchase of common stock | -471926000 | 471926000 | -228472000 | 228472000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001575515-26-000008 R7.htm period ..2025-12-28 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Cash paid for interest | 1809000 | 1809000 | 5008000 | 5008000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001575515-26-000008 R7.htm period ..2025-12-28 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R7.htm | Cash paid for income taxes | 120076000 | 120076000 | 102226000 | 102226000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001575515-26-000008 R7.htm period ..2025-12-28 |
-| total_debt | mapped | us-gaap:LongTermDebt | R75.htm | Senior secured debt | 0 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R75.htm 'Long-Term Debt and Other Finance Obligations - Summary of Long-Term Debt and Oth' (MetaLinks.json presentation) |
+| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of LongTermDebt, DebtLongtermAndShorttermCombinedAmount, DebtInstrumentCarryingAmount, LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities, LongTermDebtNoncurrent, LongTermDebtCurrent, ShortTermBorrowings, CommercialPaper, SeniorNotes, NotesPayable, LinesOfCreditCurrent in MetaLinks.json (864 tags across all 111 R pages, face and notes) of 0001575515-26-000008; HAND REVIEW: 18 label candidate(s) incl. custom tags: us-gaap:DebtInstrumentBasisSpreadOnVariableRate1 'Interest rate spread / Debt Instrument, Basis Spread on Vari' R76; sfm:DebtInstrumentBasisSpreadOnVariableRateFloor 'Interest rate spread, floor / Debt Instrument, Basis Spread ' R76; sfm:DebtInstrumentBasisSpreadOnVariableRateMetricLinkedAdjustmentMaximum 'Maximum interest rate margin adjustment related to metric-li' R76; sfm:DebtInstrumentCovenantInterestCoverageRatioMinimum 'Interest coverage ratio / Debt Instrument, Covenant, Interes' R76; sfm:DebtInstrumentCovenantLeverageRatioMaximum 'Net leverage ratio / Debt Instrument, Covenant, Leverage Rat' R76; us-gaap:DebtInstrumentTerm 'Debt instrument term / Debt Instrument, Term / Period of tim' R76; us-gaap:FinanceLeaseLiabilityNoncurrent 'Long-term debt and other finance obligations / Long-term lea' R69,R67,R75; us-gaap:InterestPaidNet 'Cash paid for interest / Interest Paid, Excluding Capitalize' R7 |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 95926024 | 95926024 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-28; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
@@ -97,4 +97,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Mismatches (printed vs API)
 - operating_expenses: API missing (us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:DepreciationAndAmortization+sfm:IncomeExpenseStoreClosureAndOtherCostsNet)
-- total_debt: API missing (us-gaap:LongTermDebt)

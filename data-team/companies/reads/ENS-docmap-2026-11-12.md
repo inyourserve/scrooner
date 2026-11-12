@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001289308-15-000029 (CIK 0001289308, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001289308-18-000017 (CIK 0001289308, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001289308-24-000018 (CIK 0001289308, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R9.htm
-- companyfacts CIK0001289308.json (one call).
+- companyfacts CIK0001289308.json (one call); submissions CIK0001289308.json (SIC 3690).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -46,7 +46,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | sbc | mapped | us-gaap:ShareBasedCompensation | R9.htm | Stock-based compensation | 37594000 | 37594000 | 27825000 | 27825000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-036900 R9.htm period ..2026-03-31 |
 | dividends_paid | mapped | us-gaap:PaymentsOfDividends | R9.htm | Dividends paid to stockholders | -38142000 | 38142000 | -37466000 | 37466000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-036900 R9.htm period ..2026-03-31 |
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R9.htm | Purchase of treasury stock | -370685000 | 370685000 | -153961000 | 153961000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-036900 R9.htm period ..2026-03-31 |
-| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R84.htm | Interest paid | 53556000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R84.htm 'Debt - Additional Information (Detail)' (MetaLinks.json presentation) |
+| cash_paid_for_interest | not_presented |  | R9.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of InterestPaidNet, InterestPaid in MetaLinks.json (1194 tags across all 132 R pages, face and notes) of 0001628280-26-036900; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:FinanceLeaseInterestPaymentOnLiability 'Operating cash flows from finance leases / Finance Lease, In' R70; us-gaap:InterestPaidNet 'Interest paid / Interest Paid, Excluding Capitalized Interes' R84 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R101.htm | Total income taxes paid | 51508000 | 51508000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R101.htm 'Income Taxes - Schedule of Cash Income Taxes Paid (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtNoncurrent | R3.htm | Short-term debt + Long-term debt, net of unamortized debt issuance costs | 1108983000 | 1108983000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 36462211 | 36462211 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2026-03-31; single row |
@@ -84,7 +84,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - sbc: FY2015 10-K 0001289308-15-000029 R8.htm read; no row matched (auto)
 - dividends_paid: FY2015 10-K 0001289308-15-000029 R8.htm read; no row matched (auto)
 - share_buybacks: FY2015 10-K 0001289308-15-000029 R8.htm read; no row matched (auto)
-- cash_paid_for_interest: FY2015 10-K 0001289308-15-000029 R8.htm read; no row matched (auto)
 - cash_paid_for_income_taxes: FY2015 10-K 0001289308-15-000029 R8.htm read; no row matched (auto)
 - revenue: era 10-K 0001289308-18-000017 R4.htm prints 'Net sales' on us-gaap:SalesRevenueNet = 2581891000 (FILING-CHECKED)
 - cost_of_revenue: era 10-K 0001289308-18-000017 R4.htm prints 'Cost of goods sold' on us-gaap:CostOfGoodsSold = 1921494000 (FILING-CHECKED)
@@ -92,4 +91,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Mismatches (printed vs API)
 - cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)
-- cash_paid_for_interest: API missing (us-gaap:InterestPaidNet)
