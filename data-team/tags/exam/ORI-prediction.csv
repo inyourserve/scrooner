@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ORI,718,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0000074260-26-000008,R3,"Commissions, expenses, fees, and taxes",601800000.0000,combined line (library or label demote)
 ORI,718,accounts_receivable,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
-ORI,718,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000074260-26-000008,,,,note-sourced default tag (no face line)
+ORI,718,amortization_of_intangibles,not_presented,,,,,,,,0000074260-26-000008,,,,no face line and no note fact
 ORI,718,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000074260-26-000008,R5,Net income per share: basic (in dollars per share),3.8200,library map
 ORI,718,capex,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
 ORI,718,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-5,N,,sec_api,0000074260-26-000008,R3,Cash,263200000.0000,library map
 ORI,718,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000074260-26-000008,R8,Total,-925700000.0000,library map
 ORI,718,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,Y,NetCashProvidedByUsedInFinancingActivities,sec_api,0000074260-26-000008,R8,Total,-177200000.0000,library map
-ORI,718,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000074260-26-000008,,,,note-sourced default tag (no face line)
+ORI,718,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000074260-26-000008,,,210500000.0000,note fact present in the filing (FSN value)
 ORI,718,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000074260-26-000008,R8,Cash paid during the period for: Interest,69300000.0000,library map
 ORI,718,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,Y,PaymentsForProceedsFromOtherInvestingActivities,sec_api,0000074260-26-000008,R8,Other - net,29100000.0000,combined line (library or label demote)
 ORI,718,cf_ar_change,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
@@ -27,7 +27,7 @@ ORI,718,gross_profit,OUT,,,,,,,,0000074260-26-000008,,,,sector template (bank/in
 ORI,718,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000074260-26-000008,R5,Income before income taxes,1184000000.0000,library map
 ORI,718,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000074260-26-000008,R5,Total income taxes,242100000.0000,library map
 ORI,718,interest_expense,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
-ORI,718,interest_income,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
+ORI,718,interest_income,combined,custom:InterestAndOtherCharges,IS,+,-5,N,,fsn_xbrl,0000074260-26-000008,R5,Interest and other charges,70300000.0000,interest income only inside a net/other face line between OI and pretax
 ORI,718,inventory,OUT,,,,,,,,0000074260-26-000008,,,,sector template (bank/insurer)
 ORI,718,loans_net,OUT,,,,,,,,0000074260-26-000008,,,,not a bank
 ORI,718,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000074260-26-000008,R5,Net income to shareholders,935400000.0000,library map
@@ -41,7 +41,7 @@ ORI,718,ppe_net,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
 ORI,718,provision_for_credit_losses,OUT,,,,,,,,0000074260-26-000008,,,,not a bank
 ORI,718,research_and_development,OUT,,,,,,,,0000074260-26-000008,,,,sector template (bank/insurer)
 ORI,718,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000074260-26-000008,R5,Total revenues,9136300000.0000,library map
-ORI,718,sbc,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
+ORI,718,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000074260-26-000008,,,46700000.0000,note fact present in the filing (FSN value)
 ORI,718,sga_expense,not_presented,,,,,,,,0000074260-26-000008,,,,no face line
 ORI,718,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000074260-26-000008,R8,Treasury stock acquired,123800000.0000,library map
 ORI,718,shares_outstanding,not_presented,,,,,,,,0000074260-26-000008,,,,no face line

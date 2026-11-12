@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OGE,705,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,Accounts payable,350600000.0000,library map
 OGE,705,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,Accounts receivable,347800000.0000,library map
-OGE,705,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-055414,,,,note-sourced default tag (no face line)
+OGE,705,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-055414,,,,no face line and no note fact
 OGE,705,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-055414,R2,BASIC EARNINGS PER AVERAGE COMMON SHARE,2.3300,library map
 OGE,705,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001193125-26-055414,R5,Capital expenditures (less allowance for equity funds used during construction),1054400000.0000,library map
 OGE,705,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,Cash and cash equivalents,200000.0000,library map
 OGE,705,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-055414,R5,Net cash (used in) provided from financing activities,-10900000.0000,library map
 OGE,705,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-055414,R5,Net cash used in investing activities,-1126600000.0000,library map
-OGE,705,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-055414,,,,note-sourced default tag (no face line)
+OGE,705,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-055414,,,,no face line and no note fact
 OGE,705,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001193125-26-055414,R5,Interest (net of interest capitalized),268700000.0000,library map
 OGE,705,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001193125-26-055414,R5,Accounts payable,34900000.0000,library map
 OGE,705,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001193125-26-055414,R5,"Accounts receivable and accrued unbilled revenues, net",108800000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ OGE,705,gross_profit,not_presented,,,,,,,,0001193125-26-055414,,,,no face line
 OGE,705,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,INCOME BEFORE TAXES,560500000.0000,library map
 OGE,705,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,INCOME TAX EXPENSE,89800000.0000,library map
 OGE,705,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Interest expense,270300000.0000,library map
-OGE,705,interest_income,not_presented,,,,,,,,0001193125-26-055414,,,,no face line
+OGE,705,interest_income,combined,us-gaap:InterestExpenseShortTermBorrowings,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Interest on short-term debt and other interest charges,25100000.0000,interest income only inside a net/other face line between OI and pretax
 OGE,705,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,Fuel inventories,112000000.0000,library map
 OGE,705,loans_net,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
 OGE,705,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,NET INCOME,470700000.0000,library map

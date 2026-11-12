@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ACM,824,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000868857-25-000013,R3,Accounts payable,2260609000.0000,library map
 ACM,824,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000868857-25-000013,R3,Accounts receivablenet,2497147000.0000,library map
-ACM,824,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000868857-25-000013,,,,note-sourced default tag (no face line)
+ACM,824,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000868857-25-000013,,,1500000.0000,note fact present in the filing (FSN value)
 ACM,824,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000868857-25-000013,R5,Basic earnings per share (in dollar per share),4.2400,library map
 ACM,824,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000868857-25-000013,R8,Payments for capital expenditures,136675000.0000,library map
 ACM,824,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000868857-25-000013,R3,Total cash and cash equivalents,1585739000.0000,library map
@@ -21,7 +21,7 @@ ACM,824,deposits,OUT,,,,,,,,0000868857-25-000013,,,,not a bank
 ACM,824,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000868857-25-000013,R8,Depreciation and amortization,175917000.0000,library map
 ACM,824,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000868857-25-000013,R5,Diluted earnings per share (in dollar per share),4.2100,library map
 ACM,824,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000868857-25-000013,R8,Dividends paid,133572000.0000,library map
-ACM,824,dividends_per_share,not_presented,,,,,,,,0000868857-25-000013,,,,no face line
+ACM,824,dividends_per_share,not_presented,,,,,,,,0000868857-25-000013,,,,no face line and no note fact
 ACM,824,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000868857-25-000013,R3,GOODWILL,3700619000.0000,library map
 ACM,824,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000868857-25-000013,R5,Gross profit,1216713000.0000,library map
 ACM,824,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000868857-25-000013,R5,Income from continuing operations before taxes,915569000.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 COMP,863,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001563190-26-000057,R3,Accounts payable,12500000.0000,library map
 COMP,863,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001563190-26-000057,R3,"Accounts receivable, net of allowance of $3.5 and $4.4, respectively",57000000.0000,library map
-COMP,863,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001563190-26-000057,,,,note-sourced default tag (no face line)
+COMP,863,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001563190-26-000057,,,72500000.0000,note fact present in the filing (FSN value)
 COMP,863,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001563190-26-000057,R5,"Net loss per share attributable to Compass, Inc., basic (in dollars per share)",-0.1000,library map
 COMP,863,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001563190-26-000057,R7,Capital expenditures,13400000.0000,library map
 COMP,863,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001563190-26-000057,R3,Cash and cash equivalents,199000000.0000,library map
 COMP,863,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001563190-26-000057,R7,Net cash used in financing activities,-50200000.0000,library map
 COMP,863,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001563190-26-000057,R7,Net cash used in investing activities,-191300000.0000,library map
-COMP,863,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001563190-26-000057,,,,note-sourced default tag (no face line)
+COMP,863,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001563190-26-000057,,,1800000.0000,note fact present in the filing (FSN value)
 COMP,863,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001563190-26-000057,R7,Cash paid for interest,5600000.0000,library map
 COMP,863,cf_ap_change,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
 COMP,863,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001563190-26-000057,R7,Accounts receivable,-7100000.0000,library map
@@ -21,20 +21,20 @@ COMP,863,deposits,OUT,,,,,,,,0001563190-26-000057,,,,not a bank
 COMP,863,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001563190-26-000057,R7,Depreciation and amortization,112700000.0000,library map
 COMP,863,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001563190-26-000057,R5,"Net loss per share attributable to Compass, Inc., diluted (in dollars per share)",-0.1000,library map
 COMP,863,dividends_paid,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
-COMP,863,dividends_per_share,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
+COMP,863,dividends_per_share,not_presented,,,,,,,,0001563190-26-000057,,,,no face line and no note fact
 COMP,863,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001563190-26-000057,R3,Goodwill,479200000.0000,library map
 COMP,863,gross_profit,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
 COMP,863,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-5,N,,sec_api,0001563190-26-000057,R5,Loss before income taxes and equity in income (loss) of unconsolidated entities,-66900000.0000,library map
 COMP,863,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0001563190-26-000057,R5,Benefit from income taxes,-1100000.0000,library map
 COMP,863,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001563190-26-000057,R5,Interest expense,9000000.0000,library map
-COMP,863,interest_income,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
+COMP,863,interest_income,not_presented,,,,,,,,0001563190-26-000057,,,,no face line and no note fact
 COMP,863,inventory,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
 COMP,863,loans_net,OUT,,,,,,,,0001563190-26-000057,,,,not a bank
 COMP,863,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001563190-26-000057,R5,"Net loss attributable to Compass, Inc.",-58500000.0000,library map
 COMP,863,net_interest_income,OUT,,,,,,,,0001563190-26-000057,,,,not a bank
 COMP,863,noninterest_expense,OUT,,,,,,,,0001563190-26-000057,,,,not a bank
 COMP,863,noninterest_income,OUT,,,,,,,,0001563190-26-000057,,,,not a bank
-COMP,863,operating_expenses,not_presented,,,,,,,,0001563190-26-000057,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+COMP,863,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001563190-26-000057,R5,Total operating expenses,7025000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 COMP,863,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0001563190-26-000057,R5,Loss from operations,-63400000.0000,library map
 COMP,863,other_income_expense_net,not_presented,,,,,,,,0001563190-26-000057,,,,no face line
 COMP,863,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001563190-26-000057,R3,"Property and equipment, net",113800000.0000,library map

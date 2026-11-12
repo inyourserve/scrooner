@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TEVA,244,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-6,N,,sec_api,0001193125-26-034532,R2,Accounts payables,2531000000.0000,library map
 TEVA,244,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-034532,R2,"Accounts receivables, net of allowance for credit losses of $81 million and $78 million as of December 31, 2025 and December 31, 2024, respectively",3709000000.0000,library map
-TEVA,244,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-034532,,,,note-sourced default tag (no face line)
+TEVA,244,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-034532,,,581000000.0000,note fact present in the filing (FSN value)
 TEVA,244,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-034532,R4,Basic,1.2300,library map
 TEVA,244,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001193125-26-034532,R8,"Purchases of property, plant and equipment and intangible assets",501000000.0000,library map
 TEVA,244,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-034532,R2,Cash and cash equivalents,3556000000.0000,library map
 TEVA,244,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-034532,R8,Net cash provided by (used in) financing activities,-2151000000.0000,library map
 TEVA,244,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001193125-26-034532,R8,Net cash provided by (used in) investing activities,737000000.0000,library map
-TEVA,244,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-034532,,,,note-sourced default tag (no face line)
+TEVA,244,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-034532,,,,no face line and no note fact
 TEVA,244,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001193125-26-034532,R8,Interest,950000000.0000,library map
 TEVA,244,cf_ap_change,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
 TEVA,244,cf_ar_change,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
@@ -21,13 +21,13 @@ TEVA,244,deposits,OUT,,,,,,,,0001193125-26-034532,,,,not a bank
 TEVA,244,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001193125-26-034532,R8,Depreciation and amortization,1002000000.0000,library map
 TEVA,244,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-034532,R4,Diluted,1.2100,library map
 TEVA,244,dividends_paid,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
-TEVA,244,dividends_per_share,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
+TEVA,244,dividends_per_share,not_presented,,,,,,,,0001193125-26-034532,,,,no face line and no note fact
 TEVA,244,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-034532,R2,Goodwill,16000000000.0000,library map
 TEVA,244,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001193125-26-034532,R4,Gross profit,8938000000.0000,library map
 TEVA,244,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001193125-26-034532,R4,Income (loss) before income taxes,1223000000.0000,library map
 TEVA,244,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001193125-26-034532,R4,Income taxes (benefit),-180000000.0000,library map
 TEVA,244,interest_expense,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
-TEVA,244,interest_income,not_presented,,,,,,,,0001193125-26-034532,,,,no face line
+TEVA,244,interest_income,not_presented,,,,,,,,0001193125-26-034532,,,,no face line and no note fact
 TEVA,244,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-034532,R2,Inventories,3179000000.0000,library map
 TEVA,244,loans_net,OUT,,,,,,,,0001193125-26-034532,,,,not a bank
 TEVA,244,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-034532,R4,Net income (loss) attributable to Teva,1410000000.0000,library map

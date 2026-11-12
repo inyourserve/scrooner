@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HEI,496,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Trade accounts payable,231040000.0000,library map
 HEI,496,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Accounts receivable, net",637615000.0000,combined line (library or label demote)
-HEI,496,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000046619-25-000082,,,,note-sourced default tag (no face line)
+HEI,496,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000046619-25-000082,,,137900000.0000,note fact present in the filing (FSN value)
 HEI,496,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000046619-25-000082,R7,Basic (in dollars per share),4.9700,library map
 HEI,496,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Capital expenditures,72886000.0000,library map
 HEI,496,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000046619-25-000082,R5,Cash and cash equivalents,217781000.0000,combined line (library or label demote)
 HEI,496,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash (used in) provided by financing activities,-150677000.0000,library map
 HEI,496,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash used in investing activities,-731691000.0000,library map
 HEI,496,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,UN,+,-3,N,,sec_api,0000046619-25-000082,R14,Cash paid for income taxes,213665000.0000,library map
-HEI,496,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000046619-25-000082,,,,note-sourced default tag (no face line)
+HEI,496,cash_paid_for_interest,not_presented,,,,,,,,0000046619-25-000082,,,,no face line and no note fact
 HEI,496,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Trade accounts payable,27593000.0000,library map
 HEI,496,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Accounts receivable,75576000.0000,library map
 HEI,496,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Inventories,44850000.0000,library map
@@ -27,7 +27,7 @@ HEI,496,gross_profit,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
 HEI,496,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income before taxes and noncontrolling interests,893554000.0000,library map
 HEI,496,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income tax expense,148000000.0000,library map
 HEI,496,interest_expense,not_presented,,,,,,,,0000046619-25-000082,,,,single component only
-HEI,496,interest_income,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
+HEI,496,interest_income,not_presented,,,,,,,,0000046619-25-000082,,,,no face line and no note fact
 HEI,496,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Inventories, net",1295336000.0000,library map
 HEI,496,loans_net,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
 HEI,496,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Net income attributable to HEICO,690385000.0000,library map

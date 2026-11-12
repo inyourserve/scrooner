@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NUE,212,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Accounts payable,1890000000.0000,library map
 NUE,212,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Accounts receivable, net",3105000000.0000,library map
-NUE,212,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-071575,,,,note-sourced default tag (no face line)
+NUE,212,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-071575,,,254000000.0000,note fact present in the filing (FSN value)
 NUE,212,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-071575,R4,Basic,7.5300,library map
 NUE,212,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Capital expenditures,3422000000.0000,library map
 NUE,212,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Cash and cash equivalents,2260000000.0000,library map
 NUE,212,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in financing activities,-1315000000.0000,library map
 NUE,212,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in investing activities,-3226000000.0000,library map
-NUE,212,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-071575,,,,note-sourced default tag (no face line)
-NUE,212,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-071575,,,,note-sourced default tag (no face line)
+NUE,212,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-071575,,,,no face line and no note fact
+NUE,212,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-071575,,,281000000.0000,note fact present in the filing (FSN value)
 NUE,212,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts payable,80000000.0000,library map
 NUE,212,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts receivable,428000000.0000,library map
 NUE,212,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Inventories,366000000.0000,library map
@@ -27,7 +27,7 @@ NUE,212,gross_profit,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
 NUE,212,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Earnings before income taxes and noncontrolling interests,2568000000.0000,library map
 NUE,212,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Provision for income taxes,530000000.0000,library map
 NUE,212,interest_expense,combined,us-gaap:InterestRevenueExpenseNet,IS,-,-6,N,,sec_api,0001193125-26-071575,R4,"Interest expense (income), net",-59000000.0000,combined line (library or label demote)
-NUE,212,interest_income,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
+NUE,212,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001193125-26-071575,,,111000000.0000,note fact present in the filing (FSN value)
 NUE,212,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Inventories, net",5462000000.0000,library map
 NUE,212,loans_net,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
 NUE,212,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Net earnings attributable to Nucor stockholders,1744000000.0000,library map
@@ -50,5 +50,5 @@ NUE,212,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-0715
 NUE,212,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Short-term debt,122000000.0000,printed face components (duration sum; total_debt founder sum)
 NUE,212,total_interest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
 NUE,212,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total liabilities,12980000000.0000,library map
-NUE,212,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-071575,,,,note-sourced default tag (no face line)
-NUE,212,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-071575,,,,note-sourced default tag (no face line)
+NUE,212,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-071575,,,230700000.0000,note fact present in the filing (FSN value)
+NUE,212,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-071575,,,231000000.0000,note fact present in the filing (FSN value)

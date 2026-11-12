@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PR,446,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,Accounts payable and accrued expenses,1453610000.0000,combined line (library or label demote)
 PR,446,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,"Accounts receivable, net",840653000.0000,combined line (library or label demote)
-PR,446,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001658566-26-000035,,,,note-sourced default tag (no face line)
+PR,446,amortization_of_intangibles,not_presented,,,,,,,,0001658566-26-000035,,,,no face line and no note fact
 PR,446,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001658566-26-000035,R5,Basic (in dollars per share),1.3100,library map
 PR,446,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001658566-26-000035,R6,Purchases of other property and equipment,13682000.0000,combined line (library or label demote)
 PR,446,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,Cash and cash equivalents,153690000.0000,library map
@@ -21,20 +21,20 @@ PR,446,deposits,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,depreciation_and_amortization,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
 PR,446,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001658566-26-000035,R5,Diluted (in dollars per share),1.2800,library map
 PR,446,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001658566-26-000035,R6,Dividends paid,447714000.0000,library map
-PR,446,dividends_per_share,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
+PR,446,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001658566-26-000035,,,0.6000,note fact present in the filing (FSN value)
 PR,446,goodwill,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
 PR,446,gross_profit,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
 PR,446,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Income before income taxes,1383115000.0000,library map
 PR,446,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Income tax expense,284179000.0000,library map
 PR,446,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001658566-26-000035,R5,Interest expense,283062000.0000,library map
-PR,446,interest_income,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
+PR,446,interest_income,not_presented,,,,,,,,0001658566-26-000035,,,,no face line and no note fact
 PR,446,inventory,not_presented,,,,,,,,0001658566-26-000035,,,,no face line
 PR,446,loans_net,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Net income attributable to Class A Common Stock,935174000.0000,library map
 PR,446,net_interest_income,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,noninterest_expense,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,noninterest_income,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
-PR,446,operating_expenses,not_presented,,,,,,,,0001658566-26-000035,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+PR,446,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Total operating expenses,3602482000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 PR,446,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Income from operations,1462729000.0000,library map
 PR,446,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncomeAndExpensesAbstract,sec_api,0001658566-26-000035,R5,Other income (expense),27844000.0000,library map
 PR,446,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,"Other property and equipment, net",57051000.0000,library map
@@ -50,5 +50,5 @@ PR,446,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001658566-26-00003
 PR,446,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,"Long-term debt, net",3545598000.0000,printed face components (duration sum; total_debt founder sum)
 PR,446,total_interest_income,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,Total liabilities,6378302000.0000,library map
-PR,446,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001658566-26-000035,,,,note-sourced default tag (no face line)
-PR,446,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001658566-26-000035,,,,note-sourced default tag (no face line)
+PR,446,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001658566-26-000035,,,715772000.0000,note fact present in the filing (FSN value)
+PR,446,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001658566-26-000035,,,730975000.0000,note fact present in the filing (FSN value)

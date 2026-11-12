@@ -7,8 +7,8 @@ XYZ,252,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 XYZ,252,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-012254,R3,Cash and cash equivalents,6564092000.0000,library map
 XYZ,252,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-012254,R9,Net cash provided by (used in) financing activities,-613099000.0000,library map
 XYZ,252,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-012254,R9,Net cash provided by (used in) investing activities,-2801932000.0000,library map
-XYZ,252,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-012254,,,,note-sourced default tag (no face line)
-XYZ,252,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-012254,,,,note-sourced default tag (no face line)
+XYZ,252,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-012254,,,129390000.0000,note fact present in the filing (FSN value)
+XYZ,252,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-012254,,,246331000.0000,note fact present in the filing (FSN value)
 XYZ,252,cf_ap_change,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
 XYZ,252,cf_ar_change,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
 XYZ,252,cf_inventory_change,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
@@ -21,13 +21,13 @@ XYZ,252,deposits,OUT,,,,,,,,0001628280-26-012254,,,,not a bank
 XYZ,252,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-012254,R9,Depreciation and amortization,369529000.0000,library map
 XYZ,252,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-012254,R5,Diluted (in USD per share),2.1000,library map
 XYZ,252,dividends_paid,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
-XYZ,252,dividends_per_share,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
+XYZ,252,dividends_per_share,not_presented,,,,,,,,0001628280-26-012254,,,,no face line and no note fact
 XYZ,252,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-012254,R3,Goodwill,11849018000.0000,library map
 XYZ,252,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-012254,R5,Gross profit,10359929000.0000,library map
 XYZ,252,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-012254,R5,Income (loss) before income tax,1689911000.0000,library map
 XYZ,252,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-012254,R5,Total,385701000.0000,library map
 XYZ,252,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001628280-26-012254,R5,"Interest expense (income), net",-129363000.0000,combined line (library or label demote)
-XYZ,252,interest_income,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
+XYZ,252,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-012254,,,127100000.0000,note fact present in the filing (FSN value)
 XYZ,252,inventory,not_presented,,,,,,,,0001628280-26-012254,,,,no face line
 XYZ,252,loans_net,OUT,,,,,,,,0001628280-26-012254,,,,not a bank
 XYZ,252,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-012254,R5,Net income attributable to common stockholders,1305636000.0000,library map

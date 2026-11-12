@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MNST,259,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-020831,R2,Accounts payable,565974000.0000,library map
 MNST,259,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-020831,R2,"Accounts receivable, net",1618072000.0000,library map
-MNST,259,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-020831,,,,note-sourced default tag (no face line)
+MNST,259,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-020831,,,19300000.0000,note fact present in the filing (FSN value)
 MNST,259,basic_eps,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
 MNST,259,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-020831,R7,Purchases of property and equipment,132275000.0000,library map
 MNST,259,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-020831,R2,Cash and cash equivalents,2088117000.0000,library map
 MNST,259,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-020831,R7,Net cash used in financing activities,-324422000.0000,library map
 MNST,259,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-020831,R7,Net cash (used in) provided by investing activities,-1316778000.0000,library map
-MNST,259,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-020831,,,,note-sourced default tag (no face line)
+MNST,259,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-020831,,,550118000.0000,note fact present in the filing (FSN value)
 MNST,259,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-020831,R7,Interest,5337000.0000,library map
 MNST,259,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001104659-26-020831,R7,Accounts payable,78460000.0000,library map
 MNST,259,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001104659-26-020831,R7,Accounts receivable,300600000.0000,library map
@@ -21,13 +21,13 @@ MNST,259,deposits,OUT,,,,,,,,0001104659-26-020831,,,,not a bank
 MNST,259,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-020831,R7,Depreciation and amortization,114441000.0000,library map
 MNST,259,diluted_eps,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
 MNST,259,dividends_paid,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
-MNST,259,dividends_per_share,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
+MNST,259,dividends_per_share,not_presented,,,,,,,,0001104659-26-020831,,,,no face line and no note fact
 MNST,259,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-26-020831,R2,GOODWILL,1331643000.0000,library map
 MNST,259,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001104659-26-020831,R4,GROSS PROFIT,4632195000.0000,library map
 MNST,259,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-020831,R4,INCOME BEFORE PROVISION FOR INCOME TAXES,2482529000.0000,library map
 MNST,259,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-020831,R4,PROVISION FOR INCOME TAXES,577097000.0000,library map
 MNST,259,interest_expense,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
-MNST,259,interest_income,not_presented,,,,,,,,0001104659-26-020831,,,,no face line
+MNST,259,interest_income,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-020831,R4,"INTEREST AND OTHER INCOME, NET",63175000.0000,interest income only inside a net/other face line between OI and pretax
 MNST,259,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-020831,R2,Inventories,799623000.0000,library map
 MNST,259,loans_net,OUT,,,,,,,,0001104659-26-020831,,,,not a bank
 MNST,259,net_income,not_presented,,,,,,,,0001104659-26-020831,,,,no face line

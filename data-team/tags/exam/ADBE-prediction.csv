@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ADBE,123,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000796343-26-000003,R3,Trade payables,417000000.0000,library map
 ADBE,123,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000796343-26-000003,R3,"Trade receivables, net of allowances for doubtful accounts of $13 and of $14, respectively",2344000000.0000,library map
-ADBE,123,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000796343-26-000003,,,,note-sourced default tag (no face line)
+ADBE,123,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000796343-26-000003,,,310000000.0000,note fact present in the filing (FSN value)
 ADBE,123,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000796343-26-000003,R5,Basic net income per share (in usd per share),16.7300,library map
 ADBE,123,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000796343-26-000003,R8,Purchases of property and equipment,179000000.0000,library map
 ADBE,123,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000796343-26-000003,R3,Cash and cash equivalents,5431000000.0000,library map
@@ -21,13 +21,13 @@ ADBE,123,deposits,OUT,,,,,,,,0000796343-26-000003,,,,not a bank
 ADBE,123,depreciation_and_amortization,combined,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000796343-26-000003,R8,"Depreciation, amortization and accretion",818000000.0000,combined line (library or label demote)
 ADBE,123,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000796343-26-000003,R5,Diluted net income per share (in usd per share),16.7000,library map
 ADBE,123,dividends_paid,not_presented,,,,,,,,0000796343-26-000003,,,,no face line
-ADBE,123,dividends_per_share,not_presented,,,,,,,,0000796343-26-000003,,,,no face line
+ADBE,123,dividends_per_share,not_presented,,,,,,,,0000796343-26-000003,,,,no face line and no note fact
 ADBE,123,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000796343-26-000003,R3,Goodwill,12857000000.0000,library map
 ADBE,123,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000796343-26-000003,R5,Gross profit,21218000000.0000,library map
 ADBE,123,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000796343-26-000003,R5,Income before income taxes,8734000000.0000,library map
 ADBE,123,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000796343-26-000003,R5,Provision for income taxes,1604000000.0000,library map
 ADBE,123,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000796343-26-000003,R5,Interest expense,263000000.0000,library map
-ADBE,123,interest_income,not_presented,,,,,,,,0000796343-26-000003,,,,no face line
+ADBE,123,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000796343-26-000003,,,264000000.0000,note fact present in the filing (FSN value)
 ADBE,123,inventory,not_presented,,,,,,,,0000796343-26-000003,,,,no face line
 ADBE,123,loans_net,OUT,,,,,,,,0000796343-26-000003,,,,not a bank
 ADBE,123,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000796343-26-000003,R5,Net income,7130000000.0000,library map

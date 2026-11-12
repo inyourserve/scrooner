@@ -27,7 +27,7 @@ ESE,892,gross_profit,not_presented,,,,,,,,0001104659-25-117276,,,,no face line
 ESE,892,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-25-117276,R2,Earnings before income tax,152853000.0000,library map
 ESE,892,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-25-117276,R2,Income tax expense,36554000.0000,library map
 ESE,892,interest_expense,not_presented,,,,,,,,0001104659-25-117276,,,,no face line
-ESE,892,interest_income,not_presented,,,,,,,,0001104659-25-117276,,,,no face line
+ESE,892,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-3,N,,sec_api,0001104659-25-117276,R2,"Interest expense, net",-17502000.0000,interest income only inside a net/other face line between OI and pretax
 ESE,892,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-25-117276,R5,Inventories,217807000.0000,library map
 ESE,892,loans_net,OUT,,,,,,,,0001104659-25-117276,,,,not a bank
 ESE,892,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-25-117276,R2,Net earnings,299223000.0000,library map

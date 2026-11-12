@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SCI,652,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-007695,R6,Accounts payable and accrued liabilities,685156000.0000,combined line (library or label demote)
 SCI,652,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-007695,R6,"Receivables, net",100415000.0000,combined line (library or label demote)
-SCI,652,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007695,,,,note-sourced default tag (no face line)
+SCI,652,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-007695,,,16370000.0000,note fact present in the filing (FSN value)
 SCI,652,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-007695,R4,"Net income attributable to common stockholders, basic",3.8300,library map
 SCI,652,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001628280-26-007695,R8,Capital expenditures,388553000.0000,library map
 SCI,652,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-007695,R6,Cash and cash equivalents,243581000.0000,library map
 SCI,652,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-007695,R8,"Cash Provided by (Used in) Financing Activity, Including Discontinued Operation",-374726000.0000,library map
 SCI,652,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-007695,R8,Net cash used in investing activities,-548284000.0000,library map
-SCI,652,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-007695,,,,note-sourced default tag (no face line)
-SCI,652,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-007695,,,,note-sourced default tag (no face line)
+SCI,652,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001628280-26-007695,,,140065000.0000,note fact present in the filing (FSN value)
+SCI,652,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001628280-26-007695,,,252901000.0000,note fact present in the filing (FSN value)
 SCI,652,cf_ap_change,not_presented,,,,,,,,0001628280-26-007695,,,,no face line
 SCI,652,cf_ar_change,not_presented,,,,,,,,0001628280-26-007695,,,,no face line
 SCI,652,cf_inventory_change,not_presented,,,,,,,,0001628280-26-007695,,,,no face line
@@ -27,7 +27,7 @@ SCI,652,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26
 SCI,652,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Income from continuing operations before income taxes,729783000.0000,library map
 SCI,652,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Provision for income taxes,186938000.0000,library map
 SCI,652,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Interest expense,255372000.0000,library map
-SCI,652,interest_income,not_presented,,,,,,,,0001628280-26-007695,,,,no face line
+SCI,652,interest_income,not_presented,,,,,,,,0001628280-26-007695,,,,no face line and no note fact
 SCI,652,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-007695,R6,Inventories,35246000.0000,library map
 SCI,652,loans_net,OUT,,,,,,,,0001628280-26-007695,,,,not a bank
 SCI,652,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Net income attributable to common stockholders,542614000.0000,library map

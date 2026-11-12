@@ -27,7 +27,7 @@ LFUS,714,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-2
 LFUS,714,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-009585,R5,Income before income taxes,3607000.0000,library map
 LFUS,714,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-009585,R5,Income taxes,75307000.0000,library map
 LFUS,714,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-009585,R5,Interest expense,34303000.0000,library map
-LFUS,714,interest_income,not_presented,,,,,,,,0001628280-26-009585,,,,no face line
+LFUS,714,interest_income,not_presented,,,,,,,,0001628280-26-009585,,,,no face line and no note fact
 LFUS,714,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-009585,R3,Inventories (Note 3),416472000.0000,library map
 LFUS,714,loans_net,OUT,,,,,,,,0001628280-26-009585,,,,not a bank
 LFUS,714,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-009585,R5,Net (loss) income,-71700000.0000,library map

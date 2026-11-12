@@ -7,8 +7,8 @@ DGX,376,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,
 DGX,376,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001022079-26-000015,R3,Cash and cash equivalents,420000000.0000,library map
 DGX,376,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001022079-26-000015,R7,Net cash (used in) provided by financing activities,-1388000000.0000,library map
 DGX,376,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001022079-26-000015,R7,Net cash used in investing activities,-631000000.0000,library map
-DGX,376,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001022079-26-000015,,,,note-sourced default tag (no face line)
-DGX,376,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001022079-26-000015,,,,note-sourced default tag (no face line)
+DGX,376,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001022079-26-000015,,,169000000.0000,note fact present in the filing (FSN value)
+DGX,376,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001022079-26-000015,,,280000000.0000,note fact present in the filing (FSN value)
 DGX,376,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001022079-26-000015,R7,Accounts payable and accrued expenses,129000000.0000,combined line (library or label demote)
 DGX,376,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001022079-26-000015,R7,Accounts receivable,106000000.0000,library map
 DGX,376,cf_inventory_change,not_presented,,,,,,,,0001022079-26-000015,,,,no face line
@@ -21,13 +21,13 @@ DGX,376,deposits,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
 DGX,376,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001022079-26-000015,R7,Depreciation and amortization,570000000.0000,library map
 DGX,376,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001022079-26-000015,R5,Diluted (in dollars per share),8.7500,library map
 DGX,376,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001022079-26-000015,R7,Dividends paid,353000000.0000,library map
-DGX,376,dividends_per_share,not_presented,,,,,,,,0001022079-26-000015,,,,no face line
+DGX,376,dividends_per_share,not_presented,,,,,,,,0001022079-26-000015,,,,no face line and no note fact
 DGX,376,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001022079-26-000015,R3,Goodwill,8945000000.0000,library map
 DGX,376,gross_profit,not_presented,,,,,,,,0001022079-26-000015,,,,no face line
 DGX,376,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,Income before income taxes and equity in earnings of equity method investees,1318000000.0000,library map
 DGX,376,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,Income tax expense,314000000.0000,library map
 DGX,376,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001022079-26-000015,R5,"Interest expense, net",-264000000.0000,combined line (library or label demote)
-DGX,376,interest_income,not_presented,,,,,,,,0001022079-26-000015,,,,no face line
+DGX,376,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001022079-26-000015,R5,"Interest expense, net",-264000000.0000,interest income only inside a net/other face line between OI and pretax
 DGX,376,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001022079-26-000015,R3,Inventories,189000000.0000,library map
 DGX,376,loans_net,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
 DGX,376,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,Net income attributable to Quest Diagnostics,992000000.0000,library map
@@ -50,5 +50,5 @@ DGX,376,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001022079-26-0000
 DGX,376,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001022079-26-000015,R3,Less: Current portion of long-term debt,504000000.0000,printed face components (duration sum; total_debt founder sum)
 DGX,376,total_interest_income,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
 DGX,376,total_liabilities,not_presented,,,,,,,,0001022079-26-000015,,,,no face line
-DGX,376,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001022079-26-000015,,,,note-sourced default tag (no face line)
-DGX,376,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001022079-26-000015,,,,note-sourced default tag (no face line)
+DGX,376,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001022079-26-000015,,,111000000.0000,note fact present in the filing (FSN value)
+DGX,376,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001022079-26-000015,,,113000000.0000,note fact present in the filing (FSN value)

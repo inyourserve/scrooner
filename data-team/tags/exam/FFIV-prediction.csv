@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FFIV,385,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001048695-25-000157,R3,Accounts payable,83972000.0000,library map
 FFIV,385,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001048695-25-000157,R3,"Accounts receivable, net of allowances of $2,877 and $4,585",414433000.0000,library map
-FFIV,385,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001048695-25-000157,,,,note-sourced default tag (no face line)
+FFIV,385,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001048695-25-000157,,,42900000.0000,note fact present in the filing (FSN value)
 FFIV,385,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001048695-25-000157,R5,Net income per share - basic (USD per share),11.9600,library map
 FFIV,385,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001048695-25-000157,R9,Purchases of property and equipment,43260000.0000,library map
 FFIV,385,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001048695-25-000157,R3,Cash and cash equivalents,1344273000.0000,library map
@@ -21,13 +21,13 @@ FFIV,385,deposits,OUT,,,,,,,,0001048695-25-000157,,,,not a bank
 FFIV,385,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001048695-25-000157,R9,Depreciation and amortization,92399000.0000,library map
 FFIV,385,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001048695-25-000157,R5,Net income per share - diluted (USD per share),11.8000,library map
 FFIV,385,dividends_paid,not_presented,,,,,,,,0001048695-25-000157,,,,no face line
-FFIV,385,dividends_per_share,not_presented,,,,,,,,0001048695-25-000157,,,,no face line
+FFIV,385,dividends_per_share,not_presented,,,,,,,,0001048695-25-000157,,,,no face line and no note fact
 FFIV,385,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001048695-25-000157,R3,Goodwill,2443882000.0000,library map
 FFIV,385,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001048695-25-000157,R5,Gross profit,2514094000.0000,library map
 FFIV,385,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001048695-25-000157,R5,Income before income taxes,808336000.0000,library map
 FFIV,385,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001048695-25-000157,R5,Provision for income taxes,115956000.0000,library map
 FFIV,385,interest_expense,not_presented,,,,,,,,0001048695-25-000157,,,,no face line
-FFIV,385,interest_income,not_presented,,,,,,,,0001048695-25-000157,,,,no face line
+FFIV,385,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001048695-25-000157,,,40800000.0000,note fact present in the filing (FSN value)
 FFIV,385,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001048695-25-000157,R3,Inventories,77229000.0000,library map
 FFIV,385,loans_net,OUT,,,,,,,,0001048695-25-000157,,,,not a bank
 FFIV,385,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001048695-25-000157,R5,Net income,692380000.0000,library map

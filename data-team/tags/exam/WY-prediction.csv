@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WY,552,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-051422,R5,Accounts payable,278000000.0000,library map
 WY,552,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-051422,R5,"Receivables, net",303000000.0000,library map
-WY,552,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-051422,,,,note-sourced default tag (no face line)
+WY,552,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-051422,,,,no face line and no note fact
 WY,552,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-051422,R2,Basic,0.4500,library map
 WY,552,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-6,N,,sec_api,0001193125-26-051422,R7,Capital expenditures for timberlands reforestation,51000000.0000,combined line (library or label demote)
 WY,552,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-051422,R5,Cash and cash equivalents,464000000.0000,library map
@@ -27,7 +27,7 @@ WY,552,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001193125-26-
 WY,552,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-051422,R2,Earnings before income taxes,260000000.0000,library map
 WY,552,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001193125-26-051422,R2,Income taxes (Note 18),-64000000.0000,library map
 WY,552,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-051422,R2,"Interest expense, net of capitalized interest",273000000.0000,library map
-WY,552,interest_income,not_presented,,,,,,,,0001193125-26-051422,,,,no face line
+WY,552,interest_income,combined,custom:InterestAndOtherIncomeLoss,IS,+,-6,Y,InterestAndOtherIncome,fsn_xbrl,0001193125-26-051422,R2,Interest income and other,22000000.0000,interest income only inside a net/other face line between OI and pretax
 WY,552,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-051422,R5,Inventories (Note 6),593000000.0000,library map
 WY,552,loans_net,OUT,,,,,,,,0001193125-26-051422,,,,not a bank
 WY,552,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-051422,R2,Net earnings,324000000.0000,library map

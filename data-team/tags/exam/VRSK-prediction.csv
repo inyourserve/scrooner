@@ -21,13 +21,13 @@ VRSK,386,deposits,OUT,,,,,,,,0001437749-26-004452,,,,not a bank
 VRSK,386,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001437749-26-004452,R9,Depreciation and amortization of fixed assets,259200000.0000,library map
 VRSK,386,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-004452,R4,Diluted net income per share attributable to Verisk: (in dollars per share),6.4800,library map
 VRSK,386,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001437749-26-004452,R9,Dividends paid,251100000.0000,library map
-VRSK,386,dividends_per_share,not_presented,,,,,,,,0001437749-26-004452,,,,no face line
+VRSK,386,dividends_per_share,not_presented,,,,,,,,0001437749-26-004452,,,,no face line and no note fact
 VRSK,386,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001437749-26-004452,R2,Goodwill,1878200000.0000,library map
 VRSK,386,gross_profit,not_presented,,,,,,,,0001437749-26-004452,,,,no face line
 VRSK,386,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,Total income before income taxes,1171300000.0000,library map
 VRSK,386,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001437749-26-004452,R4,Provision for income taxes,263000000.0000,library map
 VRSK,386,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,"Interest expense, net",170900000.0000,combined line (library or label demote)
-VRSK,386,interest_income,not_presented,,,,,,,,0001437749-26-004452,,,,no face line
+VRSK,386,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,"Interest expense, net",170900000.0000,interest income only inside a net/other face line between OI and pretax
 VRSK,386,inventory,not_presented,,,,,,,,0001437749-26-004452,,,,no face line
 VRSK,386,loans_net,OUT,,,,,,,,0001437749-26-004452,,,,not a bank
 VRSK,386,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,Net income attributable to Verisk,908300000.0000,library map

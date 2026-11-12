@@ -21,20 +21,20 @@ MEDP,494,deposits,OUT,,,,,,,,0001668397-26-000006,,,,not a bank
 MEDP,494,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001668397-26-000006,R9,Depreciation,27178000.0000,printed face components (duration sum; total_debt founder sum)
 MEDP,494,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001668397-26-000006,R5,"Earnings per share, diluted (in dollars per share)",15.2800,library map
 MEDP,494,dividends_paid,not_presented,,,,,,,,0001668397-26-000006,,,,no face line
-MEDP,494,dividends_per_share,not_presented,,,,,,,,0001668397-26-000006,,,,no face line
+MEDP,494,dividends_per_share,not_presented,,,,,,,,0001668397-26-000006,,,,no face line and no note fact
 MEDP,494,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001668397-26-000006,R3,Goodwill,662396000.0000,library map
 MEDP,494,gross_profit,not_presented,,,,,,,,0001668397-26-000006,,,,no face line
 MEDP,494,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,Income before income taxes,542377000.0000,library map
 MEDP,494,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,Income tax provision,91254000.0000,library map
 MEDP,494,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,"Interest income (expense), net",12780000.0000,combined line (library or label demote)
-MEDP,494,interest_income,not_presented,,,,,,,,0001668397-26-000006,,,,no face line
+MEDP,494,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,"Interest income (expense), net",12780000.0000,interest income only inside a net/other face line between OI and pretax
 MEDP,494,inventory,not_presented,,,,,,,,0001668397-26-000006,,,,no face line
 MEDP,494,loans_net,OUT,,,,,,,,0001668397-26-000006,,,,not a bank
 MEDP,494,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,Net income,451123000.0000,library map
 MEDP,494,net_interest_income,OUT,,,,,,,,0001668397-26-000006,,,,not a bank
 MEDP,494,noninterest_expense,OUT,,,,,,,,0001668397-26-000006,,,,not a bank
 MEDP,494,noninterest_income,OUT,,,,,,,,0001668397-26-000006,,,,not a bank
-MEDP,494,operating_expenses,not_presented,,,,,,,,0001668397-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+MEDP,494,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,Total operating expenses,1995299000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 MEDP,494,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001668397-26-000006,R5,Income from operations,534935000.0000,library map
 MEDP,494,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001668397-26-000006,R5,"Miscellaneous (expense) income, net",-5338000.0000,library map
 MEDP,494,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001668397-26-000006,R3,"Property and equipment, net",131055000.0000,library map

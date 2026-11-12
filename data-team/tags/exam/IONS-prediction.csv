@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IONS,850,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000874015-26-000115,R3,Accounts payable,28082000.0000,library map
 IONS,850,accounts_receivable,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
-IONS,850,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000874015-26-000115,,,,note-sourced default tag (no face line)
+IONS,850,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000874015-26-000115,,,2439000.0000,note fact present in the filing (FSN value)
 IONS,850,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000874015-26-000115,R5,Basic net loss per share (in Dollars per share),-2.3800,library map
 IONS,850,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000874015-26-000115,R9,"Purchases of property, plant and equipment",51444000.0000,library map
 IONS,850,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000874015-26-000115,R3,Cash and cash equivalents,372260000.0000,library map
@@ -21,13 +21,13 @@ IONS,850,deposits,OUT,,,,,,,,0000874015-26-000115,,,,not a bank
 IONS,850,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0000874015-26-000115,R9,Depreciation,10008000.0000,printed face components (duration sum; total_debt founder sum)
 IONS,850,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000874015-26-000115,R5,Diluted net loss per share (in Dollars per share),-2.3800,library map
 IONS,850,dividends_paid,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
-IONS,850,dividends_per_share,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
+IONS,850,dividends_per_share,not_presented,,,,,,,,0000874015-26-000115,,,,no face line and no note fact
 IONS,850,goodwill,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
 IONS,850,gross_profit,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
 IONS,850,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0000874015-26-000115,R5,Loss before income tax benefit (expense),-379601000.0000,library map
 IONS,850,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000874015-26-000115,R5,Income tax benefit (expense),1786000.0000,library map
 IONS,850,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000874015-26-000115,R5,Interest expense,17262000.0000,library map
-IONS,850,interest_income,not_presented,,,,,,,,0000874015-26-000115,,,,no face line
+IONS,850,interest_income,not_presented,,,,,,,,0000874015-26-000115,,,,no face line and no note fact
 IONS,850,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000874015-26-000115,R3,Inventories,10048000.0000,library map
 IONS,850,loans_net,OUT,,,,,,,,0000874015-26-000115,,,,not a bank
 IONS,850,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000874015-26-000115,R5,Net loss,-381387000.0000,library map

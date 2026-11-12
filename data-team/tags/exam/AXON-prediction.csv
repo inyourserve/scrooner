@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AXON,326,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-011360,R3,Accounts payable,139086000.0000,library map
 AXON,326,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-011360,R3,"Accounts and notes receivable, net of allowance of $4,198 and $3,322 as of December 31, 2025 and December 31, 2024, respectively",777486000.0000,combined line (library or label demote)
-AXON,326,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-011360,,,,note-sourced default tag (no face line)
+AXON,326,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-011360,,,29800000.0000,note fact present in the filing (FSN value)
 AXON,326,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-011360,R5,Basic (in dollars per share),1.6000,library map
 AXON,326,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-011360,R7,Purchases of property and equipment,136258000.0000,library map
 AXON,326,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-011360,R3,Cash and cash equivalents,1201147000.0000,library map
@@ -21,7 +21,7 @@ AXON,326,deposits,OUT,,,,,,,,0001628280-26-011360,,,,not a bank
 AXON,326,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-011360,R7,Depreciation and amortization,83161000.0000,library map
 AXON,326,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-011360,R5,Diluted (in dollars per share),1.5100,library map
 AXON,326,dividends_paid,not_presented,,,,,,,,0001628280-26-011360,,,,no face line
-AXON,326,dividends_per_share,not_presented,,,,,,,,0001628280-26-011360,,,,no face line
+AXON,326,dividends_per_share,not_presented,,,,,,,,0001628280-26-011360,,,,no face line and no note fact
 AXON,326,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-011360,R3,Goodwill,1370189000.0000,library map
 AXON,326,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-011360,R5,Gross margin,1658125000.0000,library map
 AXON,326,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-011360,R5,Income before provision for income taxes,18974000.0000,library map

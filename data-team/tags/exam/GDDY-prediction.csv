@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GDDY,574,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001609711-26-000010,R3,Accounts payable,67500000.0000,library map
 GDDY,574,accounts_receivable,combined,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001609711-26-000010,R3,Accounts and other receivables,83100000.0000,combined line (library or label demote)
-GDDY,574,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001609711-26-000010,,,,note-sourced default tag (no face line)
+GDDY,574,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001609711-26-000010,,,71700000.0000,note fact present in the filing (FSN value)
 GDDY,574,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001609711-26-000010,R5,Basic (in USD per share),6.3400,library map
 GDDY,574,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001609711-26-000010,R11,Purchases of property and equipment,23900000.0000,library map
 GDDY,574,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0001609711-26-000010,R3,Cash and cash equivalents,1080900000.0000,combined line (library or label demote)
 GDDY,574,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001609711-26-000010,R11,Net cash used in financing activities,-1587100000.0000,library map
 GDDY,574,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001609711-26-000010,R11,Net cash provided by (used in) investing activities,-25100000.0000,library map
-GDDY,574,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001609711-26-000010,,,,note-sourced default tag (no face line)
+GDDY,574,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001609711-26-000010,,,16500000.0000,note fact present in the filing (FSN value)
 GDDY,574,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001609711-26-000010,R11,"Interest on long-term debt, including impact of interest rate swaps",139500000.0000,library map
 GDDY,574,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001609711-26-000010,R11,Accounts payable,-14500000.0000,library map
 GDDY,574,cf_ar_change,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
@@ -21,13 +21,13 @@ GDDY,574,deposits,OUT,,,,,,,,0001609711-26-000010,,,,not a bank
 GDDY,574,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001609711-26-000010,R11,Depreciation and amortization,116600000.0000,library map
 GDDY,574,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001609711-26-000010,R5,Diluted (in USD per share),6.2200,library map
 GDDY,574,dividends_paid,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
-GDDY,574,dividends_per_share,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
+GDDY,574,dividends_per_share,not_presented,,,,,,,,0001609711-26-000010,,,,no face line and no note fact
 GDDY,574,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001609711-26-000010,R3,Goodwill,3633300000.0000,library map
 GDDY,574,gross_profit,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
 GDDY,574,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001609711-26-000010,R5,Income before income taxes,1020000000.0000,library map
 GDDY,574,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001609711-26-000010,R5,Benefit (provision) for income taxes,145000000.0000,library map
 GDDY,574,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001609711-26-000010,R5,Interest expense,151000000.0000,library map
-GDDY,574,interest_income,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
+GDDY,574,interest_income,not_presented,,,,,,,,0001609711-26-000010,,,,no face line and no note fact
 GDDY,574,inventory,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
 GDDY,574,loans_net,OUT,,,,,,,,0001609711-26-000010,,,,not a bank
 GDDY,574,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001609711-26-000010,R5,Net income,875000000.0000,library map

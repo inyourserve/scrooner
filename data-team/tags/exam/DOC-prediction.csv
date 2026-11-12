@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DOC,583,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-005044,R3,"Accounts payable, accrued liabilities, and other liabilities",718509000.0000,combined line (library or label demote)
 DOC,583,accounts_receivable,not_presented,,,,,,,,0001628280-26-005044,,,,no face line
-DOC,583,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-005044,,,,note-sourced default tag (no face line)
+DOC,583,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-005044,,,,no face line and no note fact
 DOC,583,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-005044,R5,Basic (in dollars per share),0.1000,library map
 DOC,583,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0001628280-26-005044,R9,"Development, redevelopment, and other major improvements of real estate",763656000.0000,combined line (library or label demote)
 DOC,583,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-005044,R3,Cash and cash equivalents,467457000.0000,library map
 DOC,583,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-005044,R9,Net cash provided by (used in) financing activities,136111000.0000,library map
 DOC,583,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-005044,R9,Net cash provided by (used in) investing activities,-1034673000.0000,library map
-DOC,583,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-005044,,,,note-sourced default tag (no face line)
-DOC,583,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-005044,,,,note-sourced default tag (no face line)
+DOC,583,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-005044,,,3414000.0000,note fact present in the filing (FSN value)
+DOC,583,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-005044,,,260109000.0000,note fact present in the filing (FSN value)
 DOC,583,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001628280-26-005044,R9,"Increase (decrease) in accounts payable, accrued liabilities, and other liabilities",-25285000.0000,combined line (library or label demote)
 DOC,583,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-3,N,,sec_api,0001628280-26-005044,R9,Decrease (increase) in accounts receivable and other assets,16267000.0000,combined line (library or label demote)
 DOC,583,cf_inventory_change,not_presented,,,,,,,,0001628280-26-005044,,,,no face line
@@ -34,7 +34,7 @@ DOC,583,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 DOC,583,net_interest_income,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
 DOC,583,noninterest_expense,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
 DOC,583,noninterest_income,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
-DOC,583,operating_expenses,not_presented,,,,,,,,0001628280-26-005044,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+DOC,583,operating_expenses,mapped,us-gaap:OperatingCostsAndExpenses,IS,+,-3,Y,CostOfGoodsAndServicesSold,sec_api,0001628280-26-005044,R5,Operating,1129099000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 DOC,583,operating_income,not_presented,,,,,,,,0001628280-26-005044,,,,no face line
 DOC,583,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-005044,R5,"Other income (expense), net",479000.0000,library map
 DOC,583,ppe_net,not_presented,,,,,,,,0001628280-26-005044,,,,no face line

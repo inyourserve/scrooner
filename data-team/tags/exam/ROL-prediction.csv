@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROL,514,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000084839-26-000008,R3,Accounts payable,44361000.0000,library map
 ROL,514,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000084839-26-000008,R3,"Trade receivables, net of allowance for expected credit losses of $23,528 and $19,770, respectively",202518000.0000,library map
-ROL,514,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000084839-26-000008,,,,note-sourced default tag (no face line)
+ROL,514,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000084839-26-000008,,,90400000.0000,note fact present in the filing (FSN value)
 ROL,514,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000084839-26-000008,R5,NET INCOME PER SHARE - BASIC (in USD per share),1.0900,library map
 ROL,514,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000084839-26-000008,R8,Capital expenditures,28086000.0000,library map
 ROL,514,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000084839-26-000008,R3,Cash and cash equivalents,100004000.0000,library map
@@ -27,7 +27,7 @@ ROL,514,gross_profit,not_presented,,,,,,,,0000084839-26-000008,,,,no face line
 ROL,514,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,CONSOLIDATED INCOME BEFORE INCOME TAXES,700926000.0000,library map
 ROL,514,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,PROVISION FOR INCOME TAXES,174221000.0000,library map
 ROL,514,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0000084839-26-000008,R5,"Interest expense, net",28558000.0000,combined line (library or label demote)
-ROL,514,interest_income,not_presented,,,,,,,,0000084839-26-000008,,,,no face line
+ROL,514,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0000084839-26-000008,R5,"Interest expense, net",28558000.0000,interest income only inside a net/other face line between OI and pretax
 ROL,514,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000084839-26-000008,R3,Materials and supplies,42982000.0000,library map
 ROL,514,loans_net,OUT,,,,,,,,0000084839-26-000008,,,,not a bank
 ROL,514,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,NET INCOME,526705000.0000,library map

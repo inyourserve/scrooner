@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ALLY,635,accounts_payable,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
 ALLY,635,accounts_receivable,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
-ALLY,635,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000040729-26-000005,,,,note-sourced default tag (no face line)
+ALLY,635,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000040729-26-000005,,,3000000.0000,note fact present in the filing (FSN value)
 ALLY,635,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000040729-26-000005,R3,Net income (in dollars per share),2.3900,library map
 ALLY,635,capex,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
 ALLY,635,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000040729-26-000005,R5,Total cash and cash equivalents,10030000000.0000,library map
@@ -27,7 +27,7 @@ ALLY,635,gross_profit,OUT,,,,,,,,0000040729-26-000005,,,,sector template (bank/i
 ALLY,635,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000040729-26-000005,R3,Income from continuing operations before income tax expense,1051000000.0000,library map
 ALLY,635,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000040729-26-000005,R3,Total income tax expense from continuing operations,199000000.0000,library map
 ALLY,635,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0000040729-26-000005,R3,Total interest expense,6408000000.0000,library map
-ALLY,635,interest_income,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
+ALLY,635,interest_income,combined,custom:InterestAndDividendIncomeSecuritiesAndOtherEarningAssetsOperating,IS,+,-6,Y,InterestAndDividendIncomeSecurities,fsn_xbrl,0000040729-26-000005,R3,Interest and dividends on investment securities and other earning assets,972000000.0000,interest income only inside a net/other face line between OI and pretax
 ALLY,635,inventory,OUT,,,,,,,,0000040729-26-000005,,,,sector template (bank/insurer)
 ALLY,635,loans_net,mapped,us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,+,-6,N,,sec_api,0000040729-26-000005,R5,"Total finance receivables and loans, net",133964000000.0000,bank template tag
 ALLY,635,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000040729-26-000005,R3,Net income,852000000.0000,library map
@@ -41,7 +41,7 @@ ALLY,635,ppe_net,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
 ALLY,635,provision_for_credit_losses,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
 ALLY,635,research_and_development,OUT,,,,,,,,0000040729-26-000005,,,,sector template (bank/insurer)
 ALLY,635,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000040729-26-000005,R3,Total net revenue,7914000000.0000,library map
-ALLY,635,sbc,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
+ALLY,635,sbc,not_presented,,,,,,,,0000040729-26-000005,,,,no face line and no note fact
 ALLY,635,sga_expense,not_presented,,,,,,,,0000040729-26-000005,,,,no face line
 ALLY,635,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000040729-26-000005,R11,Repurchases of common stock,59000000.0000,library map
 ALLY,635,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000040729-26-000005,R6,"Common stock, shares outstanding (in shares)",308492929.0000,library map

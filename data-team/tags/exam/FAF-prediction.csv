@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FAF,880,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0001193125-26-055516,R2,Accounts payable and accrued liabilities,1002700000.0000,combined line (library or label demote)
 FAF,880,accounts_receivable,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
-FAF,880,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-055516,,,,note-sourced default tag (no face line)
+FAF,880,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-055516,,,37600000.0000,note fact present in the filing (FSN value)
 FAF,880,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-055516,R4,Basic,6.0200,library map
 FAF,880,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001193125-26-055516,R8,Capital expenditures,188300000.0000,library map
 FAF,880,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-055516,R2,Cash and cash equivalents,1387300000.0000,library map
@@ -27,14 +27,14 @@ FAF,880,gross_profit,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
 FAF,880,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-055516,R4,Income before income taxes,826200000.0000,library map
 FAF,880,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-055516,R4,Income taxes,201000000.0000,library map
 FAF,880,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-055516,R4,Interest,157000000.0000,library map
-FAF,880,interest_income,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
+FAF,880,interest_income,not_presented,,,,,,,,0001193125-26-055516,,,,no face line and no note fact
 FAF,880,inventory,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
 FAF,880,loans_net,OUT,,,,,,,,0001193125-26-055516,,,,not a bank
 FAF,880,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-055516,R4,Net income attributable to the Company,621800000.0000,library map
 FAF,880,net_interest_income,OUT,,,,,,,,0001193125-26-055516,,,,not a bank
 FAF,880,noninterest_expense,OUT,,,,,,,,0001193125-26-055516,,,,not a bank
 FAF,880,noninterest_income,OUT,,,,,,,,0001193125-26-055516,,,,not a bank
-FAF,880,operating_expenses,not_presented,,,,,,,,0001193125-26-055516,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+FAF,880,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001193125-26-055516,R4,Total expenses,6626000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 FAF,880,operating_income,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
 FAF,880,other_income_expense_net,not_presented,,,,,,,,0001193125-26-055516,,,,no face line
 FAF,880,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-055516,R2,"Property and equipment, net",682300000.0000,library map

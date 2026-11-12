@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TXNM,1000,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Accounts payable,243062000.0000,library map
 TXNM,1000,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,"Accounts receivable, net of allowance for credit losses of $1,394 and $1,398",151804000.0000,library map
-TXNM,1000,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001108426-26-000006,,,,note-sourced default tag (no face line)
+TXNM,1000,amortization_of_intangibles,not_presented,,,,,,,,0001108426-26-000006,,,,no face line and no note fact
 TXNM,1000,basic_eps,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
 TXNM,1000,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001108426-26-000006,R6,Additions to utility and non-utility plant,1195922000.0000,library map
 TXNM,1000,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Cash and cash equivalents,18256000.0000,library map
@@ -21,7 +21,7 @@ TXNM,1000,deposits,OUT,,,,,,,,0001108426-26-000006,,,,not a bank
 TXNM,1000,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001108426-26-000006,R6,Depreciation and amortization,483378000.0000,library map
 TXNM,1000,diluted_eps,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
 TXNM,1000,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001108426-26-000006,R6,Dividends paid,163373000.0000,library map
-TXNM,1000,dividends_per_share,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
+TXNM,1000,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001108426-26-000006,,,1.6500,note fact present in the filing (FSN value)
 TXNM,1000,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Goodwill,278297000.0000,library map
 TXNM,1000,gross_profit,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
 TXNM,1000,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001108426-26-000006,R3,Earnings before Income Taxes,180013000.0000,library map
@@ -50,5 +50,5 @@ TXNM,1000,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001108426-26-00
 TXNM,1000,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Short-term debt,181400000.0000,printed face components (duration sum; total_debt founder sum)
 TXNM,1000,total_interest_income,OUT,,,,,,,,0001108426-26-000006,,,,not a bank
 TXNM,1000,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Total liabilities,8599750000.0000,library map
-TXNM,1000,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001108426-26-000006,,,,note-sourced default tag (no face line)
-TXNM,1000,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001108426-26-000006,,,,note-sourced default tag (no face line)
+TXNM,1000,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001108426-26-000006,,,101507000.0000,note fact present in the filing (FSN value)
+TXNM,1000,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001108426-26-000006,,,102392000.0000,note fact present in the filing (FSN value)

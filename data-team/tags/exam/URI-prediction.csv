@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 URI,191,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,Accounts payable,776000000.0000,library map
 URI,191,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,"Accounts receivable, net",2510000000.0000,library map
-URI,191,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001067701-26-000007,,,,note-sourced default tag (no face line)
+URI,191,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001067701-26-000007,,,238000000.0000,note fact present in the filing (FSN value)
 URI,191,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001067701-26-000007,R5,Basic earnings per share (in dollars per share),38.7100,library map
 URI,191,capex,not_presented,,,,,,,,0001067701-26-000007,,,,no face line
 URI,191,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,Cash and cash equivalents,459000000.0000,library map
@@ -27,7 +27,7 @@ URI,191,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001067701-26
 URI,191,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,Income before provision for income taxes,3338000000.0000,library map
 URI,191,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,Provision for income taxes,844000000.0000,library map
 URI,191,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001067701-26-000007,R5,"Interest expense, net",-716000000.0000,combined line (library or label demote)
-URI,191,interest_income,not_presented,,,,,,,,0001067701-26-000007,,,,no face line
+URI,191,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001067701-26-000007,R5,"Interest expense, net",-716000000.0000,interest income only inside a net/other face line between OI and pretax
 URI,191,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,Inventory,240000000.0000,library map
 URI,191,loans_net,OUT,,,,,,,,0001067701-26-000007,,,,not a bank
 URI,191,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,Net income,2494000000.0000,library map
@@ -50,5 +50,5 @@ URI,191,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001067701-26-0000
 URI,191,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,Short-term debt and current maturities of long-term debt,1577000000.0000,printed face components (duration sum; total_debt founder sum)
 URI,191,total_interest_income,OUT,,,,,,,,0001067701-26-000007,,,,not a bank
 URI,191,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001067701-26-000007,R3,Total liabilities,20898000000.0000,library map
-URI,191,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001067701-26-000007,,,,note-sourced default tag (no face line)
-URI,191,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001067701-26-000007,,,,note-sourced default tag (no face line)
+URI,191,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001067701-26-000007,,,64439000.0000,note fact present in the filing (FSN value)
+URI,191,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001067701-26-000007,,,64604000.0000,note fact present in the filing (FSN value)

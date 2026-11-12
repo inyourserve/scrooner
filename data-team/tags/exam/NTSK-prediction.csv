@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NTSK,828,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,Accounts payable,14436000.0000,library map
 NTSK,828,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,"Accounts receivable, net",158278000.0000,library map
-NTSK,828,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-135011,,,,note-sourced default tag (no face line)
+NTSK,828,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-135011,,,15800000.0000,note fact present in the filing (FSN value)
 NTSK,828,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-135011,R4,"Net loss per share attributable to common stockholders, basic",-3.1800,library map
 NTSK,828,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-135011,R7,Purchases of property and equipment,22920000.0000,library map
 NTSK,828,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,Cash and cash equivalents,432583000.0000,library map
 NTSK,828,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-135011,R7,Net cash provided by financing activities,895366000.0000,library map
 NTSK,828,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-135011,R7,Net cash (used in) provided by investing activities,-666867000.0000,library map
-NTSK,828,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-135011,,,,note-sourced default tag (no face line)
+NTSK,828,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-135011,,,10567000.0000,note fact present in the filing (FSN value)
 NTSK,828,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,0,-3,N,,sec_api,0001193125-26-135011,R7,Cash paid for interest,0.0000,library map
 NTSK,828,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-135011,R7,Accounts payable,11353000.0000,library map
 NTSK,828,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001193125-26-135011,R7,Accounts receivable,-36822000.0000,library map
@@ -21,13 +21,13 @@ NTSK,828,deposits,OUT,,,,,,,,0001193125-26-135011,,,,not a bank
 NTSK,828,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001193125-26-135011,R7,Depreciation and amortization,45902000.0000,library map
 NTSK,828,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-135011,R4,"Net loss per share attributable to common stockholders, diluted",-3.1800,library map
 NTSK,828,dividends_paid,not_presented,,,,,,,,0001193125-26-135011,,,,no face line
-NTSK,828,dividends_per_share,not_presented,,,,,,,,0001193125-26-135011,,,,no face line
+NTSK,828,dividends_per_share,not_presented,,,,,,,,0001193125-26-135011,,,,no face line and no note fact
 NTSK,828,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,Goodwill,61083000.0000,library map
 NTSK,828,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-135011,R4,Gross profit,482669000.0000,library map
 NTSK,828,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,-,-3,N,,sec_api,0001193125-26-135011,R4,Loss before provision for income taxes,-668053000.0000,library map
 NTSK,828,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-135011,R4,Provision for income taxes,11335000.0000,library map
 NTSK,828,interest_expense,not_presented,,,,,,,,0001193125-26-135011,,,,no face line
-NTSK,828,interest_income,not_presented,,,,,,,,0001193125-26-135011,,,,no face line
+NTSK,828,interest_income,not_presented,,,,,,,,0001193125-26-135011,,,,no face line and no note fact
 NTSK,828,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,Inventories,4902000.0000,library map
 NTSK,828,loans_net,OUT,,,,,,,,0001193125-26-135011,,,,not a bank
 NTSK,828,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-135011,R4,Net loss,-679388000.0000,library map

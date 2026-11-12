@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FSLR,468,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001274494-26-000021,R3,Accounts payable,405775000.0000,library map
 FSLR,468,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001274494-26-000021,R3,"Accounts receivable trade, net",1294040000.0000,library map
-FSLR,468,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001274494-26-000021,,,,note-sourced default tag (no face line)
+FSLR,468,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001274494-26-000021,,,4100000.0000,note fact present in the filing (FSN value)
 FSLR,468,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001274494-26-000021,R5,Basic,14.2500,library map
 FSLR,468,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001274494-26-000021,R8,"Purchases of property, plant and equipment",869875000.0000,library map
 FSLR,468,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001274494-26-000021,R3,Cash and cash equivalents,2803514000.0000,library map
 FSLR,468,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001274494-26-000021,R8,Net cash (used in) provided by financing activities,-119228000.0000,library map
 FSLR,468,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001274494-26-000021,R8,Net cash used in investing activities,-765168000.0000,library map
-FSLR,468,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001274494-26-000021,,,,note-sourced default tag (no face line)
-FSLR,468,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001274494-26-000021,,,,note-sourced default tag (no face line)
+FSLR,468,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001274494-26-000021,,,43161000.0000,note fact present in the filing (FSN value)
+FSLR,468,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001274494-26-000021,,,34600000.0000,note fact present in the filing (FSN value)
 FSLR,468,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001274494-26-000021,R8,Accounts payable and accrued expenses,4677000.0000,combined line (library or label demote)
 FSLR,468,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001274494-26-000021,R8,"Accounts receivable, trade",-30620000.0000,library map
 FSLR,468,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001274494-26-000021,R8,Inventories,-377718000.0000,library map
@@ -21,13 +21,13 @@ FSLR,468,deposits,OUT,,,,,,,,0001274494-26-000021,,,,not a bank
 FSLR,468,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001274494-26-000021,R8,"Depreciation, amortization and accretion",529216000.0000,combined line (library or label demote)
 FSLR,468,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001274494-26-000021,R5,Diluted,14.2100,library map
 FSLR,468,dividends_paid,not_presented,,,,,,,,0001274494-26-000021,,,,no face line
-FSLR,468,dividends_per_share,not_presented,,,,,,,,0001274494-26-000021,,,,no face line
+FSLR,468,dividends_per_share,not_presented,,,,,,,,0001274494-26-000021,,,,no face line and no note fact
 FSLR,468,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001274494-26-000021,R3,Goodwill,31095000.0000,library map
 FSLR,468,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001274494-26-000021,R5,Gross profit,2120339000.0000,library map
 FSLR,468,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001274494-26-000021,R5,Income before taxes,1580913000.0000,library map
 FSLR,468,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001274494-26-000021,R5,Income tax expense,52684000.0000,library map
 FSLR,468,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001274494-26-000021,R5,"Interest Expense, net",44131000.0000,combined line (library or label demote)
-FSLR,468,interest_income,not_presented,,,,,,,,0001274494-26-000021,,,,no face line
+FSLR,468,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-3,Y,InvestmentIncomeInterest,sec_api,0001274494-26-000021,R5,Interest income,81762000.0000,interest income only inside a net/other face line between OI and pretax
 FSLR,468,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001274494-26-000021,R3,Inventories,736734000.0000,library map
 FSLR,468,loans_net,OUT,,,,,,,,0001274494-26-000021,,,,not a bank
 FSLR,468,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001274494-26-000021,R5,Net income,1528229000.0000,library map

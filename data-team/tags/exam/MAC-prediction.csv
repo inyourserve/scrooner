@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MAC,884,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000912242-26-000016,R3,Accounts payable and accrued expenses,125210000.0000,combined line (library or label demote)
 MAC,884,accounts_receivable,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
-MAC,884,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000912242-26-000016,,,,note-sourced default tag (no face line)
+MAC,884,amortization_of_intangibles,not_presented,,,,,,,,0000912242-26-000016,,,,no face line and no note fact
 MAC,884,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000912242-26-000016,R5,Basic (in dollars per share),-0.7800,library map
 MAC,884,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0000912242-26-000016,R9,Property improvements,66415000.0000,combined line (library or label demote)
 MAC,884,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000912242-26-000016,R3,Cash and cash equivalents,280246000.0000,library map
 MAC,884,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000912242-26-000016,R9,Net cash provided by (used in) financing activities,199219000.0000,library map
 MAC,884,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000912242-26-000016,R9,Net cash (used in) provided by investing activities,-325339000.0000,library map
-MAC,884,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000912242-26-000016,,,,note-sourced default tag (no face line)
+MAC,884,cash_paid_for_income_taxes,not_presented,,,,,,,,0000912242-26-000016,,,,no face line and no note fact
 MAC,884,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000912242-26-000016,R9,"Cash payments for interest, net of amounts capitalized",207922000.0000,library map
 MAC,884,cf_ap_change,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0000912242-26-000016,R9,Tenant and other receivables,-3398000.0000,combined line (library or label demote)
@@ -27,14 +27,14 @@ MAC,884,gross_profit,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,income_before_tax,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0000912242-26-000016,R5,Income tax benefit,-2193000.0000,library map
 MAC,884,interest_expense,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
-MAC,884,interest_income,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
+MAC,884,interest_income,not_presented,,,,,,,,0000912242-26-000016,,,,no face line and no note fact
 MAC,884,inventory,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,loans_net,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
 MAC,884,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000912242-26-000016,R5,Net loss attributable to the Company,-197149000.0000,library map
 MAC,884,net_interest_income,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
 MAC,884,noninterest_expense,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
 MAC,884,noninterest_income,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
-MAC,884,operating_expenses,not_presented,,,,,,,,0000912242-26-000016,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+MAC,884,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000912242-26-000016,R5,Total expenses,1129764000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 MAC,884,operating_income,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,other_income_expense_net,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000912242-26-000016,R3,"Property, net",6688128000.0000,library map

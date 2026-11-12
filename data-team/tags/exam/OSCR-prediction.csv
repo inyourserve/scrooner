@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OSCR,674,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Accounts payable and other liabilities,649720000.0000,combined line (library or label demote)
 OSCR,674,accounts_receivable,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001568651-26-000011,,,,note-sourced default tag (no face line)
+OSCR,674,amortization_of_intangibles,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
 OSCR,674,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Basic (in dollars per share),-1.6900,library map
 OSCR,674,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,"Purchase of property, equipment and capitalized software",36372000.0000,library map
 OSCR,674,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Cash and cash equivalents,2774151000.0000,library map
@@ -21,13 +21,13 @@ OSCR,674,deposits,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
 OSCR,674,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Depreciation and amortization expense,28892000.0000,library map
 OSCR,674,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Diluted (in dollars per share),-1.6900,library map
 OSCR,674,dividends_paid,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,dividends_per_share,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
+OSCR,674,dividends_per_share,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
 OSCR,674,goodwill,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
 OSCR,674,gross_profit,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
 OSCR,674,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Earnings (loss) before income taxes,-437297000.0000,library map
 OSCR,674,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Income tax expense,5606000.0000,library map
 OSCR,674,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001568651-26-000011,R3,Interest expense,17601000.0000,library map
-OSCR,674,interest_income,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
+OSCR,674,interest_income,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
 OSCR,674,inventory,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
 OSCR,674,loans_net,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
 OSCR,674,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,"Net income (loss) attributable to Oscar Health, Inc.",-443151000.0000,library map

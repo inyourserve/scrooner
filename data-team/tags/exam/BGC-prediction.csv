@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BGC,988,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-013162,R3,"Accounts payable, accrued and other liabilities",771963000.0000,combined line (library or label demote)
 BGC,988,accounts_receivable,not_presented,,,,,,,,0001628280-26-013162,,,,no face line
-BGC,988,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-013162,,,,note-sourced default tag (no face line)
+BGC,988,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-013162,,,35500000.0000,note fact present in the filing (FSN value)
 BGC,988,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-013162,R5,Basic earnings (loss) per share (in dollars per share),0.3100,library map
 BGC,988,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-013162,R7,Purchases of fixed assets,21488000.0000,library map
 BGC,988,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-013162,R3,Cash and cash equivalents,851502000.0000,library map
@@ -34,14 +34,14 @@ BGC,988,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 BGC,988,net_interest_income,OUT,,,,,,,,0001628280-26-013162,,,,not a bank
 BGC,988,noninterest_expense,OUT,,,,,,,,0001628280-26-013162,,,,not a bank
 BGC,988,noninterest_income,OUT,,,,,,,,0001628280-26-013162,,,,not a bank
-BGC,988,operating_expenses,not_presented,,,,,,,,0001628280-26-013162,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+BGC,988,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-013162,R5,Total expenses,2817171000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 BGC,988,operating_income,not_presented,,,,,,,,0001628280-26-013162,,,,no face line
 BGC,988,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-013162,R5,Other income (loss),14412000.0000,library map
 BGC,988,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001628280-26-013162,R3,"Fixed assets, net",182080000.0000,library map
 BGC,988,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-013162,,,,not a bank
 BGC,988,research_and_development,not_presented,,,,,,,,0001628280-26-013162,,,,no face line
 BGC,988,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001628280-26-013162,R5,Total revenues,2941460000.0000,library map
-BGC,988,sbc,not_presented,,,,,,,,0001628280-26-013162,,,,no face line
+BGC,988,sbc,not_presented,,,,,,,,0001628280-26-013162,,,,no face line and no note fact
 BGC,988,sga_expense,not_presented,,,,,,,,0001628280-26-013162,,,,single component only
 BGC,988,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001628280-26-013162,R7,Repurchase of Class A common stock,281514000.0000,library map
 BGC,988,shares_outstanding,not_presented,,,,,,,,0001628280-26-013162,,,,no face line
@@ -51,4 +51,4 @@ BGC,988,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDeb
 BGC,988,total_interest_income,OUT,,,,,,,,0001628280-26-013162,,,,not a bank
 BGC,988,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-013162,R3,Total liabilities,3266647000.0000,library map
 BGC,988,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001628280-26-013162,R5,Basic weighted-average shares of common stock outstanding (in shares),476364000.0000,library map
-BGC,988,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-013162,,,,note-sourced default tag (no face line)
+BGC,988,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-013162,,,480950000.0000,note fact present in the filing (FSN value)

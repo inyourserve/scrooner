@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RPM,598,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-312142,R2,Accounts payable,853524000.0000,library map
 RPM,598,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-312142,R2,"Trade accounts receivable (less allowances of $39,179 and $42,844, respectively)",1661538000.0000,library map
-RPM,598,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-312142,,,,note-sourced default tag (no face line)
+RPM,598,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-312142,,,45800000.0000,note fact present in the filing (FSN value)
 RPM,598,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-312142,R4,Basic,5.1900,library map
 RPM,598,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001193125-26-312142,R6,Capital expenditures,223507000.0000,library map
 RPM,598,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-312142,R2,Cash and cash equivalents,315188000.0000,library map
@@ -21,13 +21,13 @@ RPM,598,deposits,OUT,,,,,,,,0001193125-26-312142,,,,not a bank
 RPM,598,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-312142,R6,Depreciation and amortization,213490000.0000,library map
 RPM,598,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-312142,R4,Diluted,5.1700,library map
 RPM,598,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001193125-26-312142,R6,Cash dividends,271705000.0000,library map
-RPM,598,dividends_per_share,not_presented,,,,,,,,0001193125-26-312142,,,,no face line
+RPM,598,dividends_per_share,not_presented,,,,,,,,0001193125-26-312142,,,,no face line and no note fact
 RPM,598,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-312142,R2,Goodwill,1688164000.0000,library map
 RPM,598,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Gross Profit,3258225000.0000,library map
 RPM,598,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Income Before Income Taxes,870340000.0000,library map
 RPM,598,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Provision for Income Taxes,207857000.0000,library map
 RPM,598,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Interest Expense,111544000.0000,library map
-RPM,598,interest_income,not_presented,,,,,,,,0001193125-26-312142,,,,no face line
+RPM,598,interest_income,not_presented,,,,,,,,0001193125-26-312142,,,,no face line and no note fact
 RPM,598,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-312142,R2,Inventories,1058911000.0000,library map
 RPM,598,loans_net,OUT,,,,,,,,0001193125-26-312142,,,,not a bank
 RPM,598,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Net Income Attributable to RPM International Inc. Stockholders,661392000.0000,library map
@@ -41,7 +41,7 @@ RPM,598,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0
 RPM,598,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-312142,,,,not a bank
 RPM,598,research_and_development,not_presented,,,,,,,,0001193125-26-312142,,,,no face line
 RPM,598,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,Net Sales,7863422000.0000,library map
-RPM,598,sbc,not_presented,,,,,,,,0001193125-26-312142,,,,no face line
+RPM,598,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-312142,,,32848000.0000,note fact present in the filing (FSN value)
 RPM,598,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-312142,R4,"Selling, General and Administrative Expenses",2292130000.0000,library map
 RPM,598,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-312142,R6,Repurchase of common stock,77497000.0000,library map
 RPM,598,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001193125-26-312142,R3,"Common stock, outstanding",127643000.0000,library map

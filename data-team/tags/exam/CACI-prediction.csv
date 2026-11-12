@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CACI,568,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-054195,R3,Accounts payable,521669000.0000,library map
 CACI,568,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-054195,R3,"Accounts receivable, net",1705087000.0000,library map
-CACI,568,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-054195,,,,note-sourced default tag (no face line)
+CACI,568,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-054195,,,168300000.0000,note fact present in the filing (FSN value)
 CACI,568,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-054195,R5,Basic earnings per share (in dollars per shares),24.2800,library map
 CACI,568,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001628280-26-054195,R7,Capital expenditures,106653000.0000,library map
 CACI,568,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-054195,R3,Cash and cash equivalents,191756000.0000,library map
@@ -21,20 +21,20 @@ CACI,568,deposits,OUT,,,,,,,,0001628280-26-054195,,,,not a bank
 CACI,568,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-054195,R7,Depreciation and amortization,245899000.0000,library map
 CACI,568,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-054195,R5,Diluted earnings per share (in dollars per shares),24.1600,library map
 CACI,568,dividends_paid,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
-CACI,568,dividends_per_share,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
+CACI,568,dividends_per_share,not_presented,,,,,,,,0001628280-26-054195,,,,no face line and no note fact
 CACI,568,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-054195,R3,Goodwill,6484456000.0000,library map
 CACI,568,gross_profit,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
 CACI,568,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-054195,R5,Income before income taxes,704361000.0000,library map
 CACI,568,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-054195,R5,Income taxes,168553000.0000,library map
 CACI,568,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-054195,R5,"Interest expense and other, net",215454000.0000,combined line (library or label demote)
-CACI,568,interest_income,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
+CACI,568,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-054195,R5,"Interest expense and other, net",215454000.0000,interest income only inside a net/other face line between OI and pretax
 CACI,568,inventory,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
 CACI,568,loans_net,OUT,,,,,,,,0001628280-26-054195,,,,not a bank
 CACI,568,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-054195,R5,Net income,535808000.0000,library map
 CACI,568,net_interest_income,OUT,,,,,,,,0001628280-26-054195,,,,not a bank
 CACI,568,noninterest_expense,OUT,,,,,,,,0001628280-26-054195,,,,not a bank
 CACI,568,noninterest_income,OUT,,,,,,,,0001628280-26-054195,,,,not a bank
-CACI,568,operating_expenses,not_presented,,,,,,,,0001628280-26-054195,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CACI,568,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-054195,R5,Total costs of revenues,8647964000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CACI,568,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-054195,R5,Income from operations,919815000.0000,library map
 CACI,568,other_income_expense_net,not_presented,,,,,,,,0001628280-26-054195,,,,no face line
 CACI,568,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-054195,R3,"Property, plant, and equipment, net",397161000.0000,library map

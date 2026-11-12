@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FCFS,732,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0000840489-26-000032,R3,Accounts payable and accrued liabilities,212615000.0000,combined line (library or label demote)
 FCFS,732,accounts_receivable,not_presented,,,,,,,,0000840489-26-000032,,,,no face line
-FCFS,732,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000840489-26-000032,,,,note-sourced default tag (no face line)
+FCFS,732,amortization_of_intangibles,not_presented,,,,,,,,0000840489-26-000032,,,,no face line and no note fact
 FCFS,732,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000840489-26-000032,R5,Basic (in dollars per share),7.4600,library map
 FCFS,732,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000840489-26-000032,R9,"Purchases of furniture, fixtures, equipment and improvements",54906000.0000,library map
 FCFS,732,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000840489-26-000032,R3,Cash and cash equivalents,125197000.0000,library map
 FCFS,732,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000840489-26-000032,R9,Net cash flow provided by (used in) financing activities,176408000.0000,library map
 FCFS,732,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000840489-26-000032,R9,Net cash flow used in investing activities,-828045000.0000,library map
-FCFS,732,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000840489-26-000032,,,,note-sourced default tag (no face line)
+FCFS,732,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000840489-26-000032,,,72715000.0000,note fact present in the filing (FSN value)
 FCFS,732,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000840489-26-000032,R9,Interest,134451000.0000,library map
 FCFS,732,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000840489-26-000032,R9,"Accounts payable, accrued liabilities and other liabilities",5371000.0000,combined line (library or label demote)
 FCFS,732,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000840489-26-000032,R9,"Accounts receivable, net",5547000.0000,library map
@@ -50,5 +50,5 @@ FCFS,732,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000840489-26-000
 FCFS,732,total_debt,combined,us-gaap:LongTermLineOfCredit,BS,+,-3,N,,sec_api,0000840489-26-000032,R3,Revolving unsecured credit facility,559000000.0000,combined line (library or label demote)
 FCFS,732,total_interest_income,OUT,,,,,,,,0000840489-26-000032,,,,not a bank
 FCFS,732,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000840489-26-000032,R3,Total liabilities,3024001000.0000,library map
-FCFS,732,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000840489-26-000032,,,,note-sourced default tag (no face line)
-FCFS,732,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000840489-26-000032,,,,note-sourced default tag (no face line)
+FCFS,732,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000840489-26-000032,,,44314000.0000,note fact present in the filing (FSN value)
+FCFS,732,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000840489-26-000032,,,44526000.0000,note fact present in the filing (FSN value)

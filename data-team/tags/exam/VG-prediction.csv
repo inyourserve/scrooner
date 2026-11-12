@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VG,331,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Accounts payable,737000000.0000,library map
 VG,331,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Accounts receivable,918000000.0000,library map
-VG,331,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
+VG,331,amortization_of_intangibles,not_presented,,,,,,,,0002007855-26-000013,,,,no face line and no note fact
 VG,331,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002007855-26-000013,R5,Net income attributable to common stockholders per sharebasic (in usd per share),0.9300,library map
 VG,331,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Capital expenditures,13365000000.0000,library map
 VG,331,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Cash and cash equivalents,2355000000.0000,library map
 VG,331,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Net cash from financing activities,5465000000.0000,library map
 VG,331,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0002007855-26-000013,R9,Net cash used by investing activities,-13220000000.0000,library map
-VG,331,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
-VG,331,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
+VG,331,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0002007855-26-000013,,,-11000000.0000,note fact present in the filing (FSN value)
+VG,331,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0002007855-26-000013,,,1000000000.0000,note fact present in the filing (FSN value)
 VG,331,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Accounts payable and accrued liabilities,873000000.0000,combined line (library or label demote)
 VG,331,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Accounts receivable,564000000.0000,library map
 VG,331,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Inventory,61000000.0000,library map
@@ -21,7 +21,7 @@ VG,331,deposits,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
 VG,331,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Depreciation and amortization,941000000.0000,library map
 VG,331,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002007855-26-000013,R5,Net income attributable to common stockholders per sharediluted (in usd per share),0.8600,library map
 VG,331,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Payments of dividends and subsidiary distributions,465000000.0000,library map
-VG,331,dividends_per_share,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0002007855-26-000013,,,0.0300,note fact present in the filing (FSN value)
 VG,331,goodwill,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
 VG,331,gross_profit,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
 VG,331,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,INCOME BEFORE INCOME TAX EXPENSE,3363000000.0000,library map

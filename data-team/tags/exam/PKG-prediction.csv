@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PKG,438,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,Accounts payable,471400000.0000,library map
 PKG,438,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,"Accounts receivable, net of allowance for credit losses and customer deductions of $17.0 million and $20.6 million as of December 31, 2025 and December 31, 2024, respectively",1255800000.0000,library map
-PKG,438,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-074129,,,,note-sourced default tag (no face line)
+PKG,438,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-074129,,,49600000.0000,note fact present in the filing (FSN value)
 PKG,438,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-074129,R2,Basic,8.6100,library map
 PKG,438,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-074129,R6,"Additions to property, plant, and equipment",828900000.0000,library map
 PKG,438,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,Cash and cash equivalents,529000000.0000,library map
 PKG,438,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001193125-26-074129,R6,Net cash provided by (used for) financing activities,859400000.0000,library map
 PKG,438,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-074129,R6,Net cash used for investing activities,-2572900000.0000,library map
-PKG,438,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-074129,,,,note-sourced default tag (no face line)
-PKG,438,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-074129,,,,note-sourced default tag (no face line)
+PKG,438,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-074129,,,174400000.0000,note fact present in the filing (FSN value)
+PKG,438,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-074129,,,100600000.0000,note fact present in the filing (FSN value)
 PKG,438,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001193125-26-074129,R6,Accounts payable,-42500000.0000,library map
 PKG,438,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001193125-26-074129,R6,Accounts receivable,10300000.0000,library map
 PKG,438,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-074129,R6,Inventories,-4400000.0000,library map
@@ -27,7 +27,7 @@ PKG,438,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001193125-26
 PKG,438,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-074129,R2,Income before taxes,1027800000.0000,library map
 PKG,438,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-074129,R2,Provision for income taxes,253700000.0000,library map
 PKG,438,interest_expense,not_presented,,,,,,,,0001193125-26-074129,,,,no face line
-PKG,438,interest_income,not_presented,,,,,,,,0001193125-26-074129,,,,no face line
+PKG,438,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001193125-26-074129,,,26700000.0000,note fact present in the filing (FSN value)
 PKG,438,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,Inventories,1243200000.0000,library map
 PKG,438,loans_net,OUT,,,,,,,,0001193125-26-074129,,,,not a bank
 PKG,438,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-074129,R2,Net income,774100000.0000,library map
@@ -50,5 +50,5 @@ PKG,438,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-0741
 PKG,438,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,Long-term debt,3967300000.0000,printed face components (duration sum; total_debt founder sum)
 PKG,438,total_interest_income,OUT,,,,,,,,0001193125-26-074129,,,,not a bank
 PKG,438,total_liabilities,not_presented,,,,,,,,0001193125-26-074129,,,,no face line
-PKG,438,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-074129,,,,note-sourced default tag (no face line)
-PKG,438,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-074129,,,,note-sourced default tag (no face line)
+PKG,438,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-074129,,,89300000.0000,note fact present in the filing (FSN value)
+PKG,438,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-074129,,,89600000.0000,note fact present in the filing (FSN value)

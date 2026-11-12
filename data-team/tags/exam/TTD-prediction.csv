@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TTD,954,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001671933-26-000014,R3,Accounts payable,3007651000.0000,library map
 TTD,954,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001671933-26-000014,R3,"Accounts receivable, net of allowance for credit losses of $12,199 and $11,244 as of December 31, 2025 and 2024, respectively",3770194000.0000,library map
-TTD,954,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001671933-26-000014,,,,note-sourced default tag (no face line)
+TTD,954,amortization_of_intangibles,not_presented,,,,,,,,0001671933-26-000014,,,,no face line and no note fact
 TTD,954,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001671933-26-000014,R5,Basic (in dollars per share),0.9100,library map
 TTD,954,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001671933-26-000014,R7,Purchases of property and equipment,197011000.0000,library map
 TTD,954,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001671933-26-000014,R3,Cash and cash equivalents,658175000.0000,library map
@@ -21,13 +21,13 @@ TTD,954,deposits,OUT,,,,,,,,0001671933-26-000014,,,,not a bank
 TTD,954,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001671933-26-000014,R7,Depreciation and amortization expense,115784000.0000,library map
 TTD,954,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001671933-26-000014,R5,Diluted (in dollars per share),0.9000,library map
 TTD,954,dividends_paid,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
-TTD,954,dividends_per_share,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
+TTD,954,dividends_per_share,not_presented,,,,,,,,0001671933-26-000014,,,,no face line and no note fact
 TTD,954,goodwill,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
 TTD,954,gross_profit,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
 TTD,954,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Income before income taxes,658755000.0000,library map
 TTD,954,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Provision for income taxes,215451000.0000,library map
 TTD,954,interest_expense,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
-TTD,954,interest_income,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
+TTD,954,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,"Interest income, net",68717000.0000,interest income only inside a net/other face line between OI and pretax
 TTD,954,inventory,not_presented,,,,,,,,0001671933-26-000014,,,,no face line
 TTD,954,loans_net,OUT,,,,,,,,0001671933-26-000014,,,,not a bank
 TTD,954,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Net income,443304000.0000,library map

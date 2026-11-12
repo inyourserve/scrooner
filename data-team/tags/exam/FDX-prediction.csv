@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FDX,183,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001048911-26-000105,R3,Accounts payable,4327000000.0000,library map
 FDX,183,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001048911-26-000105,R3,"Receivables, less allowances of $864 and $773",12672000000.0000,combined line (library or label demote)
-FDX,183,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001048911-26-000105,,,,note-sourced default tag (no face line)
+FDX,183,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001048911-26-000105,,,54000000.0000,note fact present in the filing (FSN value)
 FDX,183,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001048911-26-000105,R5,Basic (in dollar per share),18.7100,library map
 FDX,183,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001048911-26-000105,R8,Capital expenditures,3809000000.0000,library map
 FDX,183,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001048911-26-000105,R3,Cash and cash equivalents,13311000000.0000,library map
 FDX,183,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001048911-26-000105,R8,Cash provided by (used in) financing activities,2749000000.0000,library map
 FDX,183,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001048911-26-000105,R8,Cash used in investing activities,-3911000000.0000,library map
-FDX,183,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001048911-26-000105,,,,note-sourced default tag (no face line)
-FDX,183,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001048911-26-000105,,,,note-sourced default tag (no face line)
+FDX,183,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001048911-26-000105,,,1912000000.0000,note fact present in the filing (FSN value)
+FDX,183,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001048911-26-000105,,,881000000.0000,note fact present in the filing (FSN value)
 FDX,183,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,-,-6,Y,IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,sec_api,0001048911-26-000105,R8,Accounts payable and other liabilities,-933000000.0000,combined line (library or label demote)
 FDX,183,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001048911-26-000105,R8,Receivables,2247000000.0000,library map
 FDX,183,cf_inventory_change,not_presented,,,,,,,,0001048911-26-000105,,,,no face line
@@ -21,7 +21,7 @@ FDX,183,deposits,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001048911-26-000105,R8,Depreciation and amortization,4369000000.0000,library map
 FDX,183,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001048911-26-000105,R5,Diluted (in dollar per share),18.5500,library map
 FDX,183,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001048911-26-000105,R8,Dividends paid,1374000000.0000,library map
-FDX,183,dividends_per_share,not_presented,,,,,,,,0001048911-26-000105,,,,no face line
+FDX,183,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001048911-26-000105,,,5.8000,note fact present in the filing (FSN value)
 FDX,183,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001048911-26-000105,R3,Goodwill,6733000000.0000,library map
 FDX,183,gross_profit,not_presented,,,,,,,,0001048911-26-000105,,,,no face line
 FDX,183,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001048911-26-000105,R5,INCOME BEFORE INCOME TAXES,5793000000.0000,library map
@@ -34,7 +34,7 @@ FDX,183,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001048911-26
 FDX,183,net_interest_income,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,noninterest_expense,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,noninterest_income,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
-FDX,183,operating_expenses,not_presented,,,,,,,,0001048911-26-000105,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+FDX,183,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001048911-26-000105,R5,Total operating expenses,89257000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 FDX,183,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001048911-26-000105,R5,OPERATING INCOME,5463000000.0000,library map
 FDX,183,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001048911-26-000105,R5,"Other, net",-22000000.0000,library map
 FDX,183,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001048911-26-000105,R3,Net property and equipment,42044000000.0000,library map
@@ -50,5 +50,5 @@ FDX,183,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001048911-26-0001
 FDX,183,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-6,Y,LongTermDebtAndCapitalLeaseObligations,sec_api,0001048911-26-000105,R3,Current portion of long-term debt,1676000000.0000,printed face components (duration sum; total_debt founder sum)
 FDX,183,total_interest_income,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,total_liabilities,not_presented,,,,,,,,0001048911-26-000105,,,,no face line
-FDX,183,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001048911-26-000105,,,,note-sourced default tag (no face line)
-FDX,183,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001048911-26-000105,,,,note-sourced default tag (no face line)
+FDX,183,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001048911-26-000105,,,237000000.0000,note fact present in the filing (FSN value)
+FDX,183,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001048911-26-000105,,,239000000.0000,note fact present in the filing (FSN value)

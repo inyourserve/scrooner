@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ADM,276,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000007084-26-000011,R5,Trade payables,5195000000.0000,library map
 ADM,276,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000007084-26-000011,R5,Trade receivables - net,3021000000.0000,library map
-ADM,276,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000007084-26-000011,,,,note-sourced default tag (no face line)
+ADM,276,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000007084-26-000011,,,249000000.0000,note fact present in the filing (FSN value)
 ADM,276,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000007084-26-000011,R3,Basic earnings per common share (in dollars per share),2.2300,library map
 ADM,276,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000007084-26-000011,R6,Capital expenditures,1248000000.0000,library map
 ADM,276,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000007084-26-000011,R5,Cash and cash equivalents,1015000000.0000,library map
@@ -27,7 +27,7 @@ ADM,276,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000007084-26
 ADM,276,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Earnings Before Income Taxes,1255000000.0000,library map
 ADM,276,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Income tax expense,182000000.0000,library map
 ADM,276,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Interest expense,612000000.0000,library map
-ADM,276,interest_income,not_presented,,,,,,,,0000007084-26-000011,,,,no face line
+ADM,276,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Interest and investment (income),118000000.0000,interest income only inside a net/other face line between OI and pretax
 ADM,276,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000007084-26-000011,R5,Inventories,10369000000.0000,library map
 ADM,276,loans_net,OUT,,,,,,,,0000007084-26-000011,,,,not a bank
 ADM,276,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Net Earnings Attributable to Controlling Interests,1078000000.0000,library map

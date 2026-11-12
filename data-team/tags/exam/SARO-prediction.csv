@@ -21,13 +21,13 @@ SARO,855,deposits,OUT,,,,,,,,0001193125-26-072618,,,,not a bank
 SARO,855,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-072618,R8,Depreciation and amortization,193664000.0000,library map
 SARO,855,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-072618,R4,Diluted,0.8300,library map
 SARO,855,dividends_paid,not_presented,,,,,,,,0001193125-26-072618,,,,no face line
-SARO,855,dividends_per_share,not_presented,,,,,,,,0001193125-26-072618,,,,no face line
+SARO,855,dividends_per_share,not_presented,,,,,,,,0001193125-26-072618,,,,no face line and no note fact
 SARO,855,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-072618,R2,Goodwill,1684255000.0000,library map
 SARO,855,gross_profit,not_presented,,,,,,,,0001193125-26-072618,,,,no face line
 SARO,855,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,Income before income taxes,376852000.0000,library map
 SARO,855,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,Income tax expense,99435000.0000,library map
 SARO,855,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,Interest expense,174217000.0000,library map
-SARO,855,interest_income,not_presented,,,,,,,,0001193125-26-072618,,,,no face line
+SARO,855,interest_income,not_presented,,,,,,,,0001193125-26-072618,,,,no face line and no note fact
 SARO,855,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-072618,R2,Inventories,827691000.0000,library map
 SARO,855,loans_net,OUT,,,,,,,,0001193125-26-072618,,,,not a bank
 SARO,855,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,Net income (loss),277417000.0000,library map

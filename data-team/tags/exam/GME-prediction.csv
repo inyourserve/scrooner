@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GME,571,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001326380-26-000013,R3,Accounts payable,147100000.0000,library map
 GME,571,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001326380-26-000013,R3,"Receivables, net of allowance of $4.2 and $4.7, respectively",45000000.0000,combined line (library or label demote)
-GME,571,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001326380-26-000013,,,,note-sourced default tag (no face line)
+GME,571,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001326380-26-000013,,,100000.0000,note fact present in the filing (FSN value)
 GME,571,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001326380-26-000013,R5,Basic (in dollars per share),0.9300,library map
 GME,571,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001326380-26-000013,R7,Capital expenditures,17500000.0000,library map
 GME,571,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001326380-26-000013,R3,Cash and cash equivalents,6304700000.0000,library map
@@ -21,13 +21,13 @@ GME,571,deposits,OUT,,,,,,,,0001326380-26-000013,,,,not a bank
 GME,571,depreciation_and_amortization,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
 GME,571,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001326380-26-000013,R5,Diluted (in dollars per share),0.7700,library map
 GME,571,dividends_paid,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
-GME,571,dividends_per_share,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
+GME,571,dividends_per_share,not_presented,,,,,,,,0001326380-26-000013,,,,no face line and no note fact
 GME,571,goodwill,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
 GME,571,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,Gross profit,1196100000.0000,library map
 GME,571,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,Income before income taxes,384000000.0000,library map
 GME,571,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0001326380-26-000013,R5,Income tax (benefit) expense,-34400000.0000,library map
 GME,571,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,"Interest income, net",271500000.0000,combined line (library or label demote)
-GME,571,interest_income,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
+GME,571,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,"Interest income, net",271500000.0000,interest income only inside a net/other face line between OI and pretax
 GME,571,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001326380-26-000013,R3,"Merchandise inventories, net",403300000.0000,library map
 GME,571,loans_net,OUT,,,,,,,,0001326380-26-000013,,,,not a bank
 GME,571,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,Net income,418400000.0000,library map

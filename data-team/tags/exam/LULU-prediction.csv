@@ -7,8 +7,8 @@ LULU,688,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3
 LULU,688,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001397187-26-000020,R3,Cash and cash equivalents,1807202000.0000,combined line (library or label demote)
 LULU,688,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001397187-26-000020,R7,Net cash used in financing activities,-1208656000.0000,library map
 LULU,688,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001397187-26-000020,R7,Net cash used in investing activities,-662118000.0000,library map
-LULU,688,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001397187-26-000020,,,,note-sourced default tag (no face line)
-LULU,688,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001397187-26-000020,,,,note-sourced default tag (no face line)
+LULU,688,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001397187-26-000020,,,1015444000.0000,note fact present in the filing (FSN value)
+LULU,688,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001397187-26-000020,,,1028000.0000,note fact present in the filing (FSN value)
 LULU,688,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001397187-26-000020,R7,Accounts payable,45856000.0000,library map
 LULU,688,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001397187-26-000020,R7,Accounts receivable,65755000.0000,library map
 LULU,688,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001397187-26-000020,R7,Inventories,188710000.0000,library map
@@ -21,13 +21,13 @@ LULU,688,deposits,OUT,,,,,,,,0001397187-26-000020,,,,not a bank
 LULU,688,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001397187-26-000020,R7,Depreciation and amortization,496228000.0000,library map
 LULU,688,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001397187-26-000020,R5,Diluted earnings per share (in dollars per share),13.2600,library map
 LULU,688,dividends_paid,not_presented,,,,,,,,0001397187-26-000020,,,,no face line
-LULU,688,dividends_per_share,not_presented,,,,,,,,0001397187-26-000020,,,,no face line
+LULU,688,dividends_per_share,not_presented,,,,,,,,0001397187-26-000020,,,,no face line and no note fact
 LULU,688,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001397187-26-000020,R3,Goodwill,184911000.0000,library map
 LULU,688,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,Gross profit,6284132000.0000,library map
 LULU,688,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,Income before income tax expense,2238967000.0000,library map
 LULU,688,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,Income tax expense,659784000.0000,library map
 LULU,688,interest_expense,not_presented,,,,,,,,0001397187-26-000020,,,,no face line
-LULU,688,interest_income,not_presented,,,,,,,,0001397187-26-000020,,,,no face line
+LULU,688,interest_income,not_presented,,,,,,,,0001397187-26-000020,,,,no face line and no note fact
 LULU,688,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001397187-26-000020,R3,Inventories,1700753000.0000,library map
 LULU,688,loans_net,OUT,,,,,,,,0001397187-26-000020,,,,not a bank
 LULU,688,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,Net income,1579183000.0000,library map

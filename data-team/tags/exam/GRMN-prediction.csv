@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GRMN,223,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-056028,R4,Accounts payable,347493000.0000,library map
 GRMN,223,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-056028,R4,"Accounts receivable, less allowance for doubtful accounts of $9,191 in 2025 and $8,644 in 2024",1253015000.0000,library map
-GRMN,223,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-056028,,,,note-sourced default tag (no face line)
+GRMN,223,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-056028,,,32368000.0000,note fact present in the filing (FSN value)
 GRMN,223,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-056028,R2,Basic net income per share,8.6500,library map
 GRMN,223,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-056028,R6,Purchases of property and equipment,270446000.0000,library map
 GRMN,223,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-056028,R4,Cash and cash equivalents,2278646000.0000,library map
 GRMN,223,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-056028,R6,Net cash used in financing activities,-844081000.0000,library map
 GRMN,223,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-056028,R6,Net cash used in investing activities,-645235000.0000,library map
-GRMN,223,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-056028,,,,note-sourced default tag (no face line)
-GRMN,223,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-056028,,,,note-sourced default tag (no face line)
+GRMN,223,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-056028,,,317005000.0000,note fact present in the filing (FSN value)
+GRMN,223,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-056028,,,,no face line and no note fact
 GRMN,223,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001193125-26-056028,R6,Accounts payable,-30518000.0000,library map
 GRMN,223,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-056028,R6,"Accounts receivable, net of allowance for doubtful accounts",222809000.0000,library map
 GRMN,223,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-056028,R6,Inventories,218063000.0000,library map
@@ -21,7 +21,7 @@ GRMN,223,deposits,OUT,,,,,,,,0001193125-26-056028,,,,not a bank
 GRMN,223,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-3,N,,sec_api,0001193125-26-056028,R6,Depreciation,152611000.0000,printed face components (duration sum; total_debt founder sum)
 GRMN,223,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-056028,R2,Diluted net income per share,8.5900,library map
 GRMN,223,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001193125-26-056028,R6,Dividends,663885000.0000,library map
-GRMN,223,dividends_per_share,not_presented,,,,,,,,0001193125-26-056028,,,,no face line
+GRMN,223,dividends_per_share,not_presented,,,,,,,,0001193125-26-056028,,,,no face line and no note fact
 GRMN,223,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-056028,R4,Goodwill,760241000.0000,library map
 GRMN,223,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Gross profit,4256303000.0000,library map
 GRMN,223,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Income before income taxes,2014535000.0000,library map
@@ -50,5 +50,5 @@ GRMN,223,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-056
 GRMN,223,total_debt,not_presented,,,,,,,,0001193125-26-056028,,,,no face line
 GRMN,223,total_interest_income,OUT,,,,,,,,0001193125-26-056028,,,,not a bank
 GRMN,223,total_liabilities,not_presented,,,,,,,,0001193125-26-056028,,,,no face line
-GRMN,223,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-056028,,,,note-sourced default tag (no face line)
-GRMN,223,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-056028,,,,note-sourced default tag (no face line)
+GRMN,223,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-056028,,,192467000.0000,note fact present in the filing (FSN value)
+GRMN,223,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-056028,,,193616000.0000,note fact present in the filing (FSN value)

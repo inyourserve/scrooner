@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SMCI,444,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Accounts payable (including amounts due to related parties of $117,062 and $129,752 at June 30, 2026 and 2025, respectively)",2247003000.0000,library map
 SMCI,444,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Accounts receivable, net of allowance for credit losses of $109 and $0 at June 30, 2026 and 2025, respectively (including amounts receivable from related parties of $624 and $393 at June 30, 2026 and 2025, respectively)",6125414000.0000,library map
-SMCI,444,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001375365-26-000022,,,,note-sourced default tag (no face line)
+SMCI,444,amortization_of_intangibles,not_presented,,,,,,,,0001375365-26-000022,,,,no face line and no note fact
 SMCI,444,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001375365-26-000022,R5,Basic (in dollars per share),3.6500,library map
 SMCI,444,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,"Purchases of property, plant, and equipment (including payments to related parties of $12,567, $17,677, and $10,625 in fiscal years 2026, 2025, and 2024, respectively)",161999000.0000,library map
 SMCI,444,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Cash and cash equivalents,7521474000.0000,library map
@@ -21,7 +21,7 @@ SMCI,444,deposits,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
 SMCI,444,depreciation_and_amortization,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
 SMCI,444,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001375365-26-000022,R5,Diluted (in dollars per share),3.2600,library map
 SMCI,444,dividends_paid,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
-SMCI,444,dividends_per_share,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
+SMCI,444,dividends_per_share,not_presented,,,,,,,,0001375365-26-000022,,,,no face line and no note fact
 SMCI,444,goodwill,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
 SMCI,444,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Gross profit,4227251000.0000,library map
 SMCI,444,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Income before income tax provision,2789264000.0000,library map

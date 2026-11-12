@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PFG,403,accounts_payable,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,accounts_receivable,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
-PFG,403,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-017031,,,,note-sourced default tag (no face line)
+PFG,403,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-017031,,,72900000.0000,note fact present in the filing (FSN value)
 PFG,403,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-017031,R4,Basic earnings per common share (in dollars per share),5.3200,library map
 PFG,403,capex,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Cash and cash equivalents (2025 and 2024 include $89.1 million and $86.1 million related to consolidated variable interest entities),4431000000.0000,library map
@@ -21,13 +21,13 @@ PFG,403,deposits,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-5,N,,sec_api,0001104659-26-017031,R7,Depreciation and amortization expense,251400000.0000,library map
 PFG,403,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-017031,R4,Diluted earnings per common share (in dollars per share),5.2500,library map
 PFG,403,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001104659-26-017031,R7,Dividends to common stockholders,684000000.0000,library map
-PFG,403,dividends_per_share,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
+PFG,403,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001104659-26-017031,,,3.0800,note fact present in the filing (FSN value)
 PFG,403,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Goodwill,1600500000.0000,library map
 PFG,403,gross_profit,OUT,,,,,,,,0001104659-26-017031,,,,sector template (bank/insurer)
 PFG,403,income_before_tax,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-017031,R4,Income taxes (benefits),160500000.0000,library map
 PFG,403,interest_expense,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
-PFG,403,interest_income,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
+PFG,403,interest_income,not_presented,,,,,,,,0001104659-26-017031,,,,no face line and no note fact
 PFG,403,inventory,OUT,,,,,,,,0001104659-26-017031,,,,sector template (bank/insurer)
 PFG,403,loans_net,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-017031,R4,"Net income (loss) attributable to Principal Financial Group, Inc.",1185100000.0000,library map
@@ -50,5 +50,5 @@ PFG,403,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001104659-26-0170
 PFG,403,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Short-term debt (2025 and 2024 include $0.0 million and $119.0 million related to consolidated variable interest entities),27700000.0000,printed face components (duration sum; total_debt founder sum)
 PFG,403,total_interest_income,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Total liabilities,328985200000.0000,library map
-PFG,403,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001104659-26-017031,,,,note-sourced default tag (no face line)
-PFG,403,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001104659-26-017031,,,,note-sourced default tag (no face line)
+PFG,403,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001104659-26-017031,,,222800000.0000,note fact present in the filing (FSN value)
+PFG,403,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001104659-26-017031,,,225700000.0000,note fact present in the filing (FSN value)

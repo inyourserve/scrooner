@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BE,197,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-006516,R3,Accounts payable,203129000.0000,library map
 BE,197,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-006516,R3,"Accounts receivable, less allowance for credit losses",371796000.0000,library map
-BE,197,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-006516,,,,note-sourced default tag (no face line)
+BE,197,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-006516,,,,no face line and no note fact
 BE,197,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-006516,R5,"Net loss per share available to common stockholders, basic (in dollars per share)",-0.3700,library map
 BE,197,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-006516,R10,"Purchase of property, plant and equipment",56759000.0000,library map
 BE,197,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-006516,R3,Cash and cash equivalents,2454108000.0000,library map
@@ -21,13 +21,13 @@ BE,197,deposits,OUT,,,,,,,,0001628280-26-006516,,,,not a bank
 BE,197,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-006516,,,,single component only
 BE,197,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-006516,R5,"Net loss per share available to common stockholders, diluted (in dollars per share)",-0.3700,library map
 BE,197,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001628280-26-006516,R10,Dividend paid,947000.0000,library map
-BE,197,dividends_per_share,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
+BE,197,dividends_per_share,not_presented,,,,,,,,0001628280-26-006516,,,,no face line and no note fact
 BE,197,goodwill,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
 BE,197,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-006516,R5,Gross profit,587400000.0000,library map
 BE,197,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-006516,R5,Loss before income taxes,-84404000.0000,library map
 BE,197,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-006516,R5,Income tax provision,2736000.0000,library map
 BE,197,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpenseDebt,sec_api,0001628280-26-006516,R5,Interest expense,53888000.0000,library map
-BE,197,interest_income,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
+BE,197,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001628280-26-006516,,,34070000.0000,note fact present in the filing (FSN value)
 BE,197,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-006516,R3,Inventories,643306000.0000,library map
 BE,197,loans_net,OUT,,,,,,,,0001628280-26-006516,,,,not a bank
 BE,197,net_income,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
@@ -41,7 +41,7 @@ BE,197,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUse
 BE,197,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-006516,,,,not a bank
 BE,197,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001628280-26-006516,R5,Research and development,185993000.0000,library map
 BE,197,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001628280-26-006516,R5,Total revenue,2023994000.0000,library map
-BE,197,sbc,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
+BE,197,sbc,not_presented,,,,,,,,0001628280-26-006516,,,,no face line and no note fact
 BE,197,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-006516,R5,Sales and marketing,130228000.0000,printed face components (duration sum; total_debt founder sum)
 BE,197,share_buybacks,not_presented,,,,,,,,0001628280-26-006516,,,,no face line
 BE,197,shares_outstanding,not_presented,,,,,,,,0001628280-26-006516,,,,no face line

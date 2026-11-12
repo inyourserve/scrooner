@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DUOL,881,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-012494,R3,Accounts payable,7998000.0000,library map
 DUOL,881,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-012494,R3,Accounts receivable,162827000.0000,library map
-DUOL,881,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-012494,,,,note-sourced default tag (no face line)
+DUOL,881,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-012494,,,,no face line and no note fact
 DUOL,881,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-012494,R5,"Net income per share attributable to Class A and Class B common stockholders, basic (in usd per share)",9.0500,library map
 DUOL,881,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-012494,R7,Purchase of property and equipment,18096000.0000,library map
 DUOL,881,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-012494,R3,Cash and cash equivalents,1036389000.0000,library map
 DUOL,881,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-012494,R7,Net cash used for financing activities,-29547000.0000,library map
 DUOL,881,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-012494,R7,Net cash used for investing activities,-107678000.0000,library map
 DUOL,881,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,Y,IncomeTaxesPaidNet,sec_api,0001628280-26-012494,R7,Cash paid for income taxes,14405000.0000,library map
-DUOL,881,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-012494,,,,note-sourced default tag (no face line)
+DUOL,881,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-012494,,,,no face line and no note fact
 DUOL,881,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-012494,R7,Accounts payable,1617000.0000,library map
 DUOL,881,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-012494,R7,Accounts receivable,33904000.0000,library map
 DUOL,881,cf_inventory_change,not_presented,,,,,,,,0001628280-26-012494,,,,no face line
@@ -21,7 +21,7 @@ DUOL,881,deposits,OUT,,,,,,,,0001628280-26-012494,,,,not a bank
 DUOL,881,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-012494,R7,Depreciation and amortization,14391000.0000,library map
 DUOL,881,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-012494,R5,"Net income per share attributable to Class A and Class B common stockholders, diluted (in usd per share)",8.5700,library map
 DUOL,881,dividends_paid,not_presented,,,,,,,,0001628280-26-012494,,,,no face line
-DUOL,881,dividends_per_share,not_presented,,,,,,,,0001628280-26-012494,,,,no face line
+DUOL,881,dividends_per_share,not_presented,,,,,,,,0001628280-26-012494,,,,no face line and no note fact
 DUOL,881,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-012494,R3,Goodwill,35335000.0000,library map
 DUOL,881,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-012494,R5,Gross profit,749457000.0000,library map
 DUOL,881,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-012494,R5,Income before income taxes,182410000.0000,library map
@@ -50,5 +50,5 @@ DUOL,881,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-012
 DUOL,881,total_debt,not_presented,,,,,,,,0001628280-26-012494,,,,no face line
 DUOL,881,total_interest_income,OUT,,,,,,,,0001628280-26-012494,,,,not a bank
 DUOL,881,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-012494,R3,Total liabilities,645176000.0000,library map
-DUOL,881,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-012494,,,,note-sourced default tag (no face line)
-DUOL,881,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-012494,,,,note-sourced default tag (no face line)
+DUOL,881,weighted_basic_shares,not_presented,,,,,,,,0001628280-26-012494,,,,no face line and no note fact
+DUOL,881,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-012494,,,48308000.0000,note fact present in the filing (FSN value)

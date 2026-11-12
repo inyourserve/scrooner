@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LYV,273,accounts_payable,not_presented,,,,,,,,0001335258-26-000009,,,,no face line
 LYV,273,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001335258-26-000009,R3,"Accounts receivable, less allowance of $73,912 and $72,663, respectively",2009055000.0000,library map
-LYV,273,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001335258-26-000009,,,,note-sourced default tag (no face line)
+LYV,273,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001335258-26-000009,,,264571000.0000,note fact present in the filing (FSN value)
 LYV,273,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001335258-26-000009,R5,"Earnings Per Share, Basic",-0.2400,library map
 LYV,273,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001335258-26-000009,R8,"Purchases of property, plant and equipment",1061705000.0000,library map
 LYV,273,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001335258-26-000009,R3,Cash and cash equivalents,7094200000.0000,library map
@@ -21,7 +21,7 @@ LYV,273,deposits,OUT,,,,,,,,0001335258-26-000009,,,,not a bank
 LYV,273,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-3,N,,sec_api,0001335258-26-000009,R5,Depreciation and amortization,638872000.0000,library map
 LYV,273,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001335258-26-000009,R5,"Earnings Per Share, Diluted",-0.2400,library map
 LYV,273,dividends_paid,not_presented,,,,,,,,0001335258-26-000009,,,,no face line
-LYV,273,dividends_per_share,not_presented,,,,,,,,0001335258-26-000009,,,,no face line
+LYV,273,dividends_per_share,not_presented,,,,,,,,0001335258-26-000009,,,,no face line and no note fact
 LYV,273,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001335258-26-000009,R3,Goodwill,2889178000.0000,library map
 LYV,273,gross_profit,not_presented,,,,,,,,0001335258-26-000009,,,,no face line
 LYV,273,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001335258-26-000009,R5,Income before income taxes,1030527000.0000,library map

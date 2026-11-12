@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ENSG,687,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001125376-26-000007,R3,Accounts payable,97327000.0000,library map
 ENSG,687,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001125376-26-000007,R3,"Accounts receivableless allowance for doubtful accounts of $7,805 and $8,435 at December 31, 2025 and 2024, respectively",636985000.0000,library map
-ENSG,687,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001125376-26-000007,,,,note-sourced default tag (no face line)
+ENSG,687,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001125376-26-000007,,,2225000.0000,note fact present in the filing (FSN value)
 ENSG,687,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001125376-26-000007,R5,Basic (in dollars per share),6.0000,library map
 ENSG,687,capex,not_presented,,,,,,,,0001125376-26-000007,,,,no face line
 ENSG,687,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001125376-26-000007,R3,Cash and cash equivalents,503881000.0000,library map

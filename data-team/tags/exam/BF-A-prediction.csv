@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BF-A,570,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,Accounts payable and accrued expenses,795000000.0000,combined line (library or label demote)
 BF-A,570,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,"Accounts receivable, net",832000000.0000,library map
-BF-A,570,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000014693-26-000024,,,,note-sourced default tag (no face line)
+BF-A,570,amortization_of_intangibles,not_presented,,,,,,,,0000014693-26-000024,,,,no face line and no note fact
 BF-A,570,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000014693-26-000024,R3,Basic (dollars per share),1.5300,library map
 BF-A,570,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000014693-26-000024,R7,"Additions to property, plant, and equipment",107000000.0000,library map
 BF-A,570,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,Cash and cash equivalents,308000000.0000,library map
@@ -50,5 +50,5 @@ BF-A,570,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000014693-26-000
 BF-A,570,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,Short-term borrowings,68000000.0000,printed face components (duration sum; total_debt founder sum)
 BF-A,570,total_interest_income,OUT,,,,,,,,0000014693-26-000024,,,,not a bank
 BF-A,570,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,Total liabilities,3874000000.0000,library map
-BF-A,570,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000014693-26-000024,,,,note-sourced default tag (no face line)
-BF-A,570,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000014693-26-000024,,,,note-sourced default tag (no face line)
+BF-A,570,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000014693-26-000024,,,466335000.0000,note fact present in the filing (FSN value)
+BF-A,570,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000014693-26-000024,,,466733000.0000,note fact present in the filing (FSN value)

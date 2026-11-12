@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MTSI,452,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001493594-25-000054,R3,Accounts payable,67588000.0000,library map
 MTSI,452,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001493594-25-000054,R3,"Accounts receivable, net",148646000.0000,library map
-MTSI,452,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001493594-25-000054,,,,note-sourced default tag (no face line)
+MTSI,452,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001493594-25-000054,,,31752000.0000,note fact present in the filing (FSN value)
 MTSI,452,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001493594-25-000054,R5,Income (loss) per share-basic (in USD per share),-0.7300,library map
 MTSI,452,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Purchases of property and equipment,42551000.0000,library map
 MTSI,452,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001493594-25-000054,R3,Cash and cash equivalents,112142000.0000,library map
 MTSI,452,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Net cash provided by (used in) financing activities,58099000.0000,library map
 MTSI,452,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001493594-25-000054,R8,Net cash (used in) provided by investing activities,-328263000.0000,library map
-MTSI,452,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001493594-25-000054,,,,note-sourced default tag (no face line)
-MTSI,452,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001493594-25-000054,,,,note-sourced default tag (no face line)
+MTSI,452,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001493594-25-000054,,,16192000.0000,note fact present in the filing (FSN value)
+MTSI,452,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001493594-25-000054,,,3223000.0000,note fact present in the filing (FSN value)
 MTSI,452,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Accounts payable,22210000.0000,library map
 MTSI,452,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Accounts receivable,41980000.0000,library map
 MTSI,452,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Inventories,26562000.0000,library map
@@ -21,7 +21,7 @@ MTSI,452,deposits,OUT,,,,,,,,0001493594-25-000054,,,,not a bank
 MTSI,452,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001493594-25-000054,R8,Depreciation and intangible amortization,63295000.0000,library map
 MTSI,452,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001493594-25-000054,R5,Income (loss) per share-diluted (in USD per share),-0.7300,library map
 MTSI,452,dividends_paid,not_presented,,,,,,,,0001493594-25-000054,,,,no face line
-MTSI,452,dividends_per_share,not_presented,,,,,,,,0001493594-25-000054,,,,no face line
+MTSI,452,dividends_per_share,not_presented,,,,,,,,0001493594-25-000054,,,,no face line and no note fact
 MTSI,452,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001493594-25-000054,R3,Goodwill,336315000.0000,library map
 MTSI,452,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001493594-25-000054,R5,Gross profit,529002000.0000,library map
 MTSI,452,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001493594-25-000054,R5,(Loss) income before income taxes,-29025000.0000,library map

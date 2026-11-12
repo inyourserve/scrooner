@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BIIB,309,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Accounts payable,432000000.0000,library map
 BIIB,309,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,"Accounts receivable, net of allowance for doubtful accounts of $3.0 and $2.2, respectively",1342400000.0000,library map
-BIIB,309,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
+BIIB,309,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000875045-26-000013,,,507100000.0000,note fact present in the filing (FSN value)
 BIIB,309,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000875045-26-000013,R3,Basic earnings per share attributable to Biogen Inc. (in dollars per share),8.8300,library map
 BIIB,309,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000875045-26-000013,R7,"Purchases of property, plant and equipment",153800000.0000,library map
 BIIB,309,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Cash and cash equivalents,3008500000.0000,combined line (library or label demote)
 BIIB,309,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000875045-26-000013,R7,Net cash flow provided by (used in) financing activities,-301900000.0000,library map
 BIIB,309,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000875045-26-000013,R7,Net cash flow provided by (used in) investing activities,-1371100000.0000,library map
-BIIB,309,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
-BIIB,309,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
+BIIB,309,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000875045-26-000013,,,864000000.0000,note fact present in the filing (FSN value)
+BIIB,309,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000875045-26-000013,,,264100000.0000,note fact present in the filing (FSN value)
 BIIB,309,cf_ap_change,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0000875045-26-000013,R7,Accounts receivable,-102700000.0000,library map
 BIIB,309,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000875045-26-000013,R7,Inventory,64700000.0000,library map
@@ -21,13 +21,13 @@ BIIB,309,deposits,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000875045-26-000013,R7,Depreciation and amortization,779900000.0000,library map
 BIIB,309,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000875045-26-000013,R3,Diluted earnings per share attributable to Biogen Inc. (in dollars per share),8.7900,library map
 BIIB,309,dividends_paid,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
-BIIB,309,dividends_per_share,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
+BIIB,309,dividends_per_share,not_presented,,,,,,,,0000875045-26-000013,,,,no face line and no note fact
 BIIB,309,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Goodwill,6491100000.0000,library map
 BIIB,309,gross_profit,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Income before income tax (benefit) expense,1556500000.0000,library map
 BIIB,309,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000875045-26-000013,R3,Income tax (benefit) expense,263600000.0000,library map
 BIIB,309,interest_expense,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
-BIIB,309,interest_income,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
+BIIB,309,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000875045-26-000013,,,125000000.0000,note fact present in the filing (FSN value)
 BIIB,309,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Inventory,2168100000.0000,library map
 BIIB,309,loans_net,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Net income attributable to Biogen Inc.,1292900000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WWD,457,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-25-296204,R4,Accounts payable,289417000.0000,library map
 WWD,457,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001193125-25-296204,R4,"Accounts receivable, less allowance for uncollectible amounts of $9,725 and $7,738, respectively",831116000.0000,combined line (library or label demote)
-WWD,457,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-25-296204,,,,note-sourced default tag (no face line)
+WWD,457,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-25-296204,,,28224000.0000,note fact present in the filing (FSN value)
 WWD,457,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-25-296204,R2,Basic earnings per share,7.4200,library map
 WWD,457,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-25-296204,R6,"Payments for purchase of property, plant, and equipment",130928000.0000,library map
 WWD,457,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-25-296204,R4,Cash and cash equivalents,327431000.0000,library map
 WWD,457,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-25-296204,R6,Net cash used in financing activities,-313926000.0000,library map
 WWD,457,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-25-296204,R6,Net cash used in investing activities,-119553000.0000,library map
-WWD,457,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-25-296204,,,,note-sourced default tag (no face line)
-WWD,457,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-25-296204,,,,note-sourced default tag (no face line)
+WWD,457,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001193125-25-296204,,,105427000.0000,note fact present in the filing (FSN value)
+WWD,457,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-25-296204,,,34725000.0000,note fact present in the filing (FSN value)
 WWD,457,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001193125-25-296204,R6,Accounts payable and accrued liabilities,56818000.0000,combined line (library or label demote)
 WWD,457,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-25-296204,R6,Trade accounts receivable,11475000.0000,library map
 WWD,457,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-25-296204,R6,Inventories,49624000.0000,library map

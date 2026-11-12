@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CDW,464,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001402057-26-000011,R3,Accounts payable-trade,4220100000.0000,library map
 CDW,464,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001402057-26-000011,R3,"Accounts receivable, net of allowance for credit losses of $65.2 and $43.3, respectively",6312400000.0000,library map
-CDW,464,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001402057-26-000011,,,,note-sourced default tag (no face line)
+CDW,464,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001402057-26-000011,,,248000000.0000,note fact present in the filing (FSN value)
 CDW,464,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001402057-26-000011,R5,Basic (in dollars per share),8.1300,library map
 CDW,464,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001402057-26-000011,R7,Capital expenditures,117100000.0000,library map
 CDW,464,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001402057-26-000011,R3,Cash and cash equivalents,618700000.0000,library map
@@ -27,7 +27,7 @@ CDW,464,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001402057-26
 CDW,464,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Income before income taxes,1427400000.0000,library map
 CDW,464,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Income tax expense,360800000.0000,library map
 CDW,464,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,Y,InterestIncomeExpenseNet,sec_api,0001402057-26-000011,R5,"Interest expense, net",-227400000.0000,combined line (library or label demote)
-CDW,464,interest_income,not_presented,,,,,,,,0001402057-26-000011,,,,no face line
+CDW,464,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,Y,InterestIncomeExpenseNet,sec_api,0001402057-26-000011,R5,"Interest expense, net",-227400000.0000,interest income only inside a net/other face line between OI and pretax
 CDW,464,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001402057-26-000011,R3,Merchandise inventory,563400000.0000,library map
 CDW,464,loans_net,OUT,,,,,,,,0001402057-26-000011,,,,not a bank
 CDW,464,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Net income,1066600000.0000,library map
@@ -41,7 +41,7 @@ CDW,464,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0
 CDW,464,provision_for_credit_losses,OUT,,,,,,,,0001402057-26-000011,,,,not a bank
 CDW,464,research_and_development,not_presented,,,,,,,,0001402057-26-000011,,,,no face line
 CDW,464,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Net sales,22424100000.0000,library map
-CDW,464,sbc,not_presented,,,,,,,,0001402057-26-000011,,,,no face line
+CDW,464,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001402057-26-000011,,,83600000.0000,note fact present in the filing (FSN value)
 CDW,464,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Selling and administrative expenses,3217800000.0000,library map
 CDW,464,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001402057-26-000011,R7,Repurchases of common stock,653000000.0000,library map
 CDW,464,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0001402057-26-000011,R4,"Common shares, outstanding (in shares)",129400000.0000,library map

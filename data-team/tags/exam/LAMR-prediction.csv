@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LAMR,529,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001090425-26-000008,R3,Trade accounts payable,16469000.0000,library map
 LAMR,529,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001090425-26-000008,R3,"Receivables, net of allowance for doubtful accounts of $11,856 and $12,404 as of 2025 and 2024, respectively",341222000.0000,library map
-LAMR,529,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001090425-26-000008,,,,note-sourced default tag (no face line)
+LAMR,529,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001090425-26-000008,,,144364000.0000,note fact present in the filing (FSN value)
 LAMR,529,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001090425-26-000008,R5,Basic earnings per share (in usd per share),5.7800,library map
 LAMR,529,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001090425-26-000008,R8,Capital expenditures,180800000.0000,library map
 LAMR,529,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001090425-26-000008,R3,Cash and cash equivalents,64812000.0000,library map

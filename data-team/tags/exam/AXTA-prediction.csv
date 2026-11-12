@@ -21,13 +21,13 @@ AXTA,845,deposits,OUT,,,,,,,,0001628280-26-008008,,,,not a bank
 AXTA,845,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-008008,R8,Depreciation and amortization,295000000.0000,library map
 AXTA,845,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008008,R3,Diluted net income per share (in dollars per share),1.7400,library map
 AXTA,845,dividends_paid,not_presented,,,,,,,,0001628280-26-008008,,,,no face line
-AXTA,845,dividends_per_share,not_presented,,,,,,,,0001628280-26-008008,,,,no face line
+AXTA,845,dividends_per_share,not_presented,,,,,,,,0001628280-26-008008,,,,no face line and no note fact
 AXTA,845,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-008008,R5,Goodwill,1795000000.0000,library map
 AXTA,845,gross_profit,not_presented,,,,,,,,0001628280-26-008008,,,,no face line
 AXTA,845,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-008008,R3,Income before income taxes,546000000.0000,library map
 AXTA,845,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-008008,R3,Provision for income taxes,167000000.0000,library map
 AXTA,845,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-008008,R3,"Interest expense, net",176000000.0000,combined line (library or label demote)
-AXTA,845,interest_income,not_presented,,,,,,,,0001628280-26-008008,,,,no face line
+AXTA,845,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-008008,R3,"Interest expense, net",176000000.0000,interest income only inside a net/other face line between OI and pretax
 AXTA,845,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-008008,R5,Inventories,756000000.0000,library map
 AXTA,845,loans_net,OUT,,,,,,,,0001628280-26-008008,,,,not a bank
 AXTA,845,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008008,R3,Net income attributable to common shareholders,378000000.0000,library map
@@ -50,5 +50,5 @@ AXTA,845,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-008
 AXTA,845,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001628280-26-008008,R5,Current portion of borrowings,20000000.0000,printed face components (duration sum; total_debt founder sum)
 AXTA,845,total_interest_income,OUT,,,,,,,,0001628280-26-008008,,,,not a bank
 AXTA,845,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-008008,R5,Total liabilities,5206000000.0000,library map
-AXTA,845,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-008008,,,,note-sourced default tag (no face line)
-AXTA,845,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-008008,,,,note-sourced default tag (no face line)
+AXTA,845,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-008008,,,216000000.0000,note fact present in the filing (FSN value)
+AXTA,845,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-008008,,,217000000.0000,note fact present in the filing (FSN value)

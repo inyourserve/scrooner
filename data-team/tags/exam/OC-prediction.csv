@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OC,748,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,Accounts payable,1257000000.0000,library map
 OC,748,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,"Receivables, Net, Current",937000000.0000,combined line (library or label demote)
-OC,748,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001370946-26-000067,,,,note-sourced default tag (no face line)
+OC,748,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001370946-26-000067,,,148000000.0000,note fact present in the filing (FSN value)
 OC,748,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001370946-26-000067,R3,Basic (dollars per share),-6.2200,library map
 OC,748,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001370946-26-000067,R9,"Cash paid for property, plant and equipment",824000000.0000,library map
 OC,748,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,Cash and cash equivalents,345000000.0000,library map
 OC,748,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001370946-26-000067,R9,Net cash flow (used for) provided by financing activities,-1072000000.0000,library map
 OC,748,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001370946-26-000067,R9,Net cash flow used for investing activities,-765000000.0000,library map
-OC,748,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001370946-26-000067,,,,note-sourced default tag (no face line)
-OC,748,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001370946-26-000067,,,,note-sourced default tag (no face line)
+OC,748,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001370946-26-000067,,,264000000.0000,note fact present in the filing (FSN value)
+OC,748,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001370946-26-000067,,,271000000.0000,note fact present in the filing (FSN value)
 OC,748,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001370946-26-000067,R9,Change in accounts payable and accrued liabilities,-130000000.0000,combined line (library or label demote)
 OC,748,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0001370946-26-000067,R9,"Changes in receivables, net",-235000000.0000,library map
 OC,748,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001370946-26-000067,R9,Change in inventories,65000000.0000,library map
@@ -27,7 +27,7 @@ OC,748,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001370946-26-
 OC,748,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001370946-26-000067,R3,(LOSS) EARNINGS FROM CONTINUING OPERATIONS BEFORE TAXES,104000000.0000,library map
 OC,748,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001370946-26-000067,R3,Income tax expense,293000000.0000,library map
 OC,748,interest_expense,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001370946-26-000067,R3,"Interest expense, net",256000000.0000,combined line (library or label demote)
-OC,748,interest_income,not_presented,,,,,,,,0001370946-26-000067,,,,no face line
+OC,748,interest_income,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001370946-26-000067,R3,"Interest expense, net",256000000.0000,interest income only inside a net/other face line between OI and pretax
 OC,748,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,Inventories,1472000000.0000,library map
 OC,748,loans_net,OUT,,,,,,,,0001370946-26-000067,,,,not a bank
 OC,748,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001370946-26-000067,R3,NET (LOSS) EARNINGS,-522000000.0000,library map
@@ -50,5 +50,5 @@ OC,748,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001370946-26-00006
 OC,748,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,Short-term debt,50000000.0000,printed face components (duration sum; total_debt founder sum)
 OC,748,total_interest_income,OUT,,,,,,,,0001370946-26-000067,,,,not a bank
 OC,748,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001370946-26-000067,R6,Total liabilities,9087000000.0000,library map
-OC,748,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001370946-26-000067,,,,note-sourced default tag (no face line)
-OC,748,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001370946-26-000067,,,,note-sourced default tag (no face line)
+OC,748,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001370946-26-000067,,,84000000.0000,note fact present in the filing (FSN value)
+OC,748,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001370946-26-000067,,,84000000.0000,note fact present in the filing (FSN value)

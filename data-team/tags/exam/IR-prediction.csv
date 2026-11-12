@@ -21,13 +21,13 @@ IR,340,deposits,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
 IR,340,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-008617,,,,single component only
 IR,340,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008617,R3,Diluted earnings per share (in USD per share),1.4500,library map
 IR,340,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Cash dividends on common stock,31800000.0000,library map
-IR,340,dividends_per_share,not_presented,,,,,,,,0001628280-26-008617,,,,no face line
+IR,340,dividends_per_share,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact
 IR,340,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Goodwill,8484100000.0000,library map
 IR,340,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Gross Profit,3336300000.0000,library map
 IR,340,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Income Before Income Taxes,935300000.0000,library map
 IR,340,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Provision for income taxes,219400000.0000,library map
 IR,340,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-008617,R3,Interest expense,253900000.0000,library map
-IR,340,interest_income,not_presented,,,,,,,,0001628280-26-008617,,,,no face line
+IR,340,interest_income,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact
 IR,340,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Inventories,1172900000.0000,library map
 IR,340,loans_net,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
 IR,340,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Net Income Attributable to Ingersoll Rand Inc.,581400000.0000,library map
@@ -50,5 +50,5 @@ IR,340,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-00861
 IR,340,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,Y,LongTermDebtAndCapitalLeaseObligationsCurrent,sec_api,0001628280-26-008617,R5,Short-term borrowings and current maturities of long-term debt,1400000.0000,printed face components (duration sum; total_debt founder sum)
 IR,340,total_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
 IR,340,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total liabilities,8143200000.0000,library map
-IR,340,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-008617,,,,note-sourced default tag (no face line)
-IR,340,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-008617,,,,note-sourced default tag (no face line)
+IR,340,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-008617,,,398100000.0000,note fact present in the filing (FSN value)
+IR,340,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-008617,,,401000000.0000,note fact present in the filing (FSN value)

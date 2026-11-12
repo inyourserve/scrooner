@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DBX,794,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001467623-26-000008,R3,Accounts payable,24300000.0000,library map
 DBX,794,accounts_receivable,combined,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001467623-26-000008,R3,"Trade and other receivables, net",79100000.0000,combined line (library or label demote)
-DBX,794,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001467623-26-000008,,,,note-sourced default tag (no face line)
+DBX,794,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001467623-26-000008,,,25900000.0000,note fact present in the filing (FSN value)
 DBX,794,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001467623-26-000008,R5,Basic net income per share (in dollars per share),1.8900,library map
 DBX,794,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001467623-26-000008,R9,Capital expenditures,21000000.0000,library map
 DBX,794,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001467623-26-000008,R3,Cash and cash equivalents,891300000.0000,library map
@@ -21,13 +21,13 @@ DBX,794,deposits,OUT,,,,,,,,0001467623-26-000008,,,,not a bank
 DBX,794,depreciation_and_amortization,not_presented,,,,,,,,0001467623-26-000008,,,,no face line
 DBX,794,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001467623-26-000008,R5,Diluted net income per share (in dollars per share),1.8600,library map
 DBX,794,dividends_paid,not_presented,,,,,,,,0001467623-26-000008,,,,no face line
-DBX,794,dividends_per_share,not_presented,,,,,,,,0001467623-26-000008,,,,no face line
+DBX,794,dividends_per_share,not_presented,,,,,,,,0001467623-26-000008,,,,no face line and no note fact
 DBX,794,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001467623-26-000008,R3,Goodwill,454900000.0000,library map
 DBX,794,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001467623-26-000008,R5,Gross profit,2020200000.0000,library map
 DBX,794,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001467623-26-000008,R5,Income before income taxes,617600000.0000,library map
 DBX,794,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001467623-26-000008,R5,Provision for income taxes,109200000.0000,library map
 DBX,794,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001467623-26-000008,R5,"Interest (expense) income, net",-78600000.0000,combined line (library or label demote)
-DBX,794,interest_income,not_presented,,,,,,,,0001467623-26-000008,,,,no face line
+DBX,794,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001467623-26-000008,R5,"Interest (expense) income, net",-78600000.0000,interest income only inside a net/other face line between OI and pretax
 DBX,794,inventory,not_presented,,,,,,,,0001467623-26-000008,,,,no face line
 DBX,794,loans_net,OUT,,,,,,,,0001467623-26-000008,,,,not a bank
 DBX,794,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001467623-26-000008,R5,Net income,508400000.0000,library map

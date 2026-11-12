@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KEY,436,accounts_payable,not_presented,,,,,,,,0001628280-26-010546,,,,no face line
 KEY,436,accounts_receivable,not_presented,,,,,,,,0001628280-26-010546,,,,no face line
-KEY,436,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-010546,,,,note-sourced default tag (no face line)
+KEY,436,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-010546,,,,no face line and no note fact
 KEY,436,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-010546,R5,Net income (loss) attributable to Key common shareholders (in dollars per share),1.5300,library map
 KEY,436,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001628280-26-010546,R10,"Purchases of premises, equipment, and software",107000000.0000,library map
 KEY,436,cash_and_equivalents,not_presented,,,,,,,,0001628280-26-010546,,,,no face line

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WEC,297,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000783325-26-000018,R5,Accounts payable,1140100000.0000,library map
 WEC,297,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000783325-26-000018,R5,"Accounts receivable and unbilled revenues, net of reserves of $148.7 and $162.8, respectively",2062700000.0000,library map
-WEC,297,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000783325-26-000018,,,,note-sourced default tag (no face line)
+WEC,297,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0000783325-26-000018,,,58100000.0000,note fact present in the filing (FSN value)
 WEC,297,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000783325-26-000018,R3,Basic (in dollars per share),4.8400,library map
 WEC,297,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000783325-26-000018,R7,Capital expenditures,4398100000.0000,combined line (library or label demote)
 WEC,297,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000783325-26-000018,R5,Cash and cash equivalents,27600000.0000,library map
 WEC,297,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0000783325-26-000018,R7,Net cash provided by financing activities,1524000000.0000,library map
 WEC,297,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000783325-26-000018,R7,Net cash used in investing activities,-4874700000.0000,library map
-WEC,297,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000783325-26-000018,,,,note-sourced default tag (no face line)
-WEC,297,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000783325-26-000018,,,,note-sourced default tag (no face line)
+WEC,297,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000783325-26-000018,,,-281300000.0000,note fact present in the filing (FSN value)
+WEC,297,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000783325-26-000018,,,858500000.0000,note fact present in the filing (FSN value)
 WEC,297,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000783325-26-000018,R7,Accounts payable,46400000.0000,library map
 WEC,297,cf_ar_change,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000783325-26-000018,R7,"Materials, supplies, and inventories",-9800000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ WEC,297,gross_profit,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000783325-26-000018,R3,Income before income taxes,1673500000.0000,library map
 WEC,297,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000783325-26-000018,R3,Income tax expense,118000000.0000,library map
 WEC,297,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000783325-26-000018,R3,Interest expense,895100000.0000,library map
-WEC,297,interest_income,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
+WEC,297,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000783325-26-000018,,,5900000.0000,note fact present in the filing (FSN value)
 WEC,297,inventory,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,loans_net,OUT,,,,,,,,0000783325-26-000018,,,,not a bank
 WEC,297,net_income,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
@@ -41,7 +41,7 @@ WEC,297,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0
 WEC,297,provision_for_credit_losses,OUT,,,,,,,,0000783325-26-000018,,,,not a bank
 WEC,297,research_and_development,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000783325-26-000018,R3,Operating revenues,9800100000.0000,library map
-WEC,297,sbc,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
+WEC,297,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000783325-26-000018,,,48200000.0000,note fact present in the filing (FSN value)
 WEC,297,sga_expense,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000783325-26-000018,R7,Purchase of common stock,1300000.0000,library map
 WEC,297,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000783325-26-000018,R6,"Common stock, shares outstanding",325461519.0000,library map

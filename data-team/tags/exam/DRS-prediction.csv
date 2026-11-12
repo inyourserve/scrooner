@@ -7,8 +7,8 @@ DRS,724,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,
 DRS,724,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001833756-26-000013,R5,Cash and cash equivalents,647000000.0000,library map
 DRS,724,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001833756-26-000013,R7,Net cash (used in) provided by financing activities,-163000000.0000,library map
 DRS,724,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001833756-26-000013,R7,Net cash used in investing activities,-154000000.0000,library map
-DRS,724,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001833756-26-000013,,,,note-sourced default tag (no face line)
-DRS,724,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001833756-26-000013,,,,note-sourced default tag (no face line)
+DRS,724,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001833756-26-000013,,,24000000.0000,note fact present in the filing (FSN value)
+DRS,724,cash_paid_for_interest,not_presented,,,,,,,,0001833756-26-000013,,,,no face line and no note fact
 DRS,724,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001833756-26-000013,R7,Accounts payable,-79000000.0000,library map
 DRS,724,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001833756-26-000013,R7,Accounts receivable,81000000.0000,library map
 DRS,724,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001833756-26-000013,R7,Inventories,-6000000.0000,library map
@@ -27,7 +27,7 @@ DRS,724,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001833756-26
 DRS,724,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,Earnings before taxes,336000000.0000,library map
 DRS,724,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,Income tax provision,58000000.0000,library map
 DRS,724,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001833756-26-000013,R3,"Interest expense, net",-8000000.0000,combined line (library or label demote)
-DRS,724,interest_income,not_presented,,,,,,,,0001833756-26-000013,,,,no face line
+DRS,724,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001833756-26-000013,R3,"Interest expense, net",-8000000.0000,interest income only inside a net/other face line between OI and pretax
 DRS,724,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001833756-26-000013,R5,Inventories,352000000.0000,library map
 DRS,724,loans_net,OUT,,,,,,,,0001833756-26-000013,,,,not a bank
 DRS,724,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,Net earnings,278000000.0000,library map
@@ -50,5 +50,5 @@ DRS,724,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001833756-26-0000
 DRS,724,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001833756-26-000013,R5,Short-term borrowings and current portion of long-term debt,26000000.0000,printed face components (duration sum; total_debt founder sum)
 DRS,724,total_interest_income,OUT,,,,,,,,0001833756-26-000013,,,,not a bank
 DRS,724,total_liabilities,not_presented,,,,,,,,0001833756-26-000013,,,,no face line
-DRS,724,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001833756-26-000013,,,,note-sourced default tag (no face line)
-DRS,724,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001833756-26-000013,,,,note-sourced default tag (no face line)
+DRS,724,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001833756-26-000013,,,265900000.0000,note fact present in the filing (FSN value)
+DRS,724,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001833756-26-000013,,,268700000.0000,note fact present in the filing (FSN value)

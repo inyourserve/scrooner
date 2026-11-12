@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DPZ,693,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,Accounts payable,135029000.0000,library map
 DPZ,693,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,"Accounts receivable, net of reserves of $5,805 in 2025 and $5,834 in 2024",315958000.0000,library map
-DPZ,693,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-062321,,,,note-sourced default tag (no face line)
+DPZ,693,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-062321,,,,no face line and no note fact
 DPZ,693,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-062321,R4,Common Stock - basic,17.6900,library map
 DPZ,693,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-062321,R8,Capital expenditures,120558000.0000,library map
 DPZ,693,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,Cash and cash equivalents,125675000.0000,library map
 DPZ,693,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-062321,R8,Net cash used in financing activities,-752093000.0000,library map
 DPZ,693,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-062321,R8,Net cash used in investing activities,-70190000.0000,library map
-DPZ,693,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-062321,,,,note-sourced default tag (no face line)
-DPZ,693,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-062321,,,,note-sourced default tag (no face line)
+DPZ,693,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001193125-26-062321,,,161893000.0000,note fact present in the filing (FSN value)
+DPZ,693,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-062321,,,185020000.0000,note fact present in the filing (FSN value)
 DPZ,693,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001193125-26-062321,R8,Accounts payable and accrued liabilities,53637000.0000,combined line (library or label demote)
 DPZ,693,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001193125-26-062321,R8,Accounts receivable,6149000.0000,library map
 DPZ,693,cf_inventory_change,not_presented,,,,,,,,0001193125-26-062321,,,,no face line
@@ -50,5 +50,5 @@ DPZ,693,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-0623
 DPZ,693,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,Current portion of long-term debt,6131000.0000,printed face components (duration sum; total_debt founder sum)
 DPZ,693,total_interest_income,OUT,,,,,,,,0001193125-26-062321,,,,not a bank
 DPZ,693,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,Total liabilities,5617601000.0000,library map
-DPZ,693,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-062321,,,,note-sourced default tag (no face line)
-DPZ,693,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-062321,,,,note-sourced default tag (no face line)
+DPZ,693,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-062321,,,34007071.0000,note fact present in the filing (FSN value)
+DPZ,693,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-062321,,,34237646.0000,note fact present in the filing (FSN value)

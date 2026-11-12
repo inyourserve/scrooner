@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BKR,221,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,Accounts payable,4579000000.0000,library map
 BKR,221,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,"Current receivables, net",6641000000.0000,combined line (library or label demote)
-BKR,221,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001701605-26-000007,,,,note-sourced default tag (no face line)
+BKR,221,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001701605-26-000007,,,250000000.0000,note fact present in the filing (FSN value)
 BKR,221,basic_eps,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
 BKR,221,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001701605-26-000007,R9,Expenditures for capital assets,1273000000.0000,library map
 BKR,221,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,Cash and cash equivalents,3715000000.0000,combined line (library or label demote)
@@ -21,13 +21,13 @@ BKR,221,deposits,OUT,,,,,,,,0001701605-26-000007,,,,not a bank
 BKR,221,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001701605-26-000007,R9,Depreciation and amortization,1188000000.0000,library map
 BKR,221,diluted_eps,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
 BKR,221,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001701605-26-000007,R9,Dividends paid,910000000.0000,library map
-BKR,221,dividends_per_share,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
+BKR,221,dividends_per_share,not_presented,,,,,,,,0001701605-26-000007,,,,no face line and no note fact
 BKR,221,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,Goodwill,6068000000.0000,library map
 BKR,221,gross_profit,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
 BKR,221,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001701605-26-000007,R3,Income before income taxes,2877000000.0000,library map
 BKR,221,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001701605-26-000007,R3,Provision for income taxes,253000000.0000,library map
 BKR,221,interest_expense,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
-BKR,221,interest_income,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
+BKR,221,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-6,N,,sec_api,0001701605-26-000007,R3,"Interest expense, net",-222000000.0000,interest income only inside a net/other face line between OI and pretax
 BKR,221,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,"Inventories, net",4954000000.0000,library map
 BKR,221,loans_net,OUT,,,,,,,,0001701605-26-000007,,,,not a bank
 BKR,221,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001701605-26-000007,R3,Net income attributable to Baker Hughes Company,2588000000.0000,library map
@@ -50,5 +50,5 @@ BKR,221,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001701605-26-0000
 BKR,221,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001701605-26-000007,R5,Short-term and current portion of long-term debt,689000000.0000,printed face components (duration sum; total_debt founder sum)
 BKR,221,total_interest_income,OUT,,,,,,,,0001701605-26-000007,,,,not a bank
 BKR,221,total_liabilities,not_presented,,,,,,,,0001701605-26-000007,,,,no face line
-BKR,221,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001701605-26-000007,,,,note-sourced default tag (no face line)
-BKR,221,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001701605-26-000007,,,,note-sourced default tag (no face line)
+BKR,221,weighted_basic_shares,not_presented,,,,,,,,0001701605-26-000007,,,,no face line and no note fact
+BKR,221,weighted_diluted_shares,not_presented,,,,,,,,0001701605-26-000007,,,,no face line and no note fact

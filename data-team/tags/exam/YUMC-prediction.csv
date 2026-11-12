@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 YUMC,524,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-082824,R5,Accounts payable and other current liabilities,2127000000.0000,combined line (library or label demote)
 YUMC,524,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-082824,R5,"Accounts receivable, net",95000000.0000,library map
-YUMC,524,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-082824,,,,note-sourced default tag (no face line)
+YUMC,524,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-082824,,,2000000.0000,note fact present in the filing (FSN value)
 YUMC,524,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-082824,R2,Basic Earnings Per Common Share,2.5200,library map
 YUMC,524,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-082824,R4,Capital spending,626000000.0000,library map
 YUMC,524,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-082824,R5,Cash and cash equivalents,506000000.0000,library map
 YUMC,524,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-082824,R4,Net Cash Used in Financing Activities,-1689000000.0000,library map
 YUMC,524,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-082824,R4,Net Cash Used in Investing Activities,-5000000.0000,library map
 YUMC,524,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0001193125-26-082824,R4,Cash paid for income tax,370000000.0000,library map
-YUMC,524,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-082824,,,,note-sourced default tag (no face line)
+YUMC,524,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-082824,,,,no face line and no note fact
 YUMC,524,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001193125-26-082824,R4,Changes in accounts payable and other current liabilities,-33000000.0000,combined line (library or label demote)
 YUMC,524,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-082824,R4,Changes in accounts receivable,11000000.0000,library map
 YUMC,524,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-082824,R4,Changes in inventories,14000000.0000,library map
@@ -27,14 +27,14 @@ YUMC,524,gross_profit,not_presented,,,,,,,,0001193125-26-082824,,,,no face line
 YUMC,524,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,Income Before Income Taxes and Equity in Net Earnings (Losses) from Equity Method Investments,1358000000.0000,library map
 YUMC,524,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,Income tax provision,369000000.0000,library map
 YUMC,524,interest_expense,not_presented,,,,,,,,0001193125-26-082824,,,,no face line
-YUMC,524,interest_income,not_presented,,,,,,,,0001193125-26-082824,,,,no face line
+YUMC,524,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,"Interest income, net",92000000.0000,interest income only inside a net/other face line between OI and pretax
 YUMC,524,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-082824,R5,"Inventories, net",438000000.0000,library map
 YUMC,524,loans_net,OUT,,,,,,,,0001193125-26-082824,,,,not a bank
 YUMC,524,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,"Net Income  Yum China Holdings, Inc.",929000000.0000,library map
 YUMC,524,net_interest_income,OUT,,,,,,,,0001193125-26-082824,,,,not a bank
 YUMC,524,noninterest_expense,OUT,,,,,,,,0001193125-26-082824,,,,not a bank
 YUMC,524,noninterest_income,OUT,,,,,,,,0001193125-26-082824,,,,not a bank
-YUMC,524,operating_expenses,not_presented,,,,,,,,0001193125-26-082824,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+YUMC,524,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,"Total costs and expenses, net",10507000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 YUMC,524,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-082824,R2,Operating Profit,1290000000.0000,library map
 YUMC,524,other_income_expense_net,not_presented,,,,,,,,0001193125-26-082824,,,,no face line
 YUMC,524,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-082824,R5,"Property, plant and equipment, net",2543000000.0000,library map

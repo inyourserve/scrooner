@@ -7,8 +7,8 @@ ALL,196,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,
 ALL,196,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0000899051-26-000031,R5,Cash,678000000.0000,library map
 ALL,196,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000899051-26-000031,R9,Net cash used in financing activities,-2881000000.0000,library map
 ALL,196,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000899051-26-000031,R9,Net cash used in investing activities,-7255000000.0000,library map
-ALL,196,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000899051-26-000031,,,,note-sourced default tag (no face line)
-ALL,196,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000899051-26-000031,,,,note-sourced default tag (no face line)
+ALL,196,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000899051-26-000031,,,2149000000.0000,note fact present in the filing (FSN value)
+ALL,196,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000899051-26-000031,,,395000000.0000,note fact present in the filing (FSN value)
 ALL,196,cf_ap_change,not_presented,,,,,,,,0000899051-26-000031,,,,no face line
 ALL,196,cf_ar_change,not_presented,,,,,,,,0000899051-26-000031,,,,no face line
 ALL,196,cf_inventory_change,OUT,,,,,,,,0000899051-26-000031,,,,sector template (bank/insurer)
@@ -27,7 +27,7 @@ ALL,196,gross_profit,OUT,,,,,,,,0000899051-26-000031,,,,sector template (bank/in
 ALL,196,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000899051-26-000031,R3,Income (loss) from operations before income taxes,13156000000.0000,library map
 ALL,196,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000899051-26-000031,R3,Income tax expense (benefit),2890000000.0000,library map
 ALL,196,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0000899051-26-000031,R3,Interest expense,399000000.0000,library map
-ALL,196,interest_income,not_presented,,,,,,,,0000899051-26-000031,,,,no face line
+ALL,196,interest_income,not_presented,,,,,,,,0000899051-26-000031,,,,no face line and no note fact
 ALL,196,inventory,OUT,,,,,,,,0000899051-26-000031,,,,sector template (bank/insurer)
 ALL,196,loans_net,OUT,,,,,,,,0000899051-26-000031,,,,not a bank
 ALL,196,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000899051-26-000031,R3,Net income (loss) attributable to Allstate,10282000000.0000,library map
@@ -41,7 +41,7 @@ ALL,196,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 ALL,196,provision_for_credit_losses,OUT,,,,,,,,0000899051-26-000031,,,,not a bank
 ALL,196,research_and_development,OUT,,,,,,,,0000899051-26-000031,,,,sector template (bank/insurer)
 ALL,196,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000899051-26-000031,R3,Total revenues,67685000000.0000,library map
-ALL,196,sbc,not_presented,,,,,,,,0000899051-26-000031,,,,no face line
+ALL,196,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000899051-26-000031,,,123000000.0000,note fact present in the filing (FSN value)
 ALL,196,sga_expense,not_presented,,,,,,,,0000899051-26-000031,,,,no face line
 ALL,196,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000899051-26-000031,R9,Treasury stock purchases,1233000000.0000,library map
 ALL,196,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0000899051-26-000031,R6,"Common stock, shares, outstanding (in shares)",260000000.0000,library map

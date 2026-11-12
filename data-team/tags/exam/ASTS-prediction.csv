@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ASTS,618,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001780312-26-000006,R2,Accounts payable,46763000.0000,library map
 ASTS,618,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001780312-26-000006,R2,"Accounts receivable, net (includes related party accounts receivable of $2,091 and $0 at December 31, 2025 and 2024, respectively)",37726000.0000,library map
-ASTS,618,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001780312-26-000006,,,,note-sourced default tag (no face line)
+ASTS,618,amortization_of_intangibles,not_presented,,,,,,,,0001780312-26-000006,,,,no face line and no note fact
 ASTS,618,basic_eps,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
 ASTS,618,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001780312-26-000006,R9,Purchase of property and equipment,1064741000.0000,library map
 ASTS,618,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001780312-26-000006,R2,Cash and cash equivalents,2335683000.0000,library map
@@ -21,7 +21,7 @@ ASTS,618,deposits,OUT,,,,,,,,0001780312-26-000006,,,,not a bank
 ASTS,618,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001780312-26-000006,R9,Depreciation and amortization,51111000.0000,library map
 ASTS,618,diluted_eps,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
 ASTS,618,dividends_paid,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
-ASTS,618,dividends_per_share,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
+ASTS,618,dividends_per_share,not_presented,,,,,,,,0001780312-26-000006,,,,no face line and no note fact
 ASTS,618,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,Y,IntangibleAssetsNetExcludingGoodwill,sec_api,0001780312-26-000006,R2,"Intangible assets, net",245093000.0000,combined line (library or label demote)
 ASTS,618,gross_profit,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
 ASTS,618,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001780312-26-000006,R4,Loss before income tax expense,-457113000.0000,library map
@@ -34,7 +34,7 @@ ASTS,618,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,Y,NetIncomeLossAvailabl
 ASTS,618,net_interest_income,OUT,,,,,,,,0001780312-26-000006,,,,not a bank
 ASTS,618,noninterest_expense,OUT,,,,,,,,0001780312-26-000006,,,,not a bank
 ASTS,618,noninterest_income,OUT,,,,,,,,0001780312-26-000006,,,,not a bank
-ASTS,618,operating_expenses,not_presented,,,,,,,,0001780312-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ASTS,618,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001780312-26-000006,R4,Total operating expenses,358631000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 ASTS,618,operating_income,not_presented,,,,,,,,0001780312-26-000006,,,,no face line
 ASTS,618,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001780312-26-000006,R4,"Total other (expense) income, net",-169400000.0000,combined line (library or label demote)
 ASTS,618,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,Y,PropertyPlantAndEquipmentNetExcludedConstructionInProgress,sec_api,0001780312-26-000006,R2,"Property and equipment, net",1398761000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MSI,166,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000068505-26-000010,R5,Accounts payable,1134000000.0000,library map
 MSI,166,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000068505-26-000010,R5,"Accounts receivable, net",2200000000.0000,library map
-MSI,166,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000068505-26-000010,,,,note-sourced default tag (no face line)
+MSI,166,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000068505-26-000010,,,234000000.0000,note fact present in the filing (FSN value)
 MSI,166,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000068505-26-000010,R3,Basic (USD per share),12.9300,library map
 MSI,166,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000068505-26-000010,R8,Capital expenditures,265000000.0000,library map
 MSI,166,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000068505-26-000010,R5,Cash and cash equivalents,1165000000.0000,library map
@@ -27,7 +27,7 @@ MSI,166,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000068505-26
 MSI,166,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,Net earnings before income taxes,2812000000.0000,library map
 MSI,166,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,Income tax expense,652000000.0000,library map
 MSI,166,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0000068505-26-000010,R3,"Interest expense, net",302000000.0000,combined line (library or label demote)
-MSI,166,interest_income,not_presented,,,,,,,,0000068505-26-000010,,,,no face line
+MSI,166,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0000068505-26-000010,R3,"Interest expense, net",302000000.0000,interest income only inside a net/other face line between OI and pretax
 MSI,166,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000068505-26-000010,R5,"Inventories, net",983000000.0000,library map
 MSI,166,loans_net,OUT,,,,,,,,0000068505-26-000010,,,,not a bank
 MSI,166,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,"Net earnings attributable to Motorola Solutions, Inc.",2154000000.0000,library map

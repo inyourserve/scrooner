@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AMRZ,443,accounts_payable,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
 AMRZ,443,accounts_receivable,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
-AMRZ,443,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002035989-26-000017,,,,note-sourced default tag (no face line)
+AMRZ,443,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002035989-26-000017,,,142000000.0000,note fact present in the filing (FSN value)
 AMRZ,443,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002035989-26-000017,R3,Basic (in dollars per share),2.1400,library map
 AMRZ,443,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0002035989-26-000017,R7,"Purchases of property, plant and equipment",788000000.0000,library map
 AMRZ,443,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002035989-26-000017,R5,Cash and cash equivalents,1922000000.0000,library map
 AMRZ,443,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0002035989-26-000017,R7,Net cash (used in) provided by financing activities,-1555000000.0000,library map
 AMRZ,443,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0002035989-26-000017,R7,Net cash used in investing activities,-361000000.0000,library map
-AMRZ,443,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002035989-26-000017,,,,note-sourced default tag (no face line)
-AMRZ,443,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002035989-26-000017,,,,note-sourced default tag (no face line)
+AMRZ,443,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0002035989-26-000017,,,369000000.0000,note fact present in the filing (FSN value)
+AMRZ,443,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0002035989-26-000017,,,411000000.0000,note fact present in the filing (FSN value)
 AMRZ,443,cf_ap_change,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
 AMRZ,443,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0002035989-26-000017,R7,"Accounts receivable, net",43000000.0000,library map
 AMRZ,443,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0002035989-26-000017,R7,Inventories,61000000.0000,library map
@@ -21,13 +21,13 @@ AMRZ,443,deposits,OUT,,,,,,,,0002035989-26-000017,,,,not a bank
 AMRZ,443,depreciation_and_amortization,combined,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0002035989-26-000017,R7,"Depreciation, depletion, accretion and amortization",914000000.0000,combined line (library or label demote)
 AMRZ,443,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002035989-26-000017,R3,Diluted (in dollars per share),2.1400,library map
 AMRZ,443,dividends_paid,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
-AMRZ,443,dividends_per_share,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
+AMRZ,443,dividends_per_share,not_presented,,,,,,,,0002035989-26-000017,,,,no face line and no note fact
 AMRZ,443,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0002035989-26-000017,R5,Goodwill,9020000000.0000,library map
 AMRZ,443,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,Gross profit,3034000000.0000,library map
 AMRZ,443,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,Income before income tax expense and income from equity method investments,1497000000.0000,library map
 AMRZ,443,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,Income tax expense,326000000.0000,library map
 AMRZ,443,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0002035989-26-000017,R3,"Interest expense, net",-413000000.0000,combined line (library or label demote)
-AMRZ,443,interest_income,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
+AMRZ,443,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0002035989-26-000017,,,48000000.0000,note fact present in the filing (FSN value)
 AMRZ,443,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002035989-26-000017,R5,Inventories,1551000000.0000,library map
 AMRZ,443,loans_net,OUT,,,,,,,,0002035989-26-000017,,,,not a bank
 AMRZ,443,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,Net income attributable to the Company,1185000000.0000,library map

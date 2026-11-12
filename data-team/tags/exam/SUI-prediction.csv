@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SUI,545,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,Y,AccountsPayableCurrentAndNoncurrent,sec_api,0000912593-26-000086,R3,Accrued expenses and accounts payable,228100000.0000,combined line (library or label demote)
 SUI,545,accounts_receivable,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
-SUI,545,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000912593-26-000086,,,,note-sourced default tag (no face line)
+SUI,545,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000912593-26-000086,,,12900000.0000,note fact present in the filing (FSN value)
 SUI,545,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000912593-26-000086,R5,Basic earnings/(loss) per share (in USD per share),10.8400,library map
 SUI,545,capex,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
 SUI,545,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0000912593-26-000086,R3,"Cash, cash equivalents and restricted cash",636100000.0000,combined line (library or label demote)
 SUI,545,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000912593-26-000086,R8,Net Cash Provided By / (Used For) Financing Activities,-5219400000.0000,library map
 SUI,545,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0000912593-26-000086,R8,Net Cash Provided By / (Used For) Investing Activities,4925800000.0000,library map
-SUI,545,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000912593-26-000086,,,,note-sourced default tag (no face line)
+SUI,545,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000912593-26-000086,,,5000000.0000,note fact present in the filing (FSN value)
 SUI,545,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000912593-26-000086,R8,"Cash paid for interest (net of capitalized interest of $3.5, $8.6, and $12.9, respectively)",245900000.0000,library map
 SUI,545,cf_ap_change,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
 SUI,545,cf_ar_change,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
@@ -21,7 +21,7 @@ SUI,545,deposits,OUT,,,,,,,,0000912593-26-000086,,,,not a bank
 SUI,545,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-5,N,,sec_api,0000912593-26-000086,R8,Depreciation and amortization,507900000.0000,library map
 SUI,545,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000912593-26-000086,R5,Diluted earnings/(loss) per share (in USD per share),10.8400,library map
 SUI,545,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-5,N,,sec_api,0000912593-26-000086,R8,Distributions,1044300000.0000,library map
-SUI,545,dividends_per_share,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
+SUI,545,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000912593-26-000086,,,7.9600,note fact present in the filing (FSN value)
 SUI,545,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000912593-26-000086,R3,Goodwill,9500000.0000,library map
 SUI,545,gross_profit,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
 SUI,545,income_before_tax,not_presented,,,,,,,,0000912593-26-000086,,,,no face line

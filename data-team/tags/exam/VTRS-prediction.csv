@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VTRS,434,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,Accounts payable,1754100000.0000,library map
 VTRS,434,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,"Accounts receivable, net",3031300000.0000,library map
-VTRS,434,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001792044-26-000013,,,,note-sourced default tag (no face line)
+VTRS,434,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001792044-26-000013,,,2349800000.0000,note fact present in the filing (FSN value)
 VTRS,434,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001792044-26-000013,R5,Basic (in USD per share),-3.0000,library map
 VTRS,434,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001792044-26-000013,R8,Capital expenditures,378800000.0000,library map
 VTRS,434,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,Cash and cash equivalents,1322400000.0000,library map
 VTRS,434,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001792044-26-000013,R8,Net cash used in financing activities,-1293900000.0000,library map
 VTRS,434,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001792044-26-000013,R8,Net cash (used in) provided by investing activities,-427700000.0000,library map
-VTRS,434,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001792044-26-000013,,,,note-sourced default tag (no face line)
+VTRS,434,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001792044-26-000013,,,445400000.0000,note fact present in the filing (FSN value)
 VTRS,434,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001792044-26-000013,R8,Interest,492600000.0000,library map
 VTRS,434,cf_ap_change,not_presented,,,,,,,,0001792044-26-000013,,,,no face line
 VTRS,434,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001792044-26-000013,R8,Accounts receivable,-334600000.0000,library map
@@ -27,7 +27,7 @@ VTRS,434,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001792044-2
 VTRS,434,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0001792044-26-000013,R5,Earnings (loss) before income taxes,-3665000000.0000,library map
 VTRS,434,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0001792044-26-000013,R5,Income tax (benefit) provision,-150100000.0000,library map
 VTRS,434,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001792044-26-000013,R5,Interest expense,471300000.0000,library map
-VTRS,434,interest_income,not_presented,,,,,,,,0001792044-26-000013,,,,no face line
+VTRS,434,interest_income,not_presented,,,,,,,,0001792044-26-000013,,,,no face line and no note fact
 VTRS,434,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,Inventories,3999200000.0000,library map
 VTRS,434,loans_net,OUT,,,,,,,,0001792044-26-000013,,,,not a bank
 VTRS,434,net_income,not_presented,,,,,,,,0001792044-26-000013,,,,no face line
@@ -50,5 +50,5 @@ VTRS,434,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001792044-26-000
 VTRS,434,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,Current portion of long-term debt and other long-term obligations,1933300000.0000,printed face components (duration sum; total_debt founder sum)
 VTRS,434,total_interest_income,OUT,,,,,,,,0001792044-26-000013,,,,not a bank
 VTRS,434,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001792044-26-000013,R3,Total liabilities,22481800000.0000,library map
-VTRS,434,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001792044-26-000013,,,,note-sourced default tag (no face line)
-VTRS,434,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001792044-26-000013,,,,note-sourced default tag (no face line)
+VTRS,434,weighted_basic_shares,not_presented,,,,,,,,0001792044-26-000013,,,,no face line and no note fact
+VTRS,434,weighted_diluted_shares,not_presented,,,,,,,,0001792044-26-000013,,,,no face line and no note fact

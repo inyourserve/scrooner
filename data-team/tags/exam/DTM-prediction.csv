@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DTM,600,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,Y,AccountsPayableCurrentAndNoncurrentAbstract,sec_api,0001842022-26-000003,R5,Accounts payable,65000000.0000,library map
 DTM,600,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001842022-26-000003,R5,Accounts receivable (net of $ allowance for expected credit loss for each period end),186000000.0000,library map
-DTM,600,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001842022-26-000003,,,,note-sourced default tag (no face line)
+DTM,600,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001842022-26-000003,,,60000000.0000,note fact present in the filing (FSN value)
 DTM,600,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001842022-26-000003,R3,Net Income Attributable to DT Midstream (in dollars per share),4.3400,library map
 DTM,600,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001842022-26-000003,R7,Plant and equipment expenditures,426000000.0000,library map
 DTM,600,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001842022-26-000003,R5,Cash and cash equivalents,54000000.0000,library map
 DTM,600,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001842022-26-000003,R7,Net cash and cash equivalents from (used for) financing activities,-509000000.0000,library map
 DTM,600,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001842022-26-000003,R7,Net cash and cash equivalents used for investing activities,-372000000.0000,library map
-DTM,600,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001842022-26-000003,,,,note-sourced default tag (no face line)
+DTM,600,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001842022-26-000003,,,5000000.0000,note fact present in the filing (FSN value)
 DTM,600,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001842022-26-000003,R7,"Interest, net of interest capitalized",152000000.0000,library map
 DTM,600,cf_ap_change,not_presented,,,,,,,,0001842022-26-000003,,,,no face line
 DTM,600,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001842022-26-000003,R7,"Accounts receivable, net",24000000.0000,library map

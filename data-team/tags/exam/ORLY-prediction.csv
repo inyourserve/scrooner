@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ORLY,179,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000898173-26-000009,R2,Accounts payable,7103684000.0000,library map
 ORLY,179,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000898173-26-000009,R2,"Accounts receivable, less allowance for doubtful accounts $25,851 in 2025 and $22,545 in 2024",389793000.0000,library map
-ORLY,179,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000898173-26-000009,,,,note-sourced default tag (no face line)
+ORLY,179,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000898173-26-000009,,,3600000.0000,note fact present in the filing (FSN value)
 ORLY,179,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000898173-26-000009,R4,Earnings per share,2.9800,library map
 ORLY,179,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000898173-26-000009,R7,Purchases of property and equipment,1168815000.0000,library map
 ORLY,179,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000898173-26-000009,R2,Cash and cash equivalents,193793000.0000,library map
@@ -21,7 +21,7 @@ ORLY,179,deposits,OUT,,,,,,,,0000898173-26-000009,,,,not a bank
 ORLY,179,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000898173-26-000009,R7,"Depreciation and amortization of property, equipment and intangibles",511230000.0000,library map
 ORLY,179,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0000898173-26-000009,R4,Earnings per share,2.9700,library map
 ORLY,179,dividends_paid,not_presented,,,,,,,,0000898173-26-000009,,,,no face line
-ORLY,179,dividends_per_share,not_presented,,,,,,,,0000898173-26-000009,,,,no face line
+ORLY,179,dividends_per_share,not_presented,,,,,,,,0000898173-26-000009,,,,no face line and no note fact
 ORLY,179,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000898173-26-000009,R2,Goodwill,948208000.0000,library map
 ORLY,179,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000898173-26-000009,R4,Gross profit,9174141000.0000,library map
 ORLY,179,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000898173-26-000009,R4,Income before income taxes,3240171000.0000,library map

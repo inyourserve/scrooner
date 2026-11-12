@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 XEL,246,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000072903-26-000009,R7,Accounts payable,2307000000.0000,library map
 XEL,246,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000072903-26-000009,R7,"Accounts receivable, net",1330000000.0000,library map
-XEL,246,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000072903-26-000009,,,,note-sourced default tag (no face line)
+XEL,246,amortization_of_intangibles,not_presented,,,,,,,,0000072903-26-000009,,,,no face line and no note fact
 XEL,246,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000072903-26-000009,R4,Basic,3.4400,library map
 XEL,246,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000072903-26-000009,R6,Capital/construction expenditures,10908000000.0000,library map
 XEL,246,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0000072903-26-000009,R7,Cash and cash equivalents,274000000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ XEL,246,gross_profit,not_presented,,,,,,,,0000072903-26-000009,,,,no face line
 XEL,246,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000072903-26-000009,R4,Income before income taxes,1773000000.0000,library map
 XEL,246,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000072903-26-000009,R4,Income tax benefit,-245000000.0000,library map
 XEL,246,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000072903-26-000009,R4,Interest charges  includes other financing costs,1468000000.0000,library map
-XEL,246,interest_income,not_presented,,,,,,,,0000072903-26-000009,,,,no face line
+XEL,246,interest_income,not_presented,,,,,,,,0000072903-26-000009,,,,no face line and no note fact
 XEL,246,inventory,not_presented,,,,,,,,0000072903-26-000009,,,,no face line
 XEL,246,loans_net,OUT,,,,,,,,0000072903-26-000009,,,,not a bank
 XEL,246,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000072903-26-000009,R4,Net income,2018000000.0000,library map

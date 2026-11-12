@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KVUE,295,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001944048-26-000030,R3,Accounts payable,2473000000.0000,library map
 KVUE,295,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001944048-26-000030,R3,"Trade receivables, less allowances for credit losses ($26 as of both December 28, 2025 and December 29, 2024)",2382000000.0000,library map
-KVUE,295,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001944048-26-000030,,,,note-sourced default tag (no face line)
+KVUE,295,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001944048-26-000030,,,257000000.0000,note fact present in the filing (FSN value)
 KVUE,295,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001944048-26-000030,R5,Basic (in dollars per share),0.7700,library map
 KVUE,295,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001944048-26-000030,R9,"Purchases of property, plant, and equipment",475000000.0000,library map
 KVUE,295,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001944048-26-000030,R3,Cash and cash equivalents,1062000000.0000,library map
@@ -27,7 +27,7 @@ KVUE,295,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001944048-2
 KVUE,295,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001944048-26-000030,R5,Income before taxes,1999000000.0000,library map
 KVUE,295,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001944048-26-000030,R5,Provision for taxes,529000000.0000,library map
 KVUE,295,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001944048-26-000030,R5,"Interest expense, net",-379000000.0000,combined line (library or label demote)
-KVUE,295,interest_income,not_presented,,,,,,,,0001944048-26-000030,,,,no face line
+KVUE,295,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001944048-26-000030,,,51000000.0000,note fact present in the filing (FSN value)
 KVUE,295,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001944048-26-000030,R3,Inventories,1666000000.0000,library map
 KVUE,295,loans_net,OUT,,,,,,,,0001944048-26-000030,,,,not a bank
 KVUE,295,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001944048-26-000030,R5,Net income,1470000000.0000,library map

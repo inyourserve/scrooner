@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VICI,375,accounts_payable,not_presented,,,,,,,,0001705696-26-000034,,,,no face line
 VICI,375,accounts_receivable,not_presented,,,,,,,,0001705696-26-000034,,,,no face line
-VICI,375,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001705696-26-000034,,,,note-sourced default tag (no face line)
+VICI,375,amortization_of_intangibles,not_presented,,,,,,,,0001705696-26-000034,,,,no face line and no note fact
 VICI,375,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001705696-26-000034,R5,Basic (in dollars per share),2.6100,library map
 VICI,375,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001705696-26-000034,R8,Acquisition of property and equipment,1335000.0000,combined line (library or label demote)
 VICI,375,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001705696-26-000034,R3,Cash and cash equivalents,563479000.0000,library map

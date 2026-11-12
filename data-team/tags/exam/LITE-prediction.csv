@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LITE,174,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-057358,R5,Accounts payable,567400000.0000,library map
 LITE,174,accounts_receivable,not_presented,,,,,,,,0001628280-26-057358,,,,no face line
-LITE,174,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-057358,,,,note-sourced default tag (no face line)
+LITE,174,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-057358,,,135700000.0000,note fact present in the filing (FSN value)
 LITE,174,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-057358,R3,Basic (in dollars per share),-92.9600,library map
 LITE,174,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-057358,R7,"Payments for acquisition of property, plant and equipment",451300000.0000,library map
 LITE,174,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-057358,R5,Cash and cash equivalents,2043500000.0000,library map
@@ -21,13 +21,13 @@ LITE,174,deposits,OUT,,,,,,,,0001628280-26-057358,,,,not a bank
 LITE,174,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-057358,,,,single component only
 LITE,174,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-057358,R3,Diluted (in dollars per share),-92.9600,library map
 LITE,174,dividends_paid,not_presented,,,,,,,,0001628280-26-057358,,,,no face line
-LITE,174,dividends_per_share,not_presented,,,,,,,,0001628280-26-057358,,,,no face line
+LITE,174,dividends_per_share,not_presented,,,,,,,,0001628280-26-057358,,,,no face line and no note fact
 LITE,174,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-057358,R5,Goodwill,1069300000.0000,library map
 LITE,174,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-057358,R3,Gross profit,1255900000.0000,library map
 LITE,174,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,-,-5,N,,sec_api,0001628280-26-057358,R3,Loss before income taxes,-7172800000.0000,library map
 LITE,174,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0001628280-26-057358,R3,Income tax (benefit) provision,-237700000.0000,library map
 LITE,174,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-057358,R3,Interest expense,21800000.0000,library map
-LITE,174,interest_income,not_presented,,,,,,,,0001628280-26-057358,,,,no face line
+LITE,174,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-057358,,,60200000.0000,note fact present in the filing (FSN value)
 LITE,174,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-057358,R5,Inventories,691600000.0000,library map
 LITE,174,loans_net,OUT,,,,,,,,0001628280-26-057358,,,,not a bank
 LITE,174,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-057358,R3,Net (loss) income,-6935100000.0000,library map

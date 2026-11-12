@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SXT,965,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0001140361-26-005311,R5,Trade accounts payable,138344000.0000,library map
 SXT,965,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001140361-26-005311,R5,Trade accounts receivable,305380000.0000,library map
-SXT,965,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001140361-26-005311,,,,note-sourced default tag (no face line)
+SXT,965,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001140361-26-005311,,,2100000.0000,note fact present in the filing (FSN value)
 SXT,965,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001140361-26-005311,R2,Basic (in dollars per share),3.1800,library map
 SXT,965,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001140361-26-005311,R7,"Acquisition of property, plant, and equipment",89409000.0000,library map
 SXT,965,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001140361-26-005311,R5,Cash and cash equivalents,36533000.0000,library map
@@ -27,7 +27,7 @@ SXT,965,gross_profit,not_presented,,,,,,,,0001140361-26-005311,,,,no face line
 SXT,965,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Earnings before income taxes,177547000.0000,library map
 SXT,965,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Income taxes,43058000.0000,library map
 SXT,965,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Interest expense,29581000.0000,library map
-SXT,965,interest_income,not_presented,,,,,,,,0001140361-26-005311,,,,no face line
+SXT,965,interest_income,not_presented,,,,,,,,0001140361-26-005311,,,,no face line and no note fact
 SXT,965,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001140361-26-005311,R5,Inventories,678220000.0000,library map
 SXT,965,loans_net,OUT,,,,,,,,0001140361-26-005311,,,,not a bank
 SXT,965,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Net earnings,134489000.0000,library map

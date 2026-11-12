@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TRV,158,accounts_payable,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
 TRV,158,accounts_receivable,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
-TRV,158,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000086312-26-000065,,,,note-sourced default tag (no face line)
+TRV,158,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000086312-26-000065,,,20000000.0000,note fact present in the filing (FSN value)
 TRV,158,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000086312-26-000065,R3,Basic (in dollars per share),27.8300,library map
 TRV,158,capex,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
 TRV,158,cash_and_equivalents,combined,us-gaap:Cash,BS,+,-6,N,,sec_api,0000086312-26-000065,R5,Cash (including restricted cash of $132 and $131),842000000.0000,combined line (library or label demote)
@@ -21,13 +21,13 @@ TRV,158,deposits,OUT,,,,,,,,0000086312-26-000065,,,,not a bank
 TRV,158,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000086312-26-000065,R8,Depreciation and amortization,680000000.0000,library map
 TRV,158,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000086312-26-000065,R3,Diluted (in dollars per share),27.4300,library map
 TRV,158,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000086312-26-000065,R8,Dividends paid to shareholders,979000000.0000,library map
-TRV,158,dividends_per_share,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
+TRV,158,dividends_per_share,not_presented,,,,,,,,0000086312-26-000065,,,,no face line and no note fact
 TRV,158,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000086312-26-000065,R5,Goodwill,4066000000.0000,library map
 TRV,158,gross_profit,OUT,,,,,,,,0000086312-26-000065,,,,sector template (bank/insurer)
 TRV,158,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,Income before income taxes,7796000000.0000,library map
 TRV,158,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,Income tax expense,1508000000.0000,library map
 TRV,158,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,Interest expense,425000000.0000,library map
-TRV,158,interest_income,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
+TRV,158,interest_income,not_presented,,,,,,,,0000086312-26-000065,,,,no face line and no note fact
 TRV,158,inventory,OUT,,,,,,,,0000086312-26-000065,,,,sector template (bank/insurer)
 TRV,158,loans_net,OUT,,,,,,,,0000086312-26-000065,,,,not a bank
 TRV,158,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,Net income,6288000000.0000,library map
@@ -41,7 +41,7 @@ TRV,158,ppe_net,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
 TRV,158,provision_for_credit_losses,OUT,,,,,,,,0000086312-26-000065,,,,not a bank
 TRV,158,research_and_development,OUT,,,,,,,,0000086312-26-000065,,,,sector template (bank/insurer)
 TRV,158,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,Total revenues,48828000000.0000,library map
-TRV,158,sbc,not_presented,,,,,,,,0000086312-26-000065,,,,no face line
+TRV,158,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000086312-26-000065,,,256000000.0000,note fact present in the filing (FSN value)
 TRV,158,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000086312-26-000065,R3,General and administrative expenses,6120000000.0000,library map
 TRV,158,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000086312-26-000065,R8,Treasury stock acquired  share repurchase authorizations,3004000000.0000,library map
 TRV,158,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000086312-26-000065,R6,"Common stock, shares outstanding (in shares)",217500000.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CRWV,323,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001769628-26-000104,R3,Accounts payable,1623000000.0000,library map
 CRWV,323,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001769628-26-000104,R3,"Accounts receivable, net",3169000000.0000,library map
-CRWV,323,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001769628-26-000104,,,,note-sourced default tag (no face line)
+CRWV,323,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001769628-26-000104,,,27000000.0000,note fact present in the filing (FSN value)
 CRWV,323,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001769628-26-000104,R5,"Net loss per share attributable to common stockholders, basic (in usd per share )",-2.7500,library map
 CRWV,323,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,"Purchase of property and equipment, including capitalized internal-use software",10309000000.0000,library map
 CRWV,323,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001769628-26-000104,R3,Cash and cash equivalents,3127000000.0000,library map
 CRWV,323,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,Net cash provided by financing activities,9308000000.0000,library map
 CRWV,323,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001769628-26-000104,R8,Net cash used in investing activities,-10271000000.0000,library map
-CRWV,323,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001769628-26-000104,,,,note-sourced default tag (no face line)
+CRWV,323,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0001769628-26-000104,,,-1000000.0000,note fact present in the filing (FSN value)
 CRWV,323,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,"Cash paid for interest, net of capitalized amounts",869000000.0000,library map
 CRWV,323,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,Accounts payable and accrued expenses,253000000.0000,combined line (library or label demote)
 CRWV,323,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,Accounts receivable,2749000000.0000,library map
@@ -21,13 +21,13 @@ CRWV,323,deposits,OUT,,,,,,,,0001769628-26-000104,,,,not a bank
 CRWV,323,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001769628-26-000104,R8,Depreciation and amortization,2454000000.0000,library map
 CRWV,323,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001769628-26-000104,R5,"Net loss per share attributable to common stockholders, diluted (in usd per share )",-2.8100,library map
 CRWV,323,dividends_paid,not_presented,,,,,,,,0001769628-26-000104,,,,no face line
-CRWV,323,dividends_per_share,not_presented,,,,,,,,0001769628-26-000104,,,,no face line
+CRWV,323,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,0,,,,sec_api,0001769628-26-000104,,,0.0000,note fact present in the filing (FSN value)
 CRWV,323,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001769628-26-000104,R3,Goodwill,1101000000.0000,library map
 CRWV,323,gross_profit,not_presented,,,,,,,,0001769628-26-000104,,,,no face line
 CRWV,323,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,Loss before income taxes,-1215000000.0000,library map
 CRWV,323,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,Provision for (benefit from) income taxes,-48000000.0000,library map
 CRWV,323,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,"Interest expense, net",-1229000000.0000,combined line (library or label demote)
-CRWV,323,interest_income,not_presented,,,,,,,,0001769628-26-000104,,,,no face line
+CRWV,323,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,"Interest expense, net",-1229000000.0000,interest income only inside a net/other face line between OI and pretax
 CRWV,323,inventory,not_presented,,,,,,,,0001769628-26-000104,,,,no face line
 CRWV,323,loans_net,OUT,,,,,,,,0001769628-26-000104,,,,not a bank
 CRWV,323,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,Net loss and comprehensive loss,-1167000000.0000,library map

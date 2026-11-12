@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ACT,895,accounts_payable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
 ACT,895,accounts_receivable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001823529-26-000060,,,,note-sourced default tag (no face line)
+ACT,895,amortization_of_intangibles,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact
 ACT,895,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Basic (in usd per share),4.5400,library map
 ACT,895,capex,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
 ACT,895,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Cash and cash equivalents,582493000.0000,library map
@@ -21,13 +21,13 @@ ACT,895,deposits,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
 ACT,895,depreciation_and_amortization,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
 ACT,895,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Diluted (in usd per share),4.5200,library map
 ACT,895,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Dividends paid,120833000.0000,library map
-ACT,895,dividends_per_share,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
+ACT,895,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0001823529-26-000060,,,0.8150,note fact present in the filing (FSN value)
 ACT,895,goodwill,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
 ACT,895,gross_profit,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
 ACT,895,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Income before income taxes,858837000.0000,library map
 ACT,895,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Provision for income taxes,184593000.0000,library map
 ACT,895,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Interest expense,49949000.0000,library map
-ACT,895,interest_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
+ACT,895,interest_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact
 ACT,895,inventory,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
 ACT,895,loans_net,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
 ACT,895,net_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SGI,576,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001206264-26-000015,R5,Accounts payable,401600000.0000,library map
 SGI,576,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001206264-26-000015,R5,"Accounts receivable, net",358500000.0000,library map
-SGI,576,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001206264-26-000015,,,,note-sourced default tag (no face line)
+SGI,576,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001206264-26-000015,,,6000000.0000,note fact present in the filing (FSN value)
 SGI,576,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001206264-26-000015,R3,Basic (in dollars per share),1.8600,library map
 SGI,576,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001206264-26-000015,R9,"Purchases of property, plant and equipment",166900000.0000,library map
 SGI,576,cash_and_equivalents,not_presented,,,,,,,,0001206264-26-000015,,,,no face line
 SGI,576,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001206264-26-000015,R9,Net cash provided by (used in) financing activities,616900000.0000,library map
 SGI,576,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001206264-26-000015,R9,Net cash used in investing activities,-3024300000.0000,library map
-SGI,576,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001206264-26-000015,,,,note-sourced default tag (no face line)
+SGI,576,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001206264-26-000015,,,41400000.0000,note fact present in the filing (FSN value)
 SGI,576,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001206264-26-000015,R9,Interest,278300000.0000,library map
 SGI,576,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001206264-26-000015,R9,Accounts payable,-133100000.0000,library map
 SGI,576,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001206264-26-000015,R9,Accounts receivable,-72600000.0000,library map
@@ -27,7 +27,7 @@ SGI,576,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001206264-26
 SGI,576,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001206264-26-000015,R3,Income before income taxes,481000000.0000,library map
 SGI,576,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001206264-26-000015,R3,Income tax provision,95700000.0000,library map
 SGI,576,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001206264-26-000015,R3,"Interest expense, net",267900000.0000,combined line (library or label demote)
-SGI,576,interest_income,not_presented,,,,,,,,0001206264-26-000015,,,,no face line
+SGI,576,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001206264-26-000015,R3,"Interest expense, net",267900000.0000,interest income only inside a net/other face line between OI and pretax
 SGI,576,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001206264-26-000015,R5,Inventories,630000000.0000,library map
 SGI,576,loans_net,OUT,,,,,,,,0001206264-26-000015,,,,not a bank
 SGI,576,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001206264-26-000015,R3,Net income attributable to Somnigroup International Inc.,384100000.0000,library map

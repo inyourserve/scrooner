@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IRM,314,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001020569-26-000013,R3,Accounts payable,710662000.0000,library map
 IRM,314,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001020569-26-000013,R3,"Accounts receivable (less allowances of $107,838 and $86,712 as of December 31, 2025 and 2024, respectively)",1443669000.0000,library map
-IRM,314,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001020569-26-000013,,,,note-sourced default tag (no face line)
+IRM,314,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001020569-26-000013,,,326319000.0000,note fact present in the filing (FSN value)
 IRM,314,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001020569-26-000013,R5,Basic (in dollars per share),0.4900,library map
 IRM,314,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001020569-26-000013,R9,Capital expenditures,2271628000.0000,library map
 IRM,314,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001020569-26-000013,R3,Cash and cash equivalents,158535000.0000,library map
@@ -21,13 +21,13 @@ IRM,314,deposits,OUT,,,,,,,,0001020569-26-000013,,,,not a bank
 IRM,314,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,IS,+,-3,N,,sec_api,0001020569-26-000013,R5,Depreciation and amortization,1024435000.0000,library map
 IRM,314,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001020569-26-000013,R5,Diluted (in dollars per share),0.4900,library map
 IRM,314,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001020569-26-000013,R9,Parent cash dividends,919388000.0000,library map
-IRM,314,dividends_per_share,not_presented,,,,,,,,0001020569-26-000013,,,,no face line
+IRM,314,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001020569-26-000013,,,3.2200,note fact present in the filing (FSN value)
 IRM,314,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001020569-26-000013,R3,Goodwill,5285801000.0000,library map
 IRM,314,gross_profit,not_presented,,,,,,,,0001020569-26-000013,,,,no face line
 IRM,314,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001020569-26-000013,R5,Net Income (Loss) Before Provision (Benefit) for Income Taxes,211188000.0000,library map
 IRM,314,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001020569-26-000013,R5,Provision (Benefit) for Income Taxes,58934000.0000,library map
 IRM,314,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001020569-26-000013,R5,"Interest Expense, Net (includes Interest Income of $17,127, $14,672 and $12,471 in 2025, 2024 and 2023, respectively)",-829335000.0000,combined line (library or label demote)
-IRM,314,interest_income,not_presented,,,,,,,,0001020569-26-000013,,,,no face line
+IRM,314,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001020569-26-000013,,,17127000.0000,note fact present in the filing (FSN value)
 IRM,314,inventory,not_presented,,,,,,,,0001020569-26-000013,,,,no face line
 IRM,314,loans_net,OUT,,,,,,,,0001020569-26-000013,,,,not a bank
 IRM,314,net_income,not_presented,,,,,,,,0001020569-26-000013,,,,no face line

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 U,481,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001810806-26-000011,R3,Accounts payable,13981000.0000,library map
 U,481,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001810806-26-000011,R3,"Accounts receivable, net",643611000.0000,library map
-U,481,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001810806-26-000011,,,,note-sourced default tag (no face line)
+U,481,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001810806-26-000011,,,418691000.0000,note fact present in the filing (FSN value)
 U,481,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001810806-26-000011,R5,Basic net loss per share attributable to Unity Software Inc. (USD per share),-0.9600,library map
 U,481,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001810806-26-000011,R8,Purchases of property and equipment,19024000.0000,library map
 U,481,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001810806-26-000011,R3,Cash and cash equivalents,2055840000.0000,library map
@@ -21,13 +21,13 @@ U,481,deposits,OUT,,,,,,,,0001810806-26-000011,,,,not a bank
 U,481,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001810806-26-000011,R8,Depreciation and amortization,460944000.0000,library map
 U,481,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001810806-26-000011,R5,Diluted net loss per share attributable to Unity Software Inc. (USD per share),-0.9600,library map
 U,481,dividends_paid,not_presented,,,,,,,,0001810806-26-000011,,,,no face line
-U,481,dividends_per_share,not_presented,,,,,,,,0001810806-26-000011,,,,no face line
+U,481,dividends_per_share,not_presented,,,,,,,,0001810806-26-000011,,,,no face line and no note fact
 U,481,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001810806-26-000011,R3,Goodwill,3166304000.0000,library map
 U,481,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001810806-26-000011,R5,Gross profit,1371909000.0000,library map
 U,481,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001810806-26-000011,R5,Loss before income taxes,-395198000.0000,library map
 U,481,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001810806-26-000011,R5,Provision for (benefit from) Income taxes,6295000.0000,library map
 U,481,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001810806-26-000011,R5,Interest expense,24007000.0000,library map
-U,481,interest_income,not_presented,,,,,,,,0001810806-26-000011,,,,no face line
+U,481,interest_income,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001810806-26-000011,R5,"Interest income and other expense, net",107862000.0000,interest income only inside a net/other face line between OI and pretax
 U,481,inventory,not_presented,,,,,,,,0001810806-26-000011,,,,no face line
 U,481,loans_net,OUT,,,,,,,,0001810806-26-000011,,,,not a bank
 U,481,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001810806-26-000011,R5,Net loss attributable to Unity Software Inc.,-402765000.0000,library map

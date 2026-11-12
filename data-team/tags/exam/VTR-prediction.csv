@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VTR,264,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000740260-26-000006,R4,Accounts payable and other liabilities,1240820000.0000,combined line (library or label demote)
 VTR,264,accounts_receivable,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
-VTR,264,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000740260-26-000006,,,,note-sourced default tag (no face line)
+VTR,264,amortization_of_intangibles,not_presented,,,,,,,,0000740260-26-000006,,,,no face line and no note fact
 VTR,264,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000740260-26-000006,R6,Net (loss) income attributable to common stockholders (USD per share),0.5500,library map
 VTR,264,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0000740260-26-000006,R10,Development project expenditures,280752000.0000,combined line (library or label demote)
 VTR,264,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000740260-26-000006,R4,Cash and cash equivalents,741067000.0000,library map
 VTR,264,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000740260-26-000006,R10,Net cash provided by (used in) financing activities,873757000.0000,library map
 VTR,264,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000740260-26-000006,R10,Net cash used in investing activities,-2694418000.0000,library map
-VTR,264,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000740260-26-000006,,,,note-sourced default tag (no face line)
+VTR,264,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000740260-26-000006,,,7314000.0000,note fact present in the filing (FSN value)
 VTR,264,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000740260-26-000006,R10,Interest paid excluding capitalized interest,579693000.0000,library map
 VTR,264,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000740260-26-000006,R10,Increase (decrease) in accounts payable and other liabilities,81035000.0000,combined line (library or label demote)
 VTR,264,cf_ar_change,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
@@ -50,5 +50,5 @@ VTR,264,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000740260-26-0000
 VTR,264,total_debt,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
 VTR,264,total_interest_income,OUT,,,,,,,,0000740260-26-000006,,,,not a bank
 VTR,264,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000740260-26-000006,R4,Total liabilities,14630983000.0000,library map
-VTR,264,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000740260-26-000006,,,,note-sourced default tag (no face line)
-VTR,264,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000740260-26-000006,,,,note-sourced default tag (no face line)
+VTR,264,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000740260-26-000006,,,455082000.0000,note fact present in the filing (FSN value)
+VTR,264,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000740260-26-000006,,,462615000.0000,note fact present in the filing (FSN value)

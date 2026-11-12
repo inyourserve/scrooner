@@ -7,8 +7,8 @@ DOW,429,capex,not_presented,,,,,,,,0001751788-26-000018,,,,single component only
 DOW,429,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001751788-26-000018,R5,Cash and cash equivalents,3816000000.0000,library map
 DOW,429,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001751788-26-000018,R7,Cash used for financing activities,2508000000.0000,library map
 DOW,429,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001751788-26-000018,R7,Cash provided by (used for) investing activities,-2126000000.0000,library map
-DOW,429,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001751788-26-000018,,,,note-sourced default tag (no face line)
-DOW,429,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001751788-26-000018,,,,note-sourced default tag (no face line)
+DOW,429,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001751788-26-000018,,,256000000.0000,note fact present in the filing (FSN value)
+DOW,429,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001751788-26-000018,,,948000000.0000,note fact present in the filing (FSN value)
 DOW,429,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001751788-26-000018,R7,Accounts payable,-999000000.0000,library map
 DOW,429,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,-,-6,N,,sec_api,0001751788-26-000018,R7,Accounts and notes receivable,-73000000.0000,combined line (library or label demote)
 DOW,429,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001751788-26-000018,R7,Inventories,52000000.0000,library map
@@ -41,7 +41,7 @@ DOW,429,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 DOW,429,provision_for_credit_losses,OUT,,,,,,,,0001751788-26-000018,,,,not a bank
 DOW,429,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-6,N,,sec_api,0001751788-26-000018,R3,Research and development expenses,752000000.0000,library map
 DOW,429,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-6,N,,sec_api,0001751788-26-000018,R3,Net sales,39968000000.0000,library map
-DOW,429,sbc,not_presented,,,,,,,,0001751788-26-000018,,,,no face line
+DOW,429,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001751788-26-000018,,,154000000.0000,note fact present in the filing (FSN value)
 DOW,429,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001751788-26-000018,R3,"Selling, general and administrative expenses",1392000000.0000,library map
 DOW,429,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0001751788-26-000018,R7,Purchases of treasury stock,0.0000,library map
 DOW,429,shares_outstanding,not_presented,,,,,,,,0001751788-26-000018,,,,no face line

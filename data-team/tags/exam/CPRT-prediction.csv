@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CPRT,377,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,Accounts payable and accrued liabilities,634675000.0000,combined line (library or label demote)
 CPRT,377,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,"Accounts receivable, net of allowance for credit losses of $18,551 and $12,945, respectively",809247000.0000,library map
-CPRT,377,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-405731,,,,note-sourced default tag (no face line)
+CPRT,377,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-405731,,,13000000.0000,note fact present in the filing (FSN value)
 CPRT,377,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-405731,R4,Basic net income per common share,1.5600,library map
 CPRT,377,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-405731,R7,Purchases of property and equipment,337363000.0000,library map
 CPRT,377,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,RestrictedCashAndCashEquivalentsAtCarryingValue,sec_api,0001193125-26-405731,R2,"Cash, cash equivalents, and restricted cash",1907901000.0000,combined line (library or label demote)
@@ -21,20 +21,20 @@ CPRT,377,deposits,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001193125-26-405731,R7,"Depreciation and amortization, including debt cost",238466000.0000,library map
 CPRT,377,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-405731,R4,Diluted net income per common share,1.5500,library map
 CPRT,377,dividends_paid,not_presented,,,,,,,,0001193125-26-405731,,,,no face line
-CPRT,377,dividends_per_share,not_presented,,,,,,,,0001193125-26-405731,,,,no face line
+CPRT,377,dividends_per_share,not_presented,,,,,,,,0001193125-26-405731,,,,no face line and no note fact
 CPRT,377,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,Goodwill,511297000.0000,library map
 CPRT,377,gross_profit,not_presented,,,,,,,,0001193125-26-405731,,,,no face line
 CPRT,377,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Total income before taxes,1834977000.0000,library map
 CPRT,377,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Income tax expense,354580000.0000,library map
 CPRT,377,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Interest income,181923000.0000,combined line (library or label demote)
-CPRT,377,interest_income,not_presented,,,,,,,,0001193125-26-405731,,,,no face line
+CPRT,377,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Interest income,181923000.0000,interest income only inside a net/other face line between OI and pretax
 CPRT,377,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,Inventories,51382000.0000,library map
 CPRT,377,loans_net,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,"Net income attributable to Copart, Inc.",1484270000.0000,library map
 CPRT,377,net_interest_income,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,noninterest_expense,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,noninterest_income,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
-CPRT,377,operating_expenses,not_presented,,,,,,,,0001193125-26-405731,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CPRT,377,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingCostsAndExpenses,sec_api,0001193125-26-405731,R4,Total operating expenses,3013619000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CPRT,377,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Operating income,1652590000.0000,library map
 CPRT,377,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,"Other income (expense), net",464000.0000,library map
 CPRT,377,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,"Property and equipment, net",3733220000.0000,library map

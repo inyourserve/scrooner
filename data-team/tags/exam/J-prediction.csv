@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 J,507,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-25-053316,R3,Accounts payable,1261489000.0000,library map
 J,507,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001628280-25-053316,R3,Receivables and contract assets,2989067000.0000,combined line (library or label demote)
-J,507,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-25-053316,,,,note-sourced default tag (no face line)
+J,507,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-25-053316,,,155517000.0000,note fact present in the filing (FSN value)
 J,507,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-25-053316,R5,Basic Earnings Per Share (in dollars per share),2.3900,library map
 J,507,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-25-053316,R9,Additions to property and equipment,79232000.0000,library map
 J,507,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-25-053316,R3,Cash and cash equivalents,1235448000.0000,library map
 J,507,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-25-053316,R9,Net cash used for financing activities,-525221000.0000,library map
 J,507,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-25-053316,R9,Net cash used for investing activities,-75291000.0000,library map
-J,507,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-25-053316,,,,note-sourced default tag (no face line)
-J,507,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-25-053316,,,,note-sourced default tag (no face line)
+J,507,cash_paid_for_income_taxes,not_presented,,,,,,,,0001628280-25-053316,,,,no face line and no note fact
+J,507,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001628280-25-053316,,,147439000.0000,note fact present in the filing (FSN value)
 J,507,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-25-053316,R9,Accounts payable,231254000.0000,library map
 J,507,cf_ar_change,combined,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001628280-25-053316,R9,"Receivables and contract assets, net of contract liabilities",177877000.0000,combined line (library or label demote)
 J,507,cf_inventory_change,not_presented,,,,,,,,0001628280-25-053316,,,,no face line
@@ -21,7 +21,7 @@ J,507,deposits,OUT,,,,,,,,0001628280-25-053316,,,,not a bank
 J,507,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001628280-25-053316,R9,"Property, equipment and improvements",82059000.0000,library map
 J,507,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-25-053316,R5,Diluted Earnings Per Share (in dollars per share),2.3800,library map
 J,507,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-25-053316,R9,Cash dividends to shareholders,153027000.0000,library map
-J,507,dividends_per_share,not_presented,,,,,,,,0001628280-25-053316,,,,no face line
+J,507,dividends_per_share,not_presented,,,,,,,,0001628280-25-053316,,,,no face line and no note fact
 J,507,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-25-053316,R3,Goodwill,4780818000.0000,library map
 J,507,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-25-053316,R5,Gross profit,2984934000.0000,library map
 J,507,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-25-053316,R5,Earnings from Continuing Operations Before Taxes,543477000.0000,library map
@@ -50,5 +50,5 @@ J,507,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-25-053316
 J,507,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001628280-25-053316,R3,Long-term debt,2236456000.0000,printed face components (duration sum; total_debt founder sum)
 J,507,total_interest_income,OUT,,,,,,,,0001628280-25-053316,,,,not a bank
 J,507,total_liabilities,not_presented,,,,,,,,0001628280-25-053316,,,,no face line
-J,507,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-25-053316,,,,note-sourced default tag (no face line)
-J,507,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-25-053316,,,,note-sourced default tag (no face line)
+J,507,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-25-053316,,,121468000.0000,note fact present in the filing (FSN value)
+J,507,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-25-053316,,,121932000.0000,note fact present in the filing (FSN value)

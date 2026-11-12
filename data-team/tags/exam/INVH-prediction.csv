@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 INVH,515,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001687229-26-000016,R3,Accounts payable and accrued expenses,230350000.0000,combined line (library or label demote)
 INVH,515,accounts_receivable,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
-INVH,515,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001687229-26-000016,,,,note-sourced default tag (no face line)
+INVH,515,amortization_of_intangibles,not_presented,,,,,,,,0001687229-26-000016,,,,no face line and no note fact
 INVH,515,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001687229-26-000016,R5,Net income per common share  basic (in dollars per share),0.9600,library map
 INVH,515,capex,not_presented,,,,,,,,0001687229-26-000016,,,,single component only
 INVH,515,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001687229-26-000016,R3,Cash and cash equivalents,129971000.0000,library map
@@ -27,7 +27,7 @@ INVH,515,gross_profit,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
 INVH,515,income_before_tax,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
 INVH,515,income_tax_expense,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
 INVH,515,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0001687229-26-000016,R5,Interest expense,353327000.0000,library map
-INVH,515,interest_income,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
+INVH,515,interest_income,not_presented,,,,,,,,0001687229-26-000016,,,,no face line and no note fact
 INVH,515,inventory,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
 INVH,515,loans_net,OUT,,,,,,,,0001687229-26-000016,,,,not a bank
 INVH,515,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001687229-26-000016,R5,Net income attributable to common stockholders,587924000.0000,library map

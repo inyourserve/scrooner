@@ -7,8 +7,8 @@ TKR,811,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_ap
 TKR,811,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000098362-26-000012,R5,Cash and cash equivalents,364400000.0000,library map
 TKR,811,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000098362-26-000012,R7,Net Cash (Used in) Provided by Financing Activities,-437100000.0000,library map
 TKR,811,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000098362-26-000012,R7,Net Cash Used in Investing Activities,-148300000.0000,library map
-TKR,811,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000098362-26-000012,,,,note-sourced default tag (no face line)
-TKR,811,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000098362-26-000012,,,,note-sourced default tag (no face line)
+TKR,811,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000098362-26-000012,,,144800000.0000,note fact present in the filing (FSN value)
+TKR,811,cash_paid_for_interest,not_presented,,,,,,,,0000098362-26-000012,,,,no face line and no note fact
 TKR,811,cf_ap_change,not_presented,,,,,,,,0000098362-26-000012,,,,no face line
 TKR,811,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0000098362-26-000012,R7,Accounts receivable,-3700000.0000,library map
 TKR,811,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000098362-26-000012,R7,Inventories,3100000.0000,library map
@@ -50,5 +50,5 @@ TKR,811,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000098362-26-0000
 TKR,811,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,Y,LongTermDebtAndCapitalLeaseObligations,sec_api,0000098362-26-000012,R5,"Short-term debt, including current portion of long-term debt",38900000.0000,printed face components (duration sum; total_debt founder sum)
 TKR,811,total_interest_income,OUT,,,,,,,,0000098362-26-000012,,,,not a bank
 TKR,811,total_liabilities,not_presented,,,,,,,,0000098362-26-000012,,,,no face line
-TKR,811,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000098362-26-000012,,,,note-sourced default tag (no face line)
-TKR,811,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000098362-26-000012,,,,note-sourced default tag (no face line)
+TKR,811,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000098362-26-000012,,,69766557.0000,note fact present in the filing (FSN value)
+TKR,811,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000098362-26-000012,,,70231706.0000,note fact present in the filing (FSN value)

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DOCN,637,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001582961-26-000019,R3,Accounts payable,38836000.0000,library map
 DOCN,637,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001582961-26-000019,R3,"Accounts receivable, less allowance for credit losses of $6,374 and $5,940, respectively",90908000.0000,library map
-DOCN,637,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001582961-26-000019,,,,note-sourced default tag (no face line)
+DOCN,637,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001582961-26-000019,,,20057000.0000,note fact present in the filing (FSN value)
 DOCN,637,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001582961-26-000019,R5,Basic (in dollars per share),2.8300,library map
 DOCN,637,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001582961-26-000019,R8,Capital expenditures - property and equipment,129086000.0000,library map
 DOCN,637,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001582961-26-000019,R3,Cash and cash equivalents,254475000.0000,library map
@@ -21,13 +21,13 @@ DOCN,637,deposits,OUT,,,,,,,,0001582961-26-000019,,,,not a bank
 DOCN,637,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001582961-26-000019,R8,Depreciation and amortization,137449000.0000,library map
 DOCN,637,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001582961-26-000019,R5,Diluted (in dollars per share),2.5200,library map
 DOCN,637,dividends_paid,not_presented,,,,,,,,0001582961-26-000019,,,,no face line
-DOCN,637,dividends_per_share,not_presented,,,,,,,,0001582961-26-000019,,,,no face line
+DOCN,637,dividends_per_share,not_presented,,,,,,,,0001582961-26-000019,,,,no face line and no note fact
 DOCN,637,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001582961-26-000019,R3,Goodwill,348674000.0000,library map
 DOCN,637,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001582961-26-000019,R5,Gross profit,539592000.0000,library map
 DOCN,637,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001582961-26-000019,R5,Income before taxes,206662000.0000,library map
 DOCN,637,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001582961-26-000019,R5,Income tax benefit (expense),-52600000.0000,library map
 DOCN,637,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001582961-26-000019,R5,Interest expense,17940000.0000,library map
-DOCN,637,interest_income,not_presented,,,,,,,,0001582961-26-000019,,,,no face line
+DOCN,637,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001582961-26-000019,,,11310000.0000,note fact present in the filing (FSN value)
 DOCN,637,inventory,not_presented,,,,,,,,0001582961-26-000019,,,,no face line
 DOCN,637,loans_net,OUT,,,,,,,,0001582961-26-000019,,,,not a bank
 DOCN,637,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001582961-26-000019,R5,Net income attributable to common stockholders,259262000.0000,library map

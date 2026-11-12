@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CNM,783,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001856525-26-000031,R3,Accounts payable,512000000.0000,library map
 CNM,783,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001856525-26-000031,R3,"Receivables, net of allowance for credit losses of $22 and $18",1048000000.0000,combined line (library or label demote)
-CNM,783,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001856525-26-000031,,,,note-sourced default tag (no face line)
+CNM,783,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001856525-26-000031,,,149000000.0000,note fact present in the filing (FSN value)
 CNM,783,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001856525-26-000031,R5,Basic (in dollars per share),2.3200,library map
 CNM,783,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001856525-26-000031,R9,Capital expenditures,46000000.0000,library map
 CNM,783,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001856525-26-000031,R3,Cash and cash equivalents,220000000.0000,library map
@@ -21,13 +21,13 @@ CNM,783,deposits,OUT,,,,,,,,0001856525-26-000031,,,,not a bank
 CNM,783,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001856525-26-000031,R9,Depreciation and amortization,192000000.0000,library map
 CNM,783,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001856525-26-000031,R5,Diluted (in dollars per share),2.3100,library map
 CNM,783,dividends_paid,not_presented,,,,,,,,0001856525-26-000031,,,,no face line
-CNM,783,dividends_per_share,not_presented,,,,,,,,0001856525-26-000031,,,,no face line
+CNM,783,dividends_per_share,not_presented,,,,,,,,0001856525-26-000031,,,,no face line and no note fact
 CNM,783,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001856525-26-000031,R3,Goodwill,1920000000.0000,library map
 CNM,783,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001856525-26-000031,R5,Gross profit,2059000000.0000,library map
 CNM,783,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001856525-26-000031,R5,Income before provision for income taxes,607000000.0000,library map
 CNM,783,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001856525-26-000031,R5,Provision for income taxes,145000000.0000,library map
 CNM,783,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001856525-26-000031,R5,Interest expense,120000000.0000,library map
-CNM,783,interest_income,not_presented,,,,,,,,0001856525-26-000031,,,,no face line
+CNM,783,interest_income,not_presented,,,,,,,,0001856525-26-000031,,,,no face line and no note fact
 CNM,783,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001856525-26-000031,R3,Inventories,986000000.0000,library map
 CNM,783,loans_net,OUT,,,,,,,,0001856525-26-000031,,,,not a bank
 CNM,783,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001856525-26-000031,R5,"Net income attributable to Core & Main, Inc.",441000000.0000,library map

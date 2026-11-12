@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FTI,357,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001681459-26-000010,R6,"Accounts payable, trade",1179800000.0000,library map
 FTI,357,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001681459-26-000010,R6,"Trade receivables, net of allowances of $45.3 in 2025 and $43.4 in 2024",1128600000.0000,combined line (library or label demote)
-FTI,357,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001681459-26-000010,,,,note-sourced default tag (no face line)
+FTI,357,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001681459-26-000010,,,87500000.0000,note fact present in the filing (FSN value)
 FTI,357,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001681459-26-000010,R3,Basic (usd per share),2.3400,library map
 FTI,357,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001681459-26-000010,R8,Capital expenditures,317200000.0000,library map
 FTI,357,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001681459-26-000010,R6,Cash and cash equivalents,1031900000.0000,library map
@@ -21,7 +21,7 @@ FTI,357,deposits,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001681459-26-000010,R8,Depreciation and amortization,441800000.0000,library map
 FTI,357,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001681459-26-000010,R3,Diluted (usd per share),2.3000,library map
 FTI,357,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001681459-26-000010,R8,Dividends paid,82300000.0000,library map
-FTI,357,dividends_per_share,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
+FTI,357,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001681459-26-000010,,,0.2000,note fact present in the filing (FSN value)
 FTI,357,goodwill,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
 FTI,357,gross_profit,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
 FTI,357,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,Income before income taxes,1270000000.0000,library map
@@ -34,14 +34,14 @@ FTI,357,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001681459-26
 FTI,357,net_interest_income,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,noninterest_expense,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,noninterest_income,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
-FTI,357,operating_expenses,not_presented,,,,,,,,0001681459-26-000010,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+FTI,357,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,Total costs and expenses,8612400000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 FTI,357,operating_income,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
 FTI,357,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001681459-26-000010,R3,"Other income (expense), net (Note 18)",-57700000.0000,library map
 FTI,357,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001681459-26-000010,R6,"Property, plant and equipment, net (Note 12)",2285300000.0000,library map
 FTI,357,provision_for_credit_losses,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,Research and development expense,83100000.0000,library map
 FTI,357,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,Total revenue,9932600000.0000,library map
-FTI,357,sbc,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
+FTI,357,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001681459-26-000010,,,61900000.0000,note fact present in the filing (FSN value)
 FTI,357,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,"Selling, general and administrative expense",705300000.0000,library map
 FTI,357,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-5,N,,sec_api,0001681459-26-000010,R8,Share repurchases,918300000.0000,combined line (library or label demote)
 FTI,357,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0001681459-26-000010,R7,"Ordinary shares, shares outstanding (in shares)",400700000.0000,library map

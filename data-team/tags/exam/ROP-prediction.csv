@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROP,287,accounts_payable,not_presented,,,,,,,,0000882835-26-000009,,,,no face line
 ROP,287,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000882835-26-000009,R3,"Accounts receivable, net",1001000000.0000,library map
-ROP,287,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000882835-26-000009,,,,note-sourced default tag (no face line)
+ROP,287,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000882835-26-000009,,,858400000.0000,note fact present in the filing (FSN value)
 ROP,287,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,Y,DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerBasicShare,sec_api,0000882835-26-000009,R5,Basic (in dollars per share),14.3000,library map
 ROP,287,capex,not_presented,,,,,,,,0000882835-26-000009,,,,single component only
 ROP,287,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000882835-26-000009,R3,Cash and cash equivalents,297400000.0000,library map
 ROP,287,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0000882835-26-000009,R9,Cash provided by (used in) financing activities,923600000.0000,library map
 ROP,287,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-5,N,,sec_api,0000882835-26-000009,R9,Cash used in investing activities from continuing operations,-3388000000.0000,library map
-ROP,287,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000882835-26-000009,,,,note-sourced default tag (no face line)
+ROP,287,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000882835-26-000009,,,414200000.0000,note fact present in the filing (FSN value)
 ROP,287,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000882835-26-000009,R9,Cash paid for interest,306600000.0000,library map
 ROP,287,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000882835-26-000009,R9,Accounts payable,-3900000.0000,library map
 ROP,287,cf_ar_change,not_presented,,,,,,,,0000882835-26-000009,,,,no face line
@@ -27,7 +27,7 @@ ROP,287,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000882835-26
 ROP,287,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000882835-26-000009,R5,Earnings before income taxes,1936100000.0000,library map
 ROP,287,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000882835-26-000009,R5,Income taxes,399800000.0000,library map
 ROP,287,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000882835-26-000009,R5,"Interest expense, net",325000000.0000,combined line (library or label demote)
-ROP,287,interest_income,not_presented,,,,,,,,0000882835-26-000009,,,,no face line
+ROP,287,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000882835-26-000009,R5,"Interest expense, net",325000000.0000,interest income only inside a net/other face line between OI and pretax
 ROP,287,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000882835-26-000009,R3,"Inventories, net",141700000.0000,library map
 ROP,287,loans_net,OUT,,,,,,,,0000882835-26-000009,,,,not a bank
 ROP,287,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000882835-26-000009,R5,Net earnings,1536300000.0000,library map

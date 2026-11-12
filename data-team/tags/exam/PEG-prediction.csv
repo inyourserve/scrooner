@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PEG,296,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-077446,R5,Accounts Payable,1489000000.0000,library map
 PEG,296,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-077446,R5,"Accounts Receivable, net of allowance",1888000000.0000,library map
-PEG,296,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-077446,,,,note-sourced default tag (no face line)
+PEG,296,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-077446,,,,no face line and no note fact
 PEG,296,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,Y,WeightedAverageNumberOfSharesOutstandingBasic,sec_api,0001193125-26-077446,R2,BASIC,4.2300,library map
 PEG,296,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-077446,R7,"Additions to Property, Plant and Equipment",3272000000.0000,library map
 PEG,296,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-077446,R5,Cash and Cash Equivalents,132000000.0000,library map
@@ -27,7 +27,7 @@ PEG,296,gross_profit,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
 PEG,296,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,INCOME BEFORE INCOME TAXES,2374000000.0000,library map
 PEG,296,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,Income Tax Expense,263000000.0000,library map
 PEG,296,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,Interest Expense,1005000000.0000,library map
-PEG,296,interest_income,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
+PEG,296,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001193125-26-077446,,,32000000.0000,note fact present in the filing (FSN value)
 PEG,296,inventory,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
 PEG,296,loans_net,OUT,,,,,,,,0001193125-26-077446,,,,not a bank
 PEG,296,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,NET INCOME,2111000000.0000,library map
@@ -41,7 +41,7 @@ PEG,296,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,
 PEG,296,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-077446,,,,not a bank
 PEG,296,research_and_development,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
 PEG,296,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,OPERATING REVENUES,12168000000.0000,library map
-PEG,296,sbc,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
+PEG,296,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-077446,,,43000000.0000,note fact present in the filing (FSN value)
 PEG,296,sga_expense,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
 PEG,296,share_buybacks,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
 PEG,296,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-077446,R6,"Common Stock, outstanding",498000000.0000,library map

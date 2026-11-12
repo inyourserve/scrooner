@@ -21,13 +21,13 @@ MDLN,335,deposits,OUT,,,,,,,,0002046386-26-000009,,,,not a bank
 MDLN,335,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0002046386-26-000009,R7,Depreciation and amortization,1011000000.0000,library map
 MDLN,335,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0002046386-26-000009,R5,Diluted (in dollars per share),-0.0100,library map
 MDLN,335,dividends_paid,combined,us-gaap:PaymentsOfCapitalDistribution,CF,+,-6,N,,sec_api,0002046386-26-000009,R7,Distributions to partners,518000000.0000,combined line (library or label demote)
-MDLN,335,dividends_per_share,not_presented,,,,,,,,0002046386-26-000009,,,,no face line
+MDLN,335,dividends_per_share,not_presented,,,,,,,,0002046386-26-000009,,,,no face line and no note fact
 MDLN,335,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0002046386-26-000009,R3,Goodwill,8079000000.0000,library map
 MDLN,335,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0002046386-26-000009,R5,Gross profit,7518000000.0000,library map
 MDLN,335,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002046386-26-000009,R5,Income before income taxes,1248000000.0000,library map
 MDLN,335,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002046386-26-000009,R5,Provision for income taxes,91000000.0000,library map
 MDLN,335,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0002046386-26-000009,R5,"Interest expense, net",-812000000.0000,combined line (library or label demote)
-MDLN,335,interest_income,not_presented,,,,,,,,0002046386-26-000009,,,,no face line
+MDLN,335,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0002046386-26-000009,,,133000000.0000,note fact present in the filing (FSN value)
 MDLN,335,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002046386-26-000009,R3,Inventories,4769000000.0000,library map
 MDLN,335,loans_net,OUT,,,,,,,,0002046386-26-000009,,,,not a bank
 MDLN,335,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002046386-26-000009,R5,Net income attributable to Medline Inc.,1159000000.0000,library map

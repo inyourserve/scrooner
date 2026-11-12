@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EFX,463,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000033185-26-000010,R5,Accounts payable,206400000.0000,library map
 EFX,463,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000033185-26-000010,R5,"Trade accounts receivable, net of allowance for doubtful accounts of $20.2 and $16.9 at December 31, 2025 and 2024, respectively",1012700000.0000,library map
-EFX,463,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000033185-26-000010,,,,note-sourced default tag (no face line)
+EFX,463,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000033185-26-000010,,,250200000.0000,note fact present in the filing (FSN value)
 EFX,463,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000033185-26-000010,R3,Net income attributable to Equifax (in dollars per share),5.3600,library map
 EFX,463,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000033185-26-000010,R7,Capital expenditures,481400000.0000,library map
 EFX,463,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000033185-26-000010,R5,Cash and cash equivalents,180800000.0000,library map
 EFX,463,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000033185-26-000010,R7,Cash used in financing activities,-1059700000.0000,library map
 EFX,463,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000033185-26-000010,R7,Cash used in investing activities,-554300000.0000,library map
-EFX,463,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000033185-26-000010,,,,note-sourced default tag (no face line)
-EFX,463,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000033185-26-000010,,,,note-sourced default tag (no face line)
+EFX,463,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000033185-26-000010,,,197700000.0000,note fact present in the filing (FSN value)
+EFX,463,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000033185-26-000010,,,209700000.0000,note fact present in the filing (FSN value)
 EFX,463,cf_ap_change,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
 EFX,463,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000033185-26-000010,R7,"Accounts receivable, net",40900000.0000,library map
 EFX,463,cf_inventory_change,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
@@ -27,7 +27,7 @@ EFX,463,gross_profit,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
 EFX,463,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,Consolidated income before income taxes,894900000.0000,library map
 EFX,463,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,Provision for income taxes,230600000.0000,library map
 EFX,463,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000033185-26-000010,R3,Interest expense,212300000.0000,library map
-EFX,463,interest_income,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
+EFX,463,interest_income,not_presented,,,,,,,,0000033185-26-000010,,,,no face line and no note fact
 EFX,463,inventory,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
 EFX,463,loans_net,OUT,,,,,,,,0000033185-26-000010,,,,not a bank
 EFX,463,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,Net income attributable to Equifax,660300000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MP,849,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001801368-26-000008,R3,Accounts and construction payable,36655000.0000,library map
 MP,849,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001801368-26-000008,R3,"Trade accounts receivable, net of allowance for credit losses of $0 and $0, respectively (including related party)",14642000.0000,library map
-MP,849,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001801368-26-000008,,,,note-sourced default tag (no face line)
+MP,849,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001801368-26-000008,,,1200000.0000,note fact present in the filing (FSN value)
 MP,849,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001801368-26-000008,R5,Basic (in USD per share),-0.5000,library map
 MP,849,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001801368-26-000008,R8,"Additions to property, plant and equipment",172375000.0000,library map
 MP,849,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001801368-26-000008,R3,Cash and cash equivalents,1166011000.0000,library map
 MP,849,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001801368-26-000008,R8,Net cash provided by (used in) financing activities,1245560000.0000,library map
 MP,849,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001801368-26-000008,R8,Net cash provided by (used in) investing activities,-206049000.0000,library map
-MP,849,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001801368-26-000008,,,,note-sourced default tag (no face line)
-MP,849,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001801368-26-000008,,,,note-sourced default tag (no face line)
+MP,849,cash_paid_for_income_taxes,not_presented,,,,,,,,0001801368-26-000008,,,,no face line and no note fact
+MP,849,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001801368-26-000008,,,23097000.0000,note fact present in the filing (FSN value)
 MP,849,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001801368-26-000008,R8,Accounts payable and accrued liabilities,9392000.0000,combined line (library or label demote)
 MP,849,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001801368-26-000008,R8,Trade accounts receivable (including related party),-4003000.0000,library map
 MP,849,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001801368-26-000008,R8,Inventories,115019000.0000,library map
@@ -21,13 +21,13 @@ MP,849,deposits,OUT,,,,,,,,0001801368-26-000008,,,,not a bank
 MP,849,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001801368-26-000008,R8,"Depreciation, depletion and amortization",89267000.0000,library map
 MP,849,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001801368-26-000008,R5,Diluted (in USD per share),-0.5000,library map
 MP,849,dividends_paid,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
-MP,849,dividends_per_share,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
+MP,849,dividends_per_share,not_presented,,,,,,,,0001801368-26-000008,,,,no face line and no note fact
 MP,849,goodwill,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
 MP,849,gross_profit,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
 MP,849,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001801368-26-000008,R5,Income (loss) before income taxes,-117774000.0000,library map
 MP,849,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001801368-26-000008,R5,Income tax benefit (expense),-31900000.0000,library map
 MP,849,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001801368-26-000008,R5,"Interest expense, net",31481000.0000,combined line (library or label demote)
-MP,849,interest_income,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
+MP,849,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001801368-26-000008,R5,"Interest expense, net",31481000.0000,interest income only inside a net/other face line between OI and pretax
 MP,849,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001801368-26-000008,R3,Inventories,171560000.0000,library map
 MP,849,loans_net,OUT,,,,,,,,0001801368-26-000008,,,,not a bank
 MP,849,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001801368-26-000008,R5,Net income (loss),-85874000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LYB,445,accounts_payable,not_presented,,,,,,,,0001489393-26-000012,,,,no face line
 LYB,445,accounts_receivable,not_presented,,,,,,,,0001489393-26-000012,,,,no face line
-LYB,445,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001489393-26-000012,,,,note-sourced default tag (no face line)
+LYB,445,amortization_of_intangibles,not_presented,,,,,,,,0001489393-26-000012,,,,no face line and no note fact
 LYB,445,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001489393-26-000012,R3,Basic (in dollars in per share),-2.3400,library map
 LYB,445,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001489393-26-000012,R7,"Expenditures for property, plant and equipment",1878000000.0000,library map
 LYB,445,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001489393-26-000012,R5,Cash and cash equivalents,3443000000.0000,library map
@@ -50,5 +50,5 @@ LYB,445,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001489393-26-0000
 LYB,445,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001489393-26-000012,R5,Current maturities of long-term debt,588000000.0000,printed face components (duration sum; total_debt founder sum)
 LYB,445,total_interest_income,OUT,,,,,,,,0001489393-26-000012,,,,not a bank
 LYB,445,total_liabilities,not_presented,,,,,,,,0001489393-26-000012,,,,no face line
-LYB,445,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001489393-26-000012,,,,note-sourced default tag (no face line)
-LYB,445,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001489393-26-000012,,,,note-sourced default tag (no face line)
+LYB,445,weighted_basic_shares,not_presented,,,,,,,,0001489393-26-000012,,,,no face line and no note fact
+LYB,445,weighted_diluted_shares,not_presented,,,,,,,,0001489393-26-000012,,,,no face line and no note fact

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 S,837,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001583708-26-000020,R3,Accounts payable,10299000.0000,library map
 S,837,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001583708-26-000020,R3,"Accounts receivable, net",289079000.0000,library map
-S,837,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001583708-26-000020,,,,note-sourced default tag (no face line)
+S,837,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001583708-26-000020,,,32900000.0000,note fact present in the filing (FSN value)
 S,837,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001583708-26-000020,R5,"Net loss per share attributable to Class A and Class B common stockholders, basic (in USD per share)",-1.3700,library map
 S,837,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001583708-26-000020,R8,Purchases of property and equipment,713000.0000,library map
 S,837,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001583708-26-000020,R3,Cash and cash equivalents,169627000.0000,library map
@@ -21,7 +21,7 @@ S,837,deposits,OUT,,,,,,,,0001583708-26-000020,,,,not a bank
 S,837,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,Y,DepreciationDepletionAndAmortization,sec_api,0001583708-26-000020,R8,Depreciation and amortization,54933000.0000,library map
 S,837,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001583708-26-000020,R5,"Net loss per share attributable to Class A and Class B common stockholders, diluted (in USD per share)",-1.3700,library map
 S,837,dividends_paid,not_presented,,,,,,,,0001583708-26-000020,,,,no face line
-S,837,dividends_per_share,not_presented,,,,,,,,0001583708-26-000020,,,,no face line
+S,837,dividends_per_share,not_presented,,,,,,,,0001583708-26-000020,,,,no face line and no note fact
 S,837,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001583708-26-000020,R3,Goodwill,912671000.0000,library map
 S,837,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001583708-26-000020,R5,Gross profit,742101000.0000,library map
 S,837,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001583708-26-000020,R5,Loss before income taxes,-279711000.0000,library map

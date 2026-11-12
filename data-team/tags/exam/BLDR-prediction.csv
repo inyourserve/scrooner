@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BLDR,944,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-054643,R3,Accounts payable,714710000.0000,library map
 BLDR,944,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-054643,R3,"Accounts receivable, less allowances of $42,511 and $41,233, respectively",1061011000.0000,library map
-BLDR,944,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-054643,,,,note-sourced default tag (no face line)
+BLDR,944,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-054643,,,297200000.0000,note fact present in the filing (FSN value)
 BLDR,944,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-054643,R2,Basic,3.9100,library map
 BLDR,944,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-054643,R5,"Purchases of property, plant and equipment",362602000.0000,library map
 BLDR,944,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-054643,R3,Cash and cash equivalents,181753000.0000,library map
 BLDR,944,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-054643,R5,Net cash provided by (used in) financing activities,279417000.0000,library map
 BLDR,944,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-054643,R5,Net cash used in investing activities,-1467174000.0000,library map
-BLDR,944,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-054643,,,,note-sourced default tag (no face line)
+BLDR,944,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-054643,,,67658000.0000,note fact present in the filing (FSN value)
 BLDR,944,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,Y,InterestPaid,sec_api,0001193125-26-054643,R5,Cash paid for interest,260515000.0000,library map
 BLDR,944,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001193125-26-054643,R5,Accounts payable,-167179000.0000,library map
 BLDR,944,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-3,N,,sec_api,0001193125-26-054643,R5,Receivables,-182499000.0000,library map
@@ -21,13 +21,13 @@ BLDR,944,deposits,OUT,,,,,,,,0001193125-26-054643,,,,not a bank
 BLDR,944,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-054643,R5,Depreciation and amortization,591432000.0000,library map
 BLDR,944,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-054643,R2,Diluted,3.8900,library map
 BLDR,944,dividends_paid,not_presented,,,,,,,,0001193125-26-054643,,,,no face line
-BLDR,944,dividends_per_share,not_presented,,,,,,,,0001193125-26-054643,,,,no face line
+BLDR,944,dividends_per_share,not_presented,,,,,,,,0001193125-26-054643,,,,no face line and no note fact
 BLDR,944,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-054643,R3,Goodwill,4137377000.0000,library map
 BLDR,944,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-054643,R2,Gross margin,4615777000.0000,library map
 BLDR,944,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-054643,R2,Income before income taxes,512382000.0000,library map
 BLDR,944,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-054643,R2,Income tax expense,77183000.0000,library map
 BLDR,944,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001193125-26-054643,R2,"Interest expense, net",-273894000.0000,combined line (library or label demote)
-BLDR,944,interest_income,not_presented,,,,,,,,0001193125-26-054643,,,,no face line
+BLDR,944,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001193125-26-054643,R2,"Interest expense, net",-273894000.0000,interest income only inside a net/other face line between OI and pretax
 BLDR,944,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-054643,R3,"Inventories, net",1094684000.0000,library map
 BLDR,944,loans_net,OUT,,,,,,,,0001193125-26-054643,,,,not a bank
 BLDR,944,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-054643,R2,Net income,435199000.0000,library map

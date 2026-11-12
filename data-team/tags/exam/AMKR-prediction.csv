@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AMKR,681,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Trade accounts payable,912766000.0000,library map
 AMKR,681,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,"Accounts receivable, net of allowances of $1,028 and $1,318, respectively",1354825000.0000,library map
-AMKR,681,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001047127-26-000014,,,,note-sourced default tag (no face line)
+AMKR,681,amortization_of_intangibles,not_presented,,,,,,,,0001047127-26-000014,,,,no face line and no note fact
 AMKR,681,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001047127-26-000014,R3,Basic (in dollars per share),1.5100,library map
 AMKR,681,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,"Payments for property, plant and equipment",904614000.0000,library map
 AMKR,681,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Cash and cash equivalents,1378347000.0000,library map
@@ -27,7 +27,7 @@ AMKR,681,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001047127-2
 AMKR,681,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Income before taxes,444619000.0000,library map
 AMKR,681,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Total tax provision and effective tax rate,68503000.0000,library map
 AMKR,681,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpenseOther,sec_api,0001047127-26-000014,R3,Interest expense,75444000.0000,library map
-AMKR,681,interest_income,not_presented,,,,,,,,0001047127-26-000014,,,,no face line
+AMKR,681,interest_income,not_presented,,,,,,,,0001047127-26-000014,,,,no face line and no note fact
 AMKR,681,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Inventories,437797000.0000,library map
 AMKR,681,loans_net,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
 AMKR,681,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Net income attributable to Amkor,373895000.0000,library map

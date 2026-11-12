@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RMBS,730,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Accounts payable,35915000.0000,library map
 RMBS,730,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Accounts receivable,137476000.0000,library map
-RMBS,730,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-057101,,,,note-sourced default tag (no face line)
+RMBS,730,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-057101,,,6878000.0000,note fact present in the filing (FSN value)
 RMBS,730,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-057101,R4,Basic net income per share,2.1400,library map
 RMBS,730,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Purchases of property and equipment,26842000.0000,library map
 RMBS,730,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
@@ -21,13 +21,13 @@ RMBS,730,deposits,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
 RMBS,730,depreciation_and_amortization,not_presented,,,,,,,,0001193125-26-057101,,,,single component only
 RMBS,730,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-057101,R4,Diluted net income per share,2.1100,library map
 RMBS,730,dividends_paid,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
-RMBS,730,dividends_per_share,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,dividends_per_share,not_presented,,,,,,,,0001193125-26-057101,,,,no face line and no note fact
 RMBS,730,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Goodwill,286812000.0000,library map
 RMBS,730,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Gross profit,563215000.0000,library map
 RMBS,730,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Income before income taxes,281956000.0000,library map
 RMBS,730,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Provision for (benefit from) income taxes,51501000.0000,library map
 RMBS,730,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-057101,R4,Interest expense,1373000.0000,library map
-RMBS,730,interest_income,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,interest_income,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0001193125-26-057101,R4,"Interest income and other income (expense), net",23111000.0000,interest income only inside a net/other face line between OI and pretax
 RMBS,730,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Inventories,44098000.0000,library map
 RMBS,730,loans_net,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
 RMBS,730,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Net income,230455000.0000,library map

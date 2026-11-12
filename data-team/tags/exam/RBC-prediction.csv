@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RBC,517,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001213900-26-057626,R3,Accounts payable,147000000.0000,library map
 RBC,517,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001213900-26-057626,R3,"Accounts receivable, net of allowance for credit losses of $6.3 at March 28, 2026 and $5.4 at March 29, 2025",340600000.0000,library map
-RBC,517,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001213900-26-057626,,,,note-sourced default tag (no face line)
+RBC,517,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001213900-26-057626,,,81000000.0000,note fact present in the filing (FSN value)
 RBC,517,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001213900-26-057626,R5,Basic (in Dollars per share),9.1400,library map
 RBC,517,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-5,N,,sec_api,0001213900-26-057626,R10,Capital expenditures,73100000.0000,combined line (library or label demote)
 RBC,517,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001213900-26-057626,R3,Cash,57300000.0000,library map
@@ -21,13 +21,13 @@ RBC,517,deposits,OUT,,,,,,,,0001213900-26-057626,,,,not a bank
 RBC,517,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,Y,Depreciation,sec_api,0001213900-26-057626,R10,Depreciation and amortization,128800000.0000,library map
 RBC,517,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001213900-26-057626,R5,Diluted (in Dollars per share),9.0900,library map
 RBC,517,dividends_paid,not_presented,,,,,,,,0001213900-26-057626,,,,no face line
-RBC,517,dividends_per_share,not_presented,,,,,,,,0001213900-26-057626,,,,no face line
+RBC,517,dividends_per_share,not_presented,,,,,,,,0001213900-26-057626,,,,no face line and no note fact
 RBC,517,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001213900-26-057626,R3,Goodwill,2003400000.0000,library map
 RBC,517,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001213900-26-057626,R5,Gross margin,830200000.0000,library map
 RBC,517,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001213900-26-057626,R5,Income before income taxes,369300000.0000,library map
 RBC,517,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001213900-26-057626,R5,Provision for income taxes,81700000.0000,library map
 RBC,517,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001213900-26-057626,R5,"Interest expense, net",49800000.0000,combined line (library or label demote)
-RBC,517,interest_income,not_presented,,,,,,,,0001213900-26-057626,,,,no face line
+RBC,517,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001213900-26-057626,R5,"Interest expense, net",49800000.0000,interest income only inside a net/other face line between OI and pretax
 RBC,517,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001213900-26-057626,R3,"Inventory, net",762800000.0000,library map
 RBC,517,loans_net,OUT,,,,,,,,0001213900-26-057626,,,,not a bank
 RBC,517,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001213900-26-057626,R5,Net income,287600000.0000,library map

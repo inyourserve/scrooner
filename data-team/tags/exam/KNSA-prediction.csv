@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KNSA,890,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-019168,R2,Accounts payable,2028000.0000,library map
 KNSA,890,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-019168,R2,"Accounts receivable, net",15594000.0000,library map
-KNSA,890,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-019168,,,,note-sourced default tag (no face line)
+KNSA,890,amortization_of_intangibles,not_presented,,,,,,,,0001104659-26-019168,,,,no face line and no note fact
 KNSA,890,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-019168,R4,"Net income (loss) per share attributable to ordinary shareholders, basic",0.8000,library map
 KNSA,890,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,Purchases of property and equipment,1568000.0000,library map
 KNSA,890,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-019168,R2,Cash and cash equivalents,165596000.0000,library map
 KNSA,890,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,Net cash provided by financing activities,33023000.0000,library map
 KNSA,890,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-019168,R6,Net cash provided by (used in) investing activities,-188993000.0000,library map
 KNSA,890,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,"Cash paid for income taxes, net",3012000.0000,library map
-KNSA,890,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-019168,,,,note-sourced default tag (no face line)
+KNSA,890,cash_paid_for_interest,not_presented,,,,,,,,0001104659-26-019168,,,,no face line and no note fact
 KNSA,890,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,Accounts payable,142000.0000,library map
 KNSA,890,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001104659-26-019168,R6,"Accounts receivable, net",-26130000.0000,library map
 KNSA,890,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,Inventory,28531000.0000,library map
@@ -21,13 +21,13 @@ KNSA,890,deposits,OUT,,,,,,,,0001104659-26-019168,,,,not a bank
 KNSA,890,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-019168,R6,Depreciation and amortization expense,1554000.0000,library map
 KNSA,890,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-019168,R4,"Net income (loss) per share attributable to ordinary shareholders, diluted",0.7500,library map
 KNSA,890,dividends_paid,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
-KNSA,890,dividends_per_share,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
+KNSA,890,dividends_per_share,not_presented,,,,,,,,0001104659-26-019168,,,,no face line and no note fact
 KNSA,890,goodwill,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
 KNSA,890,gross_profit,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
 KNSA,890,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,Income (loss) before income taxes,88868000.0000,library map
 KNSA,890,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,Benefit (provision) for income taxes,29863000.0000,library map
 KNSA,890,interest_expense,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
-KNSA,890,interest_income,not_presented,,,,,,,,0001104659-26-019168,,,,no face line
+KNSA,890,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001104659-26-019168,,,11636000.0000,note fact present in the filing (FSN value)
 KNSA,890,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-019168,R2,Inventory,54895000.0000,library map
 KNSA,890,loans_net,OUT,,,,,,,,0001104659-26-019168,,,,not a bank
 KNSA,890,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,Net income (loss),59005000.0000,library map

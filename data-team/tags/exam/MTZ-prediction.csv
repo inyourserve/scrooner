@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MTZ,528,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000015615-26-000020,R5,Accounts payable,1280897000.0000,library map
 MTZ,528,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000015615-26-000020,R5,"Accounts receivable, net of allowance",1540263000.0000,library map
-MTZ,528,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000015615-26-000020,,,,note-sourced default tag (no face line)
+MTZ,528,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000015615-26-000020,,,131200000.0000,note fact present in the filing (FSN value)
 MTZ,528,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000015615-26-000020,R3,Basic earnings (loss) per share (in dollars per share),5.1200,library map
 MTZ,528,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000015615-26-000020,R8,Capital expenditures,259985000.0000,library map
 MTZ,528,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000015615-26-000020,R5,Cash and cash equivalents,396030000.0000,library map
@@ -21,13 +21,13 @@ MTZ,528,deposits,OUT,,,,,,,,0000015615-26-000020,,,,not a bank
 MTZ,528,depreciation_and_amortization,not_presented,,,,,,,,0000015615-26-000020,,,,no face line
 MTZ,528,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000015615-26-000020,R3,Diluted earnings (loss) per share (in dollars per share),5.0700,library map
 MTZ,528,dividends_paid,not_presented,,,,,,,,0000015615-26-000020,,,,no face line
-MTZ,528,dividends_per_share,not_presented,,,,,,,,0000015615-26-000020,,,,no face line
+MTZ,528,dividends_per_share,not_presented,,,,,,,,0000015615-26-000020,,,,no face line and no note fact
 MTZ,528,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000015615-26-000020,R5,"Goodwill, net",2248992000.0000,library map
 MTZ,528,gross_profit,not_presented,,,,,,,,0000015615-26-000020,,,,no face line
 MTZ,528,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000015615-26-000020,R3,Income (loss) before income taxes,515398000.0000,library map
 MTZ,528,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000015615-26-000020,R3,(Provision for) benefit from income taxes,93384000.0000,library map
 MTZ,528,interest_expense,combined,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestRevenueExpenseNet,sec_api,0000015615-26-000020,R3,"Interest expense, net",172985000.0000,combined line (library or label demote)
-MTZ,528,interest_income,not_presented,,,,,,,,0000015615-26-000020,,,,no face line
+MTZ,528,interest_income,combined,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestRevenueExpenseNet,sec_api,0000015615-26-000020,R3,"Interest expense, net",172985000.0000,interest income only inside a net/other face line between OI and pretax
 MTZ,528,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000015615-26-000020,R5,"Inventories, net",112465000.0000,library map
 MTZ,528,loans_net,OUT,,,,,,,,0000015615-26-000020,,,,not a bank
 MTZ,528,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000015615-26-000020,R3,"Net income (loss) attributable to MasTec, Inc.",399042000.0000,library map

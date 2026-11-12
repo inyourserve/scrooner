@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PATH,874,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001734722-26-000012,R3,Accounts payable,10161000.0000,library map
 PATH,874,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001734722-26-000012,R3,"Accounts receivable, net of allowance for credit losses of $5,222 and $1,642, respectively",488265000.0000,library map
-PATH,874,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001734722-26-000012,,,,note-sourced default tag (no face line)
+PATH,874,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001734722-26-000012,,,8200000.0000,note fact present in the filing (FSN value)
 PATH,874,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001734722-26-000012,R5,"Net income (loss) per share, basic (in dollars per share)",0.5200,library map
 PATH,874,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001734722-26-000012,R8,Purchases of property and equipment,19048000.0000,library map
 PATH,874,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001734722-26-000012,R3,Cash and cash equivalents,871157000.0000,library map
@@ -21,7 +21,7 @@ PATH,874,deposits,OUT,,,,,,,,0001734722-26-000012,,,,not a bank
 PATH,874,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001734722-26-000012,R8,Depreciation and amortization,16969000.0000,library map
 PATH,874,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001734722-26-000012,R5,"Net income (loss) per share, diluted (in dollars per share)",0.5200,library map
 PATH,874,dividends_paid,not_presented,,,,,,,,0001734722-26-000012,,,,no face line
-PATH,874,dividends_per_share,not_presented,,,,,,,,0001734722-26-000012,,,,no face line
+PATH,874,dividends_per_share,not_presented,,,,,,,,0001734722-26-000012,,,,no face line and no note fact
 PATH,874,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001734722-26-000012,R3,Goodwill,125310000.0000,library map
 PATH,874,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001734722-26-000012,R5,Gross profit,1339588000.0000,library map
 PATH,874,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001734722-26-000012,R5,Income (loss) before income taxes,100628000.0000,library map

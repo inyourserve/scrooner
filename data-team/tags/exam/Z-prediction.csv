@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 Z,858,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001617640-26-000015,R3,Accounts payable,36000000.0000,library map
 Z,858,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001617640-26-000015,R3,"Accounts receivable, net",149000000.0000,library map
-Z,858,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001617640-26-000015,,,,note-sourced default tag (no face line)
+Z,858,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001617640-26-000015,,,89000000.0000,note fact present in the filing (FSN value)
 Z,858,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001617640-26-000015,R5,Net income (loss) per share - basic (usd per share),0.0900,library map
 Z,858,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001617640-26-000015,R8,Purchases of property and equipment,133000000.0000,library map
 Z,858,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001617640-26-000015,R3,Cash and cash equivalents,768000000.0000,library map
@@ -21,13 +21,13 @@ Z,858,deposits,OUT,,,,,,,,0001617640-26-000015,,,,not a bank
 Z,858,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001617640-26-000015,R8,Depreciation and amortization,264000000.0000,library map
 Z,858,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001617640-26-000015,R5,Net income (loss) per share - diluted (usd per share),0.0900,library map
 Z,858,dividends_paid,not_presented,,,,,,,,0001617640-26-000015,,,,no face line
-Z,858,dividends_per_share,not_presented,,,,,,,,0001617640-26-000015,,,,no face line
+Z,858,dividends_per_share,not_presented,,,,,,,,0001617640-26-000015,,,,no face line and no note fact
 Z,858,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001617640-26-000015,R3,Goodwill,2823000000.0000,library map
 Z,858,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001617640-26-000015,R5,Gross profit,1915000000.0000,library map
 Z,858,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001617640-26-000015,R5,Income (loss) before income taxes,25000000.0000,library map
 Z,858,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001617640-26-000015,R5,Income tax expense,2000000.0000,library map
 Z,858,interest_expense,not_presented,,,,,,,,0001617640-26-000015,,,,single component only
-Z,858,interest_income,not_presented,,,,,,,,0001617640-26-000015,,,,no face line
+Z,858,interest_income,not_presented,,,,,,,,0001617640-26-000015,,,,no face line and no note fact
 Z,858,inventory,not_presented,,,,,,,,0001617640-26-000015,,,,no face line
 Z,858,loans_net,OUT,,,,,,,,0001617640-26-000015,,,,not a bank
 Z,858,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001617640-26-000015,R5,Net income (loss),23000000.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HII,665,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001501585-26-000006,R4,Trade accounts payable,556000000.0000,library map
 HII,665,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001501585-26-000006,R4,"Accounts receivable, net",339000000.0000,library map
-HII,665,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001501585-26-000006,,,,note-sourced default tag (no face line)
+HII,665,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001501585-26-000006,,,104000000.0000,note fact present in the filing (FSN value)
 HII,665,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001501585-26-000006,R3,Basic earnings (loss) per share,15.3900,library map
 HII,665,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001501585-26-000006,R6,Capital expenditure additions,402000000.0000,library map
 HII,665,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0001501585-26-000006,R4,Cash and cash equivalents,774000000.0000,combined line (library or label demote)
 HII,665,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001501585-26-000006,R6,Net cash provided by (used in) financing activities,-732000000.0000,library map
 HII,665,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001501585-26-000006,R6,Net cash provided by (used in) investing activities,-521000000.0000,library map
-HII,665,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001501585-26-000006,,,,note-sourced default tag (no face line)
+HII,665,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001501585-26-000006,,,96000000.0000,note fact present in the filing (FSN value)
 HII,665,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,Y,InterestPaid,sec_api,0001501585-26-000006,R6,Cash paid for interest,108000000.0000,library map
 HII,665,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001501585-26-000006,R6,Accounts payable and accruals,449000000.0000,combined line (library or label demote)
 HII,665,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001501585-26-000006,R6,Accounts receivable,127000000.0000,library map
@@ -27,7 +27,7 @@ HII,665,gross_profit,not_presented,,,,,,,,0001501585-26-000006,,,,no face line
 HII,665,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001501585-26-000006,R3,Earnings (loss) before income taxes,777000000.0000,library map
 HII,665,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001501585-26-000006,R3,Federal and foreign income taxes,172000000.0000,library map
 HII,665,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001501585-26-000006,R3,Interest expense,105000000.0000,library map
-HII,665,interest_income,not_presented,,,,,,,,0001501585-26-000006,,,,no face line
+HII,665,interest_income,not_presented,,,,,,,,0001501585-26-000006,,,,no face line and no note fact
 HII,665,inventory,not_presented,,,,,,,,0001501585-26-000006,,,,no face line
 HII,665,loans_net,OUT,,,,,,,,0001501585-26-000006,,,,not a bank
 HII,665,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001501585-26-000006,R3,Net earnings (loss),605000000.0000,library map

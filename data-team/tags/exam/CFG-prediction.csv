@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CFG,366,accounts_payable,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
 CFG,366,accounts_receivable,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
-CFG,366,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000759944-26-000028,,,,note-sourced default tag (no face line)
+CFG,366,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000759944-26-000028,,,33000000.0000,note fact present in the filing (FSN value)
 CFG,366,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000759944-26-000028,R5,Basic earnings (in dollars per share),3.9000,library map
 CFG,366,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,"Capital expenditures, net",174000000.0000,combined line (library or label demote)
 CFG,366,cash_and_equivalents,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
 CFG,366,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,Net change due to financing activities,5882000000.0000,library map
 CFG,366,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000759944-26-000028,R8,Net change due to investing activities,-5967000000.0000,library map
-CFG,366,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000759944-26-000028,,,,note-sourced default tag (no face line)
+CFG,366,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000759944-26-000028,,,151000000.0000,note fact present in the filing (FSN value)
 CFG,366,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,Interest paid,4040000000.0000,library map
 CFG,366,cf_ap_change,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
 CFG,366,cf_ar_change,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
@@ -21,7 +21,7 @@ CFG,366,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0000759944-26-000028
 CFG,366,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,"Depreciation, amortization, and accretion",478000000.0000,combined line (library or label demote)
 CFG,366,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000759944-26-000028,R5,Diluted earnings (in dollars per share),3.8600,library map
 CFG,366,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,Dividends paid to common stockholders,755000000.0000,library map
-CFG,366,dividends_per_share,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
+CFG,366,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000759944-26-000028,,,1.7200,note fact present in the filing (FSN value)
 CFG,366,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000759944-26-000028,R3,Goodwill,8187000000.0000,library map
 CFG,366,gross_profit,OUT,,,,,,,,0000759944-26-000028,,,,sector template (bank/insurer)
 CFG,366,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000759944-26-000028,R5,Income before income tax expense,2328000000.0000,library map
@@ -41,7 +41,7 @@ CFG,366,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 CFG,366,provision_for_credit_losses,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
 CFG,366,research_and_development,OUT,,,,,,,,0000759944-26-000028,,,,sector template (bank/insurer)
 CFG,366,revenue,not_presented,,,,,,,,0000759944-26-000028,,,,single component only
-CFG,366,sbc,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
+CFG,366,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000759944-26-000028,,,120000000.0000,note fact present in the filing (FSN value)
 CFG,366,sga_expense,not_presented,,,,,,,,0000759944-26-000028,,,,no face line
 CFG,366,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000759944-26-000028,R8,Treasury stock purchased,600000000.0000,library map
 CFG,366,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000759944-26-000028,R4,"Common stock, outstanding (in shares)",429242174.0000,library map

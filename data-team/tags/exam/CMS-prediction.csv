@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CMS,998,accounts_payable,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,accounts_receivable,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
-CMS,998,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000811156-26-000004,,,,note-sourced default tag (no face line)
+CMS,998,amortization_of_intangibles,not_presented,,,,,,,,0000811156-26-000004,,,,no face line and no note fact
 CMS,998,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000811156-26-000004,R3,Basic Earnings Per Average Common Share (in dollars per share),3.5300,library map
 CMS,998,capex,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000811156-26-000004,R8,Cash and cash equivalents,509000000.0000,library map
@@ -27,21 +27,21 @@ CMS,998,gross_profit,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Income (Loss) Before Income Taxes,1248000000.0000,library map
 CMS,998,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Income Tax Expense,246000000.0000,library map
 CMS,998,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000811156-26-000004,R3,Total interest charges,789000000.0000,library map
-CMS,998,interest_income,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
+CMS,998,interest_income,not_presented,,,,,,,,0000811156-26-000004,,,,no face line and no note fact
 CMS,998,inventory,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,loans_net,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
 CMS,998,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0000811156-26-000004,R3,Net Income,1071000000.0000,library map
 CMS,998,net_interest_income,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
 CMS,998,noninterest_expense,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
 CMS,998,noninterest_income,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
-CMS,998,operating_expenses,not_presented,,,,,,,,0000811156-26-000004,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CMS,998,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Total operating expenses,6812000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CMS,998,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Operating Income,1727000000.0000,library map
 CMS,998,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Total other income,310000000.0000,combined line (library or label demote)
 CMS,998,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000811156-26-000004,R8,"Total plant, property, and equipment",30680000000.0000,library map
 CMS,998,provision_for_credit_losses,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
 CMS,998,research_and_development,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000811156-26-000004,R3,Operating Revenue,8539000000.0000,library map
-CMS,998,sbc,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
+CMS,998,sbc,not_presented,,,,,,,,0000811156-26-000004,,,,no face line and no note fact
 CMS,998,sga_expense,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,share_buybacks,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
 CMS,998,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000811156-26-000004,R9,Common stock outstanding (in shares),306400000.0000,library map
@@ -50,5 +50,5 @@ CMS,998,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000811156-26-0000
 CMS,998,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000811156-26-000004,R8,Long-term debt,17807000000.0000,printed face components (duration sum; total_debt founder sum)
 CMS,998,total_interest_income,OUT,,,,,,,,0000811156-26-000004,,,,not a bank
 CMS,998,total_liabilities,not_presented,,,,,,,,0000811156-26-000004,,,,no face line
-CMS,998,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000811156-26-000004,,,,note-sourced default tag (no face line)
-CMS,998,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000811156-26-000004,,,,note-sourced default tag (no face line)
+CMS,998,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000811156-26-000004,,,300400000.0000,note fact present in the filing (FSN value)
+CMS,998,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000811156-26-000004,,,301000000.0000,note fact present in the filing (FSN value)

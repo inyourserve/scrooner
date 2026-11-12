@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 JLL,554,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Accounts payable and accrued liabilities,1398100000.0000,combined line (library or label demote)
 JLL,554,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Accounts Receivable, after Allowance for Credit Loss, Current",2302800000.0000,library map
-JLL,554,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001037976-26-000037,,,,note-sourced default tag (no face line)
+JLL,554,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001037976-26-000037,,,169000000.0000,note fact present in the filing (FSN value)
 JLL,554,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Basic earnings per common share (in dollars per share),16.7300,library map
 JLL,554,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Net capital additions - property and equipment,215600000.0000,combined line (library or label demote)
 JLL,554,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Cash and cash equivalents,599100000.0000,library map
@@ -21,27 +21,27 @@ JLL,554,deposits,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
 JLL,554,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Depreciation and amortization,252800000.0000,library map
 JLL,554,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Diluted earnings per common share (in dollars per share),16.4000,library map
 JLL,554,dividends_paid,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,dividends_per_share,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
+JLL,554,dividends_per_share,not_presented,,,,,,,,0001037976-26-000037,,,,no face line and no note fact
 JLL,554,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Goodwill, with indefinite useful lives",4707300000.0000,library map
 JLL,554,gross_profit,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
 JLL,554,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income before income taxes and noncontrolling interest,981700000.0000,library map
 JLL,554,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income tax provision,189500000.0000,library map
 JLL,554,interest_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,interest_income,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
+JLL,554,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001037976-26-000037,R4,"Interest expense, net of interest income",-107300000.0000,interest income only inside a net/other face line between OI and pretax
 JLL,554,inventory,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
 JLL,554,loans_net,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
 JLL,554,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Net income attributable to the Company,792100000.0000,library map
 JLL,554,net_interest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
 JLL,554,noninterest_expense,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
 JLL,554,noninterest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,operating_expenses,not_presented,,,,,,,,0001037976-26-000037,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+JLL,554,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Total operating expenses,25017600000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 JLL,554,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Operating income,1098000000.0000,library map
 JLL,554,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Other Income,11700000.0000,library map
 JLL,554,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Property and equipment, net of accumulated depreciation",630600000.0000,library map
 JLL,554,provision_for_credit_losses,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
 JLL,554,research_and_development,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
 JLL,554,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Revenue,26115600000.0000,library map
-JLL,554,sbc,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
+JLL,554,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,+,,,,sec_api,0001037976-26-000037,,,2700000.0000,note fact present in the filing (FSN value)
 JLL,554,sga_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
 JLL,554,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Payments for Repurchase of Common Stock,211500000.0000,library map
 JLL,554,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001037976-26-000037,R3,"Common stock, shares outstanding (in shares)",46945754.0000,library map

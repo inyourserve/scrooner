@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BAH,747,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-037521,R3,Accounts payable and other accrued expenses,909000000.0000,combined line (library or label demote)
 BAH,747,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-037521,R3,"Accounts receivable, net",2063000000.0000,library map
-BAH,747,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-037521,,,,note-sourced default tag (no face line)
+BAH,747,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-037521,,,95000000.0000,note fact present in the filing (FSN value)
 BAH,747,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-037521,R5,Basic (in dollars per share),6.9200,library map
 BAH,747,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001628280-26-037521,R7,"Purchases of property, equipment, and software",90000000.0000,library map
 BAH,747,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-037521,R3,Cash and cash equivalents,728000000.0000,library map
 BAH,747,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-037521,R7,Net cash used in financing activities,-898000000.0000,library map
 BAH,747,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-037521,R7,Net cash used in investing activities,-300000000.0000,library map
-BAH,747,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-037521,,,,note-sourced default tag (no face line)
+BAH,747,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-037521,,,103000000.0000,note fact present in the filing (FSN value)
 BAH,747,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001628280-26-037521,R7,Interest,191000000.0000,library map
 BAH,747,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-037521,R7,Accounts payable and other accrued expenses,-86000000.0000,combined line (library or label demote)
 BAH,747,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001628280-26-037521,R7,"Accounts receivable, net",-207000000.0000,library map
@@ -27,7 +27,7 @@ BAH,747,gross_profit,not_presented,,,,,,,,0001628280-26-037521,,,,no face line
 BAH,747,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-037521,R5,Income before income taxes,862000000.0000,library map
 BAH,747,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-037521,R5,Income tax expense,11000000.0000,library map
 BAH,747,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001628280-26-037521,R5,"Interest expense, net",-184000000.0000,combined line (library or label demote)
-BAH,747,interest_income,not_presented,,,,,,,,0001628280-26-037521,,,,no face line
+BAH,747,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001628280-26-037521,R5,"Interest expense, net",-184000000.0000,interest income only inside a net/other face line between OI and pretax
 BAH,747,inventory,not_presented,,,,,,,,0001628280-26-037521,,,,no face line
 BAH,747,loans_net,OUT,,,,,,,,0001628280-26-037521,,,,not a bank
 BAH,747,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0001628280-26-037521,R5,Net income,851000000.0000,library map
@@ -50,5 +50,5 @@ BAH,747,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-0375
 BAH,747,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-037521,R3,Current portion of long-term debt,19000000.0000,printed face components (duration sum; total_debt founder sum)
 BAH,747,total_interest_income,OUT,,,,,,,,0001628280-26-037521,,,,not a bank
 BAH,747,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-037521,R3,Total liabilities,6013000000.0000,library map
-BAH,747,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-037521,,,,note-sourced default tag (no face line)
-BAH,747,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-037521,,,,note-sourced default tag (no face line)
+BAH,747,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-037521,,,122071669.0000,note fact present in the filing (FSN value)
+BAH,747,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-037521,,,122375151.0000,note fact present in the filing (FSN value)

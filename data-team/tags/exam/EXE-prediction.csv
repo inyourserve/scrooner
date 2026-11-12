@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EXE,428,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000895126-26-000011,R3,Accounts payable,753000000.0000,library map
 EXE,428,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000895126-26-000011,R3,"Accounts receivable, net",1599000000.0000,library map
-EXE,428,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000895126-26-000011,,,,note-sourced default tag (no face line)
+EXE,428,amortization_of_intangibles,not_presented,,,,,,,,0000895126-26-000011,,,,no face line and no note fact
 EXE,428,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000895126-26-000011,R5,Basic (in dollars per share),7.6700,library map
 EXE,428,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,Y,PaymentsToExploreAndDevelopOilAndGasProperties,sec_api,0000895126-26-000011,R6,Capital expenditures,2736000000.0000,library map
 EXE,428,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000895126-26-000011,R3,Cash and cash equivalents,616000000.0000,library map
 EXE,428,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000895126-26-000011,R6,Net cash used in financing activities,-1515000000.0000,library map
 EXE,428,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000895126-26-000011,R6,Net cash provided by (used in) investing activities,-2759000000.0000,library map
-EXE,428,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000895126-26-000011,,,,note-sourced default tag (no face line)
-EXE,428,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000895126-26-000011,,,,note-sourced default tag (no face line)
+EXE,428,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000895126-26-000011,,,66000000.0000,note fact present in the filing (FSN value)
+EXE,428,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000895126-26-000011,,,230000000.0000,note fact present in the filing (FSN value)
 EXE,428,cf_ap_change,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
 EXE,428,cf_ar_change,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
 EXE,428,cf_inventory_change,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
@@ -21,20 +21,20 @@ EXE,428,deposits,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000895126-26-000011,R6,"Depreciation, depletion and amortization",2980000000.0000,library map
 EXE,428,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000895126-26-000011,R5,Diluted (in dollars per share),7.5700,library map
 EXE,428,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000895126-26-000011,R6,Cash paid for common stock dividends,765000000.0000,library map
-EXE,428,dividends_per_share,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
+EXE,428,dividends_per_share,not_presented,,,,,,,,0000895126-26-000011,,,,no face line and no note fact
 EXE,428,goodwill,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
 EXE,428,gross_profit,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
 EXE,428,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Income (loss) before income taxes,2282000000.0000,library map
 EXE,428,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Income tax expense (benefit),463000000.0000,library map
 EXE,428,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000895126-26-000011,R5,Interest expense,235000000.0000,library map
-EXE,428,interest_income,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
+EXE,428,interest_income,not_presented,,,,,,,,0000895126-26-000011,,,,no face line and no note fact
 EXE,428,inventory,not_presented,,,,,,,,0000895126-26-000011,,,,no face line
 EXE,428,loans_net,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0000895126-26-000011,R5,Net income (loss),1819000000.0000,library map
 EXE,428,net_interest_income,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,noninterest_expense,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,noninterest_income,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
-EXE,428,operating_expenses,not_presented,,,,,,,,0000895126-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+EXE,428,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Total operating expenses,9653000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 EXE,428,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Income (loss) from operations,2471000000.0000,library map
 EXE,428,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,"Other income, net",42000000.0000,library map
 EXE,428,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000895126-26-000011,R3,"Total property and equipment, net",24355000000.0000,library map

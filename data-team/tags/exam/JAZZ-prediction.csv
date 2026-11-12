@@ -21,20 +21,20 @@ JAZZ,567,deposits,OUT,,,,,,,,0001232524-26-000013,,,,not a bank
 JAZZ,567,depreciation_and_amortization,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:Depreciation,CF,+,-3,N,,sec_api,0001232524-26-000013,R9,Intangible asset amortization,654661000.0000,printed face components (duration sum; total_debt founder sum)
 JAZZ,567,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001232524-26-000013,R5,Diluted (in dollars per share),-5.8400,library map
 JAZZ,567,dividends_paid,not_presented,,,,,,,,0001232524-26-000013,,,,no face line
-JAZZ,567,dividends_per_share,not_presented,,,,,,,,0001232524-26-000013,,,,no face line
+JAZZ,567,dividends_per_share,not_presented,,,,,,,,0001232524-26-000013,,,,no face line and no note fact
 JAZZ,567,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001232524-26-000013,R3,Goodwill,1829340000.0000,library map
 JAZZ,567,gross_profit,not_presented,,,,,,,,0001232524-26-000013,,,,no face line
 JAZZ,567,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0001232524-26-000013,R5,Income (loss) before income tax benefit and equity in loss of investees,-627859000.0000,library map
 JAZZ,567,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001232524-26-000013,R5,Income tax benefit,-272443000.0000,library map
 JAZZ,567,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001232524-26-000013,R5,"Interest expense, net",-195051000.0000,combined line (library or label demote)
-JAZZ,567,interest_income,not_presented,,,,,,,,0001232524-26-000013,,,,no face line
+JAZZ,567,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001232524-26-000013,,,85800000.0000,note fact present in the filing (FSN value)
 JAZZ,567,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001232524-26-000013,R3,Inventories,416962000.0000,library map
 JAZZ,567,loans_net,OUT,,,,,,,,0001232524-26-000013,,,,not a bank
 JAZZ,567,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001232524-26-000013,R5,Net income (loss),-356148000.0000,library map
 JAZZ,567,net_interest_income,OUT,,,,,,,,0001232524-26-000013,,,,not a bank
 JAZZ,567,noninterest_expense,OUT,,,,,,,,0001232524-26-000013,,,,not a bank
 JAZZ,567,noninterest_income,OUT,,,,,,,,0001232524-26-000013,,,,not a bank
-JAZZ,567,operating_expenses,not_presented,,,,,,,,0001232524-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+JAZZ,567,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001232524-26-000013,R5,Total operating expenses,4697826000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 JAZZ,567,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001232524-26-000013,R5,Income (loss) from operations,-430240000.0000,library map
 JAZZ,567,other_income_expense_net,not_presented,,,,,,,,0001232524-26-000013,,,,no face line
 JAZZ,567,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001232524-26-000013,R3,"Property, plant and equipment, net",199857000.0000,library map

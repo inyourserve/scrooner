@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AEE,994,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001002910-26-000009,R5,Accounts and wages payable,1254000000.0000,combined line (library or label demote)
 AEE,994,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001002910-26-000009,R5,Accounts receivable - trade (less allowance for doubtful accounts),665000000.0000,library map
-AEE,994,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001002910-26-000009,,,,note-sourced default tag (no face line)
+AEE,994,amortization_of_intangibles,not_presented,,,,,,,,0001002910-26-000009,,,,no face line and no note fact
 AEE,994,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001002910-26-000009,R3,Earnings per Common Share  Basic,5.3800,library map
 AEE,994,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001002910-26-000009,R11,Capital expenditures,4128000000.0000,library map
 AEE,994,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001002910-26-000009,R5,Cash and cash equivalents,13000000.0000,library map
@@ -27,7 +27,7 @@ AEE,994,gross_profit,not_presented,,,,,,,,0001002910-26-000009,,,,no face line
 AEE,994,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0001002910-26-000009,R3,Income Before Income Taxes,1597000000.0000,library map
 AEE,994,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001002910-26-000009,R3,Income Taxes,136000000.0000,library map
 AEE,994,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001002910-26-000009,R3,Interest Charges,776000000.0000,library map
-AEE,994,interest_income,not_presented,,,,,,,,0001002910-26-000009,,,,no face line
+AEE,994,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001002910-26-000009,,,41000000.0000,note fact present in the filing (FSN value)
 AEE,994,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001002910-26-000009,R5,Inventories,774000000.0000,library map
 AEE,994,loans_net,OUT,,,,,,,,0001002910-26-000009,,,,not a bank
 AEE,994,net_income,not_presented,,,,,,,,0001002910-26-000009,,,,no face line

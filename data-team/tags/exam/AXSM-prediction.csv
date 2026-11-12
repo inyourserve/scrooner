@@ -7,7 +7,7 @@ AXSM,780,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3
 AXSM,780,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-064267,R2,Cash and cash equivalents,322933000.0000,library map
 AXSM,780,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-064267,R6,Net cash provided by financing activities,101465000.0000,library map
 AXSM,780,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-064267,R6,Net cash used in investing activities,-480000.0000,library map
-AXSM,780,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-064267,,,,note-sourced default tag (no face line)
+AXSM,780,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0001193125-26-064267,,,-180000.0000,note fact present in the filing (FSN value)
 AXSM,780,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-064267,R6,Interest paid,14626000.0000,library map
 AXSM,780,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001193125-26-064267,R6,Accounts payable,-6460000.0000,library map
 AXSM,780,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-064267,R6,"Accounts receivable, net",82463000.0000,library map
@@ -21,13 +21,13 @@ AXSM,780,deposits,OUT,,,,,,,,0001193125-26-064267,,,,not a bank
 AXSM,780,depreciation_and_amortization,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:Depreciation,CF,+,-3,N,,sec_api,0001193125-26-064267,R6,Amortization of intangible asset,6375000.0000,printed face components (duration sum; total_debt founder sum)
 AXSM,780,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-064267,R4,"Net loss per common share, diluted",-3.6800,library map
 AXSM,780,dividends_paid,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
-AXSM,780,dividends_per_share,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
+AXSM,780,dividends_per_share,not_presented,,,,,,,,0001193125-26-064267,,,,no face line and no note fact
 AXSM,780,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-064267,R2,Goodwill,12042000.0000,library map
 AXSM,780,gross_profit,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
 AXSM,780,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001193125-26-064267,R4,Loss before income taxes,-183704000.0000,library map
 AXSM,780,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-064267,R4,Income tax benefit (expense),-530000.0000,library map
 AXSM,780,interest_expense,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
-AXSM,780,interest_income,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
+AXSM,780,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,-,-3,N,,sec_api,0001193125-26-064267,R4,"Interest expense, net",-6557000.0000,interest income only inside a net/other face line between OI and pretax
 AXSM,780,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-064267,R2,"Inventories, net",27938000.0000,library map
 AXSM,780,loans_net,OUT,,,,,,,,0001193125-26-064267,,,,not a bank
 AXSM,780,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-064267,R4,Net loss,-183174000.0000,library map

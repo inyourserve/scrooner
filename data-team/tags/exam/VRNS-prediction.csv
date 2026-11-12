@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VRNS,977,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Trade payables,5735000.0000,library map
 VRNS,977,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,"Trade receivables (net of allowance of $1,260 and $2,518 at December 31, 2025 and December 31, 2024, respectively)",242822000.0000,library map
-VRNS,977,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-005450,,,,note-sourced default tag (no face line)
+VRNS,977,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-005450,,,1053000.0000,note fact present in the filing (FSN value)
 VRNS,977,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-005450,R5,"Net loss per share of common stock, basic (in USD per share)",-1.1300,library map
 VRNS,977,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Purchases of property and equipment,12628000.0000,library map
 VRNS,977,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Cash and cash equivalents,202482000.0000,library map
@@ -21,13 +21,13 @@ VRNS,977,deposits,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
 VRNS,977,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Depreciation and amortization,12309000.0000,library map
 VRNS,977,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-005450,R5,"Net loss per share of common stock, diluted (in USD per share)",-1.1300,library map
 VRNS,977,dividends_paid,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
-VRNS,977,dividends_per_share,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,dividends_per_share,not_presented,,,,,,,,0001628280-26-005450,,,,no face line and no note fact
 VRNS,977,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Goodwill,135276000.0000,library map
 VRNS,977,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Gross profit,491558000.0000,library map
 VRNS,977,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Loss before income taxes,-116320000.0000,library map
 VRNS,977,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Income taxes,13004000.0000,library map
 VRNS,977,interest_expense,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
-VRNS,977,interest_income,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,interest_income,not_presented,,,,,,,,0001628280-26-005450,,,,no face line and no note fact
 VRNS,977,inventory,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
 VRNS,977,loans_net,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
 VRNS,977,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Net loss,-129324000.0000,library map

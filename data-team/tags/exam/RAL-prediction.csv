@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RAL,834,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0002041385-26-000023,R3,Trade accounts payable,263700000.0000,library map
 RAL,834,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0002041385-26-000023,R3,"Accounts receivable less allowance for credit losses of $7.8 and $11.3, respectively",285300000.0000,library map
-RAL,834,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002041385-26-000023,,,,note-sourced default tag (no face line)
+RAL,834,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002041385-26-000023,,,86900000.0000,note fact present in the filing (FSN value)
 RAL,834,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0002041385-26-000023,R5,Basic (in dollars per share),-10.8400,library map
 RAL,834,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0002041385-26-000023,R9,"Purchases of property, plant and equipment",39200000.0000,library map
 RAL,834,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0002041385-26-000023,R3,Cash and equivalents,318800000.0000,library map
 RAL,834,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0002041385-26-000023,R9,Net cash (used in) provided by financing activities,-54700000.0000,library map
 RAL,834,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0002041385-26-000023,R9,Net cash used in investing activities,-37700000.0000,library map
-RAL,834,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002041385-26-000023,,,,note-sourced default tag (no face line)
-RAL,834,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002041385-26-000023,,,,note-sourced default tag (no face line)
+RAL,834,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0002041385-26-000023,,,74200000.0000,note fact present in the filing (FSN value)
+RAL,834,cash_paid_for_interest,not_presented,,,,,,,,0002041385-26-000023,,,,no face line and no note fact
 RAL,834,cf_ap_change,not_presented,,,,,,,,0002041385-26-000023,,,,no face line
 RAL,834,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0002041385-26-000023,R9,"Change in accounts receivable, net",-15200000.0000,library map
 RAL,834,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0002041385-26-000023,R9,Change in inventories,13000000.0000,library map
@@ -27,7 +27,7 @@ RAL,834,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0002041385-26
 RAL,834,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0002041385-26-000023,R5,(Loss) earnings before income taxes,-1216400000.0000,library map
 RAL,834,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0002041385-26-000023,R5,Income tax expense,6100000.0000,library map
 RAL,834,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0002041385-26-000023,R5,"Interest expense, net",32300000.0000,combined line (library or label demote)
-RAL,834,interest_income,not_presented,,,,,,,,0002041385-26-000023,,,,no face line
+RAL,834,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0002041385-26-000023,R5,"Interest expense, net",32300000.0000,interest income only inside a net/other face line between OI and pretax
 RAL,834,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0002041385-26-000023,R3,"Inventories, net",301600000.0000,library map
 RAL,834,loans_net,OUT,,,,,,,,0002041385-26-000023,,,,not a bank
 RAL,834,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0002041385-26-000023,R5,Net (loss) earnings,-1222500000.0000,library map

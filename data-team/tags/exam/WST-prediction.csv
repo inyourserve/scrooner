@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WST,360,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000105770-26-000010,R6,Accounts payable,253700000.0000,library map
 WST,360,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000105770-26-000010,R6,"Accounts receivable, net",574400000.0000,library map
-WST,360,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000105770-26-000010,,,,note-sourced default tag (no face line)
+WST,360,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000105770-26-000010,,,2800000.0000,note fact present in the filing (FSN value)
 WST,360,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000105770-26-000010,R3,Basic (in dollars per share),6.8300,library map
 WST,360,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000105770-26-000010,R10,Capital expenditures,285900000.0000,library map
 WST,360,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000105770-26-000010,R6,Cash and cash equivalents,791300000.0000,library map
@@ -27,7 +27,7 @@ WST,360,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000105770-26
 WST,360,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Income before income taxes and equity in net income of affiliated companies,600900000.0000,library map
 WST,360,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Income tax expense,121600000.0000,library map
 WST,360,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000105770-26-000010,R3,Interest expense,500000.0000,library map
-WST,360,interest_income,not_presented,,,,,,,,0000105770-26-000010,,,,no face line
+WST,360,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Interest income,17500000.0000,interest income only inside a net/other face line between OI and pretax
 WST,360,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000105770-26-000010,R6,Inventories,443900000.0000,library map
 WST,360,loans_net,OUT,,,,,,,,0000105770-26-000010,,,,not a bank
 WST,360,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Net income,493700000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VEEV,235,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001393052-26-000014,R3,Accounts payable,37644000.0000,library map
 VEEV,235,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001393052-26-000014,R3,"Accounts receivable, net of allowance for credit losses of $256 and $57, respectively",1259737000.0000,library map
-VEEV,235,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001393052-26-000014,,,,note-sourced default tag (no face line)
+VEEV,235,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001393052-26-000014,,,14000000.0000,note fact present in the filing (FSN value)
 VEEV,235,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001393052-26-000014,R5,Basic (in usd per share),5.5500,library map
 VEEV,235,capex,combined,us-gaap:PaymentsForSoftware,CF,+,-3,N,,sec_api,0001393052-26-000014,R8,Long-term assets,29131000.0000,combined line (library or label demote)
 VEEV,235,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001393052-26-000014,R3,Cash and cash equivalents,1421233000.0000,library map
 VEEV,235,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001393052-26-000014,R8,Net cash (used in) provided by financing activities,-9333000.0000,library map
 VEEV,235,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001393052-26-000014,R8,Net cash used in investing activities,-1104362000.0000,library map
 VEEV,235,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001393052-26-000014,R8,"Cash paid for income taxes, net of refunds",229965000.0000,library map
-VEEV,235,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001393052-26-000014,,,,note-sourced default tag (no face line)
+VEEV,235,cash_paid_for_interest,not_presented,,,,,,,,0001393052-26-000014,,,,no face line and no note fact
 VEEV,235,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001393052-26-000014,R8,Accounts payable,6080000.0000,library map
 VEEV,235,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001393052-26-000014,R8,Accounts receivable,244704000.0000,library map
 VEEV,235,cf_inventory_change,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
@@ -21,13 +21,13 @@ VEEV,235,deposits,OUT,,,,,,,,0001393052-26-000014,,,,not a bank
 VEEV,235,depreciation_and_amortization,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
 VEEV,235,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001393052-26-000014,R5,Diluted (in usd per share),5.4400,library map
 VEEV,235,dividends_paid,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
-VEEV,235,dividends_per_share,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
+VEEV,235,dividends_per_share,not_presented,,,,,,,,0001393052-26-000014,,,,no face line and no note fact
 VEEV,235,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001393052-26-000014,R3,Goodwill,439877000.0000,library map
 VEEV,235,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001393052-26-000014,R5,Gross profit,2413292000.0000,library map
 VEEV,235,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001393052-26-000014,R5,Income before income taxes,1194508000.0000,library map
 VEEV,235,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001393052-26-000014,R5,Income tax provision,285602000.0000,library map
 VEEV,235,interest_expense,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
-VEEV,235,interest_income,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
+VEEV,235,interest_income,not_presented,,,,,,,,0001393052-26-000014,,,,no face line and no note fact
 VEEV,235,inventory,not_presented,,,,,,,,0001393052-26-000014,,,,no face line
 VEEV,235,loans_net,OUT,,,,,,,,0001393052-26-000014,,,,not a bank
 VEEV,235,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001393052-26-000014,R5,Net income,908906000.0000,library map

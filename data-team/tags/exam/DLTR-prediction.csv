@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DLTR,407,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000935703-26-000025,R5,Accounts payable,1530700000.0000,library map
 DLTR,407,accounts_receivable,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
-DLTR,407,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000935703-26-000025,,,,note-sourced default tag (no face line)
+DLTR,407,amortization_of_intangibles,not_presented,,,,,,,,0000935703-26-000025,,,,no face line and no note fact
 DLTR,407,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000935703-26-000025,R3,Total basic earnings (loss) per share of common stock (usd per share),6.2300,library map
 DLTR,407,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000935703-26-000025,R8,Capital expenditures,1134000000.0000,library map
 DLTR,407,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000935703-26-000025,R5,Cash and cash equivalents,717800000.0000,library map
 DLTR,407,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000935703-26-000025,R8,Net cash used in financing activities,-2556900000.0000,library map
 DLTR,407,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-5,N,,sec_api,0000935703-26-000025,R8,Net cash used in investing activities of continuing operations,-648700000.0000,library map
-DLTR,407,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000935703-26-000025,,,,note-sourced default tag (no face line)
+DLTR,407,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000935703-26-000025,,,141200000.0000,note fact present in the filing (FSN value)
 DLTR,407,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000935703-26-000025,R8,"Interest, net of amounts capitalized",125400000.0000,library map
 DLTR,407,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000935703-26-000025,R8,Accounts payable,-178100000.0000,library map
 DLTR,407,cf_ar_change,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
@@ -21,13 +21,13 @@ DLTR,407,deposits,OUT,,,,,,,,0000935703-26-000025,,,,not a bank
 DLTR,407,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000935703-26-000025,R8,Depreciation and amortization,648100000.0000,library map
 DLTR,407,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000935703-26-000025,R3,Total diluted earnings (loss) per share of common stock (usd per share),6.2200,library map
 DLTR,407,dividends_paid,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
-DLTR,407,dividends_per_share,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
+DLTR,407,dividends_per_share,not_presented,,,,,,,,0000935703-26-000025,,,,no face line and no note fact
 DLTR,407,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000935703-26-000025,R5,Goodwill,423200000.0000,library map
 DLTR,407,gross_profit,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Income from continuing operations before income taxes,1629500000.0000,library map
 DLTR,407,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Provision for income taxes,404200000.0000,library map
 DLTR,407,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000935703-26-000025,R3,"Interest expense, net",-85500000.0000,combined line (library or label demote)
-DLTR,407,interest_income,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
+DLTR,407,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000935703-26-000025,R3,"Interest expense, net",-85500000.0000,interest income only inside a net/other face line between OI and pretax
 DLTR,407,inventory,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,loans_net,OUT,,,,,,,,0000935703-26-000025,,,,not a bank
 DLTR,407,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Net income (loss),1282500000.0000,library map

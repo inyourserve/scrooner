@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GEHC,327,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001932393-26-000007,R5,Accounts payable,3250000000.0000,library map
 GEHC,327,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001932393-26-000007,R5,Receivables  net of allowances of $103 and $103,3955000000.0000,combined line (library or label demote)
-GEHC,327,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001932393-26-000007,,,,note-sourced default tag (no face line)
+GEHC,327,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001932393-26-000007,,,291000000.0000,note fact present in the filing (FSN value)
 GEHC,327,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001932393-26-000007,R3,Basic (in dollars per share),4.5600,library map
 GEHC,327,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001932393-26-000007,R9,"Additions to property, plant and equipment and internal-use software",482000000.0000,library map
 GEHC,327,cash_and_equivalents,not_presented,,,,,,,,0001932393-26-000007,,,,no face line
@@ -27,7 +27,7 @@ GEHC,327,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001932393-2
 GEHC,327,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001932393-26-000007,R3,Income from continuing operations before income taxes,2768000000.0000,library map
 GEHC,327,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001932393-26-000007,R3,Benefit (provision) for income taxes,614000000.0000,library map
 GEHC,327,interest_expense,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001932393-26-000007,R3,Interest and other financial charges  net,440000000.0000,combined line (library or label demote)
-GEHC,327,interest_income,not_presented,,,,,,,,0001932393-26-000007,,,,no face line
+GEHC,327,interest_income,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001932393-26-000007,R3,Interest and other financial charges  net,440000000.0000,interest income only inside a net/other face line between OI and pretax
 GEHC,327,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001932393-26-000007,R5,Inventories,2234000000.0000,library map
 GEHC,327,loans_net,OUT,,,,,,,,0001932393-26-000007,,,,not a bank
 GEHC,327,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001932393-26-000007,R3,Net income attributable to GE HealthCare,2084000000.0000,library map

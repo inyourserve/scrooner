@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ALSN,735,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,Accounts payable,190000000.0000,library map
 ALSN,735,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,Accounts receivable net of allowance for doubtful accounts of $1,333000000.0000,library map
-ALSN,735,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-065627,,,,note-sourced default tag (no face line)
+ALSN,735,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-065627,,,7000000.0000,note fact present in the filing (FSN value)
 ALSN,735,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-065627,R4,Basic earnings per share attributable to common stockholders,7.4200,library map
 ALSN,735,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-065627,R5,Additions of long-lived assets,175000000.0000,library map
 ALSN,735,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,Cash and cash equivalents,1495000000.0000,library map
 ALSN,735,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001193125-26-065627,R5,Net cash provided by (used for) financing activities,57000000.0000,library map
 ALSN,735,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-065627,R5,Net cash used for investing activities,-184000000.0000,library map
-ALSN,735,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-065627,,,,note-sourced default tag (no face line)
+ALSN,735,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-065627,,,,no face line and no note fact
 ALSN,735,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001193125-26-065627,R5,Interest paid,120000000.0000,library map
 ALSN,735,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001193125-26-065627,R5,Accounts payable,-36000000.0000,library map
 ALSN,735,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001193125-26-065627,R5,Accounts receivable,-34000000.0000,library map
@@ -27,7 +27,7 @@ ALSN,735,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001193125-2
 ALSN,735,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,Income before income taxes,804000000.0000,library map
 ALSN,735,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,Income tax expense,181000000.0000,library map
 ALSN,735,interest_expense,not_presented,,,,,,,,0001193125-26-065627,,,,no face line
-ALSN,735,interest_income,not_presented,,,,,,,,0001193125-26-065627,,,,no face line
+ALSN,735,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-6,N,,sec_api,0001193125-26-065627,R4,"Interest expense, net",-92000000.0000,interest income only inside a net/other face line between OI and pretax
 ALSN,735,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,Inventories,316000000.0000,library map
 ALSN,735,loans_net,OUT,,,,,,,,0001193125-26-065627,,,,not a bank
 ALSN,735,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,Net income,623000000.0000,library map
@@ -50,5 +50,5 @@ ALSN,735,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-065
 ALSN,735,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,Current portion of long-term debt,5000000.0000,printed face components (duration sum; total_debt founder sum)
 ALSN,735,total_interest_income,OUT,,,,,,,,0001193125-26-065627,,,,not a bank
 ALSN,735,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,TOTAL LIABILITIES,4215000000.0000,library map
-ALSN,735,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-065627,,,,note-sourced default tag (no face line)
-ALSN,735,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-065627,,,,note-sourced default tag (no face line)
+ALSN,735,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-065627,,,84000000.0000,note fact present in the filing (FSN value)
+ALSN,735,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-065627,,,85000000.0000,note fact present in the filing (FSN value)

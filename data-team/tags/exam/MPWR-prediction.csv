@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MPWR,205,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Accounts payable,138272000.0000,library map
 MPWR,205,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,"Accounts receivable, net",255626000.0000,library map
-MPWR,205,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001437749-26-006113,,,,note-sourced default tag (no face line)
+MPWR,205,amortization_of_intangibles,not_presented,,,,,,,,0001437749-26-006113,,,,no face line and no note fact
 MPWR,205,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001437749-26-006113,R4,Basic (in dollars per share),12.9400,library map
 MPWR,205,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,Purchases of property and equipment,172013000.0000,library map
 MPWR,205,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Cash and cash equivalents,1099302000.0000,library map
 MPWR,205,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001437749-26-006113,R9,Net cash used in financing activities,-285863000.0000,library map
 MPWR,205,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001437749-26-006113,R9,Net cash provided by (used in) investing activities,-157269000.0000,library map
 MPWR,205,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,"Cash paid for income taxes, net",95061000.0000,library map
-MPWR,205,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001437749-26-006113,,,,note-sourced default tag (no face line)
+MPWR,205,cash_paid_for_interest,not_presented,,,,,,,,0001437749-26-006113,,,,no face line and no note fact
 MPWR,205,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,Accounts payable,41239000.0000,library map
 MPWR,205,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,Accounts receivable,83066000.0000,library map
 MPWR,205,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,Inventories,145077000.0000,library map
@@ -27,7 +27,7 @@ MPWR,205,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001437749-2
 MPWR,205,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Income before income taxes,766216000.0000,library map
 MPWR,205,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,"Income tax expense (benefit), net",144733000.0000,library map
 MPWR,205,interest_expense,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
-MPWR,205,interest_income,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
+MPWR,205,interest_income,not_presented,,,,,,,,0001437749-26-006113,,,,no face line and no note fact
 MPWR,205,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Inventories,564649000.0000,library map
 MPWR,205,loans_net,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
 MPWR,205,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Net income,621483000.0000,library map

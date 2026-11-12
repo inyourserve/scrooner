@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SNA,462,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000091440-26-000045,R5,Accounts payable,229100000.0000,library map
 SNA,462,accounts_receivable,combined,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000091440-26-000045,R5,Trade and other accounts receivable  net,881400000.0000,combined line (library or label demote)
-SNA,462,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000091440-26-000045,,,,note-sourced default tag (no face line)
+SNA,462,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000091440-26-000045,,,22700000.0000,note fact present in the filing (FSN value)
 SNA,462,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000091440-26-000045,R3,Basic (in dollars per share),19.5200,library map
 SNA,462,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-5,N,,sec_api,0000091440-26-000045,R9,Capital expenditures,76000000.0000,combined line (library or label demote)
 SNA,462,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000091440-26-000045,R5,Cash and cash equivalents,1624500000.0000,library map
@@ -27,7 +27,7 @@ SNA,462,gross_profit,not_presented,,,,,,,,0000091440-26-000045,,,,no face line
 SNA,462,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000091440-26-000045,R3,Earnings before income taxes,1335900000.0000,library map
 SNA,462,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000091440-26-000045,R3,Income tax expense,293600000.0000,library map
 SNA,462,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000091440-26-000045,R3,Interest expense,50500000.0000,library map
-SNA,462,interest_income,not_presented,,,,,,,,0000091440-26-000045,,,,no face line
+SNA,462,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000091440-26-000045,,,58800000.0000,note fact present in the filing (FSN value)
 SNA,462,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000091440-26-000045,R5,Inventories  net,1025200000.0000,library map
 SNA,462,loans_net,OUT,,,,,,,,0000091440-26-000045,,,,not a bank
 SNA,462,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000091440-26-000045,R3,Net earnings attributable to Snap-on Incorporated,1016900000.0000,library map

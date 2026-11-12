@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CMC,846,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0000022444-26-000065,R5,Accounts payable,540901000.0000,library map
 CMC,846,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000022444-26-000065,R5,"Accounts receivable (less allowance for doubtful accounts of $3,867 and $3,186)",1440260000.0000,library map
-CMC,846,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000022444-26-000065,,,,note-sourced default tag (no face line)
+CMC,846,amortization_of_intangibles,not_presented,,,,,,,,0000022444-26-000065,,,,no face line and no note fact
 CMC,846,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000022444-26-000065,R3,Basic (in shares),5.9200,library map
 CMC,846,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000022444-26-000065,R7,Capital expenditures,579844000.0000,library map
 CMC,846,cash_and_equivalents,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
@@ -27,7 +27,7 @@ CMC,846,gross_profit,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
 CMC,846,income_before_tax,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
 CMC,846,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000022444-26-000065,R3,Income tax expense,55162000.0000,library map
 CMC,846,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0000022444-26-000065,R3,Interest expense,143337000.0000,library map
-CMC,846,interest_income,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
+CMC,846,interest_income,not_presented,,,,,,,,0000022444-26-000065,,,,no face line and no note fact
 CMC,846,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000022444-26-000065,R5,Inventories,1104719000.0000,library map
 CMC,846,loans_net,OUT,,,,,,,,0000022444-26-000065,,,,not a bank
 CMC,846,net_income,not_presented,,,,,,,,0000022444-26-000065,,,,no face line

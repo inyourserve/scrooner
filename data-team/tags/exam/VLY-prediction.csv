@@ -50,5 +50,5 @@ VLY,859,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000714310-26-0000
 VLY,859,total_debt,component_sum,us-gaap:ShortTermBorrowings,BS,+,-3,N,,sec_api,0000714310-26-000017,R3,Short-term borrowings,91475000.0000,printed face components (duration sum; total_debt founder sum)
 VLY,859,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Total interest income,3232484000.0000,bank template tag
 VLY,859,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000714310-26-000017,R3,Total Liabilities,56325027000.0000,library map
-VLY,859,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000714310-26-000017,,,,note-sourced default tag (no face line)
-VLY,859,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000714310-26-000017,,,,note-sourced default tag (no face line)
+VLY,859,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000714310-26-000017,,,559637823.0000,note fact present in the filing (FSN value)
+VLY,859,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000714310-26-000017,,,563832550.0000,note fact present in the filing (FSN value)

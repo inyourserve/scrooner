@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FLS,744,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000030625-26-000003,R3,Accounts payable,554243000.0000,library map
 FLS,744,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000030625-26-000003,R3,"Accounts receivable, net of allowance for expected credit losses of $83,094 and $79,059, respectively",1029095000.0000,library map
-FLS,744,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000030625-26-000003,,,,note-sourced default tag (no face line)
+FLS,744,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000030625-26-000003,,,16218000.0000,note fact present in the filing (FSN value)
 FLS,744,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000030625-26-000003,R5,Basic (in dollars per share),2.6600,library map
 FLS,744,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000030625-26-000003,R10,Capital expenditures,70927000.0000,library map
 FLS,744,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000030625-26-000003,R3,Cash and cash equivalents,760183000.0000,library map
@@ -27,7 +27,7 @@ FLS,744,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000030625-26
 FLS,744,income_before_tax,not_presented,,,,,,,,0000030625-26-000003,,,,no face line
 FLS,744,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000030625-26-000003,R5,Provision for income taxes,155596000.0000,library map
 FLS,744,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000030625-26-000003,R5,Interest expense,77740000.0000,library map
-FLS,744,interest_income,not_presented,,,,,,,,0000030625-26-000003,,,,no face line
+FLS,744,interest_income,not_presented,,,,,,,,0000030625-26-000003,,,,no face line and no note fact
 FLS,744,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000030625-26-000003,R3,Inventories,789898000.0000,library map
 FLS,744,loans_net,OUT,,,,,,,,0000030625-26-000003,,,,not a bank
 FLS,744,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000030625-26-000003,R5,Net earnings attributable to Flowserve Corporation,346247000.0000,library map

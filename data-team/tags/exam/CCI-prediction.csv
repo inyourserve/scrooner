@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CCI,303,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,Accounts payable,71000000.0000,library map
 CCI,303,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,"Receivables, net of allowance of $9 and $9, respectively",172000000.0000,library map
-CCI,303,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001051470-26-000016,,,,note-sourced default tag (no face line)
+CCI,303,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001051470-26-000016,,,177000000.0000,note fact present in the filing (FSN value)
 CCI,303,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001051470-26-000016,R5,Basic (in dollars per share),1.0200,library map
 CCI,303,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001051470-26-000016,R6,Payments to Acquire Productive Assets,182000000.0000,library map
 CCI,303,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,Cash and cash equivalents,99000000.0000,library map
 CCI,303,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001051470-26-000016,R6,Net cash provided by (used for) financing activities,-1886000000.0000,library map
 CCI,303,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001051470-26-000016,R6,Net cash provided by (used for) investing activities,-1158000000.0000,library map
-CCI,303,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001051470-26-000016,,,,note-sourced default tag (no face line)
-CCI,303,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001051470-26-000016,,,,note-sourced default tag (no face line)
+CCI,303,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001051470-26-000016,,,15000000.0000,note fact present in the filing (FSN value)
+CCI,303,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001051470-26-000016,,,965000000.0000,note fact present in the filing (FSN value)
 CCI,303,cf_ap_change,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
 CCI,303,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0001051470-26-000016,R6,Decrease (increase) in receivables,-3000000.0000,library map
 CCI,303,cf_inventory_change,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
@@ -21,7 +21,7 @@ CCI,303,deposits,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001051470-26-000016,R6,"Depreciation, amortization and accretion",690000000.0000,combined line (library or label demote)
 CCI,303,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001051470-26-000016,R5,Diluted (in dollars per share),1.0100,library map
 CCI,303,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,-,-6,N,,sec_api,0001051470-26-000016,R6,Dividends/distributions paid on common stock,-2080000000.0000,library map
-CCI,303,dividends_per_share,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
+CCI,303,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001051470-26-000016,,,4.7500,note fact present in the filing (FSN value)
 CCI,303,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,Goodwill,5127000000.0000,library map
 CCI,303,gross_profit,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
 CCI,303,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,"Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest",1119000000.0000,library map

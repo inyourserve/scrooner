@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 REXR,781,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001571283-26-000006,R3,"Accounts payable, accrued expenses and other liabilities",120849000.0000,combined line (library or label demote)
 REXR,781,accounts_receivable,not_presented,,,,,,,,0001571283-26-000006,,,,no face line
-REXR,781,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001571283-26-000006,,,,note-sourced default tag (no face line)
+REXR,781,amortization_of_intangibles,not_presented,,,,,,,,0001571283-26-000006,,,,no face line and no note fact
 REXR,781,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001571283-26-000006,R5,Net income attributable to common stockholders per share - basic (in dollars per share),0.8600,library map
 REXR,781,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0001571283-26-000006,R9,Capital expenditures,333424000.0000,combined line (library or label demote)
 REXR,781,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001571283-26-000006,R3,Cash and cash equivalents,165778000.0000,library map
 REXR,781,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001571283-26-000006,R9,Net cash (used in) provided by financing activities,-307217000.0000,library map
 REXR,781,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001571283-26-000006,R9,Net cash used in investing activities,-125061000.0000,library map
-REXR,781,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001571283-26-000006,,,,note-sourced default tag (no face line)
+REXR,781,cash_paid_for_income_taxes,not_presented,,,,,,,,0001571283-26-000006,,,,no face line and no note fact
 REXR,781,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001571283-26-000006,R9,"Cash paid for interest (net of capitalized interest of $35,335, $31,363 and $23,611 for the years December 31, 2025, 2024 and 2023, respectively)",95056000.0000,library map
 REXR,781,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001571283-26-000006,R9,"Accounts payable, accrued expenses and other liabilities",-7619000.0000,combined line (library or label demote)
 REXR,781,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001571283-26-000006,R9,Rents and other receivables,-1915000.0000,combined line (library or label demote)

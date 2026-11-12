@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LNC,816,accounts_payable,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,accounts_receivable,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
-LNC,816,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000059558-26-000016,,,,note-sourced default tag (no face line)
+LNC,816,amortization_of_intangibles,not_presented,,,,,,,,0000059558-26-000016,,,,no face line and no note fact
 LNC,816,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000059558-26-000016,R5,Basic (in dollars per share),5.9400,library map
 LNC,816,capex,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0000059558-26-000016,R3,Cash and invested cash,9502000000.0000,combined line (library or label demote)
 LNC,816,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000059558-26-000016,R7,Net cash provided by (used in) financing activities,7881000000.0000,library map
 LNC,816,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000059558-26-000016,R7,Net cash provided by (used in) investing activities,-4013000000.0000,library map
-LNC,816,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000059558-26-000016,,,,note-sourced default tag (no face line)
-LNC,816,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000059558-26-000016,,,,note-sourced default tag (no face line)
+LNC,816,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000059558-26-000016,,,84000000.0000,note fact present in the filing (FSN value)
+LNC,816,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000059558-26-000016,,,336000000.0000,note fact present in the filing (FSN value)
 LNC,816,cf_ap_change,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,cf_ar_change,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,cf_inventory_change,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
@@ -27,7 +27,7 @@ LNC,816,gross_profit,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000059558-26-000016,R5,Income (loss) before taxes,1338000000.0000,library map
 LNC,816,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000059558-26-000016,R5,Federal income tax expense (benefit),161000000.0000,library map
 LNC,816,interest_expense,not_presented,,,,,,,,0000059558-26-000016,,,,single component only
-LNC,816,interest_income,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
+LNC,816,interest_income,not_presented,,,,,,,,0000059558-26-000016,,,,no face line and no note fact
 LNC,816,inventory,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,loans_net,OUT,,,,,,,,0000059558-26-000016,,,,not a bank
 LNC,816,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000059558-26-000016,R5,Net income (loss),1177000000.0000,library map
@@ -41,7 +41,7 @@ LNC,816,ppe_net,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,provision_for_credit_losses,OUT,,,,,,,,0000059558-26-000016,,,,not a bank
 LNC,816,research_and_development,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000059558-26-000016,R5,Total revenues,18212000000.0000,library map
-LNC,816,sbc,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
+LNC,816,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000059558-26-000016,,,78000000.0000,note fact present in the filing (FSN value)
 LNC,816,sga_expense,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,share_buybacks,not_presented,,,,,,,,0000059558-26-000016,,,,no face line
 LNC,816,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000059558-26-000016,R4,"Common stock, outstanding (in shares)",190051477.0000,library map
@@ -50,5 +50,5 @@ LNC,816,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000059558-26-0000
 LNC,816,total_debt,component_sum,us-gaap:DebtCurrent,BS,+,-6,N,,sec_api,0000059558-26-000016,R3,Short-term debt,400000000.0000,printed face components (duration sum; total_debt founder sum)
 LNC,816,total_interest_income,OUT,,,,,,,,0000059558-26-000016,,,,not a bank
 LNC,816,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000059558-26-000016,R3,Total liabilities,406298000000.0000,library map
-LNC,816,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000059558-26-000016,,,,note-sourced default tag (no face line)
-LNC,816,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000059558-26-000016,,,,note-sourced default tag (no face line)
+LNC,816,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000059558-26-000016,,,182674725.0000,note fact present in the filing (FSN value)
+LNC,816,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000059558-26-000016,,,186062087.0000,note fact present in the filing (FSN value)

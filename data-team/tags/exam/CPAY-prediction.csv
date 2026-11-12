@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CPAY,371,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001175454-26-000018,R3,Accounts payable,1564548000.0000,library map
 CPAY,371,accounts_receivable,combined,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001175454-26-000018,R3,"Accounts and other receivables (less allowance for credit losses of $170,957 at December 31, 2025 and $133,757 at December 31, 2024)",2145679000.0000,combined line (library or label demote)
-CPAY,371,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001175454-26-000018,,,,note-sourced default tag (no face line)
+CPAY,371,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001175454-26-000018,,,261900000.0000,note fact present in the filing (FSN value)
 CPAY,371,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001175454-26-000018,R5,Basic earnings per share attributable to Corpay (in dollars per share),15.2300,library map
 CPAY,371,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001175454-26-000018,R9,Purchases of property and equipment,200756000.0000,library map
 CPAY,371,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001175454-26-000018,R3,Cash and cash equivalents,2408097000.0000,library map
@@ -21,13 +21,13 @@ CPAY,371,deposits,OUT,,,,,,,,0001175454-26-000018,,,,not a bank
 CPAY,371,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-3,N,,sec_api,0001175454-26-000018,R5,Depreciation and amortization,393303000.0000,library map
 CPAY,371,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001175454-26-000018,R5,Diluted earnings per share attributable to Corpay (in dollars per share),15.0300,library map
 CPAY,371,dividends_paid,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
-CPAY,371,dividends_per_share,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
+CPAY,371,dividends_per_share,not_presented,,,,,,,,0001175454-26-000018,,,,no face line and no note fact
 CPAY,371,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001175454-26-000018,R3,Goodwill,7564822000.0000,library map
 CPAY,371,gross_profit,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
 CPAY,371,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001175454-26-000018,R5,Income before income taxes,1541679000.0000,library map
 CPAY,371,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001175454-26-000018,R5,Provision for income taxes,469731000.0000,library map
 CPAY,371,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0001175454-26-000018,R5,"Interest expense, net",403848000.0000,combined line (library or label demote)
-CPAY,371,interest_income,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
+CPAY,371,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0001175454-26-000018,R5,"Interest expense, net",403848000.0000,interest income only inside a net/other face line between OI and pretax
 CPAY,371,inventory,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
 CPAY,371,loans_net,OUT,,,,,,,,0001175454-26-000018,,,,not a bank
 CPAY,371,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001175454-26-000018,R5,Net income attributable to Corpay,1069826000.0000,library map

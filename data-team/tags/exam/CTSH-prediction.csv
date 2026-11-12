@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CTSH,329,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001058290-26-000008,R3,Accounts payable,308000000.0000,library map
 CTSH,329,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001058290-26-000008,R3,"Trade accounts receivable, net",4439000000.0000,library map
-CTSH,329,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001058290-26-000008,,,,note-sourced default tag (no face line)
+CTSH,329,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001058290-26-000008,,,218000000.0000,note fact present in the filing (FSN value)
 CTSH,329,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001058290-26-000008,R5,Basic earnings per share,4.5700,library map
 CTSH,329,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001058290-26-000008,R8,Purchases of property and equipment,288000000.0000,library map
 CTSH,329,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001058290-26-000008,R3,Cash and cash equivalents,1901000000.0000,library map
@@ -27,7 +27,7 @@ CTSH,329,gross_profit,not_presented,,,,,,,,0001058290-26-000008,,,,no face line
 CTSH,329,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,Income before provision for income taxes,3479000000.0000,library map
 CTSH,329,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,Provision for income taxes,1258000000.0000,library map
 CTSH,329,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001058290-26-000008,R5,Interest expense,37000000.0000,library map
-CTSH,329,interest_income,not_presented,,,,,,,,0001058290-26-000008,,,,no face line
+CTSH,329,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001058290-26-000008,,,105000000.0000,note fact present in the filing (FSN value)
 CTSH,329,inventory,not_presented,,,,,,,,0001058290-26-000008,,,,no face line
 CTSH,329,loans_net,OUT,,,,,,,,0001058290-26-000008,,,,not a bank
 CTSH,329,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,Net income,2230000000.0000,library map

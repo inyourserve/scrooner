@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TWLO,290,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001447669-26-000021,R3,Accounts payable,85089000.0000,library map
 TWLO,290,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001447669-26-000021,R3,"Accounts receivable, net",636736000.0000,library map
-TWLO,290,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001447669-26-000021,,,,note-sourced default tag (no face line)
+TWLO,290,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001447669-26-000021,,,108300000.0000,note fact present in the filing (FSN value)
 TWLO,290,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001447669-26-000021,R5,Basic (in dollars per share),0.2200,library map
 TWLO,290,capex,not_presented,,,,,,,,0001447669-26-000021,,,,single component only
 TWLO,290,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001447669-26-000021,R3,Cash and cash equivalents,682335000.0000,library map
@@ -21,13 +21,13 @@ TWLO,290,deposits,OUT,,,,,,,,0001447669-26-000021,,,,not a bank
 TWLO,290,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001447669-26-000021,R8,Depreciation and amortization,195444000.0000,library map
 TWLO,290,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001447669-26-000021,R5,Diluted (in dollars per share),0.2100,library map
 TWLO,290,dividends_paid,not_presented,,,,,,,,0001447669-26-000021,,,,no face line
-TWLO,290,dividends_per_share,not_presented,,,,,,,,0001447669-26-000021,,,,no face line
+TWLO,290,dividends_per_share,not_presented,,,,,,,,0001447669-26-000021,,,,no face line and no note fact
 TWLO,290,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001447669-26-000021,R3,Goodwill,5291787000.0000,library map
 TWLO,290,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001447669-26-000021,R5,Gross profit,2478734000.0000,library map
 TWLO,290,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001447669-26-000021,R5,Income (loss) before provision for income taxes,55094000.0000,library map
 TWLO,290,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001447669-26-000021,R5,Provision for income taxes,21260000.0000,library map
 TWLO,290,interest_expense,not_presented,,,,,,,,0001447669-26-000021,,,,no face line
-TWLO,290,interest_income,not_presented,,,,,,,,0001447669-26-000021,,,,no face line
+TWLO,290,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001447669-26-000021,,,70600000.0000,note fact present in the filing (FSN value)
 TWLO,290,inventory,not_presented,,,,,,,,0001447669-26-000021,,,,no face line
 TWLO,290,loans_net,OUT,,,,,,,,0001447669-26-000021,,,,not a bank
 TWLO,290,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001447669-26-000021,R5,Net income (loss) attributable to common stockholders,33834000.0000,library map

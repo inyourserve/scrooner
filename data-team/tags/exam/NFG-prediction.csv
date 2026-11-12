@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NFG,820,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000070145-25-000039,R5,Accounts Payable,184046000.0000,library map
 NFG,820,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000070145-25-000039,R5,"Receivables  Net of Allowance for Uncollectible Accounts of $17,099 and $26,194, Respectively",180801000.0000,combined line (library or label demote)
-NFG,820,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000070145-25-000039,,,,note-sourced default tag (no face line)
+NFG,820,amortization_of_intangibles,not_presented,,,,,,,,0000070145-25-000039,,,,no face line and no note fact
 NFG,820,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000070145-25-000039,R3,Net Income Available for Common Stock (in dollars per share),5.7300,library map
 NFG,820,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000070145-25-000039,R7,Capital Expenditures,912821000.0000,library map
 NFG,820,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000070145-25-000039,R5,Cash and Temporary Cash Investments,43166000.0000,library map
@@ -21,13 +21,13 @@ NFG,820,deposits,OUT,,,,,,,,0000070145-25-000039,,,,not a bank
 NFG,820,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000070145-25-000039,R7,"Depreciation, Depletion and Amortization",456594000.0000,library map
 NFG,820,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000070145-25-000039,R3,Net Income Available for Common Stock (in dollars per share),5.6800,library map
 NFG,820,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000070145-25-000039,R7,Dividends Paid on Common Stock,188438000.0000,library map
-NFG,820,dividends_per_share,not_presented,,,,,,,,0000070145-25-000039,,,,no face line
+NFG,820,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000070145-25-000039,,,2.1000,note fact present in the filing (FSN value)
 NFG,820,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000070145-25-000039,R5,Goodwill,5476000.0000,library map
 NFG,820,gross_profit,not_presented,,,,,,,,0000070145-25-000039,,,,no face line
 NFG,820,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Income Before Income Taxes,694053000.0000,library map
 NFG,820,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Income Tax Expense,175549000.0000,library map
 NFG,820,interest_expense,not_presented,,,,,,,,0000070145-25-000039,,,,single component only
-NFG,820,interest_income,not_presented,,,,,,,,0000070145-25-000039,,,,no face line
+NFG,820,interest_income,not_presented,,,,,,,,0000070145-25-000039,,,,no face line and no note fact
 NFG,820,inventory,not_presented,,,,,,,,0000070145-25-000039,,,,no face line
 NFG,820,loans_net,OUT,,,,,,,,0000070145-25-000039,,,,not a bank
 NFG,820,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Net Income Available for Common Stock,518504000.0000,library map

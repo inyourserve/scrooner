@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 STZ,418,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Accounts payable,960200000.0000,library map
 STZ,418,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Accounts receivable,658200000.0000,combined line (library or label demote)
-STZ,418,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000016918-26-000011,,,,note-sourced default tag (no face line)
+STZ,418,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000016918-26-000011,,,1300000.0000,note fact present in the filing (FSN value)
 STZ,418,basic_eps,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
 STZ,418,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000016918-26-000011,R8,"Purchase of property, plant, and equipment",875000000.0000,library map
 STZ,418,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Cash and cash equivalents,102400000.0000,library map
@@ -21,13 +21,13 @@ STZ,418,deposits,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
 STZ,418,depreciation_and_amortization,not_presented,,,,,,,,0000016918-26-000011,,,,single component only
 STZ,418,diluted_eps,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
 STZ,418,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000016918-26-000011,R8,Dividends paid,715700000.0000,library map
-STZ,418,dividends_per_share,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
+STZ,418,dividends_per_share,not_presented,,,,,,,,0000016918-26-000011,,,,no face line and no note fact
 STZ,418,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Goodwill,5233900000.0000,library map
 STZ,418,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000016918-26-000011,R5,Gross profit,4711500000.0000,library map
 STZ,418,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000016918-26-000011,R5,Income (loss) before income taxes,2377800000.0000,library map
 STZ,418,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000016918-26-000011,R5,(Provision for) benefit from income taxes,621000000.0000,library map
 STZ,418,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000016918-26-000011,R5,"Interest expense, net",-352600000.0000,combined line (library or label demote)
-STZ,418,interest_income,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
+STZ,418,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000016918-26-000011,R5,"Interest expense, net",-352600000.0000,interest income only inside a net/other face line between OI and pretax
 STZ,418,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Inventories,1433900000.0000,library map
 STZ,418,loans_net,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
 STZ,418,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000016918-26-000011,R5,Net income (loss) attributable to CBI,1686700000.0000,library map
@@ -50,5 +50,5 @@ STZ,418,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000016918-26-0000
 STZ,418,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Short-term borrowings,272000000.0000,printed face components (duration sum; total_debt founder sum)
 STZ,418,total_interest_income,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
 STZ,418,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,Total liabilities,13513600000.0000,library map
-STZ,418,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000016918-26-000011,,,,note-sourced default tag (no face line)
-STZ,418,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000016918-26-000011,,,,note-sourced default tag (no face line)
+STZ,418,weighted_basic_shares,not_presented,,,,,,,,0000016918-26-000011,,,,no face line and no note fact
+STZ,418,weighted_diluted_shares,not_presented,,,,,,,,0000016918-26-000011,,,,no face line and no note fact

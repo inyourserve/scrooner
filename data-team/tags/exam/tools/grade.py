@@ -21,6 +21,10 @@ def cp_upper(k, n, a=0.05):
     return hi
 def main(pdir, ddir, *only):
     rows = []; keyed = {}
+    adj = {}
+    ap = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'adjudications.csv')
+    if os.path.exists(ap):
+        for a in csv.DictReader(open(ap)): adj[(a['ticker'], a['data_point'])] = a['ruling']
     for dm in sorted(glob.glob(f'{ddir}/*-docmap-*.csv')):
         tk = os.path.basename(dm).split('-docmap')[0]
         if only and tk not in only: continue
@@ -45,6 +49,8 @@ def main(pdir, ddir, *only):
             if p is None: rows.append(dict(ticker=tk, data_point=dp, result='wrong', error_class='missed', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
             ks, ps = norm_status(k['status']), norm_status(p['status'])
             err = ''
+            if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + adj[(tk, dp)], key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'operating_expenses' and norm_status(k['status']) == 'mapped' and keyed.get(tk, {}).get('cor'):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: opex total includes cost of revenue (Dhairya ruling 2026-11-12)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'shares_outstanding' and 'entitycommonstocksharesoutstanding' in tagset(k['tags']):

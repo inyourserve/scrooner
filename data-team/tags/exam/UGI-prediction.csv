@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UGI,778,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000884614-25-000053,R3,Accounts payable,511000000.0000,library map
 UGI,778,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000884614-25-000053,R3,"Accounts receivable (less allowances for doubtful accounts of $42 and $68, respectively)",714000000.0000,library map
-UGI,778,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000884614-25-000053,,,,note-sourced default tag (no face line)
+UGI,778,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000884614-25-000053,,,54000000.0000,note fact present in the filing (FSN value)
 UGI,778,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000884614-25-000053,R5,Basic (in dollars per share),3.1500,library map
 UGI,778,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000884614-25-000053,R8,"Expenditures for property, plant and equipment",837000000.0000,library map
 UGI,778,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000884614-25-000053,R3,Cash and cash equivalents,335000000.0000,library map
@@ -27,7 +27,7 @@ UGI,778,gross_profit,not_presented,,,,,,,,0000884614-25-000053,,,,no face line
 UGI,778,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000884614-25-000053,R5,Income (loss) before income taxes,696000000.0000,library map
 UGI,778,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000884614-25-000053,R5,Income tax benefit (expense),18000000.0000,library map
 UGI,778,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000884614-25-000053,R5,Interest expense,411000000.0000,library map
-UGI,778,interest_income,not_presented,,,,,,,,0000884614-25-000053,,,,no face line
+UGI,778,interest_income,not_presented,,,,,,,,0000884614-25-000053,,,,no face line and no note fact
 UGI,778,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000884614-25-000053,R3,Inventories,385000000.0000,library map
 UGI,778,loans_net,OUT,,,,,,,,0000884614-25-000053,,,,not a bank
 UGI,778,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000884614-25-000053,R5,Net income (loss) attributable to UGI Corporation,678000000.0000,library map

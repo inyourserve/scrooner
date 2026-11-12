@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FITB,254,accounts_payable,not_presented,,,,,,,,0000035527-26-000124,,,,no face line
 FITB,254,accounts_receivable,not_presented,,,,,,,,0000035527-26-000124,,,,no face line
-FITB,254,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000035527-26-000124,,,,note-sourced default tag (no face line)
+FITB,254,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000035527-26-000124,,,29000000.0000,note fact present in the filing (FSN value)
 FITB,254,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000035527-26-000124,R5,Earnings per share - basic (in dollars per share),3.5600,library map
 FITB,254,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000035527-26-000124,R9,Bank premises and equipment,584000000.0000,library map
 FITB,254,cash_and_equivalents,mapped,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndDueFromBanks,sec_api,0000035527-26-000124,R3,Cash and due from banks,3499000000.0000,library map
 FITB,254,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000035527-26-000124,R9,Net Cash (Used in) Provided by Financing Activities,-2183000000.0000,library map
 FITB,254,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000035527-26-000124,R9,Net Cash (Used in) Provided by Investing Activities,-1846000000.0000,library map
-FITB,254,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000035527-26-000124,,,,note-sourced default tag (no face line)
-FITB,254,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000035527-26-000124,,,,note-sourced default tag (no face line)
+FITB,254,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000035527-26-000124,,,185000000.0000,note fact present in the filing (FSN value)
+FITB,254,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000035527-26-000124,,,3974000000.0000,note fact present in the filing (FSN value)
 FITB,254,cf_ap_change,not_presented,,,,,,,,0000035527-26-000124,,,,no face line
 FITB,254,cf_ar_change,not_presented,,,,,,,,0000035527-26-000124,,,,no face line
 FITB,254,cf_inventory_change,OUT,,,,,,,,0000035527-26-000124,,,,sector template (bank/insurer)

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TXG,751,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-007822,R3,Accounts payable,12733000.0000,library map
 TXG,751,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-007822,R3,"Accounts receivable, net",47013000.0000,library map
-TXG,751,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007822,,,,note-sourced default tag (no face line)
+TXG,751,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-007822,,,,no face line and no note fact
 TXG,751,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-007822,R5,"Net loss per share, basic (in dollars per share)",-0.3500,library map
 TXG,751,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-007822,R8,Purchases of property and equipment,5935000.0000,library map
 TXG,751,cash_and_equivalents,not_presented,,,,,,,,0001628280-26-007822,,,,no face line
@@ -21,7 +21,7 @@ TXG,751,deposits,OUT,,,,,,,,0001628280-26-007822,,,,not a bank
 TXG,751,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-007822,R8,Depreciation and amortization,36199000.0000,library map
 TXG,751,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-007822,R5,"Net loss per share, diluted (in dollars per share)",-0.3500,library map
 TXG,751,dividends_paid,not_presented,,,,,,,,0001628280-26-007822,,,,no face line
-TXG,751,dividends_per_share,not_presented,,,,,,,,0001628280-26-007822,,,,no face line
+TXG,751,dividends_per_share,not_presented,,,,,,,,0001628280-26-007822,,,,no face line and no note fact
 TXG,751,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-007822,R3,Goodwill,4511000.0000,library map
 TXG,751,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-007822,R5,Gross profit,443881000.0000,library map
 TXG,751,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-007822,R5,Loss before provision for income taxes,-39907000.0000,library map

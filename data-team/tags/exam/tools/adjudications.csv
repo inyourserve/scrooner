@@ -1,0 +1,9 @@
+ticker,data_point,ruling
+NEE,operating_expenses,Dhairya 2026-11-12 opex 5 refined: fuel/purchased power inside the total -> combined
+BLK,operating_expenses,Dhairya 2026-11-12 opex: asset_manager total incl. distribution/servicing and direct fund costs -> combined
+COP,operating_expenses,Dhairya 2026-11-12 opex: production and operating costs are cost of sales -> combined/not opex
+VLO,operating_expenses,Dhairya 2026-11-12 opex: CostOfGoodsAndServicesSoldOverhead is a cost-of-sales component -> not opex
+DHR,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+MDT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+LMT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+BA,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)

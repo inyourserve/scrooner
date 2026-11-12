@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TWST,782,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001581280-25-000025,R3,Accounts payable,11094000.0000,library map
 TWST,782,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001581280-25-000025,R3,"Accounts receivable, net",57019000.0000,library map
-TWST,782,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001581280-25-000025,,,,note-sourced default tag (no face line)
+TWST,782,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001581280-25-000025,,,1100000.0000,note fact present in the filing (FSN value)
 TWST,782,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001581280-25-000025,R5,Net loss per share attributable to common stockholdersbasic (in dollars per share),-1.3000,library map
 TWST,782,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,Purchases of property and equipment,28004000.0000,library map
 TWST,782,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001581280-25-000025,R3,Cash and cash equivalents,183049000.0000,library map
 TWST,782,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,Net cash provided by financing activities,28540000.0000,library map
 TWST,782,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001581280-25-000025,R8,Net cash provided by (used in) investing activities,-24762000.0000,library map
 TWST,782,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,"Income taxes paid, net of refunds",683000.0000,library map
-TWST,782,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001581280-25-000025,,,,note-sourced default tag (no face line)
+TWST,782,cash_paid_for_interest,not_presented,,,,,,,,0001581280-25-000025,,,,no face line and no note fact
 TWST,782,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,Accounts payable,9332000.0000,library map
 TWST,782,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,"Accounts receivable, net",22382000.0000,library map
 TWST,782,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,Inventories,4229000.0000,library map
@@ -21,7 +21,7 @@ TWST,782,deposits,OUT,,,,,,,,0001581280-25-000025,,,,not a bank
 TWST,782,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001581280-25-000025,R8,Depreciation and amortization expense,24853000.0000,library map
 TWST,782,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001581280-25-000025,R5,Net loss per share attributable to common stockholdersdiluted (in dollars per share),-1.3000,library map
 TWST,782,dividends_paid,not_presented,,,,,,,,0001581280-25-000025,,,,no face line
-TWST,782,dividends_per_share,not_presented,,,,,,,,0001581280-25-000025,,,,no face line
+TWST,782,dividends_per_share,not_presented,,,,,,,,0001581280-25-000025,,,,no face line and no note fact
 TWST,782,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001581280-25-000025,R3,Goodwill,82195000.0000,library map
 TWST,782,gross_profit,not_presented,,,,,,,,0001581280-25-000025,,,,no face line
 TWST,782,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001581280-25-000025,R5,Loss before income taxes,-76951000.0000,library map

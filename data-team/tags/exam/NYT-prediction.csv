@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NYT,656,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000071691-26-000011,R3,Accounts payable,135623000.0000,library map
 NYT,656,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000071691-26-000011,R3,"Accounts receivable (net of allowances of $11,406 in 2025 and $12,118 in 2024)",290823000.0000,library map
-NYT,656,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000071691-26-000011,,,,note-sourced default tag (no face line)
+NYT,656,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000071691-26-000011,,,27600000.0000,note fact present in the filing (FSN value)
 NYT,656,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000071691-26-000011,R5,Basic earnings per share attributable to The New York Times Company common stockholders (in USD per share),2.1100,library map
 NYT,656,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000071691-26-000011,R9,Capital expenditures,33984000.0000,library map
 NYT,656,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000071691-26-000011,R3,Cash and cash equivalents,255445000.0000,library map
@@ -27,7 +27,7 @@ NYT,656,gross_profit,not_presented,,,,,,,,0000071691-26-000011,,,,no face line
 NYT,656,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000071691-26-000011,R5,Income before income taxes,451256000.0000,library map
 NYT,656,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000071691-26-000011,R5,Income tax expense,107275000.0000,library map
 NYT,656,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0000071691-26-000011,R5,"Interest income and other, net",38256000.0000,combined line (library or label demote)
-NYT,656,interest_income,not_presented,,,,,,,,0000071691-26-000011,,,,no face line
+NYT,656,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000071691-26-000011,,,43481000.0000,note fact present in the filing (FSN value)
 NYT,656,inventory,not_presented,,,,,,,,0000071691-26-000011,,,,no face line
 NYT,656,loans_net,OUT,,,,,,,,0000071691-26-000011,,,,not a bank
 NYT,656,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000071691-26-000011,R5,Net income attributable to The New York Times Company common stockholders,343981000.0000,library map

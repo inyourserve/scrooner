@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KNSL,774,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001669162-26-000015,R2,Accounts payable and accrued expenses,66301000.0000,combined line (library or label demote)
 KNSL,774,accounts_receivable,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
-KNSL,774,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001669162-26-000015,,,,note-sourced default tag (no face line)
+KNSL,774,amortization_of_intangibles,not_presented,,,,,,,,0001669162-26-000015,,,,no face line and no note fact
 KNSL,774,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001669162-26-000015,R4,Basic,21.7600,library map
 KNSL,774,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001669162-26-000015,R7,Purchase of property and equipment,53685000.0000,library map
 KNSL,774,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001669162-26-000015,R2,"Cash, Cash Equivalent, Restricted Cash, and Restricted Cash Equivalent, Continuing Operation",163361000.0000,combined line (library or label demote)
 KNSL,774,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001669162-26-000015,R7,Net cash provided by (used in) financing activities,-71380000.0000,library map
 KNSL,774,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001669162-26-000015,R7,Net cash provided by (used in) investing activities,-922210000.0000,library map
 KNSL,774,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001669162-26-000015,R7,"Income Taxes Paid, Net",129600000.0000,library map
-KNSL,774,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001669162-26-000015,,,,note-sourced default tag (no face line)
+KNSL,774,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001669162-26-000015,,,10400000.0000,note fact present in the filing (FSN value)
 KNSL,774,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001669162-26-000015,R7,Accounts payable and accrued expenses,10861000.0000,combined line (library or label demote)
 KNSL,774,cf_ar_change,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
 KNSL,774,cf_inventory_change,OUT,,,,,,,,0001669162-26-000015,,,,sector template (bank/insurer)
@@ -27,14 +27,14 @@ KNSL,774,gross_profit,OUT,,,,,,,,0001669162-26-000015,,,,sector template (bank/i
 KNSL,774,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001669162-26-000015,R4,Income before income taxes,634302000.0000,library map
 KNSL,774,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001669162-26-000015,R4,Income tax expense,130688000.0000,library map
 KNSL,774,interest_expense,not_presented,,,,,,,,0001669162-26-000015,,,,single component only
-KNSL,774,interest_income,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
+KNSL,774,interest_income,not_presented,,,,,,,,0001669162-26-000015,,,,no face line and no note fact
 KNSL,774,inventory,OUT,,,,,,,,0001669162-26-000015,,,,sector template (bank/insurer)
 KNSL,774,loans_net,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
 KNSL,774,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001669162-26-000015,R4,Net income,503614000.0000,library map
 KNSL,774,net_interest_income,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
 KNSL,774,noninterest_expense,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
 KNSL,774,noninterest_income,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
-KNSL,774,operating_expenses,not_presented,,,,,,,,0001669162-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+KNSL,774,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001669162-26-000015,R4,Total expenses,1239685000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 KNSL,774,operating_income,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
 KNSL,774,other_income_expense_net,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
 KNSL,774,ppe_net,not_presented,,,,,,,,0001669162-26-000015,,,,no face line

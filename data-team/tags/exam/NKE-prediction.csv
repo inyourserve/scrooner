@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NKE,222,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000320187-26-000088,R5,Accounts payable,3600000000.0000,library map
 NKE,222,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000320187-26-000088,R5,"Accounts receivable, net",5931000000.0000,library map
-NKE,222,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000320187-26-000088,,,,note-sourced default tag (no face line)
+NKE,222,amortization_of_intangibles,not_presented,,,,,,,,0000320187-26-000088,,,,no face line and no note fact
 NKE,222,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000320187-26-000088,R3,Basic (in dollars per share),2.1000,library map
 NKE,222,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000320187-26-000088,R7,"Additions to property, plant and equipment",684000000.0000,library map
 NKE,222,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000320187-26-000088,R5,Cash and equivalents,7563000000.0000,library map
 NKE,222,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000320187-26-000088,R7,Cash provided (used) by financing activities,-2292000000.0000,library map
 NKE,222,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000320187-26-000088,R7,Cash provided (used) by investing activities,-488000000.0000,library map
-NKE,222,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000320187-26-000088,,,,note-sourced default tag (no face line)
+NKE,222,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000320187-26-000088,,,1270000000.0000,note fact present in the filing (FSN value)
 NKE,222,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000320187-26-000088,R7,"Interest, net of capitalized interest",323000000.0000,library map
 NKE,222,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,-,-6,N,,sec_api,0000320187-26-000088,R7,"Increase (decrease) in accounts payable, accrued liabilities, operating lease liabilities and other current and non-current liabilities",-959000000.0000,combined line (library or label demote)
 NKE,222,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000320187-26-000088,R7,(Increase) decrease in accounts receivable,1207000000.0000,library map
@@ -27,7 +27,7 @@ NKE,222,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000320187-26
 NKE,222,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000320187-26-000088,R3,Income before income taxes,3900000000.0000,library map
 NKE,222,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000320187-26-000088,R3,Income tax expense,792000000.0000,library map
 NKE,222,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0000320187-26-000088,R3,"Interest (income) expense, net",50000000.0000,combined line (library or label demote)
-NKE,222,interest_income,not_presented,,,,,,,,0000320187-26-000088,,,,no face line
+NKE,222,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000320187-26-000088,,,278000000.0000,note fact present in the filing (FSN value)
 NKE,222,inventory,not_presented,,,,,,,,0000320187-26-000088,,,,no face line
 NKE,222,loans_net,OUT,,,,,,,,0000320187-26-000088,,,,not a bank
 NKE,222,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000320187-26-000088,R3,NET INCOME,3108000000.0000,library map

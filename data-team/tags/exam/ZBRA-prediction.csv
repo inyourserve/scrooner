@@ -21,13 +21,13 @@ ZBRA,487,deposits,OUT,,,,,,,,0001628280-26-007668,,,,not a bank
 ZBRA,487,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-007668,R8,Depreciation and amortization,185000000.0000,library map
 ZBRA,487,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-007668,R5,Diluted earnings per share (in USD per share),8.1800,library map
 ZBRA,487,dividends_paid,not_presented,,,,,,,,0001628280-26-007668,,,,no face line
-ZBRA,487,dividends_per_share,not_presented,,,,,,,,0001628280-26-007668,,,,no face line
+ZBRA,487,dividends_per_share,not_presented,,,,,,,,0001628280-26-007668,,,,no face line and no note fact
 ZBRA,487,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-007668,R3,Goodwill,4727000000.0000,library map
 ZBRA,487,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001628280-26-007668,R5,Gross profit,2593000000.0000,library map
 ZBRA,487,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-007668,R5,Income before income tax,560000000.0000,library map
 ZBRA,487,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-007668,R5,Income tax expense,141000000.0000,library map
 ZBRA,487,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestExpense,sec_api,0001628280-26-007668,R5,"Interest expense, net",-108000000.0000,combined line (library or label demote)
-ZBRA,487,interest_income,not_presented,,,,,,,,0001628280-26-007668,,,,no face line
+ZBRA,487,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestExpense,sec_api,0001628280-26-007668,R5,"Interest expense, net",-108000000.0000,interest income only inside a net/other face line between OI and pretax
 ZBRA,487,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-007668,R3,"Inventories, net",729000000.0000,library map
 ZBRA,487,loans_net,OUT,,,,,,,,0001628280-26-007668,,,,not a bank
 ZBRA,487,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-007668,R5,Net income,419000000.0000,library map
@@ -50,5 +50,5 @@ ZBRA,487,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-007
 ZBRA,487,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-007668,R3,Current portion of long-term debt,141000000.0000,printed face components (duration sum; total_debt founder sum)
 ZBRA,487,total_interest_income,OUT,,,,,,,,0001628280-26-007668,,,,not a bank
 ZBRA,487,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-007668,R3,Total Liabilities,4914000000.0000,library map
-ZBRA,487,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-007668,,,,note-sourced default tag (no face line)
-ZBRA,487,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-007668,,,,note-sourced default tag (no face line)
+ZBRA,487,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-007668,,,50820589.0000,note fact present in the filing (FSN value)
+ZBRA,487,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-007668,,,51212395.0000,note fact present in the filing (FSN value)

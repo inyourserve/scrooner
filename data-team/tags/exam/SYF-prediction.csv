@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SYF,401,accounts_payable,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,accounts_receivable,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
-SYF,401,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001601712-26-000006,,,,note-sourced default tag (no face line)
+SYF,401,amortization_of_intangibles,not_presented,,,,,,,,0001601712-26-000006,,,,no face line and no note fact
 SYF,401,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001601712-26-000006,R3,Basic (in usd per share),9.3800,library map
 SYF,401,capex,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001601712-26-000006,R5,Cash and equivalents,14973000000.0000,library map
 SYF,401,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001601712-26-000006,R8,Cash provided from (used for) financing activities,-4735000000.0000,library map
 SYF,401,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001601712-26-000006,R8,Cash provided from (used for) investing activities,-4854000000.0000,library map
-SYF,401,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001601712-26-000006,,,,note-sourced default tag (no face line)
+SYF,401,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001601712-26-000006,,,710000000.0000,note fact present in the filing (FSN value)
 SYF,401,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001601712-26-000006,R8,Cash paid during the year for interest,4162000000.0000,library map
 SYF,401,cf_ap_change,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,cf_ar_change,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
@@ -41,7 +41,7 @@ SYF,401,ppe_net,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLossesExpensed,IS,+,-6,N,,sec_api,0001601712-26-000006,R3,Provision for credit losses (Note 5),5225000000.0000,bank template tag
 SYF,401,research_and_development,OUT,,,,,,,,0001601712-26-000006,,,,sector template (bank/insurer)
 SYF,401,revenue,not_presented,,,,,,,,0001601712-26-000006,,,,single component only
-SYF,401,sbc,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
+SYF,401,sbc,not_presented,,,,,,,,0001601712-26-000006,,,,no face line and no note fact
 SYF,401,sga_expense,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001601712-26-000006,R8,Purchases of treasury stock,2941000000.0000,library map
 SYF,401,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001601712-26-000006,R6,Common stock shares outstanding (in shares),347000000.0000,library map
@@ -50,5 +50,5 @@ SYF,401,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001601712-26-0000
 SYF,401,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0001601712-26-000006,R5,Total borrowings,15182000000.0000,printed face components (duration sum; total_debt founder sum)
 SYF,401,total_interest_income,not_presented,,,,,,,,0001601712-26-000006,,,,no face line
 SYF,401,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001601712-26-000006,R5,Total liabilities,102329000000.0000,library map
-SYF,401,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001601712-26-000006,,,,note-sourced default tag (no face line)
-SYF,401,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001601712-26-000006,,,,note-sourced default tag (no face line)
+SYF,401,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001601712-26-000006,,,369900000.0000,note fact present in the filing (FSN value)
+SYF,401,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001601712-26-000006,,,373900000.0000,note fact present in the filing (FSN value)

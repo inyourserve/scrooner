@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BXP,725,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,"Accounts payable and accrued expenses (amounts related to VIEs of $88,849 and $115,808 at December 31, 2025 and December 31, 2024, respectively)",480017000.0000,combined line (library or label demote)
 BXP,725,accounts_receivable,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
-BXP,725,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001037540-26-000006,,,,note-sourced default tag (no face line)
+BXP,725,amortization_of_intangibles,not_presented,,,,,,,,0001037540-26-000006,,,,no face line and no note fact
 BXP,725,basic_eps,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,capex,not_presented,,,,,,,,0001037540-26-000006,,,,single component only
 BXP,725,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,"Cash and cash equivalents (amounts related to VIEs of $255,631 and $373,737 at December 31, 2025 and December 31, 2024, respectively)",1478206000.0000,library map
 BXP,725,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,Net cash provided by (used in) financing activities,-378561000.0000,library map
 BXP,725,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,Net cash used in investing activities,-644526000.0000,library map
-BXP,725,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001037540-26-000006,,,,note-sourced default tag (no face line)
+BXP,725,cash_paid_for_income_taxes,not_presented,,,,,,,,0001037540-26-000006,,,,no face line and no note fact
 BXP,725,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Cash paid for interest (net of amounts capitalized),677156000.0000,library map
 BXP,725,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Accounts payable and accrued expenses,27161000.0000,combined line (library or label demote)
 BXP,725,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,"Tenant and other receivables, net",-32507000.0000,combined line (library or label demote)
@@ -21,13 +21,13 @@ BXP,725,deposits,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
 BXP,725,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Depreciation and amortization,912088000.0000,library map
 BXP,725,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001037540-26-000006,R5,"Diluted Earnings: Net income (Loss), Per Share Amount (in dollars per share / unit)",1.7400,library map
 BXP,725,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Dividends and distributions,643107000.0000,library map
-BXP,725,dividends_per_share,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,dividends_per_share,not_presented,,,,,,,,0001037540-26-000006,,,,no face line and no note fact
 BXP,725,goodwill,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,gross_profit,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,income_before_tax,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,income_tax_expense,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Interest expense,653138000.0000,library map
-BXP,725,interest_income,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,interest_income,not_presented,,,,,,,,0001037540-26-000006,,,,no face line and no note fact
 BXP,725,inventory,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,loans_net,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
 BXP,725,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,"Net income attributable to BXP, Inc.",276800000.0000,library map

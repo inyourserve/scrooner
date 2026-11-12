@@ -7,8 +7,8 @@ PWR,125,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 PWR,125,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001050915-26-000006,R3,Cash and cash equivalents,439508000.0000,library map
 PWR,125,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,Net cash provided by (used in) financing activities,1274984000.0000,library map
 PWR,125,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001050915-26-000006,R7,Net cash used in investing activities,-3830974000.0000,library map
-PWR,125,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001050915-26-000006,,,,note-sourced default tag (no face line)
-PWR,125,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001050915-26-000006,,,,note-sourced default tag (no face line)
+PWR,125,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001050915-26-000006,,,347197000.0000,note fact present in the filing (FSN value)
+PWR,125,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001050915-26-000006,,,217358000.0000,note fact present in the filing (FSN value)
 PWR,125,cf_ap_change,not_presented,,,,,,,,0001050915-26-000006,,,,no face line
 PWR,125,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,"Accounts, notes and retainage receivable",853835000.0000,combined line (library or label demote)
 PWR,125,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,Inventories,121743000.0000,library map

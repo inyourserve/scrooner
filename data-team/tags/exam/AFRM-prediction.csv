@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AFRM,389,accounts_payable,not_presented,,,,,,,,0001628280-26-059279,,,,no face line
 AFRM,389,accounts_receivable,not_presented,,,,,,,,0001628280-26-059279,,,,no face line
-AFRM,389,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-059279,,,,note-sourced default tag (no face line)
+AFRM,389,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-059279,,,200000.0000,note fact present in the filing (FSN value)
 AFRM,389,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-059279,R5,Basic (in USD per share),5.7600,library map
 AFRM,389,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-059279,R7,"Additions to property, equipment and software",238346000.0000,library map
 AFRM,389,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-059279,R3,Cash and cash equivalents,1630038000.0000,library map
@@ -21,7 +21,7 @@ AFRM,389,deposits,OUT,,,,,,,,0001628280-26-059279,,,,not a bank
 AFRM,389,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-059279,R7,Depreciation and amortization,303333000.0000,library map
 AFRM,389,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-059279,R5,Diluted (in USD per share),5.5300,library map
 AFRM,389,dividends_paid,not_presented,,,,,,,,0001628280-26-059279,,,,no face line
-AFRM,389,dividends_per_share,not_presented,,,,,,,,0001628280-26-059279,,,,no face line
+AFRM,389,dividends_per_share,not_presented,,,,,,,,0001628280-26-059279,,,,no face line and no note fact
 AFRM,389,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-059279,R3,Goodwill,524452000.0000,library map
 AFRM,389,gross_profit,not_presented,,,,,,,,0001628280-26-059279,,,,no face line
 AFRM,389,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-059279,R5,Income (loss) before income taxes,492727000.0000,library map
@@ -34,7 +34,7 @@ AFRM,389,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 AFRM,389,net_interest_income,OUT,,,,,,,,0001628280-26-059279,,,,not a bank
 AFRM,389,noninterest_expense,OUT,,,,,,,,0001628280-26-059279,,,,not a bank
 AFRM,389,noninterest_income,OUT,,,,,,,,0001628280-26-059279,,,,not a bank
-AFRM,389,operating_expenses,not_presented,,,,,,,,0001628280-26-059279,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+AFRM,389,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-059279,R5,Total operating expenses,3844105000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 AFRM,389,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-059279,R5,Operating income (loss),416977000.0000,library map
 AFRM,389,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-059279,R5,"Other income, net",75750000.0000,library map
 AFRM,389,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-059279,R3,"Property, equipment and software, net",685834000.0000,library map

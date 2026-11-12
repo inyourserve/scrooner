@@ -7,8 +7,8 @@ Q,397,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,
 Q,397,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002058873-26-000010,R5,Cash and cash equivalents,915000000.0000,library map
 Q,397,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0002058873-26-000010,R7,Cash used for financing activities,-248000000.0000,library map
 Q,397,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0002058873-26-000010,R7,Cash used for investing activities,-285000000.0000,library map
-Q,397,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002058873-26-000010,,,,note-sourced default tag (no face line)
-Q,397,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002058873-26-000010,,,,note-sourced default tag (no face line)
+Q,397,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0002058873-26-000010,,,94000000.0000,note fact present in the filing (FSN value)
+Q,397,cash_paid_for_interest,not_presented,,,,,,,,0002058873-26-000010,,,,no face line and no note fact
 Q,397,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0002058873-26-000010,R7,Accounts payable,119000000.0000,library map
 Q,397,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-6,N,,sec_api,0002058873-26-000010,R7,Accounts and notes receivable,12000000.0000,combined line (library or label demote)
 Q,397,cf_inventory_change,not_presented,,,,,,,,0002058873-26-000010,,,,no face line
@@ -27,7 +27,7 @@ Q,397,gross_profit,not_presented,,,,,,,,0002058873-26-000010,,,,no face line
 Q,397,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002058873-26-000010,R3,Income before income taxes,962000000.0000,library map
 Q,397,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002058873-26-000010,R3,Provision for income taxes,233000000.0000,library map
 Q,397,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0002058873-26-000010,R3,Interest expense,65000000.0000,library map
-Q,397,interest_income,not_presented,,,,,,,,0002058873-26-000010,,,,no face line
+Q,397,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0002058873-26-000010,,,4000000.0000,note fact present in the filing (FSN value)
 Q,397,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002058873-26-000010,R5,Inventories - net,661000000.0000,library map
 Q,397,loans_net,OUT,,,,,,,,0002058873-26-000010,,,,not a bank
 Q,397,net_income,not_presented,,,,,,,,0002058873-26-000010,,,,no face line

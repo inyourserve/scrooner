@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AWK,363,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001410636-26-000034,R3,Accounts payable,378000000.0000,library map
 AWK,363,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001410636-26-000034,R3,"Accounts receivable, net of allowance for uncollectible accounts of $58 and $53, respectively",395000000.0000,library map
-AWK,363,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001410636-26-000034,,,,note-sourced default tag (no face line)
+AWK,363,amortization_of_intangibles,not_presented,,,,,,,,0001410636-26-000034,,,,no face line and no note fact
 AWK,363,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001410636-26-000034,R5,Net income attributable to common shareholders (in dollars per share),5.6900,library map
 AWK,363,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001410636-26-000034,R8,Capital expenditures,3126000000.0000,library map
 AWK,363,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001410636-26-000034,R3,Cash and cash equivalents,98000000.0000,library map
 AWK,363,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001410636-26-000034,R8,Net cash provided by financing activities,1249000000.0000,library map
 AWK,363,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001410636-26-000034,R8,Net cash used in investing activities,-3309000000.0000,library map
-AWK,363,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001410636-26-000034,,,,note-sourced default tag (no face line)
+AWK,363,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001410636-26-000034,,,190000000.0000,note fact present in the filing (FSN value)
 AWK,363,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001410636-26-000034,R8,"Interest, net of capitalized amount",568000000.0000,library map
 AWK,363,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001410636-26-000034,R8,Accounts payable and accrued liabilities,97000000.0000,combined line (library or label demote)
 AWK,363,cf_ar_change,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
@@ -27,21 +27,21 @@ AWK,363,gross_profit,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
 AWK,363,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,Income before income taxes,1422000000.0000,library map
 AWK,363,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,Provision for income taxes,311000000.0000,library map
 AWK,363,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,Interest expense,615000000.0000,library map
-AWK,363,interest_income,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
+AWK,363,interest_income,combined,custom:InterestIncomeNonoperating,IS,+,-6,N,,fsn_xbrl,0001410636-26-000034,R5,Interest income,90000000.0000,interest income only inside a net/other face line between OI and pretax
 AWK,363,inventory,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
 AWK,363,loans_net,OUT,,,,,,,,0001410636-26-000034,,,,not a bank
 AWK,363,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,Net income attributable to common shareholders,1111000000.0000,library map
 AWK,363,net_interest_income,OUT,,,,,,,,0001410636-26-000034,,,,not a bank
 AWK,363,noninterest_expense,OUT,,,,,,,,0001410636-26-000034,,,,not a bank
 AWK,363,noninterest_income,OUT,,,,,,,,0001410636-26-000034,,,,not a bank
-AWK,363,operating_expenses,not_presented,,,,,,,,0001410636-26-000034,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+AWK,363,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,"Total operating expenses, net",3261000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 AWK,363,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,Operating income,1879000000.0000,library map
 AWK,363,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001410636-26-000034,R5,"Other, net",52000000.0000,library map
 AWK,363,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001410636-26-000034,R3,"Property, plant and equipment, net",30576000000.0000,library map
 AWK,363,provision_for_credit_losses,OUT,,,,,,,,0001410636-26-000034,,,,not a bank
 AWK,363,research_and_development,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
 AWK,363,revenue,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
-AWK,363,sbc,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
+AWK,363,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001410636-26-000034,,,32000000.0000,note fact present in the filing (FSN value)
 AWK,363,sga_expense,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
 AWK,363,share_buybacks,not_presented,,,,,,,,0001410636-26-000034,,,,no face line
 AWK,363,shares_outstanding,not_presented,,,,,,,,0001410636-26-000034,,,,no face line

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DINO,421,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Accounts payable,1902000000.0000,library map
 DINO,421,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,"Total Accounts Receivable, net",1136000000.0000,library map
-DINO,421,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001915657-26-000016,,,,note-sourced default tag (no face line)
+DINO,421,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001915657-26-000016,,,55000000.0000,note fact present in the filing (FSN value)
 DINO,421,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001915657-26-000016,R5,Basic (in USD per share),3.0800,library map
 DINO,421,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,"Additions to properties, plants and equipment",449000000.0000,library map
 DINO,421,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Cash and cash equivalents,978000000.0000,library map
 DINO,421,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Net cash used for financing activities,-631000000.0000,library map
 DINO,421,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Net cash used for investing activities,-516000000.0000,library map
-DINO,421,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001915657-26-000016,,,,note-sourced default tag (no face line)
+DINO,421,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001915657-26-000016,,,51000000.0000,note fact present in the filing (FSN value)
 DINO,421,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Cash paid for interest,139000000.0000,library map
 DINO,421,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Accounts payable,-345000000.0000,library map
 DINO,421,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Accounts receivable,-123000000.0000,library map

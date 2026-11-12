@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EVRG,459,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001711269-26-000017,R4,Accounts payable,654300000.0000,library map
 EVRG,459,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001711269-26-000017,R4,"Receivables, net of allowance for credit losses of $15.3 and $15.7, respectively",214200000.0000,library map
-EVRG,459,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001711269-26-000017,,,,note-sourced default tag (no face line)
+EVRG,459,amortization_of_intangibles,not_presented,,,,,,,,0001711269-26-000017,,,,no face line and no note fact
 EVRG,459,basic_eps,mapped,us-gaap:EarningsPerShareBasic,CI,+,2,N,,sec_api,0001711269-26-000017,R3,Basic earnings per common share (in dollars per share),3.7100,library map
 EVRG,459,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001711269-26-000017,R6,"Additions to property, plant and equipment",2796900000.0000,library map
 EVRG,459,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001711269-26-000017,R4,Cash and cash equivalents,19800000.0000,library map
 EVRG,459,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001711269-26-000017,R6,Cash Flows from Financing Activities,522000000.0000,library map
 EVRG,459,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001711269-26-000017,R6,Cash Flows used in Investing Activities,-2570100000.0000,library map
-EVRG,459,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001711269-26-000017,,,,note-sourced default tag (no face line)
-EVRG,459,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001711269-26-000017,,,,note-sourced default tag (no face line)
+EVRG,459,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001711269-26-000017,,,6100000.0000,note fact present in the filing (FSN value)
+EVRG,459,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001711269-26-000017,,,586700000.0000,note fact present in the filing (FSN value)
 EVRG,459,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001711269-26-000017,R6,Accounts payable,-6800000.0000,library map
 EVRG,459,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001711269-26-000017,R6,Accounts receivable,-19900000.0000,library map
 EVRG,459,cf_inventory_change,not_presented,,,,,,,,0001711269-26-000017,,,,no face line
@@ -27,14 +27,14 @@ EVRG,459,gross_profit,not_presented,,,,,,,,0001711269-26-000017,,,,no face line
 EVRG,459,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,INCOME BEFORE INCOME TAXES,891000000.0000,library map
 EVRG,459,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,Income tax expense,29900000.0000,library map
 EVRG,459,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,Interest expense,616300000.0000,library map
-EVRG,459,interest_income,not_presented,,,,,,,,0001711269-26-000017,,,,no face line
+EVRG,459,interest_income,not_presented,,,,,,,,0001711269-26-000017,,,,no face line and no note fact
 EVRG,459,inventory,not_presented,,,,,,,,0001711269-26-000017,,,,no face line
 EVRG,459,loans_net,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
 EVRG,459,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,"Net income attributable to Evergy, Inc.",855600000.0000,library map
 EVRG,459,net_interest_income,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
 EVRG,459,noninterest_expense,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
 EVRG,459,noninterest_income,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
-EVRG,459,operating_expenses,not_presented,,,,,,,,0001711269-26-000017,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+EVRG,459,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,Total Operating Expenses,4428700000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 EVRG,459,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,INCOME FROM OPERATIONS,1532900000.0000,library map
 EVRG,459,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,Other income,46400000.0000,combined line (library or label demote)
 EVRG,459,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001711269-26-000017,R4,"PROPERTY, PLANT AND EQUIPMENT, NET, includes $119.4 and $126.5 related to variable interest entity, respectively",26301500000.0000,library map

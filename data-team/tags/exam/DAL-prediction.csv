@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DAL,239,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000027904-26-000013,R3,Accounts payable,5226000000.0000,library map
 DAL,239,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000027904-26-000013,R3,"Accounts receivable, net of an allowance for uncollectible accounts of $13 and $18",2850000000.0000,combined line (library or label demote)
-DAL,239,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000027904-26-000013,,,,note-sourced default tag (no face line)
+DAL,239,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000027904-26-000013,,,8000000.0000,note fact present in the filing (FSN value)
 DAL,239,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000027904-26-000013,R5,Basic Earnings Per Share (USD per share),7.7200,library map
 DAL,239,capex,not_presented,,,,,,,,0000027904-26-000013,,,,single component only
 DAL,239,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000027904-26-000013,R3,Cash and cash equivalents,4310000000.0000,library map
 DAL,239,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000027904-26-000013,R7,Net cash used in financing activities,-3076000000.0000,library map
 DAL,239,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000027904-26-000013,R7,Net cash used in investing activities,-4186000000.0000,library map
-DAL,239,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000027904-26-000013,,,,note-sourced default tag (no face line)
+DAL,239,cash_paid_for_income_taxes,not_presented,,,,,,,,0000027904-26-000013,,,,no face line and no note fact
 DAL,239,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000027904-26-000013,R7,Supplemental Disclosure of Cash Paid for Interest,850000000.0000,library map
 DAL,239,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000027904-26-000013,R7,"Other payables, deferred revenue and accrued liabilities",842000000.0000,combined line (library or label demote)
 DAL,239,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0000027904-26-000013,R7,Receivables,-432000000.0000,library map
@@ -27,21 +27,21 @@ DAL,239,gross_profit,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
 DAL,239,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Income Before Income Taxes,6185000000.0000,library map
 DAL,239,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Income Tax Provision,1180000000.0000,library map
 DAL,239,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0000027904-26-000013,R5,"Interest expense, net",-679000000.0000,combined line (library or label demote)
-DAL,239,interest_income,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
+DAL,239,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0000027904-26-000013,R5,"Interest expense, net",-679000000.0000,interest income only inside a net/other face line between OI and pretax
 DAL,239,inventory,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
 DAL,239,loans_net,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
 DAL,239,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Net Income,5005000000.0000,library map
 DAL,239,net_interest_income,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
 DAL,239,noninterest_expense,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
 DAL,239,noninterest_income,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
-DAL,239,operating_expenses,not_presented,,,,,,,,0000027904-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+DAL,239,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Total operating expense,57542000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 DAL,239,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Operating Income,5822000000.0000,library map
 DAL,239,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000027904-26-000013,R5,"Miscellaneous, net",-144000000.0000,library map
 DAL,239,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000027904-26-000013,R3,"Property and equipment, net of accumulated depreciation and amortization of $24,719 and $23,228",39743000000.0000,library map
 DAL,239,provision_for_credit_losses,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
 DAL,239,research_and_development,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
 DAL,239,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000027904-26-000013,R5,Total operating revenue,63364000000.0000,library map
-DAL,239,sbc,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
+DAL,239,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000027904-26-000013,,,313000000.0000,note fact present in the filing (FSN value)
 DAL,239,sga_expense,not_presented,,,,,,,,0000027904-26-000013,,,,single component only
 DAL,239,share_buybacks,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
 DAL,239,shares_outstanding,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
@@ -50,5 +50,5 @@ DAL,239,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000027904-26-0000
 DAL,239,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000027904-26-000013,R3,Current maturities of debt and finance leases,1605000000.0000,printed face components (duration sum; total_debt founder sum)
 DAL,239,total_interest_income,OUT,,,,,,,,0000027904-26-000013,,,,not a bank
 DAL,239,total_liabilities,not_presented,,,,,,,,0000027904-26-000013,,,,no face line
-DAL,239,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000027904-26-000013,,,,note-sourced default tag (no face line)
-DAL,239,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000027904-26-000013,,,,note-sourced default tag (no face line)
+DAL,239,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000027904-26-000013,,,648000000.0000,note fact present in the filing (FSN value)
+DAL,239,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000027904-26-000013,,,654000000.0000,note fact present in the filing (FSN value)

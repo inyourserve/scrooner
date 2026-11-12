@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MKC,607,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Trade accounts payable,1259400000.0000,library map
 MKC,607,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,"Trade accounts receivable, net of allowances",628900000.0000,library map
-MKC,607,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000063754-26-000037,,,35200000.0000,note fact present in the filing (FSN value)
 MKC,607,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000063754-26-000037,R3,Earnings per sharebasic (usd per share),2.9400,library map
 MKC,607,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Capital expenditures (including software),221800000.0000,library map
 MKC,607,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Cash and cash equivalents,95900000.0000,library map
 MKC,607,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Net cash flow used in financing activities,-840900000.0000,library map
 MKC,607,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Net cash flow used in investing activities,-255200000.0000,library map
-MKC,607,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
-MKC,607,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000063754-26-000037,,,239600000.0000,note fact present in the filing (FSN value)
+MKC,607,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000063754-26-000037,,,192800000.0000,note fact present in the filing (FSN value)
 MKC,607,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Trade accounts payable,1200000.0000,library map
 MKC,607,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Trade accounts receivable,14700000.0000,library map
 MKC,607,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Inventories,-23900000.0000,library map
@@ -21,13 +21,13 @@ MKC,607,deposits,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Depreciation and amortization,231300000.0000,library map
 MKC,607,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000063754-26-000037,R3,Earnings per sharediluted (usd per share),2.9300,library map
 MKC,607,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Dividends paid,483000000.0000,library map
-MKC,607,dividends_per_share,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000063754-26-000037,,,1.8300,note fact present in the filing (FSN value)
 MKC,607,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Goodwill,5301300000.0000,library map
 MKC,607,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Gross profit,2592200000.0000,library map
 MKC,607,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income from consolidated operations before income taxes,913000000.0000,library map
 MKC,607,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income tax expense,195800000.0000,library map
 MKC,607,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Interest expense,196200000.0000,library map
-MKC,607,interest_income,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0000063754-26-000037,,,40100000.0000,note fact present in the filing (FSN value)
 MKC,607,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Inventories,1272000000.0000,library map
 MKC,607,loans_net,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Net income,789400000.0000,library map
@@ -50,5 +50,5 @@ MKC,607,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000063754-26-0000
 MKC,607,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Short-term borrowings,381400000.0000,printed face components (duration sum; total_debt founder sum)
 MKC,607,total_interest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Total liabilities,7432300000.0000,library map
-MKC,607,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
-MKC,607,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000063754-26-000037,,,268500000.0000,note fact present in the filing (FSN value)
+MKC,607,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000063754-26-000037,,,269400000.0000,note fact present in the filing (FSN value)

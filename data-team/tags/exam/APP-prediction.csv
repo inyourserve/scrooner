@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 APP,137,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001751008-26-000010,R3,Accounts payable,746977000.0000,library map
 APP,137,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001751008-26-000010,R3,"Accounts receivable, net",1819366000.0000,library map
-APP,137,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001751008-26-000010,,,,note-sourced default tag (no face line)
+APP,137,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001751008-26-000010,,,97404000.0000,note fact present in the filing (FSN value)
 APP,137,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001751008-26-000010,R5,Basic net income per share (in dollars per share),9.8400,library map
 APP,137,capex,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
 APP,137,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001751008-26-000010,R3,Cash and cash equivalents,2487096000.0000,library map
@@ -21,13 +21,13 @@ APP,137,deposits,OUT,,,,,,,,0001751008-26-000010,,,,not a bank
 APP,137,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001751008-26-000010,R8,"Amortization, depreciation and write-offs",194778000.0000,library map
 APP,137,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001751008-26-000010,R5,Diluted net income per share (in dollars per share),9.7500,library map
 APP,137,dividends_paid,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
-APP,137,dividends_per_share,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
+APP,137,dividends_per_share,not_presented,,,,,,,,0001751008-26-000010,,,,no face line and no note fact
 APP,137,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001751008-26-000010,R3,Goodwill,1539986000.0000,library map
 APP,137,gross_profit,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
 APP,137,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Income before income taxes,3952910000.0000,library map
 APP,137,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Provision for income taxes,519715000.0000,library map
 APP,137,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Interest expense and loss on settlement of debt,207016000.0000,library map
-APP,137,interest_income,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
+APP,137,interest_income,not_presented,,,,,,,,0001751008-26-000010,,,,no face line and no note fact
 APP,137,inventory,not_presented,,,,,,,,0001751008-26-000010,,,,no face line
 APP,137,loans_net,OUT,,,,,,,,0001751008-26-000010,,,,not a bank
 APP,137,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Net income,3333751000.0000,library map

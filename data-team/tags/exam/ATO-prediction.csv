@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ATO,350,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0000731802-25-000056,R3,Accounts payable and accrued liabilities,506516000.0000,combined line (library or label demote)
 ATO,350,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000731802-25-000056,R3,"Accounts receivable, less allowance for uncollectible accounts of $45,259 in 2025 and $37,056 in 2024",375509000.0000,library map
-ATO,350,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000731802-25-000056,,,,note-sourced default tag (no face line)
+ATO,350,amortization_of_intangibles,not_presented,,,,,,,,0000731802-25-000056,,,,no face line and no note fact
 ATO,350,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000731802-25-000056,R5,Basic net income per share (USD per share),7.5400,library map
 ATO,350,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000731802-25-000056,R9,Capital expenditures,3561399000.0000,library map
 ATO,350,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000731802-25-000056,R3,Cash and cash equivalents,202687000.0000,library map
 ATO,350,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000731802-25-000056,R9,Net cash provided by (used in) financing activities,1406773000.0000,library map
 ATO,350,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000731802-25-000056,R9,Net cash used in investing activities,-3561282000.0000,library map
-ATO,350,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000731802-25-000056,,,,note-sourced default tag (no face line)
-ATO,350,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000731802-25-000056,,,,note-sourced default tag (no face line)
+ATO,350,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000731802-25-000056,,,4452000.0000,note fact present in the filing (FSN value)
+ATO,350,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000731802-25-000056,,,155300000.0000,note fact present in the filing (FSN value)
 ATO,350,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000731802-25-000056,R9,Increase (decrease) in accounts payable and accrued liabilities,31558000.0000,combined line (library or label demote)
 ATO,350,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000731802-25-000056,R9,(Increase) decrease in accounts receivable,1417000.0000,library map
 ATO,350,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000731802-25-000056,R9,(Increase) decrease in gas stored underground,2248000.0000,library map
@@ -27,7 +27,7 @@ ATO,350,gross_profit,not_presented,,,,,,,,0000731802-25-000056,,,,no face line
 ATO,350,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000731802-25-000056,R5,Income before income taxes,1478034000.0000,library map
 ATO,350,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000731802-25-000056,R5,Income tax expense,279280000.0000,library map
 ATO,350,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000731802-25-000056,R5,Interest charges,171678000.0000,library map
-ATO,350,interest_income,not_presented,,,,,,,,0000731802-25-000056,,,,no face line
+ATO,350,interest_income,not_presented,,,,,,,,0000731802-25-000056,,,,no face line and no note fact
 ATO,350,inventory,not_presented,,,,,,,,0000731802-25-000056,,,,no face line
 ATO,350,loans_net,OUT,,,,,,,,0000731802-25-000056,,,,not a bank
 ATO,350,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,IncomeLossFromContinuingOperations,sec_api,0000731802-25-000056,R5,Net income,1198754000.0000,library map

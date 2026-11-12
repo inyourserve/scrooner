@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PTC,442,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-25-291326,R2,Accounts payable,11504000.0000,library map
 PTC,442,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-25-291326,R2,"Accounts receivable, net of allowance for doubtful accounts of $1,487 and $1,180 at September 30, 2025 and September 30, 2024, respectively",1001085000.0000,library map
-PTC,442,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-25-291326,,,,note-sourced default tag (no face line)
+PTC,442,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-25-291326,,,45948000.0000,note fact present in the filing (FSN value)
 PTC,442,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-25-291326,R4,Earnings per share-Basic,6.1200,library map
 PTC,442,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-25-291326,R7,Additions to property and equipment,11008000.0000,library map
 PTC,442,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-25-291326,R2,Cash and cash equivalents,184415000.0000,library map
 PTC,442,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-25-291326,R7,Net cash provided by (used in) financing activities,-908509000.0000,library map
 PTC,442,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-25-291326,R7,Net cash used in investing activities,-38293000.0000,library map
-PTC,442,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-25-291326,,,,note-sourced default tag (no face line)
-PTC,442,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-25-291326,,,,note-sourced default tag (no face line)
+PTC,442,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-25-291326,,,121700000.0000,note fact present in the filing (FSN value)
+PTC,442,cash_paid_for_interest,not_presented,,,,,,,,0001193125-25-291326,,,,no face line and no note fact
 PTC,442,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001193125-25-291326,R7,Accounts payable and accrued expenses,-636000.0000,combined line (library or label demote)
 PTC,442,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-25-291326,R7,Accounts receivable,121052000.0000,library map
 PTC,442,cf_inventory_change,not_presented,,,,,,,,0001193125-25-291326,,,,no face line
@@ -21,13 +21,13 @@ PTC,442,deposits,OUT,,,,,,,,0001193125-25-291326,,,,not a bank
 PTC,442,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-25-291326,R7,Depreciation and amortization,102504000.0000,library map
 PTC,442,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-25-291326,R4,Earnings per share-Diluted,6.0800,library map
 PTC,442,dividends_paid,not_presented,,,,,,,,0001193125-25-291326,,,,no face line
-PTC,442,dividends_per_share,not_presented,,,,,,,,0001193125-25-291326,,,,no face line
+PTC,442,dividends_per_share,not_presented,,,,,,,,0001193125-25-291326,,,,no face line and no note fact
 PTC,442,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-25-291326,R2,Goodwill,3493316000.0000,library map
 PTC,442,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-25-291326,R4,Gross margin,2294243000.0000,library map
 PTC,442,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-25-291326,R4,Income before income taxes,920177000.0000,library map
 PTC,442,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-25-291326,R4,Provision for income taxes,186180000.0000,library map
 PTC,442,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-25-291326,R4,Interest expense,77019000.0000,library map
-PTC,442,interest_income,not_presented,,,,,,,,0001193125-25-291326,,,,no face line
+PTC,442,interest_income,not_presented,,,,,,,,0001193125-25-291326,,,,no face line and no note fact
 PTC,442,inventory,not_presented,,,,,,,,0001193125-25-291326,,,,no face line
 PTC,442,loans_net,OUT,,,,,,,,0001193125-25-291326,,,,not a bank
 PTC,442,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-25-291326,R4,Net income,733997000.0000,library map

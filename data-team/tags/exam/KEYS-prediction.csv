@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KEYS,217,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001601046-25-000127,R6,Accounts payable,355000000.0000,library map
 KEYS,217,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001601046-25-000127,R6,"Accounts receivable, net",939000000.0000,library map
-KEYS,217,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001601046-25-000127,,,,note-sourced default tag (no face line)
+KEYS,217,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001601046-25-000127,,,137000000.0000,note fact present in the filing (FSN value)
 KEYS,217,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001601046-25-000127,R3,Basic net income (loss) per share:,4.9300,library map
 KEYS,217,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001601046-25-000127,R8,"Investments in property, plant and equipment",128000000.0000,library map
 KEYS,217,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001601046-25-000127,R6,Cash and cash equivalents,1873000000.0000,library map
@@ -21,7 +21,7 @@ KEYS,217,deposits,OUT,,,,,,,,0001601046-25-000127,,,,not a bank
 KEYS,217,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-6,N,,sec_api,0001601046-25-000127,R8,Depreciation,131000000.0000,printed face components (duration sum; total_debt founder sum)
 KEYS,217,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001601046-25-000127,R3,Diluted net income (loss) per share:,4.9100,library map
 KEYS,217,dividends_paid,not_presented,,,,,,,,0001601046-25-000127,,,,no face line
-KEYS,217,dividends_per_share,not_presented,,,,,,,,0001601046-25-000127,,,,no face line
+KEYS,217,dividends_per_share,not_presented,,,,,,,,0001601046-25-000127,,,,no face line and no note fact
 KEYS,217,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001601046-25-000127,R6,Goodwill,3424000000.0000,library map
 KEYS,217,gross_profit,not_presented,,,,,,,,0001601046-25-000127,,,,no face line
 KEYS,217,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001601046-25-000127,R3,"Income from continuing operations before taxes, as reported",1082000000.0000,library map

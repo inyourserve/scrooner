@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BMNR,588,accounts_payable,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,accounts_receivable,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
-BMNR,588,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001493152-25-024679,,,,note-sourced default tag (no face line)
+BMNR,588,amortization_of_intangibles,not_presented,,,,,,,,0001493152-25-024679,,,,no face line and no note fact
 BMNR,588,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001493152-25-024679,R4,Basic income (loss) per common share,13.6000,library map
 BMNR,588,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001493152-25-024679,R6,Purchase of property and equipment,1065000.0000,library map
 BMNR,588,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001493152-25-024679,R2,Cash and cash equivalents,511999000.0000,library map
 BMNR,588,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001493152-25-024679,R6,Net cash (used in) by financing activities,7947659000.0000,library map
 BMNR,588,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001493152-25-024679,R6,Net cash (used in) investing activities,-7432009000.0000,library map
-BMNR,588,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001493152-25-024679,,,,note-sourced default tag (no face line)
-BMNR,588,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001493152-25-024679,,,,note-sourced default tag (no face line)
+BMNR,588,cash_paid_for_income_taxes,not_presented,,,,,,,,0001493152-25-024679,,,,no face line and no note fact
+BMNR,588,cash_paid_for_interest,not_presented,,,,,,,,0001493152-25-024679,,,,no face line and no note fact
 BMNR,588,cf_ap_change,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,cf_ar_change,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,cf_inventory_change,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
@@ -21,7 +21,7 @@ BMNR,588,deposits,OUT,,,,,,,,0001493152-25-024679,,,,not a bank
 BMNR,588,depreciation_and_amortization,not_presented,,,,,,,,0001493152-25-024679,,,,single component only
 BMNR,588,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001493152-25-024679,R4,Diluted income (loss) per common share,13.3900,library map
 BMNR,588,dividends_paid,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
-BMNR,588,dividends_per_share,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
+BMNR,588,dividends_per_share,not_presented,,,,,,,,0001493152-25-024679,,,,no face line and no note fact
 BMNR,588,goodwill,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,gross_profit,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001493152-25-024679,R4,Pre-tax income (loss),440872000.0000,library map

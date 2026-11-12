@@ -41,7 +41,7 @@ USB,129,ppe_net,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
 USB,129,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Provision for credit losses,2186000000.0000,bank template tag
 USB,129,research_and_development,OUT,,,,,,,,0000036104-26-000011,,,,sector template (bank/insurer)
 USB,129,revenue,not_presented,,,,,,,,0000036104-26-000011,,,,single component only
-USB,129,sbc,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
+USB,129,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000036104-26-000011,,,235000000.0000,note fact present in the filing (FSN value)
 USB,129,sga_expense,not_presented,,,,,,,,0000036104-26-000011,,,,single component only
 USB,129,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000036104-26-000011,R8,Repurchase of common stock,489000000.0000,library map
 USB,129,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-8,N,,sec_api,0000036104-26-000011,R6,Beginning Balance (in shares),1600000000.0000,library map

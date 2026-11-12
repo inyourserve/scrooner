@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SLAB,833,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,Accounts payable,50717000.0000,library map
 SLAB,833,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,"Accounts receivable, net",64513000.0000,library map
-SLAB,833,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001038074-26-000005,,,,note-sourced default tag (no face line)
+SLAB,833,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001038074-26-000005,,,13369000.0000,note fact present in the filing (FSN value)
 SLAB,833,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001038074-26-000005,R5,Basic (in dollars per share),-1.9800,library map
 SLAB,833,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001038074-26-000005,R8,Purchases of property and equipment,29922000.0000,library map
 SLAB,833,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,Cash and cash equivalents,364222000.0000,library map
@@ -21,13 +21,13 @@ SLAB,833,deposits,OUT,,,,,,,,0001038074-26-000005,,,,not a bank
 SLAB,833,depreciation_and_amortization,not_presented,,,,,,,,0001038074-26-000005,,,,single component only
 SLAB,833,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001038074-26-000005,R5,Diluted (in dollars per share),-1.9800,library map
 SLAB,833,dividends_paid,not_presented,,,,,,,,0001038074-26-000005,,,,no face line
-SLAB,833,dividends_per_share,not_presented,,,,,,,,0001038074-26-000005,,,,no face line
+SLAB,833,dividends_per_share,not_presented,,,,,,,,0001038074-26-000005,,,,no face line and no note fact
 SLAB,833,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,Goodwill,376389000.0000,library map
 SLAB,833,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001038074-26-000005,R5,Gross profit,456983000.0000,library map
 SLAB,833,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0001038074-26-000005,R5,Loss before income taxes,-57912000.0000,library map
 SLAB,833,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001038074-26-000005,R5,Provision for income taxes,6995000.0000,library map
 SLAB,833,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001038074-26-000005,R5,Interest expense,975000.0000,library map
-SLAB,833,interest_income,not_presented,,,,,,,,0001038074-26-000005,,,,no face line
+SLAB,833,interest_income,combined,us-gaap:InvestmentIncomeNonoperating,IS,+,-3,N,,sec_api,0001038074-26-000005,R5,"Interest income and other, net",13604000.0000,interest income only inside a net/other face line between OI and pretax
 SLAB,833,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,Inventories,95566000.0000,library map
 SLAB,833,loans_net,OUT,,,,,,,,0001038074-26-000005,,,,not a bank
 SLAB,833,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001038074-26-000005,R5,Net loss,-64907000.0000,library map

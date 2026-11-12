@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SNAP,679,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001564408-26-000013,R6,Accounts payable,219793000.0000,library map
 SNAP,679,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001564408-26-000013,R6,"Accounts receivable, net of allowance",1372237000.0000,library map
-SNAP,679,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001564408-26-000013,,,,note-sourced default tag (no face line)
+SNAP,679,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001564408-26-000013,,,45500000.0000,note fact present in the filing (FSN value)
 SNAP,679,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001564408-26-000013,R4,Basic (in usd per share),-0.2700,library map
 SNAP,679,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001564408-26-000013,R3,Purchases of property and equipment,218981000.0000,library map
 SNAP,679,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001564408-26-000013,R6,Cash and cash equivalents,1030435000.0000,library map
@@ -21,7 +21,7 @@ SNAP,679,deposits,OUT,,,,,,,,0001564408-26-000013,,,,not a bank
 SNAP,679,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001564408-26-000013,R3,Depreciation and amortization,163633000.0000,library map
 SNAP,679,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001564408-26-000013,R4,Diluted (in usd per share),-0.2700,library map
 SNAP,679,dividends_paid,not_presented,,,,,,,,0001564408-26-000013,,,,no face line
-SNAP,679,dividends_per_share,not_presented,,,,,,,,0001564408-26-000013,,,,no face line
+SNAP,679,dividends_per_share,not_presented,,,,,,,,0001564408-26-000013,,,,no face line and no note fact
 SNAP,679,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001564408-26-000013,R6,Goodwill,1720769000.0000,library map
 SNAP,679,gross_profit,not_presented,,,,,,,,0001564408-26-000013,,,,no face line
 SNAP,679,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001564408-26-000013,R4,Loss before income taxes,-451136000.0000,library map

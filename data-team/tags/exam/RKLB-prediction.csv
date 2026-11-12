@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RKLB,337,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001819994-26-000013,R3,Trade payables,72699000.0000,library map
 RKLB,337,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001819994-26-000013,R3,"Accounts receivable, net",39001000.0000,library map
-RKLB,337,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001819994-26-000013,,,,note-sourced default tag (no face line)
+RKLB,337,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001819994-26-000013,,,17956000.0000,note fact present in the filing (FSN value)
 RKLB,337,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001819994-26-000013,R5,Basic (in dollars per share),-0.3700,library map
 RKLB,337,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001819994-26-000013,R7,"Purchases of property, equipment and software",156285000.0000,library map
 RKLB,337,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001819994-26-000013,R3,Cash and cash equivalents,828660000.0000,library map
@@ -21,13 +21,13 @@ RKLB,337,deposits,OUT,,,,,,,,0001819994-26-000013,,,,not a bank
 RKLB,337,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001819994-26-000013,R7,Depreciation and amortization,43935000.0000,library map
 RKLB,337,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001819994-26-000013,R5,Diluted (in dollars per share),-0.3700,library map
 RKLB,337,dividends_paid,not_presented,,,,,,,,0001819994-26-000013,,,,no face line
-RKLB,337,dividends_per_share,not_presented,,,,,,,,0001819994-26-000013,,,,no face line
+RKLB,337,dividends_per_share,not_presented,,,,,,,,0001819994-26-000013,,,,no face line and no note fact
 RKLB,337,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001819994-26-000013,R3,Goodwill,205750000.0000,library map
 RKLB,337,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001819994-26-000013,R5,Gross profit,207181000.0000,library map
 RKLB,337,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001819994-26-000013,R5,Loss before income taxes,-225897000.0000,library map
 RKLB,337,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001819994-26-000013,R5,Benefit (provision) for income taxes,-27688000.0000,library map
 RKLB,337,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001819994-26-000013,R5,Interest expense,26489000.0000,library map
-RKLB,337,interest_income,not_presented,,,,,,,,0001819994-26-000013,,,,no face line
+RKLB,337,interest_income,combined,us-gaap:InvestmentIncomeNonoperating,IS,+,-3,N,,sec_api,0001819994-26-000013,R5,Interest income,25512000.0000,interest income only inside a net/other face line between OI and pretax
 RKLB,337,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001819994-26-000013,R3,Inventories,158407000.0000,library map
 RKLB,337,loans_net,OUT,,,,,,,,0001819994-26-000013,,,,not a bank
 RKLB,337,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001819994-26-000013,R5,Net loss,-198209000.0000,library map

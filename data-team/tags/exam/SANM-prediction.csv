@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SANM,727,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000897723-25-000042,R4,Accounts payable,1578895000.0000,library map
 SANM,727,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000897723-25-000042,R4,"Accounts and Other Receivables, Net, Current",1400129000.0000,combined line (library or label demote)
-SANM,727,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000897723-25-000042,,,,note-sourced default tag (no face line)
+SANM,727,amortization_of_intangibles,not_presented,,,,,,,,0000897723-25-000042,,,,no face line and no note fact
 SANM,727,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000897723-25-000042,R6,Basic,4.5600,library map
 SANM,727,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000897723-25-000042,R9,"Purchases of property, plant and equipment",147357000.0000,library map
 SANM,727,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000897723-25-000042,R4,Cash and cash equivalents,926267000.0000,library map
@@ -21,13 +21,13 @@ SANM,727,deposits,OUT,,,,,,,,0000897723-25-000042,,,,not a bank
 SANM,727,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000897723-25-000042,R9,Depreciation and amortization,119466000.0000,library map
 SANM,727,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000897723-25-000042,R6,Diluted,4.4600,library map
 SANM,727,dividends_paid,not_presented,,,,,,,,0000897723-25-000042,,,,no face line
-SANM,727,dividends_per_share,not_presented,,,,,,,,0000897723-25-000042,,,,no face line
+SANM,727,dividends_per_share,not_presented,,,,,,,,0000897723-25-000042,,,,no face line and no note fact
 SANM,727,goodwill,not_presented,,,,,,,,0000897723-25-000042,,,,no face line
 SANM,727,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000897723-25-000042,R6,Gross profit,716357000.0000,library map
 SANM,727,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000897723-25-000042,R6,Income before income taxes,339428000.0000,library map
 SANM,727,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000897723-25-000042,R6,Provision for income taxes,73168000.0000,library map
 SANM,727,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000897723-25-000042,R6,Interest expense,20151000.0000,library map
-SANM,727,interest_income,not_presented,,,,,,,,0000897723-25-000042,,,,no face line
+SANM,727,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0000897723-25-000042,R6,Interest income,15855000.0000,interest income only inside a net/other face line between OI and pretax
 SANM,727,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000897723-25-000042,R4,Inventories,1988462000.0000,library map
 SANM,727,loans_net,OUT,,,,,,,,0000897723-25-000042,,,,not a bank
 SANM,727,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000897723-25-000042,R6,Net income attributable to common shareholders,245893000.0000,library map

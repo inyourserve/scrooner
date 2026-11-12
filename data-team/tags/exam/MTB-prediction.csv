@@ -41,7 +41,7 @@ MTB,330,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 MTB,330,provision_for_credit_losses,not_presented,,,,,,,,0000036270-26-000010,,,,no face line
 MTB,330,research_and_development,OUT,,,,,,,,0000036270-26-000010,,,,sector template (bank/insurer)
 MTB,330,revenue,component_sum,us-gaap:BrokerageCommissionsRevenue;us-gaap:NoninterestIncomeOtherOperatingIncome,IS,+,-6,N,,sec_api,0000036270-26-000010,R5,Brokerage services income,131000000.0000,printed face components (duration sum; total_debt founder sum)
-MTB,330,sbc,not_presented,,,,,,,,0000036270-26-000010,,,,no face line
+MTB,330,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000036270-26-000010,,,136000000.0000,note fact present in the filing (FSN value)
 MTB,330,sga_expense,not_presented,,,,,,,,0000036270-26-000010,,,,single component only
 MTB,330,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000036270-26-000010,R7,Purchases of treasury stock,2631000000.0000,library map
 MTB,330,shares_outstanding,not_presented,,,,,,,,0000036270-26-000010,,,,no face line

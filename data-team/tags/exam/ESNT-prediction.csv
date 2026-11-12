@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ESNT,957,accounts_payable,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
 ESNT,957,accounts_receivable,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
-ESNT,957,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001448893-26-000009,,,,note-sourced default tag (no face line)
+ESNT,957,amortization_of_intangibles,not_presented,,,,,,,,0001448893-26-000009,,,,no face line and no note fact
 ESNT,957,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001448893-26-000009,R5,Basic (in dollars per share),6.9700,library map
 ESNT,957,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001448893-26-000009,R8,Purchases of property and equipment and capitalization of internal-use software,7364000.0000,library map
 ESNT,957,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-3,N,,sec_api,0001448893-26-000009,R3,Cash,123049000.0000,library map
@@ -21,13 +21,13 @@ ESNT,957,deposits,OUT,,,,,,,,0001448893-26-000009,,,,not a bank
 ESNT,957,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001448893-26-000009,R8,Depreciation and amortization,5233000.0000,library map
 ESNT,957,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001448893-26-000009,R5,Diluted (in dollars per share),6.9000,library map
 ESNT,957,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001448893-26-000009,R8,Dividends paid,122067000.0000,library map
-ESNT,957,dividends_per_share,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
+ESNT,957,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001448893-26-000009,,,1.2400,note fact present in the filing (FSN value)
 ESNT,957,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0001448893-26-000009,R3,"Goodwill and acquired intangible assets, net",78153000.0000,combined line (library or label demote)
 ESNT,957,gross_profit,OUT,,,,,,,,0001448893-26-000009,,,,sector template (bank/insurer)
 ESNT,957,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,Income (loss) before income taxes,821862000.0000,library map
 ESNT,957,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,Income tax expense,131893000.0000,library map
 ESNT,957,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,"Interest Expense, Operating",32696000.0000,library map
-ESNT,957,interest_income,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
+ESNT,957,interest_income,not_presented,,,,,,,,0001448893-26-000009,,,,no face line and no note fact
 ESNT,957,inventory,OUT,,,,,,,,0001448893-26-000009,,,,sector template (bank/insurer)
 ESNT,957,loans_net,OUT,,,,,,,,0001448893-26-000009,,,,not a bank
 ESNT,957,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,Net income,689969000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ARMK,541,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001584509-25-000219,R3,Accounts payable,1522747000.0000,library map
 ARMK,541,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001584509-25-000219,R3,"Receivables (less allowances: $31,728 and $34,259)",2210388000.0000,combined line (library or label demote)
-ARMK,541,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001584509-25-000219,,,,note-sourced default tag (no face line)
+ARMK,541,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001584509-25-000219,,,124600000.0000,note fact present in the filing (FSN value)
 ARMK,541,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001584509-25-000219,R5,Basic earnings per share attributable to Aramark stockholders (in dollars per share),1.2400,library map
 ARMK,541,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001584509-25-000219,R7,Purchases of property and equipment and other,489240000.0000,library map
 ARMK,541,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001584509-25-000219,R3,Cash and cash equivalents,639095000.0000,library map
 ARMK,541,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,-,-3,N,,sec_api,0001584509-25-000219,R7,Net cash (used in) provided by financing activities of Continuing Operations,-234628000.0000,library map
 ARMK,541,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-3,N,,sec_api,0001584509-25-000219,R7,Net cash (used in) provided by investing activities of Continuing Operations,-722424000.0000,library map
-ARMK,541,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001584509-25-000219,,,,note-sourced default tag (no face line)
-ARMK,541,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001584509-25-000219,,,,note-sourced default tag (no face line)
+ARMK,541,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001584509-25-000219,,,116500000.0000,note fact present in the filing (FSN value)
+ARMK,541,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001584509-25-000219,,,328900000.0000,note fact present in the filing (FSN value)
 ARMK,541,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,Y,IncreaseDecreaseInAccountsPayableTrade,sec_api,0001584509-25-000219,R7,Accounts payable,115595000.0000,library map
 ARMK,541,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001584509-25-000219,R7,"Receivables, net",74477000.0000,library map
 ARMK,541,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001584509-25-000219,R7,Inventories,24088000.0000,library map
@@ -27,7 +27,7 @@ ARMK,541,gross_profit,not_presented,,,,,,,,0001584509-25-000219,,,,no face line
 ARMK,541,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001584509-25-000219,R5,Income from Continuing Operations Before Income Taxes,430456000.0000,library map
 ARMK,541,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001584509-25-000219,R5,Provision for Income Taxes from Continuing Operations,103586000.0000,library map
 ARMK,541,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001584509-25-000219,R5,"Interest Expense, net",-341925000.0000,combined line (library or label demote)
-ARMK,541,interest_income,not_presented,,,,,,,,0001584509-25-000219,,,,no face line
+ARMK,541,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001584509-25-000219,,,22451000.0000,note fact present in the filing (FSN value)
 ARMK,541,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001584509-25-000219,R3,Inventories,418766000.0000,library map
 ARMK,541,loans_net,OUT,,,,,,,,0001584509-25-000219,,,,not a bank
 ARMK,541,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001584509-25-000219,R5,Net income attributable to Aramark stockholders,326394000.0000,library map

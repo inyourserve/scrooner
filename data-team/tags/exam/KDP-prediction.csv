@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KDP,248,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Accounts payable,2996000000.0000,library map
 KDP,248,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,"Trade accounts receivable, net",1671000000.0000,library map
-KDP,248,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001418135-26-000016,,,,note-sourced default tag (no face line)
+KDP,248,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001418135-26-000016,,,138000000.0000,note fact present in the filing (FSN value)
 KDP,248,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001418135-26-000016,R2,Basic (in dollars per share),1.5300,library map
 KDP,248,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,"Purchases of property, plant, and equipment",486000000.0000,library map
 KDP,248,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Cash and Cash Equivalent,1026000000.0000,library map
 KDP,248,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001418135-26-000016,R7,Net cash used in financing activities,-999000000.0000,library map
 KDP,248,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001418135-26-000016,R7,Net cash used in investing activities,-573000000.0000,library map
-KDP,248,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001418135-26-000016,,,,note-sourced default tag (no face line)
+KDP,248,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001418135-26-000016,,,460000000.0000,note fact present in the filing (FSN value)
 KDP,248,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,"Interest Paid, Excluding Capitalized Interest, Operating Activity",594000000.0000,library map
 KDP,248,cf_ap_change,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
 KDP,248,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Trade accounts receivable,202000000.0000,library map
@@ -27,7 +27,7 @@ KDP,248,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001418135-26
 KDP,248,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Income before provision for income taxes,2687000000.0000,library map
 KDP,248,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Income Tax Expense (Benefit),608000000.0000,library map
 KDP,248,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestExpenseDebt,sec_api,0001418135-26-000016,R2,Interest expense,-754000000.0000,combined line (library or label demote)
-KDP,248,interest_income,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
+KDP,248,interest_income,not_presented,,,,,,,,0001418135-26-000016,,,,no face line and no note fact
 KDP,248,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Inventories,1733000000.0000,library map
 KDP,248,loans_net,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
 KDP,248,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Net income,2079000000.0000,library map

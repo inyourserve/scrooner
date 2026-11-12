@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TRU,551,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001552033-26-000012,R3,Trade accounts payable,349900000.0000,library map
 TRU,551,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001552033-26-000012,R3,"Trade accounts receivable, net of allowance of $27.7 and $19.9",905000000.0000,library map
-TRU,551,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001552033-26-000012,,,,note-sourced default tag (no face line)
+TRU,551,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001552033-26-000012,,,471400000.0000,note fact present in the filing (FSN value)
 TRU,551,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001552033-26-000012,R5,Net (loss) income attributable to TransUnion (in dollars per share),2.3400,library map
 TRU,551,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001552033-26-000012,R7,Capital expenditures,326000000.0000,library map
 TRU,551,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001552033-26-000012,R3,Cash and cash equivalents,853600000.0000,library map
@@ -34,7 +34,7 @@ TRU,551,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001552033-26
 TRU,551,net_interest_income,OUT,,,,,,,,0001552033-26-000012,,,,not a bank
 TRU,551,noninterest_expense,OUT,,,,,,,,0001552033-26-000012,,,,not a bank
 TRU,551,noninterest_income,OUT,,,,,,,,0001552033-26-000012,,,,not a bank
-TRU,551,operating_expenses,not_presented,,,,,,,,0001552033-26-000012,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+TRU,551,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001552033-26-000012,R5,Total operating expenses,3718600000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 TRU,551,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001552033-26-000012,R5,Operating income,857800000.0000,library map
 TRU,551,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001552033-26-000012,R5,"Other income and (expense), net",-32500000.0000,library map
 TRU,551,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001552033-26-000012,R3,"Property, plant and equipment, net of accumulated depreciation and amortization of $545.0 and $506.3",258400000.0000,library map

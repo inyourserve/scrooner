@@ -7,8 +7,8 @@ SJM,572,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,
 SJM,572,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,0,-5,N,,sec_api,0000091419-26-000050,R5,Cash and cash equivalents,0.0000,combined line (library or label demote)
 SJM,572,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000091419-26-000050,R7,Net Cash Provided by (Used for) Financing Activities,-1226500000.0000,library map
 SJM,572,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000091419-26-000050,R7,Net Cash Provided by (Used for) Investing Activities,-258800000.0000,library map
-SJM,572,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000091419-26-000050,,,,note-sourced default tag (no face line)
-SJM,572,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000091419-26-000050,,,,note-sourced default tag (no face line)
+SJM,572,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000091419-26-000050,,,42100000.0000,note fact present in the filing (FSN value)
+SJM,572,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000091419-26-000050,,,383100000.0000,note fact present in the filing (FSN value)
 SJM,572,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000091419-26-000050,R7,Accounts payable,-112000000.0000,library map
 SJM,572,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000091419-26-000050,R7,Trade receivables,36900000.0000,library map
 SJM,572,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000091419-26-000050,R7,Inventories,-83300000.0000,library map
@@ -27,7 +27,7 @@ SJM,572,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000091419-26
 SJM,572,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0000091419-26-000050,R3,Income (Loss) Before Income Taxes,-62400000.0000,library map
 SJM,572,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000091419-26-000050,R3,Income tax expense,76300000.0000,library map
 SJM,572,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000091419-26-000050,R3,Interest expense  net,-381200000.0000,combined line (library or label demote)
-SJM,572,interest_income,not_presented,,,,,,,,0000091419-26-000050,,,,no face line
+SJM,572,interest_income,not_presented,,,,,,,,0000091419-26-000050,,,,no face line and no note fact
 SJM,572,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000091419-26-000050,R5,Total Inventory,1126500000.0000,library map
 SJM,572,loans_net,OUT,,,,,,,,0000091419-26-000050,,,,not a bank
 SJM,572,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000091419-26-000050,R3,Net Income (Loss),-138700000.0000,library map
@@ -50,5 +50,5 @@ SJM,572,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000091419-26-0000
 SJM,572,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000091419-26-000050,R5,Current portion of long-term debt,150000000.0000,printed face components (duration sum; total_debt founder sum)
 SJM,572,total_interest_income,OUT,,,,,,,,0000091419-26-000050,,,,not a bank
 SJM,572,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000091419-26-000050,R5,Total Liabilities,10675600000.0000,library map
-SJM,572,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000091419-26-000050,,,,note-sourced default tag (no face line)
-SJM,572,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000091419-26-000050,,,,note-sourced default tag (no face line)
+SJM,572,weighted_basic_shares,not_presented,,,,,,,,0000091419-26-000050,,,,no face line and no note fact
+SJM,572,weighted_diluted_shares,not_presented,,,,,,,,0000091419-26-000050,,,,no face line and no note fact

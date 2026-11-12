@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ESTC,716,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001707753-26-000018,R3,Accounts payable,8618000.0000,library map
 ESTC,716,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001707753-26-000018,R3,"Accounts receivable, net of allowance for credit losses of $6,847 and $5,510 as of April 30, 2026 and 2025, respectively",464413000.0000,library map
-ESTC,716,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001707753-26-000018,,,,note-sourced default tag (no face line)
+ESTC,716,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001707753-26-000018,,,8795000.0000,note fact present in the filing (FSN value)
 ESTC,716,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001707753-26-000018,R5,"Net earnings (loss) per share attributable to ordinary shareholders, basic (in dollars per share)",3.4900,library map
 ESTC,716,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001707753-26-000018,R8,Purchases of property and equipment,5092000.0000,library map
 ESTC,716,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001707753-26-000018,R3,Cash and cash equivalents,768725000.0000,library map
@@ -21,13 +21,13 @@ ESTC,716,deposits,OUT,,,,,,,,0001707753-26-000018,,,,not a bank
 ESTC,716,depreciation_and_amortization,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
 ESTC,716,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001707753-26-000018,R5,"Net earnings (loss) per share attributable to ordinary shareholders, diluted (in dollars per share)",3.4300,library map
 ESTC,716,dividends_paid,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
-ESTC,716,dividends_per_share,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
+ESTC,716,dividends_per_share,not_presented,,,,,,,,0001707753-26-000018,,,,no face line and no note fact
 ESTC,716,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001707753-26-000018,R3,Goodwill,356442000.0000,library map
 ESTC,716,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Gross profit,1323059000.0000,library map
 ESTC,716,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001707753-26-000018,R5,Loss before income taxes,-2301000.0000,library map
 ESTC,716,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001707753-26-000018,R5,(Benefit from) provision for income taxes,-370067000.0000,library map
 ESTC,716,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Interest expense,25142000.0000,library map
-ESTC,716,interest_income,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
+ESTC,716,interest_income,not_presented,,,,,,,,0001707753-26-000018,,,,no face line and no note fact
 ESTC,716,inventory,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
 ESTC,716,loans_net,OUT,,,,,,,,0001707753-26-000018,,,,not a bank
 ESTC,716,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Net income (loss),367766000.0000,library map
@@ -41,7 +41,7 @@ ESTC,716,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,
 ESTC,716,provision_for_credit_losses,OUT,,,,,,,,0001707753-26-000018,,,,not a bank
 ESTC,716,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Research and development,451925000.0000,library map
 ESTC,716,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Total revenue,1739331000.0000,library map
-ESTC,716,sbc,not_presented,,,,,,,,0001707753-26-000018,,,,no face line
+ESTC,716,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001707753-26-000018,,,298435000.0000,note fact present in the filing (FSN value)
 ESTC,716,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001707753-26-000018,R5,Sales and marketing,710188000.0000,printed face components (duration sum; total_debt founder sum)
 ESTC,716,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001707753-26-000018,R8,Repurchases of ordinary shares,340088000.0000,library map
 ESTC,716,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001707753-26-000018,R4,"Ordinary shares, shares outstanding (in shares)",104751470.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ALNY,332,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-007497,R3,Accounts payable,115721000.0000,library map
 ALNY,332,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-007497,R3,"Accounts receivable, net",777567000.0000,library map
-ALNY,332,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007497,,,,note-sourced default tag (no face line)
+ALNY,332,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-007497,,,,no face line and no note fact
 ALNY,332,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-007497,R5,"Net income (loss) per common share, basic (in dollars per share)",2.3900,library map
 ALNY,332,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,"Purchases of property, plant and equipment",58697000.0000,library map
 ALNY,332,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-007497,R3,Cash and cash equivalents,1657250000.0000,library map
 ALNY,332,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-007497,R7,Net cash (used in) provided by financing activities,-305190000.0000,library map
 ALNY,332,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,Net cash provided by (used in) investing activities,436329000.0000,library map
-ALNY,332,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-007497,,,,note-sourced default tag (no face line)
+ALNY,332,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-007497,,,15088000.0000,note fact present in the filing (FSN value)
 ALNY,332,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,Cash paid for interest,218707000.0000,library map
 ALNY,332,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,"Accounts payable, accrued expenses and other liabilities",75066000.0000,combined line (library or label demote)
 ALNY,332,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,"Accounts receivable, net",359963000.0000,library map
@@ -21,7 +21,7 @@ ALNY,332,deposits,OUT,,,,,,,,0001628280-26-007497,,,,not a bank
 ALNY,332,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001628280-26-007497,R7,Depreciation and amortization,55658000.0000,library map
 ALNY,332,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-007497,R5,"Net income (loss) per common share, diluted (in dollars per share)",2.3300,library map
 ALNY,332,dividends_paid,not_presented,,,,,,,,0001628280-26-007497,,,,no face line
-ALNY,332,dividends_per_share,not_presented,,,,,,,,0001628280-26-007497,,,,no face line
+ALNY,332,dividends_per_share,not_presented,,,,,,,,0001628280-26-007497,,,,no face line and no note fact
 ALNY,332,goodwill,not_presented,,,,,,,,0001628280-26-007497,,,,no face line
 ALNY,332,gross_profit,not_presented,,,,,,,,0001628280-26-007497,,,,no face line
 ALNY,332,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-007497,R5,Income (loss) before income taxes,323152000.0000,library map

@@ -21,13 +21,13 @@ GNRC,641,deposits,OUT,,,,,,,,0001437749-26-004568,,,,not a bank
 GNRC,641,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001437749-26-004568,R7,Depreciation and finance lease amortization,93328000.0000,printed face components (duration sum; total_debt founder sum)
 GNRC,641,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-004568,R4,Net income attributable to Generac Holdings Inc. per common share - diluted: (in dollars per share),2.6900,library map
 GNRC,641,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001437749-26-004568,R7,Dividends paid to noncontrolling interest of subsidiary,293000.0000,library map
-GNRC,641,dividends_per_share,not_presented,,,,,,,,0001437749-26-004568,,,,no face line
+GNRC,641,dividends_per_share,not_presented,,,,,,,,0001437749-26-004568,,,,no face line and no note fact
 GNRC,641,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001437749-26-004568,R2,Goodwill,1467094000.0000,library map
 GNRC,641,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001437749-26-004568,R4,Gross profit,1611737000.0000,library map
 GNRC,641,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-4,N,,sec_api,0001437749-26-004568,R4,Income before provision for income taxes,199060000.0000,library map
 GNRC,641,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001437749-26-004568,R4,Provision for income taxes,37706000.0000,library map
 GNRC,641,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001437749-26-004568,R4,Interest expense,70697000.0000,library map
-GNRC,641,interest_income,not_presented,,,,,,,,0001437749-26-004568,,,,no face line
+GNRC,641,interest_income,not_presented,,,,,,,,0001437749-26-004568,,,,no face line and no note fact
 GNRC,641,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-004568,R2,Inventories,1248867000.0000,library map
 GNRC,641,loans_net,OUT,,,,,,,,0001437749-26-004568,,,,not a bank
 GNRC,641,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-004568,R4,Net income attributable to Generac Holdings Inc.,159554000.0000,library map

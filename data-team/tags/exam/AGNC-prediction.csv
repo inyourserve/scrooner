@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AGNC,680,accounts_payable,not_presented,,,,,,,,0001423689-26-000043,,,,no face line
 AGNC,680,accounts_receivable,not_presented,,,,,,,,0001423689-26-000043,,,,no face line
-AGNC,680,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001423689-26-000043,,,,note-sourced default tag (no face line)
+AGNC,680,amortization_of_intangibles,not_presented,,,,,,,,0001423689-26-000043,,,,no face line and no note fact
 AGNC,680,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001423689-26-000043,R4,"Earnings Per Share, Basic",1.4800,library map
 AGNC,680,capex,not_presented,,,,,,,,0001423689-26-000043,,,,no face line
 AGNC,680,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001423689-26-000043,R2,Cash and cash equivalents,450000000.0000,library map
 AGNC,680,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001423689-26-000043,R6,Net cash provided by financing activities,25182000000.0000,library map
 AGNC,680,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001423689-26-000043,R6,Net cash used in investing activities,-25864000000.0000,library map
-AGNC,680,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001423689-26-000043,,,,note-sourced default tag (no face line)
+AGNC,680,cash_paid_for_income_taxes,not_presented,,,,,,,,0001423689-26-000043,,,,no face line and no note fact
 AGNC,680,cash_paid_for_interest,mapped,us-gaap:InterestPaid,CF,+,-3,N,,sec_api,0001423689-26-000043,R6,"Interest Paid, Including Capitalized Interest, Operating and Investing Activities",2793000000.0000,library map
 AGNC,680,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001423689-26-000043,R6,Increase (decrease) in other liabilities,53000000.0000,combined line (library or label demote)
 AGNC,680,cf_ar_change,not_presented,,,,,,,,0001423689-26-000043,,,,no face line
@@ -34,7 +34,7 @@ AGNC,680,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001423689-2
 AGNC,680,net_interest_income,OUT,,,,,,,,0001423689-26-000043,,,,not a bank
 AGNC,680,noninterest_expense,OUT,,,,,,,,0001423689-26-000043,,,,not a bank
 AGNC,680,noninterest_income,OUT,,,,,,,,0001423689-26-000043,,,,not a bank
-AGNC,680,operating_expenses,not_presented,,,,,,,,0001423689-26-000043,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+AGNC,680,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001423689-26-000043,R4,Total expenses,127000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 AGNC,680,operating_income,not_presented,,,,,,,,0001423689-26-000043,,,,no face line
 AGNC,680,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001423689-26-000043,R4,Nonoperating Income (Expense),1122000000.0000,combined line (library or label demote)
 AGNC,680,ppe_net,not_presented,,,,,,,,0001423689-26-000043,,,,no face line

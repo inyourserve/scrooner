@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SF,655,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-067130,R2,Accounts payable and accrued expenses,701369000.0000,combined line (library or label demote)
 SF,655,accounts_receivable,not_presented,,,,,,,,0001193125-26-067130,,,,no face line
-SF,655,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-067130,,,,note-sourced default tag (no face line)
+SF,655,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-067130,,,34067000.0000,note fact present in the filing (FSN value)
 SF,655,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-067130,R4,Basic,6.2500,library map
 SF,655,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001193125-26-067130,R9,Purchase of fixed assets,62088000.0000,library map
 SF,655,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-067130,R2,Cash and cash equivalents,2253789000.0000,library map
@@ -41,7 +41,7 @@ SF,655,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,00
 SF,655,provision_for_credit_losses,not_presented,,,,,,,,0001193125-26-067130,,,,no face line
 SF,655,research_and_development,OUT,,,,,,,,0001193125-26-067130,,,,sector template (bank/insurer)
 SF,655,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001193125-26-067130,R4,Total revenues,6347533000.0000,library map
-SF,655,sbc,not_presented,,,,,,,,0001193125-26-067130,,,,no face line
+SF,655,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-067130,,,164003000.0000,note fact present in the filing (FSN value)
 SF,655,sga_expense,not_presented,,,,,,,,0001193125-26-067130,,,,no face line
 SF,655,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-067130,R9,Repurchase of common stock,244991000.0000,library map
 SF,655,shares_outstanding,not_presented,,,,,,,,0001193125-26-067130,,,,no face line

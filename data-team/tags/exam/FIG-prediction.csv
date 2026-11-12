@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FIG,650,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-009228,R3,Accounts payable,4502000.0000,library map
 FIG,650,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-009228,R3,"Accounts receivable, net",247915000.0000,library map
-FIG,650,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-009228,,,,note-sourced default tag (no face line)
+FIG,650,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-009228,,,,no face line and no note fact
 FIG,650,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-009228,R5,"Net income (loss) per share, basic (in usd per share)",-3.7100,library map
 FIG,650,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,Capital expenditures,4444000.0000,library map
 FIG,650,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-009228,R3,Cash and cash equivalents,403469000.0000,library map
 FIG,650,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,Net cash provided by financing activities,43338000.0000,library map
 FIG,650,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-009228,R9,Net cash used in investing activities,-371413000.0000,library map
 FIG,650,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,"Total cash paid during the period for income taxes, net of refunds",28639000.0000,library map
-FIG,650,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-009228,,,,note-sourced default tag (no face line)
+FIG,650,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-009228,,,,no face line and no note fact
 FIG,650,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,Accounts payable,154000.0000,library map
 FIG,650,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,"Accounts receivable, net",117721000.0000,library map
 FIG,650,cf_inventory_change,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
@@ -21,13 +21,13 @@ FIG,650,deposits,OUT,,,,,,,,0001628280-26-009228,,,,not a bank
 FIG,650,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-009228,R9,Depreciation and amortization,15594000.0000,library map
 FIG,650,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-009228,R5,"Net income (loss) per share, diluted (in usd per share)",-3.7100,library map
 FIG,650,dividends_paid,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
-FIG,650,dividends_per_share,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
+FIG,650,dividends_per_share,not_presented,,,,,,,,0001628280-26-009228,,,,no face line and no note fact
 FIG,650,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-009228,R3,Goodwill,101396000.0000,library map
 FIG,650,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-009228,R5,Gross profit,870261000.0000,library map
 FIG,650,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-009228,R5,Income (loss) before income taxes,-1225642000.0000,library map
 FIG,650,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-009228,R5,Provision for (benefit from) income taxes,24821000.0000,library map
 FIG,650,interest_expense,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
-FIG,650,interest_income,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
+FIG,650,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001628280-26-009228,,,62199000.0000,note fact present in the filing (FSN value)
 FIG,650,inventory,not_presented,,,,,,,,0001628280-26-009228,,,,no face line
 FIG,650,loans_net,OUT,,,,,,,,0001628280-26-009228,,,,not a bank
 FIG,650,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-009228,R5,Net income (loss),-1250463000.0000,library map

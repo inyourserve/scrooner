@@ -21,7 +21,7 @@ BMRN,670,deposits,OUT,,,,,,,,0001048477-26-000004,,,,not a bank
 BMRN,670,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001048477-26-000004,R9,Depreciation and amortization,79557000.0000,library map
 BMRN,670,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001048477-26-000004,R3,"EARNINGS PER SHARE, DILUTED (in dollars per share)",1.8000,library map
 BMRN,670,dividends_paid,not_presented,,,,,,,,0001048477-26-000004,,,,no face line
-BMRN,670,dividends_per_share,not_presented,,,,,,,,0001048477-26-000004,,,,no face line
+BMRN,670,dividends_per_share,not_presented,,,,,,,,0001048477-26-000004,,,,no face line and no note fact
 BMRN,670,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001048477-26-000004,R6,Goodwill,196199000.0000,library map
 BMRN,670,gross_profit,not_presented,,,,,,,,0001048477-26-000004,,,,no face line
 BMRN,670,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001048477-26-000004,R3,INCOME BEFORE INCOME TAXES,482480000.0000,library map

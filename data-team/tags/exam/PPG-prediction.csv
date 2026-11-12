@@ -21,7 +21,7 @@ PPG,402,deposits,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Depreciation and amortization,528000000.0000,library map
 PPG,402,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0000079879-26-000046,R3,Net Income (attributable to PPG) (in dollars per share),6.9400,library map
 PPG,402,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Dividends paid on PPG common stock,628000000.0000,library map
-PPG,402,dividends_per_share,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
+PPG,402,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0000079879-26-000046,,,2.7800,note fact present in the filing (FSN value)
 PPG,402,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Goodwill,6149000000.0000,library map
 PPG,402,gross_profit,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
 PPG,402,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000079879-26-000046,R3,Income before income taxes,2045000000.0000,library map
@@ -50,5 +50,5 @@ PPG,402,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000079879-26-0000
 PPG,402,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Short-term debt and current portion of long-term debt,706000000.0000,printed face components (duration sum; total_debt founder sum)
 PPG,402,total_interest_income,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Total liabilities,14001000000.0000,library map
-PPG,402,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000079879-26-000046,,,,note-sourced default tag (no face line)
-PPG,402,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000079879-26-000046,,,,note-sourced default tag (no face line)
+PPG,402,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000079879-26-000046,,,226300000.0000,note fact present in the filing (FSN value)
+PPG,402,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000079879-26-000046,,,227100000.0000,note fact present in the filing (FSN value)

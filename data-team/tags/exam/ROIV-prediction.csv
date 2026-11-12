@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROIV,396,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001635088-26-000061,R3,Accounts payable,18002000.0000,library map
 ROIV,396,accounts_receivable,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
-ROIV,396,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001635088-26-000061,,,,note-sourced default tag (no face line)
+ROIV,396,amortization_of_intangibles,not_presented,,,,,,,,0001635088-26-000061,,,,no face line and no note fact
 ROIV,396,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001635088-26-000061,R5,Net (loss) income (in dollars per share),-0.4300,library map
 ROIV,396,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001635088-26-000061,R9,Purchase of property and equipment,8209000.0000,library map
 ROIV,396,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001635088-26-000061,R3,Cash and cash equivalents,1419232000.0000,library map
 ROIV,396,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001635088-26-000061,R9,Net cash provided by (used in) financing activities,134236000.0000,library map
 ROIV,396,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001635088-26-000061,R9,Net cash (used in) provided by investing activities,-682333000.0000,library map
-ROIV,396,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001635088-26-000061,,,,note-sourced default tag (no face line)
+ROIV,396,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001635088-26-000061,,,48369000.0000,note fact present in the filing (FSN value)
 ROIV,396,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,0,-3,N,,sec_api,0001635088-26-000061,R9,Interest paid,0.0000,library map
 ROIV,396,cf_ap_change,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
 ROIV,396,cf_ar_change,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
@@ -21,7 +21,7 @@ ROIV,396,deposits,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
 ROIV,396,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001635088-26-000061,R9,Depreciation and amortization,3348000.0000,library map
 ROIV,396,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001635088-26-000061,R5,Net (loss) income (in dollars per share),-0.5400,library map
 ROIV,396,dividends_paid,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
-ROIV,396,dividends_per_share,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
+ROIV,396,dividends_per_share,not_presented,,,,,,,,0001635088-26-000061,,,,no face line and no note fact
 ROIV,396,goodwill,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
 ROIV,396,gross_profit,not_presented,,,,,,,,0001635088-26-000061,,,,no face line
 ROIV,396,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001635088-26-000061,R5,(Loss) income from continuing operations before income taxes,-264578000.0000,library map
@@ -34,7 +34,7 @@ ROIV,396,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001635088-2
 ROIV,396,net_interest_income,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
 ROIV,396,noninterest_expense,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
 ROIV,396,noninterest_income,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
-ROIV,396,operating_expenses,not_presented,,,,,,,,0001635088-26-000061,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ROIV,396,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001635088-26-000061,R5,Total operating expenses,1293563000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 ROIV,396,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001635088-26-000061,R5,(Loss) income from operations,-515068000.0000,library map
 ROIV,396,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001635088-26-000061,R5,"Other (income) expense, net",4012000.0000,library map
 ROIV,396,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001635088-26-000061,R3,"Property and equipment, net",11986000.0000,library map

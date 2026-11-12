@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PRI,756,accounts_payable,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
 PRI,756,accounts_receivable,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
-PRI,756,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-082233,,,,note-sourced default tag (no face line)
+PRI,756,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-082233,,,,no face line and no note fact
 PRI,756,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-082233,R4,Basic earnings per share attributable to common stockholders,22.9500,library map
 PRI,756,capex,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
 PRI,756,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-082233,R2,Cash and cash equivalents,756227000.0000,library map
 PRI,756,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-082233,R7,Net cash provided by (used in) financing activities,-599637000.0000,library map
 PRI,756,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-082233,R7,Net cash provided by (used in) investing activities,-235568000.0000,library map
-PRI,756,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-082233,,,,note-sourced default tag (no face line)
+PRI,756,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-082233,,,236067000.0000,note fact present in the filing (FSN value)
 PRI,756,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-082233,R7,Interest paid,23112000.0000,library map
 PRI,756,cf_ap_change,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
 PRI,756,cf_ar_change,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
@@ -27,7 +27,7 @@ PRI,756,gross_profit,OUT,,,,,,,,0001193125-26-082233,,,,sector template (bank/in
 PRI,756,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-082233,R4,Income from continuing operations before income taxes,974564000.0000,library map
 PRI,756,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-082233,R4,Income taxes from continuing operations,223330000.0000,library map
 PRI,756,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-082233,R4,Interest expense,23958000.0000,library map
-PRI,756,interest_income,not_presented,,,,,,,,0001193125-26-082233,,,,no face line
+PRI,756,interest_income,not_presented,,,,,,,,0001193125-26-082233,,,,no face line and no note fact
 PRI,756,inventory,OUT,,,,,,,,0001193125-26-082233,,,,sector template (bank/insurer)
 PRI,756,loans_net,OUT,,,,,,,,0001193125-26-082233,,,,not a bank
 PRI,756,net_income,not_presented,,,,,,,,0001193125-26-082233,,,,no face line

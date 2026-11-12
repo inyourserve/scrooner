@@ -21,7 +21,7 @@ SMTC,602,deposits,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
 SMTC,602,depreciation_and_amortization,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
 SMTC,602,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000088941-26-000005,R3,Diluted (in dollars per share),-0.4600,library map
 SMTC,602,dividends_paid,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,dividends_per_share,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
+SMTC,602,dividends_per_share,not_presented,,,,,,,,0000088941-26-000005,,,,no face line and no note fact
 SMTC,602,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Goodwill,457925000.0000,library map
 SMTC,602,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Gross profit,542144000.0000,library map
 SMTC,602,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,Loss before taxes and equity method income (loss),-21180000.0000,library map

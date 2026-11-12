@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CROX,942,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,Accounts payable,266090000.0000,library map
 CROX,942,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,"Accounts receivable, net of allowances of $28,136 and $31,579, respectively",278191000.0000,library map
-CROX,942,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001334036-26-000006,,,,note-sourced default tag (no face line)
+CROX,942,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001334036-26-000006,,,23571000.0000,note fact present in the filing (FSN value)
 CROX,942,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001334036-26-000006,R3,Basic (in dollars per share),-1.5000,library map
 CROX,942,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001334036-26-000006,R8,"Purchases of property, equipment, and software",51231000.0000,library map
 CROX,942,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,Cash and cash equivalents,130354000.0000,library map
 CROX,942,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001334036-26-000006,R8,Cash used in financing activities,-714565000.0000,library map
 CROX,942,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001334036-26-000006,R8,Cash used in investing activities,-51231000.0000,library map
-CROX,942,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001334036-26-000006,,,,note-sourced default tag (no face line)
+CROX,942,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001334036-26-000006,,,185066000.0000,note fact present in the filing (FSN value)
 CROX,942,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001334036-26-000006,R8,Cash paid for interest,77684000.0000,library map
 CROX,942,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001334036-26-000006,R8,Accounts payable,709000.0000,library map
 CROX,942,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001334036-26-000006,R8,"Accounts receivable, net of allowances",6169000.0000,library map
@@ -21,13 +21,13 @@ CROX,942,deposits,OUT,,,,,,,,0001334036-26-000006,,,,not a bank
 CROX,942,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001334036-26-000006,R8,Depreciation and amortization,79282000.0000,library map
 CROX,942,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001334036-26-000006,R3,Diluted (in dollars per share),-1.5000,library map
 CROX,942,dividends_paid,combined,us-gaap:InvestmentIncomeInterestAndDividend,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,Interest income,1844000.0000,combined line (library or label demote)
-CROX,942,dividends_per_share,not_presented,,,,,,,,0001334036-26-000006,,,,no face line
+CROX,942,dividends_per_share,not_presented,,,,,,,,0001334036-26-000006,,,,no face line and no note fact
 CROX,942,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,Goodwill,404689000.0000,library map
 CROX,942,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,Gross profit,2357055000.0000,library map
 CROX,942,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,Income before income taxes,72978000.0000,library map
 CROX,942,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,Income tax expense (benefit),154176000.0000,library map
 CROX,942,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001334036-26-000006,R3,Interest expense,88287000.0000,library map
-CROX,942,interest_income,not_presented,,,,,,,,0001334036-26-000006,,,,no face line
+CROX,942,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001334036-26-000006,,,1844000.0000,note fact present in the filing (FSN value)
 CROX,942,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,Inventories,368687000.0000,library map
 CROX,942,loans_net,OUT,,,,,,,,0001334036-26-000006,,,,not a bank
 CROX,942,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001334036-26-000006,R3,Net income (loss),-81198000.0000,library map

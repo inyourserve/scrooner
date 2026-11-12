@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RGA,488,accounts_payable,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
 RGA,488,accounts_receivable,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
-RGA,488,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000898174-26-000006,,,,note-sourced default tag (no face line)
+RGA,488,amortization_of_intangibles,not_presented,,,,,,,,0000898174-26-000006,,,,no face line and no note fact
 RGA,488,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000898174-26-000006,R6,Basic earnings per share,17.9400,library map
 RGA,488,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-6,N,,sec_api,0000898174-26-000006,R10,Payments for (Proceeds from) Productive Assets,276000000.0000,combined line (library or label demote)
 RGA,488,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000898174-26-000006,R4,Cash and cash equivalents,4168000000.0000,library map
@@ -27,7 +27,7 @@ RGA,488,gross_profit,OUT,,,,,,,,0000898174-26-000006,,,,sector template (bank/in
 RGA,488,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000898174-26-000006,R6,Income before income taxes,1540000000.0000,library map
 RGA,488,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000898174-26-000006,R6,Provision for income taxes,351000000.0000,library map
 RGA,488,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000898174-26-000006,R6,Interest expense,366000000.0000,library map
-RGA,488,interest_income,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
+RGA,488,interest_income,not_presented,,,,,,,,0000898174-26-000006,,,,no face line and no note fact
 RGA,488,inventory,OUT,,,,,,,,0000898174-26-000006,,,,sector template (bank/insurer)
 RGA,488,loans_net,OUT,,,,,,,,0000898174-26-000006,,,,not a bank
 RGA,488,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000898174-26-000006,R6,"Net income available to RGA, Inc. shareholders",1182000000.0000,library map
@@ -41,7 +41,7 @@ RGA,488,ppe_net,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
 RGA,488,provision_for_credit_losses,OUT,,,,,,,,0000898174-26-000006,,,,not a bank
 RGA,488,research_and_development,OUT,,,,,,,,0000898174-26-000006,,,,sector template (bank/insurer)
 RGA,488,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000898174-26-000006,R6,Total revenues,23698000000.0000,library map
-RGA,488,sbc,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
+RGA,488,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000898174-26-000006,,,42000000.0000,note fact present in the filing (FSN value)
 RGA,488,sga_expense,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
 RGA,488,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-6,N,,sec_api,0000898174-26-000006,R10,Purchases of treasury stock,174000000.0000,combined line (library or label demote)
 RGA,488,shares_outstanding,not_presented,,,,,,,,0000898174-26-000006,,,,no face line
@@ -50,5 +50,5 @@ RGA,488,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000898174-26-0000
 RGA,488,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0000898174-26-000006,R4,Long-term debt,5710000000.0000,printed face components (duration sum; total_debt founder sum)
 RGA,488,total_interest_income,OUT,,,,,,,,0000898174-26-000006,,,,not a bank
 RGA,488,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000898174-26-000006,R4,Total liabilities,143039000000.0000,library map
-RGA,488,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000898174-26-000006,,,,note-sourced default tag (no face line)
-RGA,488,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000898174-26-000006,,,,note-sourced default tag (no face line)
+RGA,488,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000898174-26-000006,,,65900000.0000,note fact present in the filing (FSN value)
+RGA,488,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000898174-26-000006,,,66800000.0000,note fact present in the filing (FSN value)

@@ -7,8 +7,8 @@ WAB,243,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,
 WAB,243,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001628280-26-008067,R3,"Cash, cash equivalents and restricted cash",789000000.0000,combined line (library or label demote)
 WAB,243,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001628280-26-008067,R7,Net cash provided by (used for) financing activities,1031000000.0000,library map
 WAB,243,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-008067,R7,Net cash used for investing activities,-2747000000.0000,library map
-WAB,243,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008067,,,,note-sourced default tag (no face line)
-WAB,243,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008067,,,,note-sourced default tag (no face line)
+WAB,243,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-008067,,,342000000.0000,note fact present in the filing (FSN value)
+WAB,243,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-008067,,,219000000.0000,note fact present in the filing (FSN value)
 WAB,243,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001628280-26-008067,R7,Accounts payable,34000000.0000,library map
 WAB,243,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001628280-26-008067,R7,Accounts receivable and unbilled accounts receivable,36000000.0000,combined line (library or label demote)
 WAB,243,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001628280-26-008067,R7,Inventories,182000000.0000,library map
@@ -27,7 +27,7 @@ WAB,243,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001628280-26
 WAB,243,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-008067,R5,Income (loss) before income taxes,1592000000.0000,library map
 WAB,243,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-008067,R5,Income tax expense,409000000.0000,library map
 WAB,243,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNet,sec_api,0001628280-26-008067,R5,"Interest expense, net",225000000.0000,combined line (library or label demote)
-WAB,243,interest_income,not_presented,,,,,,,,0001628280-26-008067,,,,no face line
+WAB,243,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNet,sec_api,0001628280-26-008067,R5,"Interest expense, net",225000000.0000,interest income only inside a net/other face line between OI and pretax
 WAB,243,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-008067,R3,"Inventories, net",2745000000.0000,library map
 WAB,243,loans_net,OUT,,,,,,,,0001628280-26-008067,,,,not a bank
 WAB,243,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008067,R5,Net income attributable to Wabtec shareholders,1170000000.0000,library map

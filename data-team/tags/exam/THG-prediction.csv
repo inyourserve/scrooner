@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 THG,791,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0001193125-26-060983,R4,Expenses and taxes payable,806700000.0000,combined line (library or label demote)
 THG,791,accounts_receivable,not_presented,,,,,,,,0001193125-26-060983,,,,no face line
-THG,791,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-060983,,,,note-sourced default tag (no face line)
+THG,791,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-060983,,,,no face line and no note fact
 THG,791,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-060983,R2,Net income per share,18.5000,library map
 THG,791,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-060983,R7,Capital expenditures,7700000.0000,library map
 THG,791,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-060983,R4,Cash and cash equivalents,1122700000.0000,library map
@@ -21,13 +21,13 @@ THG,791,deposits,OUT,,,,,,,,0001193125-26-060983,,,,not a bank
 THG,791,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,-,-5,Y,DepreciationAndAmortization,sec_api,0001193125-26-060983,R7,Net amortization and depreciation,-4600000.0000,library map
 THG,791,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001193125-26-060983,R2,Net income per share,18.1600,library map
 THG,791,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001193125-26-060983,R7,Dividends paid to shareholders,130600000.0000,library map
-THG,791,dividends_per_share,not_presented,,,,,,,,0001193125-26-060983,,,,no face line
+THG,791,dividends_per_share,not_presented,,,,,,,,0001193125-26-060983,,,,no face line and no note fact
 THG,791,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001193125-26-060983,R4,Goodwill,178800000.0000,library map
 THG,791,gross_profit,OUT,,,,,,,,0001193125-26-060983,,,,sector template (bank/insurer)
 THG,791,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-060983,R2,Income from continuing operations before income taxes,843800000.0000,library map
 THG,791,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-060983,R2,Total income tax expense,183100000.0000,library map
 THG,791,interest_expense,not_presented,,,,,,,,0001193125-26-060983,,,,single component only
-THG,791,interest_income,not_presented,,,,,,,,0001193125-26-060983,,,,no face line
+THG,791,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001193125-26-060983,,,469700000.0000,note fact present in the filing (FSN value)
 THG,791,inventory,OUT,,,,,,,,0001193125-26-060983,,,,sector template (bank/insurer)
 THG,791,loans_net,OUT,,,,,,,,0001193125-26-060983,,,,not a bank
 THG,791,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-060983,R2,Net income,662500000.0000,library map

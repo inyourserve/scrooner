@@ -27,7 +27,7 @@ IFF,410,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000051253-26
 IFF,410,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,(Loss) income before taxes,-412000000.0000,library map
 IFF,410,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,Income Tax Expense,-53000000.0000,library map
 IFF,410,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000051253-26-000006,R3,Interest expense,229000000.0000,library map
-IFF,410,interest_income,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
+IFF,410,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000051253-26-000006,,,19000000.0000,note fact present in the filing (FSN value)
 IFF,410,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,Inventories,2245000000.0000,library map
 IFF,410,loans_net,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,net_income,not_presented,,,,,,,,0000051253-26-000006,,,,no face line

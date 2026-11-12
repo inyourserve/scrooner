@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RBLX,298,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001315098-26-000024,R3,Accounts payable,64948000.0000,library map
 RBLX,298,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001315098-26-000024,R3,Accounts receivablenet of allowances,900646000.0000,library map
-RBLX,298,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001315098-26-000024,,,,note-sourced default tag (no face line)
+RBLX,298,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001315098-26-000024,,,18400000.0000,note fact present in the filing (FSN value)
 RBLX,298,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001315098-26-000024,R5,"Net loss per share attributable to common stockholders, basic (in dollars per share)",-1.5400,library map
 RBLX,298,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001315098-26-000024,R8,Acquisition of property and equipment,440978000.0000,library map
 RBLX,298,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001315098-26-000024,R3,Cash and cash equivalents,1205319000.0000,library map
 RBLX,298,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001315098-26-000024,R8,Net cash and cash equivalents provided by financing activities,88526000.0000,library map
 RBLX,298,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001315098-26-000024,R8,Net cash and cash equivalents used in investing activities,-1392641000.0000,library map
-RBLX,298,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001315098-26-000024,,,,note-sourced default tag (no face line)
+RBLX,298,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001315098-26-000024,,,3118000.0000,note fact present in the filing (FSN value)
 RBLX,298,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,Y,InterestPaid,sec_api,0001315098-26-000024,R8,Cash paid for interest,38750000.0000,library map
 RBLX,298,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001315098-26-000024,R8,Accounts payable,25352000.0000,library map
 RBLX,298,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001315098-26-000024,R8,Accounts receivable,290693000.0000,library map
@@ -21,7 +21,7 @@ RBLX,298,deposits,OUT,,,,,,,,0001315098-26-000024,,,,not a bank
 RBLX,298,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001315098-26-000024,R8,Depreciation and amortization expense,225820000.0000,library map
 RBLX,298,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001315098-26-000024,R5,"Net loss per share attributable to common stockholders, diluted (in dollars per share)",-1.5400,library map
 RBLX,298,dividends_paid,not_presented,,,,,,,,0001315098-26-000024,,,,no face line
-RBLX,298,dividends_per_share,not_presented,,,,,,,,0001315098-26-000024,,,,no face line
+RBLX,298,dividends_per_share,not_presented,,,,,,,,0001315098-26-000024,,,,no face line and no note fact
 RBLX,298,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001315098-26-000024,R3,Goodwill,142624000.0000,library map
 RBLX,298,gross_profit,not_presented,,,,,,,,0001315098-26-000024,,,,no face line
 RBLX,298,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001315098-26-000024,R5,Loss before income taxes,-1068025000.0000,library map

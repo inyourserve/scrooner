@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FRT,736,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000034903-26-000017,R3,Accounts payable and accrued expenses,219678000.0000,combined line (library or label demote)
 FRT,736,accounts_receivable,not_presented,,,,,,,,0000034903-26-000017,,,,no face line
-FRT,736,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000034903-26-000017,,,,note-sourced default tag (no face line)
+FRT,736,amortization_of_intangibles,not_presented,,,,,,,,0000034903-26-000017,,,,no face line and no note fact
 FRT,736,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000034903-26-000017,R5,Net income available for common shareholders,4.6800,library map
 FRT,736,capex,not_presented,,,,,,,,0000034903-26-000017,,,,no face line
 FRT,736,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000034903-26-000017,R3,Cash and cash equivalents,107415000.0000,library map
 FRT,736,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000034903-26-000017,R8,Net cash provided by (used in) financing activities,102953000.0000,library map
 FRT,736,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000034903-26-000017,R8,Net cash used in investing activities,-743068000.0000,library map
-FRT,736,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000034903-26-000017,,,,note-sourced default tag (no face line)
-FRT,736,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000034903-26-000017,,,,note-sourced default tag (no face line)
+FRT,736,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000034903-26-000017,,,369000.0000,note fact present in the filing (FSN value)
+FRT,736,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000034903-26-000017,,,171945000.0000,note fact present in the filing (FSN value)
 FRT,736,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000034903-26-000017,R8,Increase in accounts payable and accrued expenses,5588000.0000,combined line (library or label demote)
 FRT,736,cf_ar_change,not_presented,,,,,,,,0000034903-26-000017,,,,no face line
 FRT,736,cf_inventory_change,not_presented,,,,,,,,0000034903-26-000017,,,,no face line
@@ -34,7 +34,7 @@ FRT,736,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000034903-26
 FRT,736,net_interest_income,OUT,,,,,,,,0000034903-26-000017,,,,not a bank
 FRT,736,noninterest_expense,OUT,,,,,,,,0000034903-26-000017,,,,not a bank
 FRT,736,noninterest_income,OUT,,,,,,,,0000034903-26-000017,,,,not a bank
-FRT,736,operating_expenses,not_presented,,,,,,,,0000034903-26-000017,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+FRT,736,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000034903-26-000017,R5,Total operating expenses,833638000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 FRT,736,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000034903-26-000017,R5,OPERATING INCOME,602199000.0000,library map
 FRT,736,other_income_expense_net,not_presented,,,,,,,,0000034903-26-000017,,,,no face line
 FRT,736,ppe_net,not_presented,,,,,,,,0000034903-26-000017,,,,no face line

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 JEF,691,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000096223-26-000009,R3,Accrued expenses and other liabilities,3836709000.0000,combined line (library or label demote)
 JEF,691,accounts_receivable,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
-JEF,691,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000096223-26-000009,,,,note-sourced default tag (no face line)
+JEF,691,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000096223-26-000009,,,33500000.0000,note fact present in the filing (FSN value)
 JEF,691,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000096223-26-000009,R5,Basic (in dollars per share),2.9300,library map
 JEF,691,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000096223-26-000009,R11,Net payments on premises and equipment,207467000.0000,library map
 JEF,691,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000096223-26-000009,R3,Cash and cash equivalents,14043889000.0000,library map
@@ -27,7 +27,7 @@ JEF,691,gross_profit,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
 JEF,691,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000096223-26-000009,R5,Earnings from continuing operations before income taxes,870989000.0000,library map
 JEF,691,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000096223-26-000009,R5,Income tax expense,184570000.0000,library map
 JEF,691,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0000096223-26-000009,R5,Interest expense,3479926000.0000,library map
-JEF,691,interest_income,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
+JEF,691,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000096223-26-000009,,,1000000.0000,note fact present in the filing (FSN value)
 JEF,691,inventory,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
 JEF,691,loans_net,OUT,,,,,,,,0000096223-26-000009,,,,not a bank
 JEF,691,net_income,not_presented,,,,,,,,0000096223-26-000009,,,,no face line

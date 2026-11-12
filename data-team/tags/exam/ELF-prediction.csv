@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ELF,878,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001600033-26-000020,R3,Accounts payable,97467000.0000,library map
 ELF,878,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001600033-26-000020,R3,"Accounts receivable, net",174644000.0000,library map
-ELF,878,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001600033-26-000020,,,,note-sourced default tag (no face line)
+ELF,878,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001600033-26-000020,,,35500000.0000,note fact present in the filing (FSN value)
 ELF,878,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001600033-26-000020,R5,Basic (in USD per share),0.4500,library map
 ELF,878,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001600033-26-000020,R8,Purchase of property and equipment,22449000.0000,library map
 ELF,878,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,Y,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,sec_api,0001600033-26-000020,R3,Cash and cash equivalents,289685000.0000,library map
@@ -21,13 +21,13 @@ ELF,878,deposits,OUT,,,,,,,,0001600033-26-000020,,,,not a bank
 ELF,878,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001600033-26-000020,R8,Depreciation and amortization,79361000.0000,library map
 ELF,878,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001600033-26-000020,R5,Diluted (in USD per share),0.4400,library map
 ELF,878,dividends_paid,not_presented,,,,,,,,0001600033-26-000020,,,,no face line
-ELF,878,dividends_per_share,not_presented,,,,,,,,0001600033-26-000020,,,,no face line
+ELF,878,dividends_per_share,not_presented,,,,,,,,0001600033-26-000020,,,,no face line and no note fact
 ELF,878,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001600033-26-000020,R3,Goodwill,853475000.0000,library map
 ELF,878,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,Gross profit,1157347000.0000,library map
 ELF,878,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,Income before provision for income taxes,40459000.0000,library map
 ELF,878,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,Income tax provision,14141000.0000,library map
 ELF,878,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestIncomeExpenseNet,sec_api,0001600033-26-000020,R5,"Interest expense, net",-35284000.0000,combined line (library or label demote)
-ELF,878,interest_income,not_presented,,,,,,,,0001600033-26-000020,,,,no face line
+ELF,878,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestIncomeExpenseNet,sec_api,0001600033-26-000020,R5,"Interest expense, net",-35284000.0000,interest income only inside a net/other face line between OI and pretax
 ELF,878,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001600033-26-000020,R3,"Inventory, net",220246000.0000,library map
 ELF,878,loans_net,OUT,,,,,,,,0001600033-26-000020,,,,not a bank
 ELF,878,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,Net income,26318000.0000,library map

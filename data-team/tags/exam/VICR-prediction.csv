@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VICR,743,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-085102,R2,Accounts payable,12290000.0000,library map
 VICR,743,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-085102,R2,"Accounts receivable, less allowance of $137 in 2025 and $130 in 2024",60716000.0000,library map
-VICR,743,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-085102,,,,note-sourced default tag (no face line)
+VICR,743,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-085102,,,30000.0000,note fact present in the filing (FSN value)
 VICR,743,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-085102,R4,Basic,2.6300,library map
 VICR,743,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,"Additions to property, plant and equipment and internal-use software",20318000.0000,library map
 VICR,743,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-085102,R2,Cash and cash equivalents,402805000.0000,library map
 VICR,743,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,Net cash provided by financing activities,6320000.0000,library map
 VICR,743,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-085102,R7,Net cash used for investing activities,-20318000.0000,library map
 VICR,743,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,"Cash paid during the year for income taxes, net of refunds",4863000.0000,library map
-VICR,743,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-085102,,,,note-sourced default tag (no face line)
+VICR,743,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-085102,,,,no face line and no note fact
 VICR,743,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,Accounts payable and accrued liabilities,2611000.0000,combined line (library or label demote)
 VICR,743,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,Accounts receivable,7764000.0000,library map
 VICR,743,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001193125-26-085102,R7,Inventories,-14712000.0000,library map
@@ -21,13 +21,13 @@ VICR,743,deposits,OUT,,,,,,,,0001193125-26-085102,,,,not a bank
 VICR,743,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,Depreciation and amortization,20786000.0000,library map
 VICR,743,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-085102,R4,Diluted,2.6100,library map
 VICR,743,dividends_paid,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
-VICR,743,dividends_per_share,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
+VICR,743,dividends_per_share,not_presented,,,,,,,,0001193125-26-085102,,,,no face line and no note fact
 VICR,743,goodwill,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
 VICR,743,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,Gross margin,259429000.0000,library map
 VICR,743,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,Income before income taxes,94571000.0000,library map
 VICR,743,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-085102,R4,Less: (Benefit) provision for income taxes,-24025000.0000,library map
 VICR,743,interest_expense,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
-VICR,743,interest_income,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
+VICR,743,interest_income,not_presented,,,,,,,,0001193125-26-085102,,,,no face line and no note fact
 VICR,743,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-085102,R2,Inventories,91340000.0000,library map
 VICR,743,loans_net,OUT,,,,,,,,0001193125-26-085102,,,,not a bank
 VICR,743,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,Net income attributable to Vicor Corporation,118556000.0000,library map
@@ -41,7 +41,7 @@ VICR,743,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,
 VICR,743,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-085102,,,,not a bank
 VICR,743,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,Research and development,78570000.0000,library map
 VICR,743,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,Total net revenues and patent litigation settlement,452701000.0000,library map
-VICR,743,sbc,not_presented,,,,,,,,0001193125-26-085102,,,,no face line
+VICR,743,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-085102,,,16787000.0000,note fact present in the filing (FSN value)
 VICR,743,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-085102,R4,"Selling, general and administrative",99031000.0000,library map
 VICR,743,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-085102,R7,Repurchases of Common Stock,35175000.0000,library map
 VICR,743,shares_outstanding,not_presented,,,,,,,,0001193125-26-085102,,,,no face line

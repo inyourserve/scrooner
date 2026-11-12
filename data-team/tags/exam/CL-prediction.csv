@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CL,169,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Accounts payable,2089000000.0000,library map
 CL,169,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Receivables (net of allowances of $90 and $85, respectively)",1675000000.0000,library map
-CL,169,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000021665-26-000006,,,,note-sourced default tag (no face line)
+CL,169,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021665-26-000006,,,78000000.0000,note fact present in the filing (FSN value)
 CL,169,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021665-26-000006,R3,"Earnings per common share, basic (in dollars per share)",2.6400,library map
 CL,169,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Capital expenditures,564000000.0000,library map
 CL,169,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Cash and cash equivalents,1288000000.0000,library map
@@ -50,5 +50,5 @@ CL,169,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000021665-26-00000
 CL,169,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Long-term debt,6871000000.0000,printed face components (duration sum; total_debt founder sum)
 CL,169,total_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
 CL,169,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total liabilities,15965000000.0000,library map
-CL,169,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000021665-26-000006,,,,note-sourced default tag (no face line)
-CL,169,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000021665-26-000006,,,,note-sourced default tag (no face line)
+CL,169,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000021665-26-000006,,,808700000.0000,note fact present in the filing (FSN value)
+CL,169,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000021665-26-000006,,,811100000.0000,note fact present in the filing (FSN value)

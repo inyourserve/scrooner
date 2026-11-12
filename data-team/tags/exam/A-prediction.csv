@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 A,242,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001090872-25-000087,R6,Accounts payable,570000000.0000,library map
 A,242,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001090872-25-000087,R6,"Accounts receivable, net",1487000000.0000,library map
-A,242,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001090872-25-000087,,,,note-sourced default tag (no face line)
+A,242,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001090872-25-000087,,,105000000.0000,note fact present in the filing (FSN value)
 A,242,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001090872-25-000087,R3,Net income per share - basic,4.5900,library map
 A,242,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001090872-25-000087,R8,"Payments to acquire property, plant and equipment",407000000.0000,library map
 A,242,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001090872-25-000087,R6,Cash and cash equivalents,1789000000.0000,library map

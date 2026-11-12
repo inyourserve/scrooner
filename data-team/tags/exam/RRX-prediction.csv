@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RRX,689,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000082811-26-000054,R5,Accounts Payable,607300000.0000,library map
 RRX,689,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000082811-26-000054,R5,"Trade Receivables, Less Allowances of $10.5 Million in 2025 and $29.9 Million in 2024",524200000.0000,library map
-RRX,689,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000082811-26-000054,,,,note-sourced default tag (no face line)
+RRX,689,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000082811-26-000054,,,346100000.0000,note fact present in the filing (FSN value)
 RRX,689,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000082811-26-000054,R3,Basic (in dollars per share),4.2200,library map
 RRX,689,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000082811-26-000054,R9,"Additions to Property, Plant and Equipment",97700000.0000,library map
 RRX,689,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000082811-26-000054,R5,Cash and Cash Equivalents,521700000.0000,library map

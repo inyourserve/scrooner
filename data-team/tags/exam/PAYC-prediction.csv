@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PAYC,642,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-059372,R2,Accounts payable,6600000.0000,library map
 PAYC,642,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-059372,R2,Accounts receivable,44900000.0000,library map
-PAYC,642,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-059372,,,,note-sourced default tag (no face line)
+PAYC,642,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-059372,,,8800000.0000,note fact present in the filing (FSN value)
 PAYC,642,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-059372,R4,"Earnings per share, basic",8.1300,library map
 PAYC,642,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-059372,R7,Purchases of property and equipment,270900000.0000,library map
 PAYC,642,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-059372,R2,Cash and cash equivalents,370000000.0000,library map
@@ -27,7 +27,7 @@ PAYC,642,gross_profit,not_presented,,,,,,,,0001193125-26-059372,,,,no face line
 PAYC,642,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-059372,R4,Income before income taxes,619400000.0000,library map
 PAYC,642,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-059372,R4,Provision for income taxes,166000000.0000,library map
 PAYC,642,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-059372,R4,Interest expense,3400000.0000,library map
-PAYC,642,interest_income,not_presented,,,,,,,,0001193125-26-059372,,,,no face line
+PAYC,642,interest_income,not_presented,,,,,,,,0001193125-26-059372,,,,no face line and no note fact
 PAYC,642,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-059372,R2,Inventory,1700000.0000,library map
 PAYC,642,loans_net,OUT,,,,,,,,0001193125-26-059372,,,,not a bank
 PAYC,642,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059372,R4,Net income,453400000.0000,library map

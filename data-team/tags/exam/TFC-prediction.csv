@@ -21,7 +21,7 @@ TFC,213,deposits,OUT,,,,,,,,0000092230-26-000030,,,,not a bank
 TFC,213,depreciation_and_amortization,not_presented,,,,,,,,0000092230-26-000030,,,,single component only
 TFC,213,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000092230-26-000030,R5,Diluted EPS (in dollars per share),3.8200,library map
 TFC,213,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000092230-26-000030,R8,Cash dividends paid on common stock,2672000000.0000,library map
-TFC,213,dividends_per_share,not_presented,,,,,,,,0000092230-26-000030,,,,no face line
+TFC,213,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000092230-26-000030,,,2.0800,note fact present in the filing (FSN value)
 TFC,213,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000092230-26-000030,R3,Goodwill,17125000000.0000,library map
 TFC,213,gross_profit,not_presented,,,,,,,,0000092230-26-000030,,,,no face line
 TFC,213,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000092230-26-000030,R5,Income (loss) before income taxes,6349000000.0000,library map
@@ -41,7 +41,7 @@ TFC,213,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 TFC,213,provision_for_credit_losses,OUT,,,,,,,,0000092230-26-000030,,,,not a bank
 TFC,213,research_and_development,not_presented,,,,,,,,0000092230-26-000030,,,,no face line
 TFC,213,revenue,not_presented,,,,,,,,0000092230-26-000030,,,,no face line
-TFC,213,sbc,not_presented,,,,,,,,0000092230-26-000030,,,,no face line
+TFC,213,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,+,,,,sec_api,0000092230-26-000030,,,317000000.0000,note fact present in the filing (FSN value)
 TFC,213,sga_expense,not_presented,,,,,,,,0000092230-26-000030,,,,single component only
 TFC,213,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000092230-26-000030,R8,Repurchase of common stock,2500000000.0000,library map
 TFC,213,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0000092230-26-000030,R3,Common shares outstanding,1262470000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CNA,595,accounts_payable,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
 CNA,595,accounts_receivable,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
-CNA,595,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000021175-26-000011,,,,note-sourced default tag (no face line)
+CNA,595,amortization_of_intangibles,not_presented,,,,,,,,0000021175-26-000011,,,,no face line and no note fact
 CNA,595,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021175-26-000011,R3,Basic earnings per share (in usd per share),4.7100,library map
 CNA,595,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000021175-26-000011,R8,Purchases of property and equipment,86000000.0000,library map
 CNA,595,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0000021175-26-000011,R6,Cash,425000000.0000,library map
 CNA,595,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000021175-26-000011,R8,Net cash flows used by financing activities,-1104000000.0000,library map
 CNA,595,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000021175-26-000011,R8,Net cash flows used by investing activities,-1449000000.0000,library map
-CNA,595,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000021175-26-000011,,,,note-sourced default tag (no face line)
-CNA,595,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000021175-26-000011,,,,note-sourced default tag (no face line)
+CNA,595,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000021175-26-000011,,,263000000.0000,note fact present in the filing (FSN value)
+CNA,595,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000021175-26-000011,,,129000000.0000,note fact present in the filing (FSN value)
 CNA,595,cf_ap_change,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
 CNA,595,cf_ar_change,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
 CNA,595,cf_inventory_change,OUT,,,,,,,,0000021175-26-000011,,,,sector template (bank/insurer)
@@ -27,7 +27,7 @@ CNA,595,gross_profit,OUT,,,,,,,,0000021175-26-000011,,,,sector template (bank/in
 CNA,595,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021175-26-000011,R3,Income before income tax,1620000000.0000,library map
 CNA,595,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021175-26-000011,R3,Income tax expense,342000000.0000,library map
 CNA,595,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000021175-26-000011,R3,Interest,135000000.0000,library map
-CNA,595,interest_income,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
+CNA,595,interest_income,not_presented,,,,,,,,0000021175-26-000011,,,,no face line and no note fact
 CNA,595,inventory,OUT,,,,,,,,0000021175-26-000011,,,,sector template (bank/insurer)
 CNA,595,loans_net,OUT,,,,,,,,0000021175-26-000011,,,,not a bank
 CNA,595,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021175-26-000011,R3,Net income,1278000000.0000,library map
@@ -41,7 +41,7 @@ CNA,595,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 CNA,595,provision_for_credit_losses,OUT,,,,,,,,0000021175-26-000011,,,,not a bank
 CNA,595,research_and_development,OUT,,,,,,,,0000021175-26-000011,,,,sector template (bank/insurer)
 CNA,595,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000021175-26-000011,R3,Total revenues,14989000000.0000,library map
-CNA,595,sbc,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
+CNA,595,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000021175-26-000011,,,41000000.0000,note fact present in the filing (FSN value)
 CNA,595,sga_expense,not_presented,,,,,,,,0000021175-26-000011,,,,no face line
 CNA,595,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000021175-26-000011,R8,Purchase of treasury stock,34000000.0000,library map
 CNA,595,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000021175-26-000011,R7,"Common stock, shares outstanding (in shares)",270671747.0000,library map

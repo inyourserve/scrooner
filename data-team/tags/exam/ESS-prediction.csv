@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ESS,492,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000920522-26-000003,R3,Accounts payable and accrued liabilities,221351000.0000,combined line (library or label demote)
 ESS,492,accounts_receivable,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
-ESS,492,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000920522-26-000003,,,,note-sourced default tag (no face line)
+ESS,492,amortization_of_intangibles,not_presented,,,,,,,,0000920522-26-000003,,,,no face line and no note fact
 ESS,492,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000920522-26-000003,R5,Net income available to common stockholders (in dollars per share),10.4000,library map
 ESS,492,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0000920522-26-000003,R9,Development acquisitions of and additions to real estate under development,61878000.0000,combined line (library or label demote)
 ESS,492,cash_and_equivalents,combined,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000920522-26-000003,R3,Cash and cash equivalents-unrestricted,76241000.0000,combined line (library or label demote)
 ESS,492,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000920522-26-000003,R9,Net cash used in financing activities,-512200000.0000,library map
 ESS,492,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000920522-26-000003,R9,Net cash used in investing activities,-552483000.0000,library map
-ESS,492,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000920522-26-000003,,,,note-sourced default tag (no face line)
+ESS,492,cash_paid_for_income_taxes,not_presented,,,,,,,,0000920522-26-000003,,,,no face line and no note fact
 ESS,492,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000920522-26-000003,R9,"Cash paid for interest, net of capitalized interest",252651000.0000,library map
 ESS,492,cf_ap_change,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,cf_ar_change,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
@@ -27,14 +27,14 @@ ESS,492,gross_profit,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,income_before_tax,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,income_tax_expense,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000920522-26-000003,R5,Interest expense,258404000.0000,library map
-ESS,492,interest_income,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
+ESS,492,interest_income,not_presented,,,,,,,,0000920522-26-000003,,,,no face line and no note fact
 ESS,492,inventory,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,loans_net,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
 ESS,492,net_income,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,net_interest_income,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
 ESS,492,noninterest_expense,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
 ESS,492,noninterest_income,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
-ESS,492,operating_expenses,not_presented,,,,,,,,0000920522-26-000003,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ESS,492,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000920522-26-000003,R5,Total expenses,1287553000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 ESS,492,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000920522-26-000003,R5,Earnings from operations,899316000.0000,library map
 ESS,492,other_income_expense_net,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,ppe_net,not_presented,,,,,,,,0000920522-26-000003,,,,no face line

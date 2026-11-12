@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CRH,220,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-009043,R6,Accounts payable,3263000000.0000,library map
 CRH,220,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-009043,R6,"Accounts receivable, net",5178000000.0000,combined line (library or label demote)
-CRH,220,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-009043,,,,note-sourced default tag (no face line)
+CRH,220,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-009043,,,192000000.0000,note fact present in the filing (FSN value)
 CRH,220,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-009043,R3,"Basic earnings per share attributable to CRH plc, net income (in USD per share)",5.5400,library map
 CRH,220,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-009043,R8,"Purchases of property, plant and equipment, and intangibles",2713000000.0000,library map
 CRH,220,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-009043,R6,Cash and cash equivalents,4096000000.0000,library map

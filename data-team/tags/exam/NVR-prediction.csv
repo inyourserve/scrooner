@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NVR,518,accounts_payable,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,accounts_receivable,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
-NVR,518,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000906163-26-000018,,,,note-sourced default tag (no face line)
+NVR,518,amortization_of_intangibles,not_presented,,,,,,,,0000906163-26-000018,,,,no face line and no note fact
 NVR,518,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000906163-26-000018,R5,Basic earnings per share (USD per share),462.0000,library map
 NVR,518,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000906163-26-000018,R7,"Purchase of property, plant and equipment",24508000.0000,library map
 NVR,518,cash_and_equivalents,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
@@ -21,13 +21,13 @@ NVR,518,deposits,OUT,,,,,,,,0000906163-26-000018,,,,not a bank
 NVR,518,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000906163-26-000018,R7,Depreciation and amortization,24510000.0000,library map
 NVR,518,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000906163-26-000018,R5,Diluted earnings per share (USD per share),436.5500,library map
 NVR,518,dividends_paid,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
-NVR,518,dividends_per_share,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
+NVR,518,dividends_per_share,not_presented,,,,,,,,0000906163-26-000018,,,,no face line and no note fact
 NVR,518,goodwill,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,gross_profit,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,income_before_tax,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000906163-26-000018,R5,Income tax expense,422116000.0000,library map
 NVR,518,interest_expense,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
-NVR,518,interest_income,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
+NVR,518,interest_income,not_presented,,,,,,,,0000906163-26-000018,,,,no face line and no note fact
 NVR,518,inventory,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,loans_net,OUT,,,,,,,,0000906163-26-000018,,,,not a bank
 NVR,518,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000906163-26-000018,R5,Net income,1339816000.0000,library map

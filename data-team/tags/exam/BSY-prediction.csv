@@ -21,13 +21,13 @@ BSY,685,deposits,OUT,,,,,,,,0001031308-26-000007,,,,not a bank
 BSY,685,depreciation_and_amortization,not_presented,,,,,,,,0001031308-26-000007,,,,no face line
 BSY,685,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001031308-26-000007,R5,Diluted (USD per share),0.8500,library map
 BSY,685,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001031308-26-000007,R9,Payments of dividends,84963000.0000,library map
-BSY,685,dividends_per_share,not_presented,,,,,,,,0001031308-26-000007,,,,no face line
+BSY,685,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001031308-26-000007,,,0.2800,note fact present in the filing (FSN value)
 BSY,685,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001031308-26-000007,R3,Goodwill,2482154000.0000,library map
 BSY,685,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Gross profit,1224249000.0000,library map
 BSY,685,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Income before income taxes,350733000.0000,library map
 BSY,685,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,(Provision) benefit for income taxes,72977000.0000,library map
 BSY,685,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001031308-26-000007,R5,"Interest expense, net",-12435000.0000,combined line (library or label demote)
-BSY,685,interest_income,not_presented,,,,,,,,0001031308-26-000007,,,,no face line
+BSY,685,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001031308-26-000007,,,2887000.0000,note fact present in the filing (FSN value)
 BSY,685,inventory,not_presented,,,,,,,,0001031308-26-000007,,,,no face line
 BSY,685,loans_net,OUT,,,,,,,,0001031308-26-000007,,,,not a bank
 BSY,685,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Net income attributable to Bentley Systems,277861000.0000,library map

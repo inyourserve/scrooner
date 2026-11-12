@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TFX,980,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000096943-26-000019,R6,Accounts payable,130201000.0000,library map
 TFX,980,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000096943-26-000019,R6,"Accounts receivable, net",345583000.0000,library map
-TFX,980,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000096943-26-000019,,,,note-sourced default tag (no face line)
+TFX,980,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000096943-26-000019,,,121656000.0000,note fact present in the filing (FSN value)
 TFX,980,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000096943-26-000019,R3,Net income (in dollars per share),-20.3000,library map
 TFX,980,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000096943-26-000019,R8,"Expenditures for property, plant and equipment",95236000.0000,library map
 TFX,980,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000096943-26-000019,R6,Cash and cash equivalents,378564000.0000,library map
 TFX,980,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000096943-26-000019,R8,Net cash provided by (used in) financing activities from continuing operations,611539000.0000,library map
 TFX,980,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-3,N,,sec_api,0000096943-26-000019,R8,Net cash (used in) provided by investing activities from continuing operations,-812653000.0000,library map
-TFX,980,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000096943-26-000019,,,,note-sourced default tag (no face line)
-TFX,980,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000096943-26-000019,,,,note-sourced default tag (no face line)
+TFX,980,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000096943-26-000019,,,117658000.0000,note fact present in the filing (FSN value)
+TFX,980,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000096943-26-000019,,,119337000.0000,note fact present in the filing (FSN value)
 TFX,980,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0000096943-26-000019,R8,"Accounts payable, accrued expenses and other liabilities",-8284000.0000,combined line (library or label demote)
 TFX,980,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000096943-26-000019,R8,Accounts receivable,85533000.0000,library map
 TFX,980,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000096943-26-000019,R8,Inventories,-84041000.0000,library map

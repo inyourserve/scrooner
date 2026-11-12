@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CBC,800,accounts_payable,not_presented,,,,,,,,0001628280-26-021067,,,,no face line
 CBC,800,accounts_receivable,not_presented,,,,,,,,0001628280-26-021067,,,,no face line
-CBC,800,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-021067,,,,note-sourced default tag (no face line)
+CBC,800,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-021067,,,3200000.0000,note fact present in the filing (FSN value)
 CBC,800,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-021067,R5,Net income per common share - basic (in dollars per share),1.7500,library map
 CBC,800,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-021067,R9,"Purchase of land, buildings, and equipment",16771000.0000,library map
 CBC,800,cash_and_equivalents,not_presented,,,,,,,,0001628280-26-021067,,,,no face line
@@ -50,5 +50,5 @@ CBC,800,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-0210
 CBC,800,total_debt,not_presented,,,,,,,,0001628280-26-021067,,,,no face line
 CBC,800,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001628280-26-021067,R5,Total interest income,989948000.0000,bank template tag
 CBC,800,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-021067,R3,Total liabilities,16968001000.0000,library map
-CBC,800,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-021067,,,,note-sourced default tag (no face line)
-CBC,800,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-021067,,,,note-sourced default tag (no face line)
+CBC,800,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-021067,,,222352000.0000,note fact present in the filing (FSN value)
+CBC,800,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-021067,,,222352000.0000,note fact present in the filing (FSN value)

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HUBS,638,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-046646,R2,Accounts payable,24764000.0000,library map
 HUBS,638,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-046646,R2,"Accounts receivable - net of allowance for credit losses of $6,825 and $6,088 at December 31, 2025 and 2024, respectively",419146000.0000,library map
-HUBS,638,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-046646,,,,note-sourced default tag (no face line)
+HUBS,638,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-046646,,,12100000.0000,note fact present in the filing (FSN value)
 HUBS,638,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-046646,R4,"Net income (loss) per share, basic",0.8800,library map
 HUBS,638,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-046646,R8,Purchases of property and equipment,53165000.0000,library map
 HUBS,638,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-046646,R2,Cash and cash equivalents,882242000.0000,library map
@@ -21,7 +21,7 @@ HUBS,638,deposits,OUT,,,,,,,,0001193125-26-046646,,,,not a bank
 HUBS,638,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-046646,R8,Depreciation and amortization,136295000.0000,library map
 HUBS,638,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-046646,R4,"Net income (loss) per share, diluted",0.8600,library map
 HUBS,638,dividends_paid,not_presented,,,,,,,,0001193125-26-046646,,,,no face line
-HUBS,638,dividends_per_share,not_presented,,,,,,,,0001193125-26-046646,,,,no face line
+HUBS,638,dividends_per_share,not_presented,,,,,,,,0001193125-26-046646,,,,no face line and no note fact
 HUBS,638,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-046646,R2,Goodwill,291452000.0000,library map
 HUBS,638,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-046646,R4,Gross profit,2622779000.0000,library map
 HUBS,638,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-046646,R4,Income (loss) before income tax expense,69463000.0000,library map

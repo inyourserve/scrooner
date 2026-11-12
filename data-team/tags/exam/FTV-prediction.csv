@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FTV,484,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,Trade accounts payable,436400000.0000,library map
 FTV,484,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,"Accounts receivable less allowance for doubtful accounts of $18.8 and $19.4, respectively",683600000.0000,library map
-FTV,484,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001659166-26-000007,,,,note-sourced default tag (no face line)
+FTV,484,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001659166-26-000007,,,368000000.0000,note fact present in the filing (FSN value)
 FTV,484,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001659166-26-000007,R5,Basic (in dollars per share),1.7400,library map
 FTV,484,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001659166-26-000007,R8,"Purchases of property, plant and equipment",105100000.0000,library map
 FTV,484,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,Cash and equivalents,375500000.0000,library map
 FTV,484,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001659166-26-000007,R8,Net cash provided by (used in) financing activities,-1386600000.0000,library map
 FTV,484,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001659166-26-000007,R8,Net cash used in investing activities,-135400000.0000,library map
-FTV,484,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001659166-26-000007,,,,note-sourced default tag (no face line)
-FTV,484,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001659166-26-000007,,,,note-sourced default tag (no face line)
+FTV,484,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001659166-26-000007,,,100000000.0000,note fact present in the filing (FSN value)
+FTV,484,cash_paid_for_interest,not_presented,,,,,,,,0001659166-26-000007,,,,no face line and no note fact
 FTV,484,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001659166-26-000007,R8,Change in trade accounts payable,12400000.0000,library map
 FTV,484,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001659166-26-000007,R8,"Change in accounts receivable, net",-8700000.0000,library map
 FTV,484,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001659166-26-000007,R8,Change in inventories,20000000.0000,library map
@@ -21,13 +21,13 @@ FTV,484,deposits,OUT,,,,,,,,0001659166-26-000007,,,,not a bank
 FTV,484,depreciation_and_amortization,component_sum,us-gaap:AdjustmentForAmortization;us-gaap:Depreciation,CF,+,-5,N,,sec_api,0001659166-26-000007,R8,Amortization,367500000.0000,printed face components (duration sum; total_debt founder sum)
 FTV,484,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001659166-26-000007,R5,Diluted (in dollars per share),1.7300,library map
 FTV,484,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001659166-26-000007,R8,Payment of dividends,92200000.0000,library map
-FTV,484,dividends_per_share,not_presented,,,,,,,,0001659166-26-000007,,,,no face line
+FTV,484,dividends_per_share,not_presented,,,,,,,,0001659166-26-000007,,,,no face line and no note fact
 FTV,484,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,Goodwill,7298300000.0000,library map
 FTV,484,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,Gross profit,2641100000.0000,library map
 FTV,484,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,Earnings from continuing operations before income taxes,602200000.0000,library map
 FTV,484,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,Income taxes,69500000.0000,library map
 FTV,484,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001659166-26-000007,R5,"Interest expense, net",120500000.0000,combined line (library or label demote)
-FTV,484,interest_income,not_presented,,,,,,,,0001659166-26-000007,,,,no face line
+FTV,484,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001659166-26-000007,R5,"Interest expense, net",120500000.0000,interest income only inside a net/other face line between OI and pretax
 FTV,484,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,Inventories,291800000.0000,library map
 FTV,484,loans_net,OUT,,,,,,,,0001659166-26-000007,,,,not a bank
 FTV,484,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,0001659166-26-000007,R5,Net earnings,579200000.0000,library map

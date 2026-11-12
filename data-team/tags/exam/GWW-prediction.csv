@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GWW,195,accounts_payable,not_presented,,,,,,,,0000277135-26-000011,,,,no face line
 GWW,195,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000277135-26-000011,R6,Accounts receivable (less allowance for credit losses of $32 and $32),2329000000.0000,library map
-GWW,195,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000277135-26-000011,,,,note-sourced default tag (no face line)
+GWW,195,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000277135-26-000011,,,81000000.0000,note fact present in the filing (FSN value)
 GWW,195,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000277135-26-000011,R3,Basic (in dollars per share),35.4700,library map
 GWW,195,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000277135-26-000011,R8,Capital expenditures,684000000.0000,library map
 GWW,195,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000277135-26-000011,R6,Cash and cash equivalents,585000000.0000,library map
@@ -27,7 +27,7 @@ GWW,195,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000277135-26
 GWW,195,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000277135-26-000011,R3,Earnings before income taxes,2430000000.0000,library map
 GWW,195,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000277135-26-000011,R3,Income tax provision,622000000.0000,library map
 GWW,195,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNet,sec_api,0000277135-26-000011,R3,Interest expense  net,81000000.0000,library map
-GWW,195,interest_income,not_presented,,,,,,,,0000277135-26-000011,,,,no face line
+GWW,195,interest_income,not_presented,,,,,,,,0000277135-26-000011,,,,no face line and no note fact
 GWW,195,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000277135-26-000011,R6,Inventories  net,2394000000.0000,library map
 GWW,195,loans_net,OUT,,,,,,,,0000277135-26-000011,,,,not a bank
 GWW,195,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000277135-26-000011,R3,"Net earnings attributable to W.W. Grainger, Inc.",1706000000.0000,library map

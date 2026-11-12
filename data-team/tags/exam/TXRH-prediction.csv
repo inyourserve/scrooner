@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TXRH,653,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-021292,R2,Accounts payable,163421000.0000,library map
 TXRH,653,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-021292,R2,"Receivables, net of allowance for doubtful accounts of $12 at December 30, 2025 and $7 at December 31, 2024",214511000.0000,library map
-TXRH,653,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-021292,,,,note-sourced default tag (no face line)
+TXRH,653,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-021292,,,6463000.0000,note fact present in the filing (FSN value)
 TXRH,653,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-021292,R4,Basic,6.1100,library map
 TXRH,653,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-021292,R7,Capital expenditures-property and equipment,387996000.0000,library map
 TXRH,653,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-021292,R2,Cash and cash equivalents,134709000.0000,library map
@@ -27,14 +27,14 @@ TXRH,653,gross_profit,not_presented,,,,,,,,0001104659-26-021292,,,,no face line
 TXRH,653,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,Income before taxes,480756000.0000,library map
 TXRH,653,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,Income tax expense,66421000.0000,library map
 TXRH,653,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,"Interest income, net",3137000.0000,combined line (library or label demote)
-TXRH,653,interest_income,not_presented,,,,,,,,0001104659-26-021292,,,,no face line
+TXRH,653,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,"Interest income, net",3137000.0000,interest income only inside a net/other face line between OI and pretax
 TXRH,653,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-021292,R2,"Inventories, net",45560000.0000,library map
 TXRH,653,loans_net,OUT,,,,,,,,0001104659-26-021292,,,,not a bank
 TXRH,653,net_income,not_presented,,,,,,,,0001104659-26-021292,,,,no face line
 TXRH,653,net_interest_income,OUT,,,,,,,,0001104659-26-021292,,,,not a bank
 TXRH,653,noninterest_expense,OUT,,,,,,,,0001104659-26-021292,,,,not a bank
 TXRH,653,noninterest_income,OUT,,,,,,,,0001104659-26-021292,,,,not a bank
-TXRH,653,operating_expenses,not_presented,,,,,,,,0001104659-26-021292,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+TXRH,653,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,Total costs and expenses,5403335000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 TXRH,653,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-021292,R4,Income from operations,474740000.0000,library map
 TXRH,653,other_income_expense_net,not_presented,,,,,,,,0001104659-26-021292,,,,no face line
 TXRH,653,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-021292,R2,"Property and equipment, net of accumulated depreciation of $1,379,207 at December 30, 2025 and $1,223,064 at December 31, 2024",1803841000.0000,library map

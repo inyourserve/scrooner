@@ -7,7 +7,7 @@ INTU,141,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6
 INTU,141,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000896878-26-000037,R5,Cash and cash equivalents,4705000000.0000,library map
 INTU,141,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000896878-26-000037,R9,Net cash used in financing activities,-7689000000.0000,library map
 INTU,141,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000896878-26-000037,R9,Net cash used in investing activities,-1412000000.0000,library map
-INTU,141,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000896878-26-000037,,,,note-sourced default tag (no face line)
+INTU,141,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000896878-26-000037,,,281000000.0000,note fact present in the filing (FSN value)
 INTU,141,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000896878-26-000037,R9,Interest paid,295000000.0000,library map
 INTU,141,cf_ap_change,not_presented,,,,,,,,0000896878-26-000037,,,,no face line
 INTU,141,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000896878-26-000037,R9,Accounts receivable,95000000.0000,library map
@@ -27,14 +27,14 @@ INTU,141,gross_profit,not_presented,,,,,,,,0000896878-26-000037,,,,no face line
 INTU,141,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-6,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,sec_api,0000896878-26-000037,R3,Income before income taxes,6017000000.0000,library map
 INTU,141,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Income tax provision,1451000000.0000,library map
 INTU,141,interest_expense,mapped,us-gaap:InterestExpenseDebt,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Interest expense,256000000.0000,sole-debt interest rule
-INTU,141,interest_income,not_presented,,,,,,,,0000896878-26-000037,,,,no face line
+INTU,141,interest_income,not_presented,,,,,,,,0000896878-26-000037,,,,no face line and no note fact
 INTU,141,inventory,not_presented,,,,,,,,0000896878-26-000037,,,,no face line
 INTU,141,loans_net,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
 INTU,141,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Net income,4566000000.0000,library map
 INTU,141,net_interest_income,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
 INTU,141,noninterest_expense,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
 INTU,141,noninterest_income,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
-INTU,141,operating_expenses,not_presented,,,,,,,,0000896878-26-000037,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+INTU,141,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Total costs and expenses,15564000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 INTU,141,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Operating income,5884000000.0000,library map
 INTU,141,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,"Interest and other income, net",389000000.0000,combined line (library or label demote)
 INTU,141,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000896878-26-000037,R5,"Property and equipment, net",1023000000.0000,library map

@@ -7,7 +7,7 @@ TER,233,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 TER,233,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-059002,R2,Cash and cash equivalents,293751000.0000,library map
 TER,233,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-059002,R9,Net cash used for financing activities,-562250000.0000,library map
 TER,233,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-059002,R9,Net cash used for investing activities,-368617000.0000,library map
-TER,233,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-059002,,,,note-sourced default tag (no face line)
+TER,233,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-059002,,,115167000.0000,note fact present in the filing (FSN value)
 TER,233,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-059002,R9,Interest,3164000.0000,library map
 TER,233,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-3,N,,sec_api,0001193125-26-059002,R9,Accounts payable and other liabilities,208848000.0000,combined line (library or label demote)
 TER,233,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-059002,R9,Accounts receivable,305601000.0000,library map

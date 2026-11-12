@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ALGN,678,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001097149-26-000014,R5,Accounts payable,121450000.0000,library map
 ALGN,678,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001097149-26-000014,R5,"Accounts receivable, net of allowance for doubtful accounts of $34,213 and $19,131, respectively",1101757000.0000,library map
-ALGN,678,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001097149-26-000014,,,,note-sourced default tag (no face line)
+ALGN,678,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001097149-26-000014,,,18800000.0000,note fact present in the filing (FSN value)
 ALGN,678,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001097149-26-000014,R3,"Net income per share, basic (usd per share)",5.6600,library map
 ALGN,678,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001097149-26-000014,R8,"Purchase of property, plant and equipment",102445000.0000,library map
 ALGN,678,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001097149-26-000014,R5,Cash and cash equivalents,1094908000.0000,library map
 ALGN,678,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001097149-26-000014,R8,Net cash used in financing activities,-464580000.0000,library map
 ALGN,678,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001097149-26-000014,R8,Net cash used in investing activities,-112445000.0000,library map
-ALGN,678,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001097149-26-000014,,,,note-sourced default tag (no face line)
-ALGN,678,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001097149-26-000014,,,,note-sourced default tag (no face line)
+ALGN,678,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001097149-26-000014,,,134753000.0000,note fact present in the filing (FSN value)
+ALGN,678,cash_paid_for_interest,not_presented,,,,,,,,0001097149-26-000014,,,,no face line and no note fact
 ALGN,678,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001097149-26-000014,R8,Accounts payable,5330000.0000,library map
 ALGN,678,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001097149-26-000014,R8,Accounts receivable,139909000.0000,library map
 ALGN,678,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001097149-26-000014,R8,Inventories,-808000.0000,library map
@@ -21,7 +21,7 @@ ALGN,678,deposits,OUT,,,,,,,,0001097149-26-000014,,,,not a bank
 ALGN,678,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001097149-26-000014,R8,Depreciation and amortization,237436000.0000,library map
 ALGN,678,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001097149-26-000014,R3,Diluted (usd per share),5.6500,library map
 ALGN,678,dividends_paid,not_presented,,,,,,,,0001097149-26-000014,,,,no face line
-ALGN,678,dividends_per_share,not_presented,,,,,,,,0001097149-26-000014,,,,no face line
+ALGN,678,dividends_per_share,not_presented,,,,,,,,0001097149-26-000014,,,,no face line and no note fact
 ALGN,678,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001097149-26-000014,R5,Goodwill,491833000.0000,library map
 ALGN,678,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001097149-26-000014,R3,Gross profit,2711013000.0000,library map
 ALGN,678,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001097149-26-000014,R3,Net income before provision for income taxes,585287000.0000,library map

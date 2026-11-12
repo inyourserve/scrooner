@@ -7,7 +7,7 @@ TRMB,561,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5
 TRMB,561,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000864749-26-000015,R3,Cash and cash equivalents,253400000.0000,library map
 TRMB,561,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000864749-26-000015,R8,Net cash (used in) provided by financing activities,-868400000.0000,library map
 TRMB,561,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000864749-26-000015,R8,Net cash (used in) provided by investing activities,-37000000.0000,library map
-TRMB,561,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000864749-26-000015,,,,note-sourced default tag (no face line)
+TRMB,561,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000864749-26-000015,,,427500000.0000,note fact present in the filing (FSN value)
 TRMB,561,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000864749-26-000015,R8,Cash paid for interest,81500000.0000,library map
 TRMB,561,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000864749-26-000015,R8,Accounts payable,-5400000.0000,library map
 TRMB,561,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000864749-26-000015,R8,"Accounts receivable, net",119900000.0000,library map
@@ -21,13 +21,13 @@ TRMB,561,deposits,OUT,,,,,,,,0000864749-26-000015,,,,not a bank
 TRMB,561,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000864749-26-000015,R8,Depreciation and amortization,199900000.0000,library map
 TRMB,561,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000864749-26-000015,R5,Diluted (in usd per share),1.7600,library map
 TRMB,561,dividends_paid,not_presented,,,,,,,,0000864749-26-000015,,,,no face line
-TRMB,561,dividends_per_share,not_presented,,,,,,,,0000864749-26-000015,,,,no face line
+TRMB,561,dividends_per_share,not_presented,,,,,,,,0000864749-26-000015,,,,no face line and no note fact
 TRMB,561,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000864749-26-000015,R3,Goodwill,5239700000.0000,library map
 TRMB,561,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000864749-26-000015,R5,Gross margin,2477900000.0000,library map
 TRMB,561,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000864749-26-000015,R5,Income before taxes,509400000.0000,library map
 TRMB,561,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000864749-26-000015,R5,Income tax provision,85400000.0000,library map
 TRMB,561,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestIncomeExpenseNet,sec_api,0000864749-26-000015,R5,"Interest expense, net",74400000.0000,combined line (library or label demote)
-TRMB,561,interest_income,not_presented,,,,,,,,0000864749-26-000015,,,,no face line
+TRMB,561,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestIncomeExpenseNet,sec_api,0000864749-26-000015,R5,"Interest expense, net",74400000.0000,interest income only inside a net/other face line between OI and pretax
 TRMB,561,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000864749-26-000015,R3,Inventories,186300000.0000,library map
 TRMB,561,loans_net,OUT,,,,,,,,0000864749-26-000015,,,,not a bank
 TRMB,561,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,0000864749-26-000015,R5,Net income,424000000.0000,library map

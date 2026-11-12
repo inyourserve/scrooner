@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EME,324,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000105634-26-000025,R3,Accounts payable,1227428000.0000,library map
 EME,324,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000105634-26-000025,R3,"Accounts receivable, less allowance for credit losses of $22,757 and $34,957, respectively",4241177000.0000,library map
-EME,324,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000105634-26-000025,,,,note-sourced default tag (no face line)
+EME,324,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000105634-26-000025,,,119052000.0000,note fact present in the filing (FSN value)
 EME,324,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000105634-26-000025,R5,Basic earnings per common share (in US dollars per share),28.3000,library map
 EME,324,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000105634-26-000025,R8,"Purchases of property, plant, and equipment",112750000.0000,library map
 EME,324,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000105634-26-000025,R3,Cash and cash equivalents,1111968000.0000,library map
 EME,324,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000105634-26-000025,R8,Net cash used in financing activities,-663761000.0000,library map
 EME,324,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000105634-26-000025,R8,Net cash used in investing activities,-873586000.0000,library map
-EME,324,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000105634-26-000025,,,,note-sourced default tag (no face line)
-EME,324,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000105634-26-000025,,,,note-sourced default tag (no face line)
+EME,324,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000105634-26-000025,,,483424000.0000,note fact present in the filing (FSN value)
+EME,324,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000105634-26-000025,,,11130000.0000,note fact present in the filing (FSN value)
 EME,324,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000105634-26-000025,R8,Increase (decrease) in accounts payable,189349000.0000,library map
 EME,324,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000105634-26-000025,R8,Increase in accounts receivable,437768000.0000,library map
 EME,324,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000105634-26-000025,R8,(Increase) decrease in inventories,26951000.0000,library map
@@ -41,7 +41,7 @@ EME,324,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0
 EME,324,provision_for_credit_losses,OUT,,,,,,,,0000105634-26-000025,,,,not a bank
 EME,324,research_and_development,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
 EME,324,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0000105634-26-000025,R5,Revenues,16986422000.0000,library map
-EME,324,sbc,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
+EME,324,sbc,not_presented,,,,,,,,0000105634-26-000025,,,,no face line and no note fact
 EME,324,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000105634-26-000025,R5,"Selling, general and administrative expenses",1714446000.0000,library map
 EME,324,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000105634-26-000025,R8,Repurchases of common stock,586258000.0000,library map
 EME,324,shares_outstanding,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
@@ -50,5 +50,5 @@ EME,324,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000105634-26-0000
 EME,324,total_debt,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
 EME,324,total_interest_income,OUT,,,,,,,,0000105634-26-000025,,,,not a bank
 EME,324,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000105634-26-000025,R3,Total liabilities,5616418000.0000,library map
-EME,324,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000105634-26-000025,,,,note-sourced default tag (no face line)
-EME,324,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000105634-26-000025,,,,note-sourced default tag (no face line)
+EME,324,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000105634-26-000025,,,44982102.0000,note fact present in the filing (FSN value)
+EME,324,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000105634-26-000025,,,45145767.0000,note fact present in the filing (FSN value)

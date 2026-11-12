@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UNM,539,accounts_payable,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
 UNM,539,accounts_receivable,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
-UNM,539,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000005513-26-000008,,,,note-sourced default tag (no face line)
+UNM,539,amortization_of_intangibles,not_presented,,,,,,,,0000005513-26-000008,,,,no face line and no note fact
 UNM,539,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000005513-26-000008,R4,Basic,4.2800,library map
 UNM,539,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000005513-26-000008,R9,Net Purchases of Property and Equipment,132300000.0000,library map
 UNM,539,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-5,N,,sec_api,0000005513-26-000008,R2,Cash and Bank Deposits,158200000.0000,library map
 UNM,539,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000005513-26-000008,R9,Net Cash Used by Financing Activities,-1241200000.0000,library map
 UNM,539,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0000005513-26-000008,R9,Net Cash Used by Investing Activities,548900000.0000,library map
-UNM,539,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000005513-26-000008,,,,note-sourced default tag (no face line)
-UNM,539,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000005513-26-000008,,,,note-sourced default tag (no face line)
+UNM,539,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000005513-26-000008,,,93700000.0000,note fact present in the filing (FSN value)
+UNM,539,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000005513-26-000008,,,201100000.0000,note fact present in the filing (FSN value)
 UNM,539,cf_ap_change,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
 UNM,539,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-5,N,,sec_api,0000005513-26-000008,R9,Change in Receivables,-529400000.0000,library map
 UNM,539,cf_inventory_change,OUT,,,,,,,,0000005513-26-000008,,,,sector template (bank/insurer)
@@ -27,7 +27,7 @@ UNM,539,gross_profit,OUT,,,,,,,,0000005513-26-000008,,,,sector template (bank/in
 UNM,539,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0000005513-26-000008,R4,Income Before Income Tax,933500000.0000,library map
 UNM,539,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000005513-26-000008,R4,Total Income Tax,195000000.0000,library map
 UNM,539,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-5,N,,sec_api,0000005513-26-000008,R4,Interest and Debt Expense,208800000.0000,library map
-UNM,539,interest_income,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
+UNM,539,interest_income,not_presented,,,,,,,,0000005513-26-000008,,,,no face line and no note fact
 UNM,539,inventory,OUT,,,,,,,,0000005513-26-000008,,,,sector template (bank/insurer)
 UNM,539,loans_net,OUT,,,,,,,,0000005513-26-000008,,,,not a bank
 UNM,539,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000005513-26-000008,R4,Net Income,738500000.0000,library map
@@ -41,7 +41,7 @@ UNM,539,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0
 UNM,539,provision_for_credit_losses,OUT,,,,,,,,0000005513-26-000008,,,,not a bank
 UNM,539,research_and_development,OUT,,,,,,,,0000005513-26-000008,,,,sector template (bank/insurer)
 UNM,539,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000005513-26-000008,R4,Total Revenue,13075500000.0000,library map
-UNM,539,sbc,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
+UNM,539,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000005513-26-000008,,,53600000.0000,note fact present in the filing (FSN value)
 UNM,539,sga_expense,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
 UNM,539,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000005513-26-000008,R9,Repurchase of Common Stock,1010300000.0000,library map
 UNM,539,shares_outstanding,not_presented,,,,,,,,0000005513-26-000008,,,,no face line
@@ -50,5 +50,5 @@ UNM,539,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000005513-26-0000
 UNM,539,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,0,-5,N,,sec_api,0000005513-26-000008,R2,Short-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
 UNM,539,total_interest_income,OUT,,,,,,,,0000005513-26-000008,,,,not a bank
 UNM,539,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000005513-26-000008,R2,Total Liabilities,52400300000.0000,library map
-UNM,539,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000005513-26-000008,,,,note-sourced default tag (no face line)
-UNM,539,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000005513-26-000008,,,,note-sourced default tag (no face line)
+UNM,539,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000005513-26-000008,,,172511500.0000,note fact present in the filing (FSN value)
+UNM,539,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000005513-26-000008,,,172921600.0000,note fact present in the filing (FSN value)

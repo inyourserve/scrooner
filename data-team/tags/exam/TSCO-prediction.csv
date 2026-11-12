@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TSCO,493,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Accounts payable,1390833000.0000,library map
 TSCO,493,accounts_receivable,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
-TSCO,493,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000916365-26-000014,,,,note-sourced default tag (no face line)
+TSCO,493,amortization_of_intangibles,not_presented,,,,,,,,0000916365-26-000014,,,,no face line and no note fact
 TSCO,493,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000916365-26-000014,R3,Net Income per share  basic (a),2.0700,library map
 TSCO,493,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Capital expenditures,894770000.0000,library map
 TSCO,493,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Cash and cash equivalents,194109000.0000,library map
 TSCO,493,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000916365-26-000014,R8,Net cash used in financing activities,-914063000.0000,library map
 TSCO,493,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000916365-26-000014,R8,Net cash used in investing activities,-778578000.0000,library map
-TSCO,493,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000916365-26-000014,,,,note-sourced default tag (no face line)
+TSCO,493,cash_paid_for_income_taxes,not_presented,,,,,,,,0000916365-26-000014,,,,no face line and no note fact
 TSCO,493,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,"Cash paid for interest, net of amounts capitalized",69757000.0000,library map
 TSCO,493,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Accounts payable,143429000.0000,library map
 TSCO,493,cf_ar_change,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
@@ -27,7 +27,7 @@ TSCO,493,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000916365-2
 TSCO,493,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Income before income taxes,1398245000.0000,library map
 TSCO,493,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Income tax expense,302158000.0000,library map
 TSCO,493,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,"Interest expense, net",69144000.0000,combined line (library or label demote)
-TSCO,493,interest_income,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,interest_income,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,"Interest expense, net",69144000.0000,interest income only inside a net/other face line between OI and pretax
 TSCO,493,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Inventories,3084086000.0000,library map
 TSCO,493,loans_net,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
 TSCO,493,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Net income,1096087000.0000,library map

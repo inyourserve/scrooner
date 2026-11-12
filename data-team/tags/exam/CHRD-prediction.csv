@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CHRD,770,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001486159-26-000005,R3,Accounts payable,41795000.0000,library map
 CHRD,770,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001486159-26-000005,R3,"Accounts receivable, net",1116685000.0000,library map
-CHRD,770,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001486159-26-000005,,,,note-sourced default tag (no face line)
+CHRD,770,amortization_of_intangibles,not_presented,,,,,,,,0001486159-26-000005,,,,no face line and no note fact
 CHRD,770,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001486159-26-000005,R5,Basic (in dollars per share),0.7400,library map
 CHRD,770,capex,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
 CHRD,770,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001486159-26-000005,R3,Cash and cash equivalents,189531000.0000,library map
 CHRD,770,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001486159-26-000005,R7,Net cash used in financing activities,-82095000.0000,library map
 CHRD,770,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001486159-26-000005,R7,Net cash used in investing activities,-1805981000.0000,library map
-CHRD,770,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001486159-26-000005,,,,note-sourced default tag (no face line)
+CHRD,770,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001486159-26-000005,,,77540000.0000,note fact present in the filing (FSN value)
 CHRD,770,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001486159-26-000005,R7,"Cash paid for interest, net of capitalized interest",51698000.0000,library map
 CHRD,770,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001486159-26-000005,R7,"Change in accounts payable, interest payable and accrued liabilities",-165041000.0000,combined line (library or label demote)
 CHRD,770,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001486159-26-000005,R7,"Change in accounts receivable, net",-181873000.0000,library map
@@ -21,13 +21,13 @@ CHRD,770,deposits,OUT,,,,,,,,0001486159-26-000005,,,,not a bank
 CHRD,770,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001486159-26-000005,R7,"Depreciation, depletion and amortization",1470171000.0000,library map
 CHRD,770,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001486159-26-000005,R5,Diluted (in dollars per share),0.7400,library map
 CHRD,770,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001486159-26-000005,R7,Dividends paid,317763000.0000,library map
-CHRD,770,dividends_per_share,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
+CHRD,770,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001486159-26-000005,,,5.2000,note fact present in the filing (FSN value)
 CHRD,770,goodwill,mapped,us-gaap:Goodwill,BS,0,-3,N,,sec_api,0001486159-26-000005,R3,Goodwill,0.0000,library map
 CHRD,770,gross_profit,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
 CHRD,770,income_before_tax,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
 CHRD,770,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001486159-26-000005,R5,Income tax expense,199025000.0000,library map
 CHRD,770,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001486159-26-000005,R5,"Interest expense, net of capitalized interest",80150000.0000,library map
-CHRD,770,interest_income,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
+CHRD,770,interest_income,not_presented,,,,,,,,0001486159-26-000005,,,,no face line and no note fact
 CHRD,770,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001486159-26-000005,R3,Inventory,115713000.0000,library map
 CHRD,770,loans_net,OUT,,,,,,,,0001486159-26-000005,,,,not a bank
 CHRD,770,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001486159-26-000005,R5,Net income,44459000.0000,library map

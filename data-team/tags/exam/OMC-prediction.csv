@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OMC,411,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Accounts payable,20659500000.0000,library map
 OMC,411,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,"Accounts receivable, net of allowance for doubtful accounts of $11.9 and $15.0",14398000000.0000,library map
-OMC,411,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000029989-26-000006,,,,note-sourced default tag (no face line)
+OMC,411,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000029989-26-000006,,,131600000.0000,note fact present in the filing (FSN value)
 OMC,411,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000029989-26-000006,R5,Basic,-0.2700,library map
 OMC,411,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Capital expenditures,149800000.0000,library map
 OMC,411,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000029989-26-000006,R3,Cash and cash equivalents,6881100000.0000,combined line (library or label demote)
 OMC,411,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Used In Financing Activities,-1590600000.0000,library map
 OMC,411,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Provided By (Used In) Investing Activities,980200000.0000,library map
-OMC,411,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000029989-26-000006,,,,note-sourced default tag (no face line)
-OMC,411,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000029989-26-000006,,,,note-sourced default tag (no face line)
+OMC,411,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,531300000.0000,note fact present in the filing (FSN value)
+OMC,411,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,175700000.0000,note fact present in the filing (FSN value)
 OMC,411,cf_ap_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
 OMC,411,cf_ar_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
 OMC,411,cf_inventory_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
@@ -50,5 +50,5 @@ OMC,411,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000029989-26-0000
 OMC,411,total_debt,component_sum,us-gaap:ShortTermBorrowings,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Short-term debt,62000000.0000,printed face components (duration sum; total_debt founder sum)
 OMC,411,total_interest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
 OMC,411,total_liabilities,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000029989-26-000006,,,,note-sourced default tag (no face line)
-OMC,411,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000029989-26-000006,,,,note-sourced default tag (no face line)
+OMC,411,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value)
+OMC,411,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value)

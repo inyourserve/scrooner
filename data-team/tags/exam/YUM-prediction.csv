@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 YUM,272,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001041061-26-000084,R5,Accounts payable and other current liabilities,1433000000.0000,combined line (library or label demote)
 YUM,272,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-6,N,,sec_api,0001041061-26-000084,R5,"Accounts and notes receivable, net",841000000.0000,combined line (library or label demote)
-YUM,272,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001041061-26-000084,,,,note-sourced default tag (no face line)
+YUM,272,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001041061-26-000084,,,98000000.0000,note fact present in the filing (FSN value)
 YUM,272,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001041061-26-000084,R2,Basic Earnings Per Common Share (in dollars per share),5.5900,library map
 YUM,272,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001041061-26-000084,R4,Capital spending,371000000.0000,library map
 YUM,272,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001041061-26-000084,R5,Cash and cash equivalents,709000000.0000,library map
 YUM,272,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001041061-26-000084,R4,Net Cash Used in Financing Activities,-924000000.0000,library map
 YUM,272,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001041061-26-000084,R4,Net Cash Provided by (Used in) Investing Activities,-1003000000.0000,library map
-YUM,272,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001041061-26-000084,,,,note-sourced default tag (no face line)
-YUM,272,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001041061-26-000084,,,,note-sourced default tag (no face line)
+YUM,272,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001041061-26-000084,,,405000000.0000,note fact present in the filing (FSN value)
+YUM,272,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001041061-26-000084,,,516000000.0000,note fact present in the filing (FSN value)
 YUM,272,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001041061-26-000084,R4,Changes in accounts payable and other current liabilities,94000000.0000,combined line (library or label demote)
 YUM,272,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-6,N,,sec_api,0001041061-26-000084,R4,Changes in Accounts and Notes Receivable,45000000.0000,combined line (library or label demote)
 YUM,272,cf_inventory_change,not_presented,,,,,,,,0001041061-26-000084,,,,no face line
@@ -27,7 +27,7 @@ YUM,272,gross_profit,not_presented,,,,,,,,0001041061-26-000084,,,,no face line
 YUM,272,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-6,N,,sec_api,0001041061-26-000084,R2,"Income (Loss) Attributable to Parent, before Tax, Total",2077000000.0000,library map
 YUM,272,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001041061-26-000084,R2,Income tax provision,518000000.0000,library map
 YUM,272,interest_expense,not_presented,,,,,,,,0001041061-26-000084,,,,no face line
-YUM,272,interest_income,not_presented,,,,,,,,0001041061-26-000084,,,,no face line
+YUM,272,interest_income,not_presented,,,,,,,,0001041061-26-000084,,,,no face line and no note fact
 YUM,272,inventory,not_presented,,,,,,,,0001041061-26-000084,,,,no face line
 YUM,272,loans_net,OUT,,,,,,,,0001041061-26-000084,,,,not a bank
 YUM,272,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001041061-26-000084,R2,Net Income,1559000000.0000,library map
@@ -50,5 +50,5 @@ YUM,272,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001041061-26-0000
 YUM,272,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001041061-26-000084,R5,"Debt, Current",38000000.0000,printed face components (duration sum; total_debt founder sum)
 YUM,272,total_interest_income,OUT,,,,,,,,0001041061-26-000084,,,,not a bank
 YUM,272,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001041061-26-000084,R5,Total Liabilities,15521000000.0000,library map
-YUM,272,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001041061-26-000084,,,,note-sourced default tag (no face line)
-YUM,272,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001041061-26-000084,,,,note-sourced default tag (no face line)
+YUM,272,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001041061-26-000084,,,279000000.0000,note fact present in the filing (FSN value)
+YUM,272,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001041061-26-000084,,,281000000.0000,note fact present in the filing (FSN value)

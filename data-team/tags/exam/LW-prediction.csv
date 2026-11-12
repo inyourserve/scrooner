@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LW,838,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001679273-26-000026,R5,Accounts payable,613100000.0000,library map
 LW,838,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001679273-26-000026,R5,"Receivables, net of allowances of $0.9 and $0.9",779100000.0000,combined line (library or label demote)
-LW,838,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001679273-26-000026,,,,note-sourced default tag (no face line)
+LW,838,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001679273-26-000026,,,36400000.0000,note fact present in the filing (FSN value)
 LW,838,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001679273-26-000026,R3,Basic (in dollars per share),2.0900,library map
 LW,838,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001679273-26-000026,R9,"Additions to property, plant and equipment",402700000.0000,library map
 LW,838,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001679273-26-000026,R5,Cash and cash equivalents,68200000.0000,library map
 LW,838,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001679273-26-000026,R9,Net cash used for financing activities,-569100000.0000,library map
 LW,838,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001679273-26-000026,R9,Net cash used for investing activities,-380200000.0000,library map
-LW,838,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001679273-26-000026,,,,note-sourced default tag (no face line)
-LW,838,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001679273-26-000026,,,,note-sourced default tag (no face line)
+LW,838,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001679273-26-000026,,,118800000.0000,note fact present in the filing (FSN value)
+LW,838,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001679273-26-000026,,,202800000.0000,note fact present in the filing (FSN value)
 LW,838,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001679273-26-000026,R9,Accounts payable,-1500000.0000,library map
 LW,838,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-5,N,,sec_api,0001679273-26-000026,R9,Receivables,-20300000.0000,library map
 LW,838,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001679273-26-000026,R9,Inventories,-77800000.0000,library map
@@ -27,7 +27,7 @@ LW,838,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001679273-26-
 LW,838,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001679273-26-000026,R3,Income before income taxes and equity method earnings,410600000.0000,library map
 LW,838,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001679273-26-000026,R3,Income tax expense,128100000.0000,library map
 LW,838,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001679273-26-000026,R3,"Interest expense, net",-180500000.0000,combined line (library or label demote)
-LW,838,interest_income,not_presented,,,,,,,,0001679273-26-000026,,,,no face line
+LW,838,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001679273-26-000026,R3,"Interest expense, net",-180500000.0000,interest income only inside a net/other face line between OI and pretax
 LW,838,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001679273-26-000026,R5,Inventories,968500000.0000,library map
 LW,838,loans_net,OUT,,,,,,,,0001679273-26-000026,,,,not a bank
 LW,838,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001679273-26-000026,R3,Net income,290000000.0000,library map

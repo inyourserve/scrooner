@@ -21,13 +21,13 @@ COO,657,deposits,OUT,,,,,,,,0001628280-25-055615,,,,not a bank
 COO,657,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,Y,OtherDepreciationAndAmortization,sec_api,0001628280-25-055615,R10,Depreciation and amortization,377400000.0000,library map
 COO,657,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-25-055615,R3,Diluted (in dollars per share),1.8700,library map
 COO,657,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,0,32767,N,,sec_api,0001628280-25-055615,R10,Dividends on common stock,0.0000,library map
-COO,657,dividends_per_share,not_presented,,,,,,,,0001628280-25-055615,,,,no face line
+COO,657,dividends_per_share,not_presented,,,,,,,,0001628280-25-055615,,,,no face line and no note fact
 COO,657,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-25-055615,R6,Goodwill (Note 4),3853400000.0000,library map
 COO,657,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-25-055615,R3,Gross profit,2682100000.0000,library map
 COO,657,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001628280-25-055615,R3,Income before income taxes,566500000.0000,library map
 COO,657,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-25-055615,R3,Provision for income taxes (Note 6),191600000.0000,library map
 COO,657,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-25-055615,R3,Interest expense,100000000.0000,library map
-COO,657,interest_income,not_presented,,,,,,,,0001628280-25-055615,,,,no face line
+COO,657,interest_income,not_presented,,,,,,,,0001628280-25-055615,,,,no face line and no note fact
 COO,657,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-25-055615,R6,Inventories (Note 1),846000000.0000,library map
 COO,657,loans_net,OUT,,,,,,,,0001628280-25-055615,,,,not a bank
 COO,657,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,0001628280-25-055615,R3,Net income,374900000.0000,library map

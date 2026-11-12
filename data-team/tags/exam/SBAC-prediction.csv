@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SBAC,453,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001034054-26-000002,R2,Accounts payable,73034000.0000,library map
 SBAC,453,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001034054-26-000002,R2,"Accounts receivable, net",171256000.0000,library map
-SBAC,453,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001034054-26-000002,,,,note-sourced default tag (no face line)
+SBAC,453,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001034054-26-000002,,,115100000.0000,note fact present in the filing (FSN value)
 SBAC,453,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001034054-26-000002,R4,Basic,9.8300,library map
 SBAC,453,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001034054-26-000002,R7,Capital expenditures,224819000.0000,library map
 SBAC,453,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001034054-26-000002,R2,Cash and cash equivalents,264568000.0000,library map
@@ -21,7 +21,7 @@ SBAC,453,deposits,OUT,,,,,,,,0001034054-26-000002,,,,not a bank
 SBAC,453,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001034054-26-000002,R7,"Depreciation, accretion, and amortization",292285000.0000,combined line (library or label demote)
 SBAC,453,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001034054-26-000002,R4,Diluted,9.8000,library map
 SBAC,453,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001034054-26-000002,R7,Payment of dividends on common stock,479012000.0000,library map
-SBAC,453,dividends_per_share,not_presented,,,,,,,,0001034054-26-000002,,,,no face line
+SBAC,453,dividends_per_share,not_presented,,,,,,,,0001034054-26-000002,,,,no face line and no note fact
 SBAC,453,goodwill,not_presented,,,,,,,,0001034054-26-000002,,,,no face line
 SBAC,453,gross_profit,not_presented,,,,,,,,0001034054-26-000002,,,,no face line
 SBAC,453,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001034054-26-000002,R4,Income before income taxes,1242038000.0000,library map

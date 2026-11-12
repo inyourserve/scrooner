@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EXPE,318,accounts_payable,not_presented,,,,,,,,0001324424-26-000008,,,,no face line
 EXPE,318,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001324424-26-000008,R6,"Accounts receivable, net of allowance of $74 and $55",4166000000.0000,library map
-EXPE,318,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001324424-26-000008,,,,note-sourced default tag (no face line)
+EXPE,318,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001324424-26-000008,,,40000000.0000,note fact present in the filing (FSN value)
 EXPE,318,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001324424-26-000008,R3,Basic (in dollars per share),10.3200,library map
 EXPE,318,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001324424-26-000008,R10,"Capital expenditures, including internal-use software and website development",770000000.0000,library map
 EXPE,318,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001324424-26-000008,R6,Cash and cash equivalents,5413000000.0000,library map

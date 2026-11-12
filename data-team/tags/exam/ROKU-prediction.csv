@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROKU,416,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,Accounts payable,158640000.0000,library map
 ROKU,416,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,"Accounts receivable, net of allowances of $80,448 and $72,657 as of December 31, 2025 and 2024, respectively",879871000.0000,library map
-ROKU,416,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008114,,,,note-sourced default tag (no face line)
+ROKU,416,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-008114,,,23300000.0000,note fact present in the filing (FSN value)
 ROKU,416,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008114,R5,Net income (loss) per sharebasic (in dollars per share),0.6000,library map
 ROKU,416,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-008114,R8,Purchases of property and equipment,5280000.0000,library map
 ROKU,416,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,Cash and cash equivalents,1587068000.0000,library map
@@ -21,13 +21,13 @@ ROKU,416,deposits,OUT,,,,,,,,0001628280-26-008114,,,,not a bank
 ROKU,416,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-008114,R8,Depreciation and amortization,68904000.0000,library map
 ROKU,416,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008114,R5,Net income (loss) per sharediluted (in dollars per share),0.5900,library map
 ROKU,416,dividends_paid,not_presented,,,,,,,,0001628280-26-008114,,,,no face line
-ROKU,416,dividends_per_share,not_presented,,,,,,,,0001628280-26-008114,,,,no face line
+ROKU,416,dividends_per_share,not_presented,,,,,,,,0001628280-26-008114,,,,no face line and no note fact
 ROKU,416,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,Goodwill,309406000.0000,library map
 ROKU,416,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Total gross profit,2074424000.0000,library map
 ROKU,416,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Income (loss) before income taxes,93898000.0000,library map
 ROKU,416,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Income tax expense,5537000.0000,library map
 ROKU,416,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestRevenueExpenseNet,sec_api,0001628280-26-008114,R5,Interest expense,1906000.0000,library map
-ROKU,416,interest_income,not_presented,,,,,,,,0001628280-26-008114,,,,no face line
+ROKU,416,interest_income,not_presented,,,,,,,,0001628280-26-008114,,,,no face line and no note fact
 ROKU,416,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,Inventories,114642000.0000,library map
 ROKU,416,loans_net,OUT,,,,,,,,0001628280-26-008114,,,,not a bank
 ROKU,416,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Net income (loss),88361000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RDDT,344,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001713445-26-000022,R3,Accounts payable,62929000.0000,library map
 RDDT,344,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001713445-26-000022,R3,"Accounts receivable, net",590162000.0000,library map
-RDDT,344,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001713445-26-000022,,,,note-sourced default tag (no face line)
+RDDT,344,amortization_of_intangibles,not_presented,,,,,,,,0001713445-26-000022,,,,no face line and no note fact
 RDDT,344,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001713445-26-000022,R5,Basic (in dollars per share),2.8400,library map
 RDDT,344,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001713445-26-000022,R8,Purchases of property and equipment,6706000.0000,library map
 RDDT,344,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001713445-26-000022,R3,Cash and cash equivalents,953569000.0000,library map
 RDDT,344,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001713445-26-000022,R8,Net cash provided by (used in) financing activities,-80559000.0000,library map
 RDDT,344,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001713445-26-000022,R8,Net cash provided by (used in) investing activities,-218889000.0000,library map
-RDDT,344,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001713445-26-000022,,,,note-sourced default tag (no face line)
-RDDT,344,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001713445-26-000022,,,,note-sourced default tag (no face line)
+RDDT,344,cash_paid_for_income_taxes,not_presented,,,,,,,,0001713445-26-000022,,,,no face line and no note fact
+RDDT,344,cash_paid_for_interest,not_presented,,,,,,,,0001713445-26-000022,,,,no face line and no note fact
 RDDT,344,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001713445-26-000022,R8,Accounts payable,18166000.0000,library map
 RDDT,344,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001713445-26-000022,R8,Accounts receivable,241356000.0000,library map
 RDDT,344,cf_inventory_change,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
@@ -21,13 +21,13 @@ RDDT,344,deposits,OUT,,,,,,,,0001713445-26-000022,,,,not a bank
 RDDT,344,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001713445-26-000022,R8,Depreciation and amortization,15948000.0000,library map
 RDDT,344,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001713445-26-000022,R5,Diluted (in dollars per share),2.6200,library map
 RDDT,344,dividends_paid,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
-RDDT,344,dividends_per_share,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
+RDDT,344,dividends_per_share,not_presented,,,,,,,,0001713445-26-000022,,,,no face line and no note fact
 RDDT,344,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001713445-26-000022,R3,Goodwill,42174000.0000,library map
 RDDT,344,gross_profit,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
 RDDT,344,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,Income (loss) before income taxes,528690000.0000,library map
 RDDT,344,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001713445-26-000022,R5,Income tax expense (benefit),-1031000.0000,library map
 RDDT,344,interest_expense,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
-RDDT,344,interest_income,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
+RDDT,344,interest_income,not_presented,,,,,,,,0001713445-26-000022,,,,no face line and no note fact
 RDDT,344,inventory,not_presented,,,,,,,,0001713445-26-000022,,,,no face line
 RDDT,344,loans_net,OUT,,,,,,,,0001713445-26-000022,,,,not a bank
 RDDT,344,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,Net income (loss),529721000.0000,library map

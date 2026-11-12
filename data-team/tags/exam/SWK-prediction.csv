@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SWK,557,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000093556-26-000009,R5,Accounts payable,2163000000.0000,library map
 SWK,557,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-5,N,,sec_api,0000093556-26-000009,R5,"Accounts and notes receivable, net",919700000.0000,combined line (library or label demote)
-SWK,557,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000093556-26-000009,,,,note-sourced default tag (no face line)
+SWK,557,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000093556-26-000009,,,146800000.0000,note fact present in the filing (FSN value)
 SWK,557,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000093556-26-000009,R3,Total basic earnings (loss) per share of common stock (in dollars per share),2.6600,library map
 SWK,557,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000093556-26-000009,R7,Capital and software expenditures,283300000.0000,library map
 SWK,557,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000093556-26-000009,R5,Cash and cash equivalents,280100000.0000,library map
 SWK,557,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000093556-26-000009,R7,Net cash used in financing activities,-794400000.0000,library map
 SWK,557,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000093556-26-000009,R7,Net cash (used in) provided by investing activities,-261500000.0000,library map
-SWK,557,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000093556-26-000009,,,,note-sourced default tag (no face line)
-SWK,557,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000093556-26-000009,,,,note-sourced default tag (no face line)
+SWK,557,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000093556-26-000009,,,330100000.0000,note fact present in the filing (FSN value)
+SWK,557,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000093556-26-000009,,,520600000.0000,note fact present in the filing (FSN value)
 SWK,557,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000093556-26-000009,R7,Accounts payable,-284600000.0000,library map
 SWK,557,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0000093556-26-000009,R7,Accounts receivable,-190000000.0000,library map
 SWK,557,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000093556-26-000009,R7,Inventories,-258500000.0000,library map
@@ -50,5 +50,5 @@ SWK,557,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000093556-26-0000
 SWK,557,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000093556-26-000009,R5,Short-term borrowings,605600000.0000,printed face components (duration sum; total_debt founder sum)
 SWK,557,total_interest_income,OUT,,,,,,,,0000093556-26-000009,,,,not a bank
 SWK,557,total_liabilities,not_presented,,,,,,,,0000093556-26-000009,,,,no face line
-SWK,557,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000093556-26-000009,,,,note-sourced default tag (no face line)
-SWK,557,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000093556-26-000009,,,,note-sourced default tag (no face line)
+SWK,557,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000093556-26-000009,,,151258000.0000,note fact present in the filing (FSN value)
+SWK,557,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000093556-26-000009,,,151878000.0000,note fact present in the filing (FSN value)

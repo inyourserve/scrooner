@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DUK,124,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001326160-26-000014,R6,Accounts payable,5223000000.0000,library map
 DUK,124,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,Y,AccountsAndOtherReceivablesNetCurrent,sec_api,0001326160-26-000014,R6,Receivables (net of allowance for doubtful accounts),16000000.0000,library map
-DUK,124,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001326160-26-000014,,,,note-sourced default tag (no face line)
+DUK,124,amortization_of_intangibles,not_presented,,,,,,,,0001326160-26-000014,,,,no face line and no note fact
 DUK,124,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001326160-26-000014,R3,Basic (usd per share),6.3100,library map
 DUK,124,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001326160-26-000014,R8,Capital expenditures,14024000000.0000,library map
 DUK,124,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001326160-26-000014,R6,Cash and cash equivalents,245000000.0000,library map
@@ -21,27 +21,27 @@ DUK,124,deposits,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,depreciation_and_amortization,combined,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001326160-26-000014,R8,"Depreciation, amortization and accretion (including amortization of nuclear fuel)",7704000000.0000,combined line (library or label demote)
 DUK,124,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001326160-26-000014,R3,Diluted (usd per share),6.3100,library map
 DUK,124,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,Y,PaymentsOfDividends,sec_api,0001326160-26-000014,R8,Dividends paid,3300000000.0000,library map
-DUK,124,dividends_per_share,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
+DUK,124,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001326160-26-000014,,,4.2200,note fact present in the filing (FSN value)
 DUK,124,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001326160-26-000014,R6,Goodwill,19010000000.0000,library map
 DUK,124,gross_profit,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
 DUK,124,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Income From Continuing Operations Before Income Taxes,5712000000.0000,library map
 DUK,124,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Income Tax Expense From Continuing Operations,642000000.0000,library map
 DUK,124,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Interest Expense,3634000000.0000,library map
-DUK,124,interest_income,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
+DUK,124,interest_income,not_presented,,,,,,,,0001326160-26-000014,,,,no face line and no note fact
 DUK,124,inventory,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
 DUK,124,loans_net,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0001326160-26-000014,R3,Net Income,4968000000.0000,library map
 DUK,124,net_interest_income,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,noninterest_expense,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,noninterest_income,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
-DUK,124,operating_expenses,not_presented,,,,,,,,0001326160-26-000014,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+DUK,124,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Total operating expenses,23656000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 DUK,124,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Operating Income,8626000000.0000,library map
 DUK,124,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,"Other income and expenses, net",669000000.0000,library map
 DUK,124,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001326160-26-000014,R6,"Net property, plant and equipment",129959000000.0000,library map
 DUK,124,provision_for_credit_losses,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,research_and_development,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
 DUK,124,revenue,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
-DUK,124,sbc,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
+DUK,124,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001326160-26-000014,,,102000000.0000,note fact present in the filing (FSN value)
 DUK,124,sga_expense,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
 DUK,124,share_buybacks,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
 DUK,124,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001326160-26-000014,R7,"Common stock, shares outstanding (in shares)",778000000.0000,library map

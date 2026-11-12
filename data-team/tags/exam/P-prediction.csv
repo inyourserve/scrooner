@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 P,271,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001474432-26-000027,R3,Accounts payable,153312000.0000,library map
 P,271,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001474432-26-000027,R3,"Accounts receivable, net of allowance of $940 and $203",944844000.0000,library map
-P,271,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001474432-26-000027,,,,note-sourced default tag (no face line)
+P,271,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001474432-26-000027,,,13300000.0000,note fact present in the filing (FSN value)
 P,271,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001474432-26-000027,R5,"Net income per share attributable to common stockholders, basic (in dollars per share)",0.5700,library map
 P,271,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001474432-26-000027,R8,Purchases of property and equipment,264344000.0000,library map
 P,271,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001474432-26-000027,R3,Cash and cash equivalents,854873000.0000,library map
@@ -21,13 +21,13 @@ P,271,deposits,OUT,,,,,,,,0001474432-26-000027,,,,not a bank
 P,271,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001474432-26-000027,R8,Depreciation and amortization,147815000.0000,library map
 P,271,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001474432-26-000027,R5,"Net income per share attributable to common stockholders, diluted (in dollars per share)",0.5500,library map
 P,271,dividends_paid,not_presented,,,,,,,,0001474432-26-000027,,,,no face line
-P,271,dividends_per_share,not_presented,,,,,,,,0001474432-26-000027,,,,no face line
+P,271,dividends_per_share,not_presented,,,,,,,,0001474432-26-000027,,,,no face line and no note fact
 P,271,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001474432-26-000027,R3,Goodwill,365075000.0000,library map
 P,271,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001474432-26-000027,R5,Gross profit,2577953000.0000,library map
 P,271,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001474432-26-000027,R5,Income before provision for income taxes,224284000.0000,library map
 P,271,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001474432-26-000027,R5,Provision for income taxes,36103000.0000,library map
 P,271,interest_expense,not_presented,,,,,,,,0001474432-26-000027,,,,no face line
-P,271,interest_income,not_presented,,,,,,,,0001474432-26-000027,,,,no face line
+P,271,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001474432-26-000027,,,62487000.0000,note fact present in the filing (FSN value)
 P,271,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001474432-26-000027,R3,Inventory,75935000.0000,library map
 P,271,loans_net,OUT,,,,,,,,0001474432-26-000027,,,,not a bank
 P,271,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001474432-26-000027,R5,Net income,188181000.0000,library map

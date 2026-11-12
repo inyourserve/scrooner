@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IONQ,617,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-071562,R2,Accounts payable,26138000.0000,library map
 IONQ,617,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-071562,R2,"Accounts receivable, net",66532000.0000,library map
-IONQ,617,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-071562,,,,note-sourced default tag (no face line)
+IONQ,617,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-071562,,,52800000.0000,note fact present in the filing (FSN value)
 IONQ,617,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-071562,R4,"Net loss per share attributable to IonQ, Inc. common stockholders-basic",-1.8200,library map
 IONQ,617,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-071562,R7,Purchases of property and equipment,16417000.0000,library map
 IONQ,617,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-071562,R2,Cash and cash equivalents,1030865000.0000,library map
 IONQ,617,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-071562,R7,Net cash provided by (used in) financing activities,3358602000.0000,library map
 IONQ,617,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-071562,R7,Net cash provided by (used in) investing activities,-2095088000.0000,library map
-IONQ,617,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-071562,,,,note-sourced default tag (no face line)
-IONQ,617,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-071562,,,,note-sourced default tag (no face line)
+IONQ,617,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,0,,,,sec_api,0001193125-26-071562,,,0.0000,note fact present in the filing (FSN value)
+IONQ,617,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-071562,,,,no face line and no note fact
 IONQ,617,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001193125-26-071562,R7,Accounts payable,-7636000.0000,library map
 IONQ,617,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-071562,R7,Accounts receivable,37667000.0000,library map
 IONQ,617,cf_inventory_change,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
@@ -21,13 +21,13 @@ IONQ,617,deposits,OUT,,,,,,,,0001193125-26-071562,,,,not a bank
 IONQ,617,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-071562,R7,Depreciation and amortization,82004000.0000,library map
 IONQ,617,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-071562,R4,"Net loss per share attributable to IonQ, Inc. common stockholders-diluted",-1.8200,library map
 IONQ,617,dividends_paid,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
-IONQ,617,dividends_per_share,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
+IONQ,617,dividends_per_share,not_presented,,,,,,,,0001193125-26-071562,,,,no face line and no note fact
 IONQ,617,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-071562,R2,Goodwill,1963584000.0000,library map
 IONQ,617,gross_profit,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
 IONQ,617,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001193125-26-071562,R4,Total net loss before income taxes,-556693000.0000,library map
 IONQ,617,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-071562,R4,Income tax benefit (expense),-44572000.0000,library map
 IONQ,617,interest_expense,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
-IONQ,617,interest_income,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
+IONQ,617,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001193125-26-071562,R4,"Interest income, net",55997000.0000,interest income only inside a net/other face line between OI and pretax
 IONQ,617,inventory,not_presented,,,,,,,,0001193125-26-071562,,,,no face line
 IONQ,617,loans_net,OUT,,,,,,,,0001193125-26-071562,,,,not a bank
 IONQ,617,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-071562,R4,"Net loss attributable to IonQ, Inc.",-510378000.0000,library map

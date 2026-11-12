@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PFGC,525,accounts_payable,not_presented,,,,,,,,0001193125-26-346886,,,,no face line
 PFGC,525,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-346886,R2,"Accounts receivable, less allowances of $71.4 and $69.0",3054300000.0000,library map
-PFGC,525,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-346886,,,,note-sourced default tag (no face line)
+PFGC,525,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-346886,,,272000000.0000,note fact present in the filing (FSN value)
 PFGC,525,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-346886,R4,Basic,2.3000,library map
 PFGC,525,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-346886,R7,"Purchases of property, plant and equipment",384100000.0000,library map
 PFGC,525,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-5,N,,sec_api,0001193125-26-346886,R2,Cash,92400000.0000,library map
@@ -21,13 +21,13 @@ PFGC,525,deposits,OUT,,,,,,,,0001193125-26-346886,,,,not a bank
 PFGC,525,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-5,N,,sec_api,0001193125-26-346886,R7,Depreciation,541900000.0000,printed face components (duration sum; total_debt founder sum)
 PFGC,525,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-346886,R4,Diluted,2.2900,library map
 PFGC,525,dividends_paid,not_presented,,,,,,,,0001193125-26-346886,,,,no face line
-PFGC,525,dividends_per_share,not_presented,,,,,,,,0001193125-26-346886,,,,no face line
+PFGC,525,dividends_per_share,not_presented,,,,,,,,0001193125-26-346886,,,,no face line and no note fact
 PFGC,525,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001193125-26-346886,R2,Goodwill,3565000000.0000,library map
 PFGC,525,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001193125-26-346886,R4,Gross profit,8090600000.0000,library map
 PFGC,525,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-346886,R4,Income before taxes,485800000.0000,library map
 PFGC,525,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-346886,R4,Income tax expense,126500000.0000,library map
 PFGC,525,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001193125-26-346886,R4,Interest expense,413700000.0000,library map
-PFGC,525,interest_income,not_presented,,,,,,,,0001193125-26-346886,,,,no face line
+PFGC,525,interest_income,not_presented,,,,,,,,0001193125-26-346886,,,,no face line and no note fact
 PFGC,525,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-346886,R2,"Inventories, net",4333000000.0000,library map
 PFGC,525,loans_net,OUT,,,,,,,,0001193125-26-346886,,,,not a bank
 PFGC,525,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-346886,R4,Net income,359300000.0000,library map

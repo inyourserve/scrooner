@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HON,184,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000773840-26-000013,R5,Accounts payable,6315000000.0000,library map
 HON,184,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000773840-26-000013,R5,"Accounts receivable, less allowances of $202 and $307, respectively",7621000000.0000,library map
-HON,184,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000773840-26-000013,,,,note-sourced default tag (no face line)
+HON,184,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000773840-26-000013,,,570000000.0000,note fact present in the filing (FSN value)
 HON,184,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000773840-26-000013,R3,Total earnings per share of common stockbasic (in dollars per share),7.4000,library map
 HON,184,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000773840-26-000013,R7,Capital expenditures,986000000.0000,library map
 HON,184,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000773840-26-000013,R5,Cash and cash equivalents,12487000000.0000,library map
 HON,184,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000773840-26-000013,R7,Net cash (used for) provided by financing activities,-1953000000.0000,library map
 HON,184,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000773840-26-000013,R7,Net cash used for investing activities,-2711000000.0000,library map
-HON,184,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000773840-26-000013,,,,note-sourced default tag (no face line)
-HON,184,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000773840-26-000013,,,,note-sourced default tag (no face line)
+HON,184,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000773840-26-000013,,,1798000000.0000,note fact present in the filing (FSN value)
+HON,184,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000773840-26-000013,,,1300000000.0000,note fact present in the filing (FSN value)
 HON,184,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000773840-26-000013,R7,Accounts payable,724000000.0000,library map
 HON,184,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000773840-26-000013,R7,Accounts receivable,825000000.0000,library map
 HON,184,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000773840-26-000013,R7,Inventories,636000000.0000,library map
@@ -27,7 +27,7 @@ HON,184,gross_profit,not_presented,,,,,,,,0000773840-26-000013,,,,no face line
 HON,184,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000773840-26-000013,R3,Income from continuing operations before taxes,5476000000.0000,library map
 HON,184,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000773840-26-000013,R3,Tax expense,1008000000.0000,library map
 HON,184,interest_expense,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0000773840-26-000013,R3,Interest and other financial charges,1344000000.0000,combined line (library or label demote)
-HON,184,interest_income,not_presented,,,,,,,,0000773840-26-000013,,,,no face line
+HON,184,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000773840-26-000013,,,369000000.0000,note fact present in the filing (FSN value)
 HON,184,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000773840-26-000013,R5,Inventories,6162000000.0000,library map
 HON,184,loans_net,OUT,,,,,,,,0000773840-26-000013,,,,not a bank
 HON,184,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000773840-26-000013,R3,Net income attributable to Honeywell,4729000000.0000,library map
@@ -50,5 +50,5 @@ HON,184,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000773840-26-0000
 HON,184,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000773840-26-000013,R5,Commercial paper and other short-term borrowings,5893000000.0000,printed face components (duration sum; total_debt founder sum)
 HON,184,total_interest_income,OUT,,,,,,,,0000773840-26-000013,,,,not a bank
 HON,184,total_liabilities,not_presented,,,,,,,,0000773840-26-000013,,,,no face line
-HON,184,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000773840-26-000013,,,,note-sourced default tag (no face line)
-HON,184,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000773840-26-000013,,,,note-sourced default tag (no face line)
+HON,184,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000773840-26-000013,,,639000000.0000,note fact present in the filing (FSN value)
+HON,184,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000773840-26-000013,,,642800000.0000,note fact present in the filing (FSN value)

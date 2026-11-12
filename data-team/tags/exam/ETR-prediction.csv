@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ETR,995,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,"Accounts Payable, Current",2565546000.0000,library map
 ETR,995,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,"Accounts and Other Receivables, Net, Current",1470232000.0000,combined line (library or label demote)
-ETR,995,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000065984-26-000174,,,,note-sourced default tag (no face line)
+ETR,995,amortization_of_intangibles,not_presented,,,,,,,,0000065984-26-000174,,,,no face line and no note fact
 ETR,995,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000065984-26-000174,R2,"Earnings Per Share, Basic",3.9800,library map
 ETR,995,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000065984-26-000174,R5,"Payments to Acquire Property, Plant, and Equipment",7684922000.0000,library map
 ETR,995,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,"Cash and Cash Equivalents, at Carrying Value, Total",1928916000.0000,library map
@@ -21,27 +21,27 @@ ETR,995,deposits,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0000065984-26-000174,R5,"Depreciation, Amortization and Accretion, Net",2537138000.0000,combined line (library or label demote)
 ETR,995,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000065984-26-000174,R2,"Earnings Per Share, Diluted",3.9100,library map
 ETR,995,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000065984-26-000174,R5,"Payments of Ordinary Dividends, Common Stock",1074151000.0000,library map
-ETR,995,dividends_per_share,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
+ETR,995,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000065984-26-000174,,,2.4400,note fact present in the filing (FSN value)
 ETR,995,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,Goodwill,367582000.0000,library map
 ETR,995,gross_profit,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest, Total",2271280000.0000,library map
 ETR,995,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,Income Tax Expense (Benefit),497952000.0000,library map
 ETR,995,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Interest Expense, Nonoperating",1336651000.0000,library map
-ETR,995,interest_income,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
+ETR,995,interest_income,not_presented,,,,,,,,0000065984-26-000174,,,,no face line and no note fact
 ETR,995,inventory,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,loans_net,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,net_income,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,net_interest_income,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,noninterest_expense,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,noninterest_income,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
-ETR,995,operating_expenses,not_presented,,,,,,,,0000065984-26-000174,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ETR,995,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Costs and Expenses, Total",9744408000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 ETR,995,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Operating Income (Loss), Total",3202278000.0000,library map
 ETR,995,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000065984-26-000174,R2,Other Nonoperating Income (Expense),-92421000.0000,library map
 ETR,995,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,"Public Utilities, Property, Plant and Equipment, Net, Total",52854614000.0000,library map
 ETR,995,provision_for_credit_losses,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,research_and_development,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,revenue,mapped,us-gaap:Revenues,IS,+,-3,Y,RevenuesAbstract,sec_api,0000065984-26-000174,R2,Revenues,12946686000.0000,library map
-ETR,995,sbc,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
+ETR,995,sbc,not_presented,,,,,,,,0000065984-26-000174,,,,no face line and no note fact
 ETR,995,sga_expense,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,share_buybacks,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,shares_outstanding,not_presented,,,,,,,,0000065984-26-000174,,,,no face line

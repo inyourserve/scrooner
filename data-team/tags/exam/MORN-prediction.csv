@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MORN,812,accounts_payable,not_presented,,,,,,,,0001289419-26-000013,,,,no face line
 MORN,812,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001289419-26-000013,R4,"Accounts receivable, less allowance for credit losses of $7.1 million and $7.1 million, respectively",390400000.0000,library map
-MORN,812,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001289419-26-000013,,,,note-sourced default tag (no face line)
+MORN,812,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001289419-26-000013,,,59800000.0000,note fact present in the filing (FSN value)
 MORN,812,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001289419-26-000013,R2,Basic net income per share (in dollars per share),8.9300,library map
 MORN,812,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001289419-26-000013,R8,Capital expenditures,147100000.0000,library map
 MORN,812,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001289419-26-000013,R4,Cash and cash equivalents,474500000.0000,library map
@@ -27,7 +27,7 @@ MORN,812,gross_profit,not_presented,,,,,,,,0001289419-26-000013,,,,no face line
 MORN,812,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001289419-26-000013,R2,Income before income taxes and equity in investments of unconsolidated entities,499000000.0000,library map
 MORN,812,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001289419-26-000013,R2,Income tax expense,121500000.0000,library map
 MORN,812,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001289419-26-000013,R2,"Interest expense, net",-28600000.0000,combined line (library or label demote)
-MORN,812,interest_income,not_presented,,,,,,,,0001289419-26-000013,,,,no face line
+MORN,812,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001289419-26-000013,R2,"Interest expense, net",-28600000.0000,interest income only inside a net/other face line between OI and pretax
 MORN,812,inventory,not_presented,,,,,,,,0001289419-26-000013,,,,no face line
 MORN,812,loans_net,OUT,,,,,,,,0001289419-26-000013,,,,not a bank
 MORN,812,net_income,not_presented,,,,,,,,0001289419-26-000013,,,,no face line

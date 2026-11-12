@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EWBC,489,accounts_payable,not_presented,,,,,,,,0001069157-26-000009,,,,no face line
 EWBC,489,accounts_receivable,not_presented,,,,,,,,0001069157-26-000009,,,,no face line
-EWBC,489,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001069157-26-000009,,,,note-sourced default tag (no face line)
+EWBC,489,amortization_of_intangibles,not_presented,,,,,,,,0001069157-26-000009,,,,no face line and no note fact
 EWBC,489,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001069157-26-000009,R5,BASIC (in dollars per share),9.5800,library map
 EWBC,489,capex,not_presented,,,,,,,,0001069157-26-000009,,,,no face line
 EWBC,489,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001069157-26-000009,R3,Cash and cash equivalents,4188139000.0000,library map

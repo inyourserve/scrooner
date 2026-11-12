@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UI,294,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001511737-26-000056,R3,Accounts payable,432221000.0000,library map
 UI,294,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001511737-26-000056,R3,"Accounts receivable, net of allowance for doubtful accounts of $12,125 and $11,956 at June 30, 2026 and 2025 respectively",301688000.0000,library map
-UI,294,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001511737-26-000056,,,,note-sourced default tag (no face line)
+UI,294,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001511737-26-000056,,,900000.0000,note fact present in the filing (FSN value)
 UI,294,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001511737-26-000056,R5,Basic (in dollars per share),15.8700,library map
 UI,294,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001511737-26-000056,R8,Purchase of property and equipment and other long-term assets,19738000.0000,library map
 UI,294,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001511737-26-000056,R3,Cash and cash equivalents,522579000.0000,library map
@@ -27,7 +27,7 @@ UI,294,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001511737-26-
 UI,294,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001511737-26-000056,R5,Income before income taxes,1183075000.0000,library map
 UI,294,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001511737-26-000056,R5,Provision for income taxes,222772000.0000,library map
 UI,294,interest_expense,not_presented,,,,,,,,0001511737-26-000056,,,,no face line
-UI,294,interest_income,not_presented,,,,,,,,0001511737-26-000056,,,,no face line
+UI,294,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001511737-26-000056,,,200000.0000,note fact present in the filing (FSN value)
 UI,294,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001511737-26-000056,R3,Inventories,780440000.0000,library map
 UI,294,loans_net,OUT,,,,,,,,0001511737-26-000056,,,,not a bank
 UI,294,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001511737-26-000056,R5,Net income,960303000.0000,library map

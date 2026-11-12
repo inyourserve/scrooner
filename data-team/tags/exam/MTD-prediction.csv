@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MTD,299,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001037646-26-000011,R5,Trade accounts payable,266628000.0000,library map
 MTD,299,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001037646-26-000011,R5,"Trade accounts receivable, less allowances of $17,009 in 2019 and $15,469 in 2018",778243000.0000,library map
-MTD,299,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001037646-26-000011,,,,note-sourced default tag (no face line)
+MTD,299,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001037646-26-000011,,,28500000.0000,note fact present in the filing (FSN value)
 MTD,299,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001037646-26-000011,R3,Net earnings,42.1700,library map
 MTD,299,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001037646-26-000011,R8,"Purchase of property, plant and equipment",107124000.0000,library map
 MTD,299,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0001037646-26-000011,R5,Cash and cash equivalents,66888000.0000,combined line (library or label demote)
@@ -21,13 +21,13 @@ MTD,299,deposits,OUT,,,,,,,,0001037646-26-000011,,,,not a bank
 MTD,299,depreciation_and_amortization,not_presented,,,,,,,,0001037646-26-000011,,,,single component only
 MTD,299,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001037646-26-000011,R3,Net earnings,42.0500,library map
 MTD,299,dividends_paid,not_presented,,,,,,,,0001037646-26-000011,,,,no face line
-MTD,299,dividends_per_share,not_presented,,,,,,,,0001037646-26-000011,,,,no face line
+MTD,299,dividends_per_share,not_presented,,,,,,,,0001037646-26-000011,,,,no face line and no note fact
 MTD,299,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001037646-26-000011,R5,Goodwill,739225000.0000,library map
 MTD,299,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,Gross profit,2390646000.0000,library map
 MTD,299,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,"Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest",1048909000.0000,library map
 MTD,299,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,Provision for taxes,179716000.0000,library map
 MTD,299,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,Interest Expense,68515000.0000,library map
-MTD,299,interest_income,not_presented,,,,,,,,0001037646-26-000011,,,,no face line
+MTD,299,interest_income,not_presented,,,,,,,,0001037646-26-000011,,,,no face line and no note fact
 MTD,299,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001037646-26-000011,R5,Inventories,387228000.0000,library map
 MTD,299,loans_net,OUT,,,,,,,,0001037646-26-000011,,,,not a bank
 MTD,299,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,EarningsPerShareBasic,sec_api,0001037646-26-000011,R3,Net earnings,869193000.0000,library map

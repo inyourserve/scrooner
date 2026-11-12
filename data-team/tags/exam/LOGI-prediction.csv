@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LOGI,531,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001032975-26-000021,R5,Accounts payable,530983000.0000,library map
 LOGI,531,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001032975-26-000021,R5,"Accounts receivable, net",505867000.0000,library map
-LOGI,531,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001032975-26-000021,,,,note-sourced default tag (no face line)
+LOGI,531,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001032975-26-000021,,,13315000.0000,note fact present in the filing (FSN value)
 LOGI,531,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001032975-26-000021,R3,Basic (in dollars per share),4.8500,library map
 LOGI,531,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001032975-26-000021,R7,"Purchases of property, plant and equipment",61562000.0000,library map
 LOGI,531,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001032975-26-000021,R5,Cash and cash equivalents,1741546000.0000,library map
 LOGI,531,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001032975-26-000021,R7,Net cash used in financing activities,-751116000.0000,library map
 LOGI,531,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001032975-26-000021,R7,Net cash used in investing activities,-62387000.0000,library map
 LOGI,531,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001032975-26-000021,R7,"Income taxes paid, net",86353000.0000,library map
-LOGI,531,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001032975-26-000021,,,,note-sourced default tag (no face line)
+LOGI,531,cash_paid_for_interest,not_presented,,,,,,,,0001032975-26-000021,,,,no face line and no note fact
 LOGI,531,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001032975-26-000021,R7,Accounts payable,109174000.0000,library map
 LOGI,531,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001032975-26-000021,R7,"Accounts receivable, net",39436000.0000,library map
 LOGI,531,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001032975-26-000021,R7,Inventories,-22882000.0000,library map
@@ -27,7 +27,7 @@ LOGI,531,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001032975-2
 LOGI,531,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Income before income taxes,826519000.0000,library map
 LOGI,531,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Provision for income taxes,115332000.0000,library map
 LOGI,531,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Interest income,48246000.0000,combined line (library or label demote)
-LOGI,531,interest_income,not_presented,,,,,,,,0001032975-26-000021,,,,no face line
+LOGI,531,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Interest income,48246000.0000,interest income only inside a net/other face line between OI and pretax
 LOGI,531,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001032975-26-000021,R5,Inventories,489948000.0000,library map
 LOGI,531,loans_net,OUT,,,,,,,,0001032975-26-000021,,,,not a bank
 LOGI,531,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001032975-26-000021,R3,Net income,711187000.0000,library map

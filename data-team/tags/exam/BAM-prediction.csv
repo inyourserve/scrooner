@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BAM,982,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,Accounts payable and accrued liabilities,2459000000.0000,combined line (library or label demote)
 BAM,982,accounts_receivable,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
-BAM,982,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-013098,,,,note-sourced default tag (no face line)
+BAM,982,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-013098,,,20000000.0000,note fact present in the filing (FSN value)
 BAM,982,basic_eps,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-013098,R8,Other assets,9000000.0000,combined line (library or label demote)
 BAM,982,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,Cash and cash equivalents,1583000000.0000,library map
@@ -21,7 +21,7 @@ BAM,982,deposits,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-013098,R8,Depreciation and amortization,40000000.0000,library map
 BAM,982,diluted_eps,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-013098,R8,Distributions to common stockholders,2818000000.0000,library map
-BAM,982,dividends_per_share,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
+BAM,982,dividends_per_share,not_presented,,,,,,,,0001628280-26-013098,,,,no face line and no note fact
 BAM,982,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,Goodwill,236000000.0000,library map
 BAM,982,gross_profit,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-013098,R5,Income before provision for taxes,2925000000.0000,library map
@@ -34,7 +34,7 @@ BAM,982,net_income,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,net_interest_income,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,noninterest_expense,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,noninterest_income,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
-BAM,982,operating_expenses,not_presented,,,,,,,,0001628280-26-013098,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+BAM,982,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-013098,R5,Total expenses,2044000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 BAM,982,operating_income,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,other_income_expense_net,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,"Property, plant and equipment, net",92000000.0000,library map
@@ -50,5 +50,5 @@ BAM,982,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-0130
 BAM,982,total_debt,combined,us-gaap:LineOfCredit,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,Corporate borrowings,2478000000.0000,combined line (library or label demote)
 BAM,982,total_interest_income,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,Total liabilities,6737000000.0000,library map
-BAM,982,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-013098,,,,note-sourced default tag (no face line)
-BAM,982,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-013098,,,,note-sourced default tag (no face line)
+BAM,982,weighted_basic_shares,not_presented,,,,,,,,0001628280-26-013098,,,,no face line and no note fact
+BAM,982,weighted_diluted_shares,not_presented,,,,,,,,0001628280-26-013098,,,,no face line and no note fact

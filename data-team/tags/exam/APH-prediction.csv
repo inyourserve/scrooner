@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 APH,121,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001104659-26-013549,R5,Accounts payable,2661900000.0000,library map
 APH,121,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001104659-26-013549,R5,"Accounts receivable, less allowance for doubtful accounts of $99.3 and $66.5, respectively",4717100000.0000,library map
-APH,121,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-013549,,,,note-sourced default tag (no face line)
+APH,121,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-013549,,,192000000.0000,note fact present in the filing (FSN value)
 APH,121,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-013549,R3,Net income attributable to Amphenol Corporation per common share - Basic (in dollars per share),3.5100,library map
 APH,121,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001104659-26-013549,R9,Capital expenditures,996600000.0000,library map
 APH,121,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-013549,R5,Cash and cash equivalents,11130600000.0000,library map
@@ -27,7 +27,7 @@ APH,121,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001104659-26
 APH,121,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-013549,R3,Income before income taxes,5600700000.0000,library map
 APH,121,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-013549,R3,Provision for income taxes,1295400000.0000,library map
 APH,121,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001104659-26-013549,R3,Interest expense,367800000.0000,library map
-APH,121,interest_income,not_presented,,,,,,,,0001104659-26-013549,,,,no face line
+APH,121,interest_income,not_presented,,,,,,,,0001104659-26-013549,,,,no face line and no note fact
 APH,121,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-013549,R5,Inventories,3424900000.0000,library map
 APH,121,loans_net,OUT,,,,,,,,0001104659-26-013549,,,,not a bank
 APH,121,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-013549,R3,Net income attributable to Amphenol Corporation,4270300000.0000,library map

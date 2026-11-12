@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CFR,719,accounts_payable,not_presented,,,,,,,,0000039263-26-000011,,,,no face line
 CFR,719,accounts_receivable,not_presented,,,,,,,,0000039263-26-000011,,,,no face line
-CFR,719,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000039263-26-000011,,,,note-sourced default tag (no face line)
+CFR,719,amortization_of_intangibles,not_presented,,,,,,,,0000039263-26-000011,,,,no face line and no note fact
 CFR,719,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000039263-26-000011,R4,Basic (in dollars per share),9.9200,library map
 CFR,719,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000039263-26-000011,R8,Purchases of premises and equipment,146652000.0000,library map
 CFR,719,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashCashEquivalentsAndFederalFundsSold,sec_api,0000039263-26-000011,R2,Total cash and cash equivalents,8874055000.0000,combined line (library or label demote)
 CFR,719,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000039263-26-000011,R8,Net cash provided by (used in) financing activities,-33087000.0000,library map
 CFR,719,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000039263-26-000011,R8,Net cash provided by (used in) investing activities,-1601095000.0000,library map
-CFR,719,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000039263-26-000011,,,,note-sourced default tag (no face line)
-CFR,719,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000039263-26-000011,,,,note-sourced default tag (no face line)
+CFR,719,cash_paid_for_income_taxes,not_presented,,,,,,,,0000039263-26-000011,,,,no face line and no note fact
+CFR,719,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000039263-26-000011,,,697731000.0000,note fact present in the filing (FSN value)
 CFR,719,cf_ap_change,not_presented,,,,,,,,0000039263-26-000011,,,,no face line
 CFR,719,cf_ar_change,not_presented,,,,,,,,0000039263-26-000011,,,,no face line
 CFR,719,cf_inventory_change,OUT,,,,,,,,0000039263-26-000011,,,,sector template (bank/insurer)
@@ -50,5 +50,5 @@ CFR,719,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000039263-26-0000
 CFR,719,total_debt,not_presented,,,,,,,,0000039263-26-000011,,,,no face line
 CFR,719,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0000039263-26-000011,R4,Total interest income,2420747000.0000,bank template tag
 CFR,719,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000039263-26-000011,R2,Total liabilities,48468388000.0000,library map
-CFR,719,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000039263-26-000011,,,,note-sourced default tag (no face line)
-CFR,719,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000039263-26-000011,,,,note-sourced default tag (no face line)
+CFR,719,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000039263-26-000011,,,64054228.0000,note fact present in the filing (FSN value)
+CFR,719,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000039263-26-000011,,,64099238.0000,note fact present in the filing (FSN value)

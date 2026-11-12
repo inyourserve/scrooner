@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SWKS,616,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000004127-25-000085,R5,Accounts payable,236000000.0000,library map
 SWKS,616,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000004127-25-000085,R5,"Receivables, net of allowances of $0.9 and $0.9, respectively",598100000.0000,combined line (library or label demote)
-SWKS,616,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000004127-25-000085,,,,note-sourced default tag (no face line)
+SWKS,616,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000004127-25-000085,,,184300000.0000,note fact present in the filing (FSN value)
 SWKS,616,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000004127-25-000085,R3,Basic (in dollars per share),3.0900,library map
 SWKS,616,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000004127-25-000085,R7,Capital expenditures,195000000.0000,library map
 SWKS,616,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000004127-25-000085,R5,Cash and cash equivalents,1161300000.0000,library map
@@ -27,7 +27,7 @@ SWKS,616,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000004127-2
 SWKS,616,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000004127-25-000085,R3,Income before income taxes,526700000.0000,library map
 SWKS,616,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000004127-25-000085,R3,Provision for income taxes,49600000.0000,library map
 SWKS,616,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000004127-25-000085,R3,Interest expense,27100000.0000,library map
-SWKS,616,interest_income,not_presented,,,,,,,,0000004127-25-000085,,,,no face line
+SWKS,616,interest_income,not_presented,,,,,,,,0000004127-25-000085,,,,no face line and no note fact
 SWKS,616,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000004127-25-000085,R5,Inventory,754700000.0000,library map
 SWKS,616,loans_net,OUT,,,,,,,,0000004127-25-000085,,,,not a bank
 SWKS,616,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000004127-25-000085,R3,Net income,477100000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EG,532,accounts_payable,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
 EG,532,accounts_receivable,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
-EG,532,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001095073-26-000006,,,,note-sourced default tag (no face line)
+EG,532,amortization_of_intangibles,not_presented,,,,,,,,0001095073-26-000006,,,,no face line and no note fact
 EG,532,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001095073-26-000006,R5,Basic (in dollars per share),37.8000,library map
 EG,532,capex,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
 EG,532,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0001095073-26-000006,R3,Cash,1318000000.0000,library map
@@ -27,7 +27,7 @@ EG,532,gross_profit,OUT,,,,,,,,0001095073-26-000006,,,,sector template (bank/ins
 EG,532,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001095073-26-000006,R5,INCOME (LOSS) BEFORE TAXES,1887000000.0000,library map
 EG,532,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001095073-26-000006,R5,Income tax expense (benefit),296000000.0000,library map
 EG,532,interest_expense,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
-EG,532,interest_income,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
+EG,532,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001095073-26-000006,,,2172000000.0000,note fact present in the filing (FSN value)
 EG,532,inventory,OUT,,,,,,,,0001095073-26-000006,,,,sector template (bank/insurer)
 EG,532,loans_net,OUT,,,,,,,,0001095073-26-000006,,,,not a bank
 EG,532,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0001095073-26-000006,R5,NET INCOME (LOSS),1591000000.0000,library map
@@ -50,5 +50,5 @@ EG,532,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001095073-26-00000
 EG,532,total_debt,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
 EG,532,total_interest_income,OUT,,,,,,,,0001095073-26-000006,,,,not a bank
 EG,532,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001095073-26-000006,R3,TOTAL LIABILITIES,47054000000.0000,library map
-EG,532,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001095073-26-000006,,,,note-sourced default tag (no face line)
-EG,532,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001095073-26-000006,,,,note-sourced default tag (no face line)
+EG,532,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001095073-26-000006,,,41600000.0000,note fact present in the filing (FSN value)
+EG,532,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001095073-26-000006,,,41600000.0000,note fact present in the filing (FSN value)

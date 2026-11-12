@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DCI,692,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000029644-26-000085,R6,Accounts payable,378600000.0000,library map
 DCI,692,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000029644-26-000085,R6,"Accounts receivable, less allowances of $3.2 and $2.9, respectively",758100000.0000,library map
-DCI,692,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000029644-26-000085,,,,note-sourced default tag (no face line)
+DCI,692,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000029644-26-000085,,,18900000.0000,note fact present in the filing (FSN value)
 DCI,692,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000029644-26-000085,R3,Net earnings per share  basic (in usd per share),3.9200,library map
 DCI,692,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000029644-26-000085,R8,"Purchases of property, plant and equipment",67400000.0000,library map
 DCI,692,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000029644-26-000085,R6,Cash and cash equivalents,250400000.0000,library map
@@ -27,7 +27,7 @@ DCI,692,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000029644-26
 DCI,692,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0000029644-26-000085,R3,Earnings before income taxes,585800000.0000,library map
 DCI,692,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000029644-26-000085,R3,Income taxes,132000000.0000,library map
 DCI,692,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000029644-26-000085,R3,Interest expense,36000000.0000,library map
-DCI,692,interest_income,not_presented,,,,,,,,0000029644-26-000085,,,,no face line
+DCI,692,interest_income,not_presented,,,,,,,,0000029644-26-000085,,,,no face line and no note fact
 DCI,692,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000029644-26-000085,R6,"Inventories, net",538700000.0000,library map
 DCI,692,loans_net,OUT,,,,,,,,0000029644-26-000085,,,,not a bank
 DCI,692,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000029644-26-000085,R3,Net earnings,453800000.0000,library map

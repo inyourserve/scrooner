@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RJF,341,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-6,N,,sec_api,0000720005-25-000093,R3,Other payables,1961000000.0000,combined line (library or label demote)
 RJF,341,accounts_receivable,not_presented,,,,,,,,0000720005-25-000093,,,,no face line
-RJF,341,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000720005-25-000093,,,,note-sourced default tag (no face line)
+RJF,341,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000720005-25-000093,,,41000000.0000,note fact present in the filing (FSN value)
 RJF,341,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000720005-25-000093,R5,Earnings per common share  basic (in usd per share),10.5300,library map
 RJF,341,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000720005-25-000093,R8,Additions to property and equipment,188000000.0000,library map
 RJF,341,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000720005-25-000093,R3,Cash and cash equivalents,11389000000.0000,library map
@@ -21,7 +21,7 @@ RJF,341,deposits,OUT,,,,,,,,0000720005-25-000093,,,,not a bank
 RJF,341,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0000720005-25-000093,R8,Depreciation and amortization,195000000.0000,library map
 RJF,341,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000720005-25-000093,R5,Earnings per common share  diluted (in usd per share),10.3000,library map
 RJF,341,dividends_paid,combined,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0000720005-25-000093,R8,Dividends on common and preferred stock,416000000.0000,combined line (library or label demote)
-RJF,341,dividends_per_share,not_presented,,,,,,,,0000720005-25-000093,,,,no face line
+RJF,341,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000720005-25-000093,,,2.0000,note fact present in the filing (FSN value)
 RJF,341,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0000720005-25-000093,R3,"Goodwill and identifiable intangible assets, net",1847000000.0000,combined line (library or label demote)
 RJF,341,gross_profit,not_presented,,,,,,,,0000720005-25-000093,,,,no face line
 RJF,341,income_before_tax,not_presented,,,,,,,,0000720005-25-000093,,,,no face line

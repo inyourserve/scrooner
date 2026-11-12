@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ZTS,319,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Accounts payable,487000000.0000,library map
 ZTS,319,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Accounts receivable, less allowance for doubtful accounts of $16 in 2025 and $18 in 2024",1590000000.0000,library map
-ZTS,319,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001555280-26-000011,,,,note-sourced default tag (no face line)
+ZTS,319,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001555280-26-000011,,,157000000.0000,note fact present in the filing (FSN value)
 ZTS,319,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001555280-26-000011,R3,Basic (in dollars per share),6.0300,library map
 ZTS,319,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,Y,CapitalExpendituresIncurredButNotYetPaid,sec_api,0001555280-26-000011,R9,Capital expenditures,621000000.0000,library map
 ZTS,319,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Cash and cash equivalents,2312000000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ ZTS,319,gross_profit,not_presented,,,,,,,,0001555280-26-000011,,,,no face line
 ZTS,319,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Income before provision for taxes on income,3360000000.0000,library map
 ZTS,319,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Provision for taxes on income,687000000.0000,library map
 ZTS,319,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,library map
-ZTS,319,interest_income,not_presented,,,,,,,,0001555280-26-000011,,,,no face line
+ZTS,319,interest_income,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,interest income only inside a net/other face line between OI and pretax
 ZTS,319,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Inventories,2430000000.0000,library map
 ZTS,319,loans_net,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
 ZTS,319,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Net income attributable to Zoetis Inc.,2673000000.0000,library map

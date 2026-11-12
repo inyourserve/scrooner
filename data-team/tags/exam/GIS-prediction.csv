@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GIS,482,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Accounts payable,3729500000.0000,library map
 GIS,482,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Receivables,1646800000.0000,combined line (library or label demote)
-GIS,482,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-046466,,,,note-sourced default tag (no face line)
+GIS,482,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-046466,,,,no face line and no note fact
 GIS,482,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-046466,R3,(Loss) earnings per share  basic (in usd per share),-0.1600,library map
 GIS,482,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-046466,R9,"Purchases of land, buildings, and equipment",539900000.0000,library map
 GIS,482,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Cash and cash equivalents,453800000.0000,library map
 GIS,482,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001628280-26-046466,R9,Net cash used by financing activities,-3315000000.0000,library map
 GIS,482,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0001628280-26-046466,R9,Net cash provided (used) by investing activities,1258200000.0000,library map
-GIS,482,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-046466,,,,note-sourced default tag (no face line)
-GIS,482,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-046466,,,,note-sourced default tag (no face line)
+GIS,482,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-046466,,,390900000.0000,note fact present in the filing (FSN value)
+GIS,482,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-046466,,,573900000.0000,note fact present in the filing (FSN value)
 GIS,482,cf_ap_change,not_presented,,,,,,,,0001628280-26-046466,,,,no face line
 GIS,482,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001628280-26-046466,R9,Receivables,-12900000.0000,library map
 GIS,482,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001628280-26-046466,R9,Inventories,82200000.0000,library map
@@ -27,7 +27,7 @@ GIS,482,gross_profit,not_presented,,,,,,,,0001628280-26-046466,,,,no face line
 GIS,482,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001628280-26-046466,R3,Earnings before income taxes and after-tax (loss) earnings from joint ventures,405500000.0000,library map
 GIS,482,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-046466,R3,Income taxes,414300000.0000,library map
 GIS,482,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,Y,InterestExpense,sec_api,0001628280-26-046466,R3,"Interest, net",-538600000.0000,combined line (library or label demote)
-GIS,482,interest_income,not_presented,,,,,,,,0001628280-26-046466,,,,no face line
+GIS,482,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-046466,,,31000000.0000,note fact present in the filing (FSN value)
 GIS,482,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Inventories,1917900000.0000,library map
 GIS,482,loans_net,OUT,,,,,,,,0001628280-26-046466,,,,not a bank
 GIS,482,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-046466,R3,Net (loss) earnings attributable to General Mills,-87600000.0000,library map
@@ -50,5 +50,5 @@ GIS,482,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-0464
 GIS,482,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Current portion of long-term debt,1053600000.0000,printed face components (duration sum; total_debt founder sum)
 GIS,482,total_interest_income,OUT,,,,,,,,0001628280-26-046466,,,,not a bank
 GIS,482,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-046466,R5,Total liabilities,22636100000.0000,library map
-GIS,482,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-046466,,,,note-sourced default tag (no face line)
-GIS,482,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-046466,,,,note-sourced default tag (no face line)
+GIS,482,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-046466,,,537700000.0000,note fact present in the filing (FSN value)
+GIS,482,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-046466,,,537700000.0000,note fact present in the filing (FSN value)

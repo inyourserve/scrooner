@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DRI,392,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000940944-26-000025,R7,Accounts payable,427700000.0000,library map
 DRI,392,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000940944-26-000025,R7,"Receivables, net",129900000.0000,combined line (library or label demote)
-DRI,392,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000940944-26-000025,,,,note-sourced default tag (no face line)
+DRI,392,amortization_of_intangibles,not_presented,,,,,,,,0000940944-26-000025,,,,no face line and no note fact
 DRI,392,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000940944-26-000025,R3,Net earnings (in dollars per share),10.4500,library map
 DRI,392,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000940944-26-000025,R11,"Purchases of land, buildings and equipment",734000000.0000,library map
 DRI,392,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000940944-26-000025,R7,Cash and cash equivalents,219500000.0000,library map
 DRI,392,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000940944-26-000025,R11,Net cash used in financing activities of continuing operations,-1163800000.0000,library map
 DRI,392,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000940944-26-000025,R11,Net cash used in investing activities of continuing operations,-711400000.0000,library map
-DRI,392,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000940944-26-000025,,,,note-sourced default tag (no face line)
-DRI,392,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000940944-26-000025,,,,note-sourced default tag (no face line)
+DRI,392,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000940944-26-000025,,,110400000.0000,note fact present in the filing (FSN value)
+DRI,392,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000940944-26-000025,,,188600000.0000,note fact present in the filing (FSN value)
 DRI,392,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000940944-26-000025,R11,Accounts payable,-22600000.0000,library map
 DRI,392,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0000940944-26-000025,R11,"Receivables, net",36200000.0000,library map
 DRI,392,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000940944-26-000025,R11,Inventories,14700000.0000,library map
@@ -27,14 +27,14 @@ DRI,392,gross_profit,not_presented,,,,,,,,0000940944-26-000025,,,,no face line
 DRI,392,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000940944-26-000025,R3,Earnings before income taxes,1388600000.0000,library map
 DRI,392,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000940944-26-000025,R3,Income tax expense,174900000.0000,library map
 DRI,392,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000940944-26-000025,R3,"Interest, net",-194200000.0000,combined line (library or label demote)
-DRI,392,interest_income,not_presented,,,,,,,,0000940944-26-000025,,,,no face line
+DRI,392,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000940944-26-000025,R3,"Interest, net",-194200000.0000,interest income only inside a net/other face line between OI and pretax
 DRI,392,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000940944-26-000025,R7,Inventories,326300000.0000,library map
 DRI,392,loans_net,OUT,,,,,,,,0000940944-26-000025,,,,not a bank
 DRI,392,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000940944-26-000025,R3,Net earnings,1206700000.0000,library map
 DRI,392,net_interest_income,OUT,,,,,,,,0000940944-26-000025,,,,not a bank
 DRI,392,noninterest_expense,OUT,,,,,,,,0000940944-26-000025,,,,not a bank
 DRI,392,noninterest_income,OUT,,,,,,,,0000940944-26-000025,,,,not a bank
-DRI,392,operating_expenses,not_presented,,,,,,,,0000940944-26-000025,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+DRI,392,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0000940944-26-000025,R3,Total operating costs and expenses,11628100000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 DRI,392,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000940944-26-000025,R3,Operating income,1582800000.0000,library map
 DRI,392,other_income_expense_net,not_presented,,,,,,,,0000940944-26-000025,,,,no face line
 DRI,392,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000940944-26-000025,R7,"Land, buildings and equipment, net",5048600000.0000,library map

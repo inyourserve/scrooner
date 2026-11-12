@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GGG,580,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,Trade accounts payable,78573000.0000,library map
 GGG,580,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,"Accounts receivable, less allowances of $6,000 and $6,000",393753000.0000,combined line (library or label demote)
-GGG,580,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000042888-26-000081,,,,note-sourced default tag (no face line)
+GGG,580,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000042888-26-000081,,,28000000.0000,note fact present in the filing (FSN value)
 GGG,580,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000042888-26-000081,R3,Basic Net Earnings per Common Share (in dollars per share),3.1400,library map
 GGG,580,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000042888-26-000081,R7,"Property, plant and equipment additions",45669000.0000,library map
 GGG,580,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,Cash and cash equivalents,624083000.0000,library map
 GGG,580,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000042888-26-000081,R7,Net cash used in financing activities,-576055000.0000,library map
 GGG,580,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000042888-26-000081,R7,Net cash used in investing activities,-172796000.0000,library map
-GGG,580,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000042888-26-000081,,,,note-sourced default tag (no face line)
-GGG,580,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000042888-26-000081,,,,note-sourced default tag (no face line)
+GGG,580,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000042888-26-000081,,,111291000.0000,note fact present in the filing (FSN value)
+GGG,580,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000042888-26-000081,,,3000000.0000,note fact present in the filing (FSN value)
 GGG,580,cf_ap_change,not_presented,,,,,,,,0000042888-26-000081,,,,no face line
 GGG,580,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000042888-26-000081,R7,Accounts receivable,7383000.0000,library map
 GGG,580,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000042888-26-000081,R7,Inventories,-55206000.0000,library map
@@ -27,7 +27,7 @@ GGG,580,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000042888-26
 GGG,580,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,Earnings Before Income Taxes,641200000.0000,library map
 GGG,580,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,Income taxes,119361000.0000,library map
 GGG,580,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000042888-26-000081,R3,Interest expense,2893000.0000,library map
-GGG,580,interest_income,not_presented,,,,,,,,0000042888-26-000081,,,,no face line
+GGG,580,interest_income,not_presented,,,,,,,,0000042888-26-000081,,,,no face line and no note fact
 GGG,580,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,Inventories,401138000.0000,library map
 GGG,580,loans_net,OUT,,,,,,,,0000042888-26-000081,,,,not a bank
 GGG,580,net_income,not_presented,,,,,,,,0000042888-26-000081,,,,no face line
@@ -50,5 +50,5 @@ GGG,580,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000042888-26-0000
 GGG,580,total_debt,component_sum,us-gaap:LongTermDebtCurrent,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,Current portion of long-term debt,1624000.0000,printed face components (duration sum; total_debt founder sum)
 GGG,580,total_interest_income,OUT,,,,,,,,0000042888-26-000081,,,,not a bank
 GGG,580,total_liabilities,not_presented,,,,,,,,0000042888-26-000081,,,,no face line
-GGG,580,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000042888-26-000081,,,,note-sourced default tag (no face line)
-GGG,580,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000042888-26-000081,,,,note-sourced default tag (no face line)
+GGG,580,weighted_basic_shares,not_presented,,,,,,,,0000042888-26-000081,,,,no face line and no note fact
+GGG,580,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000042888-26-000081,,,169219000.0000,note fact present in the filing (FSN value)

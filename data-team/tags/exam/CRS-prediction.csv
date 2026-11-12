@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CRS,465,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Accounts payable,313400000.0000,library map
 CRS,465,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,"Accounts receivable, net of allowance for doubtful accounts of $9.4 million and $$7.9 million at June 30, 2026 and 2025, respectively",701900000.0000,library map
-CRS,465,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
+CRS,465,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000017843-26-000034,,,5600000.0000,note fact present in the filing (FSN value)
 CRS,465,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000017843-26-000034,R3,Basic (in dollars per share),10.5900,library map
 CRS,465,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,"Purchases of property, plant, equipment and software",242700000.0000,library map
 CRS,465,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Cash and cash equivalents,393300000.0000,library map
 CRS,465,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000017843-26-000034,R6,Net cash used for financing activities,-286800000.0000,library map
 CRS,465,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000017843-26-000034,R6,Net cash used for investing activities,-242700000.0000,library map
-CRS,465,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
-CRS,465,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
+CRS,465,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000017843-26-000034,,,84800000.0000,note fact present in the filing (FSN value)
+CRS,465,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000017843-26-000034,,,48200000.0000,note fact present in the filing (FSN value)
 CRS,465,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Accounts payable,17200000.0000,library map
 CRS,465,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Accounts receivable,128300000.0000,library map
 CRS,465,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Inventories,28400000.0000,library map
@@ -27,7 +27,7 @@ CRS,465,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000017843-26
 CRS,465,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Income before income taxes,656200000.0000,library map
 CRS,465,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Income tax expense,126400000.0000,library map
 CRS,465,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000017843-26-000034,R3,"Interest expense, net",37800000.0000,combined line (library or label demote)
-CRS,465,interest_income,not_presented,,,,,,,,0000017843-26-000034,,,,no face line
+CRS,465,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000017843-26-000034,R3,"Interest expense, net",37800000.0000,interest income only inside a net/other face line between OI and pretax
 CRS,465,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Inventories,822900000.0000,library map
 CRS,465,loans_net,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
 CRS,465,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Net income,529800000.0000,library map

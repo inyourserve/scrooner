@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FNF,667,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-6,N,,sec_api,0001331875-26-000026,R3,Accounts payable and accrued liabilities,3828000000.0000,combined line (library or label demote)
 FNF,667,accounts_receivable,not_presented,,,,,,,,0001331875-26-000026,,,,no face line
-FNF,667,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001331875-26-000026,,,,note-sourced default tag (no face line)
+FNF,667,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001331875-26-000026,,,203000000.0000,note fact present in the filing (FSN value)
 FNF,667,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001331875-26-000026,R5,"Net earnings per share attributable to FNF common shareholders, basic (in dollars per share)",2.2200,library map
 FNF,667,capex,not_presented,,,,,,,,0001331875-26-000026,,,,no face line
 FNF,667,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001331875-26-000026,R3,"Cash and cash equivalents, as of December 31, 2025 and 2024 includes $261 and $69, respectively, of pledged cash related to secured trust deposits",2636000000.0000,library map
 FNF,667,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001331875-26-000026,R9,Net cash provided by financing activities,2263000000.0000,library map
 FNF,667,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001331875-26-000026,R9,Net cash used in investing activities,-8934000000.0000,library map
-FNF,667,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001331875-26-000026,,,,note-sourced default tag (no face line)
-FNF,667,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001331875-26-000026,,,,note-sourced default tag (no face line)
+FNF,667,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001331875-26-000026,,,250000000.0000,note fact present in the filing (FSN value)
+FNF,667,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001331875-26-000026,,,229000000.0000,note fact present in the filing (FSN value)
 FNF,667,cf_ap_change,not_presented,,,,,,,,0001331875-26-000026,,,,no face line
 FNF,667,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001331875-26-000026,R9,Net (increase) decrease in trade receivables,14000000.0000,library map
 FNF,667,cf_inventory_change,OUT,,,,,,,,0001331875-26-000026,,,,sector template (bank/insurer)
@@ -21,13 +21,13 @@ FNF,667,deposits,OUT,,,,,,,,0001331875-26-000026,,,,not a bank
 FNF,667,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001331875-26-000026,R9,Depreciation and amortization,844000000.0000,library map
 FNF,667,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001331875-26-000026,R5,"Net earnings per share attributable to FNF common shareholders, diluted (in dollars per share)",2.2100,library map
 FNF,667,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001331875-26-000026,R9,Dividends paid,546000000.0000,library map
-FNF,667,dividends_per_share,not_presented,,,,,,,,0001331875-26-000026,,,,no face line
+FNF,667,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001331875-26-000026,,,2.0200,note fact present in the filing (FSN value)
 FNF,667,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001331875-26-000026,R3,Goodwill,5272000000.0000,library map
 FNF,667,gross_profit,OUT,,,,,,,,0001331875-26-000026,,,,sector template (bank/insurer)
 FNF,667,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001331875-26-000026,R5,Earnings before income taxes and equity in earnings of unconsolidated affiliates,1397000000.0000,library map
 FNF,667,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001331875-26-000026,R5,Income tax expense,753000000.0000,library map
 FNF,667,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0001331875-26-000026,R5,Interest expense,242000000.0000,library map
-FNF,667,interest_income,not_presented,,,,,,,,0001331875-26-000026,,,,no face line
+FNF,667,interest_income,combined,us-gaap:NetInvestmentIncome,IS,+,-6,N,,sec_api,0001331875-26-000026,R5,Interest and investment income,3237000000.0000,interest income only inside a net/other face line between OI and pretax
 FNF,667,inventory,OUT,,,,,,,,0001331875-26-000026,,,,sector template (bank/insurer)
 FNF,667,loans_net,OUT,,,,,,,,0001331875-26-000026,,,,not a bank
 FNF,667,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001331875-26-000026,R5,"Net earnings attributable to Fidelity National Financial, Inc. common shareholders",602000000.0000,library map

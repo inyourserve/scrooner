@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 THC,432,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,Accounts payable,1360000000.0000,library map
 THC,432,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,Accounts receivable,2565000000.0000,library map
-THC,432,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000070318-26-000012,,,,note-sourced default tag (no face line)
+THC,432,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000070318-26-000012,,,166000000.0000,note fact present in the filing (FSN value)
 THC,432,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000070318-26-000012,R5,Basic earnings per share (in dollars per share),15.6100,library map
 THC,432,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000070318-26-000012,R8,Purchases of property and equipment,1010000000.0000,library map
 THC,432,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,Cash and cash equivalents,2883000000.0000,library map
@@ -21,13 +21,13 @@ THC,432,deposits,OUT,,,,,,,,0000070318-26-000012,,,,not a bank
 THC,432,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000070318-26-000012,R8,Depreciation and amortization,863000000.0000,library map
 THC,432,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000070318-26-000012,R5,Diluted earnings per share (in dollars per share),15.4900,library map
 THC,432,dividends_paid,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
-THC,432,dividends_per_share,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
+THC,432,dividends_per_share,not_presented,,,,,,,,0000070318-26-000012,,,,no face line and no note fact
 THC,432,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,Goodwill,11198000000.0000,library map
 THC,432,gross_profit,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
 THC,432,income_before_tax,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
 THC,432,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,Y,DiscontinuedOperationTaxEffectOfDiscontinuedOperation,sec_api,0000070318-26-000012,R5,Income tax expense,433000000.0000,library map
 THC,432,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000070318-26-000012,R5,Interest expense,821000000.0000,library map
-THC,432,interest_income,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
+THC,432,interest_income,not_presented,,,,,,,,0000070318-26-000012,,,,no face line and no note fact
 THC,432,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,"Inventories of supplies, at cost",348000000.0000,library map
 THC,432,loans_net,OUT,,,,,,,,0000070318-26-000012,,,,not a bank
 THC,432,net_income,not_presented,,,,,,,,0000070318-26-000012,,,,no face line

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NDAQ,227,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-007703,R3,Accounts payable and accrued expenses,280000000.0000,combined line (library or label demote)
 NDAQ,227,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-007703,R3,"Receivables, net",943000000.0000,combined line (library or label demote)
-NDAQ,227,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007703,,,,note-sourced default tag (no face line)
+NDAQ,227,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-007703,,,487000000.0000,note fact present in the filing (FSN value)
 NDAQ,227,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-007703,R5,Basic earnings per share (in dollars per share),3.1200,library map
 NDAQ,227,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-007703,R8,Purchases of property and equipment,266000000.0000,library map
 NDAQ,227,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-007703,R3,Cash and cash equivalents,604000000.0000,library map
@@ -50,5 +50,5 @@ NDAQ,227,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-007
 NDAQ,227,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-007703,R3,Short-term debt,431000000.0000,printed face components (duration sum; total_debt founder sum)
 NDAQ,227,total_interest_income,OUT,,,,,,,,0001628280-26-007703,,,,not a bank
 NDAQ,227,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-007703,R3,Total liabilities,18821000000.0000,library map
-NDAQ,227,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-007703,,,,note-sourced default tag (no face line)
-NDAQ,227,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-007703,,,,note-sourced default tag (no face line)
+NDAQ,227,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-007703,,,573257760.0000,note fact present in the filing (FSN value)
+NDAQ,227,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-007703,,,578597687.0000,note fact present in the filing (FSN value)

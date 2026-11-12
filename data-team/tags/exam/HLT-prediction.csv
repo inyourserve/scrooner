@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HLT,163,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,"Accounts payable, accrued expenses and other",2336000000.0000,combined line (library or label demote)
 HLT,163,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,"Accounts receivable, net of allowance for credit losses",1690000000.0000,library map
-HLT,163,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001585689-26-000007,,,,note-sourced default tag (no face line)
+HLT,163,amortization_of_intangibles,not_presented,,,,,,,,0001585689-26-000007,,,,no face line and no note fact
 HLT,163,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001585689-26-000007,R5,Basic EPS,6.1800,library map
 HLT,163,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001585689-26-000007,R8,Capital expenditures for property and equipment,101000000.0000,library map
 HLT,163,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,Cash and cash equivalents,918000000.0000,library map
 HLT,163,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001585689-26-000007,R8,Net cash used in financing activities,-2348000000.0000,library map
 HLT,163,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001585689-26-000007,R8,Net cash used in investing activities,-190000000.0000,library map
-HLT,163,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001585689-26-000007,,,,note-sourced default tag (no face line)
-HLT,163,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001585689-26-000007,,,,note-sourced default tag (no face line)
+HLT,163,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001585689-26-000007,,,523000000.0000,note fact present in the filing (FSN value)
+HLT,163,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001585689-26-000007,,,648000000.0000,note fact present in the filing (FSN value)
 HLT,163,cf_ap_change,not_presented,,,,,,,,0001585689-26-000007,,,,no face line
 HLT,163,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001585689-26-000007,R8,"Accounts receivable, net",99000000.0000,library map
 HLT,163,cf_inventory_change,not_presented,,,,,,,,0001585689-26-000007,,,,no face line
@@ -27,14 +27,14 @@ HLT,163,gross_profit,not_presented,,,,,,,,0001585689-26-000007,,,,no face line
 HLT,163,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,Income before income taxes,2072000000.0000,library map
 HLT,163,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,Income tax expense,611000000.0000,library map
 HLT,163,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001585689-26-000007,R5,Interest expense,620000000.0000,library map
-HLT,163,interest_income,not_presented,,,,,,,,0001585689-26-000007,,,,no face line
+HLT,163,interest_income,not_presented,,,,,,,,0001585689-26-000007,,,,no face line and no note fact
 HLT,163,inventory,not_presented,,,,,,,,0001585689-26-000007,,,,no face line
 HLT,163,loans_net,OUT,,,,,,,,0001585689-26-000007,,,,not a bank
 HLT,163,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,Net income attributable to Hilton stockholders,1457000000.0000,library map
 HLT,163,net_interest_income,OUT,,,,,,,,0001585689-26-000007,,,,not a bank
 HLT,163,noninterest_expense,OUT,,,,,,,,0001585689-26-000007,,,,not a bank
 HLT,163,noninterest_income,OUT,,,,,,,,0001585689-26-000007,,,,not a bank
-HLT,163,operating_expenses,not_presented,,,,,,,,0001585689-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+HLT,163,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,Total expenses,9346000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 HLT,163,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,Operating income,2693000000.0000,library map
 HLT,163,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001585689-26-000007,R5,"Other non-operating income (loss), net",10000000.0000,library map
 HLT,163,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,"Property, plant and equipment, net",684000000.0000,library map
@@ -50,5 +50,5 @@ HLT,163,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001585689-26-0000
 HLT,163,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,Current maturities of long-term debt,25000000.0000,printed face components (duration sum; total_debt founder sum)
 HLT,163,total_interest_income,OUT,,,,,,,,0001585689-26-000007,,,,not a bank
 HLT,163,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001585689-26-000007,R3,Total liabilities,22120000000.0000,library map
-HLT,163,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001585689-26-000007,,,,note-sourced default tag (no face line)
-HLT,163,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001585689-26-000007,,,,note-sourced default tag (no face line)
+HLT,163,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001585689-26-000007,,,236000000.0000,note fact present in the filing (FSN value)
+HLT,163,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001585689-26-000007,,,238000000.0000,note fact present in the filing (FSN value)

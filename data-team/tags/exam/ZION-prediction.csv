@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ZION,734,accounts_payable,not_presented,,,,,,,,0000109380-26-000046,,,,no face line
 ZION,734,accounts_receivable,not_presented,,,,,,,,0000109380-26-000046,,,,no face line
-ZION,734,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000109380-26-000046,,,,note-sourced default tag (no face line)
+ZION,734,amortization_of_intangibles,not_presented,,,,,,,,0000109380-26-000046,,,,no face line and no note fact
 ZION,734,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000109380-26-000046,R5,Basic (in dollars per share),6.0100,library map
 ZION,734,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000109380-26-000046,R9,Purchases of premises and equipment,121000000.0000,library map
 ZION,734,cash_and_equivalents,not_presented,,,,,,,,0000109380-26-000046,,,,no face line

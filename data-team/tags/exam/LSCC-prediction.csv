@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LSCC,535,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001437749-26-004100,R4,Accounts payable,56518000.0000,library map
 LSCC,535,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001437749-26-004100,R4,"Accounts receivable, net",102277000.0000,library map
-LSCC,535,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001437749-26-004100,,,,note-sourced default tag (no face line)
+LSCC,535,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001437749-26-004100,,,2246000.0000,note fact present in the filing (FSN value)
 LSCC,535,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001437749-26-004100,R2,Basic (in dollars per share),0.0200,library map
 LSCC,535,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-004100,R6,Capital expenditures,42527000.0000,library map
 LSCC,535,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001437749-26-004100,R4,Cash and cash equivalents,133886000.0000,library map
@@ -21,13 +21,13 @@ LSCC,535,deposits,OUT,,,,,,,,0001437749-26-004100,,,,not a bank
 LSCC,535,depreciation_and_amortization,not_presented,,,,,,,,0001437749-26-004100,,,,no face line
 LSCC,535,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-004100,R2,Diluted (in dollars per share),0.0200,library map
 LSCC,535,dividends_paid,not_presented,,,,,,,,0001437749-26-004100,,,,no face line
-LSCC,535,dividends_per_share,not_presented,,,,,,,,0001437749-26-004100,,,,no face line
+LSCC,535,dividends_per_share,not_presented,,,,,,,,0001437749-26-004100,,,,no face line and no note fact
 LSCC,535,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001437749-26-004100,R4,Goodwill,315358000.0000,library map
 LSCC,535,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001437749-26-004100,R2,Gross margin,356943000.0000,library map
 LSCC,535,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001437749-26-004100,R2,Income (loss) before income taxes,13377000.0000,library map
 LSCC,535,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001437749-26-004100,R2,Income tax expense (benefit),10293000.0000,library map
 LSCC,535,interest_expense,not_presented,,,,,,,,0001437749-26-004100,,,,no face line
-LSCC,535,interest_income,not_presented,,,,,,,,0001437749-26-004100,,,,no face line
+LSCC,535,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001437749-26-004100,R2,"Interest income (expense), net",2896000.0000,interest income only inside a net/other face line between OI and pretax
 LSCC,535,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-004100,R4,"Inventories, net",89202000.0000,library map
 LSCC,535,loans_net,OUT,,,,,,,,0001437749-26-004100,,,,not a bank
 LSCC,535,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-004100,R2,Net income,3084000.0000,library map

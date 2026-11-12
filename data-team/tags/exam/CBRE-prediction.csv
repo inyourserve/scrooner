@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CBRE,283,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001138118-26-000005,R3,Accounts payable and accrued expenses,4838000000.0000,combined line (library or label demote)
 CBRE,283,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001138118-26-000005,R3,"Receivables, less allowance for doubtful accounts of $125 and $101 at December 31, 2025 and 2024, respectively",8284000000.0000,library map
-CBRE,283,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001138118-26-000005,,,,note-sourced default tag (no face line)
+CBRE,283,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001138118-26-000005,,,393000000.0000,note fact present in the filing (FSN value)
 CBRE,283,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001138118-26-000005,R5,"Net income per share attributable to CBRE Group, Inc. (in dollars per share)",3.8800,library map
 CBRE,283,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,Y,PaymentsToAcquirePropertyPlantAndEquipment,sec_api,0001138118-26-000005,R8,Capital expenditures,366000000.0000,library map
 CBRE,283,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001138118-26-000005,R3,Cash and cash equivalents,1864000000.0000,library map
@@ -21,13 +21,13 @@ CBRE,283,deposits,OUT,,,,,,,,0001138118-26-000005,,,,not a bank
 CBRE,283,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001138118-26-000005,R8,Depreciation and amortization,729000000.0000,library map
 CBRE,283,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001138118-26-000005,R5,"Net income per share attributable to CBRE Group, Inc. (in dollars per share)",3.8500,library map
 CBRE,283,dividends_paid,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
-CBRE,283,dividends_per_share,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
+CBRE,283,dividends_per_share,not_presented,,,,,,,,0001138118-26-000005,,,,no face line and no note fact
 CBRE,283,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001138118-26-000005,R3,Goodwill,7051000000.0000,library map
 CBRE,283,gross_profit,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
 CBRE,283,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001138118-26-000005,R5,Income before provision for income taxes,1594000000.0000,library map
 CBRE,283,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001138118-26-000005,R5,Provision for income taxes,317000000.0000,library map
 CBRE,283,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001138118-26-000005,R5,"Interest expense, net of interest income",-216000000.0000,combined line (library or label demote)
-CBRE,283,interest_income,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
+CBRE,283,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001138118-26-000005,R5,"Interest expense, net of interest income",-216000000.0000,interest income only inside a net/other face line between OI and pretax
 CBRE,283,inventory,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
 CBRE,283,loans_net,OUT,,,,,,,,0001138118-26-000005,,,,not a bank
 CBRE,283,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001138118-26-000005,R5,"Net income attributable to CBRE Group, Inc.",1157000000.0000,library map

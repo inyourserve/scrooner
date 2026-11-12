@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PRMB,847,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-012779,R3,Trade payables,518900000.0000,library map
 PRMB,847,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-012779,R3,"Trade receivables, net of allowance for expected credit losses of $20.5 and $4.7 as of December 31, 2025 and December 31, 2024, respectively",431800000.0000,library map
-PRMB,847,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-012779,,,,note-sourced default tag (no face line)
+PRMB,847,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-012779,,,255000000.0000,note fact present in the filing (FSN value)
 PRMB,847,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-012779,R5,Net income (loss) per common share (in dollars per share),0.1600,library map
 PRMB,847,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-012779,R8,"Purchases of property, plant and equipment",377400000.0000,library map
 PRMB,847,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0001628280-26-012779,R3,"Cash, cash equivalents and restricted cash",376900000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ PRMB,847,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-2
 PRMB,847,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,Income from continuing operations before income taxes,145000000.0000,library map
 PRMB,847,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,Provision for income taxes,64600000.0000,library map
 PRMB,847,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,"Interest and financing expense, net",326500000.0000,combined line (library or label demote)
-PRMB,847,interest_income,not_presented,,,,,,,,0001628280-26-012779,,,,no face line
+PRMB,847,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,"Interest and financing expense, net",326500000.0000,interest income only inside a net/other face line between OI and pretax
 PRMB,847,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-012779,R3,Inventories,223500000.0000,library map
 PRMB,847,loans_net,OUT,,,,,,,,0001628280-26-012779,,,,not a bank
 PRMB,847,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,Net income (loss),60100000.0000,library map

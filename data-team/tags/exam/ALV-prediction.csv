@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ALV,766,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-058162,R6,Accounts payable,2007000000.0000,library map
 ALV,766,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-058162,R6,"Receivables, net",2236000000.0000,combined line (library or label demote)
-ALV,766,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-058162,,,,note-sourced default tag (no face line)
+ALV,766,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-058162,,,,no face line and no note fact
 ALV,766,basic_eps,not_presented,,,,,,,,0001193125-26-058162,,,,no face line
 ALV,766,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-058162,R8,"Expenditures for property, plant and equipment",441000000.0000,library map
 ALV,766,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-058162,R6,Cash and cash equivalents,604000000.0000,library map
 ALV,766,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-058162,R8,Net cash used in financing activities,-369000000.0000,library map
 ALV,766,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-058162,R8,Net cash used in investing activities,-423000000.0000,library map
-ALV,766,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-058162,,,,note-sourced default tag (no face line)
-ALV,766,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-058162,,,,note-sourced default tag (no face line)
+ALV,766,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-058162,,,230000000.0000,note fact present in the filing (FSN value)
+ALV,766,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-058162,,,98000000.0000,note fact present in the filing (FSN value)
 ALV,766,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001193125-26-058162,R8,Accounts payable,119000000.0000,library map
 ALV,766,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001193125-26-058162,R8,"Receivables, gross",98000000.0000,library map
 ALV,766,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-058162,R8,"Inventories, gross",8000000.0000,library map
@@ -41,7 +41,7 @@ ALV,766,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 ALV,766,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-058162,,,,not a bank
 ALV,766,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,"Research, development and engineering expenses, net",413000000.0000,library map
 ALV,766,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,Net sales,10815000000.0000,library map
-ALV,766,sbc,not_presented,,,,,,,,0001193125-26-058162,,,,no face line
+ALV,766,sbc,not_presented,,,,,,,,0001193125-26-058162,,,,no face line and no note fact
 ALV,766,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,"Selling, general and administrative expenses",571000000.0000,library map
 ALV,766,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-6,N,,sec_api,0001193125-26-058162,R8,Stock repurchases,351000000.0000,combined line (library or label demote)
 ALV,766,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0001193125-26-058162,R7,"Common stock, shares outstanding",74700000.0000,library map

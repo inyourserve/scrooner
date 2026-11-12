@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IREN,715,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001878848-26-000052,R3,Accounts payable and accrued expenses,1825392000.0000,combined line (library or label demote)
 IREN,715,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001878848-26-000052,R3,"Accounts receivable, net",21062000.0000,library map
-IREN,715,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001878848-26-000052,,,,note-sourced default tag (no face line)
+IREN,715,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001878848-26-000052,,,500000.0000,note fact present in the filing (FSN value)
 IREN,715,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001878848-26-000052,R5,Basic net income (loss) per share of Ordinary shares ( in USD per share),-2.2200,library map
 IREN,715,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001878848-26-000052,R7,"Payments for property, plant and equipment, net of computer hardware",2998006000.0000,library map
 IREN,715,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001878848-26-000052,R3,Cash and cash equivalents,5895591000.0000,library map
@@ -21,7 +21,7 @@ IREN,715,deposits,OUT,,,,,,,,0001878848-26-000052,,,,not a bank
 IREN,715,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001878848-26-000052,R7,Depreciation and amortization,417729000.0000,library map
 IREN,715,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001878848-26-000052,R5,Diluted net income (loss) per share of Ordinary shares (in USD per share),-2.2200,library map
 IREN,715,dividends_paid,not_presented,,,,,,,,0001878848-26-000052,,,,no face line
-IREN,715,dividends_per_share,not_presented,,,,,,,,0001878848-26-000052,,,,no face line
+IREN,715,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,0,,,,sec_api,0001878848-26-000052,,,0.0000,note fact present in the filing (FSN value)
 IREN,715,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001878848-26-000052,R3,Goodwill,36577000.0000,library map
 IREN,715,gross_profit,not_presented,,,,,,,,0001878848-26-000052,,,,no face line
 IREN,715,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001878848-26-000052,R5,Income (loss) before taxes,-708683000.0000,library map

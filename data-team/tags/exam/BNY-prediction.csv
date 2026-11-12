@@ -7,7 +7,7 @@ BNY,119,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,
 BNY,119,cash_and_equivalents,combined,us-gaap:RestrictedCashAndCashEquivalents,CF,+,-6,N,,sec_api,0001390777-26-000033,R8,Restricted cash at end of period,2848000000.0000,combined line (library or label demote)
 BNY,119,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001390777-26-000033,R8,Net cash provided by (used for) financing activities,39714000000.0000,library map
 BNY,119,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001390777-26-000033,R8,Net cash (used for) provided by investing activities,-44283000000.0000,library map
-BNY,119,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001390777-26-000033,,,,note-sourced default tag (no face line)
+BNY,119,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001390777-26-000033,,,991000000.0000,note fact present in the filing (FSN value)
 BNY,119,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001390777-26-000033,R8,Interest paid,20629000000.0000,library map
 BNY,119,cf_ap_change,not_presented,,,,,,,,0001390777-26-000033,,,,no face line
 BNY,119,cf_ar_change,not_presented,,,,,,,,0001390777-26-000033,,,,no face line
@@ -41,7 +41,7 @@ BNY,119,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 BNY,119,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,IS,-,-6,N,,sec_api,0001390777-26-000033,R3,Provision for credit losses,-32000000.0000,bank template tag
 BNY,119,research_and_development,OUT,,,,,,,,0001390777-26-000033,,,,sector template (bank/insurer)
 BNY,119,revenue,not_presented,,,,,,,,0001390777-26-000033,,,,no face line
-BNY,119,sbc,not_presented,,,,,,,,0001390777-26-000033,,,,no face line
+BNY,119,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001390777-26-000033,,,1000000.0000,note fact present in the filing (FSN value)
 BNY,119,sga_expense,not_presented,,,,,,,,0001390777-26-000033,,,,no face line
 BNY,119,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001390777-26-000033,R8,Treasury stock acquired,3535000000.0000,library map
 BNY,119,shares_outstanding,not_presented,,,,,,,,0001390777-26-000033,,,,no face line

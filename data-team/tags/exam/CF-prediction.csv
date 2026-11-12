@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CF,474,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001324404-26-000007,R5,Accounts payable and accrued expenses (amount related to VIE2025: $52),681000000.0000,combined line (library or label demote)
 CF,474,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001324404-26-000007,R5,Accounts receivablenet,488000000.0000,combined line (library or label demote)
-CF,474,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001324404-26-000007,,,,note-sourced default tag (no face line)
+CF,474,amortization_of_intangibles,not_presented,,,,,,,,0001324404-26-000007,,,,no face line and no note fact
 CF,474,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001324404-26-000007,R3,Basic,8.9800,library map
 CF,474,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001324404-26-000007,R9,"Additions to property, plant and equipment",950000000.0000,library map
 CF,474,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001324404-26-000007,R5,Cash and cash equivalents (amount related to variable interest entity (VIE)2025: $130),1982000000.0000,combined line (library or label demote)
 CF,474,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001324404-26-000007,R9,Net cash used in financing activities,-1484000000.0000,library map
 CF,474,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001324404-26-000007,R9,Net cash used in investing activities,-933000000.0000,library map
-CF,474,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001324404-26-000007,,,,note-sourced default tag (no face line)
-CF,474,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001324404-26-000007,,,,note-sourced default tag (no face line)
+CF,474,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001324404-26-000007,,,321000000.0000,note fact present in the filing (FSN value)
+CF,474,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001324404-26-000007,,,137000000.0000,note fact present in the filing (FSN value)
 CF,474,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001324404-26-000007,R9,Accounts payable and accrued expenses,72000000.0000,combined line (library or label demote)
 CF,474,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001324404-26-000007,R9,Accounts receivablenet,98000000.0000,library map
 CF,474,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001324404-26-000007,R9,Inventories,88000000.0000,library map

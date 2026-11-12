@@ -21,7 +21,7 @@ IT,593,deposits,OUT,,,,,,,,0000749251-26-000112,,,,not a bank
 IT,593,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0000749251-26-000112,R8,Depreciation and amortization,200309000.0000,library map
 IT,593,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000749251-26-000112,R5,Diluted (in dollars per share),9.6500,library map
 IT,593,dividends_paid,not_presented,,,,,,,,0000749251-26-000112,,,,no face line
-IT,593,dividends_per_share,not_presented,,,,,,,,0000749251-26-000112,,,,no face line
+IT,593,dividends_per_share,not_presented,,,,,,,,0000749251-26-000112,,,,no face line and no note fact
 IT,593,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000749251-26-000112,R3,Goodwill,2740802000.0000,library map
 IT,593,gross_profit,not_presented,,,,,,,,0000749251-26-000112,,,,no face line
 IT,593,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000749251-26-000112,R5,Income before income taxes,968118000.0000,library map

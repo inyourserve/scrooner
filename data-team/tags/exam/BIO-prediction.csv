@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BIO,721,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000012208-26-000010,R3,Accounts payable,129000000.0000,library map
 BIO,721,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,Y,RestrictedInvestmentsCurrent,sec_api,0000012208-26-000010,R3,Restricted investments,460600000.0000,library map
-BIO,721,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000012208-26-000010,,,,note-sourced default tag (no face line)
+BIO,721,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000012208-26-000010,,,23800000.0000,note fact present in the filing (FSN value)
 BIO,721,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000012208-26-000010,R5,Net income (loss) per basic share (in dollars per share),27.8700,library map
 BIO,721,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000012208-26-000010,R7,"Payments for purchases of property, plant and equipment",157600000.0000,library map
 BIO,721,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000012208-26-000010,R3,Cash and cash equivalents,529800000.0000,library map
@@ -21,13 +21,13 @@ BIO,721,deposits,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
 BIO,721,depreciation_and_amortization,not_presented,,,,,,,,0000012208-26-000010,,,,no face line
 BIO,721,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000012208-26-000010,R5,Net income (loss) per diluted share (in dollars per share),27.8500,library map
 BIO,721,dividends_paid,not_presented,,,,,,,,0000012208-26-000010,,,,no face line
-BIO,721,dividends_per_share,not_presented,,,,,,,,0000012208-26-000010,,,,no face line
+BIO,721,dividends_per_share,not_presented,,,,,,,,0000012208-26-000010,,,,no face line and no note fact
 BIO,721,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000012208-26-000010,R3,"Goodwill, net",579800000.0000,library map
 BIO,721,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Gross profit,1339900000.0000,library map
 BIO,721,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Net income (loss) before income taxes,995500000.0000,library map
 BIO,721,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,(Provision for) benefit from income taxes,235600000.0000,library map
 BIO,721,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Interest expense,49000000.0000,library map
-BIO,721,interest_income,not_presented,,,,,,,,0000012208-26-000010,,,,no face line
+BIO,721,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0000012208-26-000010,,,95500000.0000,note fact present in the filing (FSN value)
 BIO,721,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000012208-26-000010,R3,Inventory,740700000.0000,library map
 BIO,721,loans_net,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
 BIO,721,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Net income (loss),759900000.0000,library map
@@ -41,7 +41,7 @@ BIO,721,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0
 BIO,721,provision_for_credit_losses,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
 BIO,721,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Research and development expense,275600000.0000,library map
 BIO,721,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Net sales,2583200000.0000,library map
-BIO,721,sbc,not_presented,,,,,,,,0000012208-26-000010,,,,no face line
+BIO,721,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,+,,,,sec_api,0000012208-26-000010,,,58000000.0000,note fact present in the filing (FSN value)
 BIO,721,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,"Selling, general and administrative expense",844300000.0000,library map
 BIO,721,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000012208-26-000010,R7,Payments for purchases of treasury stock,295500000.0000,library map
 BIO,721,shares_outstanding,not_presented,,,,,,,,0000012208-26-000010,,,,no face line

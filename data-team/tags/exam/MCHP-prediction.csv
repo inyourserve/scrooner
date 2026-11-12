@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MCHP,274,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000827054-26-000016,R3,Accounts payable,205600000.0000,library map
 MCHP,274,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000827054-26-000016,R3,"Accounts receivable, net",894700000.0000,library map
-MCHP,274,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000827054-26-000016,,,,note-sourced default tag (no face line)
+MCHP,274,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000827054-26-000016,,,534300000.0000,note fact present in the filing (FSN value)
 MCHP,274,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000827054-26-000016,R5,Basic net income (loss) per common share (in dollars per share),0.2200,library map
 MCHP,274,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000827054-26-000016,R7,Capital expenditures,91100000.0000,library map
 MCHP,274,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000827054-26-000016,R3,Cash and cash equivalents,240300000.0000,library map
 MCHP,274,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000827054-26-000016,R7,Net cash used in financing activities,-1298000000.0000,library map
 MCHP,274,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000827054-26-000016,R7,Net cash used in investing activities,-195500000.0000,library map
-MCHP,274,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000827054-26-000016,,,,note-sourced default tag (no face line)
+MCHP,274,cash_paid_for_income_taxes,not_presented,,,,,,,,0000827054-26-000016,,,,no face line and no note fact
 MCHP,274,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000827054-26-000016,R7,Cash paid for interest,211100000.0000,library map
 MCHP,274,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0000827054-26-000016,R7,Increase (decrease) in accounts payable and accrued liabilities,26000000.0000,combined line (library or label demote)
 MCHP,274,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000827054-26-000016,R7,(Increase) decrease in accounts receivable,204500000.0000,library map

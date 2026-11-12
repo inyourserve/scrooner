@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AAOI,896,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001437749-26-005875,R2,Accounts payable,143932000.0000,library map
 AAOI,896,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001437749-26-005875,R2,"Accounts receivable, net",244404000.0000,library map
-AAOI,896,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001437749-26-005875,,,,note-sourced default tag (no face line)
+AAOI,896,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001437749-26-005875,,,400000.0000,note fact present in the filing (FSN value)
 AAOI,896,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,32767,N,,sec_api,0001437749-26-005875,R4,Basic (in dollars per share),-0.6400,library map
 AAOI,896,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,"Purchase of property, plant and equipment",179148000.0000,library map
 AAOI,896,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-4,N,,sec_api,0001437749-26-005875,R2,Cash and cash equivalents,206140000.0000,library map
 AAOI,896,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,Net cash provided by financing activities,527941000.0000,library map
 AAOI,896,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001437749-26-005875,R7,Net cash used in investing activities,-210604000.0000,library map
-AAOI,896,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001437749-26-005875,,,,note-sourced default tag (no face line)
+AAOI,896,cash_paid_for_income_taxes,not_presented,,,,,,,,0001437749-26-005875,,,,no face line and no note fact
 AAOI,896,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,Interest,2483000.0000,library map
 AAOI,896,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,Accounts payable,38963000.0000,library map
 AAOI,896,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,"Accounts receivable, trade",127597000.0000,library map
@@ -21,7 +21,7 @@ AAOI,896,deposits,OUT,,,,,,,,0001437749-26-005875,,,,not a bank
 AAOI,896,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001437749-26-005875,R7,Depreciation and amortization,27696000.0000,library map
 AAOI,896,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,32767,N,,sec_api,0001437749-26-005875,R4,Diluted (in dollars per share),-0.6400,library map
 AAOI,896,dividends_paid,not_presented,,,,,,,,0001437749-26-005875,,,,no face line
-AAOI,896,dividends_per_share,not_presented,,,,,,,,0001437749-26-005875,,,,no face line
+AAOI,896,dividends_per_share,not_presented,,,,,,,,0001437749-26-005875,,,,no face line and no note fact
 AAOI,896,goodwill,not_presented,,,,,,,,0001437749-26-005875,,,,no face line
 AAOI,896,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001437749-26-005875,R4,Gross profit,136913000.0000,library map
 AAOI,896,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001437749-26-005875,R4,Loss before income taxes,-46704000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CRCL,423,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001876042-26-000062,R3,Accounts payable and accrued expenses,360609000.0000,combined line (library or label demote)
 CRCL,423,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001876042-26-000062,R3,"Accounts receivable, net",62866000.0000,library map
-CRCL,423,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001876042-26-000062,,,,note-sourced default tag (no face line)
+CRCL,423,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001876042-26-000062,,,73664000.0000,note fact present in the filing (FSN value)
 CRCL,423,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001876042-26-000062,R5,Basic earnings (loss) per common share (in dollars per share),-0.4400,library map
 CRCL,423,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001876042-26-000062,R8,Purchase of long-lived assets,12432000.0000,library map
 CRCL,423,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001876042-26-000062,R3,Cash and cash equivalents,1526046000.0000,library map
@@ -21,7 +21,7 @@ CRCL,423,deposits,OUT,,,,,,,,0001876042-26-000062,,,,not a bank
 CRCL,423,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001876042-26-000062,R8,Depreciation and amortization expense,76627000.0000,library map
 CRCL,423,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001876042-26-000062,R5,Diluted earnings (loss) per common share (in dollars per share),-0.4400,library map
 CRCL,423,dividends_paid,not_presented,,,,,,,,0001876042-26-000062,,,,no face line
-CRCL,423,dividends_per_share,not_presented,,,,,,,,0001876042-26-000062,,,,no face line
+CRCL,423,dividends_per_share,not_presented,,,,,,,,0001876042-26-000062,,,,no face line and no note fact
 CRCL,423,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001876042-26-000062,R3,Goodwill,265742000.0000,library map
 CRCL,423,gross_profit,not_presented,,,,,,,,0001876042-26-000062,,,,no face line
 CRCL,423,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001876042-26-000062,R5,Net income (loss) from continuing operations before income taxes,-102893000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CACC,971,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0000885550-26-000047,R3,Accounts payable and accrued liabilities,400200000.0000,combined line (library or label demote)
 CACC,971,accounts_receivable,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
-CACC,971,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000885550-26-000047,,,,note-sourced default tag (no face line)
+CACC,971,amortization_of_intangibles,not_presented,,,,,,,,0000885550-26-000047,,,,no face line and no note fact
 CACC,971,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000885550-26-000047,R4,Basic (in usd per share),37.0200,library map
 CACC,971,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000885550-26-000047,R7,Purchases of property and equipment,1600000.0000,library map
 CACC,971,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000885550-26-000047,R3,Cash and cash equivalents,22800000.0000,library map
@@ -21,20 +21,20 @@ CACC,971,deposits,OUT,,,,,,,,0000885550-26-000047,,,,not a bank
 CACC,971,depreciation_and_amortization,not_presented,,,,,,,,0000885550-26-000047,,,,single component only
 CACC,971,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000885550-26-000047,R4,Diluted (in usd per share),36.3800,library map
 CACC,971,dividends_paid,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
-CACC,971,dividends_per_share,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
+CACC,971,dividends_per_share,not_presented,,,,,,,,0000885550-26-000047,,,,no face line and no note fact
 CACC,971,goodwill,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
 CACC,971,gross_profit,OUT,,,,,,,,0000885550-26-000047,,,,sector template (bank/insurer)
 CACC,971,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000885550-26-000047,R4,"Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest, Total",565400000.0000,library map
 CACC,971,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000885550-26-000047,R4,"Effective tax rate, amount",141500000.0000,library map
 CACC,971,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000885550-26-000047,R4,Interest,462900000.0000,library map
-CACC,971,interest_income,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
+CACC,971,interest_income,not_presented,,,,,,,,0000885550-26-000047,,,,no face line and no note fact
 CACC,971,inventory,OUT,,,,,,,,0000885550-26-000047,,,,sector template (bank/insurer)
 CACC,971,loans_net,OUT,,,,,,,,0000885550-26-000047,,,,not a bank
 CACC,971,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000885550-26-000047,R4,Net income,423900000.0000,library map
 CACC,971,net_interest_income,OUT,,,,,,,,0000885550-26-000047,,,,not a bank
 CACC,971,noninterest_expense,OUT,,,,,,,,0000885550-26-000047,,,,not a bank
 CACC,971,noninterest_income,OUT,,,,,,,,0000885550-26-000047,,,,not a bank
-CACC,971,operating_expenses,not_presented,,,,,,,,0000885550-26-000047,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CACC,971,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0000885550-26-000047,R4,Operating Expenses,599900000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 CACC,971,operating_income,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
 CACC,971,other_income_expense_net,not_presented,,,,,,,,0000885550-26-000047,,,,no face line
 CACC,971,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000885550-26-000047,R3,"Property and equipment, net",12600000.0000,library map

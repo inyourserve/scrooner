@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROST,168,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000745732-26-000006,R5,Accounts payable,2386418000.0000,library map
 ROST,168,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000745732-26-000006,R5,Accounts receivable,181301000.0000,combined line (library or label demote)
-ROST,168,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000745732-26-000006,,,,note-sourced default tag (no face line)
+ROST,168,amortization_of_intangibles,not_presented,,,,,,,,0000745732-26-000006,,,,no face line and no note fact
 ROST,168,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000745732-26-000006,R3,Basic (in dollars per share),6.6600,library map
 ROST,168,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000745732-26-000006,R9,Additions to property and equipment,819275000.0000,library map
 ROST,168,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000745732-26-000006,R5,Cash and cash equivalents,4594392000.0000,library map
@@ -27,7 +27,7 @@ ROST,168,gross_profit,not_presented,,,,,,,,0000745732-26-000006,,,,no face line
 ROST,168,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000745732-26-000006,R3,Earnings before taxes,2842157000.0000,library map
 ROST,168,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000745732-26-000006,R3,Provision for taxes on earnings,697113000.0000,library map
 ROST,168,interest_expense,not_presented,,,,,,,,0000745732-26-000006,,,,no face line
-ROST,168,interest_income,not_presented,,,,,,,,0000745732-26-000006,,,,no face line
+ROST,168,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0000745732-26-000006,,,172742000.0000,note fact present in the filing (FSN value)
 ROST,168,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000745732-26-000006,R5,Merchandise inventory,2630970000.0000,library map
 ROST,168,loans_net,OUT,,,,,,,,0000745732-26-000006,,,,not a bank
 ROST,168,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000745732-26-000006,R3,Net earnings,2145044000.0000,library map

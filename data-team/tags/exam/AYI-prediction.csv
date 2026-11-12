@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AYI,740,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001144215-25-000082,R3,Accounts payable,454500000.0000,library map
 AYI,740,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001144215-25-000082,R3,"Accounts receivable, less reserve for doubtful accounts of $4.3 and $1.9, respectively",593900000.0000,library map
-AYI,740,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001144215-25-000082,,,,note-sourced default tag (no face line)
+AYI,740,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001144215-25-000082,,,76500000.0000,note fact present in the filing (FSN value)
 AYI,740,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001144215-25-000082,R5,Basic earnings per share (in dollars per share),12.8500,library map
 AYI,740,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001144215-25-000082,R6,"Purchases of property, plant, and equipment",68400000.0000,library map
 AYI,740,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001144215-25-000082,R3,Cash and cash equivalents,422500000.0000,library map
@@ -27,7 +27,7 @@ AYI,740,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001144215-25
 AYI,740,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,Income before income taxes,500200000.0000,library map
 AYI,740,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,Income tax expense,103600000.0000,library map
 AYI,740,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001144215-25-000082,R5,"Interest expense (income), net",-22000000.0000,combined line (library or label demote)
-AYI,740,interest_income,not_presented,,,,,,,,0001144215-25-000082,,,,no face line
+AYI,740,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001144215-25-000082,,,20500000.0000,note fact present in the filing (FSN value)
 AYI,740,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001144215-25-000082,R3,Inventories,526700000.0000,library map
 AYI,740,loans_net,OUT,,,,,,,,0001144215-25-000082,,,,not a bank
 AYI,740,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,Net income,396600000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DKNG,733,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Accounts payable and accrued expenses,785441000.0000,combined line (library or label demote)
 DKNG,733,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Accounts receivable,105577000.0000,library map
-DKNG,733,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)
+DKNG,733,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001883685-26-000013,,,256300000.0000,note fact present in the filing (FSN value)
 DKNG,733,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001883685-26-000013,R5,Basic (in dollars per share),0.0100,library map
 DKNG,733,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Purchases of property and equipment,15352000.0000,library map
 DKNG,733,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Cash and cash equivalents,1127545000.0000,library map
@@ -21,13 +21,13 @@ DKNG,733,deposits,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
 DKNG,733,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Depreciation and amortization,275488000.0000,library map
 DKNG,733,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001883685-26-000013,R5,Diluted (in dollars per share),-0.0100,library map
 DKNG,733,dividends_paid,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
-DKNG,733,dividends_per_share,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,dividends_per_share,not_presented,,,,,,,,0001883685-26-000013,,,,no face line and no note fact
 DKNG,733,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Goodwill,1597647000.0000,library map
 DKNG,733,gross_profit,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
 DKNG,733,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Income (loss) before income tax and equity method investments,7013000.0000,library map
 DKNG,733,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Income tax provision (benefit),4274000.0000,library map
 DKNG,733,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001883685-26-000013,R5,"Interest income (expense), net",-19941000.0000,combined line (library or label demote)
-DKNG,733,interest_income,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001883685-26-000013,R5,"Interest income (expense), net",-19941000.0000,interest income only inside a net/other face line between OI and pretax
 DKNG,733,inventory,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
 DKNG,733,loans_net,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
 DKNG,733,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Net income (loss) attributable to common stockholders,3710000.0000,library map
@@ -50,5 +50,5 @@ DKNG,733,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001883685-26-000
 DKNG,733,total_debt,combined,us-gaap:ConvertibleLongTermNotesPayable,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,"Convertible notes, net of issuance costs",1259096000.0000,combined line (library or label demote)
 DKNG,733,total_interest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
 DKNG,733,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total liabilities,3899323000.0000,library map
-DKNG,733,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)
-DKNG,733,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)
+DKNG,733,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001883685-26-000013,,,495638000.0000,note fact present in the filing (FSN value)
+DKNG,733,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001883685-26-000013,,,495903000.0000,note fact present in the filing (FSN value)

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LAD,888,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001023128-26-000015,R3,Trade payables,339500000.0000,library map
 LAD,888,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001023128-26-000015,R3,"Accounts receivable, net of allowance for doubtful accounts of $6.9 and $2.3",1134100000.0000,library map
-LAD,888,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001023128-26-000015,,,,note-sourced default tag (no face line)
+LAD,888,amortization_of_intangibles,not_presented,,,,,,,,0001023128-26-000015,,,,no face line and no note fact
 LAD,888,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001023128-26-000015,R5,"Basic earnings per share attributable to Lithia Motors, Inc. (in dollars per share)",32.3800,library map
 LAD,888,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001023128-26-000015,R10,Capital expenditures,350900000.0000,library map
 LAD,888,cash_and_equivalents,not_presented,,,,,,,,0001023128-26-000015,,,,no face line
@@ -27,7 +27,7 @@ LAD,888,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001023128-26
 LAD,888,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,Income before income taxes,1108400000.0000,library map
 LAD,888,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,Income tax provision,282500000.0000,library map
 LAD,888,interest_expense,not_presented,,,,,,,,0001023128-26-000015,,,,single component only
-LAD,888,interest_income,not_presented,,,,,,,,0001023128-26-000015,,,,no face line
+LAD,888,interest_income,not_presented,,,,,,,,0001023128-26-000015,,,,no face line and no note fact
 LAD,888,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001023128-26-000015,R3,"Inventories, net",6119600000.0000,library map
 LAD,888,loans_net,OUT,,,,,,,,0001023128-26-000015,,,,not a bank
 LAD,888,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,"Net income attributable to Lithia Motors, Inc.",819600000.0000,library map

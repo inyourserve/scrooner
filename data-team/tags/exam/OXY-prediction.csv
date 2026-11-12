@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OXY,198,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,Accounts payable,3285000000.0000,library map
 OXY,198,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,Trade receivables,2575000000.0000,library map
-OXY,198,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-009059,,,,note-sourced default tag (no face line)
+OXY,198,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-009059,,,,no face line and no note fact
 OXY,198,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-009059,R5,Net income attributable to common stockholdersbasic (in dollars per share),1.6500,library map
 OXY,198,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-009059,R9,Capital expenditures,6427000000.0000,library map
 OXY,198,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,Cash and cash equivalents,1968000000.0000,library map
 OXY,198,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-009059,R9,Net cash provided (used) by financing activities,-4844000000.0000,library map
 OXY,198,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-009059,R9,Net cash used by investing activities,-5799000000.0000,library map
-OXY,198,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-009059,,,,note-sourced default tag (no face line)
-OXY,198,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-009059,,,,note-sourced default tag (no face line)
+OXY,198,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-009059,,,1236000000.0000,note fact present in the filing (FSN value)
+OXY,198,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-009059,,,1250000000.0000,note fact present in the filing (FSN value)
 OXY,198,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-009059,R9,Decrease in accounts payable and accrued liabilities,-964000000.0000,combined line (library or label demote)
 OXY,198,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0001628280-26-009059,R9,(Increase) decrease in trade receivables,-252000000.0000,library map
 OXY,198,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001628280-26-009059,R9,(Increase) decrease in inventories,-12000000.0000,library map
@@ -27,7 +27,7 @@ OXY,198,gross_profit,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
 OXY,198,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,Income from continuing operations before income taxes,3128000000.0000,library map
 OXY,198,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,Income tax expense,1021000000.0000,library map
 OXY,198,interest_expense,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,"Interest and debt expense, net",1079000000.0000,combined line (library or label demote)
-OXY,198,interest_income,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
+OXY,198,interest_income,combined,custom:InterestDividendsAndOtherIncome,IS,+,-6,N,,fsn_xbrl,0001628280-26-009059,R5,"Interest, dividends and other income",219000000.0000,interest income only inside a net/other face line between OI and pretax
 OXY,198,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,Inventories,1823000000.0000,library map
 OXY,198,loans_net,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
 OXY,198,net_income,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
@@ -41,7 +41,7 @@ OXY,198,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUs
 OXY,198,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
 OXY,198,research_and_development,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
 OXY,198,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,Net sales,21593000000.0000,library map
-OXY,198,sbc,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
+OXY,198,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001628280-26-009059,,,234000000.0000,note fact present in the filing (FSN value)
 OXY,198,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,"Selling, general and administrative expense",986000000.0000,library map
 OXY,198,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0001628280-26-009059,R9,Purchases of treasury stock,0.0000,library map
 OXY,198,shares_outstanding,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
@@ -50,5 +50,5 @@ OXY,198,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-0090
 OXY,198,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,Current maturities of long-term debt,1773000000.0000,printed face components (duration sum; total_debt founder sum)
 OXY,198,total_interest_income,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
 OXY,198,total_liabilities,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
-OXY,198,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-009059,,,,note-sourced default tag (no face line)
-OXY,198,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-009059,,,,note-sourced default tag (no face line)
+OXY,198,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-009059,,,975500000.0000,note fact present in the filing (FSN value)
+OXY,198,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-009059,,,1000100000.0000,note fact present in the filing (FSN value)

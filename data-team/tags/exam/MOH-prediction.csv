@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MOH,662,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001179929-26-000005,R5,"Accounts payable, accrued liabilities and other",1093000000.0000,combined line (library or label demote)
 MOH,662,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001179929-26-000005,R5,Receivables,3533000000.0000,combined line (library or label demote)
-MOH,662,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001179929-26-000005,,,,note-sourced default tag (no face line)
+MOH,662,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001179929-26-000005,,,91000000.0000,note fact present in the filing (FSN value)
 MOH,662,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001179929-26-000005,R3,Basic (in dollars per share),8.9300,library map
 MOH,662,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001179929-26-000005,R8,"Purchases of property, equipment and capitalized software",101000000.0000,library map
 MOH,662,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001179929-26-000005,R5,Cash and cash equivalents,4248000000.0000,library map
 MOH,662,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001179929-26-000005,R8,Net cash used in financing activities,-170000000.0000,library map
 MOH,662,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001179929-26-000005,R8,Net cash provided by (used in) investing activities,312000000.0000,library map
-MOH,662,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001179929-26-000005,,,,note-sourced default tag (no face line)
+MOH,662,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001179929-26-000005,,,275000000.0000,note fact present in the filing (FSN value)
 MOH,662,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001179929-26-000005,R8,Cash paid during the period for interest,181000000.0000,library map
 MOH,662,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001179929-26-000005,R8,"Accounts payable, accrued liabilities and other",-221000000.0000,combined line (library or label demote)
 MOH,662,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001179929-26-000005,R8,Receivables,145000000.0000,library map
@@ -21,13 +21,13 @@ MOH,662,deposits,OUT,,,,,,,,0001179929-26-000005,,,,not a bank
 MOH,662,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001179929-26-000005,R8,Depreciation and amortization,195000000.0000,library map
 MOH,662,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001179929-26-000005,R3,Diluted (in dollars per share),8.9200,library map
 MOH,662,dividends_paid,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
-MOH,662,dividends_per_share,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
+MOH,662,dividends_per_share,not_presented,,,,,,,,0001179929-26-000005,,,,no face line and no note fact
 MOH,662,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0001179929-26-000005,R5,"Goodwill and intangible assets, net",2195000000.0000,combined line (library or label demote)
 MOH,662,gross_profit,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
 MOH,662,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001179929-26-000005,R3,Income before income tax expense,589000000.0000,library map
 MOH,662,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001179929-26-000005,R3,Income tax expense,117000000.0000,library map
 MOH,662,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001179929-26-000005,R3,Interest expense,192000000.0000,library map
-MOH,662,interest_income,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
+MOH,662,interest_income,not_presented,,,,,,,,0001179929-26-000005,,,,no face line and no note fact
 MOH,662,inventory,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
 MOH,662,loans_net,OUT,,,,,,,,0001179929-26-000005,,,,not a bank
 MOH,662,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001179929-26-000005,R3,Net income,472000000.0000,library map

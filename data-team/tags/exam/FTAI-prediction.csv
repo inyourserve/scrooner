@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FTAI,498,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-012940,R3,Accounts payable,208224000.0000,library map
 FTAI,498,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,Y,AccountsReceivableNet,sec_api,0001628280-26-012940,R3,"Accounts receivable, net",209907000.0000,library map
-FTAI,498,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-012940,,,,note-sourced default tag (no face line)
+FTAI,498,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001628280-26-012940,,,11800000.0000,note fact present in the filing (FSN value)
 FTAI,498,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-012940,R5,Basic (in dollars per share),4.6600,library map
 FTAI,498,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,Y,NoncashOrPartNoncashAcquisitionFixedAssetsAcquired1,sec_api,0001628280-26-012940,R9,"Acquisition of property, plant and equipment",27712000.0000,library map
 FTAI,498,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-012940,R3,Cash and cash equivalents,300476000.0000,library map
@@ -21,13 +21,13 @@ FTAI,498,deposits,OUT,,,,,,,,0001628280-26-012940,,,,not a bank
 FTAI,498,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,DepreciationDepletionAndAmortizationIncludingDiscontinuedOperations,sec_api,0001628280-26-012940,R9,Depreciation and amortization,225797000.0000,library map
 FTAI,498,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-012940,R5,Diluted (in dollars per share),4.6000,library map
 FTAI,498,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-012940,R9,Cash dividends - ordinary shares,128205000.0000,library map
-FTAI,498,dividends_per_share,not_presented,,,,,,,,0001628280-26-012940,,,,no face line
+FTAI,498,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001628280-26-012940,,,1.3500,note fact present in the filing (FSN value)
 FTAI,498,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-012940,R3,Goodwill,94221000.0000,library map
 FTAI,498,gross_profit,not_presented,,,,,,,,0001628280-26-012940,,,,no face line
 FTAI,498,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-012940,R5,Income before income taxes,606684000.0000,library map
 FTAI,498,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-012940,R5,Provision for (benefit from) income taxes,105620000.0000,library map
 FTAI,498,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-012940,R5,Interest expense,247751000.0000,library map
-FTAI,498,interest_income,not_presented,,,,,,,,0001628280-26-012940,,,,no face line
+FTAI,498,interest_income,not_presented,,,,,,,,0001628280-26-012940,,,,no face line and no note fact
 FTAI,498,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-012940,R3,"Inventory, net",1193773000.0000,library map
 FTAI,498,loans_net,OUT,,,,,,,,0001628280-26-012940,,,,not a bank
 FTAI,498,net_income,not_presented,,,,,,,,0001628280-26-012940,,,,no face line

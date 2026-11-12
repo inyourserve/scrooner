@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PAYX,278,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-307785,R3,Accounts payable,154800000.0000,library map
 PAYX,278,accounts_receivable,mapped,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-307785,R3,"Accounts receivable, net of allowance for credit losses",1507600000.0000,library map
-PAYX,278,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-307785,,,,note-sourced default tag (no face line)
+PAYX,278,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-307785,,,299500000.0000,note fact present in the filing (FSN value)
 PAYX,278,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-307785,R2,Basic earnings per share,4.9000,library map
 PAYX,278,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-307785,R7,Purchases of property and equipment,234900000.0000,library map
 PAYX,278,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-307785,R3,Cash and cash equivalents,1088200000.0000,library map
 PAYX,278,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-307785,R7,Net cash (used in)/provided by financing activities,-2653800000.0000,library map
 PAYX,278,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-307785,R7,Net cash used in investing activities,-1152400000.0000,library map
-PAYX,278,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-307785,,,,note-sourced default tag (no face line)
-PAYX,278,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-307785,,,,note-sourced default tag (no face line)
+PAYX,278,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-307785,,,310300000.0000,note fact present in the filing (FSN value)
+PAYX,278,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-307785,,,267600000.0000,note fact present in the filing (FSN value)
 PAYX,278,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001193125-26-307785,R7,Accounts payable and other current liabilities,291400000.0000,combined line (library or label demote)
 PAYX,278,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001193125-26-307785,R7,"Accounts receivable and PEO unbilled receivables, net",105800000.0000,combined line (library or label demote)
 PAYX,278,cf_inventory_change,not_presented,,,,,,,,0001193125-26-307785,,,,no face line

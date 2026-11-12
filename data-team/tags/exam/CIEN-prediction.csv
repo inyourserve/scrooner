@@ -21,13 +21,13 @@ CIEN,250,deposits,OUT,,,,,,,,0001628280-25-056698,,,,not a bank
 CIEN,250,depreciation_and_amortization,not_presented,,,,,,,,0001628280-25-056698,,,,single component only
 CIEN,250,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-25-056698,R5,Diluted net income per potential common share (in dollars per share),0.8500,library map
 CIEN,250,dividends_paid,not_presented,,,,,,,,0001628280-25-056698,,,,no face line
-CIEN,250,dividends_per_share,not_presented,,,,,,,,0001628280-25-056698,,,,no face line
+CIEN,250,dividends_per_share,not_presented,,,,,,,,0001628280-25-056698,,,,no face line and no note fact
 CIEN,250,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-25-056698,R3,Goodwill,521204000.0000,library map
 CIEN,250,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-25-056698,R5,Gross profit,2004917000.0000,library map
 CIEN,250,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-25-056698,R5,Income before income taxes,156287000.0000,library map
 CIEN,250,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-25-056698,R5,Provision for income taxes,32949000.0000,library map
 CIEN,250,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-25-056698,R5,Interest expense,89403000.0000,library map
-CIEN,250,interest_income,not_presented,,,,,,,,0001628280-25-056698,,,,no face line
+CIEN,250,interest_income,combined,custom:InterestAndOtherIncomeLossNet,IS,+,-3,N,,fsn_xbrl,0001628280-25-056698,R5,"Interest and other income, net",48888000.0000,interest income only inside a net/other face line between OI and pretax
 CIEN,250,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-25-056698,R3,"Inventories, net",826235000.0000,library map
 CIEN,250,loans_net,OUT,,,,,,,,0001628280-25-056698,,,,not a bank
 CIEN,250,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-25-056698,R5,Net income,123338000.0000,library map

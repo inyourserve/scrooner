@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GTLB,749,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-018731,R3,Accounts payable,9205000.0000,library map
 GTLB,749,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-018731,R3,"Accounts receivable, net of allowance for doubtful accounts of $967 and $991 as of January 31, 2026 and January 31, 2025, respectively",304301000.0000,library map
-GTLB,749,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-018731,,,,note-sourced default tag (no face line)
+GTLB,749,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-018731,,,8065000.0000,note fact present in the filing (FSN value)
 GTLB,749,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-018731,R5,"Net loss per share attributable to Class A and Class B common stockholders, basic (in USD per share)",-0.3400,library map
 GTLB,749,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Additions to property and equipment,10827000.0000,library map
 GTLB,749,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-018731,R3,Cash and cash equivalents,229576000.0000,library map
 GTLB,749,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Net cash provided by financing activities,34811000.0000,library map
 GTLB,749,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-018731,R8,Net cash used in investing activities,-267286000.0000,library map
 GTLB,749,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Other cash paid for income taxes,4765000.0000,library map
-GTLB,749,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-018731,,,,note-sourced default tag (no face line)
+GTLB,749,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-018731,,,,no face line and no note fact
 GTLB,749,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Accounts payable,1606000.0000,library map
 GTLB,749,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Accounts receivable,35718000.0000,library map
 GTLB,749,cf_inventory_change,not_presented,,,,,,,,0001628280-26-018731,,,,no face line
@@ -21,7 +21,7 @@ GTLB,749,deposits,OUT,,,,,,,,0001628280-26-018731,,,,not a bank
 GTLB,749,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-018731,R8,Depreciation and amortization,3280000.0000,library map
 GTLB,749,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-018731,R5,"Net loss per share attributable to Class A and Class B common stockholders, diluted (in USD per share)",-0.3400,library map
 GTLB,749,dividends_paid,not_presented,,,,,,,,0001628280-26-018731,,,,no face line
-GTLB,749,dividends_per_share,not_presented,,,,,,,,0001628280-26-018731,,,,no face line
+GTLB,749,dividends_per_share,not_presented,,,,,,,,0001628280-26-018731,,,,no face line and no note fact
 GTLB,749,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-018731,R3,Goodwill,17379000.0000,library map
 GTLB,749,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-018731,R5,Gross profit,834481000.0000,library map
 GTLB,749,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,sec_api,0001628280-26-018731,R5,Loss before income taxes,-48065000.0000,library map

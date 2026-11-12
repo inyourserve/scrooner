@@ -27,7 +27,7 @@ CTVA,996,gross_profit,not_presented,,,,,,,,0001755672-26-000004,,,,no face line
 CTVA,996,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Income (loss) from continuing operations before income taxes,1688000000.0000,library map
 CTVA,996,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Provision for (benefit from) income taxes on continuing operations,484000000.0000,library map
 CTVA,996,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Interest Expense,180000000.0000,library map
-CTVA,996,interest_income,not_presented,,,,,,,,0001755672-26-000004,,,,no face line
+CTVA,996,interest_income,not_presented,,,,,,,,0001755672-26-000004,,,,no face line and no note fact
 CTVA,996,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001755672-26-000004,R5,Inventories,5667000000.0000,library map
 CTVA,996,loans_net,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
 CTVA,996,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Net Income (Loss) attributable to Company,1094000000.0000,library map
@@ -41,7 +41,7 @@ CTVA,996,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,
 CTVA,996,provision_for_credit_losses,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
 CTVA,996,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Research and Development Expense,1474000000.0000,library map
 CTVA,996,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Net Sales,17401000000.0000,library map
-CTVA,996,sbc,not_presented,,,,,,,,0001755672-26-000004,,,,no face line
+CTVA,996,sbc,not_presented,,,,,,,,0001755672-26-000004,,,,no face line and no note fact
 CTVA,996,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,"Selling, General and Administrative Expense",3492000000.0000,library map
 CTVA,996,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001755672-26-000004,R7,Repurchase of Common Stock,1071000000.0000,library map
 CTVA,996,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001755672-26-000004,R6,"Common Stock, Shares, Outstanding",672163000.0000,library map
@@ -50,5 +50,5 @@ CTVA,996,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001755672-26-000
 CTVA,996,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001755672-26-000004,R5,Short-term borrowings and finance lease obligations,894000000.0000,printed face components (duration sum; total_debt founder sum)
 CTVA,996,total_interest_income,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
 CTVA,996,total_liabilities,not_presented,,,,,,,,0001755672-26-000004,,,,no face line
-CTVA,996,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001755672-26-000004,,,,note-sourced default tag (no face line)
-CTVA,996,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001755672-26-000004,,,,note-sourced default tag (no face line)
+CTVA,996,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001755672-26-000004,,,680000000.0000,note fact present in the filing (FSN value)
+CTVA,996,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001755672-26-000004,,,681400000.0000,note fact present in the filing (FSN value)

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SOLS,731,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,Accounts payable,909000000.0000,library map
 SOLS,731,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,"Accounts receivable, less allowances",645000000.0000,library map
-SOLS,731,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002064953-26-000008,,,,note-sourced default tag (no face line)
+SOLS,731,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002064953-26-000008,,,4000000.0000,note fact present in the filing (FSN value)
 SOLS,731,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002064953-26-000008,R3,Basic earnings per share (in usd per share),1.4900,library map
 SOLS,731,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Capital expenditures paid,336000000.0000,library map
 SOLS,731,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,Cash and cash equivalents,534000000.0000,library map
 SOLS,731,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0002064953-26-000008,R8,Net cash used for financing activities,-235000000.0000,library map
 SOLS,731,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0002064953-26-000008,R8,Net cash used for investing activities,-330000000.0000,library map
 SOLS,731,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,"Income taxes paid, net of refunds",50000000.0000,library map
-SOLS,731,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002064953-26-000008,,,,note-sourced default tag (no face line)
+SOLS,731,cash_paid_for_interest,not_presented,,,,,,,,0002064953-26-000008,,,,no face line and no note fact
 SOLS,731,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Accounts payable,77000000.0000,library map
 SOLS,731,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Accounts receivable,51000000.0000,library map
 SOLS,731,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Inventories,146000000.0000,library map
@@ -21,13 +21,13 @@ SOLS,731,deposits,OUT,,,,,,,,0002064953-26-000008,,,,not a bank
 SOLS,731,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Depreciation,191000000.0000,printed face components (duration sum; total_debt founder sum)
 SOLS,731,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002064953-26-000008,R3,Diluted earnings per share (in usd per share),1.4900,library map
 SOLS,731,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0002064953-26-000008,R8,Dividend to parent,1500000000.0000,library map
-SOLS,731,dividends_per_share,not_presented,,,,,,,,0002064953-26-000008,,,,no face line
+SOLS,731,dividends_per_share,not_presented,,,,,,,,0002064953-26-000008,,,,no face line and no note fact
 SOLS,731,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,Goodwill,820000000.0000,library map
 SOLS,731,gross_profit,not_presented,,,,,,,,0002064953-26-000008,,,,no face line
 SOLS,731,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Income before taxes,647000000.0000,library map
 SOLS,731,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Income tax expense,362000000.0000,library map
 SOLS,731,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Interest and other financial charges,28000000.0000,combined line (library or label demote)
-SOLS,731,interest_income,not_presented,,,,,,,,0002064953-26-000008,,,,no face line
+SOLS,731,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Interest and other financial charges,28000000.0000,interest income only inside a net/other face line between OI and pretax
 SOLS,731,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,Inventories,715000000.0000,library map
 SOLS,731,loans_net,OUT,,,,,,,,0002064953-26-000008,,,,not a bank
 SOLS,731,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Net income attributable to Solstice Advanced Materials,237000000.0000,library map

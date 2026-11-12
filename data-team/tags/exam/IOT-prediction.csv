@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IOT,405,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-018167,R3,Accounts payable,47680000.0000,library map
 IOT,405,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-018167,R3,"Accounts receivable, net",321442000.0000,library map
-IOT,405,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-018167,,,,note-sourced default tag (no face line)
+IOT,405,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-018167,,,,no face line and no note fact
 IOT,405,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-018167,R5,"Net loss per share, basic (in dollars per share)",-0.0200,library map
 IOT,405,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,Purchases of property and equipment,28766000.0000,library map
 IOT,405,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-018167,R3,Cash and cash equivalents,318789000.0000,library map
 IOT,405,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,Net cash provided by financing activities,29928000.0000,library map
 IOT,405,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-018167,R7,Net cash used in investing activities,-189533000.0000,library map
 IOT,405,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,"Cash paid for income taxes, net of refunds",3272000.0000,library map
-IOT,405,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-018167,,,,note-sourced default tag (no face line)
+IOT,405,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-018167,,,,no face line and no note fact
 IOT,405,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,Accounts payable and other liabilities,97723000.0000,combined line (library or label demote)
 IOT,405,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,"Accounts receivable, net",144676000.0000,library map
 IOT,405,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,Inventories,19095000.0000,library map
@@ -21,13 +21,13 @@ IOT,405,deposits,OUT,,,,,,,,0001628280-26-018167,,,,not a bank
 IOT,405,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-018167,R7,Depreciation and amortization,24048000.0000,library map
 IOT,405,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-018167,R5,"Net loss per share, diluted (in dollars per share)",-0.0200,library map
 IOT,405,dividends_paid,not_presented,,,,,,,,0001628280-26-018167,,,,no face line
-IOT,405,dividends_per_share,not_presented,,,,,,,,0001628280-26-018167,,,,no face line
+IOT,405,dividends_per_share,not_presented,,,,,,,,0001628280-26-018167,,,,no face line and no note fact
 IOT,405,goodwill,not_presented,,,,,,,,0001628280-26-018167,,,,no face line
 IOT,405,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-018167,R5,Gross profit,1242086000.0000,library map
 IOT,405,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-018167,R5,Income (loss) before provision for income taxes,906000.0000,library map
 IOT,405,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-018167,R5,Provision for income taxes,10023000.0000,library map
 IOT,405,interest_expense,not_presented,,,,,,,,0001628280-26-018167,,,,no face line
-IOT,405,interest_income,not_presented,,,,,,,,0001628280-26-018167,,,,no face line
+IOT,405,interest_income,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-018167,R5,"Interest income and other income, net",53482000.0000,interest income only inside a net/other face line between OI and pretax
 IOT,405,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-018167,R3,Inventories,48194000.0000,library map
 IOT,405,loans_net,OUT,,,,,,,,0001628280-26-018167,,,,not a bank
 IOT,405,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-018167,R5,Net loss,-9117000.0000,library map

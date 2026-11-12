@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GKOS,709,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-061944,R2,Accounts payable,24624000.0000,library map
 GKOS,709,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-061944,R2,"Accounts receivable, net",108608000.0000,library map
-GKOS,709,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-061944,,,,note-sourced default tag (no face line)
+GKOS,709,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-061944,,,27128000.0000,note fact present in the filing (FSN value)
 GKOS,709,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-061944,R4,Basic net loss per share (in dollar per share),-3.2800,library map
 GKOS,709,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-061944,R7,Purchases of property and equipment,7666000.0000,library map
 GKOS,709,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-061944,R2,Cash and cash equivalents,90813000.0000,library map
@@ -21,13 +21,13 @@ GKOS,709,deposits,OUT,,,,,,,,0001193125-26-061944,,,,not a bank
 GKOS,709,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001193125-26-061944,R7,Depreciation,10965000.0000,printed face components (duration sum; total_debt founder sum)
 GKOS,709,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-061944,R4,Diluted net loss per share (in dollar per share),-3.2800,library map
 GKOS,709,dividends_paid,not_presented,,,,,,,,0001193125-26-061944,,,,no face line
-GKOS,709,dividends_per_share,not_presented,,,,,,,,0001193125-26-061944,,,,no face line
+GKOS,709,dividends_per_share,not_presented,,,,,,,,0001193125-26-061944,,,,no face line and no note fact
 GKOS,709,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-061944,R2,Goodwill,66710000.0000,library map
 GKOS,709,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-061944,R4,Gross profit,282761000.0000,library map
 GKOS,709,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001193125-26-061944,R4,Loss before taxes,-193042000.0000,library map
 GKOS,709,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-061944,R4,Income tax (benefit) provision,-5351000.0000,library map
 GKOS,709,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-061944,R4,Interest expense,4635000.0000,library map
-GKOS,709,interest_income,not_presented,,,,,,,,0001193125-26-061944,,,,no face line
+GKOS,709,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001193125-26-061944,R4,Interest income,10714000.0000,interest income only inside a net/other face line between OI and pretax
 GKOS,709,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-061944,R2,Inventory,63564000.0000,library map
 GKOS,709,loans_net,OUT,,,,,,,,0001193125-26-061944,,,,not a bank
 GKOS,709,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-061944,R4,Net loss,-187691000.0000,library map

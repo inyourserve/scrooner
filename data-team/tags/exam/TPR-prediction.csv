@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TPR,398,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001116132-26-000018,R3,Accounts payable,582300000.0000,library map
 TPR,398,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001116132-26-000018,R3,"Trade accounts receivable, less allowances for credit losses of $6.1 and $5.7, respectively",237100000.0000,library map
-TPR,398,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001116132-26-000018,,,,note-sourced default tag (no face line)
+TPR,398,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001116132-26-000018,,,3100000.0000,note fact present in the filing (FSN value)
 TPR,398,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001116132-26-000018,R5,Basic (USD per share),7.4900,library map
 TPR,398,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001116132-26-000018,R9,Purchases of property and equipment,166000000.0000,library map
 TPR,398,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001116132-26-000018,R3,Cash and cash equivalents,974700000.0000,library map
@@ -27,7 +27,7 @@ TPR,398,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001116132-26
 TPR,398,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001116132-26-000018,R5,Income (loss) before provision for income taxes,1860600000.0000,library map
 TPR,398,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001116132-26-000018,R5,Provision (benefit) for income taxes,332900000.0000,library map
 TPR,398,interest_expense,not_presented,,,,,,,,0001116132-26-000018,,,,no face line
-TPR,398,interest_income,not_presented,,,,,,,,0001116132-26-000018,,,,no face line
+TPR,398,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001116132-26-000018,R5,"Interest expense, net",-55200000.0000,interest income only inside a net/other face line between OI and pretax
 TPR,398,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001116132-26-000018,R3,Inventories,826200000.0000,library map
 TPR,398,loans_net,OUT,,,,,,,,0001116132-26-000018,,,,not a bank
 TPR,398,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001116132-26-000018,R5,Net income (loss),1527700000.0000,library map

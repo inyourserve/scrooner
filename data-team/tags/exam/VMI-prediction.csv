@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VMI,762,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,Accounts payable,359539000.0000,library map
 VMI,762,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,"Receivables, less allowance of $54,991 and $30,408, respectively",590127000.0000,library map
-VMI,762,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000102729-26-000007,,,,note-sourced default tag (no face line)
+VMI,762,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000102729-26-000007,,,11252000.0000,note fact present in the filing (FSN value)
 VMI,762,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000102729-26-000007,R2,Basic,16.9100,library map
 VMI,762,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000102729-26-000007,R6,"Purchases of property, plant, and equipment",145035000.0000,library map
 VMI,762,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,Cash and cash equivalents,187140000.0000,library map
@@ -50,5 +50,5 @@ VMI,762,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000102729-26-0000
 VMI,762,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,Current installments of long-term debt,513000.0000,printed face components (duration sum; total_debt founder sum)
 VMI,762,total_interest_income,OUT,,,,,,,,0000102729-26-000007,,,,not a bank
 VMI,762,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,Total liabilities,1727044000.0000,library map
-VMI,762,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000102729-26-000007,,,,note-sourced default tag (no face line)
-VMI,762,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000102729-26-000007,,,,note-sourced default tag (no face line)
+VMI,762,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000102729-26-000007,,,19795000.0000,note fact present in the filing (FSN value)
+VMI,762,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000102729-26-000007,,,19937000.0000,note fact present in the filing (FSN value)

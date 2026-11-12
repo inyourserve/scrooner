@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MHK,786,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0000851968-26-000011,R5,Accounts payable and accrued expenses,2310400000.0000,combined line (library or label demote)
 MHK,786,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000851968-26-000011,R5,"Receivables, net",1924100000.0000,combined line (library or label demote)
-MHK,786,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000851968-26-000011,,,,note-sourced default tag (no face line)
+MHK,786,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000851968-26-000011,,,28300000.0000,note fact present in the filing (FSN value)
 MHK,786,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000851968-26-000011,R3,"Basic earnings per share attributable to Mohawk Industries, Inc. (in usd per share)",5.9600,library map
 MHK,786,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000851968-26-000011,R8,"Additions to property, plant and equipment",440000000.0000,library map
 MHK,786,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000851968-26-000011,R5,Cash and cash equivalents,856100000.0000,library map
 MHK,786,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000851968-26-000011,R8,Net cash used in financing activities,-470000000.0000,library map
 MHK,786,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000851968-26-000011,R8,Net cash used in investing activities,-441900000.0000,library map
-MHK,786,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000851968-26-000011,,,,note-sourced default tag (no face line)
-MHK,786,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000851968-26-000011,,,,note-sourced default tag (no face line)
+MHK,786,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000851968-26-000011,,,158300000.0000,note fact present in the filing (FSN value)
+MHK,786,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000851968-26-000011,,,32900000.0000,note fact present in the filing (FSN value)
 MHK,786,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0000851968-26-000011,R8,Accounts payable and accrued expenses,71500000.0000,combined line (library or label demote)
 MHK,786,cf_ar_change,not_presented,,,,,,,,0000851968-26-000011,,,,no face line
 MHK,786,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000851968-26-000011,R8,Inventories,28300000.0000,library map
@@ -21,13 +21,13 @@ MHK,786,deposits,OUT,,,,,,,,0000851968-26-000011,,,,not a bank
 MHK,786,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000851968-26-000011,R8,Depreciation and amortization,652600000.0000,library map
 MHK,786,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000851968-26-000011,R3,"Diluted earnings per share attributable to Mohawk Industries, Inc. (in usd per share)",5.9300,library map
 MHK,786,dividends_paid,not_presented,,,,,,,,0000851968-26-000011,,,,no face line
-MHK,786,dividends_per_share,not_presented,,,,,,,,0000851968-26-000011,,,,no face line
+MHK,786,dividends_per_share,not_presented,,,,,,,,0000851968-26-000011,,,,no face line and no note fact
 MHK,786,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000851968-26-000011,R5,Goodwill,1210300000.0000,library map
 MHK,786,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000851968-26-000011,R3,Gross profit,2574700000.0000,library map
 MHK,786,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000851968-26-000011,R3,Earnings before income taxes,468700000.0000,library map
 MHK,786,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000851968-26-000011,R3,Income tax expense,98800000.0000,library map
 MHK,786,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000851968-26-000011,R3,Interest expense,17800000.0000,library map
-MHK,786,interest_income,not_presented,,,,,,,,0000851968-26-000011,,,,no face line
+MHK,786,interest_income,not_presented,,,,,,,,0000851968-26-000011,,,,no face line and no note fact
 MHK,786,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000851968-26-000011,R5,Inventories,2661700000.0000,library map
 MHK,786,loans_net,OUT,,,,,,,,0000851968-26-000011,,,,not a bank
 MHK,786,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000851968-26-000011,R3,"Net earnings attributable to Mohawk Industries, Inc.",369900000.0000,library map

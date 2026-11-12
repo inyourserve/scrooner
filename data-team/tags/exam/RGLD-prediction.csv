@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RGLD,449,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000085535-26-000008,R3,Accounts payable,10060000.0000,library map
 RGLD,449,accounts_receivable,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
-RGLD,449,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000085535-26-000008,,,,note-sourced default tag (no face line)
+RGLD,449,amortization_of_intangibles,not_presented,,,,,,,,0000085535-26-000008,,,,no face line and no note fact
 RGLD,449,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000085535-26-000008,R5,Basic earnings per share (in dollars per share),6.7000,library map
 RGLD,449,capex,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
 RGLD,449,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000085535-26-000008,R3,Cash and equivalents,233719000.0000,library map
 RGLD,449,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000085535-26-000008,R7,Net cash provided by (used in) financing activities,751934000.0000,library map
 RGLD,449,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000085535-26-000008,R7,Net cash used in investing activities,-1418559000.0000,library map
-RGLD,449,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000085535-26-000008,,,,note-sourced default tag (no face line)
-RGLD,449,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000085535-26-000008,,,,note-sourced default tag (no face line)
+RGLD,449,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000085535-26-000008,,,95348000.0000,note fact present in the filing (FSN value)
+RGLD,449,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000085535-26-000008,,,19484000.0000,note fact present in the filing (FSN value)
 RGLD,449,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000085535-26-000008,R7,Accounts payable,-36836000.0000,library map
 RGLD,449,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000085535-26-000008,R7,Royalty receivables,18124000.0000,library map
 RGLD,449,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000085535-26-000008,R7,Stream inventory,11740000.0000,library map
@@ -27,7 +27,7 @@ RGLD,449,gross_profit,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
 RGLD,449,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,Income before income taxes,573866000.0000,library map
 RGLD,449,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,Income tax expense (Note 14),102290000.0000,library map
 RGLD,449,interest_expense,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
-RGLD,449,interest_income,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
+RGLD,449,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,Interest and other income,14411000.0000,interest income only inside a net/other face line between OI and pretax
 RGLD,449,inventory,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
 RGLD,449,loans_net,OUT,,,,,,,,0000085535-26-000008,,,,not a bank
 RGLD,449,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,Net income attributable to Royal Gold common stockholders,466281000.0000,library map

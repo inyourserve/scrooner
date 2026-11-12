@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WTRG,631,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000078128-26-000050,R2,Accounts payable,276080000.0000,library map
 WTRG,631,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000078128-26-000050,R2,"Accounts receivable, net",217191000.0000,library map
-WTRG,631,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000078128-26-000050,,,,note-sourced default tag (no face line)
+WTRG,631,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0000078128-26-000050,,,14281000.0000,note fact present in the filing (FSN value)
 WTRG,631,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000078128-26-000050,R4,Basic,2.2000,library map
 WTRG,631,capex,not_presented,,,,,,,,0000078128-26-000050,,,,no face line
 WTRG,631,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,Y,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,sec_api,0000078128-26-000050,R2,Cash and cash equivalents,34778000.0000,library map

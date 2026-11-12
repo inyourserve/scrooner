@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UTHR,415,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Accounts payable and accrued expenses,488000000.0000,combined line (library or label demote)
 UTHR,415,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Accounts receivable, no allowance for 2025 and 2024",350200000.0000,library map
-UTHR,415,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001082554-26-000006,,,,note-sourced default tag (no face line)
+UTHR,415,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001082554-26-000006,,,900000.0000,note fact present in the filing (FSN value)
 UTHR,415,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Basic (in dollars per share),30.1300,library map
 UTHR,415,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,"Purchases of property, plant, and equipment",520500000.0000,library map
 UTHR,415,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Cash and cash equivalents,1557100000.0000,library map
@@ -21,7 +21,7 @@ UTHR,415,deposits,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
 UTHR,415,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Depreciation and amortization,85600000.0000,library map
 UTHR,415,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Diluted (in dollars per share),27.8600,library map
 UTHR,415,dividends_paid,not_presented,,,,,,,,0001082554-26-000006,,,,no face line
-UTHR,415,dividends_per_share,not_presented,,,,,,,,0001082554-26-000006,,,,no face line
+UTHR,415,dividends_per_share,not_presented,,,,,,,,0001082554-26-000006,,,,no face line and no note fact
 UTHR,415,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Goodwill and other intangible assets, net",116500000.0000,combined line (library or label demote)
 UTHR,415,gross_profit,not_presented,,,,,,,,0001082554-26-000006,,,,no face line
 UTHR,415,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Income before income taxes,1713900000.0000,library map

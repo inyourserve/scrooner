@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ES,999,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-008461,R3,Accounts Payable,1859692000.0000,library map
 ES,999,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-008461,R3,"Receivables, Net (net of allowance for uncollectible accounts)",1847094000.0000,library map
-ES,999,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008461,,,,note-sourced default tag (no face line)
+ES,999,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001628280-26-008461,,,835909000.0000,note fact present in the filing (FSN value)
 ES,999,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008461,R5,Basic Earnings/(Loss) Per Common Share (in dollars per share),4.5600,library map
 ES,999,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-008461,R9,"Investments in Property, Plant and Equipment",4158669000.0000,library map
 ES,999,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-3,N,,sec_api,0001628280-26-008461,R3,Cash,135351000.0000,library map
 ES,999,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-008461,R9,Net Cash Flows Provided by Financing Activities,311528000.0000,library map
 ES,999,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-008461,R9,Net Cash Flows Used in Investing Activities,-4306163000.0000,library map
-ES,999,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008461,,,,note-sourced default tag (no face line)
-ES,999,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008461,,,,note-sourced default tag (no face line)
+ES,999,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0001628280-26-008461,,,-48400000.0000,note fact present in the filing (FSN value)
+ES,999,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-008461,,,1182600000.0000,note fact present in the filing (FSN value)
 ES,999,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-008461,R9,Accounts Payable,84192000.0000,library map
 ES,999,cf_ar_change,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,cf_inventory_change,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
@@ -27,21 +27,21 @@ ES,999,gross_profit,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,income_before_tax,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-008461,R5,Income Tax Expense,140286000.0000,library map
 ES,999,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-008461,R5,Interest Expense,1243266000.0000,library map
-ES,999,interest_income,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
+ES,999,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-008461,,,125500000.0000,note fact present in the filing (FSN value)
 ES,999,inventory,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,loans_net,OUT,,,,,,,,0001628280-26-008461,,,,not a bank
 ES,999,net_income,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,net_interest_income,OUT,,,,,,,,0001628280-26-008461,,,,not a bank
 ES,999,noninterest_expense,OUT,,,,,,,,0001628280-26-008461,,,,not a bank
 ES,999,noninterest_income,OUT,,,,,,,,0001628280-26-008461,,,,not a bank
-ES,999,operating_expenses,not_presented,,,,,,,,0001628280-26-008461,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ES,999,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-008461,R5,Total Operating Expenses,10558655000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 ES,999,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008461,R5,Operating Income,2988589000.0000,library map
 ES,999,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-008461,R5,"Other Income, Net",378854000.0000,combined line (library or label demote)
 ES,999,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-008461,R3,"Property, Plant and Equipment, Net",45930959000.0000,library map
 ES,999,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008461,,,,not a bank
 ES,999,research_and_development,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001628280-26-008461,R5,Operating Revenues,13547244000.0000,library map
-ES,999,sbc,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
+ES,999,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001628280-26-008461,,,33600000.0000,note fact present in the filing (FSN value)
 ES,999,sga_expense,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,share_buybacks,not_presented,,,,,,,,0001628280-26-008461,,,,no face line
 ES,999,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,32767,N,,sec_api,0001628280-26-008461,R7,Beginning balance (in shares),375416880.0000,library map

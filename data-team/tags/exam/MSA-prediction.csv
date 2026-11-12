@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MSA,864,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,Accounts payable,110775000.0000,library map
 MSA,864,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,"Trade receivables, less allowance for credit loss of $10,286 and $8,047",306452000.0000,library map
-MSA,864,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000066570-26-000005,,,,note-sourced default tag (no face line)
+MSA,864,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000066570-26-000005,,,20658000.0000,note fact present in the filing (FSN value)
 MSA,864,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000066570-26-000005,R3,Basic (in dollars per share),7.1100,library map
 MSA,864,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000066570-26-000005,R7,Capital expenditures,68438000.0000,library map
 MSA,864,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,Cash and cash equivalents,165067000.0000,library map
@@ -27,7 +27,7 @@ MSA,864,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000066570-26
 MSA,864,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,Income before income taxes,366398000.0000,library map
 MSA,864,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,Provision for income taxes (Note 11),87474000.0000,library map
 MSA,864,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000066570-26-000005,R3,Interest expense,31799000.0000,library map
-MSA,864,interest_income,not_presented,,,,,,,,0000066570-26-000005,,,,no face line
+MSA,864,interest_income,not_presented,,,,,,,,0000066570-26-000005,,,,no face line and no note fact
 MSA,864,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,Inventories (Note 5),343035000.0000,library map
 MSA,864,loans_net,OUT,,,,,,,,0000066570-26-000005,,,,not a bank
 MSA,864,net_income,mapped,us-gaap:NetIncomeLoss,UN,+,-3,N,,sec_api,0000066570-26-000005,R8,Net income,278924000.0000,library map
@@ -50,5 +50,5 @@ MSA,864,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000066570-26-0000
 MSA,864,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,Notes payable and current portion of long-term debt (Note 13),8225000.0000,printed face components (duration sum; total_debt founder sum)
 MSA,864,total_interest_income,OUT,,,,,,,,0000066570-26-000005,,,,not a bank
 MSA,864,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,Total liabilities,1187362000.0000,library map
-MSA,864,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000066570-26-000005,,,,note-sourced default tag (no face line)
-MSA,864,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000066570-26-000005,,,,note-sourced default tag (no face line)
+MSA,864,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000066570-26-000005,,,39216000.0000,note fact present in the filing (FSN value)
+MSA,864,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000066570-26-000005,,,39346000.0000,note fact present in the filing (FSN value)

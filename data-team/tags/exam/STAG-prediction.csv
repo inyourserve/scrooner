@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 STAG,868,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001479094-26-000009,R2,"Accounts payable, accrued expenses and other liabilities",135397000.0000,combined line (library or label demote)
 STAG,868,accounts_receivable,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
-STAG,868,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001479094-26-000009,,,,note-sourced default tag (no face line)
+STAG,868,amortization_of_intangibles,not_presented,,,,,,,,0001479094-26-000009,,,,no face line and no note fact
 STAG,868,basic_eps,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,Y,NoncashOrPartNoncashAcquisitionFixedAssetsAcquired1,sec_api,0001479094-26-000009,R6,Acquisitions of land and buildings and improvements,204517000.0000,combined line (library or label demote)
 STAG,868,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001479094-26-000009,R2,Cash and cash equivalents,14910000.0000,library map
 STAG,868,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001479094-26-000009,R6,Net cash provided by (used in) financing activities,97404000.0000,library map
 STAG,868,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001479094-26-000009,R6,Net cash used in investing activities,-497302000.0000,library map
-STAG,868,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001479094-26-000009,,,,note-sourced default tag (no face line)
+STAG,868,cash_paid_for_income_taxes,not_presented,,,,,,,,0001479094-26-000009,,,,no face line and no note fact
 STAG,868,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001479094-26-000009,R6,"Cash paid for interest, net of amounts capitalized of $3,612, $2,268, and $2,600 for 2025, 2024, and 2023, respectively",127684000.0000,library map
 STAG,868,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001479094-26-000009,R6,"Accounts payable, accrued expenses and other liabilities",4648000.0000,combined line (library or label demote)
 STAG,868,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001479094-26-000009,R6,Tenant accounts receivable,-1156000.0000,library map
@@ -27,7 +27,7 @@ STAG,868,gross_profit,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,income_before_tax,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,income_tax_expense,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001479094-26-000009,R3,Interest expense,132160000.0000,library map
-STAG,868,interest_income,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
+STAG,868,interest_income,not_presented,,,,,,,,0001479094-26-000009,,,,no face line and no note fact
 STAG,868,inventory,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,loans_net,OUT,,,,,,,,0001479094-26-000009,,,,not a bank
 STAG,868,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001479094-26-000009,R3,"Net income attributable to STAG Industrial, Inc.",273519000.0000,library map

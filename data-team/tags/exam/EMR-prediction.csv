@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EMR,134,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000032604-25-000087,R6,Accounts payable,1384000000.0000,library map
 EMR,134,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000032604-25-000087,R6,"Receivables, less allowances of $121 in 2024 and $123 in 2025",3101000000.0000,library map
-EMR,134,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000032604-25-000087,,,,note-sourced default tag (no face line)
+EMR,134,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000032604-25-000087,,,1174000000.0000,note fact present in the filing (FSN value)
 EMR,134,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000032604-25-000087,R3,Basic earnings per common share (in dollars per share),4.0600,library map
 EMR,134,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000032604-25-000087,R10,Capital expenditures,431000000.0000,library map
 EMR,134,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000032604-25-000087,R6,Cash and equivalents,1544000000.0000,combined line (library or label demote)
 EMR,134,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000032604-25-000087,R10,Cash used in financing activities,-4510000000.0000,library map
 EMR,134,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0000032604-25-000087,R10,Cash from continuing operations,-593000000.0000,library map
-EMR,134,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000032604-25-000087,,,,note-sourced default tag (no face line)
-EMR,134,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000032604-25-000087,,,,note-sourced default tag (no face line)
+EMR,134,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000032604-25-000087,,,1440000000.0000,note fact present in the filing (FSN value)
+EMR,134,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000032604-25-000087,,,221000000.0000,note fact present in the filing (FSN value)
 EMR,134,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000032604-25-000087,R10,Accounts payable,34000000.0000,library map
 EMR,134,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000032604-25-000087,R10,Receivables,171000000.0000,library map
 EMR,134,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000032604-25-000087,R10,Inventories,1000000.0000,library map
@@ -27,7 +27,7 @@ EMR,134,gross_profit,not_presented,,,,,,,,0000032604-25-000087,,,,no face line
 EMR,134,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000032604-25-000087,R3,Earnings from continuing operations before income taxes,2934000000.0000,library map
 EMR,134,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000032604-25-000087,R3,Income taxes,696000000.0000,library map
 EMR,134,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000032604-25-000087,R3,"Interest expense, net of interest income of: 2023, $227; 2024, $148; 2025, $150",-237000000.0000,combined line (library or label demote)
-EMR,134,interest_income,not_presented,,,,,,,,0000032604-25-000087,,,,no face line
+EMR,134,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000032604-25-000087,,,150000000.0000,note fact present in the filing (FSN value)
 EMR,134,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000032604-25-000087,R6,Inventories,2213000000.0000,library map
 EMR,134,loans_net,OUT,,,,,,,,0000032604-25-000087,,,,not a bank
 EMR,134,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000032604-25-000087,R3,Net income (loss) attributable to shareholders,2293000000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 O,225,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000726728-26-000011,R3,Accounts payable and accrued expenses,1060969000.0000,combined line (library or label demote)
 O,225,accounts_receivable,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
-O,225,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000726728-26-000011,,,,note-sourced default tag (no face line)
+O,225,amortization_of_intangibles,not_presented,,,,,,,,0000726728-26-000011,,,,no face line and no note fact
 O,225,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000726728-26-000011,R5,"Net income, basic (in dollars per share)",1.1700,library map
 O,225,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,"Improvements to real estate, including leasing costs",131800000.0000,combined line (library or label demote)
 O,225,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000726728-26-000011,R3,Cash and cash equivalents,434842000.0000,library map
 O,225,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,Net cash provided by (used in) financing activities,1677795000.0000,library map
 O,225,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000726728-26-000011,R7,Net cash used in investing activities,-5663173000.0000,library map
-O,225,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000726728-26-000011,,,,note-sourced default tag (no face line)
-O,225,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000726728-26-000011,,,,note-sourced default tag (no face line)
+O,225,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000726728-26-000011,,,49785000.0000,note fact present in the filing (FSN value)
+O,225,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000726728-26-000011,,,1072484000.0000,note fact present in the filing (FSN value)
 O,225,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,"Accounts payable, accrued expenses and other liabilities",193640000.0000,combined line (library or label demote)
 O,225,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,Accounts receivable and other assets,115792000.0000,combined line (library or label demote)
 O,225,cf_inventory_change,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
@@ -21,13 +21,13 @@ O,225,deposits,OUT,,,,,,,,0000726728-26-000011,,,,not a bank
 O,225,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,Depreciation and amortization,2524200000.0000,library map
 O,225,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000726728-26-000011,R5,"Net income, diluted (in dollars per share)",1.1700,library map
 O,225,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000726728-26-000011,R7,Cash distributions to common stockholders,2920895000.0000,library map
-O,225,dividends_per_share,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
+O,225,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0000726728-26-000011,,,3.2170,note fact present in the filing (FSN value)
 O,225,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000726728-26-000011,R3,Goodwill,4932199000.0000,library map
 O,225,gross_profit,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
 O,225,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000726728-26-000011,R5,Income before income taxes,1155129000.0000,library map
 O,225,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000726728-26-000011,R5,Income taxes,85346000.0000,library map
 O,225,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0000726728-26-000011,R5,Interest,1134879000.0000,library map
-O,225,interest_income,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
+O,225,interest_income,not_presented,,,,,,,,0000726728-26-000011,,,,no face line and no note fact
 O,225,inventory,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
 O,225,loans_net,OUT,,,,,,,,0000726728-26-000011,,,,not a bank
 O,225,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000726728-26-000011,R5,Net income attributable to the Company,1058590000.0000,library map

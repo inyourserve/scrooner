@@ -21,13 +21,13 @@ TDG,194,deposits,OUT,,,,,,,,0001260221-25-000081,,,,not a bank
 TDG,194,depreciation_and_amortization,not_presented,,,,,,,,0001260221-25-000081,,,,single component only
 TDG,194,diluted_eps,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
 TDG,194,dividends_paid,combined,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001260221-25-000081,R8,Dividends and dividend equivalent payments,9629000000.0000,combined line (library or label demote)
-TDG,194,dividends_per_share,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
+TDG,194,dividends_per_share,not_presented,,,,,,,,0001260221-25-000081,,,,no face line and no note fact
 TDG,194,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001260221-25-000081,R3,GOODWILL,10612000000.0000,library map
 TDG,194,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,GROSS PROFIT,5311000000.0000,library map
 TDG,194,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,INCOME FROM CONTINUING OPERATIONS BEFORE INCOME TAXES,2629000000.0000,library map
 TDG,194,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,INCOME TAX PROVISION,555000000.0000,library map
 TDG,194,interest_expense,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
-TDG,194,interest_income,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
+TDG,194,interest_income,not_presented,,,,,,,,0001260221-25-000081,,,,no face line and no note fact
 TDG,194,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001260221-25-000081,R3,InventoriesNet,2095000000.0000,library map
 TDG,194,loans_net,OUT,,,,,,,,0001260221-25-000081,,,,not a bank
 TDG,194,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,NET INCOME ATTRIBUTABLE TO TD GROUP,2074000000.0000,library map
@@ -41,7 +41,7 @@ TDG,194,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 TDG,194,provision_for_credit_losses,OUT,,,,,,,,0001260221-25-000081,,,,not a bank
 TDG,194,research_and_development,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
 TDG,194,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,NET SALES,8831000000.0000,library map
-TDG,194,sbc,not_presented,,,,,,,,0001260221-25-000081,,,,no face line
+TDG,194,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,+,,,,sec_api,0001260221-25-000081,,,152000000.0000,note fact present in the filing (FSN value)
 TDG,194,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001260221-25-000081,R5,SELLING AND ADMINISTRATIVE EXPENSES,945000000.0000,library map
 TDG,194,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001260221-25-000081,R8,Repurchases of common stock,500000000.0000,library map
 TDG,194,shares_outstanding,not_presented,,,,,,,,0001260221-25-000081,,,,no face line

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TGTX,777,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Accounts payable and accrued expenses,107508000.0000,combined line (library or label demote)
 TGTX,777,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,Y,ReceivablesNetCurrent,sec_api,0001437749-26-006133,R2,"Accounts receivable, net",305628000.0000,library map
-TGTX,777,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001437749-26-006133,,,,note-sourced default tag (no face line)
+TGTX,777,amortization_of_intangibles,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
 TGTX,777,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Basic (in dollars per share),3.1000,library map
 TGTX,777,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,"Purchases of Property, Plant and Equipment",214000.0000,library map
 TGTX,777,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Cash and cash equivalents,79148000.0000,library map
@@ -21,13 +21,13 @@ TGTX,777,deposits,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
 TGTX,777,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,Depreciation,sec_api,0001437749-26-006133,R7,Depreciation and amortization,59000.0000,library map
 TGTX,777,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Diluted (in dollars per share),2.7700,library map
 TGTX,777,dividends_paid,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,dividends_per_share,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
+TGTX,777,dividends_per_share,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
 TGTX,777,goodwill,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
 TGTX,777,gross_profit,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
 TGTX,777,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-4,N,,sec_api,0001437749-26-006133,R4,Net income before taxes,107390000.0000,library map
 TGTX,777,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001437749-26-006133,R4,Income tax benefit (expense),-339789000.0000,library map
 TGTX,777,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001437749-26-006133,R4,Interest expense,26727000.0000,library map
-TGTX,777,interest_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
+TGTX,777,interest_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
 TGTX,777,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Inventory,125586000.0000,library map
 TGTX,777,loans_net,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
 TGTX,777,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Net income,447179000.0000,library map

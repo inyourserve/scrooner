@@ -21,13 +21,13 @@ ACGL,311,deposits,OUT,,,,,,,,0000947484-26-000017,,,,not a bank
 ACGL,311,depreciation_and_amortization,not_presented,,,,,,,,0000947484-26-000017,,,,single component only
 ACGL,311,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000947484-26-000017,R5,Diluted (per share),11.6000,library map
 ACGL,311,dividends_paid,combined,us-gaap:PaymentsOfCapitalDistribution,CF,+,-6,N,,sec_api,0000947484-26-000017,R8,Common dividends paid,7000000.0000,combined line (library or label demote)
-ACGL,311,dividends_per_share,not_presented,,,,,,,,0000947484-26-000017,,,,no face line
+ACGL,311,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000947484-26-000017,,,5.0000,note fact present in the filing (FSN value)
 ACGL,311,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,Y,IntangibleAssetsLiabilitiesandGoodwillNet,sec_api,0000947484-26-000017,R3,Goodwill and intangible assets,1222000000.0000,combined line (library or label demote)
 ACGL,311,gross_profit,OUT,,,,,,,,0000947484-26-000017,,,,sector template (bank/insurer)
 ACGL,311,income_before_tax,not_presented,,,,,,,,0000947484-26-000017,,,,no face line
 ACGL,311,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000947484-26-000017,R5,Income tax expense (benefit),760000000.0000,library map
 ACGL,311,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000947484-26-000017,R5,Interest expense,148000000.0000,library map
-ACGL,311,interest_income,not_presented,,,,,,,,0000947484-26-000017,,,,no face line
+ACGL,311,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0000947484-26-000017,,,1717000000.0000,note fact present in the filing (FSN value)
 ACGL,311,inventory,OUT,,,,,,,,0000947484-26-000017,,,,sector template (bank/insurer)
 ACGL,311,loans_net,OUT,,,,,,,,0000947484-26-000017,,,,not a bank
 ACGL,311,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000947484-26-000017,R5,Net income available to Arch,4399000000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CPB,941,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000016732-26-000026,R6,Accounts payable,1377000000.0000,library map
 CPB,941,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000016732-26-000026,R6,"Accounts receivable, net",578000000.0000,combined line (library or label demote)
-CPB,941,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000016732-26-000026,,,,note-sourced default tag (no face line)
+CPB,941,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000016732-26-000026,,,41000000.0000,note fact present in the filing (FSN value)
 CPB,941,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000016732-26-000026,R4,Net earnings attributable to The Campbell's Company common shareholders - Basic,1.3400,library map
 CPB,941,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000016732-26-000026,R7,Purchases of plant assets,361000000.0000,library map
 CPB,941,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000016732-26-000026,R6,Cash and cash equivalents,394000000.0000,library map
 CPB,941,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000016732-26-000026,R7,Net cash provided by (used in) financing activities,-419000000.0000,library map
 CPB,941,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000016732-26-000026,R7,Net cash used in investing activities,-357000000.0000,library map
-CPB,941,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000016732-26-000026,,,,note-sourced default tag (no face line)
-CPB,941,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000016732-26-000026,,,,note-sourced default tag (no face line)
+CPB,941,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000016732-26-000026,,,93000000.0000,note fact present in the filing (FSN value)
+CPB,941,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000016732-26-000026,,,320000000.0000,note fact present in the filing (FSN value)
 CPB,941,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0000016732-26-000026,R7,Accounts payable and accrued liabilities,-90000000.0000,combined line (library or label demote)
 CPB,941,cf_ar_change,not_presented,,,,,,,,0000016732-26-000026,,,,no face line
 CPB,941,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000016732-26-000026,R7,Inventories,89000000.0000,library map

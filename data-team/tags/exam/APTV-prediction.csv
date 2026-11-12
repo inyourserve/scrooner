@@ -7,8 +7,8 @@ APTV,737,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_a
 APTV,737,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001521332-26-000009,R5,Cash and cash equivalents,1851000000.0000,library map
 APTV,737,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001521332-26-000009,R7,Net cash used in financing activities,-1442000000.0000,library map
 APTV,737,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001521332-26-000009,R7,Net cash used in investing activities,-498000000.0000,library map
-APTV,737,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001521332-26-000009,,,,note-sourced default tag (no face line)
-APTV,737,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001521332-26-000009,,,,note-sourced default tag (no face line)
+APTV,737,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0001521332-26-000009,,,255000000.0000,note fact present in the filing (FSN value)
+APTV,737,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001521332-26-000009,,,363000000.0000,note fact present in the filing (FSN value)
 APTV,737,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001521332-26-000009,R7,Accounts payable,251000000.0000,library map
 APTV,737,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001521332-26-000009,R7,"Accounts receivable, net",216000000.0000,library map
 APTV,737,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001521332-26-000009,R7,Inventories,241000000.0000,library map
@@ -21,13 +21,13 @@ APTV,737,deposits,OUT,,,,,,,,0001521332-26-000009,,,,not a bank
 APTV,737,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-6,N,,sec_api,0001521332-26-000009,R7,Depreciation,783000000.0000,printed face components (duration sum; total_debt founder sum)
 APTV,737,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001521332-26-000009,R3,Diluted net income per share attributable to ordinary shareholders,0.7500,library map
 APTV,737,dividends_paid,not_presented,,,,,,,,0001521332-26-000009,,,,no face line
-APTV,737,dividends_per_share,not_presented,,,,,,,,0001521332-26-000009,,,,no face line
+APTV,737,dividends_per_share,not_presented,,,,,,,,0001521332-26-000009,,,,no face line and no note fact
 APTV,737,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001521332-26-000009,R5,Goodwill,4596000000.0000,library map
 APTV,737,gross_profit,not_presented,,,,,,,,0001521332-26-000009,,,,no face line
 APTV,737,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,Income before income taxes and equity loss,919000000.0000,library map
 APTV,737,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,Income tax (expense) benefit,700000000.0000,library map
 APTV,737,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,Interest expense,361000000.0000,library map
-APTV,737,interest_income,not_presented,,,,,,,,0001521332-26-000009,,,,no face line
+APTV,737,interest_income,not_presented,,,,,,,,0001521332-26-000009,,,,no face line and no note fact
 APTV,737,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001521332-26-000009,R5,Inventories,2561000000.0000,library map
 APTV,737,loans_net,OUT,,,,,,,,0001521332-26-000009,,,,not a bank
 APTV,737,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,Net income attributable to Aptiv,165000000.0000,library map

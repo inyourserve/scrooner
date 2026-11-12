@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TTC,723,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000737758-25-000115,R6,Accounts payable,367600000.0000,library map
 TTC,723,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000737758-25-000115,R6,"Total receivables, net",378200000.0000,combined line (library or label demote)
-TTC,723,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000737758-25-000115,,,,note-sourced default tag (no face line)
+TTC,723,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000737758-25-000115,,,30700000.0000,note fact present in the filing (FSN value)
 TTC,723,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000737758-25-000115,R3,Basic net earnings per share of common stock (in dollars per share),3.1800,library map
 TTC,723,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000737758-25-000115,R8,"Purchases of property, plant, and equipment",83700000.0000,library map
 TTC,723,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0000737758-25-000115,R6,Cash and cash equivalents,341000000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ TTC,723,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000737758-25
 TTC,723,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,Earnings before income taxes,377600000.0000,library map
 TTC,723,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,Provision for income taxes,61500000.0000,library map
 TTC,723,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000737758-25-000115,R3,Interest expense,59100000.0000,library map
-TTC,723,interest_income,not_presented,,,,,,,,0000737758-25-000115,,,,no face line
+TTC,723,interest_income,not_presented,,,,,,,,0000737758-25-000115,,,,no face line and no note fact
 TTC,723,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000737758-25-000115,R6,"Inventories, net",920800000.0000,library map
 TTC,723,loans_net,OUT,,,,,,,,0000737758-25-000115,,,,not a bank
 TTC,723,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,Net earnings,316100000.0000,library map

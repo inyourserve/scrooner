@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AIZ,556,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0001267238-26-000010,R3,"Accounts payable and other liabilities (including allowances for credit losses of $0.9 and $1.4 at December 31, 2025 and 2024)",3766300000.0000,combined line (library or label demote)
 AIZ,556,accounts_receivable,not_presented,,,,,,,,0001267238-26-000010,,,,no face line
-AIZ,556,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001267238-26-000010,,,,note-sourced default tag (no face line)
+AIZ,556,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001267238-26-000010,,,108900000.0000,note fact present in the filing (FSN value)
 AIZ,556,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001267238-26-000010,R5,Basic (in dollars per share),17.1400,library map
 AIZ,556,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001267238-26-000010,R11,Property and equipment and other,235500000.0000,library map
 AIZ,556,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001267238-26-000010,R3,Cash and cash equivalents,1834100000.0000,library map
 AIZ,556,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001267238-26-000010,R11,Net cash used in financing activities,-364200000.0000,library map
 AIZ,556,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001267238-26-000010,R11,Net cash used in investing activities,-1457800000.0000,library map
-AIZ,556,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001267238-26-000010,,,,note-sourced default tag (no face line)
-AIZ,556,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001267238-26-000010,,,,note-sourced default tag (no face line)
+AIZ,556,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001267238-26-000010,,,271600000.0000,note fact present in the filing (FSN value)
+AIZ,556,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001267238-26-000010,,,107200000.0000,note fact present in the filing (FSN value)
 AIZ,556,cf_ap_change,not_presented,,,,,,,,0001267238-26-000010,,,,no face line
 AIZ,556,cf_ar_change,not_presented,,,,,,,,0001267238-26-000010,,,,no face line
 AIZ,556,cf_inventory_change,OUT,,,,,,,,0001267238-26-000010,,,,sector template (bank/insurer)
@@ -27,7 +27,7 @@ AIZ,556,gross_profit,OUT,,,,,,,,0001267238-26-000010,,,,sector template (bank/in
 AIZ,556,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001267238-26-000010,R5,Income before income tax expense,1087400000.0000,library map
 AIZ,556,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001267238-26-000010,R5,Income tax expense,214700000.0000,library map
 AIZ,556,interest_expense,not_presented,,,,,,,,0001267238-26-000010,,,,single component only
-AIZ,556,interest_income,not_presented,,,,,,,,0001267238-26-000010,,,,no face line
+AIZ,556,interest_income,not_presented,,,,,,,,0001267238-26-000010,,,,no face line and no note fact
 AIZ,556,inventory,OUT,,,,,,,,0001267238-26-000010,,,,sector template (bank/insurer)
 AIZ,556,loans_net,OUT,,,,,,,,0001267238-26-000010,,,,not a bank
 AIZ,556,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,0001267238-26-000010,R5,Net income,872700000.0000,library map

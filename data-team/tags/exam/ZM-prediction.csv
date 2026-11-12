@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ZM,355,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001585521-26-000030,R3,Accounts payable,6268000.0000,library map
 ZM,355,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001585521-26-000030,R3,"Accounts receivable, net of allowances of $18,348 and $22,078 as of January 31, 2026 and 2025, respectively",497339000.0000,library map
-ZM,355,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001585521-26-000030,,,,note-sourced default tag (no face line)
+ZM,355,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001585521-26-000030,,,13900000.0000,note fact present in the filing (FSN value)
 ZM,355,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001585521-26-000030,R5,Basic (in dollars per share),6.3200,library map
 ZM,355,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001585521-26-000030,R9,Purchases of property and equipment,64961000.0000,library map
 ZM,355,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001585521-26-000030,R3,Cash and cash equivalents,1272877000.0000,library map
 ZM,355,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001585521-26-000030,R9,Net cash (used in) provided by financing activities,-1805358000.0000,library map
 ZM,355,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001585521-26-000030,R9,Net cash used in investing activities,-278898000.0000,library map
-ZM,355,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001585521-26-000030,,,,note-sourced default tag (no face line)
-ZM,355,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001585521-26-000030,,,,note-sourced default tag (no face line)
+ZM,355,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001585521-26-000030,,,421605000.0000,note fact present in the filing (FSN value)
+ZM,355,cash_paid_for_interest,not_presented,,,,,,,,0001585521-26-000030,,,,no face line and no note fact
 ZM,355,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001585521-26-000030,R9,Accounts payable,-613000.0000,library map
 ZM,355,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001585521-26-000030,R9,Accounts receivable,-2823000.0000,library map
 ZM,355,cf_inventory_change,not_presented,,,,,,,,0001585521-26-000030,,,,no face line
@@ -21,13 +21,13 @@ ZM,355,deposits,OUT,,,,,,,,0001585521-26-000030,,,,not a bank
 ZM,355,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001585521-26-000030,R9,Depreciation and amortization,132831000.0000,library map
 ZM,355,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001585521-26-000030,R5,Diluted (in dollars per share),6.1800,library map
 ZM,355,dividends_paid,not_presented,,,,,,,,0001585521-26-000030,,,,no face line
-ZM,355,dividends_per_share,not_presented,,,,,,,,0001585521-26-000030,,,,no face line
+ZM,355,dividends_per_share,not_presented,,,,,,,,0001585521-26-000030,,,,no face line and no note fact
 ZM,355,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001585521-26-000030,R3,Goodwill,400392000.0000,library map
 ZM,355,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001585521-26-000030,R5,Gross profit,3749733000.0000,library map
 ZM,355,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001585521-26-000030,R5,Income before provision for income taxes,2422285000.0000,library map
 ZM,355,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001585521-26-000030,R5,Provision for income taxes,522137000.0000,library map
 ZM,355,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001585521-26-000030,R5,"Other income, net",328830000.0000,combined line (library or label demote)
-ZM,355,interest_income,not_presented,,,,,,,,0001585521-26-000030,,,,no face line
+ZM,355,interest_income,not_presented,,,,,,,,0001585521-26-000030,,,,no face line and no note fact
 ZM,355,inventory,not_presented,,,,,,,,0001585521-26-000030,,,,no face line
 ZM,355,loans_net,OUT,,,,,,,,0001585521-26-000030,,,,not a bank
 ZM,355,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001585521-26-000030,R5,Net income,1900148000.0000,library map

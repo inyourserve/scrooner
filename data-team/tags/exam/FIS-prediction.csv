@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FIS,470,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001136893-26-000013,R3,"Accounts payable, accrued and other liabilities",2097000000.0000,combined line (library or label demote)
 FIS,470,accounts_receivable,not_presented,,,,,,,,0001136893-26-000013,,,,no face line
-FIS,470,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001136893-26-000013,,,,note-sourced default tag (no face line)
+FIS,470,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001136893-26-000013,,,609000000.0000,note fact present in the filing (FSN value)
 FIS,470,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001136893-26-000013,R5,Basic earnings (loss) per common share attributable to FIS (in dollars per share),0.7300,library map
 FIS,470,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001136893-26-000013,R9,Additions to property and equipment,154000000.0000,library map
 FIS,470,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001136893-26-000013,R3,Cash and cash equivalents,599000000.0000,library map

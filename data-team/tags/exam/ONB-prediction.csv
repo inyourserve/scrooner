@@ -7,8 +7,8 @@ ONB,713,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 ONB,713,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000707179-26-000010,R3,Total cash and cash equivalents,1826177000.0000,library map
 ONB,713,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000707179-26-000010,R9,Net cash flows provided by (used in) financing activities,1751543000.0000,library map
 ONB,713,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000707179-26-000010,R9,Net cash flows provided by (used in) investing activities,-1834806000.0000,library map
-ONB,713,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000707179-26-000010,,,,note-sourced default tag (no face line)
-ONB,713,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000707179-26-000010,,,,note-sourced default tag (no face line)
+ONB,713,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000707179-26-000010,,,154293000.0000,note fact present in the filing (FSN value)
+ONB,713,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000707179-26-000010,,,1239737000.0000,note fact present in the filing (FSN value)
 ONB,713,cf_ap_change,not_presented,,,,,,,,0000707179-26-000010,,,,no face line
 ONB,713,cf_ar_change,not_presented,,,,,,,,0000707179-26-000010,,,,no face line
 ONB,713,cf_inventory_change,OUT,,,,,,,,0000707179-26-000010,,,,sector template (bank/insurer)

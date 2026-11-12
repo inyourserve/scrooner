@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TOST,466,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001650164-26-000057,R3,Accounts payable,47000000.0000,library map
 TOST,466,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001650164-26-000057,R3,"Accounts receivable, net",127000000.0000,library map
-TOST,466,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001650164-26-000057,,,,note-sourced default tag (no face line)
+TOST,466,amortization_of_intangibles,not_presented,,,,,,,,0001650164-26-000057,,,,no face line and no note fact
 TOST,466,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001650164-26-000057,R5,Basic (in dollars per share),0.5900,library map
 TOST,466,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001650164-26-000057,R9,Capital expenditures,53000000.0000,library map
 TOST,466,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001650164-26-000057,R3,Cash and cash equivalents,1353000000.0000,library map
 TOST,466,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001650164-26-000057,R9,Net cash provided by financing activities,7000000.0000,library map
 TOST,466,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001650164-26-000057,R9,Net cash (used in) investing activities,-172000000.0000,library map
-TOST,466,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001650164-26-000057,,,,note-sourced default tag (no face line)
-TOST,466,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001650164-26-000057,,,,note-sourced default tag (no face line)
+TOST,466,cash_paid_for_income_taxes,not_presented,,,,,,,,0001650164-26-000057,,,,no face line and no note fact
+TOST,466,cash_paid_for_interest,not_presented,,,,,,,,0001650164-26-000057,,,,no face line and no note fact
 TOST,466,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001650164-26-000057,R9,Accounts payable,11000000.0000,library map
 TOST,466,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001650164-26-000057,R9,"Accounts receivable, net",33000000.0000,library map
 TOST,466,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001650164-26-000057,R9,"Inventories, net",-4000000.0000,library map
@@ -21,13 +21,13 @@ TOST,466,deposits,OUT,,,,,,,,0001650164-26-000057,,,,not a bank
 TOST,466,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001650164-26-000057,R9,Depreciation and amortization,64000000.0000,library map
 TOST,466,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001650164-26-000057,R5,Diluted (in dollars per share),0.5600,library map
 TOST,466,dividends_paid,not_presented,,,,,,,,0001650164-26-000057,,,,no face line
-TOST,466,dividends_per_share,not_presented,,,,,,,,0001650164-26-000057,,,,no face line
+TOST,466,dividends_per_share,not_presented,,,,,,,,0001650164-26-000057,,,,no face line and no note fact
 TOST,466,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001650164-26-000057,R3,Goodwill,113000000.0000,library map
 TOST,466,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001650164-26-000057,R5,Gross profit,1593000000.0000,library map
 TOST,466,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001650164-26-000057,R5,Income (loss) before income taxes,346000000.0000,library map
 TOST,466,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001650164-26-000057,R5,Income tax (expense) benefit,4000000.0000,library map
 TOST,466,interest_expense,not_presented,,,,,,,,0001650164-26-000057,,,,no face line
-TOST,466,interest_income,not_presented,,,,,,,,0001650164-26-000057,,,,no face line
+TOST,466,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0001650164-26-000057,R5,"Interest income, net",51000000.0000,interest income only inside a net/other face line between OI and pretax
 TOST,466,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001650164-26-000057,R3,"Inventories, net",114000000.0000,library map
 TOST,466,loans_net,OUT,,,,,,,,0001650164-26-000057,,,,not a bank
 TOST,466,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001650164-26-000057,R5,Net income (loss),342000000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PNW,604,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000764622-26-000011,R6,Accounts payable,680203000.0000,library map
 PNW,604,accounts_receivable,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
-PNW,604,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
+PNW,604,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000764622-26-000011,,,157000000.0000,note fact present in the filing (FSN value)
 PNW,604,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000764622-26-000011,R3,Net income attributable to common shareholders  basic (in dollars per share),5.1500,library map
 PNW,604,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Capital expenditures,2624618000.0000,library map
 PNW,604,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000764622-26-000011,R6,Cash and cash equivalents,6604000.0000,library map
 PNW,604,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Net cash provided by financing activities,576345000.0000,library map
 PNW,604,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000764622-26-000011,R8,Net cash used for investing activities,-2378674000.0000,library map
-PNW,604,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
-PNW,604,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
+PNW,604,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000764622-26-000011,,,22754000.0000,note fact present in the filing (FSN value)
+PNW,604,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000764622-26-000011,,,388540000.0000,note fact present in the filing (FSN value)
 PNW,604,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Accounts payable,171138000.0000,library map
 PNW,604,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Customer and other receivables,51275000.0000,combined line (library or label demote)
 PNW,604,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,"Materials, supplies and fossil fuel",63711000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ PNW,604,gross_profit,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,income_before_tax,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000764622-26-000011,R3,Income Taxes (Note 5),106726000.0000,library map
 PNW,604,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,CostsAndExpenses,sec_api,0000764622-26-000011,R3,Total,421968000.0000,library map
-PNW,604,interest_income,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
+PNW,604,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000764622-26-000011,,,18037000.0000,note fact present in the filing (FSN value)
 PNW,604,inventory,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,loans_net,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,net_income,not_presented,,,,,,,,0000764622-26-000011,,,,no face line

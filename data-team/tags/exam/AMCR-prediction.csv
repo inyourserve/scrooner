@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AMCR,450,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,Trade payables,4021000000.0000,library map
 AMCR,450,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,"Trade receivables, net of allowance for credit losses of $48 and $34, respectively",3639000000.0000,library map
-AMCR,450,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001748790-26-000022,,,,note-sourced default tag (no face line)
+AMCR,450,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001748790-26-000022,,,577000000.0000,note fact present in the filing (FSN value)
 AMCR,450,basic_eps,not_presented,,,,,,,,0001748790-26-000022,,,,no face line
 AMCR,450,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001748790-26-000022,R8,"Purchase of property, plant, and equipment, and other intangible assets",922000000.0000,library map
 AMCR,450,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,Cash and cash equivalents,1115000000.0000,library map
 AMCR,450,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001748790-26-000022,R8,Net cash (used in)/provided by financing activities,-1343000000.0000,library map
 AMCR,450,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001748790-26-000022,R8,Net cash used in investing activities,-524000000.0000,library map
-AMCR,450,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001748790-26-000022,,,,note-sourced default tag (no face line)
-AMCR,450,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001748790-26-000022,,,,note-sourced default tag (no face line)
+AMCR,450,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001748790-26-000022,,,451000000.0000,note fact present in the filing (FSN value)
+AMCR,450,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001748790-26-000022,,,611000000.0000,note fact present in the filing (FSN value)
 AMCR,450,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001748790-26-000022,R8,Trade payables,570000000.0000,library map
 AMCR,450,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001748790-26-000022,R8,Trade receivables,323000000.0000,library map
 AMCR,450,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001748790-26-000022,R8,Inventories,329000000.0000,library map
@@ -50,5 +50,5 @@ AMCR,450,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001748790-26-000
 AMCR,450,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,Current portion of long-term debt,15000000.0000,printed face components (duration sum; total_debt founder sum)
 AMCR,450,total_interest_income,OUT,,,,,,,,0001748790-26-000022,,,,not a bank
 AMCR,450,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,Total liabilities,25294000000.0000,library map
-AMCR,450,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001748790-26-000022,,,,note-sourced default tag (no face line)
-AMCR,450,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001748790-26-000022,,,,note-sourced default tag (no face line)
+AMCR,450,weighted_basic_shares,not_presented,,,,,,,,0001748790-26-000022,,,,no face line and no note fact
+AMCR,450,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001748790-26-000022,,,463800000.0000,note fact present in the filing (FSN value)

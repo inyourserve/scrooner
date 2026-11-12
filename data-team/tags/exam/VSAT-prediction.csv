@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VSAT,790,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Accounts payable,288154000.0000,library map
 VSAT,790,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Accounts receivable, net",753430000.0000,library map
-VSAT,790,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-248290,,,,note-sourced default tag (no face line)
+VSAT,790,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-248290,,,315950000.0000,note fact present in the filing (FSN value)
 VSAT,790,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map
 VSAT,790,capex,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
 VSAT,790,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Cash and cash equivalents,1746835000.0000,library map
@@ -21,13 +21,13 @@ VSAT,790,deposits,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
 VSAT,790,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Depreciation,1038515000.0000,printed face components (duration sum; total_debt founder sum)
 VSAT,790,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map
 VSAT,790,dividends_paid,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,dividends_per_share,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
+VSAT,790,dividends_per_share,not_presented,,,,,,,,0001193125-26-248290,,,,no face line and no note fact
 VSAT,790,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Goodwill,1625013000.0000,library map
 VSAT,790,gross_profit,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
 VSAT,790,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from continuing operations before income taxes,104801000.0000,library map
 VSAT,790,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,(Provision for) benefit from income taxes from continuing operations,116223000.0000,library map
 VSAT,790,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Interest expense,360250000.0000,library map
-VSAT,790,interest_income,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
+VSAT,790,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Interest income,205849000.0000,interest income only inside a net/other face line between OI and pretax
 VSAT,790,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Inventories,281220000.0000,library map
 VSAT,790,loans_net,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
 VSAT,790,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-248290,R4,"Net income (loss) attributable to Viasat, Inc.",-34086000.0000,library map

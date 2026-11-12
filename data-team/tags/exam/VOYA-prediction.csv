@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VOYA,765,accounts_payable,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
 VOYA,765,accounts_receivable,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
-VOYA,765,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001535929-26-000043,,,,note-sourced default tag (no face line)
+VOYA,765,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001535929-26-000043,,,103000000.0000,note fact present in the filing (FSN value)
 VOYA,765,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001535929-26-000043,R5,Basic,6.4000,library map
 VOYA,765,capex,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
 VOYA,765,cash_and_equivalents,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
@@ -21,13 +21,13 @@ VOYA,765,deposits,OUT,,,,,,,,0001535929-26-000043,,,,not a bank
 VOYA,765,depreciation_and_amortization,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
 VOYA,765,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001535929-26-000043,R5,Diluted,6.2900,library map
 VOYA,765,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001535929-26-000043,R8,Dividends paid on common stock,178000000.0000,library map
-VOYA,765,dividends_per_share,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
+VOYA,765,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001535929-26-000043,,,1.8200,note fact present in the filing (FSN value)
 VOYA,765,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001535929-26-000043,R3,Goodwill,804000000.0000,library map
 VOYA,765,gross_profit,OUT,,,,,,,,0001535929-26-000043,,,,sector template (bank/insurer)
 VOYA,765,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001535929-26-000043,R5,Income before income taxes,837000000.0000,library map
 VOYA,765,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001535929-26-000043,R5,Income tax expense (benefit),104000000.0000,library map
 VOYA,765,interest_expense,combined,us-gaap:InterestExpenseOther,IS,+,-6,Y,InterestExpenseBeneficialInterestsIssuedByConsolidatedVariableInterestEntities,sec_api,0001535929-26-000043,R5,Interest expense,117000000.0000,combined line (library or label demote)
-VOYA,765,interest_income,not_presented,,,,,,,,0001535929-26-000043,,,,no face line
+VOYA,765,interest_income,not_presented,,,,,,,,0001535929-26-000043,,,,no face line and no note fact
 VOYA,765,inventory,OUT,,,,,,,,0001535929-26-000043,,,,sector template (bank/insurer)
 VOYA,765,loans_net,OUT,,,,,,,,0001535929-26-000043,,,,not a bank
 VOYA,765,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001535929-26-000043,R5,"Net income available to Voya Financial, Inc.",654000000.0000,library map
@@ -50,5 +50,5 @@ VOYA,765,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001535929-26-000
 VOYA,765,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001535929-26-000043,R3,Short-term debt,586000000.0000,printed face components (duration sum; total_debt founder sum)
 VOYA,765,total_interest_income,OUT,,,,,,,,0001535929-26-000043,,,,not a bank
 VOYA,765,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001535929-26-000043,R3,Total liabilities,171820000000.0000,library map
-VOYA,765,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001535929-26-000043,,,,note-sourced default tag (no face line)
-VOYA,765,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001535929-26-000043,,,,note-sourced default tag (no face line)
+VOYA,765,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001535929-26-000043,,,95800000.0000,note fact present in the filing (FSN value)
+VOYA,765,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001535929-26-000043,,,97400000.0000,note fact present in the filing (FSN value)

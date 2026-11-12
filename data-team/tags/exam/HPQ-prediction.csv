@@ -27,7 +27,7 @@ HPQ,356,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000047217-25
 HPQ,356,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000047217-25-000071,R3,Earnings before taxes,2668000000.0000,library map
 HPQ,356,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000047217-25-000071,R3,(Provision for) benefit from taxes,139000000.0000,library map
 HPQ,356,interest_expense,not_presented,,,,,,,,0000047217-25-000071,,,,no face line
-HPQ,356,interest_income,not_presented,,,,,,,,0000047217-25-000071,,,,no face line
+HPQ,356,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000047217-25-000071,,,89000000.0000,note fact present in the filing (FSN value)
 HPQ,356,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000047217-25-000071,R5,Inventory,8512000000.0000,library map
 HPQ,356,loans_net,OUT,,,,,,,,0000047217-25-000071,,,,not a bank
 HPQ,356,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000047217-25-000071,R3,Net earnings,2529000000.0000,library map

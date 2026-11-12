@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ECG,975,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0002015845-26-000010,R6,Accounts payable,226264000.0000,library map
 ECG,975,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0002015845-26-000010,R6,"Receivables, net of allowance for credit losses of $5,282 and $7,097, respectively",769828000.0000,combined line (library or label demote)
-ECG,975,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002015845-26-000010,,,,note-sourced default tag (no face line)
+ECG,975,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002015845-26-000010,,,116000.0000,note fact present in the filing (FSN value)
 ECG,975,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002015845-26-000010,R3,Earnings per share - basic (in dollars per share),3.9500,library map
 ECG,975,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0002015845-26-000010,R9,Capital expenditures,66836000.0000,library map
 ECG,975,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0002015845-26-000010,R6,"Cash, cash equivalents and restricted cash",170500000.0000,combined line (library or label demote)
@@ -21,7 +21,7 @@ ECG,975,deposits,OUT,,,,,,,,0002015845-26-000010,,,,not a bank
 ECG,975,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0002015845-26-000010,R9,Depreciation,28684000.0000,printed face components (duration sum; total_debt founder sum)
 ECG,975,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002015845-26-000010,R3,Earnings per share - diluted (in dollars per share),3.9500,library map
 ECG,975,dividends_paid,not_presented,,,,,,,,0002015845-26-000010,,,,no face line
-ECG,975,dividends_per_share,not_presented,,,,,,,,0002015845-26-000010,,,,no face line
+ECG,975,dividends_per_share,not_presented,,,,,,,,0002015845-26-000010,,,,no face line and no note fact
 ECG,975,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002015845-26-000010,R6,Goodwill,143224000.0000,library map
 ECG,975,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0002015845-26-000010,R3,Gross profit,454088000.0000,library map
 ECG,975,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0002015845-26-000010,R3,Income before income taxes and income from equity method investments,257811000.0000,library map

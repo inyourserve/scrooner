@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FERG,258,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0002011641-25-000027,R6,Accounts payable,3577000000.0000,library map
 FERG,258,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0002011641-25-000027,R6,"Accounts receivable, less allowances of $24 and $21, respectively",3964000000.0000,library map
-FERG,258,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002011641-25-000027,,,,note-sourced default tag (no face line)
+FERG,258,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002011641-25-000027,,,186000000.0000,note fact present in the filing (FSN value)
 FERG,258,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002011641-25-000027,R3,"Earnings per share, Basic (in usd per share)",9.3300,library map
 FERG,258,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0002011641-25-000027,R10,Capital expenditures,305000000.0000,library map
 FERG,258,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002011641-25-000027,R6,Cash and cash equivalents,674000000.0000,library map
@@ -27,7 +27,7 @@ FERG,258,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0002011641-2
 FERG,258,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,Income before income taxes,2423000000.0000,library map
 FERG,258,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,Provision for income taxes,567000000.0000,library map
 FERG,258,interest_expense,not_presented,,,,,,,,0002011641-25-000027,,,,no face line
-FERG,258,interest_income,not_presented,,,,,,,,0002011641-25-000027,,,,no face line
+FERG,258,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-6,N,,sec_api,0002011641-25-000027,R3,"Interest expense, net",-190000000.0000,interest income only inside a net/other face line between OI and pretax
 FERG,258,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002011641-25-000027,R6,Inventories,4492000000.0000,library map
 FERG,258,loans_net,OUT,,,,,,,,0002011641-25-000027,,,,not a bank
 FERG,258,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,Net income,1856000000.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EBAY,224,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001065088-26-000027,R3,Accounts payable,242000000.0000,library map
 EBAY,224,accounts_receivable,not_presented,,,,,,,,0001065088-26-000027,,,,no face line
-EBAY,224,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001065088-26-000027,,,,note-sourced default tag (no face line)
+EBAY,224,amortization_of_intangibles,not_presented,,,,,,,,0001065088-26-000027,,,,no face line and no note fact
 EBAY,224,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001065088-26-000027,R5,Net income per share - basic (in usd per share),4.4300,library map
 EBAY,224,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001065088-26-000027,R8,Purchases of property and equipment,525000000.0000,library map
 EBAY,224,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001065088-26-000027,R3,Cash and cash equivalents,1867000000.0000,library map
 EBAY,224,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001065088-26-000027,R8,Net cash used in financing activities,-3661000000.0000,library map
 EBAY,224,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001065088-26-000027,R8,Net cash provided by investing activities,1420000000.0000,library map
-EBAY,224,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001065088-26-000027,,,,note-sourced default tag (no face line)
+EBAY,224,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001065088-26-000027,,,1457000000.0000,note fact present in the filing (FSN value)
 EBAY,224,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001065088-26-000027,R8,Interest,256000000.0000,library map
 EBAY,224,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001065088-26-000027,R8,Accounts payable,-4000000.0000,library map
 EBAY,224,cf_ar_change,not_presented,,,,,,,,0001065088-26-000027,,,,no face line
@@ -21,13 +21,13 @@ EBAY,224,deposits,OUT,,,,,,,,0001065088-26-000027,,,,not a bank
 EBAY,224,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001065088-26-000027,R8,Depreciation and amortization,407000000.0000,library map
 EBAY,224,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001065088-26-000027,R5,Net income per share - diluted (in usd per share),4.3400,library map
 EBAY,224,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001065088-26-000027,R8,Payments for dividends,531000000.0000,library map
-EBAY,224,dividends_per_share,not_presented,,,,,,,,0001065088-26-000027,,,,no face line
+EBAY,224,dividends_per_share,not_presented,,,,,,,,0001065088-26-000027,,,,no face line and no note fact
 EBAY,224,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001065088-26-000027,R3,Goodwill,4467000000.0000,library map
 EBAY,224,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Gross profit,7931000000.0000,library map
 EBAY,224,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Income from continuing operations before income taxes,2307000000.0000,library map
 EBAY,224,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Income tax provision,311000000.0000,library map
 EBAY,224,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Interest expense,246000000.0000,library map
-EBAY,224,interest_income,not_presented,,,,,,,,0001065088-26-000027,,,,no face line
+EBAY,224,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001065088-26-000027,,,265000000.0000,note fact present in the filing (FSN value)
 EBAY,224,inventory,not_presented,,,,,,,,0001065088-26-000027,,,,no face line
 EBAY,224,loans_net,OUT,,,,,,,,0001065088-26-000027,,,,not a bank
 EBAY,224,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Net income,2031000000.0000,library map

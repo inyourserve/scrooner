@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CBSH,798,accounts_payable,not_presented,,,,,,,,0000022356-26-000069,,,,no face line
 CBSH,798,accounts_receivable,not_presented,,,,,,,,0000022356-26-000069,,,,no face line
-CBSH,798,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000022356-26-000069,,,,note-sourced default tag (no face line)
+CBSH,798,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000022356-26-000069,,,1300000.0000,note fact present in the filing (FSN value)
 CBSH,798,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000022356-26-000069,R5,Net income per common share - basic (in dollars per share),4.0400,library map
 CBSH,798,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000022356-26-000069,R9,"Purchases of land, buildings and equipment",52748000.0000,library map
 CBSH,798,cash_and_equivalents,not_presented,,,,,,,,0000022356-26-000069,,,,no face line
 CBSH,798,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000022356-26-000069,R9,Net cash provided by (used in) financing activities,-11043000.0000,library map
 CBSH,798,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000022356-26-000069,R9,Net cash provided by (used in) investing activities,-462370000.0000,library map
-CBSH,798,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000022356-26-000069,,,,note-sourced default tag (no face line)
+CBSH,798,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000022356-26-000069,,,162912000.0000,note fact present in the filing (FSN value)
 CBSH,798,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000022356-26-000069,R9,Interest paid on deposits and borrowings,363184000.0000,library map
 CBSH,798,cf_ap_change,not_presented,,,,,,,,0000022356-26-000069,,,,no face line
 CBSH,798,cf_ar_change,not_presented,,,,,,,,0000022356-26-000069,,,,no face line
@@ -50,5 +50,5 @@ CBSH,798,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000022356-26-000
 CBSH,798,total_debt,combined,us-gaap:OtherBorrowings,BS,+,-3,N,,sec_api,0000022356-26-000069,R3,Other borrowings,12798000.0000,combined line (library or label demote)
 CBSH,798,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0000022356-26-000069,R5,Total interest income,1483723000.0000,bank template tag
 CBSH,798,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000022356-26-000069,R3,Total liabilities,29100317000.0000,library map
-CBSH,798,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000022356-26-000069,,,,note-sourced default tag (no face line)
-CBSH,798,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000022356-26-000069,,,,note-sourced default tag (no face line)
+CBSH,798,weighted_basic_shares,not_presented,,,,,,,,0000022356-26-000069,,,,no face line and no note fact
+CBSH,798,weighted_diluted_shares,not_presented,,,,,,,,0000022356-26-000069,,,,no face line and no note fact

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LNTH,885,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,Accounts payable,42906000.0000,library map
 LNTH,885,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,"Accounts receivable, net",358640000.0000,library map
-LNTH,885,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-073498,,,,note-sourced default tag (no face line)
+LNTH,885,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-073498,,,47100000.0000,note fact present in the filing (FSN value)
 LNTH,885,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-073498,R4,Basic (in dollars per share),3.4600,library map
 LNTH,885,capex,not_presented,,,,,,,,0001193125-26-073498,,,,single component only
 LNTH,885,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,Cash and cash equivalents,359121000.0000,library map
@@ -21,13 +21,13 @@ LNTH,885,deposits,OUT,,,,,,,,0001193125-26-073498,,,,not a bank
 LNTH,885,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001193125-26-073498,R7,"Depreciation, amortization and accretion",70098000.0000,combined line (library or label demote)
 LNTH,885,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-073498,R4,Diluted (in dollars per share),3.4100,library map
 LNTH,885,dividends_paid,not_presented,,,,,,,,0001193125-26-073498,,,,no face line
-LNTH,885,dividends_per_share,not_presented,,,,,,,,0001193125-26-073498,,,,no face line
+LNTH,885,dividends_per_share,not_presented,,,,,,,,0001193125-26-073498,,,,no face line and no note fact
 LNTH,885,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,Goodwill,239517000.0000,library map
 LNTH,885,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Gross profit,941952000.0000,library map
 LNTH,885,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Income before income taxes,313792000.0000,library map
 LNTH,885,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Income tax expense,80233000.0000,library map
 LNTH,885,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-073498,R4,Interest expense,19749000.0000,library map
-LNTH,885,interest_income,not_presented,,,,,,,,0001193125-26-073498,,,,no face line
+LNTH,885,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001193125-26-073498,,,23391000.0000,note fact present in the filing (FSN value)
 LNTH,885,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,"Inventory, net",64674000.0000,library map
 LNTH,885,loans_net,OUT,,,,,,,,0001193125-26-073498,,,,not a bank
 LNTH,885,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Net income,233559000.0000,library map

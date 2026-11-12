@@ -34,14 +34,14 @@ KNX,675,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001492691-26
 KNX,675,net_interest_income,OUT,,,,,,,,0001492691-26-000016,,,,not a bank
 KNX,675,noninterest_expense,OUT,,,,,,,,0001492691-26-000016,,,,not a bank
 KNX,675,noninterest_income,OUT,,,,,,,,0001492691-26-000016,,,,not a bank
-KNX,675,operating_expenses,not_presented,,,,,,,,0001492691-26-000016,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+KNX,675,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001492691-26-000016,R3,Total operating expenses,7253627000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 KNX,675,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001492691-26-000016,R3,Operating income,216062000.0000,library map
 KNX,675,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001492691-26-000016,R3,"Other income, net",30145000.0000,library map
 KNX,675,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001492691-26-000016,R2,"Property and equipment, net",4717725000.0000,library map
 KNX,675,provision_for_credit_losses,OUT,,,,,,,,0001492691-26-000016,,,,not a bank
 KNX,675,research_and_development,not_presented,,,,,,,,0001492691-26-000016,,,,no face line
 KNX,675,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001492691-26-000016,R3,Total revenue,7469689000.0000,library map
-KNX,675,sbc,not_presented,,,,,,,,0001492691-26-000016,,,,no face line
+KNX,675,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001492691-26-000016,,,28562000.0000,note fact present in the filing (FSN value)
 KNX,675,sga_expense,not_presented,,,,,,,,0001492691-26-000016,,,,no face line
 KNX,675,share_buybacks,not_presented,,,,,,,,0001492691-26-000016,,,,no face line
 KNX,675,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001492691-26-000016,R2,"Beginning balance, shares",162339000.0000,library map

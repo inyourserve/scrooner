@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EXC,261,accounts_payable,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001109357-26-000018,R19,"Customer accounts receivable, net",3297000000.0000,library map
-EXC,261,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001109357-26-000018,,,,note-sourced default tag (no face line)
+EXC,261,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001109357-26-000018,,,2000000.0000,note fact present in the filing (FSN value)
 EXC,261,basic_eps,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001109357-26-000018,R11,Capital expenditures,8529000000.0000,library map
 EXC,261,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001109357-26-000018,R19,Cash and cash equivalents,626000000.0000,library map
 EXC,261,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001109357-26-000018,R11,Net cash flows provided by (used in) financing activities,2533000000.0000,library map
 EXC,261,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001109357-26-000018,R11,Net cash flows used in investing activities,-8525000000.0000,library map
-EXC,261,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001109357-26-000018,,,,note-sourced default tag (no face line)
-EXC,261,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001109357-26-000018,,,,note-sourced default tag (no face line)
+EXC,261,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001109357-26-000018,,,12000000.0000,note fact present in the filing (FSN value)
+EXC,261,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001109357-26-000018,,,2021000000.0000,note fact present in the filing (FSN value)
 EXC,261,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001109357-26-000018,R11,Accounts payable and accrued expenses,260000000.0000,combined line (library or label demote)
 EXC,261,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001109357-26-000018,R11,Accounts receivable,1691000000.0000,library map
 EXC,261,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001109357-26-000018,R11,Inventories,22000000.0000,library map
@@ -27,21 +27,21 @@ EXC,261,gross_profit,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,Income (loss) before income taxes,3291000000.0000,library map
 EXC,261,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,Income taxes,523000000.0000,library map
 EXC,261,interest_expense,combined,us-gaap:InterestExpenseBorrowings,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,"Interest expense, net",2102000000.0000,combined line (library or label demote)
-EXC,261,interest_income,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
+EXC,261,interest_income,combined,us-gaap:InterestExpenseBorrowings,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,"Interest expense, net",2102000000.0000,interest income only inside a net/other face line between OI and pretax
 EXC,261,inventory,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,loans_net,OUT,,,,,,,,0001109357-26-000018,,,,not a bank
 EXC,261,net_income,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,net_interest_income,OUT,,,,,,,,0001109357-26-000018,,,,not a bank
 EXC,261,noninterest_expense,OUT,,,,,,,,0001109357-26-000018,,,,not a bank
 EXC,261,noninterest_income,OUT,,,,,,,,0001109357-26-000018,,,,not a bank
-EXC,261,operating_expenses,not_presented,,,,,,,,0001109357-26-000018,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+EXC,261,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,Total operating expenses,19113000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 EXC,261,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,Operating income (loss),5148000000.0000,library map
 EXC,261,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,"Other, net",270000000.0000,library map
 EXC,261,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001109357-26-000018,R19,"Property, plant and equipment, net",84318000000.0000,library map
 EXC,261,provision_for_credit_losses,OUT,,,,,,,,0001109357-26-000018,,,,not a bank
 EXC,261,research_and_development,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001109357-26-000018,R3,Total operating revenues,24258000000.0000,library map
-EXC,261,sbc,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
+EXC,261,sbc,not_presented,,,,,,,,0001109357-26-000018,,,,no face line and no note fact
 EXC,261,sga_expense,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,share_buybacks,not_presented,,,,,,,,0001109357-26-000018,,,,no face line
 EXC,261,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001109357-26-000018,R20,"Common stock, shares, outstanding (in shares)",1023000000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UDR,651,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0000074208-26-000013,R2,"Accounts payable, accrued expenses, and other liabilities",142102000.0000,combined line (library or label demote)
 UDR,651,accounts_receivable,not_presented,,,,,,,,0000074208-26-000013,,,,no face line
-UDR,651,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000074208-26-000013,,,,note-sourced default tag (no face line)
+UDR,651,amortization_of_intangibles,not_presented,,,,,,,,0000074208-26-000013,,,,no face line and no note fact
 UDR,651,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000074208-26-000013,R4,Income/(loss) per weighted average common share - basic,1.1300,library map
 UDR,651,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0000074208-26-000013,R8,Capital expenditures and other major improvements - real estate assets,252857000.0000,combined line (library or label demote)
 UDR,651,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000074208-26-000013,R2,Cash and cash equivalents,1222000.0000,library map
@@ -27,7 +27,7 @@ UDR,651,gross_profit,not_presented,,,,,,,,0000074208-26-000013,,,,no face line
 UDR,651,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,Income/(loss) before income taxes,404550000.0000,library map
 UDR,651,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,"Tax (provision)/benefit, net",835000.0000,library map
 UDR,651,interest_expense,not_presented,,,,,,,,0000074208-26-000013,,,,single component only
-UDR,651,interest_income,not_presented,,,,,,,,0000074208-26-000013,,,,no face line
+UDR,651,interest_income,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,"Interest income and other income/(expense), net",19175000.0000,interest income only inside a net/other face line between OI and pretax
 UDR,651,inventory,not_presented,,,,,,,,0000074208-26-000013,,,,no face line
 UDR,651,loans_net,OUT,,,,,,,,0000074208-26-000013,,,,not a bank
 UDR,651,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,"Net income/(loss) attributable to UDR, Inc.",377704000.0000,library map

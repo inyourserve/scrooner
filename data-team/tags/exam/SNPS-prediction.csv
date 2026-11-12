@@ -21,13 +21,13 @@ SNPS,140,deposits,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Amortization and depreciation,660430000.0000,library map
 SNPS,140,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000883241-25-000028,R5,Diluted net income per share (in USD per share),8.0400,library map
 SNPS,140,dividends_paid,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
-SNPS,140,dividends_per_share,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
+SNPS,140,dividends_per_share,not_presented,,,,,,,,0000883241-25-000028,,,,no face line and no note fact
 SNPS,140,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Goodwill,26899215000.0000,library map
 SNPS,140,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Gross margin,5430629000.0000,library map
 SNPS,140,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Income before income taxes,1393142000.0000,library map
 SNPS,140,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Provision for income taxes,55991000.0000,library map
 SNPS,140,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Interest expense,446729000.0000,library map
-SNPS,140,interest_income,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
+SNPS,140,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0000883241-25-000028,,,277684000.0000,note fact present in the filing (FSN value)
 SNPS,140,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Inventories,365190000.0000,library map
 SNPS,140,loans_net,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Net income attributed to Synopsys,1332220000.0000,library map

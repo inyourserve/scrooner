@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TSN,527,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,Accounts payable,2601000000.0000,library map
 TSN,527,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,"Accounts receivable, net",2524000000.0000,library map
-TSN,527,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000100493-25-000095,,,,note-sourced default tag (no face line)
+TSN,527,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000100493-25-000095,,,239000000.0000,note fact present in the filing (FSN value)
 TSN,527,basic_eps,not_presented,,,,,,,,0000100493-25-000095,,,,no face line
 TSN,527,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000100493-25-000095,R8,"Additions to property, plant and equipment",978000000.0000,library map
 TSN,527,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,Cash and cash equivalents,1229000000.0000,library map
@@ -21,7 +21,7 @@ TSN,527,deposits,OUT,,,,,,,,0000100493-25-000095,,,,not a bank
 TSN,527,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-6,N,,sec_api,0000100493-25-000095,R8,Depreciation,1093000000.0000,printed face components (duration sum; total_debt founder sum)
 TSN,527,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000100493-25-000095,R3,Diluted (USD per share),1.3300,library map
 TSN,527,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000100493-25-000095,R8,Dividends,697000000.0000,library map
-TSN,527,dividends_per_share,not_presented,,,,,,,,0000100493-25-000095,,,,no face line
+TSN,527,dividends_per_share,not_presented,,,,,,,,0000100493-25-000095,,,,no face line and no note fact
 TSN,527,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,"Goodwill, net",9469000000.0000,library map
 TSN,527,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,Gross Profit,3562000000.0000,library map
 TSN,527,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,Income before Income Taxes,769000000.0000,library map
@@ -50,5 +50,5 @@ TSN,527,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000100493-25-0000
 TSN,527,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,Current debt,909000000.0000,printed face components (duration sum; total_debt founder sum)
 TSN,527,total_interest_income,OUT,,,,,,,,0000100493-25-000095,,,,not a bank
 TSN,527,total_liabilities,not_presented,,,,,,,,0000100493-25-000095,,,,no face line
-TSN,527,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000100493-25-000095,,,,note-sourced default tag (no face line)
+TSN,527,weighted_basic_shares,not_presented,,,,,,,,0000100493-25-000095,,,,no face line and no note fact
 TSN,527,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,"Diluted, Shares",357000000.0000,library map

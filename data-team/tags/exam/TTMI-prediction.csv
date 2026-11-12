@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TTMI,702,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Accounts payable,543538000.0000,library map
 TTMI,702,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Accounts receivable, net",563741000.0000,library map
-TTMI,702,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-051976,,,36897000.0000,note fact present in the filing (FSN value)
 TTMI,702,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-051976,R4,Basic earnings (loss) per share,1.7300,library map
 TTMI,702,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,"Purchases of property, plant, and equipment and other assets",292565000.0000,library map
 TTMI,702,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Cash and cash equivalents,501234000.0000,library map
@@ -21,13 +21,13 @@ TTMI,702,deposits,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,Y,AmortizationOfIntangibleAssetsIncludingCostOfGoodAndServicesAmortization,sec_api,0001193125-26-051976,R7,"Depreciation of property, plant, and equipment",110274000.0000,printed face components (duration sum; total_debt founder sum)
 TTMI,702,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-051976,R4,Diluted earnings (loss) per share,1.6800,library map
 TTMI,702,dividends_paid,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
-TTMI,702,dividends_per_share,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,dividends_per_share,not_presented,,,,,,,,0001193125-26-051976,,,,no face line and no note fact
 TTMI,702,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Goodwill,670135000.0000,library map
 TTMI,702,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Gross profit,601686000.0000,library map
 TTMI,702,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income before income taxes,210337000.0000,library map
 TTMI,702,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income tax provision,32889000.0000,library map
 TTMI,702,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-051976,R4,Interest expense,45334000.0000,library map
-TTMI,702,interest_income,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,interest_income,not_presented,,,,,,,,0001193125-26-051976,,,,no face line and no note fact
 TTMI,702,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Inventories,250057000.0000,library map
 TTMI,702,loans_net,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Net income (loss),177448000.0000,library map
@@ -50,5 +50,5 @@ TTMI,702,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-051
 TTMI,702,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Short-term debt, including current portion of long-term debt",3815000.0000,printed face components (duration sum; total_debt founder sum)
 TTMI,702,total_interest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,total_liabilities,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
-TTMI,702,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
-TTMI,702,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-051976,,,102598000.0000,note fact present in the filing (FSN value)
+TTMI,702,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-051976,,,105453000.0000,note fact present in the filing (FSN value)

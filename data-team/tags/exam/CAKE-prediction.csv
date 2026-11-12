@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CAKE,968,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-018643,R2,Accounts payable,62714000.0000,library map
 CAKE,968,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-018643,R2,Accounts and other receivables,109718000.0000,combined line (library or label demote)
-CAKE,968,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-018643,,,,note-sourced default tag (no face line)
+CAKE,968,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-018643,,,800000.0000,note fact present in the filing (FSN value)
 CAKE,968,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-018643,R4,Basic (in dollars per share),3.1700,library map
 CAKE,968,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-018643,R8,Additions to property and equipment,146204000.0000,library map
 CAKE,968,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-018643,R2,Cash and cash equivalents,215729000.0000,library map
@@ -27,14 +27,14 @@ CAKE,968,gross_profit,not_presented,,,,,,,,0001104659-26-018643,,,,no face line
 CAKE,968,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,Income before income taxes,162895000.0000,library map
 CAKE,968,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,Income tax provision/(benefit),14468000.0000,library map
 CAKE,968,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001104659-26-018643,R4,"Interest expense, net",-10448000.0000,combined line (library or label demote)
-CAKE,968,interest_income,not_presented,,,,,,,,0001104659-26-018643,,,,no face line
+CAKE,968,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001104659-26-018643,R4,"Interest expense, net",-10448000.0000,interest income only inside a net/other face line between OI and pretax
 CAKE,968,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-018643,R2,Inventories,53969000.0000,library map
 CAKE,968,loans_net,OUT,,,,,,,,0001104659-26-018643,,,,not a bank
 CAKE,968,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,Net income,148427000.0000,library map
 CAKE,968,net_interest_income,OUT,,,,,,,,0001104659-26-018643,,,,not a bank
 CAKE,968,noninterest_expense,OUT,,,,,,,,0001104659-26-018643,,,,not a bank
 CAKE,968,noninterest_income,OUT,,,,,,,,0001104659-26-018643,,,,not a bank
-CAKE,968,operating_expenses,not_presented,,,,,,,,0001104659-26-018643,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CAKE,968,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,Total costs and expenses,3564521000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CAKE,968,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,Income from operations,187285000.0000,library map
 CAKE,968,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-018643,R4,"Other income, net",1949000.0000,library map
 CAKE,968,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-018643,R2,"Property and equipment, net",869696000.0000,library map

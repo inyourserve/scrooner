@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SPXC,775,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000088205-26-000008,R6,Accounts payable,145200000.0000,library map
 SPXC,775,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000088205-26-000008,R6,"Accounts receivable, net",357200000.0000,library map
-SPXC,775,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000088205-26-000008,,,,note-sourced default tag (no face line)
+SPXC,775,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000088205-26-000008,,,91300000.0000,note fact present in the filing (FSN value)
 SPXC,775,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000088205-26-000008,R3,Net income per share (in dollars per share),5.1000,library map
 SPXC,775,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000088205-26-000008,R10,Capital expenditures,92100000.0000,library map
 SPXC,775,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000088205-26-000008,R6,Cash and equivalents,364000000.0000,library map
@@ -21,7 +21,7 @@ SPXC,775,deposits,OUT,,,,,,,,0000088205-26-000008,,,,not a bank
 SPXC,775,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000088205-26-000008,R10,Depreciation and amortization,122600000.0000,library map
 SPXC,775,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000088205-26-000008,R3,Net income per share (in dollars per share),5.0300,library map
 SPXC,775,dividends_paid,not_presented,,,,,,,,0000088205-26-000008,,,,no face line
-SPXC,775,dividends_per_share,not_presented,,,,,,,,0000088205-26-000008,,,,no face line
+SPXC,775,dividends_per_share,not_presented,,,,,,,,0000088205-26-000008,,,,no face line and no note fact
 SPXC,775,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000088205-26-000008,R6,Goodwill,1043400000.0000,library map
 SPXC,775,gross_profit,not_presented,,,,,,,,0000088205-26-000008,,,,no face line
 SPXC,775,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000088205-26-000008,R3,Income from continuing operations before income taxes,314100000.0000,library map

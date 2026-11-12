@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AIT,614,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000109563-26-000033,R5,Accounts payable,341094000.0000,library map
 AIT,614,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000109563-26-000033,R5,Accounts receivable  net,831244000.0000,library map
-AIT,614,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000109563-26-000033,,,,note-sourced default tag (no face line)
+AIT,614,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000109563-26-000033,,,40072000.0000,note fact present in the filing (FSN value)
 AIT,614,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000109563-26-000033,R3,Net income per share  basic (in dollars per share),11.0900,library map
 AIT,614,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000109563-26-000033,R7,Capital expenditures,23565000.0000,library map
 AIT,614,cash_and_equivalents,not_presented,,,,,,,,0000109563-26-000033,,,,no face line
 AIT,614,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000109563-26-000033,R7,Cash used in Financing Activities,-711539000.0000,library map
 AIT,614,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000109563-26-000033,R7,Cash used in Investing Activities,-33899000.0000,library map
-AIT,614,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000109563-26-000033,,,,note-sourced default tag (no face line)
+AIT,614,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000109563-26-000033,,,108946000.0000,note fact present in the filing (FSN value)
 AIT,614,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000109563-26-000033,R7,Interest (includes interest rate swap settlements),18954000.0000,library map
 AIT,614,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000109563-26-000033,R7,Accounts payable,56886000.0000,library map
 AIT,614,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000109563-26-000033,R7,Accounts receivable,66422000.0000,library map
@@ -50,5 +50,5 @@ AIT,614,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000109563-26-0000
 AIT,614,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000109563-26-000033,R5,Long-term debt,262300000.0000,printed face components (duration sum; total_debt founder sum)
 AIT,614,total_interest_income,OUT,,,,,,,,0000109563-26-000033,,,,not a bank
 AIT,614,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000109563-26-000033,R5,Total Liabilities,1148224000.0000,library map
-AIT,614,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000109563-26-000033,,,,note-sourced default tag (no face line)
-AIT,614,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000109563-26-000033,,,,note-sourced default tag (no face line)
+AIT,614,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000109563-26-000033,,,37377000.0000,note fact present in the filing (FSN value)
+AIT,614,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000109563-26-000033,,,37857000.0000,note fact present in the filing (FSN value)

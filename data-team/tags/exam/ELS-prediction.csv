@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ELS,626,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-008722,R3,Accounts payable and other liabilities,152536000.0000,combined line (library or label demote)
 ELS,626,accounts_receivable,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
-ELS,626,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008722,,,,note-sourced default tag (no face line)
+ELS,626,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-008722,,,,no face line and no note fact
 ELS,626,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008722,R5,Earnings per Common Share  Basic (usd per share),2.0100,library map
 ELS,626,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0001628280-26-008722,R7,Capital improvements,237091000.0000,combined line (library or label demote)
 ELS,626,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001628280-26-008722,R3,Cash and restricted cash,26132000.0000,combined line (library or label demote)
 ELS,626,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-008722,R7,Net cash used in financing activities,-292509000.0000,library map
 ELS,626,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-008722,R7,Net cash used in investing activities,-277083000.0000,library map
-ELS,626,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008722,,,,note-sourced default tag (no face line)
+ELS,626,cash_paid_for_income_taxes,not_presented,,,,,,,,0001628280-26-008722,,,,no face line and no note fact
 ELS,626,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-008722,R7,"Cash paid for interest, net",129968000.0000,library map
 ELS,626,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001628280-26-008722,R7,Accounts payable and other liabilities,-7704000.0000,combined line (library or label demote)
 ELS,626,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,-,-3,N,,sec_api,0001628280-26-008722,R7,"Notes receivable, net",-13245000.0000,combined line (library or label demote)
@@ -21,7 +21,7 @@ ELS,626,deposits,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
 ELS,626,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,IS,+,-3,N,,sec_api,0001628280-26-008722,R5,Depreciation and amortization,208895000.0000,library map
 ELS,626,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008722,R5,Earnings per Common Share  Fully Diluted (usd per share),2.0100,library map
 ELS,626,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-008722,R7,Common Stockholders,387963000.0000,library map
-ELS,626,dividends_per_share,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
+ELS,626,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001628280-26-008722,,,2.0600,note fact present in the filing (FSN value)
 ELS,626,goodwill,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,gross_profit,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,income_before_tax,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
@@ -34,7 +34,7 @@ ELS,626,net_income,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,net_interest_income,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
 ELS,626,noninterest_expense,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
 ELS,626,noninterest_income,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
-ELS,626,operating_expenses,not_presented,,,,,,,,0001628280-26-008722,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+ELS,626,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-008722,R5,Total expenses,1140033000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 ELS,626,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008722,R5,Income before taxes and other items,391349000.0000,library map
 ELS,626,other_income_expense_net,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,ppe_net,not_presented,,,,,,,,0001628280-26-008722,,,,no face line

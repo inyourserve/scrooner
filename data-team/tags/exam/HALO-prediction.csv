@@ -21,13 +21,13 @@ HALO,565,deposits,OUT,,,,,,,,0001159036-26-000024,,,,not a bank
 HALO,565,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001159036-26-000024,R7,Depreciation and amortization,11389000.0000,library map
 HALO,565,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001159036-26-000024,R5,Diluted (usd per share),2.5600,library map
 HALO,565,dividends_paid,not_presented,,,,,,,,0001159036-26-000024,,,,no face line
-HALO,565,dividends_per_share,not_presented,,,,,,,,0001159036-26-000024,,,,no face line
+HALO,565,dividends_per_share,not_presented,,,,,,,,0001159036-26-000024,,,,no face line and no note fact
 HALO,565,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001159036-26-000024,R3,Goodwill,580360000.0000,library map
 HALO,565,gross_profit,not_presented,,,,,,,,0001159036-26-000024,,,,no face line
 HALO,565,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001159036-26-000024,R5,Income before income tax expense,466875000.0000,library map
 HALO,565,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001159036-26-000024,R5,Income tax expense,149986000.0000,library map
 HALO,565,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001159036-26-000024,R5,Interest expense,18126000.0000,library map
-HALO,565,interest_income,not_presented,,,,,,,,0001159036-26-000024,,,,no face line
+HALO,565,interest_income,not_presented,,,,,,,,0001159036-26-000024,,,,no face line and no note fact
 HALO,565,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001159036-26-000024,R3,Inventories,176475000.0000,library map
 HALO,565,loans_net,OUT,,,,,,,,0001159036-26-000024,,,,not a bank
 HALO,565,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001159036-26-000024,R5,Net income,316889000.0000,library map

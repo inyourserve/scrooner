@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FCX,118,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000831259-26-000012,R6,Accounts payable and accrued liabilities,4565000000.0000,combined line (library or label demote)
 FCX,118,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000831259-26-000012,R6,Trade accounts receivable,977000000.0000,library map
-FCX,118,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000831259-26-000012,,,,note-sourced default tag (no face line)
+FCX,118,amortization_of_intangibles,not_presented,,,,,,,,0000831259-26-000012,,,,no face line and no note fact
 FCX,118,basic_eps,not_presented,,,,,,,,0000831259-26-000012,,,,no face line
 FCX,118,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000831259-26-000012,R5,Capital expenditures,4494000000.0000,library map
 FCX,118,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000831259-26-000012,R6,Cash and cash equivalents,3824000000.0000,library map
 FCX,118,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000831259-26-000012,R5,Net cash used in financing activities,-1876000000.0000,library map
 FCX,118,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000831259-26-000012,R5,Net cash provided by (used in) investing activities,-4472000000.0000,library map
-FCX,118,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000831259-26-000012,,,,note-sourced default tag (no face line)
-FCX,118,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000831259-26-000012,,,,note-sourced default tag (no face line)
+FCX,118,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000831259-26-000012,,,2898000000.0000,note fact present in the filing (FSN value)
+FCX,118,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000831259-26-000012,,,256000000.0000,note fact present in the filing (FSN value)
 FCX,118,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000831259-26-000012,R5,Accounts payable and accrued liabilities,802000000.0000,combined line (library or label demote)
 FCX,118,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000831259-26-000012,R5,Accounts receivable,521000000.0000,library map
 FCX,118,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000831259-26-000012,R5,Inventories,709000000.0000,library map
@@ -27,7 +27,7 @@ FCX,118,gross_profit,not_presented,,,,,,,,0000831259-26-000012,,,,no face line
 FCX,118,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0000831259-26-000012,R3,Income before income taxes and equity in affiliated companies net earnings,6372000000.0000,library map
 FCX,118,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000831259-26-000012,R3,Provision for (benefit from) income taxes,2221000000.0000,library map
 FCX,118,interest_expense,not_presented,,,,,,,,0000831259-26-000012,,,,no face line
-FCX,118,interest_income,not_presented,,,,,,,,0000831259-26-000012,,,,no face line
+FCX,118,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-6,N,,sec_api,0000831259-26-000012,R3,"Interest expense, net",-369000000.0000,interest income only inside a net/other face line between OI and pretax
 FCX,118,inventory,not_presented,,,,,,,,0000831259-26-000012,,,,no face line
 FCX,118,loans_net,OUT,,,,,,,,0000831259-26-000012,,,,not a bank
 FCX,118,net_income,not_presented,,,,,,,,0000831259-26-000012,,,,no face line

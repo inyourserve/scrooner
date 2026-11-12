@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FAST,209,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,Accounts payable,316800000.0000,library map
 FAST,209,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,"Trade accounts receivable, net of allowance for credit losses of $5.3 and $5.2, respectively",1245300000.0000,library map
-FAST,209,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000815556-26-000009,,,,note-sourced default tag (no face line)
+FAST,209,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000815556-26-000009,,,10700000.0000,note fact present in the filing (FSN value)
 FAST,209,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000815556-26-000009,R5,Basic net income per share (in dollars per share),1.1000,library map
 FAST,209,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000815556-26-000009,R8,Purchases of property and equipment,245300000.0000,library map
 FAST,209,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,Cash and cash equivalents,276800000.0000,library map
@@ -27,7 +27,7 @@ FAST,209,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000815556-2
 FAST,209,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Income before income taxes,1655000000.0000,library map
 FAST,209,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Income tax expense,396600000.0000,library map
 FAST,209,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000815556-26-000009,R5,Interest expense,6200000.0000,library map
-FAST,209,interest_income,not_presented,,,,,,,,0000815556-26-000009,,,,no face line
+FAST,209,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Interest income,5500000.0000,interest income only inside a net/other face line between OI and pretax
 FAST,209,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,Inventories,1748000000.0000,library map
 FAST,209,loans_net,OUT,,,,,,,,0000815556-26-000009,,,,not a bank
 FAST,209,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Net income,1258400000.0000,library map

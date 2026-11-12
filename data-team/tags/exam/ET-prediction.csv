@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ET,182,accounts_payable,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,accounts_receivable,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
-ET,182,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001276187-26-000013,,,,note-sourced default tag (no face line)
+ET,182,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001276187-26-000013,,,479000000.0000,note fact present in the filing (FSN value)
 ET,182,basic_eps,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001276187-26-000013,R7,"Capital expenditures, excluding allowance for equity funds used during construction",6303000000.0000,library map
 ET,182,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001276187-26-000013,R2,Cash and cash equivalents,1272000000.0000,library map
 ET,182,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001276187-26-000013,R7,Net cash used in financing activities,-816000000.0000,library map
 ET,182,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001276187-26-000013,R7,Net cash used in investing activities,-8373000000.0000,library map
-ET,182,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001276187-26-000013,,,,note-sourced default tag (no face line)
-ET,182,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001276187-26-000013,,,,note-sourced default tag (no face line)
+ET,182,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001276187-26-000013,,,103000000.0000,note fact present in the filing (FSN value)
+ET,182,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001276187-26-000013,,,3136000000.0000,note fact present in the filing (FSN value)
 ET,182,cf_ap_change,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,cf_ar_change,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,cf_inventory_change,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
@@ -21,13 +21,13 @@ ET,182,deposits,OUT,,,,,,,,0001276187-26-000013,,,,not a bank
 ET,182,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001276187-26-000013,R7,"Depreciation, depletion and amortization",5682000000.0000,library map
 ET,182,diluted_eps,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,dividends_paid,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
-ET,182,dividends_per_share,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
+ET,182,dividends_per_share,not_presented,,,,,,,,0001276187-26-000013,,,,no face line and no note fact
 ET,182,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001276187-26-000013,R2,Goodwill,5452000000.0000,library map
 ET,182,gross_profit,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,income_before_tax,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
 ET,182,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001276187-26-000013,R4,Income tax expense,350000000.0000,library map
 ET,182,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001276187-26-000013,R4,"Interest expense, net of interest capitalized",3474000000.0000,library map
-ET,182,interest_income,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
+ET,182,interest_income,not_presented,,,,,,,,0001276187-26-000013,,,,no face line and no note fact
 ET,182,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001276187-26-000013,R2,Inventories,4770000000.0000,library map
 ET,182,loans_net,OUT,,,,,,,,0001276187-26-000013,,,,not a bank
 ET,182,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001276187-26-000013,R4,NET INCOME ATTRIBUTABLE TO PARTNERS,4433000000.0000,library map
@@ -50,5 +50,5 @@ ET,182,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001276187-26-00001
 ET,182,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001276187-26-000013,R2,Current maturities of long-term debt,25000000.0000,printed face components (duration sum; total_debt founder sum)
 ET,182,total_interest_income,OUT,,,,,,,,0001276187-26-000013,,,,not a bank
 ET,182,total_liabilities,not_presented,,,,,,,,0001276187-26-000013,,,,no face line
-ET,182,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001276187-26-000013,,,,note-sourced default tag (no face line)
-ET,182,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001276187-26-000013,,,,note-sourced default tag (no face line)
+ET,182,weighted_basic_shares,not_presented,,,,,,,,0001276187-26-000013,,,,no face line and no note fact
+ET,182,weighted_diluted_shares,not_presented,,,,,,,,0001276187-26-000013,,,,no face line and no note fact

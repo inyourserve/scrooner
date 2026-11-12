@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BBY,456,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000764478-26-000009,R3,Accounts payable,4745000000.0000,library map
 BBY,456,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000764478-26-000009,R3,"Receivables, net",1043000000.0000,combined line (library or label demote)
-BBY,456,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000764478-26-000009,,,,note-sourced default tag (no face line)
+BBY,456,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000764478-26-000009,,,14000000.0000,note fact present in the filing (FSN value)
 BBY,456,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000764478-26-000009,R5,Basic earnings per share (in dollars per share),5.0600,library map
 BBY,456,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000764478-26-000009,R7,Additions to property and equipment,704000000.0000,library map
 BBY,456,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000764478-26-000009,R3,Cash and cash equivalents,1738000000.0000,library map
@@ -27,7 +27,7 @@ BBY,456,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000764478-26
 BBY,456,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,Earnings before income tax expense and equity in income of affiliates,1404000000.0000,library map
 BBY,456,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,Income tax expense,337000000.0000,library map
 BBY,456,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000764478-26-000009,R5,Interest expense,47000000.0000,library map
-BBY,456,interest_income,not_presented,,,,,,,,0000764478-26-000009,,,,no face line
+BBY,456,interest_income,not_presented,,,,,,,,0000764478-26-000009,,,,no face line and no note fact
 BBY,456,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000764478-26-000009,R3,Merchandise inventories,5230000000.0000,library map
 BBY,456,loans_net,OUT,,,,,,,,0000764478-26-000009,,,,not a bank
 BBY,456,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,Net earnings,1069000000.0000,library map

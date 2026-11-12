@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WRB,352,accounts_payable,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,accounts_receivable,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
-WRB,352,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000011544-26-000005,,,,note-sourced default tag (no face line)
+WRB,352,amortization_of_intangibles,not_presented,,,,,,,,0000011544-26-000005,,,,no face line and no note fact
 WRB,352,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000011544-26-000005,R3,Basic (dollars per share),4.4800,library map
 WRB,352,capex,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000011544-26-000005,R4,Cash and cash equivalents,2539938000.0000,library map
 WRB,352,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000011544-26-000005,R9,Net cash used in financing activities,-1026447000.0000,library map
 WRB,352,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000011544-26-000005,R9,Net cash used in investing activities,-2029335000.0000,library map
-WRB,352,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000011544-26-000005,,,,note-sourced default tag (no face line)
-WRB,352,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000011544-26-000005,,,,note-sourced default tag (no face line)
+WRB,352,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000011544-26-000005,,,407000000.0000,note fact present in the filing (FSN value)
+WRB,352,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000011544-26-000005,,,126000000.0000,note fact present in the filing (FSN value)
 WRB,352,cf_ap_change,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,cf_ar_change,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,cf_inventory_change,OUT,,,,,,,,0000011544-26-000005,,,,sector template (bank/insurer)
@@ -27,14 +27,14 @@ WRB,352,gross_profit,OUT,,,,,,,,0000011544-26-000005,,,,sector template (bank/in
 WRB,352,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000011544-26-000005,R3,Pre-Tax Income (Loss),2280543000.0000,library map
 WRB,352,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000011544-26-000005,R3,Income tax expense,495764000.0000,library map
 WRB,352,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000011544-26-000005,R3,Interest expense,126892000.0000,library map
-WRB,352,interest_income,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
+WRB,352,interest_income,not_presented,,,,,,,,0000011544-26-000005,,,,no face line and no note fact
 WRB,352,inventory,OUT,,,,,,,,0000011544-26-000005,,,,sector template (bank/insurer)
 WRB,352,loans_net,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000011544-26-000005,R3,Net income to common stockholders,1779403000.0000,library map
 WRB,352,net_interest_income,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,noninterest_expense,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,noninterest_income,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
-WRB,352,operating_expenses,not_presented,,,,,,,,0000011544-26-000005,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+WRB,352,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0000011544-26-000005,R3,Total operating costs and expenses,12427313000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 WRB,352,operating_income,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,other_income_expense_net,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000011544-26-000005,R4,"Property, furniture and equipment",596235000.0000,library map
@@ -50,5 +50,5 @@ WRB,352,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000011544-26-0000
 WRB,352,total_debt,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,total_interest_income,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000011544-26-000005,R4,Total liabilities,34359177000.0000,library map
-WRB,352,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000011544-26-000005,,,,note-sourced default tag (no face line)
-WRB,352,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000011544-26-000005,,,,note-sourced default tag (no face line)
+WRB,352,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000011544-26-000005,,,396968000.0000,note fact present in the filing (FSN value)
+WRB,352,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000011544-26-000005,,,399861000.0000,note fact present in the filing (FSN value)

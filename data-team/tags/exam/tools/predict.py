@@ -26,6 +26,16 @@ BANK = {'deposits':['Deposits'],'loans_net':['LoansAndLeasesReceivableNetReporte
 NOTE = {'cash_paid_for_income_taxes':'IncomeTaxesPaidNet','cash_paid_for_interest':'InterestPaidNet','amortization_of_intangibles':'AmortizationOfIntangibleAssets',
  'interest_income':'InvestmentIncomeInterest','weighted_basic_shares':'WeightedAverageNumberOfSharesOutstandingBasic','weighted_diluted_shares':'WeightedAverageNumberOfDilutedSharesOutstanding',
  'dividends_per_share':'CommonStockDividendsPerShareDeclared','sbc':'ShareBasedCompensation'}
+NOTE_RULES = {  # (tag, status) in priority order; cards: interest.md, net-income-and-shares.md, shareholder-returns.md §11
+ 'interest_income': [('InvestmentIncomeInterest', 'mapped'), ('InterestIncomeOther', 'component_in_note'), ('InvestmentIncomeInterestAndDividend', 'combined')],
+ 'amortization_of_intangibles': [('AmortizationOfIntangibleAssets', 'mapped'), ('AdjustmentForAmortization', 'mapped')],
+ 'cash_paid_for_income_taxes': [('IncomeTaxesPaidNet', 'mapped'), ('IncomeTaxesPaid', 'mapped')],
+ 'cash_paid_for_interest': [('InterestPaidNet', 'mapped'), ('InterestPaid', 'mapped')],
+ 'sbc': [('ShareBasedCompensation', 'mapped'), ('AllocatedShareBasedCompensationExpense', 'component_in_note')],
+ 'dividends_per_share': [('CommonStockDividendsPerShareDeclared', 'mapped'), ('CommonStockDividendsPerShareCashPaid', 'mapped')],
+ 'weighted_basic_shares': [('WeightedAverageNumberOfSharesOutstandingBasic', 'mapped'), ('WeightedAverageNumberOfShareOutstandingBasicAndDiluted', 'mapped')],
+ 'weighted_diluted_shares': [('WeightedAverageNumberOfDilutedSharesOutstanding', 'mapped'), ('WeightedAverageNumberOfShareOutstandingBasicAndDiluted', 'mapped')],
+}
 DURATION_SUM = {'cost_of_revenue','operating_expenses','sga_expense','interest_expense','capex','depreciation_and_amortization','research_and_development','revenue','income_tax_expense','total_debt'}
 DEMOTE = {
  'interest_expense': r'(?i)(,\s*net\b|net of interest income|and other|interest and other)(?!.*capitaliz)',
@@ -66,7 +76,7 @@ def sign(v):
     try: x = float(v)
     except (TypeError, ValueError): return ''
     return '+' if x > 0 else '-' if x < 0 else '0'
-def main(lines_path, ticker, rank, libdir):
+def main(lines_path, ticker, rank, libdir, notes_path=None):
     lib, ov, nd = load_lib(libdir)
     L = [json.loads(l) for l in open(lines_path) if l.strip()]
     L = [l for l in L if not l.get('missing')]
@@ -76,6 +86,16 @@ def main(lines_path, ticker, rank, libdir):
             except (TypeError, ValueError): l[k] = 0
         if l.get('val') == '': l['val'] = None
     cik = L[0]['cik'] if L else ''
+    NF = None  # note facts of this filing: tag -> {qtrs: value}
+    if notes_path:
+        NF = {}
+        for ln_ in open(notes_path):
+            o_ = json.loads(ln_)
+            if o_['cik'] != cik: continue
+            for kv in (o_.get('facts') or '').split('|'):
+                if '=' not in kv: continue
+                t_, rest = kv.split('=', 1); q_, v_ = rest.split(':', 1)
+                NF.setdefault(t_, {})[int(q_)] = v_
     tags = {l['tag'] for l in L}
     bank = 'Deposits' in tags and bool(tags & {'InterestAndDividendIncomeOperating','InterestExpenseDeposits','NoninterestIncome','LoansAndLeasesReceivableNetReportedAmount'})
     insurer = bool(tags & {'PremiumsEarnedNet','LiabilityForFuturePolicyBenefits','LiabilityForUnpaidClaimsAndClaimsAdjustmentExpense'})
@@ -156,8 +176,21 @@ def main(lines_path, ticker, rank, libdir):
                     status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue: combined, never opex'
                 else:
                     status, rule = 'not_presented', 'opex lines do not tie to GP - OI'
+            elif incl and cor is not None:
+                status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue'
             elif incl:
-                status, chosen, rule = ('combined', [incl[0]], 'total includes cost of revenue') if cor is not None else ('not_presented', [], 'one-step corporate IS with no cost of revenue: not_presented (ruling 5)')
+                # ruling 5 (refined 2026-11-12): no cost-of-revenue line anywhere; total maps unless a cost-of-sales-type line sits inside it
+                t0 = incl[0]
+                inside = [l for l in IS_ if l['r'] == t0['r'] and l['ln'] < t0['ln'] and l['val'] is not None and not l['tag'].endswith('Abstract')]
+                rev_ln = max([l['ln'] for l in revs if l['r'] == t0['r']] or [0])
+                inside = [l for l in inside if l['ln'] > rev_ln]
+                COS = r'(?i)cost of|costs of|fuel|purchased power|food and paper|food & paper|production|operating costs|cost of operations|operations and maintenance|direct|distribution and servicing|cost of sales'
+                cos_tags = ('CostOf', 'Fuel', 'PurchasedPower', 'Production', 'DirectCosts', 'DirectOperatingCosts', 'OperatingCostsAndExpenses', 'UtilitiesOperatingExpense', 'CostDirect')
+                hit = [l for l in inside if re.search(COS, l['lab'] or '') or l['tag'].startswith(cos_tags)]
+                if hit:
+                    status, chosen, rule = 'combined', [t0], 'one-step total contains a cost-of-sales-type line (ruling 5 refined)'
+                else:
+                    status, chosen, rule = 'mapped', [t0], 'one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)'
             else:
                 status, rule = 'not_presented', 'no opex total and no GP/COR anchor'
         elif maps:
@@ -177,6 +210,25 @@ def main(lines_path, ticker, rank, libdir):
             status, chosen, rule = 'combined', [pick(combs)], 'combined line (library or label demote)'
         elif dp in ('current_assets', 'current_liabilities') and not classified:
             status, rule = 'not_presented', 'unclassified balance sheet'
+        elif NF is not None and dp in NOTE_RULES:
+            hit = None
+            for tg, st_ in NOTE_RULES[dp]:
+                if tg in NF and (4 in NF[tg] or 0 in NF[tg]):
+                    hit = (tg, st_); break
+            if hit:
+                out.append(dict(ticker=ticker, rank=rank, data_point=dp, status=hit[1], tags=('us-gaap:' + hit[0]), stmt='NOTE', sign=sign(NF[hit[0]].get(4, NF[hit[0]].get(0))), scale='',
+                                era_break='', prior_tag='', value_source='sec_api', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value=NF[hit[0]].get(4, NF[hit[0]].get(0)), rule='note fact present in the filing (FSN value)'))
+                continue
+            status, rule = 'not_presented', 'no face line and no note fact'
+            if dp == 'interest_income':
+                ISl = [l for l in L if l['st'] == 'IS' and not l['pth'] and l['val'] is not None]
+                oil_ = next((l for l in ISl if l['tag'] == 'OperatingIncomeLoss'), None)
+                ptl_ = next((l for l in ISl if l['tag'].startswith('IncomeLossFromContinuingOperationsBeforeIncomeTaxes')), None)
+                if ptl_ is not None:
+                    lo_ = oil_['ln'] if oil_ is not None and oil_['r'] == ptl_['r'] else 0
+                    nl = [l for l in ISl if l['r'] == ptl_['r'] and lo_ < l['ln'] < ptl_['ln'] and re.search(r'(?i)interest', l['lab'] or '') and re.search(r'(?i)income|, net|and other', l['lab'] or '')]
+                    if nl:
+                        status, chosen, rule = 'combined', [nl[0]], 'interest income only inside a net/other face line between OI and pretax'
         elif dp in NOTE and dp not in ('dividends_per_share', 'interest_income', 'sbc'):
             status, rule = 'mapped', 'note-sourced default tag (no face line)'
             out.append(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='us-gaap:' + NOTE[dp], stmt='NOTE', sign='', scale='',
@@ -195,4 +247,4 @@ def main(lines_path, ticker, rank, libdir):
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
     w = csv.DictWriter(sys.stdout, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
 if __name__ == '__main__':
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])

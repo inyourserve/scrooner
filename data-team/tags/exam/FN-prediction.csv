@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FN,589,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0001408710-26-000028,R3,Trade accounts payable,1005761000.0000,library map
 FN,589,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001408710-26-000028,R3,"Trade accounts receivable, net of allowance for expected credit losses of $1,050 and $1,344, respectively",1017933000.0000,library map
-FN,589,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001408710-26-000028,,,,note-sourced default tag (no face line)
+FN,589,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001408710-26-000028,,,900000.0000,note fact present in the filing (FSN value)
 FN,589,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001408710-26-000028,R5,Basic (in USD per share),13.2100,library map
 FN,589,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001408710-26-000028,R8,"Purchase of property, plant and equipment",252503000.0000,library map
 FN,589,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001408710-26-000028,R3,Cash and cash equivalents,346711000.0000,library map
@@ -21,13 +21,13 @@ FN,589,deposits,OUT,,,,,,,,0001408710-26-000028,,,,not a bank
 FN,589,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001408710-26-000028,R8,Depreciation and amortization,68371000.0000,library map
 FN,589,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001408710-26-000028,R5,Diluted (in USD per share),13.0500,library map
 FN,589,dividends_paid,not_presented,,,,,,,,0001408710-26-000028,,,,no face line
-FN,589,dividends_per_share,not_presented,,,,,,,,0001408710-26-000028,,,,no face line
+FN,589,dividends_per_share,not_presented,,,,,,,,0001408710-26-000028,,,,no face line and no note fact
 FN,589,goodwill,not_presented,,,,,,,,0001408710-26-000028,,,,no face line
 FN,589,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Gross profit,556511000.0000,library map
 FN,589,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Income before income taxes,555113000.0000,library map
 FN,589,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Income tax expense,82086000.0000,library map
 FN,589,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001408710-26-000028,R5,Interest expense,84000.0000,library map
-FN,589,interest_income,not_presented,,,,,,,,0001408710-26-000028,,,,no face line
+FN,589,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Interest income,32418000.0000,interest income only inside a net/other face line between OI and pretax
 FN,589,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001408710-26-000028,R3,Inventories,1021235000.0000,library map
 FN,589,loans_net,OUT,,,,,,,,0001408710-26-000028,,,,not a bank
 FN,589,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Net income,473027000.0000,library map

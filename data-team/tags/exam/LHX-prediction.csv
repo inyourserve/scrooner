@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LHX,253,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,Accounts payable,2461000000.0000,library map
 LHX,253,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,"Receivables, net",1371000000.0000,library map
-LHX,253,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000202058-26-000015,,,,note-sourced default tag (no face line)
+LHX,253,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000202058-26-000015,,,770000000.0000,note fact present in the filing (FSN value)
 LHX,253,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000202058-26-000015,R3,Basic (in dollars per share),8.5700,library map
 LHX,253,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000202058-26-000015,R6,Capital expenditures,424000000.0000,library map
 LHX,253,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,Cash and cash equivalents,1069000000.0000,library map
 LHX,253,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000202058-26-000015,R6,Net cash (used in) provided by financing activities,-3082000000.0000,library map
 LHX,253,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0000202058-26-000015,R6,Net cash provided by (used in) investing activities,407000000.0000,library map
-LHX,253,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000202058-26-000015,,,,note-sourced default tag (no face line)
-LHX,253,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000202058-26-000015,,,,note-sourced default tag (no face line)
+LHX,253,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000202058-26-000015,,,-55000000.0000,note fact present in the filing (FSN value)
+LHX,253,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000202058-26-000015,,,604000000.0000,note fact present in the filing (FSN value)
 LHX,253,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000202058-26-000015,R6,Accounts payable,475000000.0000,library map
 LHX,253,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000202058-26-000015,R6,"Receivables, net",343000000.0000,library map
 LHX,253,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000202058-26-000015,R6,"Inventories, net",-117000000.0000,library map
@@ -27,7 +27,7 @@ LHX,253,gross_profit,not_presented,,,,,,,,0000202058-26-000015,,,,no face line
 LHX,253,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,Income before income taxes,1932000000.0000,library map
 LHX,253,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,Income taxes,326000000.0000,library map
 LHX,253,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000202058-26-000015,R3,"Interest expense, net",-597000000.0000,combined line (library or label demote)
-LHX,253,interest_income,not_presented,,,,,,,,0000202058-26-000015,,,,no face line
+LHX,253,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000202058-26-000015,R3,"Interest expense, net",-597000000.0000,interest income only inside a net/other face line between OI and pretax
 LHX,253,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,"Inventories, net",1219000000.0000,library map
 LHX,253,loans_net,OUT,,,,,,,,0000202058-26-000015,,,,not a bank
 LHX,253,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,Net income attributable to L3Harris,1606000000.0000,library map
@@ -50,5 +50,5 @@ LHX,253,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000202058-26-0000
 LHX,253,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,0,-6,N,,sec_api,0000202058-26-000015,R5,Short-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
 LHX,253,total_interest_income,OUT,,,,,,,,0000202058-26-000015,,,,not a bank
 LHX,253,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,Total liabilities,21560000000.0000,library map
-LHX,253,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000202058-26-000015,,,,note-sourced default tag (no face line)
-LHX,253,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000202058-26-000015,,,,note-sourced default tag (no face line)
+LHX,253,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000202058-26-000015,,,187400000.0000,note fact present in the filing (FSN value)
+LHX,253,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000202058-26-000015,,,188400000.0000,note fact present in the filing (FSN value)

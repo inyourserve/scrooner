@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WULF,956,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001083301-26-000031,R3,Accounts payable,65139000.0000,library map
 WULF,956,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001083301-26-000031,R3,Accounts receivable,1212000.0000,library map
-WULF,956,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001083301-26-000031,,,,note-sourced default tag (no face line)
+WULF,956,amortization_of_intangibles,not_presented,,,,,,,,0001083301-26-000031,,,,no face line and no note fact
 WULF,956,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001083301-26-000031,R5,"Earnings per share, basic (in dollars per share)",-1.6600,library map
 WULF,956,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001083301-26-000031,R9,Purchase of and deposits on plant and equipment,1060189000.0000,library map
 WULF,956,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001083301-26-000031,R3,Cash and cash equivalents,3266389000.0000,library map
@@ -21,13 +21,13 @@ WULF,956,deposits,OUT,,,,,,,,0001083301-26-000031,,,,not a bank
 WULF,956,depreciation_and_amortization,not_presented,,,,,,,,0001083301-26-000031,,,,single component only
 WULF,956,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001083301-26-000031,R5,"Earnings per share, diluted (in dollars per share)",-1.6600,library map
 WULF,956,dividends_paid,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
-WULF,956,dividends_per_share,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
+WULF,956,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,0,,,,sec_api,0001083301-26-000031,,,0.0000,note fact present in the filing (FSN value)
 WULF,956,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001083301-26-000031,R3,Goodwill,55457000.0000,library map
 WULF,956,gross_profit,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
 WULF,956,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0001083301-26-000031,R5,Loss before income tax and equity in net (loss) income of investee,-657210000.0000,library map
 WULF,956,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001083301-26-000031,R5,Income tax provision,76000.0000,library map
 WULF,956,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001083301-26-000031,R5,Interest expense,80248000.0000,library map
-WULF,956,interest_income,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
+WULF,956,interest_income,not_presented,,,,,,,,0001083301-26-000031,,,,no face line and no note fact
 WULF,956,inventory,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
 WULF,956,loans_net,OUT,,,,,,,,0001083301-26-000031,,,,not a bank
 WULF,956,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001083301-26-000031,R5,Net loss,-661416000.0000,library map

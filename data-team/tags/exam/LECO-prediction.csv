@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LECO,550,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,Trade accounts payable,364934000.0000,library map
 LECO,550,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,"Accounts receivable (less allowance for doubtful accounts of $11,326 in 2025; $12,674 in 2024)",538791000.0000,library map
-LECO,550,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000059527-26-000006,,,,note-sourced default tag (no face line)
+LECO,550,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000059527-26-000006,,,29717000.0000,note fact present in the filing (FSN value)
 LECO,550,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000059527-26-000006,R2,Basic earnings per share (Note 3),9.3900,library map
 LECO,550,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000059527-26-000006,R8,Capital expenditures,126974000.0000,library map
 LECO,550,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,Cash and cash equivalents,308789000.0000,library map
 LECO,550,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000059527-26-000006,R8,NET CASH USED BY FINANCING ACTIVITIES,-461887000.0000,library map
 LECO,550,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000059527-26-000006,R8,NET CASH USED BY INVESTING ACTIVITIES,-257326000.0000,library map
-LECO,550,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000059527-26-000006,,,,note-sourced default tag (no face line)
-LECO,550,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000059527-26-000006,,,,note-sourced default tag (no face line)
+LECO,550,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000059527-26-000006,,,100722000.0000,note fact present in the filing (FSN value)
+LECO,550,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000059527-26-000006,,,58829000.0000,note fact present in the filing (FSN value)
 LECO,550,cf_ap_change,not_presented,,,,,,,,0000059527-26-000006,,,,no face line
 LECO,550,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000059527-26-000006,R8,(Increase) decrease in accounts receivable,26433000.0000,library map
 LECO,550,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000059527-26-000006,R8,(Increase) decrease in inventories,47783000.0000,library map
@@ -27,7 +27,7 @@ LECO,550,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000059527-2
 LECO,550,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,Income before income taxes,675450000.0000,library map
 LECO,550,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,Income taxes (Note 13),154917000.0000,library map
 LECO,550,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0000059527-26-000006,R2,"Interest expense, net",-51561000.0000,combined line (library or label demote)
-LECO,550,interest_income,not_presented,,,,,,,,0000059527-26-000006,,,,no face line
+LECO,550,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000059527-26-000006,,,6818000.0000,note fact present in the filing (FSN value)
 LECO,550,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,Inventories (Note 16),633364000.0000,library map
 LECO,550,loans_net,OUT,,,,,,,,0000059527-26-000006,,,,not a bank
 LECO,550,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,Net income,520533000.0000,library map
@@ -50,5 +50,5 @@ LECO,550,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000059527-26-000
 LECO,550,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0000059527-26-000006,R4,Current portion of long-term debt (Note 9),0.0000,printed face components (duration sum; total_debt founder sum)
 LECO,550,total_interest_income,OUT,,,,,,,,0000059527-26-000006,,,,not a bank
 LECO,550,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,Total Liabilities,2307783000.0000,library map
-LECO,550,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000059527-26-000006,,,,note-sourced default tag (no face line)
-LECO,550,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000059527-26-000006,,,,note-sourced default tag (no face line)
+LECO,550,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000059527-26-000006,,,55410000.0000,note fact present in the filing (FSN value)
+LECO,550,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000059527-26-000006,,,55875000.0000,note fact present in the filing (FSN value)

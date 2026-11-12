@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HOMB,951,accounts_payable,not_presented,,,,,,,,0001331520-26-000051,,,,no face line
 HOMB,951,accounts_receivable,not_presented,,,,,,,,0001331520-26-000051,,,,no face line
-HOMB,951,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001331520-26-000051,,,,note-sourced default tag (no face line)
+HOMB,951,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001331520-26-000051,,,8034000.0000,note fact present in the filing (FSN value)
 HOMB,951,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001331520-26-000051,R5,Basic earnings per common share (in dollars per share),2.4100,library map
 HOMB,951,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001331520-26-000051,R9,Purchases of premises and equipment,22265000.0000,library map
 HOMB,951,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001331520-26-000051,R3,Cash and cash equivalents,667337000.0000,library map
 HOMB,951,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001331520-26-000051,R9,Net cash used in financing activities,-171974000.0000,library map
 HOMB,951,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001331520-26-000051,R9,Net cash (used in) provided by investing activities,-470317000.0000,library map
-HOMB,951,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001331520-26-000051,,,,note-sourced default tag (no face line)
-HOMB,951,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001331520-26-000051,,,,note-sourced default tag (no face line)
+HOMB,951,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001331520-26-000051,,,109627000.0000,note fact present in the filing (FSN value)
+HOMB,951,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001331520-26-000051,,,391778000.0000,note fact present in the filing (FSN value)
 HOMB,951,cf_ap_change,not_presented,,,,,,,,0001331520-26-000051,,,,no face line
 HOMB,951,cf_ar_change,not_presented,,,,,,,,0001331520-26-000051,,,,no face line
 HOMB,951,cf_inventory_change,OUT,,,,,,,,0001331520-26-000051,,,,sector template (bank/insurer)
@@ -50,5 +50,5 @@ HOMB,951,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001331520-26-000
 HOMB,951,total_debt,not_presented,,,,,,,,0001331520-26-000051,,,,no face line
 HOMB,951,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001331520-26-000051,R5,Total interest income,1278820000.0000,bank template tag
 HOMB,951,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001331520-26-000051,R3,Total liabilities,18585008000.0000,library map
-HOMB,951,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001331520-26-000051,,,,note-sourced default tag (no face line)
-HOMB,951,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001331520-26-000051,,,,note-sourced default tag (no face line)
+HOMB,951,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001331520-26-000051,,,197448000.0000,note fact present in the filing (FSN value)
+HOMB,951,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001331520-26-000051,,,197651000.0000,note fact present in the filing (FSN value)

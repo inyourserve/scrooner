@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AES,669,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000874761-26-000063,R3,Accounts payable,1980000000.0000,library map
 AES,669,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000874761-26-000063,R3,"Accounts receivable, net of allowance of $39 and $52, respectively",1683000000.0000,library map
-AES,669,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000874761-26-000063,,,,note-sourced default tag (no face line)
+AES,669,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000874761-26-000063,,,94000000.0000,note fact present in the filing (FSN value)
 AES,669,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000874761-26-000063,R4,NET INCOME AVAILABLE TO THE AES CORPORATION COMMON STOCKHOLDERS,1.2600,library map
 AES,669,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000874761-26-000063,R8,Capital expenditures,5929000000.0000,library map
 AES,669,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000874761-26-000063,R3,Cash and cash equivalents,1382000000.0000,library map
@@ -41,7 +41,7 @@ AES,669,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 AES,669,provision_for_credit_losses,OUT,,,,,,,,0000874761-26-000063,,,,not a bank
 AES,669,research_and_development,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
 AES,669,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000874761-26-000063,R4,Revenues,12233000000.0000,library map
-AES,669,sbc,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
+AES,669,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000874761-26-000063,,,14000000.0000,note fact present in the filing (FSN value)
 AES,669,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000874761-26-000063,R4,General and administrative expenses,241000000.0000,lone G&A line
 AES,669,share_buybacks,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
 AES,669,shares_outstanding,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
@@ -50,5 +50,5 @@ AES,669,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000874761-26-0000
 AES,669,total_debt,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
 AES,669,total_interest_income,OUT,,,,,,,,0000874761-26-000063,,,,not a bank
 AES,669,total_liabilities,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
-AES,669,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000874761-26-000063,,,,note-sourced default tag (no face line)
-AES,669,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000874761-26-000063,,,,note-sourced default tag (no face line)
+AES,669,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000874761-26-000063,,,712000000.0000,note fact present in the filing (FSN value)
+AES,669,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000874761-26-000063,,,714000000.0000,note fact present in the filing (FSN value)

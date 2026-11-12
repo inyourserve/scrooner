@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NI,448,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001111711-26-000027,R6,Accounts payable,1124500000.0000,library map
 NI,448,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001111711-26-000027,R6,"Accounts receivable, net",1197500000.0000,library map
-NI,448,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001111711-26-000027,,,,note-sourced default tag (no face line)
+NI,448,amortization_of_intangibles,not_presented,,,,,,,,0001111711-26-000027,,,,no face line and no note fact
 NI,448,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001111711-26-000027,R3,Basic Earnings Per Share,1.9600,library map
 NI,448,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001111711-26-000027,R8,Capital expenditures,2782300000.0000,library map
 NI,448,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001111711-26-000027,R6,Cash and cash equivalents,110100000.0000,library map
 NI,448,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001111711-26-000027,R8,Net Cash Flows (used for) from Financing Activities,2098900000.0000,library map
 NI,448,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001111711-26-000027,R8,Net Cash Flows used for Investing Activities,-4524100000.0000,library map
-NI,448,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001111711-26-000027,,,,note-sourced default tag (no face line)
-NI,448,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001111711-26-000027,,,,note-sourced default tag (no face line)
+NI,448,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001111711-26-000027,,,3300000.0000,note fact present in the filing (FSN value)
+NI,448,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001111711-26-000027,,,557100000.0000,note fact present in the filing (FSN value)
 NI,448,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001111711-26-000027,R8,Accounts payable,131800000.0000,library map
 NI,448,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001111711-26-000027,R8,Accounts receivable,273400000.0000,library map
 NI,448,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001111711-26-000027,R8,Gas storage and other inventories,60300000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ NI,448,gross_profit,not_presented,,,,,,,,0001111711-26-000027,,,,no face line
 NI,448,income_before_tax,not_presented,,,,,,,,0001111711-26-000027,,,,no face line
 NI,448,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001111711-26-000027,R3,Income Taxes,203800000.0000,library map
 NI,448,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001111711-26-000027,R3,"Interest expense, net",639000000.0000,combined line (library or label demote)
-NI,448,interest_income,not_presented,,,,,,,,0001111711-26-000027,,,,no face line
+NI,448,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001111711-26-000027,R3,"Interest expense, net",639000000.0000,interest income only inside a net/other face line between OI and pretax
 NI,448,inventory,not_presented,,,,,,,,0001111711-26-000027,,,,no face line
 NI,448,loans_net,OUT,,,,,,,,0001111711-26-000027,,,,not a bank
 NI,448,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001111711-26-000027,R3,Net Income attributable to NiSource,929500000.0000,library map

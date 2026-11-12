@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LOAR,952,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,Accounts payable,18606000.0000,library map
 LOAR,952,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,"Accounts receivable, net",88026000.0000,library map
-LOAR,952,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002000178-26-000003,,,,note-sourced default tag (no face line)
+LOAR,952,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002000178-26-000003,,,38500000.0000,note fact present in the filing (FSN value)
 LOAR,952,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002000178-26-000003,R4,Net income (loss) per common share - Basic,0.7700,library map
 LOAR,952,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-3,N,,sec_api,0002000178-26-000003,R7,Capital expenditures,13023000.0000,combined line (library or label demote)
 LOAR,952,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,Cash and cash equivalents,84827000.0000,library map
@@ -21,13 +21,13 @@ LOAR,952,deposits,OUT,,,,,,,,0002000178-26-000003,,,,not a bank
 LOAR,952,depreciation_and_amortization,not_presented,,,,,,,,0002000178-26-000003,,,,single component only
 LOAR,952,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002000178-26-000003,R4,Net income (loss) per common share - Diluted,0.7500,library map
 LOAR,952,dividends_paid,not_presented,,,,,,,,0002000178-26-000003,,,,no face line
-LOAR,952,dividends_per_share,not_presented,,,,,,,,0002000178-26-000003,,,,no face line
+LOAR,952,dividends_per_share,not_presented,,,,,,,,0002000178-26-000003,,,,no face line and no note fact
 LOAR,952,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,Goodwill,1008377000.0000,library map
 LOAR,952,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,Gross profit,261325000.0000,library map
 LOAR,952,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,Income before income taxes,80578000.0000,library map
 LOAR,952,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,Income tax provision,8432000.0000,library map
 LOAR,952,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,"Interest expense, net",25665000.0000,combined line (library or label demote)
-LOAR,952,interest_income,not_presented,,,,,,,,0002000178-26-000003,,,,no face line
+LOAR,952,interest_income,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,"Interest expense, net",25665000.0000,interest income only inside a net/other face line between OI and pretax
 LOAR,952,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,Inventories,109036000.0000,library map
 LOAR,952,loans_net,OUT,,,,,,,,0002000178-26-000003,,,,not a bank
 LOAR,952,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,Net income (loss),72146000.0000,library map

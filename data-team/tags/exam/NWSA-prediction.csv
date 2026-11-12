@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NWSA,512,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,Accounts payable,412000000.0000,library map
 NWSA,512,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,"Receivables, net",1757000000.0000,library map
-NWSA,512,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001564708-26-000175,,,,note-sourced default tag (no face line)
+NWSA,512,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001564708-26-000175,,,100000000.0000,note fact present in the filing (FSN value)
 NWSA,512,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001564708-26-000175,R3,Basic (in dollars per share),1.0300,library map
 NWSA,512,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Capital expenditures,426000000.0000,library map
 NWSA,512,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,Cash and cash equivalents,2095000000.0000,library map
 NWSA,512,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0001564708-26-000175,R8,Net cash used in financing activities from continuing operations,-1014000000.0000,library map
 NWSA,512,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0001564708-26-000175,R8,Net cash used in investing activities from continuing operations,-539000000.0000,library map
-NWSA,512,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001564708-26-000175,,,,note-sourced default tag (no face line)
-NWSA,512,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001564708-26-000175,,,,note-sourced default tag (no face line)
+NWSA,512,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001564708-26-000175,,,272000000.0000,note fact present in the filing (FSN value)
+NWSA,512,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001564708-26-000175,,,90000000.0000,note fact present in the filing (FSN value)
 NWSA,512,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Accounts payable and other liabilities,59000000.0000,combined line (library or label demote)
 NWSA,512,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Receivables and other assets,237000000.0000,combined line (library or label demote)
 NWSA,512,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001564708-26-000175,R8,"Inventories, net",-33000000.0000,library map
@@ -21,27 +21,27 @@ NWSA,512,deposits,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Depreciation and amortization,485000000.0000,library map
 NWSA,512,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001564708-26-000175,R3,Diluted (in dollars per share),1.0300,library map
 NWSA,512,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Dividends paid,204000000.0000,library map
-NWSA,512,dividends_per_share,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
+NWSA,512,dividends_per_share,not_presented,,,,,,,,0001564708-26-000175,,,,no face line and no note fact
 NWSA,512,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,Goodwill,4542000000.0000,library map
 NWSA,512,gross_profit,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
 NWSA,512,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,Income before income tax expense from continuing operations,1046000000.0000,library map
 NWSA,512,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,Income tax expense from continuing operations,303000000.0000,library map
 NWSA,512,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,"Interest income (expense), net",29000000.0000,combined line (library or label demote)
-NWSA,512,interest_income,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
+NWSA,512,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,"Interest income (expense), net",29000000.0000,interest income only inside a net/other face line between OI and pretax
 NWSA,512,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,"Inventory, net",302000000.0000,library map
 NWSA,512,loans_net,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,Net income attributable to News Corporation stockholders,573000000.0000,library map
 NWSA,512,net_interest_income,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,noninterest_expense,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,noninterest_income,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
-NWSA,512,operating_expenses,not_presented,,,,,,,,0001564708-26-000175,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+NWSA,512,operating_expenses,mapped,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,Operating expenses,3892000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 NWSA,512,operating_income,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
 NWSA,512,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001564708-26-000175,R3,"Other, net",-4000000.0000,library map
 NWSA,512,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,"Property, plant and equipment, net",1398000000.0000,library map
 NWSA,512,provision_for_credit_losses,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,research_and_development,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
 NWSA,512,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,Y,RevenuesAbstract,sec_api,0001564708-26-000175,R3,Revenues:,9028000000.0000,library map
-NWSA,512,sbc,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
+NWSA,512,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001564708-26-000175,,,77000000.0000,note fact present in the filing (FSN value)
 NWSA,512,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001564708-26-000175,R3,"Selling, general and administrative",3509000000.0000,library map
 NWSA,512,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001564708-26-000175,R8,Repurchase of shares,641000000.0000,library map
 NWSA,512,shares_outstanding,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
@@ -50,5 +50,5 @@ NWSA,512,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001564708-26-000
 NWSA,512,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001564708-26-000175,R6,Current borrowings,0.0000,printed face components (duration sum; total_debt founder sum)
 NWSA,512,total_interest_income,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,total_liabilities,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
-NWSA,512,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001564708-26-000175,,,,note-sourced default tag (no face line)
-NWSA,512,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001564708-26-000175,,,,note-sourced default tag (no face line)
+NWSA,512,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001564708-26-000175,,,556500000.0000,note fact present in the filing (FSN value)
+NWSA,512,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001564708-26-000175,,,558400000.0000,note fact present in the filing (FSN value)

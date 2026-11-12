@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PCAR,210,accounts_payable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,accounts_receivable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
+PCAR,210,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-057025,,,,no face line and no note fact
 PCAR,210,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-057025,R2,Basic,4.5200,library map
 PCAR,210,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,"Payments for property, plant and equipment",743000000.0000,library map
 PCAR,210,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash (Used in) Provided by Financing Activities,-3082400000.0000,library map
 PCAR,210,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Used in Investing Activities,-2267200000.0000,library map
-PCAR,210,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
-PCAR,210,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
+PCAR,210,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-057025,,,646300000.0000,note fact present in the filing (FSN value)
+PCAR,210,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-057025,,,692800000.0000,note fact present in the filing (FSN value)
 PCAR,210,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Accounts payable and accrued expenses,-432600000.0000,combined line (library or label demote)
 PCAR,210,cf_ar_change,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Inventories,-296400000.0000,library map
@@ -27,7 +27,7 @@ PCAR,210,gross_profit,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Total Income Before Income Taxes,3023500000.0000,library map
 PCAR,210,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Income taxes,647700000.0000,library map
 PCAR,210,interest_expense,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,interest_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
+PCAR,210,interest_income,combined,custom:InterestAndOtherBorrowingExpense,IS,+,-5,N,,fsn_xbrl,0001193125-26-057025,R2,Interest and other borrowing expenses,783000000.0000,interest income only inside a net/other face line between OI and pretax
 PCAR,210,inventory,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,loans_net,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Net Income,2375800000.0000,library map
@@ -41,7 +41,7 @@ PCAR,210,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,
 PCAR,210,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,library map
 PCAR,210,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Revenues,28444800000.0000,library map
-PCAR,210,sbc,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
+PCAR,210,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-057025,,,24100000.0000,note fact present in the filing (FSN value)
 PCAR,210,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,"Selling, general and administrative",735800000.0000,library map
 PCAR,210,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Purchases of treasury stock,36100000.0000,library map
 PCAR,210,shares_outstanding,not_presented,,,,,,,,0001193125-26-057025,,,,no face line

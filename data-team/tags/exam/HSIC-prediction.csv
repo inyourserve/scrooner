@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HSIC,720,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Accounts payable,1154000000.0000,library map
 HSIC,720,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Accounts receivable, net of allowance for credit losses of $90 and $78",1651000000.0000,library map
-HSIC,720,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001000228-26-000013,,,,note-sourced default tag (no face line)
+HSIC,720,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001000228-26-000013,,,180000000.0000,note fact present in the filing (FSN value)
 HSIC,720,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Basic (in dollars per share),3.2900,library map
 HSIC,720,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Purchases of property and equipment,139000000.0000,library map
 HSIC,720,cash_and_equivalents,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
 HSIC,720,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash provided by (used in) financing activities,-188000000.0000,library map
 HSIC,720,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash used in investing activities,-400000000.0000,library map
-HSIC,720,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001000228-26-000013,,,,note-sourced default tag (no face line)
-HSIC,720,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001000228-26-000013,,,,note-sourced default tag (no face line)
+HSIC,720,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,128000000.0000,note fact present in the filing (FSN value)
+HSIC,720,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,151000000.0000,note fact present in the filing (FSN value)
 HSIC,720,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts payable and accrued expenses,216000000.0000,combined line (library or label demote)
 HSIC,720,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts receivable,124000000.0000,library map
 HSIC,720,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Inventories,95000000.0000,library map
@@ -21,7 +21,7 @@ HSIC,720,deposits,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
 HSIC,720,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Depreciation and amortization,311000000.0000,library map
 HSIC,720,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Diluted (in dollars per share),3.2700,library map
 HSIC,720,dividends_paid,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
-HSIC,720,dividends_per_share,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
+HSIC,720,dividends_per_share,not_presented,,,,,,,,0001000228-26-000013,,,,no face line and no note fact
 HSIC,720,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Goodwill,4213000000.0000,library map
 HSIC,720,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Gross profit,4105000000.0000,library map
 HSIC,720,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Income before taxes, equity in earnings of affiliates and noncontrolling interests",533000000.0000,library map

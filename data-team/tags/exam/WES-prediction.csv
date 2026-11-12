@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WES,475,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,Accounts and imbalance payables,319170000.0000,library map
 WES,475,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,"Accounts receivable, net",773197000.0000,combined line (library or label demote)
-WES,475,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001423902-26-000030,,,,note-sourced default tag (no face line)
+WES,475,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001423902-26-000030,,,34800000.0000,note fact present in the filing (FSN value)
 WES,475,basic_eps,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
 WES,475,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0001423902-26-000030,R8,Capital expenditures,727991000.0000,combined line (library or label demote)
 WES,475,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,Cash and cash equivalents,819491000.0000,library map
@@ -21,13 +21,13 @@ WES,475,deposits,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
 WES,475,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001423902-26-000030,R8,Depreciation and amortization,710778000.0000,library map
 WES,475,diluted_eps,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
 WES,475,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001423902-26-000030,R8,Distributions to Partnership unitholders,1431024000.0000,library map
-WES,475,dividends_per_share,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
+WES,475,dividends_per_share,not_presented,,,,,,,,0001423902-26-000030,,,,no face line and no note fact
 WES,475,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,Goodwill,353257000.0000,library map
 WES,475,gross_profit,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
 WES,475,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,Income (loss) before income taxes,1227541000.0000,library map
 WES,475,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,Income tax expense (benefit),15086000.0000,library map
 WES,475,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,Interest expense,390490000.0000,library map
-WES,475,interest_income,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
+WES,475,interest_income,not_presented,,,,,,,,0001423902-26-000030,,,,no face line and no note fact
 WES,475,inventory,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
 WES,475,loans_net,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
 WES,475,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,"Net income (loss) attributable to Western Midstream Partners, LP",1180983000.0000,library map
@@ -50,5 +50,5 @@ WES,475,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001423902-26-0000
 WES,475,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,Short-term debt,448825000.0000,printed face components (duration sum; total_debt founder sum)
 WES,475,total_interest_income,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
 WES,475,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,Total liabilities,10835298000.0000,library map
-WES,475,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001423902-26-000030,,,,note-sourced default tag (no face line)
-WES,475,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001423902-26-000030,,,,note-sourced default tag (no face line)
+WES,475,weighted_basic_shares,not_presented,,,,,,,,0001423902-26-000030,,,,no face line and no note fact
+WES,475,weighted_diluted_shares,not_presented,,,,,,,,0001423902-26-000030,,,,no face line and no note fact

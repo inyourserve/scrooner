@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VFC,886,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000103379-26-000030,R3,Accounts payable,826347000.0000,library map
 VFC,886,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000103379-26-000030,R3,"Accounts receivable, less allowance for doubtful accounts of: March 2026 - $23,964; March 2025 - $31,853",1427957000.0000,library map
-VFC,886,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000103379-26-000030,,,,note-sourced default tag (no face line)
+VFC,886,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000103379-26-000030,,,11400000.0000,note fact present in the filing (FSN value)
 VFC,886,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000103379-26-000030,R5,Total earnings (loss) per common share - basic (in USD per share),0.6500,library map
 VFC,886,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0000103379-26-000030,R7,Capital expenditures,114707000.0000,combined line (library or label demote)
 VFC,886,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000103379-26-000030,R3,Cash and cash equivalents,823943000.0000,library map
 VFC,886,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000103379-26-000030,R7,Cash used by financing activities,-737781000.0000,library map
 VFC,886,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,+,-3,N,,sec_api,0000103379-26-000030,R7,Cash provided (used) by investing activities - continuing operations,407096000.0000,library map
-VFC,886,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000103379-26-000030,,,,note-sourced default tag (no face line)
-VFC,886,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000103379-26-000030,,,,note-sourced default tag (no face line)
+VFC,886,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000103379-26-000030,,,171775000.0000,note fact present in the filing (FSN value)
+VFC,886,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000103379-26-000030,,,145110000.0000,note fact present in the filing (FSN value)
 VFC,886,cf_ap_change,not_presented,,,,,,,,0000103379-26-000030,,,,no face line
 VFC,886,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000103379-26-000030,R7,Accounts receivable,166709000.0000,library map
 VFC,886,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000103379-26-000030,R7,Inventories,-173517000.0000,library map

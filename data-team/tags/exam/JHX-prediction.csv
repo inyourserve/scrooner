@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 JHX,530,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001159152-26-000045,R3,Accounts payable and accrued liabilities,712500000.0000,combined line (library or label demote)
 JHX,530,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001159152-26-000045,R3,"Accounts and other receivables, net",517300000.0000,combined line (library or label demote)
-JHX,530,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001159152-26-000045,,,,note-sourced default tag (no face line)
+JHX,530,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001159152-26-000045,,,183600000.0000,note fact present in the filing (FSN value)
 JHX,530,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001159152-26-000045,R5,Basic (in dollars per share),0.1900,library map
 JHX,530,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001159152-26-000045,R7,"Purchases of property, plant and equipment",383900000.0000,library map
 JHX,530,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001159152-26-000045,R3,Cash and cash equivalents,269200000.0000,library map
 JHX,530,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001159152-26-000045,R7,Net cash provided by (used in) financing activities,3350900000.0000,library map
 JHX,530,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001159152-26-000045,R7,Net cash used in investing activities,-4208500000.0000,library map
-JHX,530,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001159152-26-000045,,,,note-sourced default tag (no face line)
+JHX,530,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001159152-26-000045,,,85100000.0000,note fact present in the filing (FSN value)
 JHX,530,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001159152-26-000045,R7,Cash paid for interest,207800000.0000,library map
 JHX,530,cf_ap_change,not_presented,,,,,,,,0001159152-26-000045,,,,no face line
 JHX,530,cf_ar_change,not_presented,,,,,,,,0001159152-26-000045,,,,no face line
@@ -21,13 +21,13 @@ JHX,530,deposits,OUT,,,,,,,,0001159152-26-000045,,,,not a bank
 JHX,530,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001159152-26-000045,R7,Depreciation and amortization,493500000.0000,library map
 JHX,530,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001159152-26-000045,R5,Diluted (in dollars per share),0.1900,library map
 JHX,530,dividends_paid,not_presented,,,,,,,,0001159152-26-000045,,,,no face line
-JHX,530,dividends_per_share,not_presented,,,,,,,,0001159152-26-000045,,,,no face line
+JHX,530,dividends_per_share,not_presented,,,,,,,,0001159152-26-000045,,,,no face line and no note fact
 JHX,530,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001159152-26-000045,R3,Goodwill,4780400000.0000,library map
 JHX,530,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,Gross profit,1729600000.0000,library map
 JHX,530,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,Income before income taxes,206700000.0000,library map
 JHX,530,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,Income tax expense,102700000.0000,library map
 JHX,530,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,"Interest, net",231100000.0000,combined line (library or label demote)
-JHX,530,interest_income,not_presented,,,,,,,,0001159152-26-000045,,,,no face line
+JHX,530,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,"Interest, net",231100000.0000,interest income only inside a net/other face line between OI and pretax
 JHX,530,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001159152-26-000045,R3,Inventories,635700000.0000,library map
 JHX,530,loans_net,OUT,,,,,,,,0001159152-26-000045,,,,not a bank
 JHX,530,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001159152-26-000045,R5,Net income,104000000.0000,library map

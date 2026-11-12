@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TTEK,750,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Accounts payable,204725000.0000,library map
 TTEK,750,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Accounts receivable, net",1158928000.0000,library map
-TTEK,750,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000831641-25-000032,,,,note-sourced default tag (no face line)
+TTEK,750,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000831641-25-000032,,,37100000.0000,note fact present in the filing (FSN value)
 TTEK,750,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000831641-25-000032,R5,Basic (in dollars per share),0.9400,library map
 TTEK,750,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Capital expenditures,18633000.0000,library map
 TTEK,750,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Cash and cash equivalents,167459000.0000,library map

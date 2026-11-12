@@ -7,8 +7,8 @@ LH,378,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N
 LH,378,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000920148-26-000111,R3,Cash and cash equivalents,532300000.0000,library map
 LH,378,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,-,-5,N,,sec_api,0000920148-26-000111,R8,Net cash (used for) provided by continuing financing activities,-1457000000.0000,library map
 LH,378,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-5,N,,sec_api,0000920148-26-000111,R8,Net cash used for continuing investing activities,-1194000000.0000,library map
-LH,378,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000920148-26-000111,,,,note-sourced default tag (no face line)
-LH,378,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000920148-26-000111,,,,note-sourced default tag (no face line)
+LH,378,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000920148-26-000111,,,171100000.0000,note fact present in the filing (FSN value)
+LH,378,cash_paid_for_interest,not_presented,,,,,,,,0000920148-26-000111,,,,no face line and no note fact
 LH,378,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000920148-26-000111,R8,(Decrease) increase in accounts payable,-52800000.0000,library map
 LH,378,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000920148-26-000111,R8,Increase in accounts receivable,125500000.0000,library map
 LH,378,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000920148-26-000111,R8,Increase in supplies inventory,30200000.0000,library map
@@ -21,13 +21,13 @@ LH,378,deposits,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
 LH,378,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000920148-26-000111,R8,Depreciation and amortization,681100000.0000,library map
 LH,378,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000920148-26-000111,R5,Diluted earnings per share,10.4600,library map
 LH,378,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0000920148-26-000111,R8,Dividends paid,240700000.0000,library map
-LH,378,dividends_per_share,not_presented,,,,,,,,0000920148-26-000111,,,,no face line
+LH,378,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0000920148-26-000111,,,2.8800,note fact present in the filing (FSN value)
 LH,378,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000920148-26-000111,R3,"Goodwill, net",6789500000.0000,library map
 LH,378,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,Gross profit,4012500000.0000,library map
 LH,378,income_before_tax,not_presented,,,,,,,,0000920148-26-000111,,,,no face line
 LH,378,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,Provision for income taxes,229800000.0000,library map
 LH,378,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,Interest expense,224100000.0000,library map
-LH,378,interest_income,not_presented,,,,,,,,0000920148-26-000111,,,,no face line
+LH,378,interest_income,not_presented,,,,,,,,0000920148-26-000111,,,,no face line and no note fact
 LH,378,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000920148-26-000111,R3,Supplies inventory,534700000.0000,library map
 LH,378,loans_net,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
 LH,378,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,Net earnings attributable to Labcorp Holdings Inc.,876500000.0000,library map
@@ -50,5 +50,5 @@ LH,378,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000920148-26-00011
 LH,378,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,Y,ShortTermDebtAndLongTermDebtCurrentMaturities,sec_api,0000920148-26-000111,R3,Short-term borrowings and current portion of long-term debt,500100000.0000,printed face components (duration sum; total_debt founder sum)
 LH,378,total_interest_income,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
 LH,378,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000920148-26-000111,R3,Total liabilities,9756000000.0000,library map
-LH,378,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000920148-26-000111,,,,note-sourced default tag (no face line)
-LH,378,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000920148-26-000111,,,,note-sourced default tag (no face line)
+LH,378,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000920148-26-000111,,,83200000.0000,note fact present in the filing (FSN value)
+LH,378,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000920148-26-000111,,,83800000.0000,note fact present in the filing (FSN value)

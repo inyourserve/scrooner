@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SSRM,889,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000921638-26-000035,R6,Accounts payable,40854000.0000,library map
 SSRM,889,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000921638-26-000035,R6,Trade and other receivables,136721000.0000,combined line (library or label demote)
-SSRM,889,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000921638-26-000035,,,,note-sourced default tag (no face line)
+SSRM,889,amortization_of_intangibles,not_presented,,,,,,,,0000921638-26-000035,,,,no face line and no note fact
 SSRM,889,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000921638-26-000035,R3,Basic (in dollars per share),1.9500,library map
 SSRM,889,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000921638-26-000035,R4,"Additions to mineral properties, plant and equipment",230204000.0000,library map
 SSRM,889,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000921638-26-000035,R6,Cash and cash equivalents,534834000.0000,library map
 SSRM,889,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000921638-26-000035,R4,Net cash provided by (used in) financing activities,26170000.0000,library map
 SSRM,889,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000921638-26-000035,R4,Net cash provided by (used in) investing activities,-339697000.0000,library map
-SSRM,889,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000921638-26-000035,,,,note-sourced default tag (no face line)
-SSRM,889,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000921638-26-000035,,,,note-sourced default tag (no face line)
+SSRM,889,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000921638-26-000035,,,101267000.0000,note fact present in the filing (FSN value)
+SSRM,889,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000921638-26-000035,,,9035000.0000,note fact present in the filing (FSN value)
 SSRM,889,cf_ap_change,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
 SSRM,889,cf_ar_change,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
 SSRM,889,cf_inventory_change,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
@@ -21,13 +21,13 @@ SSRM,889,deposits,OUT,,,,,,,,0000921638-26-000035,,,,not a bank
 SSRM,889,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000921638-26-000035,R4,"Depreciation, depletion, and amortization",116178000.0000,library map
 SSRM,889,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000921638-26-000035,R3,Diluted (in dollars per share),1.8500,library map
 SSRM,889,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,0,-3,N,,sec_api,0000921638-26-000035,R4,Dividends paid,0.0000,library map
-SSRM,889,dividends_per_share,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
+SSRM,889,dividends_per_share,not_presented,,,,,,,,0000921638-26-000035,,,,no face line and no note fact
 SSRM,889,goodwill,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
 SSRM,889,gross_profit,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
 SSRM,889,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0000921638-26-000035,R3,Income (loss) before income and mining taxes,443148000.0000,library map
 SSRM,889,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000921638-26-000035,R3,Income and mining tax benefit (expense),80245000.0000,library map
 SSRM,889,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000921638-26-000035,R3,Interest expense,14575000.0000,library map
-SSRM,889,interest_income,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
+SSRM,889,interest_income,not_presented,,,,,,,,0000921638-26-000035,,,,no face line and no note fact
 SSRM,889,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000921638-26-000035,R6,Inventories,516321000.0000,library map
 SSRM,889,loans_net,OUT,,,,,,,,0000921638-26-000035,,,,not a bank
 SSRM,889,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000921638-26-000035,R3,Net income (loss) attributable to SSR Mining shareholders,395754000.0000,library map

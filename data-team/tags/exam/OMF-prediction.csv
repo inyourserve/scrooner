@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OMF,891,accounts_payable,not_presented,,,,,,,,0001584207-26-000008,,,,no face line
 OMF,891,accounts_receivable,not_presented,,,,,,,,0001584207-26-000008,,,,no face line
-OMF,891,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001584207-26-000008,,,,note-sourced default tag (no face line)
+OMF,891,amortization_of_intangibles,not_presented,,,,,,,,0001584207-26-000008,,,,no face line and no note fact
 OMF,891,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001584207-26-000008,R5,Basic (in dollars per share),6.5900,library map
 OMF,891,capex,not_presented,,,,,,,,0001584207-26-000008,,,,no face line
 OMF,891,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001584207-26-000008,R3,Cash and cash equivalents,914000000.0000,library map

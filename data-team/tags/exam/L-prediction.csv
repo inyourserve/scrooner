@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 L,417,accounts_payable,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
 L,417,accounts_receivable,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
-L,417,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
+L,417,amortization_of_intangibles,not_presented,,,,,,,,0000060086-26-000008,,,,no face line and no note fact
 L,417,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000060086-26-000008,R5,Basic net income per share (in dollars per share),7.9800,library map
 L,417,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,"Purchases of property, plant and equipment",579000000.0000,library map
 L,417,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Cash,495000000.0000,library map
 L,417,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000060086-26-000008,R10,Net cash flow used by financing activities,-513000000.0000,library map
 L,417,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000060086-26-000008,R10,Net cash flow used by investing activities,-2828000000.0000,library map
-L,417,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
-L,417,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
+L,417,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000060086-26-000008,,,381000000.0000,note fact present in the filing (FSN value)
+L,417,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000060086-26-000008,,,421000000.0000,note fact present in the filing (FSN value)
 L,417,cf_ap_change,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
 L,417,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,Y,IncreaseDecreaseInReceivables,sec_api,0000060086-26-000008,R10,Receivables,408000000.0000,library map
 L,417,cf_inventory_change,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
@@ -27,7 +27,7 @@ L,417,gross_profit,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insu
 L,417,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Income before income tax,2283000000.0000,library map
 L,417,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Income tax expense,511000000.0000,library map
 L,417,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Interest,437000000.0000,library map
-L,417,interest_income,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,interest_income,not_presented,,,,,,,,0000060086-26-000008,,,,no face line and no note fact
 L,417,inventory,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
 L,417,loans_net,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
 L,417,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Net income attributable to Loews Corporation,1667000000.0000,library map
@@ -41,7 +41,7 @@ L,417,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,000
 L,417,provision_for_credit_losses,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
 L,417,research_and_development,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
 L,417,revenue,mapped,us-gaap:Revenues,IS,+,-6,Y,BenefitsLossesAndExpenses,sec_api,0000060086-26-000008,R5,Total,18454000000.0000,library map
-L,417,sbc,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000060086-26-000008,,,41000000.0000,note fact present in the filing (FSN value)
 L,417,sga_expense,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
 L,417,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,Purchases of Loews Corporation treasury stock,806000000.0000,library map
 L,417,shares_outstanding,not_presented,,,,,,,,0000060086-26-000008,,,,no face line

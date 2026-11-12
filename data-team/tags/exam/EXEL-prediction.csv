@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EXEL,521,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000939767-26-000021,R3,Accounts payable,29623000.0000,library map
 EXEL,521,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000939767-26-000021,R3,"Trade receivables, net",286916000.0000,combined line (library or label demote)
-EXEL,521,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000939767-26-000021,,,,note-sourced default tag (no face line)
+EXEL,521,amortization_of_intangibles,not_presented,,,,,,,,0000939767-26-000021,,,,no face line and no note fact
 EXEL,521,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000939767-26-000021,R5,Basic (in dollars per share),2.8800,library map
 EXEL,521,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000939767-26-000021,R9,"Purchases of property, equipment and other, net",8429000.0000,library map
 EXEL,521,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000939767-26-000021,R3,Cash and cash equivalents,482488000.0000,library map
 EXEL,521,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000939767-26-000021,R9,Net cash used in financing activities,-969594000.0000,library map
 EXEL,521,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0000939767-26-000021,R9,Net cash provided by (used in) investing activities,350441000.0000,library map
 EXEL,521,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0000939767-26-000021,R9,Net cash paid for income taxes,155296000.0000,library map
-EXEL,521,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000939767-26-000021,,,,note-sourced default tag (no face line)
+EXEL,521,cash_paid_for_interest,not_presented,,,,,,,,0000939767-26-000021,,,,no face line and no note fact
 EXEL,521,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000939767-26-000021,R9,Accounts payable and other liabilities,-50152000.0000,combined line (library or label demote)
 EXEL,521,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000939767-26-000021,R9,"Trade receivables, net",21398000.0000,library map
 EXEL,521,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000939767-26-000021,R9,Inventory,-12225000.0000,library map
@@ -21,7 +21,7 @@ EXEL,521,deposits,OUT,,,,,,,,0000939767-26-000021,,,,not a bank
 EXEL,521,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000939767-26-000021,R9,Depreciation and amortization,29055000.0000,library map
 EXEL,521,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000939767-26-000021,R5,Diluted (in dollars per share),2.7800,library map
 EXEL,521,dividends_paid,not_presented,,,,,,,,0000939767-26-000021,,,,no face line
-EXEL,521,dividends_per_share,not_presented,,,,,,,,0000939767-26-000021,,,,no face line
+EXEL,521,dividends_per_share,not_presented,,,,,,,,0000939767-26-000021,,,,no face line and no note fact
 EXEL,521,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000939767-26-000021,R3,Goodwill,63684000.0000,library map
 EXEL,521,gross_profit,not_presented,,,,,,,,0000939767-26-000021,,,,no face line
 EXEL,521,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-3,N,,sec_api,0000939767-26-000021,R5,Income before income taxes,941206000.0000,library map

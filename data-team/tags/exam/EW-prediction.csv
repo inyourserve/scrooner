@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EW,236,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001099800-26-000009,R3,Accounts payable,227500000.0000,library map
 EW,236,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001099800-26-000009,R3,"Accounts receivable, net of allowances of $15.0 and $11.6, respectively",659600000.0000,library map
-EW,236,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001099800-26-000009,,,,note-sourced default tag (no face line)
+EW,236,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001099800-26-000009,,,8400000.0000,note fact present in the filing (FSN value)
 EW,236,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001099800-26-000009,R5,Basic earnings per share (in dollars per share),1.8400,library map
 EW,236,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001099800-26-000009,R7,Capital expenditures,260200000.0000,library map
 EW,236,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001099800-26-000009,R3,Cash and cash equivalents,2938000000.0000,library map
 EW,236,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001099800-26-000009,R7,Net cash used in financing activities,-956800000.0000,library map
 EW,236,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001099800-26-000009,R7,Net cash (used in) provided by investing activities,-712900000.0000,library map
-EW,236,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001099800-26-000009,,,,note-sourced default tag (no face line)
-EW,236,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001099800-26-000009,,,,note-sourced default tag (no face line)
+EW,236,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001099800-26-000009,,,490400000.0000,note fact present in the filing (FSN value)
+EW,236,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001099800-26-000009,,,20200000.0000,note fact present in the filing (FSN value)
 EW,236,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001099800-26-000009,R7,Accounts payable and accrued liabilities,395100000.0000,combined line (library or label demote)
 EW,236,cf_ar_change,not_presented,,,,,,,,0001099800-26-000009,,,,no face line
 EW,236,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001099800-26-000009,R7,Inventories,-50700000.0000,library map
@@ -21,7 +21,7 @@ EW,236,deposits,OUT,,,,,,,,0001099800-26-000009,,,,not a bank
 EW,236,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001099800-26-000009,R7,Depreciation and amortization,156600000.0000,library map
 EW,236,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001099800-26-000009,R5,Diluted earnings per share (in dollars per share),1.8300,library map
 EW,236,dividends_paid,not_presented,,,,,,,,0001099800-26-000009,,,,no face line
-EW,236,dividends_per_share,not_presented,,,,,,,,0001099800-26-000009,,,,no face line
+EW,236,dividends_per_share,not_presented,,,,,,,,0001099800-26-000009,,,,no face line and no note fact
 EW,236,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001099800-26-000009,R3,Goodwill (Note 11),1768600000.0000,library map
 EW,236,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001099800-26-000009,R5,Gross profit,4733400000.0000,library map
 EW,236,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001099800-26-000009,R5,Income from continuing operations before provision for income taxes,1272900000.0000,library map

@@ -7,7 +7,7 @@ STLD,307,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3
 STLD,307,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-021395,R2,Cash and equivalents,769878000.0000,library map
 STLD,307,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-021395,R8,Net cash used in financing activities,-294315000.0000,library map
 STLD,307,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-021395,R8,Net cash used in investing activities,-974957000.0000,library map
-STLD,307,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-021395,,,,note-sourced default tag (no face line)
+STLD,307,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-021395,,,152000000.0000,note fact present in the filing (FSN value)
 STLD,307,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-021395,R8,Cash paid for interest,156749000.0000,library map
 STLD,307,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001104659-26-021395,R8,Accounts payable,206843000.0000,library map
 STLD,307,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001104659-26-021395,R8,Accounts receivable,157456000.0000,library map
@@ -27,7 +27,7 @@ STLD,307,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001104659-2
 STLD,307,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,Income before income taxes,1492971000.0000,library map
 STLD,307,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,Income tax expense,305660000.0000,library map
 STLD,307,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-021395,R4,"Interest expense, net of capitalized interest",70043000.0000,library map
-STLD,307,interest_income,not_presented,,,,,,,,0001104659-26-021395,,,,no face line
+STLD,307,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001104659-26-021395,,,36800000.0000,note fact present in the filing (FSN value)
 STLD,307,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-021395,R2,Inventories,3738516000.0000,library map
 STLD,307,loans_net,OUT,,,,,,,,0001104659-26-021395,,,,not a bank
 STLD,307,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001104659-26-021395,R4,"Net income attributable to Steel Dynamics, Inc.",1185595000.0000,library map

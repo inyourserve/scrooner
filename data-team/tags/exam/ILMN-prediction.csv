@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ILMN,280,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001110803-26-000024,R3,Accounts payable,240000000.0000,library map
 ILMN,280,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001110803-26-000024,R3,"Accounts receivable, net",854000000.0000,library map
-ILMN,280,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001110803-26-000024,,,,note-sourced default tag (no face line)
+ILMN,280,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001110803-26-000024,,,67000000.0000,note fact present in the filing (FSN value)
 ILMN,280,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001110803-26-000024,R5,Basic (in dollars per share),5.4700,library map
 ILMN,280,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001110803-26-000024,R8,Net purchases of property and equipment,148000000.0000,library map
 ILMN,280,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001110803-26-000024,R3,Cash and cash equivalents,1418000000.0000,combined line (library or label demote)
@@ -21,7 +21,7 @@ ILMN,280,deposits,OUT,,,,,,,,0001110803-26-000024,,,,not a bank
 ILMN,280,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-6,N,,sec_api,0001110803-26-000024,R8,Depreciation expense,203000000.0000,printed face components (duration sum; total_debt founder sum)
 ILMN,280,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001110803-26-000024,R5,Diluted (in dollars per share),5.4500,library map
 ILMN,280,dividends_paid,not_presented,,,,,,,,0001110803-26-000024,,,,no face line
-ILMN,280,dividends_per_share,not_presented,,,,,,,,0001110803-26-000024,,,,no face line
+ILMN,280,dividends_per_share,not_presented,,,,,,,,0001110803-26-000024,,,,no face line and no note fact
 ILMN,280,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001110803-26-000024,R3,Goodwill,1113000000.0000,library map
 ILMN,280,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,Gross profit,2870000000.0000,library map
 ILMN,280,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,Income (loss) before income taxes,1086000000.0000,library map

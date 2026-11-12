@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TKO,312,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-071651,R2,Accounts payable,194807000.0000,library map
 TKO,312,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-071651,R2,"Accounts receivable (net of allowance for doubtful accounts of $30,733 and $20,639, respectively)",558277000.0000,library map
-TKO,312,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-071651,,,,note-sourced default tag (no face line)
+TKO,312,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-071651,,,367800000.0000,note fact present in the filing (FSN value)
 TKO,312,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-071651,R4,Basic net earnings (loss) per share of Class A common stock,2.4200,library map
 TKO,312,capex,not_presented,,,,,,,,0001193125-26-071651,,,,no face line
 TKO,312,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-071651,R2,Cash and cash equivalents,831100000.0000,library map
@@ -21,20 +21,20 @@ TKO,312,deposits,OUT,,,,,,,,0001193125-26-071651,,,,not a bank
 TKO,312,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-071651,R8,Depreciation and amortization,484990000.0000,library map
 TKO,312,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-071651,R4,Diluted net earnings (loss) per share of Class A common stock,2.2600,library map
 TKO,312,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001193125-26-071651,R8,Dividends paid,185155000.0000,library map
-TKO,312,dividends_per_share,not_presented,,,,,,,,0001193125-26-071651,,,,no face line
+TKO,312,dividends_per_share,not_presented,,,,,,,,0001193125-26-071651,,,,no face line and no note fact
 TKO,312,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-071651,R2,Goodwill,8444886000.0000,library map
 TKO,312,gross_profit,not_presented,,,,,,,,0001193125-26-071651,,,,no face line
 TKO,312,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,Income (loss) before income taxes and equity earnings of affiliates,606624000.0000,library map
 TKO,312,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,Provision for income taxes,73771000.0000,library map
 TKO,312,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,"Interest expense, net",202724000.0000,combined line (library or label demote)
-TKO,312,interest_income,not_presented,,,,,,,,0001193125-26-071651,,,,no face line
+TKO,312,interest_income,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,"Interest expense, net",202724000.0000,interest income only inside a net/other face line between OI and pretax
 TKO,312,inventory,not_presented,,,,,,,,0001193125-26-071651,,,,no face line
 TKO,312,loans_net,OUT,,,,,,,,0001193125-26-071651,,,,not a bank
 TKO,312,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,"Net income (loss) attributable to TKO Group Holdings, Inc.",195403000.0000,library map
 TKO,312,net_interest_income,OUT,,,,,,,,0001193125-26-071651,,,,not a bank
 TKO,312,noninterest_expense,OUT,,,,,,,,0001193125-26-071651,,,,not a bank
 TKO,312,noninterest_income,OUT,,,,,,,,0001193125-26-071651,,,,not a bank
-TKO,312,operating_expenses,not_presented,,,,,,,,0001193125-26-071651,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+TKO,312,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,Total operating expenses,3900136000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 TKO,312,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-071651,R4,Operating income,835015000.0000,library map
 TKO,312,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-071651,R4,"Other (expense) income, net",-25667000.0000,library map
 TKO,312,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071651,R2,"Property, buildings and equipment, net",639930000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RRC,695,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-067292,R2,Accounts payable,164352000.0000,library map
 RRC,695,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-067292,R2,"Accounts receivable, less allowance for doubtful accounts of $248 and $255",358687000.0000,library map
-RRC,695,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-067292,,,,note-sourced default tag (no face line)
+RRC,695,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-067292,,,,no face line and no note fact
 RRC,695,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-067292,R4,Basic,2.7600,library map
 RRC,695,capex,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-067292,R2,Cash and cash equivalents,204000.0000,library map
 RRC,695,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-067292,R6,Net cash used in financing activities,-834217000.0000,library map
 RRC,695,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-067292,R6,Net cash used in investing activities,-641393000.0000,library map
-RRC,695,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-067292,,,,note-sourced default tag (no face line)
-RRC,695,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-067292,,,,note-sourced default tag (no face line)
+RRC,695,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-067292,,,,no face line and no note fact
+RRC,695,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-067292,,,104719000.0000,note fact present in the filing (FSN value)
 RRC,695,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-067292,R6,Accounts payable,9087000.0000,library map
 RRC,695,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-067292,R6,Accounts receivable,56398000.0000,library map
 RRC,695,cf_inventory_change,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
@@ -27,7 +27,7 @@ RRC,695,gross_profit,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,income_before_tax,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-067292,R4,Income tax expense (benefit),173666000.0000,library map
 RRC,695,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-067292,R4,Interest,104897000.0000,library map
-RRC,695,interest_income,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
+RRC,695,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001193125-26-067292,,,1100000.0000,note fact present in the filing (FSN value)
 RRC,695,inventory,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,loans_net,OUT,,,,,,,,0001193125-26-067292,,,,not a bank
 RRC,695,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067292,R4,Net income,658024000.0000,library map
@@ -41,7 +41,7 @@ RRC,695,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0
 RRC,695,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-067292,,,,not a bank
 RRC,695,research_and_development,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-067292,R4,Total Revenues from Contracts with Customers,2988164000.0000,library map
-RRC,695,sbc,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
+RRC,695,sbc,not_presented,,,,,,,,0001193125-26-067292,,,,no face line and no note fact
 RRC,695,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-067292,R4,General and administrative,178315000.0000,lone G&A line
 RRC,695,share_buybacks,not_presented,,,,,,,,0001193125-26-067292,,,,no face line
 RRC,695,shares_outstanding,not_presented,,,,,,,,0001193125-26-067292,,,,no face line

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 H,513,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,Accounts payable,451000000.0000,library map
 H,513,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,"Receivables, net of allowances of $79 and $62 at December 31, 2025 and December 31, 2024, respectively",1123000000.0000,combined line (library or label demote)
-H,513,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001468174-26-000007,,,,note-sourced default tag (no face line)
+H,513,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001468174-26-000007,,,145000000.0000,note fact present in the filing (FSN value)
 H,513,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001468174-26-000007,R3,Net income (loss) attributable to Hyatt Hotels CorporationBasic (in dollars per share),-0.5500,library map
 H,513,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001468174-26-000007,R8,Capital expenditures,220000000.0000,library map
 H,513,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,Cash and cash equivalents,787000000.0000,library map
@@ -27,7 +27,7 @@ H,513,gross_profit,not_presented,,,,,,,,0001468174-26-000007,,,,no face line
 H,513,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001468174-26-000007,R3,Income before income taxes,81000000.0000,library map
 H,513,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001468174-26-000007,R3,Provision for income taxes,130000000.0000,library map
 H,513,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001468174-26-000007,R3,Interest expense,317000000.0000,library map
-H,513,interest_income,not_presented,,,,,,,,0001468174-26-000007,,,,no face line
+H,513,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001468174-26-000007,,,137000000.0000,note fact present in the filing (FSN value)
 H,513,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,Inventories,8000000.0000,library map
 H,513,loans_net,OUT,,,,,,,,0001468174-26-000007,,,,not a bank
 H,513,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001468174-26-000007,R3,Net income (loss) attributable to Hyatt Hotels Corporation,-52000000.0000,library map
@@ -50,5 +50,5 @@ H,513,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001468174-26-000007
 H,513,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,Current maturities of long-term debt,6000000.0000,printed face components (duration sum; total_debt founder sum)
 H,513,total_interest_income,OUT,,,,,,,,0001468174-26-000007,,,,not a bank
 H,513,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001468174-26-000007,R6,Total liabilities,10377000000.0000,library map
-H,513,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001468174-26-000007,,,,note-sourced default tag (no face line)
-H,513,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001468174-26-000007,,,,note-sourced default tag (no face line)
+H,513,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001468174-26-000007,,,95504061.0000,note fact present in the filing (FSN value)
+H,513,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001468174-26-000007,,,95504061.0000,note fact present in the filing (FSN value)

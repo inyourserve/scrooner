@@ -7,8 +7,8 @@ ZBH,477,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,
 ZBH,477,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Cash and cash equivalents,591900000.0000,library map
 ZBH,477,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Net cash provided by (used in) financing activities,326000000.0000,library map
 ZBH,477,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Net cash used in investing activities,-1975700000.0000,library map
-ZBH,477,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-059853,,,,note-sourced default tag (no face line)
-ZBH,477,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-059853,,,,note-sourced default tag (no face line)
+ZBH,477,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-059853,,,376900000.0000,note fact present in the filing (FSN value)
+ZBH,477,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-059853,,,298400000.0000,note fact present in the filing (FSN value)
 ZBH,477,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Accounts payable and accrued liabilities,101800000.0000,combined line (library or label demote)
 ZBH,477,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Receivables,127300000.0000,library map
 ZBH,477,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Inventories,-98200000.0000,library map
@@ -27,7 +27,7 @@ ZBH,477,gross_profit,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
 ZBH,477,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Earnings before income taxes,830800000.0000,library map
 ZBH,477,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Provision for income taxes,125700000.0000,library map
 ZBH,477,interest_expense,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
-ZBH,477,interest_income,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
+ZBH,477,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001193125-26-059853,R2,"Interest expense, net",-292800000.0000,interest income only inside a net/other face line between OI and pretax
 ZBH,477,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Inventories,2286400000.0000,library map
 ZBH,477,loans_net,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
 ZBH,477,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Net Earnings of Zimmer Biomet Holdings, Inc.",705100000.0000,library map

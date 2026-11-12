@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NTRA,216,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,Accounts payable,33156000.0000,library map
 NTRA,216,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,"Accounts receivable, net of allowance of $8,018 in 2025 and $7,259 in 2024",296528000.0000,library map
-NTRA,216,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-020881,,,,note-sourced default tag (no face line)
+NTRA,216,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-020881,,,3900000.0000,note fact present in the filing (FSN value)
 NTRA,216,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001104659-26-020881,R4,Basic (in dollars per share),-1.5200,library map
 NTRA,216,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-020881,R6,"Purchases of property and equipment, net",106188000.0000,library map
 NTRA,216,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,"Cash, cash equivalents and restricted cash",1076140000.0000,combined line (library or label demote)
@@ -21,20 +21,20 @@ NTRA,216,deposits,OUT,,,,,,,,0001104659-26-020881,,,,not a bank
 NTRA,216,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-020881,R6,Depreciation and amortization,41764000.0000,library map
 NTRA,216,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001104659-26-020881,R4,Diluted (in dollars per share),-1.5200,library map
 NTRA,216,dividends_paid,not_presented,,,,,,,,0001104659-26-020881,,,,no face line
-NTRA,216,dividends_per_share,not_presented,,,,,,,,0001104659-26-020881,,,,no face line
+NTRA,216,dividends_per_share,not_presented,,,,,,,,0001104659-26-020881,,,,no face line and no note fact
 NTRA,216,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,Goodwill,141070000.0000,library map
 NTRA,216,gross_profit,not_presented,,,,,,,,0001104659-26-020881,,,,no face line
 NTRA,216,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001104659-26-020881,R4,Loss before income taxes,-268089000.0000,library map
 NTRA,216,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001104659-26-020881,R4,Income tax benefit (expense),-59929000.0000,library map
 NTRA,216,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001104659-26-020881,R4,Interest expense,4069000.0000,library map
-NTRA,216,interest_income,not_presented,,,,,,,,0001104659-26-020881,,,,no face line
+NTRA,216,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001104659-26-020881,R4,"Interest and other income, net",45891000.0000,interest income only inside a net/other face line between OI and pretax
 NTRA,216,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,Inventory,68443000.0000,library map
 NTRA,216,loans_net,OUT,,,,,,,,0001104659-26-020881,,,,not a bank
 NTRA,216,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-020881,R4,Net loss,-208160000.0000,library map
 NTRA,216,net_interest_income,OUT,,,,,,,,0001104659-26-020881,,,,not a bank
 NTRA,216,noninterest_expense,OUT,,,,,,,,0001104659-26-020881,,,,not a bank
 NTRA,216,noninterest_income,OUT,,,,,,,,0001104659-26-020881,,,,not a bank
-NTRA,216,operating_expenses,not_presented,,,,,,,,0001104659-26-020881,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+NTRA,216,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-26-020881,R4,Total cost and expenses,2616024000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 NTRA,216,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-020881,R4,Loss from operations,-309911000.0000,library map
 NTRA,216,other_income_expense_net,not_presented,,,,,,,,0001104659-26-020881,,,,no face line
 NTRA,216,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-020881,R2,"Property and equipment, net",241184000.0000,library map

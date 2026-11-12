@@ -7,8 +7,8 @@ FSS,870,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,
 FSS,870,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-011576,R6,Cash and cash equivalents,63700000.0000,library map
 FSS,870,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001628280-26-011576,R8,Net cash provided by (used for) financing activities,244500000.0000,library map
 FSS,870,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001628280-26-011576,R8,Net cash used for investing activities,-527900000.0000,library map
-FSS,870,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-011576,,,,note-sourced default tag (no face line)
-FSS,870,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-011576,,,,note-sourced default tag (no face line)
+FSS,870,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-011576,,,64900000.0000,note fact present in the filing (FSN value)
+FSS,870,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001628280-26-011576,,,14300000.0000,note fact present in the filing (FSN value)
 FSS,870,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001628280-26-011576,R8,Accounts payable,3400000.0000,library map
 FSS,870,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001628280-26-011576,R8,Accounts receivable,26600000.0000,library map
 FSS,870,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001628280-26-011576,R8,Inventories,28100000.0000,library map
@@ -27,7 +27,7 @@ FSS,870,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26
 FSS,870,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,Income before income taxes,324500000.0000,library map
 FSS,870,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,Income tax expense,77900000.0000,library map
 FSS,870,interest_expense,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,"Interest expense, net",14100000.0000,combined line (library or label demote)
-FSS,870,interest_income,not_presented,,,,,,,,0001628280-26-011576,,,,no face line
+FSS,870,interest_income,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,"Interest expense, net",14100000.0000,interest income only inside a net/other face line between OI and pretax
 FSS,870,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-011576,R6,Inventories,471600000.0000,library map
 FSS,870,loans_net,OUT,,,,,,,,0001628280-26-011576,,,,not a bank
 FSS,870,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,Net income,246600000.0000,library map

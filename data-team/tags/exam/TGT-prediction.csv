@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TGT,181,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000027419-26-000016,R5,Accounts payable,12622000000.0000,library map
 TGT,181,accounts_receivable,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
-TGT,181,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000027419-26-000016,,,,note-sourced default tag (no face line)
+TGT,181,amortization_of_intangibles,not_presented,,,,,,,,0000027419-26-000016,,,,no face line and no note fact
 TGT,181,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000027419-26-000016,R3,Basic earnings per share (in usd per share),8.1600,library map
 TGT,181,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000027419-26-000016,R7,Expenditures for property and equipment,3727000000.0000,library map
 TGT,181,cash_and_equivalents,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
 TGT,181,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000027419-26-000016,R7,Cash used in financing activities,-2187000000.0000,library map
 TGT,181,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000027419-26-000016,R7,Cash used in investing activities,-3649000000.0000,library map
-TGT,181,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000027419-26-000016,,,,note-sourced default tag (no face line)
+TGT,181,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000027419-26-000016,,,1091000000.0000,note fact present in the filing (FSN value)
 TGT,181,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000027419-26-000016,R7,"Interest paid, net of capitalized interest",629000000.0000,library map
 TGT,181,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0000027419-26-000016,R7,Accounts payable,-501000000.0000,library map
 TGT,181,cf_ar_change,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
@@ -21,13 +21,13 @@ TGT,181,deposits,OUT,,,,,,,,0000027419-26-000016,,,,not a bank
 TGT,181,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000027419-26-000016,R7,Depreciation and amortization,3134000000.0000,library map
 TGT,181,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000027419-26-000016,R3,Diluted earnings per share (in usd per share),8.1300,library map
 TGT,181,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000027419-26-000016,R7,Dividends paid,2053000000.0000,library map
-TGT,181,dividends_per_share,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
+TGT,181,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000027419-26-000016,,,4.5400,note fact present in the filing (FSN value)
 TGT,181,goodwill,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
 TGT,181,gross_profit,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
 TGT,181,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000027419-26-000016,R3,Earnings before income taxes,4767000000.0000,library map
 TGT,181,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000027419-26-000016,R3,Provision for income taxes,1062000000.0000,library map
 TGT,181,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000027419-26-000016,R3,Net interest expense,445000000.0000,library map
-TGT,181,interest_income,not_presented,,,,,,,,0000027419-26-000016,,,,no face line
+TGT,181,interest_income,not_presented,,,,,,,,0000027419-26-000016,,,,no face line and no note fact
 TGT,181,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000027419-26-000016,R5,Inventory,12304000000.0000,library map
 TGT,181,loans_net,OUT,,,,,,,,0000027419-26-000016,,,,not a bank
 TGT,181,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0000027419-26-000016,R3,Net earnings,3705000000.0000,library map

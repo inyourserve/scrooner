@@ -21,13 +21,13 @@ AXS,830,deposits,OUT,,,,,,,,0001214816-26-000097,,,,not a bank
 AXS,830,depreciation_and_amortization,not_presented,,,,,,,,0001214816-26-000097,,,,no face line
 AXS,830,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001214816-26-000097,R5,Earnings per diluted common share (in dollars per share),12.3500,library map
 AXS,830,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001214816-26-000097,R8,Dividends paid - common shares,142732000.0000,library map
-AXS,830,dividends_per_share,not_presented,,,,,,,,0001214816-26-000097,,,,no face line
+AXS,830,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001214816-26-000097,,,1.7600,note fact present in the filing (FSN value)
 AXS,830,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001214816-26-000097,R3,Goodwill,66498000.0000,library map
 AXS,830,gross_profit,OUT,,,,,,,,0001214816-26-000097,,,,sector template (bank/insurer)
 AXS,830,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001214816-26-000097,R5,Income before income taxes and interest in income of equity method investments,1216178000.0000,library map
 AXS,830,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001214816-26-000097,R5,Income tax (expense) benefit,216732000.0000,library map
 AXS,830,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001214816-26-000097,R5,Interest expense and financing costs,66659000.0000,library map
-AXS,830,interest_income,not_presented,,,,,,,,0001214816-26-000097,,,,no face line
+AXS,830,interest_income,not_presented,,,,,,,,0001214816-26-000097,,,,no face line and no note fact
 AXS,830,inventory,OUT,,,,,,,,0001214816-26-000097,,,,sector template (bank/insurer)
 AXS,830,loans_net,OUT,,,,,,,,0001214816-26-000097,,,,not a bank
 AXS,830,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001214816-26-000097,R5,Net income,1008898000.0000,library map

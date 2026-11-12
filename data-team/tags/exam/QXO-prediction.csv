@@ -21,13 +21,13 @@ QXO,643,deposits,OUT,,,,,,,,0001628280-26-012601,,,,not a bank
 QXO,643,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,IS,+,-5,N,,sec_api,0001628280-26-012601,R5,Depreciation,108400000.0000,library map
 QXO,643,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-012601,R5,Loss per common share - diluted (in usd per share),-0.6300,library map
 QXO,643,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,0,-5,N,,sec_api,0001628280-26-012601,R8,Payment of common-stock dividend,0.0000,library map
-QXO,643,dividends_per_share,not_presented,,,,,,,,0001628280-26-012601,,,,no face line
+QXO,643,dividends_per_share,not_presented,,,,,,,,0001628280-26-012601,,,,no face line and no note fact
 QXO,643,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-012601,R3,Goodwill,5111300000.0000,library map
 QXO,643,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-012601,R5,Gross profit,1572700000.0000,library map
 QXO,643,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0001628280-26-012601,R5,(Loss) income before (benefit from) provision for income taxes,-337100000.0000,library map
 QXO,643,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001628280-26-012601,R5,(Benefit from) provision for income taxes,-57700000.0000,library map
 QXO,643,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001628280-26-012601,R5,"Interest (expense) income, net",-47700000.0000,combined line (library or label demote)
-QXO,643,interest_income,not_presented,,,,,,,,0001628280-26-012601,,,,no face line
+QXO,643,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-012601,,,125800000.0000,note fact present in the filing (FSN value)
 QXO,643,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-012601,R3,"Inventories, net",1497300000.0000,library map
 QXO,643,loans_net,OUT,,,,,,,,0001628280-26-012601,,,,not a bank
 QXO,643,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-012601,R5,Net (loss) income,-279400000.0000,library map

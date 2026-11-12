@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SLB,175,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Accounts payable and accrued liabilities,11490000000.0000,combined line (library or label demote)
 SLB,175,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Receivables less allowance for doubtful accounts (2025 - $335; 2024 - $325),8689000000.0000,combined line (library or label demote)
-SLB,175,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-021017,,,,note-sourced default tag (no face line)
+SLB,175,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-021017,,,376000000.0000,note fact present in the filing (FSN value)
 SLB,175,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-021017,R2,Basic earnings per share of SLB,2.3800,library map
 SLB,175,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Capital expenditures,1694000000.0000,library map
 SLB,175,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Cash,3036000000.0000,library map
 SLB,175,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-021017,R6,NET CASH USED IN FINANCING ACTIVITIES,-5642000000.0000,library map
 SLB,175,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-021017,R6,NET CASH USED IN INVESTING ACTIVITIES,-1412000000.0000,library map
-SLB,175,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-021017,,,,note-sourced default tag (no face line)
-SLB,175,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-021017,,,,note-sourced default tag (no face line)
+SLB,175,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-021017,,,1198000000.0000,note fact present in the filing (FSN value)
+SLB,175,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-021017,,,560000000.0000,note fact present in the filing (FSN value)
 SLB,175,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Increase (decrease) in accounts payable and accrued liabilities,218000000.0000,combined line (library or label demote)
 SLB,175,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Increase in receivables,75000000.0000,library map
 SLB,175,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Increase in inventories,72000000.0000,library map
@@ -21,13 +21,13 @@ SLB,175,deposits,OUT,,,,,,,,0001193125-26-021017,,,,not a bank
 SLB,175,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Depreciation and amortization,2643000000.0000,library map
 SLB,175,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-021017,R2,Diluted earnings per share of SLB,2.3500,library map
 SLB,175,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001193125-26-021017,R6,Dividends paid,1602000000.0000,library map
-SLB,175,dividends_per_share,not_presented,,,,,,,,0001193125-26-021017,,,,no face line
+SLB,175,dividends_per_share,not_presented,,,,,,,,0001193125-26-021017,,,,no face line and no note fact
 SLB,175,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Goodwill,16794000000.0000,library map
 SLB,175,gross_profit,not_presented,,,,,,,,0001193125-26-021017,,,,no face line
 SLB,175,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-021017,R2,Income before taxes,4291000000.0000,library map
 SLB,175,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-021017,R2,Tax expense,840000000.0000,library map
 SLB,175,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-021017,R2,Interest,558000000.0000,library map
-SLB,175,interest_income,not_presented,,,,,,,,0001193125-26-021017,,,,no face line
+SLB,175,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001193125-26-021017,,,136000000.0000,note fact present in the filing (FSN value)
 SLB,175,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Inventories,5032000000.0000,library map
 SLB,175,loans_net,OUT,,,,,,,,0001193125-26-021017,,,,not a bank
 SLB,175,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-021017,R2,Net income attributable to SLB,3374000000.0000,library map

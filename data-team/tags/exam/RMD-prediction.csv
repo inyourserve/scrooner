@@ -27,7 +27,7 @@ RMD,308,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000943819-26
 RMD,308,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000943819-26-000047,R5,Income before income taxes,1919416000.0000,library map
 RMD,308,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000943819-26-000047,R5,Income taxes (note 12),396123000.0000,library map
 RMD,308,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0000943819-26-000047,R5,"Interest income (expense), net",49914000.0000,combined line (library or label demote)
-RMD,308,interest_income,not_presented,,,,,,,,0000943819-26-000047,,,,no face line
+RMD,308,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0000943819-26-000047,R5,"Interest income (expense), net",49914000.0000,interest income only inside a net/other face line between OI and pretax
 RMD,308,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000943819-26-000047,R3,Inventories (note 4),945805000.0000,library map
 RMD,308,loans_net,OUT,,,,,,,,0000943819-26-000047,,,,not a bank
 RMD,308,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000943819-26-000047,R5,Net income,1523293000.0000,library map

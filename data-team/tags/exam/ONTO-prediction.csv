@@ -8,7 +8,7 @@ ONTO,661,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingVal
 ONTO,661,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-066937,R6,Net cash and cash equivalents provided by (used in) financing activities,-75150000.0000,library map
 ONTO,661,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-066937,R6,Net cash and cash equivalents provided by (used in) investing activities,-121568000.0000,library map
 ONTO,661,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-066937,R6,"Income taxes paid (received), net",36039000.0000,library map
-ONTO,661,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-066937,,,,note-sourced default tag (no face line)
+ONTO,661,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-066937,,,,no face line and no note fact
 ONTO,661,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-066937,R6,Accounts payable,50937000.0000,library map
 ONTO,661,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001193125-26-066937,R6,Accounts receivable,-53783000.0000,library map
 ONTO,661,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-066937,R6,Inventories,3029000.0000,library map
@@ -21,13 +21,13 @@ ONTO,661,deposits,OUT,,,,,,,,0001193125-26-066937,,,,not a bank
 ONTO,661,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001193125-26-066937,R6,Depreciation,21030000.0000,printed face components (duration sum; total_debt founder sum)
 ONTO,661,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-066937,R2,Diluted,2.7800,library map
 ONTO,661,dividends_paid,not_presented,,,,,,,,0001193125-26-066937,,,,no face line
-ONTO,661,dividends_per_share,not_presented,,,,,,,,0001193125-26-066937,,,,no face line
+ONTO,661,dividends_per_share,not_presented,,,,,,,,0001193125-26-066937,,,,no face line and no note fact
 ONTO,661,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-066937,R4,Goodwill,644015000.0000,library map
 ONTO,661,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,Gross profit,499770000.0000,library map
 ONTO,661,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,Income (loss) before provision (benefit) for income taxes,162902000.0000,library map
 ONTO,661,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,Provision (benefit) for income taxes,26143000.0000,library map
 ONTO,661,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,"Interest income, net",34971000.0000,combined line (library or label demote)
-ONTO,661,interest_income,not_presented,,,,,,,,0001193125-26-066937,,,,no face line
+ONTO,661,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,"Interest income, net",34971000.0000,interest income only inside a net/other face line between OI and pretax
 ONTO,661,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-066937,R4,Inventories,298264000.0000,library map
 ONTO,661,loans_net,OUT,,,,,,,,0001193125-26-066937,,,,not a bank
 ONTO,661,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-066937,R2,Net income,136759000.0000,library map

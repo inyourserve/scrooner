@@ -7,7 +7,7 @@ BOKF,823,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_a
 BOKF,823,cash_and_equivalents,not_presented,,,,,,,,0000875357-26-000013,,,,no face line
 BOKF,823,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000875357-26-000013,R7,Net cash provided by (used in) financing activities,1005527000.0000,library map
 BOKF,823,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000875357-26-000013,R7,Net cash provided by (used in) investing activities,-1521746000.0000,library map
-BOKF,823,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000875357-26-000013,,,,note-sourced default tag (no face line)
+BOKF,823,cash_paid_for_income_taxes,not_presented,,,,,,,,0000875357-26-000013,,,,no face line and no note fact
 BOKF,823,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000875357-26-000013,R7,Cash paid for interest,1205437000.0000,library map
 BOKF,823,cf_ap_change,not_presented,,,,,,,,0000875357-26-000013,,,,no face line
 BOKF,823,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000875357-26-000013,R7,Change in receivables,61528000.0000,library map

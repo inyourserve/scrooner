@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TTWO,284,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,Accounts payable,211000000.0000,library map
 TTWO,284,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,"Accounts receivable, net of allowances of $0.9 and $1.6 at March 31, 2026 and 2025, respectively",737000000.0000,library map
-TTWO,284,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-037434,,,,note-sourced default tag (no face line)
+TTWO,284,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-037434,,,725700000.0000,note fact present in the filing (FSN value)
 TTWO,284,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-037434,R5,Basic loss per share (in dollars per share),-1.6200,library map
 TTWO,284,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-037434,R7,Purchases of fixed assets,162800000.0000,library map
 TTWO,284,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,Cash and cash equivalents,1545500000.0000,library map
@@ -21,13 +21,13 @@ TTWO,284,deposits,OUT,,,,,,,,0001628280-26-037434,,,,not a bank
 TTWO,284,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,IS,+,-5,N,,sec_api,0001628280-26-037434,R5,Depreciation and amortization,198500000.0000,library map
 TTWO,284,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-037434,R5,Diluted loss per share (in dollars per share),-1.6200,library map
 TTWO,284,dividends_paid,not_presented,,,,,,,,0001628280-26-037434,,,,no face line
-TTWO,284,dividends_per_share,not_presented,,,,,,,,0001628280-26-037434,,,,no face line
+TTWO,284,dividends_per_share,not_presented,,,,,,,,0001628280-26-037434,,,,no face line and no note fact
 TTWO,284,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,Goodwill,1061900000.0000,library map
 TTWO,284,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-037434,R5,Gross profit,3809700000.0000,library map
 TTWO,284,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0001628280-26-037434,R5,Loss before income taxes,-197800000.0000,library map
 TTWO,284,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-037434,R5,Provision for (benefit from) income taxes,100400000.0000,library map
 TTWO,284,interest_expense,not_presented,,,,,,,,0001628280-26-037434,,,,no face line
-TTWO,284,interest_income,not_presented,,,,,,,,0001628280-26-037434,,,,no face line
+TTWO,284,interest_income,combined,custom:InterestIncomeExpenseAndOtherNonoperatingIncomeExpense,IS,-,-5,Y,OtherNonoperatingIncomeExpense,fsn_xbrl,0001628280-26-037434,R5,"Interest and other, net",-93600000.0000,interest income only inside a net/other face line between OI and pretax
 TTWO,284,inventory,not_presented,,,,,,,,0001628280-26-037434,,,,no face line
 TTWO,284,loans_net,OUT,,,,,,,,0001628280-26-037434,,,,not a bank
 TTWO,284,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-037434,R5,Net loss,-298200000.0000,library map
@@ -50,5 +50,5 @@ TTWO,284,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-037
 TTWO,284,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,"Short-term debt, net",30000000.0000,printed face components (duration sum; total_debt founder sum)
 TTWO,284,total_interest_income,OUT,,,,,,,,0001628280-26-037434,,,,not a bank
 TTWO,284,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-037434,R3,Total liabilities,5872300000.0000,library map
-TTWO,284,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-037434,,,,note-sourced default tag (no face line)
-TTWO,284,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-037434,,,,note-sourced default tag (no face line)
+TTWO,284,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-037434,,,183900000.0000,note fact present in the filing (FSN value)
+TTWO,284,weighted_diluted_shares,not_presented,,,,,,,,0001628280-26-037434,,,,no face line and no note fact

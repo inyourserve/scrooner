@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EQT,313,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Accounts payable,1367431000.0000,library map
 EQT,313,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,"Accounts receivable (less allowance for credit losses: $3,088 and $12,529)",1457959000.0000,library map
-EQT,313,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
+EQT,313,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000033213-26-000018,,,13300000.0000,note fact present in the filing (FSN value)
 EQT,313,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000033213-26-000018,R3,Net income attributable to EQT Corporation - Basic (in dollars per share),3.3300,library map
 EQT,313,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Capital expenditures,2288425000.0000,library map
 EQT,313,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Cash and cash equivalents,110795000.0000,library map
 EQT,313,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000033213-26-000018,R8,Net cash used in financing activities,-2372343000.0000,library map
 EQT,313,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000033213-26-000018,R8,Net cash used in investing activities,-2844907000.0000,library map
-EQT,313,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
-EQT,313,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
+EQT,313,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000033213-26-000018,,,-79022000.0000,note fact present in the filing (FSN value)
+EQT,313,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000033213-26-000018,,,455091000.0000,note fact present in the filing (FSN value)
 EQT,313,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Accounts payable,207074000.0000,library map
 EQT,313,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Accounts receivable,353472000.0000,library map
 EQT,313,cf_inventory_change,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
@@ -27,7 +27,7 @@ EQT,313,gross_profit,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
 EQT,313,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Income before income taxes,2977542000.0000,library map
 EQT,313,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Income tax expense,651884000.0000,library map
 EQT,313,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,"Interest expense, net",438695000.0000,combined line (library or label demote)
-EQT,313,interest_income,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,"Interest expense, net",438695000.0000,interest income only inside a net/other face line between OI and pretax
 EQT,313,inventory,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
 EQT,313,loans_net,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
 EQT,313,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Net income attributable to EQT Corporation,2039247000.0000,library map

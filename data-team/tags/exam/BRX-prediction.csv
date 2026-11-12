@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BRX,767,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001581068-26-000007,R3,"Accounts payable, accrued expenses and other liabilities",628328000.0000,combined line (library or label demote)
 BRX,767,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001581068-26-000007,R3,"Receivables, net",315128000.0000,combined line (library or label demote)
-BRX,767,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001581068-26-000007,,,,note-sourced default tag (no face line)
+BRX,767,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001581068-26-000007,,,29500000.0000,note fact present in the filing (FSN value)
 BRX,767,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001581068-26-000007,R5,Basic (usd per share),1.2600,library map
 BRX,767,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0001581068-26-000007,R9,Improvements to and investments in real estate assets,320064000.0000,combined line (library or label demote)
 BRX,767,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001581068-26-000007,R3,Cash and cash equivalents,334422000.0000,library map
@@ -27,14 +27,14 @@ BRX,767,gross_profit,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
 BRX,767,income_before_tax,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
 BRX,767,income_tax_expense,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
 BRX,767,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001581068-26-000007,R5,Interest expense,224689000.0000,library map
-BRX,767,interest_income,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
+BRX,767,interest_income,not_presented,,,,,,,,0001581068-26-000007,,,,no face line and no note fact
 BRX,767,inventory,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
 BRX,767,loans_net,OUT,,,,,,,,0001581068-26-000007,,,,not a bank
 BRX,767,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001581068-26-000007,R5,Net income attributable to Brixmor Property Group Inc.,386228000.0000,library map
 BRX,767,net_interest_income,OUT,,,,,,,,0001581068-26-000007,,,,not a bank
 BRX,767,noninterest_expense,OUT,,,,,,,,0001581068-26-000007,,,,not a bank
 BRX,767,noninterest_income,OUT,,,,,,,,0001581068-26-000007,,,,not a bank
-BRX,767,operating_expenses,not_presented,,,,,,,,0001581068-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+BRX,767,operating_expenses,mapped,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0001581068-26-000007,R5,Operating costs,162285000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 BRX,767,operating_income,not_presented,,,,,,,,0001581068-26-000007,,,,no face line
 BRX,767,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001581068-26-000007,R5,Other,-2856000.0000,library map
 BRX,767,ppe_net,not_presented,,,,,,,,0001581068-26-000007,,,,no face line

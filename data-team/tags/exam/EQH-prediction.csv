@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EQH,543,accounts_payable,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
 EQH,543,accounts_receivable,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
-EQH,543,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001333986-26-000012,,,,note-sourced default tag (no face line)
+EQH,543,amortization_of_intangibles,not_presented,,,,,,,,0001333986-26-000012,,,,no face line and no note fact
 EQH,543,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001333986-26-000012,R5,Basic (in dollars per share),-4.8300,library map
 EQH,543,capex,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
 EQH,543,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001333986-26-000012,R3,Cash and cash equivalents,12462000000.0000,library map
@@ -27,7 +27,7 @@ EQH,543,gross_profit,OUT,,,,,,,,0001333986-26-000012,,,,sector template (bank/in
 EQH,543,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001333986-26-000012,R5,"Income (loss) from continuing operations, before income taxes",-1193000000.0000,library map
 EQH,543,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001333986-26-000012,R5,Income tax (expense) benefit,-156000000.0000,library map
 EQH,543,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0001333986-26-000012,R5,Interest expense,224000000.0000,library map
-EQH,543,interest_income,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
+EQH,543,interest_income,not_presented,,,,,,,,0001333986-26-000012,,,,no face line and no note fact
 EQH,543,inventory,OUT,,,,,,,,0001333986-26-000012,,,,sector template (bank/insurer)
 EQH,543,loans_net,OUT,,,,,,,,0001333986-26-000012,,,,not a bank
 EQH,543,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001333986-26-000012,R5,Net income (loss) attributable to Holdings,-1380000000.0000,library map
@@ -41,7 +41,7 @@ EQH,543,ppe_net,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
 EQH,543,provision_for_credit_losses,OUT,,,,,,,,0001333986-26-000012,,,,not a bank
 EQH,543,research_and_development,OUT,,,,,,,,0001333986-26-000012,,,,sector template (bank/insurer)
 EQH,543,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001333986-26-000012,R5,Total revenues,11665000000.0000,library map
-EQH,543,sbc,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
+EQH,543,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001333986-26-000012,,,262000000.0000,note fact present in the filing (FSN value)
 EQH,543,sga_expense,not_presented,,,,,,,,0001333986-26-000012,,,,no face line
 EQH,543,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001333986-26-000012,R9,Purchase of treasury shares,1450000000.0000,library map
 EQH,543,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001333986-26-000012,R4,Common stock outstanding (in shares),283358187.0000,library map

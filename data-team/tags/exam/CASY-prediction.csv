@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CASY,379,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Accounts payable,823804000.0000,library map
 CASY,379,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Receivables,243502000.0000,combined line (library or label demote)
-CASY,379,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000726958-26-000046,,,,note-sourced default tag (no face line)
+CASY,379,amortization_of_intangibles,not_presented,,,,,,,,0000726958-26-000046,,,,no face line and no note fact
 CASY,379,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000726958-26-000046,R5,Basic (in Dollars per share),19.2800,library map
 CASY,379,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000726958-26-000046,R8,Purchase of property and equipment,655920000.0000,library map
 CASY,379,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Cash and cash equivalents,522991000.0000,library map
@@ -21,13 +21,13 @@ CASY,379,deposits,OUT,,,,,,,,0000726958-26-000046,,,,not a bank
 CASY,379,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0000726958-26-000046,R8,Depreciation and amortization,449958000.0000,library map
 CASY,379,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000726958-26-000046,R5,Diluted (in Dollars per share),19.1600,library map
 CASY,379,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000726958-26-000046,R8,Payments of cash dividends,83136000.0000,library map
-CASY,379,dividends_per_share,not_presented,,,,,,,,0000726958-26-000046,,,,no face line
+CASY,379,dividends_per_share,not_presented,,,,,,,,0000726958-26-000046,,,,no face line and no note fact
 CASY,379,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Goodwill,1268686000.0000,library map
 CASY,379,gross_profit,not_presented,,,,,,,,0000726958-26-000046,,,,no face line
 CASY,379,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-3,N,,sec_api,0000726958-26-000046,R5,Income before income taxes,937023000.0000,library map
 CASY,379,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000726958-26-000046,R5,Federal and state income taxes,222575000.0000,library map
 CASY,379,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000726958-26-000046,R5,"Interest, net",96634000.0000,combined line (library or label demote)
-CASY,379,interest_income,not_presented,,,,,,,,0000726958-26-000046,,,,no face line
+CASY,379,interest_income,not_presented,,,,,,,,0000726958-26-000046,,,,no face line and no note fact
 CASY,379,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Inventories,557151000.0000,library map
 CASY,379,loans_net,OUT,,,,,,,,0000726958-26-000046,,,,not a bank
 CASY,379,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000726958-26-000046,R5,Net income,714448000.0000,library map
@@ -50,5 +50,5 @@ CASY,379,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000726958-26-000
 CASY,379,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Current maturities of long-term debt and finance lease obligations,101357000.0000,printed face components (duration sum; total_debt founder sum)
 CASY,379,total_interest_income,OUT,,,,,,,,0000726958-26-000046,,,,not a bank
 CASY,379,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000726958-26-000046,R3,Total liabilities,4984336000.0000,library map
-CASY,379,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000726958-26-000046,,,,note-sourced default tag (no face line)
-CASY,379,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000726958-26-000046,,,,note-sourced default tag (no face line)
+CASY,379,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000726958-26-000046,,,37065319.0000,note fact present in the filing (FSN value)
+CASY,379,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000726958-26-000046,,,37281653.0000,note fact present in the filing (FSN value)

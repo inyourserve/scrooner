@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 XYL,394,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001524472-26-000012,R5,Accounts payable,1013000000.0000,library map
 XYL,394,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001524472-26-000012,R5,"Receivables, less allowances for discounts, returns and credit losses of $68 and $59 in 2025 and 2024, respectively",1759000000.0000,library map
-XYL,394,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001524472-26-000012,,,,note-sourced default tag (no face line)
+XYL,394,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001524472-26-000012,,,308000000.0000,note fact present in the filing (FSN value)
 XYL,394,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001524472-26-000012,R3,Basic (in dollars per share),3.9300,library map
 XYL,394,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001524472-26-000012,R7,Capital expenditures,331000000.0000,library map
 XYL,394,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001524472-26-000012,R5,Cash and cash equivalents,1479000000.0000,library map
@@ -27,7 +27,7 @@ XYL,394,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001524472-26
 XYL,394,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001524472-26-000012,R3,Income before taxes,1181000000.0000,library map
 XYL,394,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001524472-26-000012,R3,Income tax expense,231000000.0000,library map
 XYL,394,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001524472-26-000012,R3,Interest expense,29000000.0000,library map
-XYL,394,interest_income,not_presented,,,,,,,,0001524472-26-000012,,,,no face line
+XYL,394,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001524472-26-000012,,,27000000.0000,note fact present in the filing (FSN value)
 XYL,394,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001524472-26-000012,R5,Inventories,983000000.0000,library map
 XYL,394,loans_net,OUT,,,,,,,,0001524472-26-000012,,,,not a bank
 XYL,394,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001524472-26-000012,R3,Net income attributable to Xylem,957000000.0000,library map

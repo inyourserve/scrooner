@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TROW,430,accounts_payable,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,accounts_receivable,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
-TROW,430,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008002,,,,note-sourced default tag (no face line)
+TROW,430,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-008002,,,,no face line and no note fact
 TROW,430,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008002,R5,Basic (in dollars per share),9.2600,library map
 TROW,430,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-008002,R7,"Additions to property, equipment and software",274200000.0000,library map
 TROW,430,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-008002,R3,Cash and cash equivalents,3378200000.0000,library map
 TROW,430,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001628280-26-008002,R7,Net cash used in financing activities,-1277400000.0000,library map
 TROW,430,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0001628280-26-008002,R7,Net cash provided by (used in) investing activities,230300000.0000,library map
-TROW,430,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008002,,,,note-sourced default tag (no face line)
-TROW,430,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008002,,,,note-sourced default tag (no face line)
+TROW,430,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-008002,,,595400000.0000,note fact present in the filing (FSN value)
+TROW,430,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-008002,,,,no face line and no note fact
 TROW,430,cf_ap_change,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,cf_ar_change,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,cf_inventory_change,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
@@ -27,14 +27,14 @@ TROW,430,gross_profit,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,Income before income taxes,2875500000.0000,library map
 TROW,430,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,Provision for income taxes,667200000.0000,library map
 TROW,430,interest_expense,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
-TROW,430,interest_income,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
+TROW,430,interest_income,not_presented,,,,,,,,0001628280-26-008002,,,,no face line and no note fact
 TROW,430,inventory,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,loans_net,OUT,,,,,,,,0001628280-26-008002,,,,not a bank
 TROW,430,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,Net income attributable to T. Rowe Price Group,2087100000.0000,library map
 TROW,430,net_interest_income,OUT,,,,,,,,0001628280-26-008002,,,,not a bank
 TROW,430,noninterest_expense,OUT,,,,,,,,0001628280-26-008002,,,,not a bank
 TROW,430,noninterest_income,OUT,,,,,,,,0001628280-26-008002,,,,not a bank
-TROW,430,operating_expenses,not_presented,,,,,,,,0001628280-26-008002,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+TROW,430,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,Total operating expenses,5126000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 TROW,430,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,Net operating income,2188800000.0000,library map
 TROW,430,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-008002,R5,"Other gains (losses), including foreign currency gains (losses)",1900000.0000,library map
 TROW,430,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-008002,R3,"Property, equipment and software, net",845300000.0000,library map
@@ -50,5 +50,5 @@ TROW,430,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-008
 TROW,430,total_debt,not_presented,,,,,,,,0001628280-26-008002,,,,no face line
 TROW,430,total_interest_income,OUT,,,,,,,,0001628280-26-008002,,,,not a bank
 TROW,430,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-008002,R3,Total liabilities,2288600000.0000,library map
-TROW,430,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-008002,,,,note-sourced default tag (no face line)
-TROW,430,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-008002,,,,note-sourced default tag (no face line)
+TROW,430,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-008002,,,220000000.0000,note fact present in the filing (FSN value)
+TROW,430,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-008002,,,220300000.0000,note fact present in the filing (FSN value)

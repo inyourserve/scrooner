@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AVY,578,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000008818-26-000015,R3,Accounts payable,1261700000.0000,library map
 AVY,578,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000008818-26-000015,R3,"Trade accounts receivable, less allowances of $28.1 and $29.0 at year-end 2025 and 2024, respectively",1503900000.0000,library map
-AVY,578,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000008818-26-000015,,,,note-sourced default tag (no face line)
+AVY,578,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000008818-26-000015,,,92800000.0000,note fact present in the filing (FSN value)
 AVY,578,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000008818-26-000015,R5,Net income per common share (in dollars per share),8.8100,library map
 AVY,578,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000008818-26-000015,R9,"Purchases of property, plant and equipment",169000000.0000,library map
 AVY,578,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000008818-26-000015,R3,Cash and cash equivalents,202800000.0000,library map
 AVY,578,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000008818-26-000015,R9,Net cash used in financing activities,-414900000.0000,library map
 AVY,578,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000008818-26-000015,R9,Net cash used in investing activities,-596000000.0000,library map
-AVY,578,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000008818-26-000015,,,,note-sourced default tag (no face line)
-AVY,578,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000008818-26-000015,,,,note-sourced default tag (no face line)
+AVY,578,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000008818-26-000015,,,265000000.0000,note fact present in the filing (FSN value)
+AVY,578,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000008818-26-000015,,,131300000.0000,note fact present in the filing (FSN value)
 AVY,578,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000008818-26-000015,R9,Accounts payable,-144400000.0000,library map
 AVY,578,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0000008818-26-000015,R9,Trade accounts receivable,-44000000.0000,library map
 AVY,578,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000008818-26-000015,R9,Inventories,-53200000.0000,library map
@@ -27,7 +27,7 @@ AVY,578,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000008818-26
 AVY,578,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0000008818-26-000015,R5,Income before taxes,925100000.0000,library map
 AVY,578,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000008818-26-000015,R5,Provision for income taxes,237100000.0000,library map
 AVY,578,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000008818-26-000015,R5,Interest expense,135400000.0000,library map
-AVY,578,interest_income,not_presented,,,,,,,,0000008818-26-000015,,,,no face line
+AVY,578,interest_income,not_presented,,,,,,,,0000008818-26-000015,,,,no face line and no note fact
 AVY,578,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000008818-26-000015,R3,Inventories,975800000.0000,library map
 AVY,578,loans_net,OUT,,,,,,,,0000008818-26-000015,,,,not a bank
 AVY,578,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000008818-26-000015,R5,Net income,688000000.0000,library map

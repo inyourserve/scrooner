@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TAP,829,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0000024545-26-000006,R5,Accounts payable and other current liabilities,2876700000.0000,combined line (library or label demote)
 TAP,829,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000024545-26-000006,R5,"Trade receivables, net",703000000.0000,library map
-TAP,829,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000024545-26-000006,,,,note-sourced default tag (no face line)
+TAP,829,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000024545-26-000006,,,206100000.0000,note fact present in the filing (FSN value)
 TAP,829,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,Y,IncomeLossFromContinuingOperationsPerBasicShare,sec_api,0000024545-26-000006,R3,Basic (in dollars per share),-10.7500,library map
 TAP,829,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000024545-26-000006,R7,"Additions to property, plant and equipment",716600000.0000,library map
 TAP,829,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000024545-26-000006,R5,Cash and cash equivalents,896500000.0000,library map
@@ -21,7 +21,7 @@ TAP,829,deposits,OUT,,,,,,,,0000024545-26-000006,,,,not a bank
 TAP,829,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0000024545-26-000006,R7,Depreciation and amortization,711300000.0000,library map
 TAP,829,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,Y,IncomeLossFromContinuingOperationsPerDilutedShare,sec_api,0000024545-26-000006,R3,Diluted (in dollars per share),-10.7500,library map
 TAP,829,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0000024545-26-000006,R7,Dividends paid,376300000.0000,library map
-TAP,829,dividends_per_share,not_presented,,,,,,,,0000024545-26-000006,,,,no face line
+TAP,829,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000024545-26-000006,,,1.8800,note fact present in the filing (FSN value)
 TAP,829,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000024545-26-000006,R5,Goodwill,1944700000.0000,library map
 TAP,829,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000024545-26-000006,R3,Gross profit,4274600000.0000,library map
 TAP,829,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0000024545-26-000006,R3,Income (loss) before income taxes,-2518000000.0000,library map

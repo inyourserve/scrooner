@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GTES,883,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,Trade accounts payable,433700000.0000,library map
 GTES,883,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,"Trade accounts receivable, net",744200000.0000,library map
-GTES,883,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007719,,,,note-sourced default tag (no face line)
+GTES,883,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-007719,,,128600000.0000,note fact present in the filing (FSN value)
 GTES,883,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-007719,R3,Earnings per share (in usd per share),0.9800,library map
 GTES,883,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-007719,R9,"Purchases of property, plant and equipment",73200000.0000,library map
 GTES,883,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,Cash and cash equivalents,812100000.0000,library map
@@ -21,13 +21,13 @@ GTES,883,deposits,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
 GTES,883,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001628280-26-007719,R9,Depreciation and amortization,213800000.0000,library map
 GTES,883,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001628280-26-007719,R3,Earnings per share (in usd per share),0.9600,library map
 GTES,883,dividends_paid,not_presented,,,,,,,,0001628280-26-007719,,,,no face line
-GTES,883,dividends_per_share,not_presented,,,,,,,,0001628280-26-007719,,,,no face line
+GTES,883,dividends_per_share,not_presented,,,,,,,,0001628280-26-007719,,,,no face line and no note fact
 GTES,883,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,Goodwill,2035200000.0000,library map
 GTES,883,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Gross profit,1371700000.0000,library map
 GTES,883,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Income from continuing operations before taxes,340200000.0000,library map
 GTES,883,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Income tax expense,63100000.0000,library map
 GTES,883,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-007719,R3,Interest expense,125900000.0000,library map
-GTES,883,interest_income,not_presented,,,,,,,,0001628280-26-007719,,,,no face line
+GTES,883,interest_income,not_presented,,,,,,,,0001628280-26-007719,,,,no face line and no note fact
 GTES,883,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,Inventories,700000000.0000,library map
 GTES,883,loans_net,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
 GTES,883,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Net income attributable to shareholders,251400000.0000,library map
@@ -50,5 +50,5 @@ GTES,883,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-007
 GTES,883,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,"Debt, current portion",36200000.0000,printed face components (duration sum; total_debt founder sum)
 GTES,883,total_interest_income,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
 GTES,883,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,Total liabilities,3462200000.0000,library map
-GTES,883,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-007719,,,,note-sourced default tag (no face line)
-GTES,883,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-007719,,,,note-sourced default tag (no face line)
+GTES,883,weighted_basic_shares,not_presented,,,,,,,,0001628280-26-007719,,,,no face line and no note fact
+GTES,883,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-007719,,,260534865.0000,note fact present in the filing (FSN value)

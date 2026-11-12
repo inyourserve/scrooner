@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AUR,706,accounts_payable,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,accounts_receivable,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
-AUR,706,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001828108-26-000016,,,,note-sourced default tag (no face line)
+AUR,706,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,0,,,,sec_api,0001828108-26-000016,,,0.0000,note fact present in the filing (FSN value)
 AUR,706,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001828108-26-000016,R5,Basic net loss per share (in usd per share),-0.4400,library map
 AUR,706,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001828108-26-000016,R8,Purchases of property and equipment,31000000.0000,library map
 AUR,706,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001828108-26-000016,R3,Cash and cash equivalents,221000000.0000,library map
 AUR,706,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001828108-26-000016,R8,Net cash provided by financing activities,834000000.0000,library map
 AUR,706,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001828108-26-000016,R8,Net cash (used in) provided by investing activities,-245000000.0000,library map
-AUR,706,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001828108-26-000016,,,,note-sourced default tag (no face line)
-AUR,706,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001828108-26-000016,,,,note-sourced default tag (no face line)
+AUR,706,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,0,,,,sec_api,0001828108-26-000016,,,0.0000,note fact present in the filing (FSN value)
+AUR,706,cash_paid_for_interest,not_presented,,,,,,,,0001828108-26-000016,,,,no face line and no note fact
 AUR,706,cf_ap_change,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,cf_ar_change,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,cf_inventory_change,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
@@ -21,13 +21,13 @@ AUR,706,deposits,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001828108-26-000016,R8,Depreciation and amortization,30000000.0000,library map
 AUR,706,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001828108-26-000016,R5,Diluted net loss per share (in usd per share),-0.4400,library map
 AUR,706,dividends_paid,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
-AUR,706,dividends_per_share,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
+AUR,706,dividends_per_share,not_presented,,,,,,,,0001828108-26-000016,,,,no face line and no note fact
 AUR,706,goodwill,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,gross_profit,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Loss before income taxes,-816000000.0000,library map
 AUR,706,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,0,-6,N,,sec_api,0001828108-26-000016,R5,Income tax expense,0.0000,library map
 AUR,706,interest_expense,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
-AUR,706,interest_income,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
+AUR,706,interest_income,not_presented,,,,,,,,0001828108-26-000016,,,,no face line and no note fact
 AUR,706,inventory,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,loans_net,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Net loss,-816000000.0000,library map

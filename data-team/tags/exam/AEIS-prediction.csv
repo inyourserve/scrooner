@@ -7,8 +7,8 @@ AEIS,722,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5
 AEIS,722,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-014731,R2,Cash and cash equivalents,791200000.0000,library map
 AEIS,722,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001104659-26-014731,R8,Net cash from financing activities,-56100000.0000,library map
 AEIS,722,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001104659-26-014731,R8,Net cash from investing activities,-109800000.0000,library map
-AEIS,722,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-014731,,,,note-sourced default tag (no face line)
-AEIS,722,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-014731,,,,note-sourced default tag (no face line)
+AEIS,722,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0001104659-26-014731,,,-20800000.0000,note fact present in the filing (FSN value)
+AEIS,722,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001104659-26-014731,,,14700000.0000,note fact present in the filing (FSN value)
 AEIS,722,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001104659-26-014731,R8,Accounts payable,79300000.0000,library map
 AEIS,722,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001104659-26-014731,R8,"Accounts receivable, net",57400000.0000,library map
 AEIS,722,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001104659-26-014731,R8,Inventories,47400000.0000,library map

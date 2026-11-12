@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GWRE,562,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001528396-26-000046,R3,Accounts payable,38074000.0000,library map
 GWRE,562,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001528396-26-000046,R3,"Accounts receivable, net of allowances of $2,379 and $1,166, respectively",193720000.0000,library map
-GWRE,562,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001528396-26-000046,,,,note-sourced default tag (no face line)
+GWRE,562,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001528396-26-000046,,,6700000.0000,note fact present in the filing (FSN value)
 GWRE,562,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001528396-26-000046,R5,Basic (in USD per share),1.6500,library map
 GWRE,562,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001528396-26-000046,R8,Purchases of property and equipment,12056000.0000,library map
 GWRE,562,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001528396-26-000046,R3,Cash and cash equivalents,372887000.0000,library map
@@ -21,13 +21,13 @@ GWRE,562,deposits,OUT,,,,,,,,0001528396-26-000046,,,,not a bank
 GWRE,562,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001528396-26-000046,R8,Depreciation and amortization,27952000.0000,library map
 GWRE,562,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001528396-26-000046,R5,Diluted (in USD per share),1.6300,library map
 GWRE,562,dividends_paid,not_presented,,,,,,,,0001528396-26-000046,,,,no face line
-GWRE,562,dividends_per_share,not_presented,,,,,,,,0001528396-26-000046,,,,no face line
+GWRE,562,dividends_per_share,not_presented,,,,,,,,0001528396-26-000046,,,,no face line and no note fact
 GWRE,562,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001528396-26-000046,R3,Goodwill,423267000.0000,library map
 GWRE,562,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Gross profit,947368000.0000,library map
 GWRE,562,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Income (loss) before provision for (benefit from) income taxes,164117000.0000,library map
 GWRE,562,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Provision for (benefit from) income taxes,24834000.0000,library map
 GWRE,562,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Interest expense,13324000.0000,library map
-GWRE,562,interest_income,not_presented,,,,,,,,0001528396-26-000046,,,,no face line
+GWRE,562,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Interest income,48564000.0000,interest income only inside a net/other face line between OI and pretax
 GWRE,562,inventory,not_presented,,,,,,,,0001528396-26-000046,,,,no face line
 GWRE,562,loans_net,OUT,,,,,,,,0001528396-26-000046,,,,not a bank
 GWRE,562,net_income,not_presented,,,,,,,,0001528396-26-000046,,,,no face line

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EQIX,120,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001101239-26-000032,R3,Accounts payable and accrued expenses,1350000000.0000,combined line (library or label demote)
 EQIX,120,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001101239-26-000032,R3,"Accounts receivable, net of allowance of $16 and $19",1001000000.0000,library map
-EQIX,120,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001101239-26-000032,,,,note-sourced default tag (no face line)
+EQIX,120,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001101239-26-000032,,,200000000.0000,note fact present in the filing (FSN value)
 EQIX,120,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001101239-26-000032,R5,Basic EPS (in dollars per share),13.7900,library map
 EQIX,120,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001101239-26-000032,R9,"Purchases of other property, plant and equipment",4311000000.0000,combined line (library or label demote)
 EQIX,120,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001101239-26-000032,R3,Cash and cash equivalents,1727000000.0000,library map
 EQIX,120,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001101239-26-000032,R9,Net cash provided by financing activities,1272000000.0000,library map
 EQIX,120,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001101239-26-000032,R9,Net cash used in investing activities,-6484000000.0000,library map
 EQIX,120,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0001101239-26-000032,R9,"Cash paid for taxes, net",207000000.0000,library map
-EQIX,120,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001101239-26-000032,,,,note-sourced default tag (no face line)
+EQIX,120,cash_paid_for_interest,not_presented,,,,,,,,0001101239-26-000032,,,,no face line and no note fact
 EQIX,120,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001101239-26-000032,R9,Accounts payable and accrued expenses,25000000.0000,combined line (library or label demote)
 EQIX,120,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001101239-26-000032,R9,Accounts receivable,40000000.0000,library map
 EQIX,120,cf_inventory_change,not_presented,,,,,,,,0001101239-26-000032,,,,no face line

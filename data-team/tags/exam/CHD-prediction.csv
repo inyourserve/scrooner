@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CHD,388,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-048139,R4,Accounts payable,732400000.0000,library map
 CHD,388,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-048139,R4,"Accounts receivable, less allowances of $3.7 and $5.1",593400000.0000,library map
-CHD,388,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-048139,,,,note-sourced default tag (no face line)
+CHD,388,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-048139,,,121100000.0000,note fact present in the filing (FSN value)
 CHD,388,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-048139,R2,Net income per share - Basic,3.0400,library map
 CHD,388,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-048139,R6,"Additions to property, plant and equipment",122400000.0000,library map
 CHD,388,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-048139,R4,Cash and cash equivalents,409000000.0000,library map

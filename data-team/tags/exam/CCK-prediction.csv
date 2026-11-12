@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CCK,610,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,Accounts payable,2643000000.0000,library map
 CCK,610,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,"Receivables, net",1768000000.0000,combined line (library or label demote)
-CCK,610,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-012904,,,,note-sourced default tag (no face line)
+CCK,610,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-012904,,,148000000.0000,note fact present in the filing (FSN value)
 CCK,610,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-012904,R3,Basic (in dollars per share),6.4100,library map
 CCK,610,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,Y,PaymentsToAcquireProductiveAssets,sec_api,0001628280-26-012904,R7,Capital expenditures,413000000.0000,library map
 CCK,610,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,Cash and cash equivalents,764000000.0000,library map
 CCK,610,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-012904,R7,Net cash (used for) / provided by financing activities,-1361000000.0000,library map
 CCK,610,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-012904,R7,Net cash used for investing activities,-320000000.0000,library map
-CCK,610,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-012904,,,,note-sourced default tag (no face line)
-CCK,610,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-012904,,,,note-sourced default tag (no face line)
+CCK,610,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-012904,,,286000000.0000,note fact present in the filing (FSN value)
+CCK,610,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001628280-26-012904,,,372000000.0000,note fact present in the filing (FSN value)
 CCK,610,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001628280-26-012904,R7,Accounts payable and accrued liabilities,140000000.0000,combined line (library or label demote)
 CCK,610,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001628280-26-012904,R7,Receivables,42000000.0000,library map
 CCK,610,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001628280-26-012904,R7,Inventories,72000000.0000,library map
@@ -21,7 +21,7 @@ CCK,610,deposits,OUT,,,,,,,,0001628280-26-012904,,,,not a bank
 CCK,610,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
 CCK,610,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-012904,R3,Diluted (in dollars per share),6.3800,library map
 CCK,610,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001628280-26-012904,R7,Dividends paid to shareholders,120000000.0000,library map
-CCK,610,dividends_per_share,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
+CCK,610,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001628280-26-012904,,,1.0400,note fact present in the filing (FSN value)
 CCK,610,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,Goodwill,3155000000.0000,library map
 CCK,610,gross_profit,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
 CCK,610,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001628280-26-012904,R3,Income before income taxes and equity in net earnings of affiliates,1160000000.0000,library map
@@ -50,5 +50,5 @@ CCK,610,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-0129
 CCK,610,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,Short-term debt,83000000.0000,printed face components (duration sum; total_debt founder sum)
 CCK,610,total_interest_income,OUT,,,,,,,,0001628280-26-012904,,,,not a bank
 CCK,610,total_liabilities,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
-CCK,610,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-012904,,,,note-sourced default tag (no face line)
-CCK,610,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-012904,,,,note-sourced default tag (no face line)
+CCK,610,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-012904,,,115220000.0000,note fact present in the filing (FSN value)
+CCK,610,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-012904,,,115740000.0000,note fact present in the filing (FSN value)

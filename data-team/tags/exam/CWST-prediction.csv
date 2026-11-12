@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CWST,974,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000911177-26-000008,R3,Accounts payable,102468000.0000,library map
 CWST,974,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000911177-26-000008,R3,"Accounts receivable, net of allowance for credit losses of $7,082 and $8,515, respectively",178068000.0000,library map
-CWST,974,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000911177-26-000008,,,,note-sourced default tag (no face line)
+CWST,974,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000911177-26-000008,,,76475000.0000,note fact present in the filing (FSN value)
 CWST,974,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000911177-26-000008,R5,Basic earnings per common share (in dollars per share),0.1200,library map
 CWST,974,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000911177-26-000008,R8,Additions to property and equipment,245071000.0000,library map
 CWST,974,cash_and_equivalents,not_presented,,,,,,,,0000911177-26-000008,,,,no face line
@@ -21,7 +21,7 @@ CWST,974,deposits,OUT,,,,,,,,0000911177-26-000008,,,,not a bank
 CWST,974,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000911177-26-000008,R8,Depreciation and amortization,306835000.0000,library map
 CWST,974,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000911177-26-000008,R5,Diluted earnings per common share (in dollars per share),0.1200,library map
 CWST,974,dividends_paid,not_presented,,,,,,,,0000911177-26-000008,,,,no face line
-CWST,974,dividends_per_share,not_presented,,,,,,,,0000911177-26-000008,,,,no face line
+CWST,974,dividends_per_share,not_presented,,,,,,,,0000911177-26-000008,,,,no face line and no note fact
 CWST,974,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000911177-26-000008,R3,Goodwill,1120056000.0000,library map
 CWST,974,gross_profit,not_presented,,,,,,,,0000911177-26-000008,,,,no face line
 CWST,974,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000911177-26-000008,R5,Income before income taxes,13052000.0000,library map

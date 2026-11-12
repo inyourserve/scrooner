@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TEX,953,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000097216-26-000035,R6,Trade accounts payable,683000000.0000,library map
 TEX,953,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000097216-26-000035,R6,"Receivables (net of allowance of $9 million at December 31, 2025 and 2024)",712000000.0000,combined line (library or label demote)
-TEX,953,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000097216-26-000035,,,,note-sourced default tag (no face line)
+TEX,953,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000097216-26-000035,,,82000000.0000,note fact present in the filing (FSN value)
 TEX,953,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000097216-26-000035,R3,Net income (loss) (in dollars per share),3.3600,library map
 TEX,953,capex,not_presented,,,,,,,,0000097216-26-000035,,,,no face line
 TEX,953,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000097216-26-000035,R6,Cash and cash equivalents,772000000.0000,library map
 TEX,953,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000097216-26-000035,R9,Net cash provided by (used in) financing activities,-123000000.0000,library map
 TEX,953,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0000097216-26-000035,R9,Net cash provided by (used in) investing activities,32000000.0000,library map
-TEX,953,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000097216-26-000035,,,,note-sourced default tag (no face line)
-TEX,953,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000097216-26-000035,,,,note-sourced default tag (no face line)
+TEX,953,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000097216-26-000035,,,43000000.0000,note fact present in the filing (FSN value)
+TEX,953,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000097216-26-000035,,,156000000.0000,note fact present in the filing (FSN value)
 TEX,953,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000097216-26-000035,R9,Trade accounts payable,118000000.0000,library map
 TEX,953,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000097216-26-000035,R9,Receivables,46000000.0000,library map
 TEX,953,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000097216-26-000035,R9,Inventories,-39000000.0000,library map
@@ -21,7 +21,7 @@ TEX,953,deposits,OUT,,,,,,,,0000097216-26-000035,,,,not a bank
 TEX,953,depreciation_and_amortization,not_presented,,,,,,,,0000097216-26-000035,,,,no face line
 TEX,953,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0000097216-26-000035,R3,Net income (loss) attributable to Terex Corporation (in dollars per share),3.3300,library map
 TEX,953,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000097216-26-000035,R9,Dividends paid,45000000.0000,library map
-TEX,953,dividends_per_share,not_presented,,,,,,,,0000097216-26-000035,,,,no face line
+TEX,953,dividends_per_share,not_presented,,,,,,,,0000097216-26-000035,,,,no face line and no note fact
 TEX,953,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000097216-26-000035,R6,Goodwill,1091000000.0000,library map
 TEX,953,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000097216-26-000035,R3,Gross profit,1051000000.0000,library map
 TEX,953,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000097216-26-000035,R3,Income (loss) from continuing operations before income taxes,292000000.0000,library map

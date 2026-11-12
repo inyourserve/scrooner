@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SNEX,872,accounts_payable,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
 SNEX,872,accounts_receivable,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
-SNEX,872,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000913760-25-000196,,,,note-sourced default tag (no face line)
+SNEX,872,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000913760-25-000196,,,9500000.0000,note fact present in the filing (FSN value)
 SNEX,872,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000913760-25-000196,R5,Basic (in dollar per share),6.2200,library map
 SNEX,872,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000913760-25-000196,R7,Purchase of property and equipment and internally developed software,65400000.0000,library map
 SNEX,872,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000913760-25-000196,R3,Cash and cash equivalents,1605800000.0000,library map
@@ -21,13 +21,13 @@ SNEX,872,deposits,OUT,,,,,,,,0000913760-25-000196,,,,not a bank
 SNEX,872,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,Y,OtherDepreciationAndAmortization,sec_api,0000913760-25-000196,R7,Depreciation and amortization,67500000.0000,library map
 SNEX,872,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000913760-25-000196,R5,Diluted (in dollar per share),5.8900,library map
 SNEX,872,dividends_paid,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
-SNEX,872,dividends_per_share,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
+SNEX,872,dividends_per_share,not_presented,,,,,,,,0000913760-25-000196,,,,no face line and no note fact
 SNEX,872,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,Y,GoodwillAndIntangibleAssetsNet,sec_api,0000913760-25-000196,R3,"Goodwill and intangible assets, net",736200000.0000,combined line (library or label demote)
 SNEX,872,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000913760-25-000196,R5,Operating revenues,4126900000.0000,library map
 SNEX,872,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000913760-25-000196,R5,Income before tax,408800000.0000,library map
 SNEX,872,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000913760-25-000196,R5,Income tax expense,102900000.0000,library map
 SNEX,872,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-5,Y,InterestExpense,sec_api,0000913760-25-000196,R5,Interest expense,1402700000.0000,library map
-SNEX,872,interest_income,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
+SNEX,872,interest_income,not_presented,,,,,,,,0000913760-25-000196,,,,no face line and no note fact
 SNEX,872,inventory,not_presented,,,,,,,,0000913760-25-000196,,,,no face line
 SNEX,872,loans_net,OUT,,,,,,,,0000913760-25-000196,,,,not a bank
 SNEX,872,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000913760-25-000196,R5,Net income,305900000.0000,library map

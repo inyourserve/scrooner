@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DT,486,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001773383-26-000019,R3,Accounts payable,2728000.0000,library map
 DT,486,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001773383-26-000019,R3,"Accounts receivable, net",710200000.0000,library map
-DT,486,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001773383-26-000019,,,,note-sourced default tag (no face line)
+DT,486,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001773383-26-000019,,,5600000.0000,note fact present in the filing (FSN value)
 DT,486,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001773383-26-000019,R5,Basic (in dollars per share),0.5400,library map
 DT,486,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001773383-26-000019,R8,Purchase of property and equipment,32173000.0000,library map
 DT,486,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001773383-26-000019,R3,Cash and cash equivalents,1097220000.0000,library map
@@ -21,13 +21,13 @@ DT,486,deposits,OUT,,,,,,,,0001773383-26-000019,,,,not a bank
 DT,486,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-3,Y,AmortizationOfIntangibleAssets,sec_api,0001773383-26-000019,R8,Depreciation,18446000.0000,printed face components (duration sum; total_debt founder sum)
 DT,486,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001773383-26-000019,R5,Diluted (in dollars per share),0.5400,library map
 DT,486,dividends_paid,not_presented,,,,,,,,0001773383-26-000019,,,,no face line
-DT,486,dividends_per_share,not_presented,,,,,,,,0001773383-26-000019,,,,no face line
+DT,486,dividends_per_share,not_presented,,,,,,,,0001773383-26-000019,,,,no face line and no note fact
 DT,486,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001773383-26-000019,R3,Goodwill,1350256000.0000,library map
 DT,486,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,Gross profit,1646183000.0000,library map
 DT,486,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,Income before income taxes,299761000.0000,library map
 DT,486,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,Income tax (expense) benefit,137092000.0000,library map
 DT,486,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,"Interest income, net",47731000.0000,combined line (library or label demote)
-DT,486,interest_income,not_presented,,,,,,,,0001773383-26-000019,,,,no face line
+DT,486,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,"Interest income, net",47731000.0000,interest income only inside a net/other face line between OI and pretax
 DT,486,inventory,not_presented,,,,,,,,0001773383-26-000019,,,,no face line
 DT,486,loans_net,OUT,,,,,,,,0001773383-26-000019,,,,not a bank
 DT,486,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001773383-26-000019,R5,Net income,162669000.0000,library map

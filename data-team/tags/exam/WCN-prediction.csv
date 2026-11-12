@@ -7,7 +7,7 @@ WCN,267,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 WCN,267,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-013700,R2,Cash and equivalents,45968000.0000,library map
 WCN,267,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-013700,R7,Net cash provided by (used in) financing activities,-360041000.0000,library map
 WCN,267,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-013700,R7,Net cash used in investing activities,-2023243000.0000,library map
-WCN,267,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-013700,,,,note-sourced default tag (no face line)
+WCN,267,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-013700,,,221022000.0000,note fact present in the filing (FSN value)
 WCN,267,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-013700,R7,Cash paid for interest,308316000.0000,library map
 WCN,267,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001104659-26-013700,R7,Accounts payable,57080000.0000,library map
 WCN,267,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001104659-26-013700,R7,"Accounts receivable, net",68056000.0000,library map
@@ -27,7 +27,7 @@ WCN,267,gross_profit,not_presented,,,,,,,,0001104659-26-013700,,,,no face line
 WCN,267,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,Income before income tax provision,1417916000.0000,library map
 WCN,267,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,Income tax provision,341359000.0000,library map
 WCN,267,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-013700,R4,Interest expense,334551000.0000,library map
-WCN,267,interest_income,not_presented,,,,,,,,0001104659-26-013700,,,,no face line
+WCN,267,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,Interest income,12139000.0000,interest income only inside a net/other face line between OI and pretax
 WCN,267,inventory,not_presented,,,,,,,,0001104659-26-013700,,,,no face line
 WCN,267,loans_net,OUT,,,,,,,,0001104659-26-013700,,,,not a bank
 WCN,267,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,Net income attributable to Waste Connections,1076557000.0000,library map

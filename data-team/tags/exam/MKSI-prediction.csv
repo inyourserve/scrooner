@@ -7,7 +7,7 @@ MKSI,544,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6
 MKSI,544,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001193125-26-066820,R2,Cash and cash equivalents,675000000.0000,combined line (library or label demote)
 MKSI,544,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-066820,R7,Net cash used in financing activities,-562000000.0000,library map
 MKSI,544,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-066820,R7,Net cash used in investing activities,-145000000.0000,library map
-MKSI,544,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-066820,,,,note-sourced default tag (no face line)
+MKSI,544,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-066820,,,178000000.0000,note fact present in the filing (FSN value)
 MKSI,544,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001193125-26-066820,R7,Interest,190000000.0000,library map
 MKSI,544,cf_ap_change,not_presented,,,,,,,,0001193125-26-066820,,,,no face line
 MKSI,544,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-066820,R7,Trade accounts receivable,16000000.0000,library map
@@ -27,7 +27,7 @@ MKSI,544,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001193125-2
 MKSI,544,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,Income (loss) before income taxes,304000000.0000,library map
 MKSI,544,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,(Benefit) provision for income taxes,9000000.0000,library map
 MKSI,544,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,Interest expense,212000000.0000,library map
-MKSI,544,interest_income,not_presented,,,,,,,,0001193125-26-066820,,,,no face line
+MKSI,544,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,Interest income,14000000.0000,interest income only inside a net/other face line between OI and pretax
 MKSI,544,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-066820,R2,Inventories,921000000.0000,library map
 MKSI,544,loans_net,OUT,,,,,,,,0001193125-26-066820,,,,not a bank
 MKSI,544,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,Net income (loss),295000000.0000,library map

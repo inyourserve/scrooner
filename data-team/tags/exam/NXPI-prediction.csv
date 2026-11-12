@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NXPI,211,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,Accounts payable,997000000.0000,library map
 NXPI,211,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,"Accounts receivables, net",1055000000.0000,library map
-NXPI,211,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001413447-26-000008,,,,note-sourced default tag (no face line)
+NXPI,211,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001413447-26-000008,,,272000000.0000,note fact present in the filing (FSN value)
 NXPI,211,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001413447-26-000008,R3,Basic (in dollars per share),8.0000,library map
 NXPI,211,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001413447-26-000008,R7,"Capital expenditures on property, plant and equipment",397000000.0000,library map
 NXPI,211,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,Cash and cash equivalents,3267000000.0000,library map
@@ -21,13 +21,13 @@ NXPI,211,deposits,OUT,,,,,,,,0001413447-26-000008,,,,not a bank
 NXPI,211,depreciation_and_amortization,combined,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001413447-26-000008,R7,"Depreciation, amortization and impairment",832000000.0000,combined line (library or label demote)
 NXPI,211,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001413447-26-000008,R3,Diluted (in dollars per share),7.9500,library map
 NXPI,211,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001413447-26-000008,R7,Dividends paid to common stockholders,1025000000.0000,library map
-NXPI,211,dividends_per_share,not_presented,,,,,,,,0001413447-26-000008,,,,no face line
+NXPI,211,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001413447-26-000008,,,4.0560,note fact present in the filing (FSN value)
 NXPI,211,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,Goodwill,10299000000.0000,library map
 NXPI,211,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Gross profit,6716000000.0000,library map
 NXPI,211,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Income (loss) before income taxes,2663000000.0000,library map
 NXPI,211,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Benefit (provision) for income taxes,525000000.0000,library map
 NXPI,211,interest_expense,not_presented,,,,,,,,0001413447-26-000008,,,,no face line
-NXPI,211,interest_income,not_presented,,,,,,,,0001413447-26-000008,,,,no face line
+NXPI,211,interest_income,not_presented,,,,,,,,0001413447-26-000008,,,,no face line and no note fact
 NXPI,211,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,"Inventories, net",2577000000.0000,library map
 NXPI,211,loans_net,OUT,,,,,,,,0001413447-26-000008,,,,not a bank
 NXPI,211,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Net income (loss) attributable to stockholders,2021000000.0000,library map

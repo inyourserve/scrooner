@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BBIO,590,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Accounts payable,36228000.0000,library map
 BBIO,590,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Accounts receivable, net",139444000.0000,library map
-BBIO,590,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001743881-26-000009,,,,note-sourced default tag (no face line)
+BBIO,590,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001743881-26-000009,,,2700000.0000,note fact present in the filing (FSN value)
 BBIO,590,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, basic (in dollars per share)",-3.7800,library map
 BBIO,590,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Purchases of property and equipment,1097000.0000,library map
 BBIO,590,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Cash and cash equivalents,570119000.0000,library map
@@ -21,7 +21,7 @@ BBIO,590,deposits,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
 BBIO,590,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Depreciation and amortization,5434000.0000,library map
 BBIO,590,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, diluted (in dollars per share)",-3.7800,library map
 BBIO,590,dividends_paid,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,dividends_per_share,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
+BBIO,590,dividends_per_share,not_presented,,,,,,,,0001743881-26-000009,,,,no face line and no note fact
 BBIO,590,goodwill,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
 BBIO,590,gross_profit,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
 BBIO,590,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss before income taxes,-732503000.0000,library map

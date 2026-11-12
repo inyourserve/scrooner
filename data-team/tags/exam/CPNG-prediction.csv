@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CPNG,372,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001834584-26-000024,R5,Accounts payable,6298000000.0000,library map
 CPNG,372,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,Y,ReceivablesNetCurrent,sec_api,0001834584-26-000024,R5,"Accounts receivable, net",363000000.0000,library map
-CPNG,372,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001834584-26-000024,,,,note-sourced default tag (no face line)
+CPNG,372,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001834584-26-000024,,,50000000.0000,note fact present in the filing (FSN value)
 CPNG,372,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001834584-26-000024,R3,Basic (in usd per share),0.1100,library map
 CPNG,372,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001834584-26-000024,R8,Purchases of property and equipment,1251000000.0000,library map
 CPNG,372,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001834584-26-000024,R5,Cash and cash equivalents,6318000000.0000,library map
 CPNG,372,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001834584-26-000024,R8,Net cash (used in) provided by financing activities,-247000000.0000,library map
 CPNG,372,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001834584-26-000024,R8,Net cash used in investing activities,-1254000000.0000,library map
-CPNG,372,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001834584-26-000024,,,,note-sourced default tag (no face line)
-CPNG,372,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001834584-26-000024,,,,note-sourced default tag (no face line)
+CPNG,372,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001834584-26-000024,,,177000000.0000,note fact present in the filing (FSN value)
+CPNG,372,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001834584-26-000024,,,65000000.0000,note fact present in the filing (FSN value)
 CPNG,372,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001834584-26-000024,R8,Accounts payable,515000000.0000,library map
 CPNG,372,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001834584-26-000024,R8,"Accounts receivable, net",-37000000.0000,library map
 CPNG,372,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001834584-26-000024,R8,Inventories,233000000.0000,library map
@@ -21,7 +21,7 @@ CPNG,372,deposits,OUT,,,,,,,,0001834584-26-000024,,,,not a bank
 CPNG,372,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001834584-26-000024,R8,Depreciation and amortization,517000000.0000,library map
 CPNG,372,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001834584-26-000024,R3,Diluted (in usd per share),0.1100,library map
 CPNG,372,dividends_paid,not_presented,,,,,,,,0001834584-26-000024,,,,no face line
-CPNG,372,dividends_per_share,not_presented,,,,,,,,0001834584-26-000024,,,,no face line
+CPNG,372,dividends_per_share,not_presented,,,,,,,,0001834584-26-000024,,,,no face line and no note fact
 CPNG,372,goodwill,not_presented,,,,,,,,0001834584-26-000024,,,,no face line
 CPNG,372,gross_profit,not_presented,,,,,,,,0001834584-26-000024,,,,no face line
 CPNG,372,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001834584-26-000024,R3,Income before income taxes,597000000.0000,library map

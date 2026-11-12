@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IBKR,291,accounts_payable,not_presented,,,,,,,,0001381197-26-000062,,,,no face line
 IBKR,291,accounts_receivable,not_presented,,,,,,,,0001381197-26-000062,,,,no face line
-IBKR,291,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001381197-26-000062,,,,note-sourced default tag (no face line)
+IBKR,291,amortization_of_intangibles,not_presented,,,,,,,,0001381197-26-000062,,,,no face line and no note fact
 IBKR,291,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001381197-26-000062,R4,Basic,2.2300,library map
 IBKR,291,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-6,N,,sec_api,0001381197-26-000062,R8,"Purchase of property, equipment and intangible assets",67000000.0000,combined line (library or label demote)
 IBKR,291,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001381197-26-000062,R2,Cash and cash equivalents,4963000000.0000,library map

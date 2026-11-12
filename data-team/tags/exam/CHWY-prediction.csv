@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CHWY,761,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,Trade accounts payable,1221400000.0000,library map
 CHWY,761,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,Accounts receivable,222200000.0000,library map
-CHWY,761,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001766502-26-000034,,,,note-sourced default tag (no face line)
+CHWY,761,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001766502-26-000034,,,400000.0000,note fact present in the filing (FSN value)
 CHWY,761,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001766502-26-000034,R5,Basic (in dollars per share),0.5400,library map
 CHWY,761,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,Y,PaymentsToAcquireOtherProductiveAssets,sec_api,0001766502-26-000034,R7,Capital expenditures,129200000.0000,library map
 CHWY,761,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,Cash and cash equivalents,860100000.0000,library map
 CHWY,761,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001766502-26-000034,R7,Net cash (used in) provided by financing activities,-276000000.0000,library map
 CHWY,761,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001766502-26-000034,R7,Net cash (used in) provided by investing activities,-151800000.0000,library map
-CHWY,761,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001766502-26-000034,,,,note-sourced default tag (no face line)
-CHWY,761,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001766502-26-000034,,,,note-sourced default tag (no face line)
+CHWY,761,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001766502-26-000034,,,23300000.0000,note fact present in the filing (FSN value)
+CHWY,761,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001766502-26-000034,,,2400000.0000,note fact present in the filing (FSN value)
 CHWY,761,cf_ap_change,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
 CHWY,761,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001766502-26-000034,R7,Accounts receivable,53100000.0000,library map
 CHWY,761,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001766502-26-000034,R7,Inventories,27700000.0000,library map
@@ -21,13 +21,13 @@ CHWY,761,deposits,OUT,,,,,,,,0001766502-26-000034,,,,not a bank
 CHWY,761,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001766502-26-000034,R7,Depreciation and amortization,129300000.0000,library map
 CHWY,761,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001766502-26-000034,R5,Diluted (in dollars per share),0.5200,library map
 CHWY,761,dividends_paid,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
-CHWY,761,dividends_per_share,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
+CHWY,761,dividends_per_share,not_presented,,,,,,,,0001766502-26-000034,,,,no face line and no note fact
 CHWY,761,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,Goodwill,39400000.0000,library map
 CHWY,761,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Gross profit,3753900000.0000,library map
 CHWY,761,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Income before income tax provision (benefit),263300000.0000,library map
 CHWY,761,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Income tax provision (benefit),40500000.0000,library map
 CHWY,761,interest_expense,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
-CHWY,761,interest_income,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
+CHWY,761,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001766502-26-000034,,,19800000.0000,note fact present in the filing (FSN value)
 CHWY,761,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,Inventories,864800000.0000,library map
 CHWY,761,loans_net,OUT,,,,,,,,0001766502-26-000034,,,,not a bank
 CHWY,761,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Net income,222800000.0000,library map

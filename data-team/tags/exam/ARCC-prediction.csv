@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ARCC,573,accounts_payable,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,accounts_receivable,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
-ARCC,573,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001287750-26-000006,,,,note-sourced default tag (no face line)
+ARCC,573,amortization_of_intangibles,not_presented,,,,,,,,0001287750-26-000006,,,,no face line and no note fact
 ARCC,573,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001287750-26-000006,R5,Basic (in usd per share),1.8600,library map
 ARCC,573,capex,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001287750-26-000006,R3,Cash and cash equivalents,638000000.0000,library map
@@ -27,7 +27,7 @@ ARCC,573,gross_profit,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,income_before_tax,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,income_tax_expense,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001287750-26-000006,R5,Interest and credit facility fees,793000000.0000,library map
-ARCC,573,interest_income,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
+ARCC,573,interest_income,not_presented,,,,,,,,0001287750-26-000006,,,,no face line and no note fact
 ARCC,573,inventory,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,loans_net,OUT,,,,,,,,0001287750-26-000006,,,,not a bank
 ARCC,573,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001287750-26-000006,R5,NET INCREASE IN STOCKHOLDERS EQUITY RESULTING FROM OPERATIONS,1299000000.0000,library map
@@ -41,7 +41,7 @@ ARCC,573,ppe_net,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,provision_for_credit_losses,OUT,,,,,,,,0001287750-26-000006,,,,not a bank
 ARCC,573,research_and_development,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,revenue,combined,us-gaap:NetInvestmentIncome,IS,+,-6,N,,sec_api,0001287750-26-000006,R5,NET INVESTMENT INCOME BEFORE INCOME TAXES,1458000000.0000,combined line (library or label demote)
-ARCC,573,sbc,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
+ARCC,573,sbc,not_presented,,,,,,,,0001287750-26-000006,,,,no face line and no note fact
 ARCC,573,sga_expense,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,share_buybacks,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001287750-26-000006,R4,"Common stock, shares outstanding (in shares)",718000000.0000,library map

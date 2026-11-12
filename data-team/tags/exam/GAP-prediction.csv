@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GAP,792,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-018573,R4,Accounts payable,1567000000.0000,library map
 GAP,792,accounts_receivable,not_presented,,,,,,,,0001628280-26-018573,,,,no face line
-GAP,792,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-018573,,,,note-sourced default tag (no face line)
+GAP,792,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-018573,,,6000000.0000,note fact present in the filing (FSN value)
 GAP,792,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-018573,R6,Earnings per sharebasic,2.1900,library map
 GAP,792,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-018573,R11,Purchases of property and equipment,470000000.0000,library map
 GAP,792,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-018573,R4,Cash and cash equivalents,2616000000.0000,library map

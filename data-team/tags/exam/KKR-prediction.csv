@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 KKR,165,accounts_payable,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,accounts_receivable,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
-KKR,165,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001404912-26-000007,,,,note-sourced default tag (no face line)
+KKR,165,amortization_of_intangibles,not_presented,,,,,,,,0001404912-26-000007,,,,no face line and no note fact
 KKR,165,basic_eps,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,capex,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,cash_and_equivalents,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
@@ -50,5 +50,5 @@ KKR,165,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001404912-26-0000
 KKR,165,total_debt,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,total_interest_income,OUT,,,,,,,,0001404912-26-000007,,,,not a bank
 KKR,165,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001404912-26-000007,R3,Total Liabilities,328512161000.0000,library map
-KKR,165,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001404912-26-000007,,,,note-sourced default tag (no face line)
-KKR,165,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001404912-26-000007,,,,note-sourced default tag (no face line)
+KKR,165,weighted_basic_shares,not_presented,,,,,,,,0001404912-26-000007,,,,no face line and no note fact
+KKR,165,weighted_diluted_shares,not_presented,,,,,,,,0001404912-26-000007,,,,no face line and no note fact

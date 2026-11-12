@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SO,992,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000092122-26-000006,R8,Accounts payable,3710000000.0000,library map
 SO,992,accounts_receivable,not_presented,,,,,,,,0000092122-26-000006,,,,no face line
-SO,992,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000092122-26-000006,,,,note-sourced default tag (no face line)
+SO,992,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000092122-26-000006,,,32000000.0000,note fact present in the filing (FSN value)
 SO,992,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000092122-26-000006,R3,Basic (in dollars per share),3.9400,library map
 SO,992,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000092122-26-000006,R6,Property additions,12737000000.0000,library map
 SO,992,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000092122-26-000006,R8,Cash and cash equivalents,1639000000.0000,library map
@@ -27,14 +27,14 @@ SO,992,gross_profit,not_presented,,,,,,,,0000092122-26-000006,,,,no face line
 SO,992,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,Earnings Before Income Taxes,4999000000.0000,library map
 SO,992,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,0,N,,sec_api,0000092122-26-000006,R3,Income taxes (benefit),828000000.0000,library map
 SO,992,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,"Interest expense, net of amounts capitalized",3238000000.0000,library map
-SO,992,interest_income,not_presented,,,,,,,,0000092122-26-000006,,,,no face line
+SO,992,interest_income,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,"Interest expense, net of amounts capitalized",3238000000.0000,interest income only inside a net/other face line between OI and pretax
 SO,992,inventory,not_presented,,,,,,,,0000092122-26-000006,,,,no face line
 SO,992,loans_net,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
 SO,992,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0000092122-26-000006,R3,Net Income,4341000000.0000,library map
 SO,992,net_interest_income,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
 SO,992,noninterest_expense,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
 SO,992,noninterest_income,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
-SO,992,operating_expenses,not_presented,,,,,,,,0000092122-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+SO,992,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,Total operating expenses,22268000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 SO,992,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,Operating Income,7285000000.0000,library map
 SO,992,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,"Other income (expense), net",500000000.0000,library map
 SO,992,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000092122-26-000006,R8,"Total property, plant, and equipment",114369000000.0000,library map

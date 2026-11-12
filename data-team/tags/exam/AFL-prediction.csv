@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AFL,203,accounts_payable,not_presented,,,,,,,,0001628280-26-011402,,,,no face line
 AFL,203,accounts_receivable,not_presented,,,,,,,,0001628280-26-011402,,,,no face line
-AFL,203,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-011402,,,,note-sourced default tag (no face line)
+AFL,203,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-011402,,,,no face line and no note fact
 AFL,203,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-011402,R3,Basic (in dollars per share),6.8400,library map
 AFL,203,capex,not_presented,,,,,,,,0001628280-26-011402,,,,no face line
 AFL,203,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-011402,R6,Cash and cash equivalents,6245000000.0000,library map
@@ -27,7 +27,7 @@ AFL,203,gross_profit,OUT,,,,,,,,0001628280-26-011402,,,,sector template (bank/in
 AFL,203,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0001628280-26-011402,R3,Earnings before income taxes,4533000000.0000,library map
 AFL,203,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-011402,R3,Income taxes,887000000.0000,library map
 AFL,203,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-011402,R3,Interest expense,220000000.0000,library map
-AFL,203,interest_income,not_presented,,,,,,,,0001628280-26-011402,,,,no face line
+AFL,203,interest_income,not_presented,,,,,,,,0001628280-26-011402,,,,no face line and no note fact
 AFL,203,inventory,OUT,,,,,,,,0001628280-26-011402,,,,sector template (bank/insurer)
 AFL,203,loans_net,OUT,,,,,,,,0001628280-26-011402,,,,not a bank
 AFL,203,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-011402,R3,Net earnings,3646000000.0000,library map
@@ -41,7 +41,7 @@ AFL,203,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0
 AFL,203,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-011402,,,,not a bank
 AFL,203,research_and_development,OUT,,,,,,,,0001628280-26-011402,,,,sector template (bank/insurer)
 AFL,203,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001628280-26-011402,R3,Total revenues,17164000000.0000,library map
-AFL,203,sbc,not_presented,,,,,,,,0001628280-26-011402,,,,no face line
+AFL,203,sbc,not_presented,,,,,,,,0001628280-26-011402,,,,no face line and no note fact
 AFL,203,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-011402,R3,Insurance and other expenses,3253000000.0000,library map
 AFL,203,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-011402,R10,Purchases of treasury stock,3530000000.0000,library map
 AFL,203,shares_outstanding,not_presented,,,,,,,,0001628280-26-011402,,,,no face line

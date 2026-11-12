@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LEVI,799,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000094845-26-000008,R3,Accounts payable,597600000.0000,library map
 LEVI,799,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000094845-26-000008,R3,"Trade receivables, net",774700000.0000,library map
-LEVI,799,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000094845-26-000008,,,,note-sourced default tag (no face line)
+LEVI,799,amortization_of_intangibles,not_presented,,,,,,,,0000094845-26-000008,,,,no face line and no note fact
 LEVI,799,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000094845-26-000008,R5,Net income - Basic (usd per share),1.4600,library map
 LEVI,799,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000094845-26-000008,R8,"Purchases of property, plant and equipment",221400000.0000,library map
 LEVI,799,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000094845-26-000008,R3,Cash and cash equivalents,757900000.0000,library map
@@ -27,7 +27,7 @@ LEVI,799,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000094845-2
 LEVI,799,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,Income from continuing operations before income taxes,634000000.0000,library map
 LEVI,799,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,Income tax expense,132000000.0000,library map
 LEVI,799,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000094845-26-000008,R5,Interest expense,48600000.0000,library map
-LEVI,799,interest_income,not_presented,,,,,,,,0000094845-26-000008,,,,no face line
+LEVI,799,interest_income,not_presented,,,,,,,,0000094845-26-000008,,,,no face line and no note fact
 LEVI,799,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000094845-26-000008,R3,Inventories,1237700000.0000,library map
 LEVI,799,loans_net,OUT,,,,,,,,0000094845-26-000008,,,,not a bank
 LEVI,799,net_income,not_presented,,,,,,,,0000094845-26-000008,,,,no face line

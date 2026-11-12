@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HSY,306,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Accounts payable,1255701000.0000,library map
 HSY,306,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,"Accounts receivabletrade, net",729547000.0000,library map
-HSY,306,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
+HSY,306,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-008586,,,85398000.0000,note fact present in the filing (FSN value)
 HSY,306,basic_eps,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Capital additions (including software),454622000.0000,library map
 HSY,306,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Cash and cash equivalents,925859000.0000,combined line (library or label demote)
@@ -21,13 +21,13 @@ HSY,306,deposits,OUT,,,,,,,,0001628280-26-008586,,,,not a bank
 HSY,306,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Depreciation and amortization,503701000.0000,library map
 HSY,306,diluted_eps,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Cash dividends paid,1085296000.0000,library map
-HSY,306,dividends_per_share,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
+HSY,306,dividends_per_share,not_presented,,,,,,,,0001628280-26-008586,,,,no face line and no note fact
 HSY,306,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Goodwill,2996005000.0000,library map
 HSY,306,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Gross profit,3922691000.0000,library map
 HSY,306,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Income before income taxes,1214208000.0000,library map
 HSY,306,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Provision for income taxes,330949000.0000,library map
 HSY,306,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001628280-26-008586,R3,"Interest expense, net",-190206000.0000,combined line (library or label demote)
-HSY,306,interest_income,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
+HSY,306,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-008586,,,34600000.0000,note fact present in the filing (FSN value)
 HSY,306,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Inventories,1429254000.0000,library map
 HSY,306,loans_net,OUT,,,,,,,,0001628280-26-008586,,,,not a bank
 HSY,306,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Net income,883259000.0000,library map
@@ -50,5 +50,5 @@ HSY,306,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-0085
 HSY,306,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Short-term debt,218546000.0000,printed face components (duration sum; total_debt founder sum)
 HSY,306,total_interest_income,OUT,,,,,,,,0001628280-26-008586,,,,not a bank
 HSY,306,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Total liabilities,9104547000.0000,library map
-HSY,306,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
-HSY,306,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
+HSY,306,weighted_basic_shares,not_presented,,,,,,,,0001628280-26-008586,,,,no face line and no note fact
+HSY,306,weighted_diluted_shares,not_presented,,,,,,,,0001628280-26-008586,,,,no face line and no note fact

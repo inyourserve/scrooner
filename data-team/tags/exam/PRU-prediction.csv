@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PRU,275,accounts_payable,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
 PRU,275,accounts_receivable,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
-PRU,275,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001137774-26-000048,,,,note-sourced default tag (no face line)
+PRU,275,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001137774-26-000048,,,73000000.0000,note fact present in the filing (FSN value)
 PRU,275,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001137774-26-000048,R5,"Net income (loss) attributable to Prudential Financial, Inc. (in dollars per share)",10.0500,library map
 PRU,275,capex,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
 PRU,275,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001137774-26-000048,R3,Cash and cash equivalents,19712000000.0000,library map
@@ -21,13 +21,13 @@ PRU,275,deposits,OUT,,,,,,,,0001137774-26-000048,,,,not a bank
 PRU,275,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001137774-26-000048,R8,Depreciation and amortization,128000000.0000,library map
 PRU,275,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001137774-26-000048,R5,"Net income (loss) attributable to Prudential Financial, Inc. (in dollars per share)",9.9900,library map
 PRU,275,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001137774-26-000048,R8,Cash dividends paid on Common Stock,1926000000.0000,library map
-PRU,275,dividends_per_share,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
+PRU,275,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001137774-26-000048,,,5.4000,note fact present in the filing (FSN value)
 PRU,275,goodwill,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
 PRU,275,gross_profit,OUT,,,,,,,,0001137774-26-000048,,,,sector template (bank/insurer)
 PRU,275,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001137774-26-000048,R5,INCOME (LOSS) BEFORE INCOME TAXES AND EQUITY IN EARNINGS OF JOINT VENTURES AND OTHER OPERATING ENTITIES,4656000000.0000,library map
 PRU,275,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001137774-26-000048,R5,Total income tax expense (benefit),1053000000.0000,library map
 PRU,275,interest_expense,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
-PRU,275,interest_income,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
+PRU,275,interest_income,not_presented,,,,,,,,0001137774-26-000048,,,,no face line and no note fact
 PRU,275,inventory,OUT,,,,,,,,0001137774-26-000048,,,,sector template (bank/insurer)
 PRU,275,loans_net,OUT,,,,,,,,0001137774-26-000048,,,,not a bank
 PRU,275,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001137774-26-000048,R5,"NET INCOME (LOSS) ATTRIBUTABLE TO PRUDENTIAL FINANCIAL, INC.",3576000000.0000,library map
@@ -41,7 +41,7 @@ PRU,275,ppe_net,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
 PRU,275,provision_for_credit_losses,OUT,,,,,,,,0001137774-26-000048,,,,not a bank
 PRU,275,research_and_development,OUT,,,,,,,,0001137774-26-000048,,,,sector template (bank/insurer)
 PRU,275,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001137774-26-000048,R5,Total revenues,60774000000.0000,library map
-PRU,275,sbc,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
+PRU,275,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001137774-26-000048,,,257000000.0000,note fact present in the filing (FSN value)
 PRU,275,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001137774-26-000048,R5,General and administrative expenses,13012000000.0000,lone G&A line
 PRU,275,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001137774-26-000048,R8,Common Stock acquired,1000000000.0000,library map
 PRU,275,shares_outstanding,not_presented,,,,,,,,0001137774-26-000048,,,,no face line
@@ -50,5 +50,5 @@ PRU,275,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001137774-26-0000
 PRU,275,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001137774-26-000048,R3,Long-term debt,18856000000.0000,printed face components (duration sum; total_debt founder sum)
 PRU,275,total_interest_income,OUT,,,,,,,,0001137774-26-000048,,,,not a bank
 PRU,275,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001137774-26-000048,R3,Total liabilities,738159000000.0000,library map
-PRU,275,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001137774-26-000048,,,,note-sourced default tag (no face line)
-PRU,275,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001137774-26-000048,,,,note-sourced default tag (no face line)
+PRU,275,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001137774-26-000048,,,351800000.0000,note fact present in the filing (FSN value)
+PRU,275,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001137774-26-000048,,,353700000.0000,note fact present in the filing (FSN value)

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DXCM,322,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001093557-26-000027,R3,Accounts payable and accrued liabilities,1944000000.0000,combined line (library or label demote)
 DXCM,322,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001093557-26-000027,R3,"Accounts receivable, net",1216100000.0000,library map
-DXCM,322,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001093557-26-000027,,,,note-sourced default tag (no face line)
+DXCM,322,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001093557-26-000027,,,4200000.0000,note fact present in the filing (FSN value)
 DXCM,322,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001093557-26-000027,R5,Basic net income per share (in usd per share),2.1400,library map
 DXCM,322,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001093557-26-000027,R8,Purchases of property and equipment,363500000.0000,library map
 DXCM,322,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001093557-26-000027,R3,Cash and cash equivalents,917700000.0000,library map
@@ -21,13 +21,13 @@ DXCM,322,deposits,OUT,,,,,,,,0001093557-26-000027,,,,not a bank
 DXCM,322,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001093557-26-000027,R8,Depreciation and amortization,251800000.0000,library map
 DXCM,322,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001093557-26-000027,R5,Diluted net income per share (in usd per share),2.0900,library map
 DXCM,322,dividends_paid,not_presented,,,,,,,,0001093557-26-000027,,,,no face line
-DXCM,322,dividends_per_share,not_presented,,,,,,,,0001093557-26-000027,,,,no face line
+DXCM,322,dividends_per_share,not_presented,,,,,,,,0001093557-26-000027,,,,no face line and no note fact
 DXCM,322,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001093557-26-000027,R3,Goodwill,24200000.0000,library map
 DXCM,322,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Gross profit,2801900000.0000,library map
 DXCM,322,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Income before income taxes,1088400000.0000,library map
 DXCM,322,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Income tax expense,252100000.0000,library map
 DXCM,322,interest_expense,not_presented,,,,,,,,0001093557-26-000027,,,,no face line
-DXCM,322,interest_income,not_presented,,,,,,,,0001093557-26-000027,,,,no face line
+DXCM,322,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001093557-26-000027,,,112700000.0000,note fact present in the filing (FSN value)
 DXCM,322,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001093557-26-000027,R3,Inventory,629100000.0000,library map
 DXCM,322,loans_net,OUT,,,,,,,,0001093557-26-000027,,,,not a bank
 DXCM,322,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Net income,836300000.0000,library map

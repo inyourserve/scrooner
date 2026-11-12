@@ -21,13 +21,13 @@ VIAV,785,deposits,OUT,,,,,,,,0001628280-26-056765,,,,not a bank
 VIAV,785,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-056765,,,,single component only
 VIAV,785,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-056765,R3,Diluted (usd per share),-0.1300,library map
 VIAV,785,dividends_paid,not_presented,,,,,,,,0001628280-26-056765,,,,no face line
-VIAV,785,dividends_per_share,not_presented,,,,,,,,0001628280-26-056765,,,,no face line
+VIAV,785,dividends_per_share,not_presented,,,,,,,,0001628280-26-056765,,,,no face line and no note fact
 VIAV,785,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-056765,R5,"Goodwill, net",700700000.0000,library map
 VIAV,785,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-056765,R3,Gross profit,875400000.0000,library map
 VIAV,785,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001628280-26-056765,R3,Income before income taxes and equity investment earnings,16300000.0000,library map
 VIAV,785,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-056765,R3,Provision for income taxes,47500000.0000,library map
 VIAV,785,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-056765,R3,Interest expense,47400000.0000,library map
-VIAV,785,interest_income,not_presented,,,,,,,,0001628280-26-056765,,,,no face line
+VIAV,785,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001628280-26-056765,,,15400000.0000,note fact present in the filing (FSN value)
 VIAV,785,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-056765,R5,"Inventories, net",155300000.0000,library map
 VIAV,785,loans_net,OUT,,,,,,,,0001628280-26-056765,,,,not a bank
 VIAV,785,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-056765,R3,Net (loss) income,-30400000.0000,library map

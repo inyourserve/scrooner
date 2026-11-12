@@ -7,8 +7,8 @@ ON,354,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N
 ON,354,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001097864-26-000006,R3,Cash and cash equivalents,2147600000.0000,library map
 ON,354,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001097864-26-000006,R8,Net cash used in financing activities,-1763800000.0000,library map
 ON,354,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001097864-26-000006,R8,Net cash used in investing activities,-538500000.0000,library map
-ON,354,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001097864-26-000006,,,,note-sourced default tag (no face line)
-ON,354,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001097864-26-000006,,,,note-sourced default tag (no face line)
+ON,354,cash_paid_for_income_taxes,not_presented,,,,,,,,0001097864-26-000006,,,,no face line and no note fact
+ON,354,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001097864-26-000006,,,58300000.0000,note fact present in the filing (FSN value)
 ON,354,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001097864-26-000006,R8,Accounts payable,136900000.0000,library map
 ON,354,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-5,N,,sec_api,0001097864-26-000006,R8,Receivables,-163500000.0000,library map
 ON,354,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001097864-26-000006,R8,Inventories,-273400000.0000,library map
@@ -21,7 +21,7 @@ ON,354,deposits,OUT,,,,,,,,0001097864-26-000006,,,,not a bank
 ON,354,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001097864-26-000006,R8,Depreciation and amortization,686000000.0000,library map
 ON,354,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001097864-26-000006,R5,Diluted (in dollars per share),0.2900,library map
 ON,354,dividends_paid,not_presented,,,,,,,,0001097864-26-000006,,,,no face line
-ON,354,dividends_per_share,not_presented,,,,,,,,0001097864-26-000006,,,,no face line
+ON,354,dividends_per_share,not_presented,,,,,,,,0001097864-26-000006,,,,no face line and no note fact
 ON,354,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001097864-26-000006,R3,Goodwill,1679900000.0000,library map
 ON,354,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001097864-26-000006,R5,Gross profit,1983900000.0000,library map
 ON,354,income_before_tax,not_presented,,,,,,,,0001097864-26-000006,,,,no face line

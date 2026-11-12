@@ -7,8 +7,8 @@ CMCSA,162,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-
 CMCSA,162,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Cash and cash equivalents,9481000000.0000,library map
 CMCSA,162,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) financing activities,-14346000000.0000,library map
 CMCSA,162,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) investing activities,-16157000000.0000,library map
-CMCSA,162,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
-CMCSA,162,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
+CMCSA,162,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-004994,,,755000000.0000,note fact present in the filing (FSN value)
+CMCSA,162,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-004994,,,3871000000.0000,note fact present in the filing (FSN value)
 CMCSA,162,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Accounts payable and accrued expenses related to trade creditors,-20000000.0000,combined line (library or label demote)
 CMCSA,162,cf_ar_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
 CMCSA,162,cf_inventory_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
@@ -27,14 +27,14 @@ CMCSA,162,gross_profit,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
 CMCSA,162,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income before income taxes,25766000000.0000,library map
 CMCSA,162,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income tax expense,6106000000.0000,library map
 CMCSA,162,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-004994,R3,Interest expense,4409000000.0000,library map
-CMCSA,162,interest_income,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
+CMCSA,162,interest_income,not_presented,,,,,,,,0001628280-26-004994,,,,no face line and no note fact
 CMCSA,162,inventory,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
 CMCSA,162,loans_net,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
 CMCSA,162,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Net income attributable to Comcast Corporation,19998000000.0000,library map
 CMCSA,162,net_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
 CMCSA,162,noninterest_expense,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
 CMCSA,162,noninterest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,operating_expenses,not_presented,,,,,,,,0001628280-26-004994,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CMCSA,162,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Total costs and expenses,103035000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CMCSA,162,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Operating income,20672000000.0000,library map
 CMCSA,162,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,"Investment and other income (loss), net",9503000000.0000,combined line (library or label demote)
 CMCSA,162,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,"Property and equipment, net",65680000000.0000,library map
@@ -50,5 +50,5 @@ CMCSA,162,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-00
 CMCSA,162,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Current portion of debt,5958000000.0000,printed face components (duration sum; total_debt founder sum)
 CMCSA,162,total_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
 CMCSA,162,total_liabilities,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
-CMCSA,162,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
+CMCSA,162,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-004994,,,3699000000.0000,note fact present in the filing (FSN value)
+CMCSA,162,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-004994,,,3709000000.0000,note fact present in the filing (FSN value)

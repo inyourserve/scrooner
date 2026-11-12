@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SMMT,629,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001599298-26-000015,R3,Accounts payable,20292000.0000,library map
 SMMT,629,accounts_receivable,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
-SMMT,629,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001599298-26-000015,,,,note-sourced default tag (no face line)
+SMMT,629,amortization_of_intangibles,not_presented,,,,,,,,0001599298-26-000015,,,,no face line and no note fact
 SMMT,629,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001599298-26-000015,R5,Basic (in dollars per share),-1.4400,library map
 SMMT,629,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001599298-26-000015,R8,Purchase of property and equipment,657000.0000,library map
 SMMT,629,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001599298-26-000015,R3,Cash and cash equivalents,225266000.0000,library map
@@ -21,20 +21,20 @@ SMMT,629,deposits,OUT,,,,,,,,0001599298-26-000015,,,,not a bank
 SMMT,629,depreciation_and_amortization,not_presented,,,,,,,,0001599298-26-000015,,,,single component only
 SMMT,629,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001599298-26-000015,R5,Diluted (in dollars per share),-1.4400,library map
 SMMT,629,dividends_paid,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
-SMMT,629,dividends_per_share,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
+SMMT,629,dividends_per_share,not_presented,,,,,,,,0001599298-26-000015,,,,no face line and no note fact
 SMMT,629,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001599298-26-000015,R3,Goodwill,2001000.0000,library map
 SMMT,629,gross_profit,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
 SMMT,629,income_before_tax,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
 SMMT,629,income_tax_expense,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
 SMMT,629,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,0,-3,N,,sec_api,0001599298-26-000015,R5,Interest expense,0.0000,library map
-SMMT,629,interest_income,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
+SMMT,629,interest_income,not_presented,,,,,,,,0001599298-26-000015,,,,no face line and no note fact
 SMMT,629,inventory,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
 SMMT,629,loans_net,OUT,,,,,,,,0001599298-26-000015,,,,not a bank
 SMMT,629,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001599298-26-000015,R5,Net loss,-1079586000.0000,library map
 SMMT,629,net_interest_income,OUT,,,,,,,,0001599298-26-000015,,,,not a bank
 SMMT,629,noninterest_expense,OUT,,,,,,,,0001599298-26-000015,,,,not a bank
 SMMT,629,noninterest_income,OUT,,,,,,,,0001599298-26-000015,,,,not a bank
-SMMT,629,operating_expenses,not_presented,,,,,,,,0001599298-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+SMMT,629,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001599298-26-000015,R5,Total operating expenses,1094424000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 SMMT,629,operating_income,not_presented,,,,,,,,0001599298-26-000015,,,,no face line
 SMMT,629,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001599298-26-000015,R5,"Other income, net",14838000.0000,combined line (library or label demote)
 SMMT,629,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001599298-26-000015,R3,"Property and equipment, net",1059000.0000,library map

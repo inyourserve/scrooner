@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BR,451,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001628280-26-052243,R6,Payables and accrued expenses,1138200000.0000,combined line (library or label demote)
 BR,451,accounts_receivable,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
-BR,451,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-052243,,,,note-sourced default tag (no face line)
+BR,451,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-052243,,,291800000.0000,note fact present in the filing (FSN value)
 BR,451,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-052243,R3,Basic earnings per share (in dollars per share),9.6700,library map
 BR,451,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-052243,R8,Capital expenditures,67200000.0000,library map
 BR,451,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-052243,R6,Cash and cash equivalents,402900000.0000,library map
@@ -27,7 +27,7 @@ BR,451,gross_profit,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
 BR,451,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-5,N,,sec_api,0001628280-26-052243,R3,Earnings before income taxes,1445800000.0000,library map
 BR,451,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-052243,R3,Provision for income taxes,321600000.0000,library map
 BR,451,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001628280-26-052243,R3,"Interest expense, net",-99900000.0000,combined line (library or label demote)
-BR,451,interest_income,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
+BR,451,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001628280-26-052243,,,11900000.0000,note fact present in the filing (FSN value)
 BR,451,inventory,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
 BR,451,loans_net,OUT,,,,,,,,0001628280-26-052243,,,,not a bank
 BR,451,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-052243,R3,Net earnings,1124300000.0000,library map
@@ -41,7 +41,7 @@ BR,451,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,00
 BR,451,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-052243,,,,not a bank
 BR,451,research_and_development,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
 BR,451,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001628280-26-052243,R3,Revenues,7476800000.0000,library map
-BR,451,sbc,not_presented,,,,,,,,0001628280-26-052243,,,,no face line
+BR,451,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001628280-26-052243,,,93900000.0000,note fact present in the filing (FSN value)
 BR,451,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001628280-26-052243,R3,"Selling, general and administrative expenses",1075500000.0000,library map
 BR,451,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001628280-26-052243,R8,Purchases of Treasury stock,603700000.0000,library map
 BR,451,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0001628280-26-052243,R7,"Common stock, shares outstanding (in shares)",114000000.0000,library map

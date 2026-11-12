@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CUBE,753,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001298675-26-000010,R2,"Accounts payable, accrued expenses and other liabilities",229666000.0000,combined line (library or label demote)
 CUBE,753,accounts_receivable,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
-CUBE,753,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001298675-26-000010,,,,note-sourced default tag (no face line)
+CUBE,753,amortization_of_intangibles,not_presented,,,,,,,,0001298675-26-000010,,,,no face line and no note fact
 CUBE,753,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001298675-26-000010,R4,Basic earnings per share attributable to common shareholders (in dollars per share),1.4600,library map
 CUBE,753,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0001298675-26-000010,R8,Development costs,28050000.0000,combined line (library or label demote)
 CUBE,753,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001298675-26-000010,R2,Cash and cash equivalents,5782000.0000,library map
 CUBE,753,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001298675-26-000010,R8,Net cash used in financing activities,-104619000.0000,library map
 CUBE,753,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001298675-26-000010,R8,Net cash used in investing activities,-571323000.0000,library map
-CUBE,753,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001298675-26-000010,,,,note-sourced default tag (no face line)
+CUBE,753,cash_paid_for_income_taxes,not_presented,,,,,,,,0001298675-26-000010,,,,no face line and no note fact
 CUBE,753,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001298675-26-000010,R8,"Cash paid for interest, net of interest capitalized",106830000.0000,library map
 CUBE,753,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001298675-26-000010,R8,Accounts payable and accrued expenses,2477000.0000,combined line (library or label demote)
 CUBE,753,cf_ar_change,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
@@ -27,7 +27,7 @@ CUBE,753,gross_profit,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,income_before_tax,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,income_tax_expense,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,interest_expense,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
-CUBE,753,interest_income,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
+CUBE,753,interest_income,not_presented,,,,,,,,0001298675-26-000010,,,,no face line and no note fact
 CUBE,753,inventory,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,loans_net,OUT,,,,,,,,0001298675-26-000010,,,,not a bank
 CUBE,753,net_income,not_presented,,,,,,,,0001298675-26-000010,,,,no face line

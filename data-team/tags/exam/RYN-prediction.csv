@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RYN,959,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000052827-26-000036,R5,Accounts payable,12775000.0000,library map
 RYN,959,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000052827-26-000036,R5,"Trade receivables, less allowance for doubtful accounts of $209 and $401",9101000.0000,library map
-RYN,959,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000052827-26-000036,,,,note-sourced default tag (no face line)
+RYN,959,amortization_of_intangibles,not_presented,,,,,,,,0000052827-26-000036,,,,no face line and no note fact
 RYN,959,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000052827-26-000036,R3,Net Income (in dollars per share),3.0700,library map
 RYN,959,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,N,,sec_api,0000052827-26-000036,R9,Real estate development investments,22440000.0000,combined line (library or label demote)
 RYN,959,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000052827-26-000036,R5,Cash and cash equivalents,842944000.0000,library map
 RYN,959,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000052827-26-000036,R9,CASH USED FOR FINANCING ACTIVITIES,-372866000.0000,library map
 RYN,959,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0000052827-26-000036,R9,CASH PROVIDED BY INVESTING ACTIVITIES,615054000.0000,library map
 RYN,959,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0000052827-26-000036,R9,Income taxes,4054000.0000,library map
-RYN,959,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000052827-26-000036,,,,note-sourced default tag (no face line)
+RYN,959,cash_paid_for_interest,not_presented,,,,,,,,0000052827-26-000036,,,,no face line and no note fact
 RYN,959,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000052827-26-000036,R9,Accounts payable,-1985000.0000,library map
 RYN,959,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0000052827-26-000036,R9,Receivables,-6601000.0000,library map
 RYN,959,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000052827-26-000036,R9,Inventories,-235000.0000,library map
@@ -50,5 +50,5 @@ RYN,959,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000052827-26-0000
 RYN,959,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000052827-26-000036,R5,"Current maturities of long-term debt, net (Note 8)",199982000.0000,printed face components (duration sum; total_debt founder sum)
 RYN,959,total_interest_income,OUT,,,,,,,,0000052827-26-000036,,,,not a bank
 RYN,959,total_liabilities,not_presented,,,,,,,,0000052827-26-000036,,,,no face line
-RYN,959,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000052827-26-000036,,,,note-sourced default tag (no face line)
-RYN,959,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000052827-26-000036,,,,note-sourced default tag (no face line)
+RYN,959,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000052827-26-000036,,,154760442.0000,note fact present in the filing (FSN value)
+RYN,959,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000052827-26-000036,,,158709766.0000,note fact present in the filing (FSN value)

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CRDO,325,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-043303,R3,Accounts payable,107345000.0000,library map
 CRDO,325,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-043303,R3,Accounts receivable,233377000.0000,library map
-CRDO,325,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-043303,,,,note-sourced default tag (no face line)
+CRDO,325,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-043303,,,400000.0000,note fact present in the filing (FSN value)
 CRDO,325,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-043303,R5,Basic (in US dollars per share),2.6500,library map
 CRDO,325,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Purchases of property and equipment,57296000.0000,library map
 CRDO,325,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-043303,R3,Cash and cash equivalents,1164952000.0000,library map
 CRDO,325,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Net cash provided by (used in) financing activities,717629000.0000,library map
 CRDO,325,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-043303,R8,Net cash provided by (used in) investing activities,-253528000.0000,library map
 CRDO,325,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Income taxes paid,2472000.0000,library map
-CRDO,325,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-043303,,,,note-sourced default tag (no face line)
+CRDO,325,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-043303,,,,no face line and no note fact
 CRDO,325,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Accounts payable,48752000.0000,library map
 CRDO,325,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Accounts receivable,70798000.0000,library map
 CRDO,325,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Inventories,174036000.0000,library map
@@ -21,13 +21,13 @@ CRDO,325,deposits,OUT,,,,,,,,0001628280-26-043303,,,,not a bank
 CRDO,325,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-043303,R8,Depreciation and amortization,34637000.0000,library map
 CRDO,325,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-043303,R5,Diluted (in US dollars per share),2.5100,library map
 CRDO,325,dividends_paid,not_presented,,,,,,,,0001628280-26-043303,,,,no face line
-CRDO,325,dividends_per_share,not_presented,,,,,,,,0001628280-26-043303,,,,no face line
+CRDO,325,dividends_per_share,not_presented,,,,,,,,0001628280-26-043303,,,,no face line and no note fact
 CRDO,325,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-043303,R3,Goodwill,92798000.0000,library map
 CRDO,325,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-043303,R5,Gross profit,908349000.0000,library map
 CRDO,325,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-043303,R5,Income (loss) before income taxes,475435000.0000,library map
 CRDO,325,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-043303,R5,Provision for income taxes,3156000.0000,library map
 CRDO,325,interest_expense,not_presented,,,,,,,,0001628280-26-043303,,,,no face line
-CRDO,325,interest_income,not_presented,,,,,,,,0001628280-26-043303,,,,no face line
+CRDO,325,interest_income,not_presented,,,,,,,,0001628280-26-043303,,,,no face line and no note fact
 CRDO,325,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-043303,R3,Inventories,250831000.0000,library map
 CRDO,325,loans_net,OUT,,,,,,,,0001628280-26-043303,,,,not a bank
 CRDO,325,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-043303,R5,Net income (loss),472279000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MMM,147,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000066740-26-000014,R5,Accounts payable,2702000000.0000,library map
 MMM,147,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000066740-26-000014,R5,Accounts receivable  net of allowances of $61 and $60,3533000000.0000,library map
-MMM,147,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000066740-26-000014,,,,note-sourced default tag (no face line)
+MMM,147,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000066740-26-000014,,,104000000.0000,note fact present in the filing (FSN value)
 MMM,147,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000066740-26-000014,R3,Earnings (loss) per share  basic (in dollars per share),6.0500,library map
 MMM,147,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000066740-26-000014,R9,"Purchases of property, plant and equipment (PP&E)",910000000.0000,library map
 MMM,147,cash_and_equivalents,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
 MMM,147,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000066740-26-000014,R9,Net cash provided by (used in) financing activities,-4016000000.0000,library map
 MMM,147,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0000066740-26-000014,R9,Net cash provided by (used in) investing activities,1350000000.0000,library map
-MMM,147,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000066740-26-000014,,,,note-sourced default tag (no face line)
-MMM,147,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000066740-26-000014,,,,note-sourced default tag (no face line)
+MMM,147,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000066740-26-000014,,,800000000.0000,note fact present in the filing (FSN value)
+MMM,147,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000066740-26-000014,,,467000000.0000,note fact present in the filing (FSN value)
 MMM,147,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000066740-26-000014,R9,Accounts payable,21000000.0000,library map
 MMM,147,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000066740-26-000014,R9,Accounts receivable,211000000.0000,library map
 MMM,147,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000066740-26-000014,R9,Inventories,-139000000.0000,library map
@@ -27,7 +27,7 @@ MMM,147,gross_profit,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
 MMM,147,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Income (loss) from continuing operations before income taxes,4213000000.0000,library map
 MMM,147,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Provision (benefit) for income taxes,1003000000.0000,library map
 MMM,147,interest_expense,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
-MMM,147,interest_income,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
+MMM,147,interest_income,not_presented,,,,,,,,0000066740-26-000014,,,,no face line and no note fact
 MMM,147,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000066740-26-000014,R5,Total inventories,3661000000.0000,library map
 MMM,147,loans_net,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Net income (loss) attributable to 3M,3250000000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WAL,788,accounts_payable,not_presented,,,,,,,,0001628280-26-010336,,,,no face line
 WAL,788,accounts_receivable,not_presented,,,,,,,,0001628280-26-010336,,,,no face line
-WAL,788,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-010336,,,,note-sourced default tag (no face line)
+WAL,788,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-010336,,,9700000.0000,note fact present in the filing (FSN value)
 WAL,788,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-010336,R5,"Earnings per share, basic (dollars per share)",8.7900,library map
 WAL,788,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-5,N,,sec_api,0001628280-26-010336,R9,"Purchase of premises, equipment, and other assets, net",114300000.0000,combined line (library or label demote)
 WAL,788,cash_and_equivalents,not_presented,,,,,,,,0001628280-26-010336,,,,no face line

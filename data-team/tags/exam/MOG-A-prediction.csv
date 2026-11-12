@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MOG-A,627,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-25-054103,R5,Accounts payable,318402000.0000,library map
 MOG-A,627,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-3,Y,ReceivablesNetCurrent,sec_api,0001628280-25-054103,R5,"Receivables, net",506768000.0000,combined line (library or label demote)
-MOG-A,627,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-25-054103,,,,note-sourced default tag (no face line)
+MOG-A,627,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-25-054103,,,9702000.0000,note fact present in the filing (FSN value)
 MOG-A,627,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-25-054103,R3,Basic,7.4200,library map
 MOG-A,627,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-25-054103,R8,"Purchase of property, plant and equipment",144731000.0000,library map
 MOG-A,627,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-25-054103,R5,Cash and cash equivalents,62013000.0000,library map
@@ -27,7 +27,7 @@ MOG-A,627,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-
 MOG-A,627,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-25-054103,R3,Earnings before income taxes,312648000.0000,library map
 MOG-A,627,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-25-054103,R3,Income taxes,77620000.0000,library map
 MOG-A,627,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001628280-25-054103,R3,Interest,72075000.0000,library map
-MOG-A,627,interest_income,not_presented,,,,,,,,0001628280-25-054103,,,,no face line
+MOG-A,627,interest_income,not_presented,,,,,,,,0001628280-25-054103,,,,no face line and no note fact
 MOG-A,627,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-25-054103,R5,"Inventories, net",914302000.0000,library map
 MOG-A,627,loans_net,OUT,,,,,,,,0001628280-25-054103,,,,not a bank
 MOG-A,627,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-25-054103,R3,Net earnings,235028000.0000,library map

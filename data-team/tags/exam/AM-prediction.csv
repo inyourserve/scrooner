@@ -21,20 +21,20 @@ AM,711,deposits,OUT,,,,,,,,0001104659-26-013380,,,,not a bank
 AM,711,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001104659-26-013380,R7,Depreciation,134310000.0000,printed face components (duration sum; total_debt founder sum)
 AM,711,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-013380,R4,Net income per common share-diluted (in dollars per share),0.8600,library map
 AM,711,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001104659-26-013380,R7,Dividends to common stockholders,439007000.0000,library map
-AM,711,dividends_per_share,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
+AM,711,dividends_per_share,not_presented,,,,,,,,0001104659-26-013380,,,,no face line and no note fact
 AM,711,goodwill,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
 AM,711,gross_profit,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
 AM,711,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-013380,R4,Income before income taxes,564196000.0000,library map
 AM,711,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-013380,R4,Income tax expense,151033000.0000,library map
 AM,711,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestIncomeExpenseNet,sec_api,0001104659-26-013380,R4,"Interest expense, net",-190404000.0000,combined line (library or label demote)
-AM,711,interest_income,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
+AM,711,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestIncomeExpenseNet,sec_api,0001104659-26-013380,R4,"Interest expense, net",-190404000.0000,interest income only inside a net/other face line between OI and pretax
 AM,711,inventory,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
 AM,711,loans_net,OUT,,,,,,,,0001104659-26-013380,,,,not a bank
 AM,711,net_income,not_presented,,,,,,,,0001104659-26-013380,,,,no face line
 AM,711,net_interest_income,OUT,,,,,,,,0001104659-26-013380,,,,not a bank
 AM,711,noninterest_expense,OUT,,,,,,,,0001104659-26-013380,,,,not a bank
 AM,711,noninterest_income,OUT,,,,,,,,0001104659-26-013380,,,,not a bank
-AM,711,operating_expenses,not_presented,,,,,,,,0001104659-26-013380,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+AM,711,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001104659-26-013380,R4,Total operating expenses,543757000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 AM,711,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-013380,R4,Operating income,644669000.0000,library map
 AM,711,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001104659-26-013380,R4,Total other expense,-80473000.0000,library map
 AM,711,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-013380,R2,"Property and equipment, net",3454572000.0000,library map

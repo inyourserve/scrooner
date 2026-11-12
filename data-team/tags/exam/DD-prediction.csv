@@ -7,8 +7,8 @@ DD,485,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api
 DD,485,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001666700-26-000013,R5,Cash and cash equivalents,715000000.0000,library map
 DD,485,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0001666700-26-000013,R7,Cash used for financing activities - continuing operations,-1750000000.0000,library map
 DD,485,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0001666700-26-000013,R7,Cash (used for) provided by investing activities - continuing operations,-374000000.0000,library map
-DD,485,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001666700-26-000013,,,,note-sourced default tag (no face line)
-DD,485,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001666700-26-000013,,,,note-sourced default tag (no face line)
+DD,485,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001666700-26-000013,,,127000000.0000,note fact present in the filing (FSN value)
+DD,485,cash_paid_for_interest,not_presented,,,,,,,,0001666700-26-000013,,,,no face line and no note fact
 DD,485,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001666700-26-000013,R7,Accounts payable,61000000.0000,library map
 DD,485,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-6,N,,sec_api,0001666700-26-000013,R7,Accounts and notes receivable,201000000.0000,combined line (library or label demote)
 DD,485,cf_inventory_change,not_presented,,,,,,,,0001666700-26-000013,,,,no face line
@@ -27,7 +27,7 @@ DD,485,gross_profit,not_presented,,,,,,,,0001666700-26-000013,,,,no face line
 DD,485,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001666700-26-000013,R3,Income (loss) from continuing operations before income taxes,200000000.0000,library map
 DD,485,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001666700-26-000013,R3,Provision for (benefit from) income taxes on continuing operations,102000000.0000,library map
 DD,485,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001666700-26-000013,R3,Interest expense,313000000.0000,library map
-DD,485,interest_income,not_presented,,,,,,,,0001666700-26-000013,,,,no face line
+DD,485,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001666700-26-000013,,,98000000.0000,note fact present in the filing (FSN value)
 DD,485,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001666700-26-000013,R5,Inventories,1172000000.0000,library map
 DD,485,loans_net,OUT,,,,,,,,0001666700-26-000013,,,,not a bank
 DD,485,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001666700-26-000013,R3,Net (loss) income available for DuPont common stockholders,-779000000.0000,library map

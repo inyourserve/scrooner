@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RS,441,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001104659-26-020651,R4,Accounts payable,375200000.0000,library map
 RS,441,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001104659-26-020651,R4,"Accounts receivable, less allowance for credit losses of $22.1 and $23.2",1539900000.0000,library map
-RS,441,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-020651,,,,note-sourced default tag (no face line)
+RS,441,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-020651,,,39200000.0000,note fact present in the filing (FSN value)
 RS,441,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-020651,R2,Basic (in dollars per share),14.0700,library map
 RS,441,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001104659-26-020651,R6,"Purchases of property, plant and equipment",328900000.0000,library map
 RS,441,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-020651,R4,Cash and cash equivalents,216600000.0000,library map
@@ -27,7 +27,7 @@ RS,441,gross_profit,not_presented,,,,,,,,0001104659-26-020651,,,,no face line
 RS,441,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-020651,R2,Income before income taxes,969200000.0000,library map
 RS,441,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-020651,R2,Income tax provision,227600000.0000,library map
 RS,441,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001104659-26-020651,R2,Interest expense,55700000.0000,library map
-RS,441,interest_income,not_presented,,,,,,,,0001104659-26-020651,,,,no face line
+RS,441,interest_income,not_presented,,,,,,,,0001104659-26-020651,,,,no face line and no note fact
 RS,441,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-020651,R4,Inventories,2187800000.0000,library map
 RS,441,loans_net,OUT,,,,,,,,0001104659-26-020651,,,,not a bank
 RS,441,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001104659-26-020651,R2,Net income attributable to Reliance,739400000.0000,library map

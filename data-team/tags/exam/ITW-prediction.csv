@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ITW,164,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Accounts payable,522000000.0000,library map
 ITW,164,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Trade receivables,3227000000.0000,combined line (library or label demote)
-ITW,164,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000049826-26-000008,,,,note-sourced default tag (no face line)
+ITW,164,amortization_of_intangibles,not_presented,,,,,,,,0000049826-26-000008,,,,no face line and no note fact
 ITW,164,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000049826-26-000008,R3,Basic (in dollars per share),10.5200,library map
 ITW,164,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000049826-26-000008,R9,Additions to plant and equipment,419000000.0000,library map
 ITW,164,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Cash and equivalents,851000000.0000,library map
@@ -27,7 +27,7 @@ ITW,164,gross_profit,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
 ITW,164,income_before_tax,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
 ITW,164,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000049826-26-000008,R3,Income taxes,900000000.0000,library map
 ITW,164,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000049826-26-000008,R3,Interest expense,292000000.0000,library map
-ITW,164,interest_income,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
+ITW,164,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000049826-26-000008,,,40000000.0000,note fact present in the filing (FSN value)
 ITW,164,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Inventories,1659000000.0000,library map
 ITW,164,loans_net,OUT,,,,,,,,0000049826-26-000008,,,,not a bank
 ITW,164,net_income,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
@@ -50,5 +50,5 @@ ITW,164,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000049826-26-0000
 ITW,164,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Short-term debt,2286000000.0000,printed face components (duration sum; total_debt founder sum)
 ITW,164,total_interest_income,OUT,,,,,,,,0000049826-26-000008,,,,not a bank
 ITW,164,total_liabilities,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
-ITW,164,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000049826-26-000008,,,,note-sourced default tag (no face line)
-ITW,164,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000049826-26-000008,,,,note-sourced default tag (no face line)
+ITW,164,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000049826-26-000008,,,291500000.0000,note fact present in the filing (FSN value)
+ITW,164,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000049826-26-000008,,,292300000.0000,note fact present in the filing (FSN value)

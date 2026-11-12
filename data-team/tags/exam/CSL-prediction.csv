@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CSL,581,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000790051-26-000012,R4,Accounts payable,233000000.0000,library map
 CSL,581,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000790051-26-000012,R4,"Receivables, net of allowance for credit losses of $3.9 and $4.7",593800000.0000,library map
-CSL,581,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000790051-26-000012,,,,note-sourced default tag (no face line)
+CSL,581,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000790051-26-000012,,,121900000.0000,note fact present in the filing (FSN value)
 CSL,581,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000790051-26-000012,R3,Basic earnings per share (in dollars per share),17.2700,library map
 CSL,581,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000790051-26-000012,R6,Capital expenditures,131200000.0000,library map
 CSL,581,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000790051-26-000012,R4,Cash and cash equivalents,1112100000.0000,library map
 CSL,581,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000790051-26-000012,R6,Net cash provided by (used in) financing activities,-503700000.0000,library map
 CSL,581,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000790051-26-000012,R6,Net cash provided by (used in) investing activities,-240400000.0000,library map
-CSL,581,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000790051-26-000012,,,,note-sourced default tag (no face line)
-CSL,581,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000790051-26-000012,,,,note-sourced default tag (no face line)
+CSL,581,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000790051-26-000012,,,205500000.0000,note fact present in the filing (FSN value)
+CSL,581,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000790051-26-000012,,,56200000.0000,note fact present in the filing (FSN value)
 CSL,581,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000790051-26-000012,R6,Accounts payable,-33000000.0000,library map
 CSL,581,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000790051-26-000012,R6,Receivables,3400000.0000,library map
 CSL,581,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000790051-26-000012,R6,Inventories,-33200000.0000,library map

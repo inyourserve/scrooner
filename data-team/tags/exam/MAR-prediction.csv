@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MAR,117,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,Accounts payable,814000000.0000,library map
 MAR,117,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,"Accounts and notes receivable, net",2909000000.0000,combined line (library or label demote)
-MAR,117,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001048286-26-000007,,,,note-sourced default tag (no face line)
+MAR,117,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001048286-26-000007,,,313000000.0000,note fact present in the filing (FSN value)
 MAR,117,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001048286-26-000007,R3,Earnings per share - basic (in USD per share),9.5300,library map
 MAR,117,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,Y,PaymentsToAcquirePropertyPlantAndEquipment,sec_api,0001048286-26-000007,R6,Capital and technology expenditures,604000000.0000,library map
 MAR,117,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,Cash and equivalents,358000000.0000,library map
 MAR,117,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001048286-26-000007,R6,Net cash used in financing activities,-2318000000.0000,library map
 MAR,117,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001048286-26-000007,R6,Net cash used in investing activities,-948000000.0000,library map
-MAR,117,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001048286-26-000007,,,,note-sourced default tag (no face line)
-MAR,117,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001048286-26-000007,,,,note-sourced default tag (no face line)
+MAR,117,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001048286-26-000007,,,1070000000.0000,note fact present in the filing (FSN value)
+MAR,117,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001048286-26-000007,,,698000000.0000,note fact present in the filing (FSN value)
 MAR,117,cf_ap_change,not_presented,,,,,,,,0001048286-26-000007,,,,no face line
 MAR,117,cf_ar_change,not_presented,,,,,,,,0001048286-26-000007,,,,no face line
 MAR,117,cf_inventory_change,not_presented,,,,,,,,0001048286-26-000007,,,,no face line
@@ -34,7 +34,7 @@ MAR,117,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001048286-26
 MAR,117,net_interest_income,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
 MAR,117,noninterest_expense,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
 MAR,117,noninterest_income,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
-MAR,117,operating_expenses,not_presented,,,,,,,,0001048286-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+MAR,117,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,Costs and expenses,22045000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 MAR,117,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,OPERATING INCOME,4141000000.0000,library map
 MAR,117,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,"Gains and other income, net",9000000.0000,library map
 MAR,117,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,"Property and equipment, net",1954000000.0000,library map
@@ -50,5 +50,5 @@ MAR,117,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001048286-26-0000
 MAR,117,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,Current portion of long-term debt,1209000000.0000,printed face components (duration sum; total_debt founder sum)
 MAR,117,total_interest_income,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
 MAR,117,total_liabilities,not_presented,,,,,,,,0001048286-26-000007,,,,no face line
-MAR,117,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001048286-26-000007,,,,note-sourced default tag (no face line)
-MAR,117,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001048286-26-000007,,,,note-sourced default tag (no face line)
+MAR,117,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001048286-26-000007,,,272900000.0000,note fact present in the filing (FSN value)
+MAR,117,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001048286-26-000007,,,273600000.0000,note fact present in the filing (FSN value)

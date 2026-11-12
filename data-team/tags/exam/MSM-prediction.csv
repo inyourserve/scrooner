@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MSM,839,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001003078-25-000123,R3,Accounts payable,225150000.0000,library map
 MSM,839,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001003078-25-000123,R3,"Accounts receivable, net of allowance for credit losses of $22,365 and $22,368, respectively",423306000.0000,library map
-MSM,839,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001003078-25-000123,,,,note-sourced default tag (no face line)
+MSM,839,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001003078-25-000123,,,16269000.0000,note fact present in the filing (FSN value)
 MSM,839,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001003078-25-000123,R5,Basic (in USD per share),3.5700,library map
 MSM,839,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001003078-25-000123,R9,"Expenditures for property, plant and equipment",92840000.0000,library map
 MSM,839,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001003078-25-000123,R3,Cash and cash equivalents,56228000.0000,library map
@@ -21,7 +21,7 @@ MSM,839,deposits,OUT,,,,,,,,0001003078-25-000123,,,,not a bank
 MSM,839,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001003078-25-000123,R9,Depreciation and amortization,90627000.0000,library map
 MSM,839,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001003078-25-000123,R5,Diluted (in USD per share),3.5700,library map
 MSM,839,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-3,N,,sec_api,0001003078-25-000123,R9,Payments of regular cash dividends,189650000.0000,library map
-MSM,839,dividends_per_share,not_presented,,,,,,,,0001003078-25-000123,,,,no face line
+MSM,839,dividends_per_share,not_presented,,,,,,,,0001003078-25-000123,,,,no face line and no note fact
 MSM,839,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001003078-25-000123,R3,Goodwill,723702000.0000,library map
 MSM,839,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001003078-25-000123,R5,Gross profit,1536135000.0000,library map
 MSM,839,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001003078-25-000123,R5,Income before provision for income taxes,263578000.0000,library map

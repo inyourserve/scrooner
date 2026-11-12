@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AMT,144,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,Accounts payable,259800000.0000,library map
 AMT,144,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,"Accounts receivable, net",650300000.0000,library map
-AMT,144,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
+AMT,144,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001053507-26-000035,,,879700000.0000,note fact present in the filing (FSN value)
 AMT,144,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001053507-26-000035,R5,Basic net income attributable to American Tower Corporation common stockholders (in dollars per share),5.4100,library map
 AMT,144,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001053507-26-000035,R10,Payments for purchase of property and equipment and construction activities,1680400000.0000,library map
 AMT,144,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,Cash and cash equivalents,1474800000.0000,library map
 AMT,144,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001053507-26-000035,R10,Cash used for financing activities,-4208500000.0000,library map
 AMT,144,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001053507-26-000035,R10,Cash (used for) provided by investing activities,-1859800000.0000,library map
-AMT,144,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
-AMT,144,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
+AMT,144,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001053507-26-000035,,,328700000.0000,note fact present in the filing (FSN value)
+AMT,144,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001053507-26-000035,,,1287400000.0000,note fact present in the filing (FSN value)
 AMT,144,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001053507-26-000035,R10,Accounts payable and accrued expenses,-65600000.0000,combined line (library or label demote)
 AMT,144,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001053507-26-000035,R10,Accounts receivable,62200000.0000,library map
 AMT,144,cf_inventory_change,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
@@ -21,7 +21,7 @@ AMT,144,deposits,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
 AMT,144,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,"Depreciation, amortization and accretion",2041600000.0000,combined line (library or label demote)
 AMT,144,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001053507-26-000035,R5,Diluted net income attributable to American Tower Corporation common stockholders (in dollars per share),5.4000,library map
 AMT,144,dividends_paid,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
-AMT,144,dividends_per_share,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
+AMT,144,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001053507-26-000035,,,6.7200,note fact present in the filing (FSN value)
 AMT,144,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,GOODWILL,12255500000.0000,library map
 AMT,144,gross_profit,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,INCOME FROM CONTINUING OPERATIONS BEFORE INCOME TAXES,3044200000.0000,library map

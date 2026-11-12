@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RF,404,accounts_payable,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
 RF,404,accounts_receivable,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
-RF,404,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001281761-26-000019,,,,note-sourced default tag (no face line)
+RF,404,amortization_of_intangibles,not_presented,,,,,,,,0001281761-26-000019,,,,no face line and no note fact
 RF,404,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001281761-26-000019,R5,Basic,2.3100,library map
 RF,404,capex,not_presented,,,,,,,,0001281761-26-000019,,,,single component only
 RF,404,cash_and_equivalents,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
 RF,404,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001281761-26-000019,R9,Net cash from financing activities,-568000000.0000,library map
 RF,404,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001281761-26-000019,R9,Net cash from investing activities,-1418000000.0000,library map
-RF,404,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001281761-26-000019,,,,note-sourced default tag (no face line)
-RF,404,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001281761-26-000019,,,,note-sourced default tag (no face line)
+RF,404,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001281761-26-000019,,,178000000.0000,note fact present in the filing (FSN value)
+RF,404,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001281761-26-000019,,,2145000000.0000,note fact present in the filing (FSN value)
 RF,404,cf_ap_change,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
 RF,404,cf_ar_change,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
 RF,404,cf_inventory_change,OUT,,,,,,,,0001281761-26-000019,,,,sector template (bank/insurer)
@@ -21,7 +21,7 @@ RF,404,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0001281761-26-000019,
 RF,404,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001281761-26-000019,R9,"Depreciation, amortization and accretion, net",84000000.0000,combined line (library or label demote)
 RF,404,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001281761-26-000019,R5,Diluted,2.3000,library map
 RF,404,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001281761-26-000019,R9,Cash dividends on common stock,912000000.0000,library map
-RF,404,dividends_per_share,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
+RF,404,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001281761-26-000019,,,1.0300,note fact present in the filing (FSN value)
 RF,404,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001281761-26-000019,R3,Goodwill,5733000000.0000,library map
 RF,404,gross_profit,OUT,,,,,,,,0001281761-26-000019,,,,sector template (bank/insurer)
 RF,404,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-6,N,,sec_api,0001281761-26-000019,R5,Income before income taxes,2743000000.0000,library map
@@ -41,7 +41,7 @@ RF,404,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,00
 RF,404,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,IS,+,-6,N,,sec_api,0001281761-26-000019,R5,Provision for credit losses,470000000.0000,bank template tag
 RF,404,research_and_development,OUT,,,,,,,,0001281761-26-000019,,,,sector template (bank/insurer)
 RF,404,revenue,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
-RF,404,sbc,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
+RF,404,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001281761-26-000019,,,69000000.0000,note fact present in the filing (FSN value)
 RF,404,sga_expense,not_presented,,,,,,,,0001281761-26-000019,,,,no face line
 RF,404,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001281761-26-000019,R9,Repurchases of common stock,1067000000.0000,library map
 RF,404,shares_outstanding,not_presented,,,,,,,,0001281761-26-000019,,,,no face line

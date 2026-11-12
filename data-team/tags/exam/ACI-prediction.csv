@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ACI,897,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001646972-26-000032,R3,Accounts payable,4021200000.0000,library map
 ACI,897,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001646972-26-000032,R3,"Receivables, net",932600000.0000,combined line (library or label demote)
-ACI,897,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001646972-26-000032,,,,note-sourced default tag (no face line)
+ACI,897,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001646972-26-000032,,,340600000.0000,note fact present in the filing (FSN value)
 ACI,897,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001646972-26-000032,R5,Basic net income per Class A common share (in dollars per share),0.4000,library map
 ACI,897,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001646972-26-000032,R6,"Payments for property, equipment and intangibles, including payments for lease buyouts",1839400000.0000,library map
 ACI,897,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001646972-26-000032,R3,Cash and cash equivalents,198600000.0000,library map
@@ -27,7 +27,7 @@ ACI,897,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001646972-26
 ACI,897,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,Y,IncomeLossFromContinuingOperations,sec_api,0001646972-26-000032,R5,Income before income taxes,267800000.0000,library map
 ACI,897,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001646972-26-000032,R5,Income tax expense,50400000.0000,library map
 ACI,897,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,Y,InterestIncomeExpenseNet,sec_api,0001646972-26-000032,R5,"Interest expense, net",-504200000.0000,combined line (library or label demote)
-ACI,897,interest_income,not_presented,,,,,,,,0001646972-26-000032,,,,no face line
+ACI,897,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,Y,InterestIncomeExpenseNet,sec_api,0001646972-26-000032,R5,"Interest expense, net",-504200000.0000,interest income only inside a net/other face line between OI and pretax
 ACI,897,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001646972-26-000032,R3,"Inventories, net",5173900000.0000,library map
 ACI,897,loans_net,OUT,,,,,,,,0001646972-26-000032,,,,not a bank
 ACI,897,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001646972-26-000032,R5,Net income,217400000.0000,library map

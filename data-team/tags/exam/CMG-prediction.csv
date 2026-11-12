@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CMG,286,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,Accounts payable,212813000.0000,library map
 CMG,286,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,"Accounts receivable, net",156466000.0000,library map
-CMG,286,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001058090-26-000009,,,,note-sourced default tag (no face line)
+CMG,286,amortization_of_intangibles,not_presented,,,,,,,,0001058090-26-000009,,,,no face line and no note fact
 CMG,286,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001058090-26-000009,R5,Basic (in usd per share),1.1500,library map
 CMG,286,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001058090-26-000009,R7,"Purchases of leasehold improvements, property and equipment",666336000.0000,library map
 CMG,286,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,Cash and cash equivalents,350545000.0000,library map
 CMG,286,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001058090-26-000009,R7,Net cash used in financing activities,-2470898000.0000,library map
 CMG,286,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001058090-26-000009,R7,Net cash used in investing activities,-35082000.0000,library map
 CMG,286,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,Y,IncomeTaxesPaid,sec_api,0001058090-26-000009,R7,Income taxes paid,423481000.0000,library map
-CMG,286,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001058090-26-000009,,,,note-sourced default tag (no face line)
+CMG,286,cash_paid_for_interest,not_presented,,,,,,,,0001058090-26-000009,,,,no face line and no note fact
 CMG,286,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001058090-26-000009,R7,Accounts payable,-7449000.0000,library map
 CMG,286,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001058090-26-000009,R7,Accounts receivable,11383000.0000,library map
 CMG,286,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001058090-26-000009,R7,Inventory,710000.0000,library map
@@ -21,20 +21,20 @@ CMG,286,deposits,OUT,,,,,,,,0001058090-26-000009,,,,not a bank
 CMG,286,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001058090-26-000009,R7,Depreciation and amortization,361382000.0000,library map
 CMG,286,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001058090-26-000009,R5,Diluted (in usd per share),1.1400,library map
 CMG,286,dividends_paid,not_presented,,,,,,,,0001058090-26-000009,,,,no face line
-CMG,286,dividends_per_share,not_presented,,,,,,,,0001058090-26-000009,,,,no face line
+CMG,286,dividends_per_share,not_presented,,,,,,,,0001058090-26-000009,,,,no face line and no note fact
 CMG,286,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,Goodwill,21939000.0000,library map
 CMG,286,gross_profit,not_presented,,,,,,,,0001058090-26-000009,,,,no face line
 CMG,286,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,Income before income taxes,2009519000.0000,library map
 CMG,286,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,Provision for income taxes,473758000.0000,library map
 CMG,286,interest_expense,not_presented,,,,,,,,0001058090-26-000009,,,,no face line
-CMG,286,interest_income,not_presented,,,,,,,,0001058090-26-000009,,,,no face line
+CMG,286,interest_income,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,"Interest and other income, net",73721000.0000,interest income only inside a net/other face line between OI and pretax
 CMG,286,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,Inventory,49508000.0000,library map
 CMG,286,loans_net,OUT,,,,,,,,0001058090-26-000009,,,,not a bank
 CMG,286,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,Net income,1535761000.0000,library map
 CMG,286,net_interest_income,OUT,,,,,,,,0001058090-26-000009,,,,not a bank
 CMG,286,noninterest_expense,OUT,,,,,,,,0001058090-26-000009,,,,not a bank
 CMG,286,noninterest_income,OUT,,,,,,,,0001058090-26-000009,,,,not a bank
-CMG,286,operating_expenses,not_presented,,,,,,,,0001058090-26-000009,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CMG,286,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,Total operating expenses,9989803000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CMG,286,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,Income from operations,1935798000.0000,library map
 CMG,286,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001058090-26-000009,R5,"Interest and other income, net",73721000.0000,combined line (library or label demote)
 CMG,286,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001058090-26-000009,R3,"Leasehold improvements, property and equipment, net",2679361000.0000,library map

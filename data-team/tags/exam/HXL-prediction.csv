@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HXL,871,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Accounts payable,146600000.0000,library map
 HXL,871,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,"Accounts receivable, net",249300000.0000,library map
-HXL,871,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-046377,,,,note-sourced default tag (no face line)
+HXL,871,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-046377,,,5600000.0000,note fact present in the filing (FSN value)
 HXL,871,basic_eps,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
 HXL,871,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Capital expenditures,73300000.0000,library map
 HXL,871,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Cash and cash equivalents,71000000.0000,library map
@@ -27,7 +27,7 @@ HXL,871,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001193125-26
 HXL,871,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Total income before income taxes,135000000.0000,library map
 HXL,871,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Income tax expense,25600000.0000,library map
 HXL,871,interest_expense,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Interest expense, net",37700000.0000,combined line (library or label demote)
-HXL,871,interest_income,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,interest_income,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Interest expense, net",37700000.0000,interest income only inside a net/other face line between OI and pretax
 HXL,871,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Inventories,328800000.0000,library map
 HXL,871,loans_net,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
 HXL,871,net_income,not_presented,,,,,,,,0001193125-26-046377,,,,no face line

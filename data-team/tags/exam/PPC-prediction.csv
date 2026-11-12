@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PPC,865,accounts_payable,not_presented,,,,,,,,0000802481-26-000011,,,,no face line
 PPC,865,accounts_receivable,not_presented,,,,,,,,0000802481-26-000011,,,,no face line
-PPC,865,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000802481-26-000011,,,,note-sourced default tag (no face line)
+PPC,865,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000802481-26-000011,,,33122000.0000,note fact present in the filing (FSN value)
 PPC,865,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000802481-26-000011,R5,Basic (in dollars per share),4.5600,library map
 PPC,865,capex,not_presented,,,,,,,,0000802481-26-000011,,,,no face line
 PPC,865,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000802481-26-000011,R3,Cash and cash equivalents,640235000.0000,library map
@@ -21,7 +21,7 @@ PPC,865,deposits,OUT,,,,,,,,0000802481-26-000011,,,,not a bank
 PPC,865,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000802481-26-000011,R9,Depreciation and amortization,456157000.0000,library map
 PPC,865,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000802481-26-000011,R5,Diluted (in dollars per share),4.5400,library map
 PPC,865,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000802481-26-000011,R9,Payment of cash dividends,1994347000.0000,library map
-PPC,865,dividends_per_share,not_presented,,,,,,,,0000802481-26-000011,,,,no face line
+PPC,865,dividends_per_share,not_presented,,,,,,,,0000802481-26-000011,,,,no face line and no note fact
 PPC,865,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000802481-26-000011,R3,Goodwill,1338884000.0000,library map
 PPC,865,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,Gross profit,2358143000.0000,library map
 PPC,865,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,Income before income taxes,1502138000.0000,library map

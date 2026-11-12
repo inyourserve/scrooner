@@ -7,8 +7,8 @@ BPOP,694,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3
 BPOP,694,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-085756,,,,no face line
 BPOP,694,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001193125-26-085756,R11,Net cash provided by (used in) financing activities,864581000.0000,library map
 BPOP,694,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-085756,R11,Net cash used in investing activities,-1759445000.0000,library map
-BPOP,694,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-085756,,,,note-sourced default tag (no face line)
-BPOP,694,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-085756,,,,note-sourced default tag (no face line)
+BPOP,694,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-085756,,,204174000.0000,note fact present in the filing (FSN value)
+BPOP,694,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-085756,,,1236290000.0000,note fact present in the filing (FSN value)
 BPOP,694,cf_ap_change,not_presented,,,,,,,,0001193125-26-085756,,,,no face line
 BPOP,694,cf_ar_change,not_presented,,,,,,,,0001193125-26-085756,,,,no face line
 BPOP,694,cf_inventory_change,OUT,,,,,,,,0001193125-26-085756,,,,sector template (bank/insurer)
@@ -41,7 +41,7 @@ BPOP,694,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,
 BPOP,694,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,IS,+,-3,N,,sec_api,0001193125-26-085756,R5,Provision for credit losses,260163000.0000,bank template tag
 BPOP,694,research_and_development,OUT,,,,,,,,0001193125-26-085756,,,,sector template (bank/insurer)
 BPOP,694,revenue,not_presented,,,,,,,,0001193125-26-085756,,,,single component only
-BPOP,694,sbc,not_presented,,,,,,,,0001193125-26-085756,,,,no face line
+BPOP,694,sbc,not_presented,,,,,,,,0001193125-26-085756,,,,no face line and no note fact
 BPOP,694,sga_expense,not_presented,,,,,,,,0001193125-26-085756,,,,single component only
 BPOP,694,share_buybacks,not_presented,,,,,,,,0001193125-26-085756,,,,no face line
 BPOP,694,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001193125-26-085756,R4,Common Stock Shares Outstanding,65719385.0000,library map
@@ -50,5 +50,5 @@ BPOP,694,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-085
 BPOP,694,total_debt,combined,us-gaap:OtherShortTermBorrowings,BS,+,-3,N,,sec_api,0001193125-26-085756,R3,Other short-term borrowings,650000000.0000,combined line (library or label demote)
 BPOP,694,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001193125-26-085756,R5,Total interest income,3783009000.0000,bank template tag
 BPOP,694,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-085756,R3,Total liabilities,69099188000.0000,library map
-BPOP,694,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-085756,,,,note-sourced default tag (no face line)
-BPOP,694,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-085756,,,,note-sourced default tag (no face line)
+BPOP,694,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-085756,,,67586130.0000,note fact present in the filing (FSN value)
+BPOP,694,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-085756,,,67612847.0000,note fact present in the filing (FSN value)

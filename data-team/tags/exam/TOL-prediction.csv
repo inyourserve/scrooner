@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TOL,612,accounts_payable,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,accounts_receivable,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
-TOL,612,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000794170-25-000112,,,,note-sourced default tag (no face line)
+TOL,612,amortization_of_intangibles,not_presented,,,,,,,,0000794170-25-000112,,,,no face line and no note fact
 TOL,612,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000794170-25-000112,R5,Basic earnings (in dollars per share),13.6000,library map
 TOL,612,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000794170-25-000112,R7,"Purchase of property, construction, and office equipment  net",86195000.0000,library map
 TOL,612,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000794170-25-000112,R3,Cash and cash equivalents,1258997000.0000,library map
 TOL,612,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000794170-25-000112,R7,Net cash used in financing activities,-833875000.0000,library map
 TOL,612,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000794170-25-000112,R7,Net cash used in investing activities,-310033000.0000,library map
-TOL,612,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000794170-25-000112,,,,note-sourced default tag (no face line)
-TOL,612,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000794170-25-000112,,,,note-sourced default tag (no face line)
+TOL,612,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000794170-25-000112,,,372355000.0000,note fact present in the filing (FSN value)
+TOL,612,cash_paid_for_interest,not_presented,,,,,,,,0000794170-25-000112,,,,no face line and no note fact
 TOL,612,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000794170-25-000112,R7,Accounts payable and accrued expenses,64622000.0000,combined line (library or label demote)
 TOL,612,cf_ar_change,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000794170-25-000112,R7,Inventory,521182000.0000,library map
@@ -21,13 +21,13 @@ TOL,612,deposits,OUT,,,,,,,,0000794170-25-000112,,,,not a bank
 TOL,612,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000794170-25-000112,R7,Depreciation and amortization,82085000.0000,library map
 TOL,612,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000794170-25-000112,R5,Diluted earnings (in dollars per share),13.4900,library map
 TOL,612,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000794170-25-000112,R7,Dividends paid,97075000.0000,library map
-TOL,612,dividends_per_share,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
+TOL,612,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000794170-25-000112,,,0.9800,note fact present in the filing (FSN value)
 TOL,612,goodwill,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,gross_profit,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,income_before_tax,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000794170-25-000112,R5,Income tax provision,444885000.0000,library map
 TOL,612,interest_expense,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
-TOL,612,interest_income,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
+TOL,612,interest_income,not_presented,,,,,,,,0000794170-25-000112,,,,no face line and no note fact
 TOL,612,inventory,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
 TOL,612,loans_net,OUT,,,,,,,,0000794170-25-000112,,,,not a bank
 TOL,612,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000794170-25-000112,R5,Net income,1346486000.0000,library map

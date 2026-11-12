@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ROK,247,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001024478-25-000116,R3,Accounts payable,930000000.0000,library map
 ROK,247,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001024478-25-000116,R3,Receivables,1931000000.0000,combined line (library or label demote)
-ROK,247,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001024478-25-000116,,,,note-sourced default tag (no face line)
+ROK,247,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001024478-25-000116,,,152000000.0000,note fact present in the filing (FSN value)
 ROK,247,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001024478-25-000116,R5,Basic (in dollars per share),7.6900,library map
 ROK,247,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,Y,PaymentsToAcquirePropertyPlantAndEquipment,sec_api,0001024478-25-000116,R8,Capital expenditures,186000000.0000,library map
 ROK,247,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001024478-25-000116,R3,Cash and cash equivalents,468000000.0000,library map
 ROK,247,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001024478-25-000116,R8,Cash used for financing activities,-1335000000.0000,library map
 ROK,247,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001024478-25-000116,R8,Cash (used for) provided by investing activities,-216000000.0000,library map
-ROK,247,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001024478-25-000116,,,,note-sourced default tag (no face line)
-ROK,247,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001024478-25-000116,,,,note-sourced default tag (no face line)
+ROK,247,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001024478-25-000116,,,356000000.0000,note fact present in the filing (FSN value)
+ROK,247,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001024478-25-000116,,,157000000.0000,note fact present in the filing (FSN value)
 ROK,247,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001024478-25-000116,R8,Accounts payable,53000000.0000,library map
 ROK,247,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001024478-25-000116,R8,Receivables,117000000.0000,library map
 ROK,247,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001024478-25-000116,R8,Inventories,-55000000.0000,library map
@@ -27,7 +27,7 @@ ROK,247,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001024478-25
 ROK,247,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001024478-25-000116,R5,Income before income taxes,917000000.0000,library map
 ROK,247,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001024478-25-000116,R5,Income tax provision (Note 16),168000000.0000,library map
 ROK,247,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001024478-25-000116,R5,Interest expense,156000000.0000,library map
-ROK,247,interest_income,not_presented,,,,,,,,0001024478-25-000116,,,,no face line
+ROK,247,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001024478-25-000116,,,13000000.0000,note fact present in the filing (FSN value)
 ROK,247,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001024478-25-000116,R3,Inventories,1247000000.0000,library map
 ROK,247,loans_net,OUT,,,,,,,,0001024478-25-000116,,,,not a bank
 ROK,247,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001024478-25-000116,R5,"Net income attributable to Rockwell Automation, Inc.",869000000.0000,library map

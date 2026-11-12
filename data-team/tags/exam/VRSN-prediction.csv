@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 VRSN,358,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001014473-26-000006,R3,Accounts payable and accrued liabilities,298000000.0000,combined line (library or label demote)
 VRSN,358,accounts_receivable,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
-VRSN,358,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001014473-26-000006,,,,note-sourced default tag (no face line)
+VRSN,358,amortization_of_intangibles,not_presented,,,,,,,,0001014473-26-000006,,,,no face line and no note fact
 VRSN,358,basic_eps,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001014473-26-000006,R7,Purchases of property and equipment,22800000.0000,library map
 VRSN,358,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001014473-26-000006,R3,Cash and cash equivalents,307900000.0000,library map
 VRSN,358,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001014473-26-000006,R7,Net cash used in financing activities,-1102800000.0000,library map
 VRSN,358,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0001014473-26-000006,R7,Net cash provided by (used in) investing activities,109100000.0000,library map
-VRSN,358,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001014473-26-000006,,,,note-sourced default tag (no face line)
-VRSN,358,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001014473-26-000006,,,,note-sourced default tag (no face line)
+VRSN,358,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001014473-26-000006,,,202400000.0000,note fact present in the filing (FSN value)
+VRSN,358,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001014473-26-000006,,,78700000.0000,note fact present in the filing (FSN value)
 VRSN,358,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001014473-26-000006,R7,Accounts payable and accrued liabilities,42700000.0000,combined line (library or label demote)
 VRSN,358,cf_ar_change,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,cf_inventory_change,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
@@ -27,7 +27,7 @@ VRSN,358,gross_profit,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,"Income from Continuing Operations before Income Taxes, Noncontrolling Interest, Total",1068500000.0000,library map
 VRSN,358,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,Income tax expense,242800000.0000,library map
 VRSN,358,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,Interest expense,77000000.0000,library map
-VRSN,358,interest_income,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
+VRSN,358,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0001014473-26-000006,,,26500000.0000,note fact present in the filing (FSN value)
 VRSN,358,inventory,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,loans_net,OUT,,,,,,,,0001014473-26-000006,,,,not a bank
 VRSN,358,net_income,not_presented,,,,,,,,0001014473-26-000006,,,,no face line

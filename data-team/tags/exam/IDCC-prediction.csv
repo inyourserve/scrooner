@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IDCC,779,accounts_payable,not_presented,,,,,,,,0001405495-26-000011,,,,no face line
 IDCC,779,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001405495-26-000011,R3,Accounts receivable,69816000.0000,library map
-IDCC,779,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001405495-26-000011,,,,note-sourced default tag (no face line)
+IDCC,779,amortization_of_intangibles,not_presented,,,,,,,,0001405495-26-000011,,,,no face line and no note fact
 IDCC,779,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001405495-26-000011,R5,Basic (in USD per share),15.7700,library map
 IDCC,779,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001405495-26-000011,R9,Purchases of property and equipment,15888000.0000,library map
 IDCC,779,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001405495-26-000011,R3,Cash and cash equivalents,738960000.0000,library map
 IDCC,779,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001405495-26-000011,R9,Net cash used in financing activities,-201449000.0000,library map
 IDCC,779,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001405495-26-000011,R9,Net cash (used in) provided by investing activities,-140280000.0000,library map
-IDCC,779,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001405495-26-000011,,,,note-sourced default tag (no face line)
-IDCC,779,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001405495-26-000011,,,,note-sourced default tag (no face line)
+IDCC,779,cash_paid_for_income_taxes,not_presented,,,,,,,,0001405495-26-000011,,,,no face line and no note fact
+IDCC,779,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001405495-26-000011,,,16100000.0000,note fact present in the filing (FSN value)
 IDCC,779,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001405495-26-000011,R9,Accounts payable,3950000.0000,library map
 IDCC,779,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-3,N,,sec_api,0001405495-26-000011,R9,Receivables,-118486000.0000,library map
 IDCC,779,cf_inventory_change,not_presented,,,,,,,,0001405495-26-000011,,,,no face line
@@ -27,14 +27,14 @@ IDCC,779,gross_profit,not_presented,,,,,,,,0001405495-26-000011,,,,no face line
 IDCC,779,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001405495-26-000011,R5,Income before income taxes,469432000.0000,library map
 IDCC,779,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001405495-26-000011,R5,Income tax provision,62788000.0000,library map
 IDCC,779,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001405495-26-000011,R5,Interest expense,39962000.0000,library map
-IDCC,779,interest_income,not_presented,,,,,,,,0001405495-26-000011,,,,no face line
+IDCC,779,interest_income,not_presented,,,,,,,,0001405495-26-000011,,,,no face line and no note fact
 IDCC,779,inventory,not_presented,,,,,,,,0001405495-26-000011,,,,no face line
 IDCC,779,loans_net,OUT,,,,,,,,0001405495-26-000011,,,,not a bank
 IDCC,779,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001405495-26-000011,R5,"Net income attributable to InterDigital, Inc.",406644000.0000,library map
 IDCC,779,net_interest_income,OUT,,,,,,,,0001405495-26-000011,,,,not a bank
 IDCC,779,noninterest_expense,OUT,,,,,,,,0001405495-26-000011,,,,not a bank
 IDCC,779,noninterest_income,OUT,,,,,,,,0001405495-26-000011,,,,not a bank
-IDCC,779,operating_expenses,not_presented,,,,,,,,0001405495-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+IDCC,779,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001405495-26-000011,R5,Total operating expenses,373162000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 IDCC,779,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001405495-26-000011,R5,Income from operations,460853000.0000,library map
 IDCC,779,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherOperatingIncomeExpenseNet,sec_api,0001405495-26-000011,R5,"Other income, net",48541000.0000,library map
 IDCC,779,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001405495-26-000011,R3,"Property and equipment, net",23713000.0000,library map

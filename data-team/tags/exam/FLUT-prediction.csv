@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FLUT,596,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Accounts payable,386000000.0000,library map
 FLUT,596,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,"Accounts receivable, net",190000000.0000,library map
-FLUT,596,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)
+FLUT,596,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001635327-26-000005,,,1388000000.0000,note fact present in the filing (FSN value)
 FLUT,596,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001635327-26-000005,R5,Basic (in USD per share),-1.7500,library map
 FLUT,596,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Purchases of property and equipment,105000000.0000,library map
 FLUT,596,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Cash and cash equivalents,1828000000.0000,library map
@@ -21,13 +21,13 @@ FLUT,596,deposits,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
 FLUT,596,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Depreciation and amortization,1517000000.0000,library map
 FLUT,596,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001635327-26-000005,R5,Diluted (in USD per share),-1.7500,library map
 FLUT,596,dividends_paid,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
-FLUT,596,dividends_per_share,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,dividends_per_share,not_presented,,,,,,,,0001635327-26-000005,,,,no face line and no note fact
 FLUT,596,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Goodwill,15825000000.0000,library map
 FLUT,596,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Gross profit,7404000000.0000,library map
 FLUT,596,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001635327-26-000005,R5,(Loss) income before income taxes,-121000000.0000,library map
 FLUT,596,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Income tax (expense) benefit,286000000.0000,library map
 FLUT,596,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001635327-26-000005,R5,"Interest expense, net",-515000000.0000,combined line (library or label demote)
-FLUT,596,interest_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001635327-26-000005,,,73000000.0000,note fact present in the filing (FSN value)
 FLUT,596,inventory,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
 FLUT,596,loans_net,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
 FLUT,596,net_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
@@ -50,5 +50,5 @@ FLUT,596,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001635327-26-000
 FLUT,596,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Long-term debt due within one year,109000000.0000,printed face components (duration sum; total_debt founder sum)
 FLUT,596,total_interest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
 FLUT,596,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,TOTAL LIABILITIES,19582000000.0000,library map
-FLUT,596,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)
-FLUT,596,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)
+FLUT,596,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001635327-26-000005,,,177000000.0000,note fact present in the filing (FSN value)
+FLUT,596,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001635327-26-000005,,,177000000.0000,note fact present in the filing (FSN value)

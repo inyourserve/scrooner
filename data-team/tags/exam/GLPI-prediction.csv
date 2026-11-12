@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GLPI,639,accounts_payable,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
 GLPI,639,accounts_receivable,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
-GLPI,639,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001575965-26-000032,,,,note-sourced default tag (no face line)
+GLPI,639,amortization_of_intangibles,not_presented,,,,,,,,0001575965-26-000032,,,,no face line and no note fact
 GLPI,639,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001575965-26-000032,R5,Basic earnings per common share (in dollars per share),2.9500,library map
 GLPI,639,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001575965-26-000032,R8,Capital project and maintenance expenditures,304443000.0000,combined line (library or label demote)
 GLPI,639,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001575965-26-000032,R3,Cash and cash equivalents,224314000.0000,combined line (library or label demote)
 GLPI,639,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001575965-26-000032,R8,Net cash provided by (used in) financing activities,-1058979000.0000,library map
 GLPI,639,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001575965-26-000032,R8,Net cash used in investing activities,-308756000.0000,library map
-GLPI,639,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001575965-26-000032,,,,note-sourced default tag (no face line)
-GLPI,639,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001575965-26-000032,,,,note-sourced default tag (no face line)
+GLPI,639,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001575965-26-000032,,,2228000.0000,note fact present in the filing (FSN value)
+GLPI,639,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001575965-26-000032,,,357025000.0000,note fact present in the filing (FSN value)
 GLPI,639,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001575965-26-000032,R8,"Accounts payable, accrued expenses , accrued salary and wages",2881000.0000,combined line (library or label demote)
 GLPI,639,cf_ar_change,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
 GLPI,639,cf_inventory_change,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
@@ -27,14 +27,14 @@ GLPI,639,gross_profit,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
 GLPI,639,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Income before income taxes,852585000.0000,library map
 GLPI,639,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Income tax expense,2229000.0000,library map
 GLPI,639,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001575965-26-000032,R5,Interest expense,373881000.0000,library map
-GLPI,639,interest_income,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
+GLPI,639,interest_income,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Interest income,28796000.0000,interest income only inside a net/other face line between OI and pretax
 GLPI,639,inventory,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
 GLPI,639,loans_net,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Net income,825111000.0000,library map
 GLPI,639,net_interest_income,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,noninterest_expense,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,noninterest_income,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
-GLPI,639,operating_expenses,not_presented,,,,,,,,0001575965-26-000032,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+GLPI,639,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Total operating expenses,393299000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 GLPI,639,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Income from operations,1201453000.0000,library map
 GLPI,639,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001575965-26-000032,R5,Total other expenses,-348868000.0000,combined line (library or label demote)
 GLPI,639,ppe_net,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
@@ -50,5 +50,5 @@ GLPI,639,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001575965-26-000
 GLPI,639,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001575965-26-000032,R3,"Long-term debt, net of unamortized debt issuance costs, bond premiums and original issuance discounts",7203731000.0000,printed face components (duration sum; total_debt founder sum)
 GLPI,639,total_interest_income,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001575965-26-000032,R3,Total liabilities,7901349000.0000,library map
-GLPI,639,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001575965-26-000032,,,,note-sourced default tag (no face line)
-GLPI,639,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001575965-26-000032,,,,note-sourced default tag (no face line)
+GLPI,639,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001575965-26-000032,,,279605000.0000,note fact present in the filing (FSN value)
+GLPI,639,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001575965-26-000032,,,280043000.0000,note fact present in the filing (FSN value)

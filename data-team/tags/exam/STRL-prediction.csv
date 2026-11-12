@@ -21,7 +21,7 @@ STRL,597,deposits,OUT,,,,,,,,0000874238-26-000024,,,,not a bank
 STRL,597,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000874238-26-000024,R6,Depreciation and amortization,77114000.0000,library map
 STRL,597,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000874238-26-000024,R3,Diluted (in dollars per share),9.3800,library map
 STRL,597,dividends_paid,not_presented,,,,,,,,0000874238-26-000024,,,,no face line
-STRL,597,dividends_per_share,not_presented,,,,,,,,0000874238-26-000024,,,,no face line
+STRL,597,dividends_per_share,not_presented,,,,,,,,0000874238-26-000024,,,,no face line and no note fact
 STRL,597,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000874238-26-000024,R4,Goodwill,585221000.0000,library map
 STRL,597,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000874238-26-000024,R3,Gross profit,572314000.0000,library map
 STRL,597,income_before_tax,not_presented,,,,,,,,0000874238-26-000024,,,,no face line

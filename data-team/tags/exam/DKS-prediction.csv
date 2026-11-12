@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DKS,586,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001089063-26-000007,R6,Accounts payable,1986990000.0000,library map
 DKS,586,accounts_receivable,mapped,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-3,N,,sec_api,0001089063-26-000007,R6,"Accounts receivable, net",475852000.0000,library map
-DKS,586,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001089063-26-000007,,,,note-sourced default tag (no face line)
+DKS,586,amortization_of_intangibles,not_presented,,,,,,,,0001089063-26-000007,,,,no face line and no note fact
 DKS,586,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001089063-26-000007,R3,Basic (in dollars per share),10.2200,library map
 DKS,586,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001089063-26-000007,R10,Capital expenditures,1137176000.0000,library map
 DKS,586,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001089063-26-000007,R6,Cash and cash equivalents,1353226000.0000,library map
@@ -27,7 +27,7 @@ DKS,586,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001089063-26
 DKS,586,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001089063-26-000007,R3,INCOME BEFORE INCOME TAXES,1141973000.0000,library map
 DKS,586,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001089063-26-000007,R3,Provision for income taxes,292734000.0000,library map
 DKS,586,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001089063-26-000007,R3,Interest expense,64263000.0000,library map
-DKS,586,interest_income,not_presented,,,,,,,,0001089063-26-000007,,,,no face line
+DKS,586,interest_income,not_presented,,,,,,,,0001089063-26-000007,,,,no face line and no note fact
 DKS,586,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001089063-26-000007,R6,"Inventories, net",4907823000.0000,library map
 DKS,586,loans_net,OUT,,,,,,,,0001089063-26-000007,,,,not a bank
 DKS,586,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001089063-26-000007,R3,NET INCOME,849239000.0000,library map

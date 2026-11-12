@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NIQ,990,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-012572,R5,Accounts payable,224400000.0000,library map
 NIQ,990,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-012572,R5,"Trade receivables, net",695600000.0000,library map
-NIQ,990,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-012572,,,,note-sourced default tag (no face line)
+NIQ,990,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-012572,,,544100000.0000,note fact present in the filing (FSN value)
 NIQ,990,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-012572,R3,"Net loss attributable to NIQ, basic (in dollars per share)",-1.3200,library map
 NIQ,990,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001628280-26-012572,R8,Additions to property and equipment,34700000.0000,library map
 NIQ,990,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-012572,R5,Cash and cash equivalents,518800000.0000,library map
@@ -21,13 +21,13 @@ NIQ,990,deposits,OUT,,,,,,,,0001628280-26-012572,,,,not a bank
 NIQ,990,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001628280-26-012572,R8,Depreciation and amortization,632500000.0000,library map
 NIQ,990,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-012572,R3,"Net loss attributable to NIQ, diluted (in dollars per share)",-1.3200,library map
 NIQ,990,dividends_paid,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
-NIQ,990,dividends_per_share,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
+NIQ,990,dividends_per_share,not_presented,,,,,,,,0001628280-26-012572,,,,no face line and no note fact
 NIQ,990,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-012572,R5,Goodwill,2431700000.0000,library map
 NIQ,990,gross_profit,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
 NIQ,990,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0001628280-26-012572,R3,Loss from continuing operations before income taxes,-209800000.0000,library map
 NIQ,990,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-012572,R3,Income tax expense from continuing operations,135500000.0000,library map
 NIQ,990,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001628280-26-012572,R3,"Interest expense, net",-317600000.0000,combined line (library or label demote)
-NIQ,990,interest_income,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
+NIQ,990,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001628280-26-012572,R3,"Interest expense, net",-317600000.0000,interest income only inside a net/other face line between OI and pretax
 NIQ,990,inventory,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
 NIQ,990,loans_net,OUT,,,,,,,,0001628280-26-012572,,,,not a bank
 NIQ,990,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26-012572,R3,Net loss attributable to NIQ,-353300000.0000,library map

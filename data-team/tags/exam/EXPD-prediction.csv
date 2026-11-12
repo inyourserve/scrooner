@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EXPD,380,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-071569,R2,Accounts payable,1123429000.0000,library map
 EXPD,380,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-071569,R2,"Accounts receivable, net",2021889000.0000,library map
-EXPD,380,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-071569,,,,note-sourced default tag (no face line)
+EXPD,380,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-071569,,,,no face line and no note fact
 EXPD,380,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-071569,R4,Basic earnings attributable to shareholders per share,5.9700,library map
 EXPD,380,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001193125-26-071569,R9,Purchase of property and equipment,53101000.0000,library map
 EXPD,380,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-071569,R2,Cash and cash equivalents,1314285000.0000,library map
 EXPD,380,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-071569,R9,Net cash from financing activities,-802477000.0000,library map
 EXPD,380,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-071569,R9,Net cash from investing activities,-44703000.0000,library map
 EXPD,380,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-071569,R9,Cash paid for income taxes,265035000.0000,library map
-EXPD,380,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-071569,,,,note-sourced default tag (no face line)
+EXPD,380,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-071569,,,,no face line and no note fact
 EXPD,380,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001193125-26-071569,R9,Increase (decrease) in accounts payable and accrued expenses,20589000.0000,combined line (library or label demote)
 EXPD,380,cf_ar_change,not_presented,,,,,,,,0001193125-26-071569,,,,no face line
 EXPD,380,cf_inventory_change,not_presented,,,,,,,,0001193125-26-071569,,,,no face line
@@ -34,7 +34,7 @@ EXPD,380,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 EXPD,380,net_interest_income,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
 EXPD,380,noninterest_expense,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
 EXPD,380,noninterest_income,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
-EXPD,380,operating_expenses,not_presented,,,,,,,,0001193125-26-071569,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+EXPD,380,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,Total operating expenses,10016463000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 EXPD,380,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,Operating income,1052546000.0000,library map
 EXPD,380,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,"Other, net",5802000.0000,library map
 EXPD,380,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071569,R2,"Property and equipment, net",462122000.0000,library map

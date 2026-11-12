@@ -21,13 +21,13 @@ CSGP,582,deposits,OUT,,,,,,,,0001057352-26-000020,,,,not a bank
 CSGP,582,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001057352-26-000020,R9,Depreciation and amortization,263000000.0000,library map
 CSGP,582,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001057352-26-000020,R3,Earning per share  diluted (in dollars per share),0.0200,library map
 CSGP,582,dividends_paid,not_presented,,,,,,,,0001057352-26-000020,,,,no face line
-CSGP,582,dividends_per_share,not_presented,,,,,,,,0001057352-26-000020,,,,no face line
+CSGP,582,dividends_per_share,not_presented,,,,,,,,0001057352-26-000020,,,,no face line and no note fact
 CSGP,582,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001057352-26-000020,R5,Goodwill,4944000000.0000,library map
 CSGP,582,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001057352-26-000020,R3,Gross profit,2561000000.0000,library map
 CSGP,582,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001057352-26-000020,R3,Income before income taxes,30000000.0000,library map
 CSGP,582,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001057352-26-000020,R3,Income tax expense,23000000.0000,library map
 CSGP,582,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001057352-26-000020,R3,"Interest income, net",110000000.0000,combined line (library or label demote)
-CSGP,582,interest_income,not_presented,,,,,,,,0001057352-26-000020,,,,no face line
+CSGP,582,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001057352-26-000020,R3,"Interest income, net",110000000.0000,interest income only inside a net/other face line between OI and pretax
 CSGP,582,inventory,not_presented,,,,,,,,0001057352-26-000020,,,,no face line
 CSGP,582,loans_net,OUT,,,,,,,,0001057352-26-000020,,,,not a bank
 CSGP,582,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001057352-26-000020,R3,Net income,7000000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MLI,579,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000089439-26-000008,R6,Accounts payable,180577000.0000,library map
 MLI,579,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000089439-26-000008,R6,"Accounts receivable, less allowance for credit losses of $2,545 in 2025 and $3,724 in 2024",475566000.0000,library map
-MLI,579,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000089439-26-000008,,,,note-sourced default tag (no face line)
+MLI,579,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000089439-26-000008,,,20770000.0000,note fact present in the filing (FSN value)
 MLI,579,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000089439-26-000008,R3,Basic earnings per share (in dollars per share),6.9900,library map
 MLI,579,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0000089439-26-000008,R8,Capital expenditures,68805000.0000,library map
 MLI,579,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000089439-26-000008,R6,Cash and cash equivalents,1367003000.0000,library map
 MLI,579,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000089439-26-000008,R8,Net cash used in financing activities,-394618000.0000,library map
 MLI,579,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000089439-26-000008,R8,Net cash (used in) provided by investing activities,-24911000.0000,library map
-MLI,579,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000089439-26-000008,,,,note-sourced default tag (no face line)
-MLI,579,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000089439-26-000008,,,,note-sourced default tag (no face line)
+MLI,579,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000089439-26-000008,,,245800000.0000,note fact present in the filing (FSN value)
+MLI,579,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,0,,,,sec_api,0000089439-26-000008,,,0.0000,note fact present in the filing (FSN value)
 MLI,579,cf_ap_change,not_presented,,,,,,,,0000089439-26-000008,,,,no face line
 MLI,579,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000089439-26-000008,R8,Receivables,19093000.0000,library map
 MLI,579,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000089439-26-000008,R8,Inventories,40428000.0000,library map

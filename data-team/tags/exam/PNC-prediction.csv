@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PNC,142,accounts_payable,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,accounts_receivable,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
-PNC,142,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000713676-26-000020,,,,note-sourced default tag (no face line)
+PNC,142,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0000713676-26-000020,,,151000000.0000,note fact present in the filing (FSN value)
 PNC,142,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000713676-26-000020,R3,Basic (in dollars per share),16.6000,library map
 PNC,142,capex,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,cash_and_equivalents,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000713676-26-000020,R9,Net cash provided (used) by financing activities,4695000000.0000,library map
 PNC,142,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000713676-26-000020,R9,Net cash provided (used) by investing activities,-15617000000.0000,library map
-PNC,142,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000713676-26-000020,,,,note-sourced default tag (no face line)
+PNC,142,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000713676-26-000020,,,704000000.0000,note fact present in the filing (FSN value)
 PNC,142,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000713676-26-000020,R9,Interest paid,11154000000.0000,library map
 PNC,142,cf_ap_change,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,cf_ar_change,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
@@ -21,7 +21,7 @@ PNC,142,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0000713676-26-000020
 PNC,142,depreciation_and_amortization,combined,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000713676-26-000020,R9,"Depreciation, amortization and accretion",381000000.0000,combined line (library or label demote)
 PNC,142,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000713676-26-000020,R3,Diluted (in dollars per share),16.5900,library map
 PNC,142,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000713676-26-000020,R9,Common stock cash dividends paid,2635000000.0000,library map
-PNC,142,dividends_per_share,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
+PNC,142,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0000713676-26-000020,,,6.6000,note fact present in the filing (FSN value)
 PNC,142,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000713676-26-000020,R5,Goodwill,10959000000.0000,library map
 PNC,142,gross_profit,OUT,,,,,,,,0000713676-26-000020,,,,sector template (bank/insurer)
 PNC,142,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000713676-26-000020,R3,Income before income taxes and noncontrolling interests,8486000000.0000,library map
@@ -41,7 +41,7 @@ PNC,142,ppe_net,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,provision_for_credit_losses,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
 PNC,142,research_and_development,OUT,,,,,,,,0000713676-26-000020,,,,sector template (bank/insurer)
 PNC,142,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000713676-26-000020,R3,Total revenue,23099000000.0000,library map
-PNC,142,sbc,not_presented,,,,,,,,0000713676-26-000020,,,,no face line
+PNC,142,sbc,not_presented,,,,,,,,0000713676-26-000020,,,,no face line and no note fact
 PNC,142,sga_expense,not_presented,,,,,,,,0000713676-26-000020,,,,single component only
 PNC,142,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000713676-26-000020,R9,Acquisition of treasury stock,1338000000.0000,library map
 PNC,142,shares_outstanding,not_presented,,,,,,,,0000713676-26-000020,,,,no face line

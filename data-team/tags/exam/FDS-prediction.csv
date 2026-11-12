@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FDS,666,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-25-045769,R6,Accounts payable and accrued expenses,135262000.0000,combined line (library or label demote)
 FDS,666,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-25-045769,R6,"Accounts receivable, net of reserves of $13,789 at August 31, 2025 and $14,581 at August 31, 2024",270684000.0000,library map
-FDS,666,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-25-045769,,,,note-sourced default tag (no face line)
+FDS,666,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-25-045769,,,133573000.0000,note fact present in the filing (FSN value)
 FDS,666,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-25-045769,R3,Basic earnings per common share (in USD per share),15.7400,library map
 FDS,666,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001628280-25-045769,R8,"Purchases of property, equipment, leasehold improvements and capitalized internal-use software",108806000.0000,library map
 FDS,666,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-25-045769,R6,Cash and cash equivalents,337651000.0000,library map
@@ -21,7 +21,7 @@ FDS,666,deposits,OUT,,,,,,,,0001628280-25-045769,,,,not a bank
 FDS,666,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,OtherDepreciationAndAmortization,sec_api,0001628280-25-045769,R8,Depreciation and amortization,157691000.0000,library map
 FDS,666,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-25-045769,R3,Diluted earnings per common share (in USD per share),15.5500,library map
 FDS,666,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001628280-25-045769,R8,Dividend payments,159973000.0000,library map
-FDS,666,dividends_per_share,not_presented,,,,,,,,0001628280-25-045769,,,,no face line
+FDS,666,dividends_per_share,not_presented,,,,,,,,0001628280-25-045769,,,,no face line and no note fact
 FDS,666,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-25-045769,R6,Goodwill,1284708000.0000,library map
 FDS,666,gross_profit,not_presented,,,,,,,,0001628280-25-045769,,,,no face line
 FDS,666,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-25-045769,R3,Income before income taxes,720958000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SSNC,454,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-076745,R2,Accounts payable,87200000.0000,library map
 SSNC,454,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-076745,R2,"Accounts receivable, net of allowance for credit losses of $34.9 and $31.6, respectively (Note 3)",978700000.0000,library map
-SSNC,454,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-076745,,,,note-sourced default tag (no face line)
+SSNC,454,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-076745,,,483900000.0000,note fact present in the filing (FSN value)
 SSNC,454,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-076745,R4,Basic earnings per share attributable to SS&C common stockholders,3.2600,library map
 SSNC,454,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-076745,R5,Additions to property and equipment,80800000.0000,library map
 SSNC,454,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-076745,R2,Cash and cash equivalents,462100000.0000,library map

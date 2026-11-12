@@ -21,13 +21,13 @@ BSX,192,deposits,OUT,,,,,,,,0000885725-26-000010,,,,not a bank
 BSX,192,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000885725-26-000010,R8,Depreciation and amortization,1368000000.0000,library map
 BSX,192,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000885725-26-000010,R3,Net income (loss) per common share  diluted,1.9400,library map
 BSX,192,dividends_paid,not_presented,,,,,,,,0000885725-26-000010,,,,no face line
-BSX,192,dividends_per_share,not_presented,,,,,,,,0000885725-26-000010,,,,no face line
+BSX,192,dividends_per_share,not_presented,,,,,,,,0000885725-26-000010,,,,no face line and no note fact
 BSX,192,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000885725-26-000010,R5,Goodwill,18282000000.0000,library map
 BSX,192,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000885725-26-000010,R3,Gross profit,13854000000.0000,library map
 BSX,192,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000885725-26-000010,R3,Income (loss) before income taxes,3385000000.0000,library map
 BSX,192,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000885725-26-000010,R3,Income tax expense (benefit),493000000.0000,library map
 BSX,192,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000885725-26-000010,R3,Interest expense,349000000.0000,library map
-BSX,192,interest_income,not_presented,,,,,,,,0000885725-26-000010,,,,no face line
+BSX,192,interest_income,not_presented,,,,,,,,0000885725-26-000010,,,,no face line and no note fact
 BSX,192,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000885725-26-000010,R5,Inventories,2943000000.0000,library map
 BSX,192,loans_net,OUT,,,,,,,,0000885725-26-000010,,,,not a bank
 BSX,192,net_income,not_presented,,,,,,,,0000885725-26-000010,,,,no face line

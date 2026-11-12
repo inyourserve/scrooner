@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LUV,458,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000092380-26-000004,R3,Accounts payable,1991000000.0000,library map
 LUV,458,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000092380-26-000004,R3,Accounts and other receivables,1149000000.0000,combined line (library or label demote)
-LUV,458,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000092380-26-000004,,,,note-sourced default tag (no face line)
+LUV,458,amortization_of_intangibles,not_presented,,,,,,,,0000092380-26-000004,,,,no face line and no note fact
 LUV,458,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000092380-26-000004,R5,"NET INCOME PER SHARE, BASIC (in USD per share)",0.8200,library map
 LUV,458,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000092380-26-000004,R10,"Capital expenditures, net",2673000000.0000,library map
 LUV,458,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000092380-26-000004,R3,Cash and cash equivalents,3231000000.0000,library map
 LUV,458,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000092380-26-000004,R10,Net cash used in financing activities,-4691000000.0000,library map
 LUV,458,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000092380-26-000004,R10,Net cash used in investing activities,-1429000000.0000,library map
-LUV,458,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000092380-26-000004,,,,note-sourced default tag (no face line)
+LUV,458,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000092380-26-000004,,,-1000000.0000,note fact present in the filing (FSN value)
 LUV,458,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000092380-26-000004,R10,"Interest, net of amount capitalized",108000000.0000,library map
 LUV,458,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000092380-26-000004,R10,Accounts payable and accrued liabilities,218000000.0000,combined line (library or label demote)
 LUV,458,cf_ar_change,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
@@ -34,14 +34,14 @@ LUV,458,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000092380-26
 LUV,458,net_interest_income,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,noninterest_expense,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,noninterest_income,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
-LUV,458,operating_expenses,not_presented,,,,,,,,0000092380-26-000004,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+LUV,458,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,Total operating expenses,27635000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 LUV,458,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,OPERATING INCOME,428000000.0000,library map
 LUV,458,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,"Other (gains) losses, net",43000000.0000,library map
 LUV,458,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0000092380-26-000004,R3,"Property and equipment, net",20245000000.0000,library map
 LUV,458,provision_for_credit_losses,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,research_and_development,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
 LUV,458,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,Total operating revenues,28063000000.0000,library map
-LUV,458,sbc,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
+LUV,458,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000092380-26-000004,,,99000000.0000,note fact present in the filing (FSN value)
 LUV,458,sga_expense,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
 LUV,458,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000092380-26-000004,R10,Repurchase of common stock,2550000000.0000,library map
 LUV,458,shares_outstanding,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
@@ -50,5 +50,5 @@ LUV,458,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000092380-26-0000
 LUV,458,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000092380-26-000004,R3,Current maturities of long-term debt,324000000.0000,printed face components (duration sum; total_debt founder sum)
 LUV,458,total_interest_income,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,total_liabilities,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
-LUV,458,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000092380-26-000004,,,,note-sourced default tag (no face line)
-LUV,458,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000092380-26-000004,,,,note-sourced default tag (no face line)
+LUV,458,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000092380-26-000004,,,540000000.0000,note fact present in the filing (FSN value)
+LUV,458,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000092380-26-000004,,,558000000.0000,note fact present in the filing (FSN value)

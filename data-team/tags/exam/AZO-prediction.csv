@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AZO,230,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-25-102611,R4,Accounts payable,8025590000.0000,library map
 AZO,230,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-25-102611,R4,Accounts receivable,670137000.0000,library map
-AZO,230,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-25-102611,,,,note-sourced default tag (no face line)
+AZO,230,amortization_of_intangibles,not_presented,,,,,,,,0001104659-25-102611,,,,no face line and no note fact
 AZO,230,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-25-102611,R2,Basic earnings per share,148.8000,library map
 AZO,230,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-25-102611,R6,Capital expenditures,1327257000.0000,library map
 AZO,230,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-25-102611,R4,Cash and cash equivalents,271803000.0000,library map
@@ -21,13 +21,13 @@ AZO,230,deposits,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
 AZO,230,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001104659-25-102611,R6,Depreciation and amortization of property and equipment,613199000.0000,library map
 AZO,230,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-25-102611,R2,Diluted earnings per share,144.8700,library map
 AZO,230,dividends_paid,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
-AZO,230,dividends_per_share,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
+AZO,230,dividends_per_share,not_presented,,,,,,,,0001104659-25-102611,,,,no face line and no note fact
 AZO,230,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-25-102611,R4,Goodwill,302645000.0000,library map
 AZO,230,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Gross profit,9966474000.0000,library map
 AZO,230,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Income before income taxes,3134332000.0000,library map
 AZO,230,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Income tax expense,636085000.0000,library map
 AZO,230,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001104659-25-102611,R2,"Interest expense, net",-475824000.0000,combined line (library or label demote)
-AZO,230,interest_income,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
+AZO,230,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001104659-25-102611,,,10972000.0000,note fact present in the filing (FSN value)
 AZO,230,inventory,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
 AZO,230,loans_net,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
 AZO,230,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Net income,2498247000.0000,library map
@@ -41,7 +41,7 @@ AZO,230,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0
 AZO,230,provision_for_credit_losses,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
 AZO,230,research_and_development,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
 AZO,230,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Net sales,18938717000.0000,library map
-AZO,230,sbc,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
+AZO,230,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001104659-25-102611,,,124717000.0000,note fact present in the filing (FSN value)
 AZO,230,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,"Operating, selling, general and administrative expenses",6356318000.0000,library map
 AZO,230,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001104659-25-102611,R6,Purchase of treasury stock,1578186000.0000,library map
 AZO,230,shares_outstanding,not_presented,,,,,,,,0001104659-25-102611,,,,no face line

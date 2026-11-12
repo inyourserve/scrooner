@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 GPC,471,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0000040987-26-000003,R3,Trade accounts payable,6051882000.0000,library map
 GPC,471,accounts_receivable,mapped,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-3,N,,sec_api,0000040987-26-000003,R3,"Trade accounts receivable, net",2370939000.0000,library map
-GPC,471,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000040987-26-000003,,,,note-sourced default tag (no face line)
+GPC,471,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000040987-26-000003,,,152431000.0000,note fact present in the filing (FSN value)
 GPC,471,basic_eps,not_presented,,,,,,,,0000040987-26-000003,,,,no face line
 GPC,471,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000040987-26-000003,R10,"Purchases of property, plant and equipment",469838000.0000,library map
 GPC,471,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0000040987-26-000003,R3,Cash and cash equivalents,477179000.0000,combined line (library or label demote)
@@ -27,7 +27,7 @@ GPC,471,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000040987-26
 GPC,471,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000040987-26-000003,R5,Income before income taxes,52168000.0000,library map
 GPC,471,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0000040987-26-000003,R5,Income tax expense (benefit),-13777000.0000,library map
 GPC,471,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000040987-26-000003,R5,"Interest expense, net",163506000.0000,combined line (library or label demote)
-GPC,471,interest_income,not_presented,,,,,,,,0000040987-26-000003,,,,no face line
+GPC,471,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000040987-26-000003,R5,"Interest expense, net",163506000.0000,interest income only inside a net/other face line between OI and pretax
 GPC,471,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000040987-26-000003,R3,"Merchandise inventories, net",6071996000.0000,library map
 GPC,471,loans_net,OUT,,,,,,,,0000040987-26-000003,,,,not a bank
 GPC,471,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000040987-26-000003,R5,Net income,65945000.0000,library map
@@ -50,5 +50,5 @@ GPC,471,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000040987-26-0000
 GPC,471,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000040987-26-000003,R3,Short-term borrowings,943540000.0000,printed face components (duration sum; total_debt founder sum)
 GPC,471,total_interest_income,OUT,,,,,,,,0000040987-26-000003,,,,not a bank
 GPC,471,total_liabilities,not_presented,,,,,,,,0000040987-26-000003,,,,no face line
-GPC,471,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000040987-26-000003,,,,note-sourced default tag (no face line)
-GPC,471,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000040987-26-000003,,,,note-sourced default tag (no face line)
+GPC,471,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000040987-26-000003,,,138945000.0000,note fact present in the filing (FSN value)
+GPC,471,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000040987-26-000003,,,139250000.0000,note fact present in the filing (FSN value)

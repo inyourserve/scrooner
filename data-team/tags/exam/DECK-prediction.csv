@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DECK,628,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0001628280-26-037664,R3,Trade accounts payable,384529000.0000,library map
 DECK,628,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-037664,R3,"Trade accounts receivable, net of allowances ($38,198 and $32,883 as of March 31, 2026, and March 31, 2025, respectively) (Note 2 and Schedule II)",318978000.0000,library map
-DECK,628,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-037664,,,,note-sourced default tag (no face line)
+DECK,628,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-037664,,,,no face line and no note fact
 DECK,628,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-037664,R5,Basic (in dollars per share),7.0400,library map
 DECK,628,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-037664,R7,Purchases of property and equipment,84623000.0000,library map
 DECK,628,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-037664,R3,Cash and cash equivalents,1907249000.0000,library map
 DECK,628,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-037664,R7,Net cash used in financing activities,-1084044000.0000,library map
 DECK,628,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-037664,R7,Net cash used in investing activities,-84612000.0000,library map
-DECK,628,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-037664,,,,note-sourced default tag (no face line)
+DECK,628,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-037664,,,234314000.0000,note fact present in the filing (FSN value)
 DECK,628,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-037664,R7,Interest,2492000.0000,library map
 DECK,628,cf_ap_change,not_presented,,,,,,,,0001628280-26-037664,,,,no face line
 DECK,628,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001628280-26-037664,R7,"Trade accounts receivable, net",-7550000.0000,library map
@@ -21,7 +21,7 @@ DECK,628,deposits,OUT,,,,,,,,0001628280-26-037664,,,,not a bank
 DECK,628,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001628280-26-037664,R7,"Depreciation, amortization, and accretion",75773000.0000,combined line (library or label demote)
 DECK,628,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-037664,R5,Diluted (in dollars per share),7.0200,library map
 DECK,628,dividends_paid,not_presented,,,,,,,,0001628280-26-037664,,,,no face line
-DECK,628,dividends_per_share,not_presented,,,,,,,,0001628280-26-037664,,,,no face line
+DECK,628,dividends_per_share,not_presented,,,,,,,,0001628280-26-037664,,,,no face line and no note fact
 DECK,628,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-037664,R3,Goodwill (Note 1),13990000.0000,library map
 DECK,628,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-037664,R5,Gross profit,3157726000.0000,library map
 DECK,628,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-3,N,,sec_api,0001628280-26-037664,R5,Income before income taxes,1326356000.0000,library map

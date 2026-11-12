@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ECHO,390,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,Y,AccountsPayableTradeCurrent,sec_api,0001104659-26-021817,R2,Trade accounts payable,541706000.0000,library map
 ECHO,390,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-021817,R2,"Trade accounts receivable, net of allowance for credit losses of $79,590 and $82,628, respectively",1273849000.0000,library map
-ECHO,390,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-021817,,,,note-sourced default tag (no face line)
+ECHO,390,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-021817,,,16000000.0000,note fact present in the filing (FSN value)
 ECHO,390,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001104659-26-021817,R4,Basic net income (loss) per share attributable to EchoStar (In dollar per share),-50.4100,library map
 ECHO,390,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-021817,R7,Purchases of property and equipment (Note 8),965730000.0000,library map
 ECHO,390,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-021817,R2,Cash and cash equivalents,1883074000.0000,library map
 ECHO,390,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-021817,R7,Net cash flows from financing activities,-910313000.0000,library map
 ECHO,390,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-021817,R7,Net cash flows from investing activities,-1404606000.0000,library map
-ECHO,390,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-021817,,,,note-sourced default tag (no face line)
-ECHO,390,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-021817,,,,note-sourced default tag (no face line)
+ECHO,390,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-021817,,,34011000.0000,note fact present in the filing (FSN value)
+ECHO,390,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001104659-26-021817,,,2087133000.0000,note fact present in the filing (FSN value)
 ECHO,390,cf_ap_change,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
 ECHO,390,cf_ar_change,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
 ECHO,390,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001104659-26-021817,R7,Inventory,-59368000.0000,library map
@@ -21,13 +21,13 @@ ECHO,390,deposits,OUT,,,,,,,,0001104659-26-021817,,,,not a bank
 ECHO,390,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,DepreciationandAmortizationNonproductionIncludingDiscontinuedOperations,sec_api,0001104659-26-021817,R7,Depreciation and amortization,1585549000.0000,library map
 ECHO,390,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001104659-26-021817,R4,Diluted net income (loss) per share attributable to EchoStar (In dollar per share),-50.4100,library map
 ECHO,390,dividends_paid,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
-ECHO,390,dividends_per_share,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
+ECHO,390,dividends_per_share,not_presented,,,,,,,,0001104659-26-021817,,,,no face line and no note fact
 ECHO,390,goodwill,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
 ECHO,390,gross_profit,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
 ECHO,390,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001104659-26-021817,R4,Income (loss) before income taxes,-18893314000.0000,library map
 ECHO,390,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001104659-26-021817,R4,"Income tax (provision) benefit, net",-4386375000.0000,library map
 ECHO,390,interest_expense,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
-ECHO,390,interest_income,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
+ECHO,390,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-3,N,,sec_api,0001104659-26-021817,R4,Interest income,228733000.0000,interest income only inside a net/other face line between OI and pretax
 ECHO,390,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-021817,R2,Inventory,380647000.0000,library map
 ECHO,390,loans_net,OUT,,,,,,,,0001104659-26-021817,,,,not a bank
 ECHO,390,net_income,not_presented,,,,,,,,0001104659-26-021817,,,,no face line

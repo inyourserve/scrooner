@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LEN,472,accounts_payable,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,accounts_receivable,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
-LEN,472,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-003870,,,,note-sourced default tag (no face line)
+LEN,472,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-003870,,,,no face line and no note fact
 LEN,472,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-003870,R5,Basic earnings per share (in USD per share),7.9800,library map
 LEN,472,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-003870,R8,Net additions to operating properties and equipment,188629000.0000,library map
 LEN,472,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-003870,R3,Cash and cash equivalents,3756305000.0000,library map
@@ -21,20 +21,20 @@ LEN,472,deposits,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001628280-26-003870,R8,Depreciation and amortization,134310000.0000,library map
 LEN,472,diluted_eps,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-003870,R8,Dividends,520959000.0000,library map
-LEN,472,dividends_per_share,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
+LEN,472,dividends_per_share,not_presented,,,,,,,,0001628280-26-003870,,,,no face line and no note fact
 LEN,472,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-003870,R3,Goodwill,3632058000.0000,library map
 LEN,472,gross_profit,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-003870,R5,Earnings before income taxes,2813863000.0000,library map
 LEN,472,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-003870,R5,Provision for income taxes,705563000.0000,library map
 LEN,472,interest_expense,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
-LEN,472,interest_income,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
+LEN,472,interest_income,not_presented,,,,,,,,0001628280-26-003870,,,,no face line and no note fact
 LEN,472,inventory,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,loans_net,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-003870,R5,Net earnings attributable to Lennar,2078179000.0000,library map
 LEN,472,net_interest_income,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,noninterest_expense,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,noninterest_income,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
-LEN,472,operating_expenses,not_presented,,,,,,,,0001628280-26-003870,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+LEN,472,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-003870,R5,Total costs and expenses,31519110000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 LEN,472,operating_income,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-003870,R5,"Other income (expense), net and other gains (losses), net",-62352000.0000,combined line (library or label demote)
 LEN,472,ppe_net,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
@@ -50,5 +50,5 @@ LEN,472,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-0038
 LEN,472,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001628280-26-003870,R3,"Senior notes and other debts payable, net",5874995000.0000,printed face components (duration sum; total_debt founder sum)
 LEN,472,total_interest_income,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-003870,R3,Total liabilities,12289828000.0000,library map
-LEN,472,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-003870,,,,note-sourced default tag (no face line)
-LEN,472,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-003870,,,,note-sourced default tag (no face line)
+LEN,472,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-003870,,,257746000.0000,note fact present in the filing (FSN value)
+LEN,472,weighted_diluted_shares,not_presented,,,,,,,,0001628280-26-003870,,,,no face line and no note fact

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FPS,814,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0002080126-26-000035,R3,Accounts payable,130453000.0000,library map
 FPS,814,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0002080126-26-000035,R3,"Accounts receivable, net",329628000.0000,library map
-FPS,814,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002080126-26-000035,,,,note-sourced default tag (no face line)
+FPS,814,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0002080126-26-000035,,,47900000.0000,note fact present in the filing (FSN value)
 FPS,814,basic_eps,not_presented,,,,,,,,0002080126-26-000035,,,,no face line
 FPS,814,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0002080126-26-000035,R7,Purchases of property and equipment,115905000.0000,library map
 FPS,814,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0002080126-26-000035,R3,Cash and cash equivalents,97477000.0000,library map
@@ -21,7 +21,7 @@ FPS,814,deposits,OUT,,,,,,,,0002080126-26-000035,,,,not a bank
 FPS,814,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0002080126-26-000035,R7,Depreciation and amortization,66899000.0000,library map
 FPS,814,diluted_eps,not_presented,,,,,,,,0002080126-26-000035,,,,no face line
 FPS,814,dividends_paid,not_presented,,,,,,,,0002080126-26-000035,,,,no face line
-FPS,814,dividends_per_share,not_presented,,,,,,,,0002080126-26-000035,,,,no face line
+FPS,814,dividends_per_share,not_presented,,,,,,,,0002080126-26-000035,,,,no face line and no note fact
 FPS,814,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002080126-26-000035,R3,Goodwill,516629000.0000,library map
 FPS,814,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0002080126-26-000035,R5,Gross Profit,497600000.0000,library map
 FPS,814,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0002080126-26-000035,R5,Income (loss) before tax (expense) benefit,127400000.0000,library map

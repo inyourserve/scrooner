@@ -7,8 +7,8 @@ COR,189,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,
 COR,189,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001140859-25-000131,R3,Cash and cash equivalents,4356138000.0000,library map
 COR,189,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001140859-25-000131,R9,NET CASH PROVIDED BY (USED IN) FINANCING ACTIVITIES,2249114000.0000,library map
 COR,189,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001140859-25-000131,R9,NET CASH USED IN INVESTING ACTIVITIES,-4977293000.0000,library map
-COR,189,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001140859-25-000131,,,,note-sourced default tag (no face line)
-COR,189,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001140859-25-000131,,,,note-sourced default tag (no face line)
+COR,189,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001140859-25-000131,,,571200000.0000,note fact present in the filing (FSN value)
+COR,189,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001140859-25-000131,,,356500000.0000,note fact present in the filing (FSN value)
 COR,189,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001140859-25-000131,R9,Accounts payable,3693364000.0000,library map
 COR,189,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001140859-25-000131,R9,Accounts receivable,1923411000.0000,library map
 COR,189,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001140859-25-000131,R9,Inventories,1269429000.0000,library map
@@ -27,7 +27,7 @@ COR,189,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001140859-25
 COR,189,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,Income before income taxes,2258336000.0000,library map
 COR,189,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,Income tax expense,690522000.0000,library map
 COR,189,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001140859-25-000131,R5,"Interest expense, net",-291548000.0000,combined line (library or label demote)
-COR,189,interest_income,not_presented,,,,,,,,0001140859-25-000131,,,,no face line
+COR,189,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001140859-25-000131,R5,"Interest expense, net",-291548000.0000,interest income only inside a net/other face line between OI and pretax
 COR,189,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001140859-25-000131,R3,Inventories,20492480000.0000,library map
 COR,189,loans_net,OUT,,,,,,,,0001140859-25-000131,,,,not a bank
 COR,189,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,"Net income attributable to Cencora, Inc.",1554169000.0000,library map

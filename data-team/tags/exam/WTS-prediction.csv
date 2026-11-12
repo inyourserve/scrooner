@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WTS,620,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Accounts payable,182200000.0000,library map
 WTS,620,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,"Trade accounts receivable, less reserve allowances of $12.5 million at December 31, 2025 and $11.9 million at December 31, 2024",294000000.0000,library map
-WTS,620,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-018541,,,,note-sourced default tag (no face line)
+WTS,620,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-018541,,,20600000.0000,note fact present in the filing (FSN value)
 WTS,620,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-018541,R2,NET INCOME PER SHARE,10.1700,library map
 WTS,620,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,"Additions to property, plant and equipment",45700000.0000,library map
 WTS,620,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Cash and cash equivalents,405500000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UBSI,898,accounts_payable,not_presented,,,,,,,,0001193125-26-081470,,,,no face line
 UBSI,898,accounts_receivable,not_presented,,,,,,,,0001193125-26-081470,,,,no face line
-UBSI,898,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-081470,,,,note-sourced default tag (no face line)
+UBSI,898,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-081470,,,9363000.0000,note fact present in the filing (FSN value)
 UBSI,898,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-081470,R4,Basic,3.2800,library map
 UBSI,898,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-081470,R8,Purchases of bank premises and equipment,17714000.0000,library map
 UBSI,898,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-081470,,,,no face line

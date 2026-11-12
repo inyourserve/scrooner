@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 NBIX,564,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0000914475-26-000007,R3,Accounts payable and accrued liabilities,674300000.0000,combined line (library or label demote)
 NBIX,564,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000914475-26-000007,R3,Accounts receivable,686800000.0000,library map
-NBIX,564,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000914475-26-000007,,,,note-sourced default tag (no face line)
+NBIX,564,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000914475-26-000007,,,4100000.0000,note fact present in the filing (FSN value)
 NBIX,564,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000914475-26-000007,R5,"Earnings per share, basic (in USD per share)",4.8100,library map
 NBIX,564,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000914475-26-000007,R7,Capital expenditures,34000000.0000,library map
 NBIX,564,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000914475-26-000007,R3,Cash and cash equivalents,713000000.0000,library map
@@ -21,13 +21,13 @@ NBIX,564,deposits,OUT,,,,,,,,0000914475-26-000007,,,,not a bank
 NBIX,564,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-5,N,,sec_api,0000914475-26-000007,R7,Depreciation,26000000.0000,printed face components (duration sum; total_debt founder sum)
 NBIX,564,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000914475-26-000007,R5,"Earnings per share, diluted (in USD per share)",4.6700,library map
 NBIX,564,dividends_paid,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
-NBIX,564,dividends_per_share,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
+NBIX,564,dividends_per_share,not_presented,,,,,,,,0000914475-26-000007,,,,no face line and no note fact
 NBIX,564,goodwill,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
 NBIX,564,gross_profit,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
 NBIX,564,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000914475-26-000007,R5,Income before provision for income taxes,705400000.0000,library map
 NBIX,564,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000914475-26-000007,R5,Provision for income taxes,226800000.0000,library map
 NBIX,564,interest_expense,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
-NBIX,564,interest_income,not_presented,,,,,,,,0000914475-26-000007,,,,no face line
+NBIX,564,interest_income,not_presented,,,,,,,,0000914475-26-000007,,,,no face line and no note fact
 NBIX,564,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000914475-26-000007,R3,Inventory,69000000.0000,library map
 NBIX,564,loans_net,OUT,,,,,,,,0000914475-26-000007,,,,not a bank
 NBIX,564,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000914475-26-000007,R5,Net income,478600000.0000,library map

@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 JKHY,660,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000779152-26-000067,R3,Accounts payable,34935000.0000,library map
 JKHY,660,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000779152-26-000067,R3,"Receivables, net",349111000.0000,library map
-JKHY,660,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000779152-26-000067,,,,note-sourced default tag (no face line)
+JKHY,660,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0000779152-26-000067,,,171138000.0000,note fact present in the filing (FSN value)
 JKHY,660,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000779152-26-000067,R2,Basic earnings per share,7.0000,library map
 JKHY,660,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000779152-26-000067,R5,Capital expenditures,67103000.0000,library map
 JKHY,660,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0000779152-26-000067,R3,Cash and cash equivalents,12056000.0000,combined line (library or label demote)
 JKHY,660,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000779152-26-000067,R5,Net cash from financing activities,-574119000.0000,library map
 JKHY,660,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000779152-26-000067,R5,Net cash from investing activities,-277738000.0000,library map
-JKHY,660,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000779152-26-000067,,,,note-sourced default tag (no face line)
-JKHY,660,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000779152-26-000067,,,,note-sourced default tag (no face line)
+JKHY,660,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000779152-26-000067,,,38868000.0000,note fact present in the filing (FSN value)
+JKHY,660,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000779152-26-000067,,,4606000.0000,note fact present in the filing (FSN value)
 JKHY,660,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000779152-26-000067,R5,Change in accounts payable,-1431000.0000,library map
 JKHY,660,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000779152-26-000067,R5,Change in receivables,29268000.0000,library map
 JKHY,660,cf_inventory_change,not_presented,,,,,,,,0000779152-26-000067,,,,no face line

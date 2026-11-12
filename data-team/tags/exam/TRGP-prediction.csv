@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TRGP,200,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-059296,R2,Accounts payable,1873000000.0000,library map
 TRGP,200,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-059296,R2,"Trade receivables, net of allowances of $0.7 million and $2.5 million as of December 31, 2025 and 2024",1474600000.0000,library map
-TRGP,200,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-059296,,,,note-sourced default tag (no face line)
+TRGP,200,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-059296,,,326000000.0000,note fact present in the filing (FSN value)
 TRGP,200,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-059296,R4,Net income (loss) per common share - basic,8.5200,library map
 TRGP,200,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-059296,R6,"Outlays for property, plant and equipment",3333300000.0000,library map
 TRGP,200,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-059296,R2,Cash and cash equivalents,166100000.0000,library map
 TRGP,200,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-059296,R6,Net cash provided by (used in) financing activities,-266600000.0000,library map
 TRGP,200,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-059296,R6,Net cash provided by (used in) investing activities,-3642000000.0000,library map
-TRGP,200,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-059296,,,,note-sourced default tag (no face line)
-TRGP,200,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-059296,,,,note-sourced default tag (no face line)
+TRGP,200,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-059296,,,24300000.0000,note fact present in the filing (FSN value)
+TRGP,200,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001193125-26-059296,,,793300000.0000,note fact present in the filing (FSN value)
 TRGP,200,cf_ap_change,not_presented,,,,,,,,0001193125-26-059296,,,,no face line
 TRGP,200,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,-,-5,N,,sec_api,0001193125-26-059296,R6,Receivables and other assets,-110800000.0000,combined line (library or label demote)
 TRGP,200,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001193125-26-059296,R6,Inventories,89500000.0000,library map
@@ -27,7 +27,7 @@ TRGP,200,gross_profit,not_presented,,,,,,,,0001193125-26-059296,,,,no face line
 TRGP,200,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-059296,R4,Income (loss) before income taxes,2486400000.0000,library map
 TRGP,200,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-059296,R4,Income tax (expense) benefit,529700000.0000,library map
 TRGP,200,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001193125-26-059296,R4,"Interest expense, net",-852800000.0000,combined line (library or label demote)
-TRGP,200,interest_income,not_presented,,,,,,,,0001193125-26-059296,,,,no face line
+TRGP,200,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0001193125-26-059296,R4,"Interest expense, net",-852800000.0000,interest income only inside a net/other face line between OI and pretax
 TRGP,200,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-059296,R2,Inventories,429300000.0000,library map
 TRGP,200,loans_net,OUT,,,,,,,,0001193125-26-059296,,,,not a bank
 TRGP,200,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059296,R4,Net income (loss) attributable to Targa Resources Corp.,1923000000.0000,library map

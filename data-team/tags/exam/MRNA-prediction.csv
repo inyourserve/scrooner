@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MRNA,145,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001682852-26-000033,R3,Accounts payable,317000000.0000,library map
 MRNA,145,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001682852-26-000033,R3,"Accounts receivable, net",184000000.0000,library map
-MRNA,145,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001682852-26-000033,,,,note-sourced default tag (no face line)
+MRNA,145,amortization_of_intangibles,not_presented,,,,,,,,0001682852-26-000033,,,,no face line and no note fact
 MRNA,145,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001682852-26-000033,R5,Basic (in usd per share),-7.2600,library map
 MRNA,145,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001682852-26-000033,R8,"Purchases of property, plant and equipment",192000000.0000,library map
 MRNA,145,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001682852-26-000033,R3,Cash and cash equivalents,2595000000.0000,library map
@@ -21,7 +21,7 @@ MRNA,145,deposits,OUT,,,,,,,,0001682852-26-000033,,,,not a bank
 MRNA,145,depreciation_and_amortization,not_presented,,,,,,,,0001682852-26-000033,,,,no face line
 MRNA,145,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001682852-26-000033,R5,Diluted (in usd per share),-7.2600,library map
 MRNA,145,dividends_paid,not_presented,,,,,,,,0001682852-26-000033,,,,no face line
-MRNA,145,dividends_per_share,not_presented,,,,,,,,0001682852-26-000033,,,,no face line
+MRNA,145,dividends_per_share,not_presented,,,,,,,,0001682852-26-000033,,,,no face line and no note fact
 MRNA,145,goodwill,not_presented,,,,,,,,0001682852-26-000033,,,,no face line
 MRNA,145,gross_profit,not_presented,,,,,,,,0001682852-26-000033,,,,no face line
 MRNA,145,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001682852-26-000033,R5,Loss before income taxes,-2768000000.0000,library map

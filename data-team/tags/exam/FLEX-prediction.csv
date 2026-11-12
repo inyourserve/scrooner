@@ -7,8 +7,8 @@ FLEX,317,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6
 FLEX,317,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000866374-26-000012,R3,Cash and cash equivalents,2389000000.0000,library map
 FLEX,317,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000866374-26-000012,R8,Net cash (used in) provided by financing activities,-924000000.0000,library map
 FLEX,317,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000866374-26-000012,R8,Net cash used in investing activities,-672000000.0000,library map
-FLEX,317,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000866374-26-000012,,,,note-sourced default tag (no face line)
-FLEX,317,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000866374-26-000012,,,,note-sourced default tag (no face line)
+FLEX,317,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000866374-26-000012,,,323000000.0000,note fact present in the filing (FSN value)
+FLEX,317,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000866374-26-000012,,,212000000.0000,note fact present in the filing (FSN value)
 FLEX,317,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000866374-26-000012,R8,Accounts payable,2858000000.0000,library map
 FLEX,317,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000866374-26-000012,R8,Accounts receivable,979000000.0000,library map
 FLEX,317,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000866374-26-000012,R8,Inventories,742000000.0000,library map
@@ -21,13 +21,13 @@ FLEX,317,deposits,OUT,,,,,,,,0000866374-26-000012,,,,not a bank
 FLEX,317,depreciation_and_amortization,not_presented,,,,,,,,0000866374-26-000012,,,,single component only
 FLEX,317,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000866374-26-000012,R5,Diluted earnings per share attributable to the shareholders of Flex Ltd (in dollars per share),2.3300,library map
 FLEX,317,dividends_paid,not_presented,,,,,,,,0000866374-26-000012,,,,no face line
-FLEX,317,dividends_per_share,not_presented,,,,,,,,0000866374-26-000012,,,,no face line
+FLEX,317,dividends_per_share,not_presented,,,,,,,,0000866374-26-000012,,,,no face line and no note fact
 FLEX,317,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000866374-26-000012,R3,Goodwill,1369000000.0000,library map
 FLEX,317,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,Gross profit,2567000000.0000,library map
 FLEX,317,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,Income from continuing operations before income taxes,1143000000.0000,library map
 FLEX,317,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000866374-26-000012,R5,Provision for (benefit from) income taxes,263000000.0000,library map
 FLEX,317,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,Interest expense,215000000.0000,library map
-FLEX,317,interest_income,not_presented,,,,,,,,0000866374-26-000012,,,,no face line
+FLEX,317,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0000866374-26-000012,,,51000000.0000,note fact present in the filing (FSN value)
 FLEX,317,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000866374-26-000012,R3,Inventories,5845000000.0000,library map
 FLEX,317,loans_net,OUT,,,,,,,,0000866374-26-000012,,,,not a bank
 FLEX,317,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,Net income attributable to Flex Ltd.,880000000.0000,library map

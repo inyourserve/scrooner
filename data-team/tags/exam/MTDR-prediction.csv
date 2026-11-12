@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MTDR,848,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001520006-26-000002,R3,Accounts payable and accrued liabilities,540620000.0000,combined line (library or label demote)
 MTDR,848,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001520006-26-000002,R3,Oil and natural gas revenues,286158000.0000,library map
-MTDR,848,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001520006-26-000002,,,,note-sourced default tag (no face line)
+MTDR,848,amortization_of_intangibles,not_presented,,,,,,,,0001520006-26-000002,,,,no face line and no note fact
 MTDR,848,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001520006-26-000002,R5,Basic (usd per share),6.1000,library map
 MTDR,848,capex,combined,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001520006-26-000002,R7,Expenditures for other property and equipment,4246000.0000,combined line (library or label demote)
 MTDR,848,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001520006-26-000002,R3,Cash,15314000.0000,library map
 MTDR,848,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001520006-26-000002,R7,Net cash (used in) provided by financing activities,-282598000.0000,library map
 MTDR,848,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001520006-26-000002,R7,Net cash used in investing activities,-2157682000.0000,library map
-MTDR,848,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001520006-26-000002,,,,note-sourced default tag (no face line)
-MTDR,848,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001520006-26-000002,,,,note-sourced default tag (no face line)
+MTDR,848,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001520006-26-000002,,,50500000.0000,note fact present in the filing (FSN value)
+MTDR,848,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001520006-26-000002,,,196368000.0000,note fact present in the filing (FSN value)
 MTDR,848,cf_ap_change,not_presented,,,,,,,,0001520006-26-000002,,,,no face line
 MTDR,848,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001520006-26-000002,R7,Accounts receivable,-114285000.0000,library map
 MTDR,848,cf_inventory_change,not_presented,,,,,,,,0001520006-26-000002,,,,no face line
@@ -27,7 +27,7 @@ MTDR,848,gross_profit,not_presented,,,,,,,,0001520006-26-000002,,,,no face line
 MTDR,848,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001520006-26-000002,R5,Income before income taxes,1033444000.0000,library map
 MTDR,848,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001520006-26-000002,R5,Total income tax provision,172675000.0000,library map
 MTDR,848,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001520006-26-000002,R5,Interest expense,208520000.0000,library map
-MTDR,848,interest_income,not_presented,,,,,,,,0001520006-26-000002,,,,no face line
+MTDR,848,interest_income,not_presented,,,,,,,,0001520006-26-000002,,,,no face line and no note fact
 MTDR,848,inventory,not_presented,,,,,,,,0001520006-26-000002,,,,no face line
 MTDR,848,loans_net,OUT,,,,,,,,0001520006-26-000002,,,,not a bank
 MTDR,848,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001520006-26-000002,R5,Net income attributable to Matador Resources Company shareholders,759221000.0000,library map

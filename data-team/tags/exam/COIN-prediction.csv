@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 COIN,256,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001679788-26-000015,R3,Accounts payable,117605000.0000,library map
 COIN,256,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001679788-26-000015,R3,"Accounts receivable, net",307119000.0000,library map
-COIN,256,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001679788-26-000015,,,,note-sourced default tag (no face line)
+COIN,256,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001679788-26-000015,,,67126000.0000,note fact present in the filing (FSN value)
 COIN,256,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001679788-26-000015,R5,Basic (in dollars per share),4.8500,library map
 COIN,256,capex,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
 COIN,256,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001679788-26-000015,R3,Cash and cash equivalents,11285452000.0000,library map
 COIN,256,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001679788-26-000015,R9,Net cash provided by (used in) financing activities,740282000.0000,library map
 COIN,256,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001679788-26-000015,R9,Net cash used in investing activities,-2049550000.0000,library map
-COIN,256,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001679788-26-000015,,,,note-sourced default tag (no face line)
-COIN,256,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001679788-26-000015,,,,note-sourced default tag (no face line)
+COIN,256,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001679788-26-000015,,,164868000.0000,note fact present in the filing (FSN value)
+COIN,256,cash_paid_for_interest,not_presented,,,,,,,,0001679788-26-000015,,,,no face line and no note fact
 COIN,256,cf_ap_change,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
 COIN,256,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001679788-26-000015,R9,"Accounts receivable, net",1983000.0000,library map
 COIN,256,cf_inventory_change,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
@@ -21,20 +21,20 @@ COIN,256,deposits,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001679788-26-000015,R9,Depreciation and amortization,157067000.0000,library map
 COIN,256,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001679788-26-000015,R5,Diluted (in dollars per share),4.4500,library map
 COIN,256,dividends_paid,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
-COIN,256,dividends_per_share,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
+COIN,256,dividends_per_share,not_presented,,,,,,,,0001679788-26-000015,,,,no face line and no note fact
 COIN,256,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001679788-26-000015,R3,Goodwill,4168967000.0000,library map
 COIN,256,gross_profit,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
 COIN,256,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Income (loss) before income taxes,1522065000.0000,library map
 COIN,256,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Provision for (benefit from) income taxes,261738000.0000,library map
 COIN,256,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Interest expense,85413000.0000,library map
-COIN,256,interest_income,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
+COIN,256,interest_income,not_presented,,,,,,,,0001679788-26-000015,,,,no face line and no note fact
 COIN,256,inventory,not_presented,,,,,,,,0001679788-26-000015,,,,no face line
 COIN,256,loans_net,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Net income,1260327000.0000,library map
 COIN,256,net_interest_income,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,noninterest_expense,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,noninterest_income,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
-COIN,256,operating_expenses,not_presented,,,,,,,,0001679788-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+COIN,256,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Total operating expenses,5745884000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 COIN,256,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Operating income (loss),1435441000.0000,library map
 COIN,256,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,"Other income, net",700894000.0000,library map
 COIN,256,ppe_net,not_presented,,,,,,,,0001679788-26-000015,,,,no face line

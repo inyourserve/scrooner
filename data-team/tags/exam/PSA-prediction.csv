@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PSA,228,accounts_payable,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,accounts_receivable,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
-PSA,228,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-007696,,,,note-sourced default tag (no face line)
+PSA,228,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-007696,,,94000000.0000,note fact present in the filing (FSN value)
 PSA,228,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-007696,R5,Basic (in USD per share),9.0400,library map
 PSA,228,capex,combined,us-gaap:PaymentsToDevelopRealEstateAssets,CF,+,-3,Y,DevelopmentAndExpansionOfRealEstateFacilities,sec_api,0001628280-26-007696,R9,Development and expansion of real estate facilities,310737000.0000,combined line (library or label demote)
 PSA,228,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-007696,R3,Cash and equivalents,318095000.0000,library map
@@ -27,14 +27,14 @@ PSA,228,gross_profit,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-007696,R5,Income before income taxes,1789804000.0000,library map
 PSA,228,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001628280-26-007696,R5,Income tax (provision) benefit,-7228000.0000,library map
 PSA,228,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001628280-26-007696,R5,Interest expense,304495000.0000,library map
-PSA,228,interest_income,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
+PSA,228,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001628280-26-007696,R5,Interest and other income,63099000.0000,interest income only inside a net/other face line between OI and pretax
 PSA,228,inventory,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,loans_net,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
 PSA,228,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-007696,R5,Net income allocable to Public Storage shareholders,1784348000.0000,library map
 PSA,228,net_interest_income,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
 PSA,228,noninterest_expense,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
 PSA,228,noninterest_income,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
-PSA,228,operating_expenses,not_presented,,,,,,,,0001628280-26-007696,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+PSA,228,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-007696,R5,Total expenses,2892542000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 PSA,228,operating_income,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,other_income_expense_net,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,ppe_net,not_presented,,,,,,,,0001628280-26-007696,,,,no face line

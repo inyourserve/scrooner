@@ -7,7 +7,7 @@ PB,787,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N
 PB,787,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-077437,,,,no face line
 PB,787,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-077437,R8,Net cash used in financing activities,-1548166000.0000,library map
 PB,787,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001193125-26-077437,R8,Net cash provided by investing activities,773914000.0000,library map
-PB,787,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-077437,,,,note-sourced default tag (no face line)
+PB,787,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-077437,,,,no face line and no note fact
 PB,787,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-077437,R8,Interest paid,499828000.0000,library map
 PB,787,cf_ap_change,not_presented,,,,,,,,0001193125-26-077437,,,,no face line
 PB,787,cf_ar_change,not_presented,,,,,,,,0001193125-26-077437,,,,no face line
@@ -21,7 +21,7 @@ PB,787,deposits,mapped,us-gaap:Deposits,BS,+,-3,N,,sec_api,0001193125-26-077437,
 PB,787,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001193125-26-077437,R8,Depreciation and core deposit intangibles amortization,34116000.0000,library map
 PB,787,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-077437,R4,Diluted,5.7200,library map
 PB,787,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001193125-26-077437,R8,Payments of cash dividends,221437000.0000,library map
-PB,787,dividends_per_share,not_presented,,,,,,,,0001193125-26-077437,,,,no face line
+PB,787,dividends_per_share,not_presented,,,,,,,,0001193125-26-077437,,,,no face line and no note fact
 PB,787,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-077437,R2,Goodwill,3503127000.0000,library map
 PB,787,gross_profit,OUT,,,,,,,,0001193125-26-077437,,,,sector template (bank/insurer)
 PB,787,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-077437,R4,INCOME BEFORE INCOME TAXES,693580000.0000,library map
@@ -50,5 +50,5 @@ PB,787,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-07743
 PB,787,total_debt,combined,us-gaap:OtherBorrowings,BS,+,-3,N,,sec_api,0001193125-26-077437,R2,Other borrowings,1950000000.0000,combined line (library or label demote)
 PB,787,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001193125-26-077437,R4,Total interest income,1570323000.0000,bank template tag
 PB,787,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-077437,R2,Total liabilities,30847285000.0000,library map
-PB,787,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-077437,,,,note-sourced default tag (no face line)
-PB,787,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-077437,,,,note-sourced default tag (no face line)
+PB,787,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-077437,,,94917000.0000,note fact present in the filing (FSN value)
+PB,787,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-077437,,,94917000.0000,note fact present in the filing (FSN value)

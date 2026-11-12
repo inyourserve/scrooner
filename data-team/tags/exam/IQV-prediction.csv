@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IQV,260,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-008322,R6,Accounts payable and accrued expenses,3751000000.0000,combined line (library or label demote)
 IQV,260,accounts_receivable,not_presented,,,,,,,,0001628280-26-008322,,,,no face line
-IQV,260,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008322,,,,note-sourced default tag (no face line)
+IQV,260,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-008322,,,984000000.0000,note fact present in the filing (FSN value)
 IQV,260,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008322,R3,Basic (in dollars per share),7.9100,library map
 IQV,260,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001628280-26-008322,R8,"Acquisition of property, equipment and software",603000000.0000,library map
 IQV,260,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-008322,R6,Cash and cash equivalents,1980000000.0000,library map
 IQV,260,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-008322,R8,Net cash used in financing activities,-150000000.0000,library map
 IQV,260,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-008322,R8,Net cash used in investing activities,-2305000000.0000,library map
-IQV,260,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008322,,,,note-sourced default tag (no face line)
-IQV,260,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008322,,,,note-sourced default tag (no face line)
+IQV,260,cash_paid_for_income_taxes,not_presented,,,,,,,,0001628280-26-008322,,,,no face line and no note fact
+IQV,260,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-008322,,,647000000.0000,note fact present in the filing (FSN value)
 IQV,260,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-008322,R8,Accounts payable and accrued expenses,-96000000.0000,combined line (library or label demote)
 IQV,260,cf_ar_change,combined,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0001628280-26-008322,R8,Accounts receivable and unbilled services,-60000000.0000,combined line (library or label demote)
 IQV,260,cf_inventory_change,not_presented,,,,,,,,0001628280-26-008322,,,,no face line
@@ -21,7 +21,7 @@ IQV,260,deposits,OUT,,,,,,,,0001628280-26-008322,,,,not a bank
 IQV,260,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-008322,R8,Depreciation and amortization,1144000000.0000,library map
 IQV,260,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008322,R3,Diluted (in dollars per share),7.8400,library map
 IQV,260,dividends_paid,not_presented,,,,,,,,0001628280-26-008322,,,,no face line
-IQV,260,dividends_per_share,not_presented,,,,,,,,0001628280-26-008322,,,,no face line
+IQV,260,dividends_per_share,not_presented,,,,,,,,0001628280-26-008322,,,,no face line and no note fact
 IQV,260,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-008322,R6,Goodwill,16616000000.0000,library map
 IQV,260,gross_profit,not_presented,,,,,,,,0001628280-26-008322,,,,no face line
 IQV,260,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001628280-26-008322,R3,Income before income taxes and equity in earnings of unconsolidated affiliates,1591000000.0000,library map

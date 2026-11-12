@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 INCY,420,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000879169-26-000010,R3,Accounts payable,209938000.0000,library map
 INCY,420,accounts_receivable,not_presented,,,,,,,,0000879169-26-000010,,,,no face line
-INCY,420,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000879169-26-000010,,,,note-sourced default tag (no face line)
+INCY,420,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000879169-26-000010,,,26700000.0000,note fact present in the filing (FSN value)
 INCY,420,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000879169-26-000010,R5,Basic (in dollars per share),6.5900,library map
 INCY,420,capex,not_presented,,,,,,,,0000879169-26-000010,,,,single component only
 INCY,420,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000879169-26-000010,R3,Cash and cash equivalents,3097817000.0000,library map
 INCY,420,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000879169-26-000010,R9,Net cash provided by (used in) financing activities,101039000.0000,library map
 INCY,420,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000879169-26-000010,R9,Net cash (used in) provided by investing activities,-102610000.0000,library map
-INCY,420,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000879169-26-000010,,,,note-sourced default tag (no face line)
-INCY,420,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000879169-26-000010,,,,note-sourced default tag (no face line)
+INCY,420,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000879169-26-000010,,,212178000.0000,note fact present in the filing (FSN value)
+INCY,420,cash_paid_for_interest,not_presented,,,,,,,,0000879169-26-000010,,,,no face line and no note fact
 INCY,420,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000879169-26-000010,R9,Accounts payable,6562000.0000,library map
 INCY,420,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000879169-26-000010,R9,Accounts receivable,170772000.0000,library map
 INCY,420,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000879169-26-000010,R9,Inventory,58513000.0000,library map
@@ -21,7 +21,7 @@ INCY,420,deposits,OUT,,,,,,,,0000879169-26-000010,,,,not a bank
 INCY,420,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000879169-26-000010,R9,Depreciation and amortization,93286000.0000,library map
 INCY,420,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000879169-26-000010,R5,Diluted (in dollars per share),6.4100,library map
 INCY,420,dividends_paid,not_presented,,,,,,,,0000879169-26-000010,,,,no face line
-INCY,420,dividends_per_share,not_presented,,,,,,,,0000879169-26-000010,,,,no face line
+INCY,420,dividends_per_share,not_presented,,,,,,,,0000879169-26-000010,,,,no face line and no note fact
 INCY,420,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000879169-26-000010,R3,Goodwill,133000000.0000,library map
 INCY,420,gross_profit,not_presented,,,,,,,,0000879169-26-000010,,,,no face line
 INCY,420,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000879169-26-000010,R5,Income before provision for income taxes,1664451000.0000,library map

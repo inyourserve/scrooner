@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SUN,986,accounts_payable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,accounts_receivable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001552275-26-000021,,,,note-sourced default tag (no face line)
+SUN,986,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001552275-26-000021,,,45000000.0000,note fact present in the filing (FSN value)
 SUN,986,basic_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Capital expenditures,577000000.0000,combined line (library or label demote)
 SUN,986,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Cash and cash equivalents,891000000.0000,library map
 SUN,986,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) financing activities,2412000000.0000,library map
 SUN,986,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) investing activities,-2807000000.0000,library map
-SUN,986,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001552275-26-000021,,,,note-sourced default tag (no face line)
-SUN,986,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001552275-26-000021,,,,note-sourced default tag (no face line)
+SUN,986,cash_paid_for_income_taxes,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
+SUN,986,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001552275-26-000021,,,434000000.0000,note fact present in the filing (FSN value)
 SUN,986,cf_ap_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,cf_ar_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,cf_inventory_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
@@ -21,13 +21,13 @@ SUN,986,deposits,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
 SUN,986,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,"Depreciation, amortization and accretion",688000000.0000,combined line (library or label demote)
 SUN,986,diluted_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,dividends_paid,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,dividends_per_share,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
+SUN,986,dividends_per_share,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
 SUN,986,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Goodwill,3026000000.0000,library map
 SUN,986,gross_profit,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,income_before_tax,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
 SUN,986,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Income tax expense,62000000.0000,library map
 SUN,986,interest_expense,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,"Interest expense, net",541000000.0000,combined line (library or label demote)
-SUN,986,interest_income,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
+SUN,986,interest_income,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
 SUN,986,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Inventories, net",2383000000.0000,library map
 SUN,986,loans_net,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
 SUN,986,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,NET INCOME ATTRIBUTABLE TO COMMON UNITS,527000000.0000,library map
@@ -50,5 +50,5 @@ SUN,986,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001552275-26-0000
 SUN,986,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Current maturities of long-term debt,17000000.0000,printed face components (duration sum; total_debt founder sum)
 SUN,986,total_interest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
 SUN,986,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total liabilities,20353000000.0000,library map
-SUN,986,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001552275-26-000021,,,,note-sourced default tag (no face line)
-SUN,986,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001552275-26-000021,,,,note-sourced default tag (no face line)
+SUN,986,weighted_basic_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
+SUN,986,weighted_diluted_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact

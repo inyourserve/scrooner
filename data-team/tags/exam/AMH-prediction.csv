@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AMH,645,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001562401-26-000010,R3,Accounts payable and accrued expenses,436879000.0000,combined line (library or label demote)
 AMH,645,accounts_receivable,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
-AMH,645,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001562401-26-000010,,,,note-sourced default tag (no face line)
+AMH,645,amortization_of_intangibles,not_presented,,,,,,,,0001562401-26-000010,,,,no face line and no note fact
 AMH,645,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001562401-26-000010,R5,Basic (in dollars per share),1.1800,library map
 AMH,645,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0001562401-26-000010,R9,Renovations to single-family properties,40645000.0000,combined line (library or label demote)
 AMH,645,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001562401-26-000010,R3,Cash and cash equivalents,108516000.0000,library map
 AMH,645,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001562401-26-000010,R9,Net cash (used for) provided by financing activities,-655686000.0000,library map
 AMH,645,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001562401-26-000010,R9,Net cash used for investing activities,-328167000.0000,library map
-AMH,645,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001562401-26-000010,,,,note-sourced default tag (no face line)
+AMH,645,cash_paid_for_income_taxes,not_presented,,,,,,,,0001562401-26-000010,,,,no face line and no note fact
 AMH,645,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001562401-26-000010,R9,"Cash payments for interest, net of amounts capitalized",172220000.0000,library map
 AMH,645,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001562401-26-000010,R9,Accounts payable and accrued expenses,18160000.0000,combined line (library or label demote)
 AMH,645,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001562401-26-000010,R9,Rent and other receivables,-1313000.0000,combined line (library or label demote)
@@ -27,14 +27,14 @@ AMH,645,gross_profit,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,income_before_tax,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,income_tax_expense,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001562401-26-000010,R5,Interest expense,185198000.0000,library map
-AMH,645,interest_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
+AMH,645,interest_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line and no note fact
 AMH,645,inventory,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,loans_net,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
 AMH,645,net_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,net_interest_income,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
 AMH,645,noninterest_expense,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
 AMH,645,noninterest_income,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
-AMH,645,operating_expenses,not_presented,,,,,,,,0001562401-26-000010,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+AMH,645,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingExpenses,sec_api,0001562401-26-000010,R5,Total expenses,1583566000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 AMH,645,operating_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0001562401-26-000010,R5,"Other income and expense, net",15660000.0000,library map
 AMH,645,ppe_net,not_presented,,,,,,,,0001562401-26-000010,,,,no face line

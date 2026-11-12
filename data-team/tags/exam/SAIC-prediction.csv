@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SAIC,976,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001571123-26-000029,R5,Accounts payable,500000000.0000,library map
 SAIC,976,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001571123-26-000029,R5,"Receivables, net",853000000.0000,library map
-SAIC,976,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001571123-26-000029,,,,note-sourced default tag (no face line)
+SAIC,976,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001571123-26-000029,,,119000000.0000,note fact present in the filing (FSN value)
 SAIC,976,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001571123-26-000029,R3,Basic (in dollars per share),7.7300,library map
 SAIC,976,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001571123-26-000029,R9,"Expenditures for property, plant, and equipment",32000000.0000,library map
 SAIC,976,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001571123-26-000029,R5,Cash and cash equivalents,182000000.0000,library map
 SAIC,976,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001571123-26-000029,R9,Net cash used in financing activities,-235000000.0000,library map
 SAIC,976,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001571123-26-000029,R9,Net cash (used in) provided by investing activities,-248000000.0000,library map
-SAIC,976,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001571123-26-000029,,,,note-sourced default tag (no face line)
+SAIC,976,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001571123-26-000029,,,22000000.0000,note fact present in the filing (FSN value)
 SAIC,976,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001571123-26-000029,R9,Cash paid for interest,101000000.0000,library map
 SAIC,976,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001571123-26-000029,R9,Accounts payable and other accrued liabilities,-101000000.0000,combined line (library or label demote)
 SAIC,976,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001571123-26-000029,R9,Receivables,-161000000.0000,library map
@@ -27,7 +27,7 @@ SAIC,976,gross_profit,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
 SAIC,976,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,Income before income taxes,387000000.0000,library map
 SAIC,976,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,Provision for income taxes,29000000.0000,library map
 SAIC,976,interest_expense,combined,us-gaap:InterestExpenseOperating,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,"Interest expense, net",128000000.0000,combined line (library or label demote)
-SAIC,976,interest_income,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
+SAIC,976,interest_income,combined,us-gaap:InterestExpenseOperating,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,"Interest expense, net",128000000.0000,interest income only inside a net/other face line between OI and pretax
 SAIC,976,inventory,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
 SAIC,976,loans_net,OUT,,,,,,,,0001571123-26-000029,,,,not a bank
 SAIC,976,net_income,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
@@ -50,5 +50,5 @@ SAIC,976,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001571123-26-000
 SAIC,976,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001571123-26-000029,R5,"Debt, current portion",19000000.0000,printed face components (duration sum; total_debt founder sum)
 SAIC,976,total_interest_income,OUT,,,,,,,,0001571123-26-000029,,,,not a bank
 SAIC,976,total_liabilities,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
-SAIC,976,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001571123-26-000029,,,,note-sourced default tag (no face line)
-SAIC,976,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001571123-26-000029,,,,note-sourced default tag (no face line)
+SAIC,976,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001571123-26-000029,,,46300000.0000,note fact present in the filing (FSN value)
+SAIC,976,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001571123-26-000029,,,46500000.0000,note fact present in the filing (FSN value)

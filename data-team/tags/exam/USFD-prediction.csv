@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 USFD,422,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001665918-26-000008,R3,Accounts payable,2447000000.0000,library map
 USFD,422,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001665918-26-000008,R3,"Accounts receivable, less allowances of $30 and $24",2026000000.0000,library map
-USFD,422,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001665918-26-000008,,,,note-sourced default tag (no face line)
+USFD,422,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001665918-26-000008,,,56000000.0000,note fact present in the filing (FSN value)
 USFD,422,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001665918-26-000008,R5,Basic,2.9800,library map
 USFD,422,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001665918-26-000008,R7,Purchases of property and equipment,410000000.0000,library map
 USFD,422,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001665918-26-000008,R3,Cash and cash equivalents,41000000.0000,library map
@@ -21,13 +21,13 @@ USFD,422,deposits,OUT,,,,,,,,0001665918-26-000008,,,,not a bank
 USFD,422,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001665918-26-000008,R7,Depreciation and amortization,462000000.0000,library map
 USFD,422,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001665918-26-000008,R5,Diluted,2.9400,library map
 USFD,422,dividends_paid,not_presented,,,,,,,,0001665918-26-000008,,,,no face line
-USFD,422,dividends_per_share,not_presented,,,,,,,,0001665918-26-000008,,,,no face line
+USFD,422,dividends_per_share,not_presented,,,,,,,,0001665918-26-000008,,,,no face line and no note fact
 USFD,422,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001665918-26-000008,R3,Goodwill,5794000000.0000,library map
 USFD,422,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001665918-26-000008,R5,Gross profit,6864000000.0000,library map
 USFD,422,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001665918-26-000008,R5,Income before income taxes,898000000.0000,library map
 USFD,422,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001665918-26-000008,R5,Income tax provision,222000000.0000,library map
 USFD,422,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001665918-26-000008,R5,Interest expensenet,305000000.0000,library map
-USFD,422,interest_income,not_presented,,,,,,,,0001665918-26-000008,,,,no face line
+USFD,422,interest_income,not_presented,,,,,,,,0001665918-26-000008,,,,no face line and no note fact
 USFD,422,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001665918-26-000008,R3,Inventoriesnet,1711000000.0000,library map
 USFD,422,loans_net,OUT,,,,,,,,0001665918-26-000008,,,,not a bank
 USFD,422,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001665918-26-000008,R5,Net income,676000000.0000,library map

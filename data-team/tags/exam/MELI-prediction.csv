@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MELI,127,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001099590-26-000006,R3,Accounts payable and accrued expenses,4502000000.0000,combined line (library or label demote)
 MELI,127,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001099590-26-000006,R3,"Accounts receivable, net",369000000.0000,library map
-MELI,127,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001099590-26-000006,,,,note-sourced default tag (no face line)
+MELI,127,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001099590-26-000006,,,9000000.0000,note fact present in the filing (FSN value)
 MELI,127,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001099590-26-000006,R5,Basic net income available to shareholders per common share (in dollars per share),39.4000,library map
 MELI,127,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001099590-26-000006,R8,"Investments in property and equipment, intangible assets and intangible assets at fair value",1343000000.0000,library map
 MELI,127,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001099590-26-000006,R3,Cash and cash equivalents,3670000000.0000,library map
@@ -21,7 +21,7 @@ MELI,127,deposits,OUT,,,,,,,,0001099590-26-000006,,,,not a bank
 MELI,127,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001099590-26-000006,R8,Depreciation and amortization,818000000.0000,library map
 MELI,127,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001099590-26-000006,R5,Diluted net income available to shareholders per common share (in dollars per share),39.4000,library map
 MELI,127,dividends_paid,not_presented,,,,,,,,0001099590-26-000006,,,,no face line
-MELI,127,dividends_per_share,not_presented,,,,,,,,0001099590-26-000006,,,,no face line
+MELI,127,dividends_per_share,not_presented,,,,,,,,0001099590-26-000006,,,,no face line and no note fact
 MELI,127,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001099590-26-000006,R3,Goodwill,163000000.0000,library map
 MELI,127,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001099590-26-000006,R5,Gross profit,12858000000.0000,library map
 MELI,127,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001099590-26-000006,R5,Net income before income tax expense and equity in earnings of unconsolidated entity,2842000000.0000,library map

@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 HQY,819,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001428336-26-000010,R3,Accounts payable,12159000.0000,library map
 HQY,819,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001428336-26-000010,R3,"Accounts receivable, net of allowance for doubtful accounts of $924 and $2,070 as of January 31, 2026 and 2025, respectively",123696000.0000,library map
-HQY,819,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001428336-26-000010,,,,note-sourced default tag (no face line)
+HQY,819,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001428336-26-000010,,,152700000.0000,note fact present in the filing (FSN value)
 HQY,819,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001428336-26-000010,R5,Basic (in usd per share),2.5000,library map
 HQY,819,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001428336-26-000010,R9,Purchases of property and equipment,1969000.0000,library map
 HQY,819,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001428336-26-000010,R3,Cash and cash equivalents,318927000.0000,library map
@@ -21,13 +21,13 @@ HQY,819,deposits,OUT,,,,,,,,0001428336-26-000010,,,,not a bank
 HQY,819,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001428336-26-000010,R9,Depreciation and amortization,154657000.0000,library map
 HQY,819,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001428336-26-000010,R5,Diluted (in usd per share),2.4600,library map
 HQY,819,dividends_paid,not_presented,,,,,,,,0001428336-26-000010,,,,no face line
-HQY,819,dividends_per_share,not_presented,,,,,,,,0001428336-26-000010,,,,no face line
+HQY,819,dividends_per_share,not_presented,,,,,,,,0001428336-26-000010,,,,no face line and no note fact
 HQY,819,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001428336-26-000010,R3,Goodwill,1648145000.0000,library map
 HQY,819,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001428336-26-000010,R5,Gross profit,913116000.0000,library map
 HQY,819,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001428336-26-000010,R5,Income before income taxes,277432000.0000,library map
 HQY,819,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001428336-26-000010,R5,Income tax provision,62231000.0000,library map
 HQY,819,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001428336-26-000010,R5,Interest expense,57131000.0000,library map
-HQY,819,interest_income,not_presented,,,,,,,,0001428336-26-000010,,,,no face line
+HQY,819,interest_income,not_presented,,,,,,,,0001428336-26-000010,,,,no face line and no note fact
 HQY,819,inventory,not_presented,,,,,,,,0001428336-26-000010,,,,no face line
 HQY,819,loans_net,OUT,,,,,,,,0001428336-26-000010,,,,not a bank
 HQY,819,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001428336-26-000010,R5,Net income,215201000.0000,library map

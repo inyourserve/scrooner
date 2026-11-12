@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CEG,122,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001868275-26-000032,R5,Accounts payable and accrued expenses,4294000000.0000,combined line (library or label demote)
 CEG,122,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001868275-26-000032,R5,"Accounts receivable, net",4266000000.0000,library map
-CEG,122,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001868275-26-000032,,,,note-sourced default tag (no face line)
+CEG,122,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001868275-26-000032,,,18000000.0000,note fact present in the filing (FSN value)
 CEG,122,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001868275-26-000032,R3,Basic (in dollars per share),7.4000,library map
 CEG,122,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001868275-26-000032,R4,Capital expenditures,2949000000.0000,library map
 CEG,122,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001868275-26-000032,R5,Cash and cash equivalents,3641000000.0000,library map
 CEG,122,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001868275-26-000032,R4,Net cash flows provided by (used in) financing activities,-420000000.0000,library map
 CEG,122,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001868275-26-000032,R4,Net cash flows provided by (used in) investing activities,-3198000000.0000,library map
-CEG,122,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001868275-26-000032,,,,note-sourced default tag (no face line)
-CEG,122,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001868275-26-000032,,,,note-sourced default tag (no face line)
+CEG,122,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001868275-26-000032,,,446000000.0000,note fact present in the filing (FSN value)
+CEG,122,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001868275-26-000032,,,412000000.0000,note fact present in the filing (FSN value)
 CEG,122,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001868275-26-000032,R4,Accounts payable and accrued expenses,316000000.0000,combined line (library or label demote)
 CEG,122,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001868275-26-000032,R4,Accounts receivable,363000000.0000,library map
 CEG,122,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001868275-26-000032,R4,Inventories,134000000.0000,library map
@@ -27,21 +27,21 @@ CEG,122,gross_profit,not_presented,,,,,,,,0001868275-26-000032,,,,no face line
 CEG,122,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,sec_api,0001868275-26-000032,R3,Income (loss) before income taxes,3511000000.0000,library map
 CEG,122,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,Income tax (benefit) expense,1187000000.0000,library map
 CEG,122,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001868275-26-000032,R3,"Interest expense, net",511000000.0000,combined line (library or label demote)
-CEG,122,interest_income,not_presented,,,,,,,,0001868275-26-000032,,,,no face line
+CEG,122,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001868275-26-000032,R3,"Interest expense, net",511000000.0000,interest income only inside a net/other face line between OI and pretax
 CEG,122,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,Y,InventoryNetAbstract,sec_api,0001868275-26-000032,R5,"Inventories, net",1736000000.0000,library map
 CEG,122,loans_net,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,Net income (loss) attributable to membership interest,2319000000.0000,library map
 CEG,122,net_interest_income,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,noninterest_expense,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,noninterest_income,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
-CEG,122,operating_expenses,not_presented,,,,,,,,0001868275-26-000032,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CEG,122,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,Total operating expenses,22447000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 CEG,122,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,Operating income (loss),3086000000.0000,library map
 CEG,122,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,"Other, net",936000000.0000,library map
 CEG,122,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001868275-26-000032,R5,"Property, plant, and equipment (net of accumulated depreciation and amortization of $19,072 and $18,088, respectively)",22474000000.0000,library map
 CEG,122,provision_for_credit_losses,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,research_and_development,not_presented,,,,,,,,0001868275-26-000032,,,,no face line
 CEG,122,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-6,Y,RevenuesAbstract,sec_api,0001868275-26-000032,R3,Operating revenues,25533000000.0000,library map
-CEG,122,sbc,not_presented,,,,,,,,0001868275-26-000032,,,,no face line
+CEG,122,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001868275-26-000032,,,385000000.0000,note fact present in the filing (FSN value)
 CEG,122,sga_expense,not_presented,,,,,,,,0001868275-26-000032,,,,no face line
 CEG,122,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001868275-26-000032,R4,Repurchases of common stock,400000000.0000,library map
 CEG,122,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001868275-26-000032,R6,"Common stock, shares outstanding (in shares)",312000000.0000,library map

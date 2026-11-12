@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SYRE,861,accounts_payable,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,accounts_receivable,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
-SYRE,861,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001636282-26-000020,,,,note-sourced default tag (no face line)
+SYRE,861,amortization_of_intangibles,not_presented,,,,,,,,0001636282-26-000020,,,,no face line and no note fact
 SYRE,861,basic_eps,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,capex,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001636282-26-000020,R3,Cash and cash equivalents,85721000.0000,library map
 SYRE,861,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001636282-26-000020,R9,Net cash provided by financing activities,309025000.0000,library map
 SYRE,861,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001636282-26-000020,R9,Net cash (used in) provided by investing activities,-143475000.0000,library map
-SYRE,861,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001636282-26-000020,,,,note-sourced default tag (no face line)
-SYRE,861,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001636282-26-000020,,,,note-sourced default tag (no face line)
+SYRE,861,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0001636282-26-000020,,,-15000.0000,note fact present in the filing (FSN value)
+SYRE,861,cash_paid_for_interest,not_presented,,,,,,,,0001636282-26-000020,,,,no face line and no note fact
 SYRE,861,cf_ap_change,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,0,-3,N,,sec_api,0001636282-26-000020,R9,Development receivables,0.0000,library map
 SYRE,861,cf_inventory_change,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
@@ -21,20 +21,20 @@ SYRE,861,deposits,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
 SYRE,861,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,0,-3,N,,sec_api,0001636282-26-000020,R9,Depreciation and amortization,0.0000,library map
 SYRE,861,diluted_eps,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,dividends_paid,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
-SYRE,861,dividends_per_share,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
+SYRE,861,dividends_per_share,not_presented,,,,,,,,0001636282-26-000020,,,,no face line and no note fact
 SYRE,861,goodwill,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,gross_profit,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001636282-26-000020,R5,Loss before income tax expense,-155218000.0000,library map
 SYRE,861,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001636282-26-000020,R5,Income tax benefit (expense),-15000.0000,library map
 SYRE,861,interest_expense,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
-SYRE,861,interest_income,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
+SYRE,861,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-3,N,,sec_api,0001636282-26-000020,R5,Interest income,24885000.0000,interest income only inside a net/other face line between OI and pretax
 SYRE,861,inventory,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,loans_net,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
 SYRE,861,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001636282-26-000020,R5,Net loss,-155203000.0000,library map
 SYRE,861,net_interest_income,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
 SYRE,861,noninterest_expense,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
 SYRE,861,noninterest_income,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
-SYRE,861,operating_expenses,not_presented,,,,,,,,0001636282-26-000020,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+SYRE,861,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001636282-26-000020,R5,Total operating expenses,209562000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 SYRE,861,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001636282-26-000020,R5,Loss from operations,-209562000.0000,library map
 SYRE,861,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001636282-26-000020,R5,"Other income (expense), net",29459000.0000,library map
 SYRE,861,ppe_net,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
@@ -50,5 +50,5 @@ SYRE,861,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001636282-26-000
 SYRE,861,total_debt,not_presented,,,,,,,,0001636282-26-000020,,,,no face line
 SYRE,861,total_interest_income,OUT,,,,,,,,0001636282-26-000020,,,,not a bank
 SYRE,861,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001636282-26-000020,R3,TOTAL LIABILITIES,62545000.0000,library map
-SYRE,861,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001636282-26-000020,,,,note-sourced default tag (no face line)
-SYRE,861,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001636282-26-000020,,,,note-sourced default tag (no face line)
+SYRE,861,weighted_basic_shares,not_presented,,,,,,,,0001636282-26-000020,,,,no face line and no note fact
+SYRE,861,weighted_diluted_shares,not_presented,,,,,,,,0001636282-26-000020,,,,no face line and no note fact

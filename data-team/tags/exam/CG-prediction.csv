@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CG,594,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0001527166-26-000009,R3,"Accounts payable, accrued expenses and other liabilities",543700000.0000,combined line (library or label demote)
 CG,594,accounts_receivable,not_presented,,,,,,,,0001527166-26-000009,,,,no face line
-CG,594,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001527166-26-000009,,,,note-sourced default tag (no face line)
+CG,594,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001527166-26-000009,,,131000000.0000,note fact present in the filing (FSN value)
 CG,594,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001527166-26-000009,R5,Basic (in dollars per share),2.2500,library map
 CG,594,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001527166-26-000009,R9,"Purchases of fixed assets, net",99400000.0000,library map
 CG,594,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001527166-26-000009,R3,Cash and cash equivalents,1970200000.0000,library map
@@ -21,7 +21,7 @@ CG,594,deposits,OUT,,,,,,,,0001527166-26-000009,,,,not a bank
 CG,594,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001527166-26-000009,R9,Depreciation and amortization,192100000.0000,library map
 CG,594,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001527166-26-000009,R5,Diluted (in dollars per share),2.1800,library map
 CG,594,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001527166-26-000009,R9,Dividends to common stockholders,505100000.0000,library map
-CG,594,dividends_per_share,not_presented,,,,,,,,0001527166-26-000009,,,,no face line
+CG,594,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001527166-26-000009,,,1.4000,note fact present in the filing (FSN value)
 CG,594,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,N,,sec_api,0001527166-26-000009,R3,"Intangible assets, net",507100000.0000,combined line (library or label demote)
 CG,594,gross_profit,not_presented,,,,,,,,0001527166-26-000009,,,,no face line
 CG,594,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001527166-26-000009,R5,Income (loss) before provision for income taxes,1159200000.0000,library map
@@ -34,7 +34,7 @@ CG,594,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001527166-26-
 CG,594,net_interest_income,OUT,,,,,,,,0001527166-26-000009,,,,not a bank
 CG,594,noninterest_expense,OUT,,,,,,,,0001527166-26-000009,,,,not a bank
 CG,594,noninterest_income,OUT,,,,,,,,0001527166-26-000009,,,,not a bank
-CG,594,operating_expenses,not_presented,,,,,,,,0001527166-26-000009,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+CG,594,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001527166-26-000009,R5,Total expenses,3738500000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 CG,594,operating_income,not_presented,,,,,,,,0001527166-26-000009,,,,no face line
 CG,594,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001527166-26-000009,R5,Other non-operating (income) expenses,200000.0000,library map
 CG,594,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001527166-26-000009,R3,"Fixed assets, net",224900000.0000,library map

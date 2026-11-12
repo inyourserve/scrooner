@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FRHC,632,accounts_payable,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
 FRHC,632,accounts_receivable,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
-FRHC,632,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000924805-26-000012,,,,note-sourced default tag (no face line)
+FRHC,632,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000924805-26-000012,,,8192000.0000,note fact present in the filing (FSN value)
 FRHC,632,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000924805-26-000012,R4,Earnings per common share - basic (in dollars per share),2.5600,library map
 FRHC,632,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000924805-26-000012,R7,Purchase of fixed assets,198766000.0000,library map
 FRHC,632,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000924805-26-000012,R3,Cash and cash equivalents,966115000.0000,library map
 FRHC,632,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000924805-26-000012,R7,Net cash flows (used in)/from financing activities,1191629000.0000,library map
 FRHC,632,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000924805-26-000012,R7,Net cash flows used in investing activities,-1049155000.0000,library map
-FRHC,632,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000924805-26-000012,,,,note-sourced default tag (no face line)
-FRHC,632,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000924805-26-000012,,,,note-sourced default tag (no face line)
+FRHC,632,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000924805-26-000012,,,81300000.0000,note fact present in the filing (FSN value)
+FRHC,632,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000924805-26-000012,,,452976000.0000,note fact present in the filing (FSN value)
 FRHC,632,cf_ap_change,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
 FRHC,632,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0000924805-26-000012,R7,Allowances for expected credit losses,-52365000.0000,library map
 FRHC,632,cf_inventory_change,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
@@ -21,7 +21,7 @@ FRHC,632,deposits,OUT,,,,,,,,0000924805-26-000012,,,,not a bank
 FRHC,632,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0000924805-26-000012,R7,Depreciation and amortization,34560000.0000,library map
 FRHC,632,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000924805-26-000012,R4,Earnings per common share - diluted (in dollars per share),2.5100,library map
 FRHC,632,dividends_paid,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
-FRHC,632,dividends_per_share,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
+FRHC,632,dividends_per_share,not_presented,,,,,,,,0000924805-26-000012,,,,no face line and no note fact
 FRHC,632,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000924805-26-000012,R3,Goodwill,51099000.0000,library map
 FRHC,632,gross_profit,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
 FRHC,632,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000924805-26-000012,R4,INCOME BEFORE INCOME TAX,225965000.0000,library map

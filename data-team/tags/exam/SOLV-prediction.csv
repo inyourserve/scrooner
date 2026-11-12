@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SOLV,538,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001964738-26-000007,R5,Accounts payable,687000000.0000,library map
 SOLV,538,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001964738-26-000007,R5,Accounts receivable  net of allowances of $87 and $86,1034000000.0000,library map
-SOLV,538,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001964738-26-000007,,,,note-sourced default tag (no face line)
+SOLV,538,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001964738-26-000007,,,312000000.0000,note fact present in the filing (FSN value)
 SOLV,538,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001964738-26-000007,R3,Basic earnings per share (in dollars per share),8.9400,library map
 SOLV,538,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001964738-26-000007,R8,"Purchases of property, plant and equipment",379000000.0000,library map
 SOLV,538,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001964738-26-000007,R5,Cash and cash equivalents,878000000.0000,library map
@@ -21,13 +21,13 @@ SOLV,538,deposits,OUT,,,,,,,,0001964738-26-000007,,,,not a bank
 SOLV,538,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001964738-26-000007,R8,Depreciation and amortization,489000000.0000,library map
 SOLV,538,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001964738-26-000007,R3,Diluted earnings per share (in dollars per share),8.8800,library map
 SOLV,538,dividends_paid,not_presented,,,,,,,,0001964738-26-000007,,,,no face line
-SOLV,538,dividends_per_share,not_presented,,,,,,,,0001964738-26-000007,,,,no face line
+SOLV,538,dividends_per_share,not_presented,,,,,,,,0001964738-26-000007,,,,no face line and no note fact
 SOLV,538,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001964738-26-000007,R5,Goodwill,5704000000.0000,library map
 SOLV,538,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001964738-26-000007,R3,Gross profit,4451000000.0000,library map
 SOLV,538,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001964738-26-000007,R3,Income before income taxes,1713000000.0000,library map
 SOLV,538,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001964738-26-000007,R3,Provision for income taxes,157000000.0000,library map
 SOLV,538,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001964738-26-000007,R3,"Interest expense, net",-347000000.0000,combined line (library or label demote)
-SOLV,538,interest_income,not_presented,,,,,,,,0001964738-26-000007,,,,no face line
+SOLV,538,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001964738-26-000007,R3,"Interest expense, net",-347000000.0000,interest income only inside a net/other face line between OI and pretax
 SOLV,538,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001964738-26-000007,R5,Total inventories,1066000000.0000,library map
 SOLV,538,loans_net,OUT,,,,,,,,0001964738-26-000007,,,,not a bank
 SOLV,538,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001964738-26-000007,R3,Net income,1556000000.0000,library map

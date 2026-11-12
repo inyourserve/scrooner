@@ -7,8 +7,8 @@ PNFP,549,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3
 PNFP,549,cash_and_equivalents,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
 PNFP,549,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0002082866-26-000018,R7,Net cash provided by financing activities,4404425000.0000,library map
 PNFP,549,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0002082866-26-000018,R7,Net cash used in investing activities,-5034276000.0000,library map
-PNFP,549,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002082866-26-000018,,,,note-sourced default tag (no face line)
-PNFP,549,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002082866-26-000018,,,,note-sourced default tag (no face line)
+PNFP,549,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0002082866-26-000018,,,77129000.0000,note fact present in the filing (FSN value)
+PNFP,549,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0002082866-26-000018,,,1253950000.0000,note fact present in the filing (FSN value)
 PNFP,549,cf_ap_change,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
 PNFP,549,cf_ar_change,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
 PNFP,549,cf_inventory_change,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
@@ -21,7 +21,7 @@ PNFP,549,deposits,OUT,,,,,,,,0002082866-26-000018,,,,not a bank
 PNFP,549,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0002082866-26-000018,R7,"Depreciation, amortization and accretion",114414000.0000,combined line (library or label demote)
 PNFP,549,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002082866-26-000018,R4,Diluted net income per common share,8.0700,library map
 PNFP,549,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0002082866-26-000018,R7,Common dividends paid,74662000.0000,library map
-PNFP,549,dividends_per_share,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
+PNFP,549,dividends_per_share,not_presented,,,,,,,,0002082866-26-000018,,,,no face line and no note fact
 PNFP,549,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002082866-26-000018,R2,Goodwill,1848904000.0000,library map
 PNFP,549,gross_profit,not_presented,,,,,,,,0002082866-26-000018,,,,no face line
 PNFP,549,income_before_tax,not_presented,,,,,,,,0002082866-26-000018,,,,no face line

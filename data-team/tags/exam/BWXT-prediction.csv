@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BWXT,606,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Accounts payable,141289000.0000,library map
 BWXT,606,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Accounts receivable  trade, net",220391000.0000,library map
-BWXT,606,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001486957-26-000007,,,,note-sourced default tag (no face line)
+BWXT,606,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001486957-26-000007,,,20581000.0000,note fact present in the filing (FSN value)
 BWXT,606,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc. (USD per share)",3.5900,library map
 BWXT,606,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,"Purchases of property, plant and equipment",184557000.0000,library map
 BWXT,606,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Cash and cash equivalents,499779000.0000,library map

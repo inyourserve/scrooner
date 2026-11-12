@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SM,728,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000893538-26-000032,R3,Accounts payable and accrued expenses,690000000.0000,combined line (library or label demote)
 SM,728,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000893538-26-000032,R3,Accounts receivable,331000000.0000,library map
-SM,728,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000893538-26-000032,,,,note-sourced default tag (no face line)
+SM,728,amortization_of_intangibles,not_presented,,,,,,,,0000893538-26-000032,,,,no face line and no note fact
 SM,728,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000893538-26-000032,R5,Basic net income per common share,5.6500,library map
 SM,728,capex,not_presented,,,,,,,,0000893538-26-000032,,,,no face line
 SM,728,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000893538-26-000032,R3,Cash and cash equivalents,368000000.0000,library map
 SM,728,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000893538-26-000032,R8,Net cash provided by (used in) financing activities,-175000000.0000,library map
 SM,728,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000893538-26-000032,R8,Net cash used in investing activities,-1468000000.0000,library map
-SM,728,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000893538-26-000032,,,,note-sourced default tag (no face line)
+SM,728,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000893538-26-000032,,,4000000.0000,note fact present in the filing (FSN value)
 SM,728,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000893538-26-000032,R8,"Cash paid for interest, net of capitalized interest (1)",166000000.0000,library map
 SM,728,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0000893538-26-000032,R8,Accounts payable and accrued expenses,-17000000.0000,combined line (library or label demote)
 SM,728,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000893538-26-000032,R8,Accounts receivable,-30000000.0000,library map
@@ -27,7 +27,7 @@ SM,728,gross_profit,not_presented,,,,,,,,0000893538-26-000032,,,,no face line
 SM,728,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000893538-26-000032,R5,Income before income taxes,830000000.0000,library map
 SM,728,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000893538-26-000032,R5,Income tax expense,182000000.0000,library map
 SM,728,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000893538-26-000032,R5,Interest expense,173000000.0000,library map
-SM,728,interest_income,not_presented,,,,,,,,0000893538-26-000032,,,,no face line
+SM,728,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-6,N,,sec_api,0000893538-26-000032,R5,Interest income,3000000.0000,interest income only inside a net/other face line between OI and pretax
 SM,728,inventory,not_presented,,,,,,,,0000893538-26-000032,,,,no face line
 SM,728,loans_net,OUT,,,,,,,,0000893538-26-000032,,,,not a bank
 SM,728,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000893538-26-000032,R5,Net income,648000000.0000,library map

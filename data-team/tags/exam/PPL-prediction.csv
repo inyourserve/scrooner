@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PPL,369,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000922224-26-000008,R6,Accounts payable,1559000000.0000,library map
 PPL,369,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000922224-26-000008,R6,Customer,1108000000.0000,library map
-PPL,369,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000922224-26-000008,,,,note-sourced default tag (no face line)
+PPL,369,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0000922224-26-000008,,,104000000.0000,note fact present in the filing (FSN value)
 PPL,369,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000922224-26-000008,R2,"Net Income (Loss) Available to PPL Common , Per Basic shares",1.6000,library map
 PPL,369,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000922224-26-000008,R5,"Expenditures for property, plant and equipment",4030000000.0000,library map
 PPL,369,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000922224-26-000008,R6,Cash and cash equivalents,1071000000.0000,library map
@@ -27,7 +27,7 @@ PPL,369,gross_profit,not_presented,,,,,,,,0000922224-26-000008,,,,no face line
 PPL,369,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,Income from Continuing Operations Before Income Taxes,1472000000.0000,library map
 PPL,369,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,Income Taxes,291000000.0000,library map
 PPL,369,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,"Interest Expense, Operating and Nonoperating",808000000.0000,library map
-PPL,369,interest_income,not_presented,,,,,,,,0000922224-26-000008,,,,no face line
+PPL,369,interest_income,not_presented,,,,,,,,0000922224-26-000008,,,,no face line and no note fact
 PPL,369,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000922224-26-000008,R6,"Fuel, materials and supplies",551000000.0000,library map
 PPL,369,loans_net,OUT,,,,,,,,0000922224-26-000008,,,,not a bank
 PPL,369,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,Net income (Loss),1181000000.0000,library map

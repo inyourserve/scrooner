@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CART,636,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001579091-26-000018,R3,Accounts payable,70000000.0000,library map
 CART,636,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001579091-26-000018,R3,"Accounts receivable, net of allowance of $4 and $3, respectively",1127000000.0000,library map
-CART,636,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001579091-26-000018,,,,note-sourced default tag (no face line)
+CART,636,amortization_of_intangibles,mapped,us-gaap:AdjustmentForAmortization,NOTE,+,,,,sec_api,0001579091-26-000018,,,25000000.0000,note fact present in the filing (FSN value)
 CART,636,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001579091-26-000018,R5,Basic (in dollars per share),1.6800,library map
 CART,636,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001579091-26-000018,R9,"Purchases of property and equipment, including capitalized internal-use software",61000000.0000,library map
 CART,636,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001579091-26-000018,R3,Cash and cash equivalents,637000000.0000,library map
 CART,636,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001579091-26-000018,R9,Net cash used in financing activities,-1391000000.0000,library map
 CART,636,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001579091-26-000018,R9,Net cash provided by (used in) investing activities,-208000000.0000,library map
 CART,636,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0001579091-26-000018,R9,"Cash paid for income taxes, net of tax refunds",43000000.0000,library map
-CART,636,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001579091-26-000018,,,,note-sourced default tag (no face line)
+CART,636,cash_paid_for_interest,not_presented,,,,,,,,0001579091-26-000018,,,,no face line and no note fact
 CART,636,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001579091-26-000018,R9,Accounts payable,-11000000.0000,library map
 CART,636,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001579091-26-000018,R9,Accounts receivable,121000000.0000,library map
 CART,636,cf_inventory_change,not_presented,,,,,,,,0001579091-26-000018,,,,no face line
@@ -21,13 +21,13 @@ CART,636,deposits,OUT,,,,,,,,0001579091-26-000018,,,,not a bank
 CART,636,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001579091-26-000018,R9,Depreciation and amortization expense,91000000.0000,library map
 CART,636,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001579091-26-000018,R5,Diluted (in dollars per share),1.6000,library map
 CART,636,dividends_paid,not_presented,,,,,,,,0001579091-26-000018,,,,no face line
-CART,636,dividends_per_share,not_presented,,,,,,,,0001579091-26-000018,,,,no face line
+CART,636,dividends_per_share,not_presented,,,,,,,,0001579091-26-000018,,,,no face line and no note fact
 CART,636,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001579091-26-000018,R3,Goodwill,393000000.0000,library map
 CART,636,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Gross profit,2758000000.0000,library map
 CART,636,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Income (loss) before provision for (benefit from) income taxes,556000000.0000,library map
 CART,636,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Provision for (benefit from) income taxes,109000000.0000,library map
 CART,636,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Interest income,57000000.0000,combined line (library or label demote)
-CART,636,interest_income,not_presented,,,,,,,,0001579091-26-000018,,,,no face line
+CART,636,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Interest income,57000000.0000,interest income only inside a net/other face line between OI and pretax
 CART,636,inventory,not_presented,,,,,,,,0001579091-26-000018,,,,no face line
 CART,636,loans_net,OUT,,,,,,,,0001579091-26-000018,,,,not a bank
 CART,636,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001579091-26-000018,R5,Net income (loss),447000000.0000,library map

@@ -21,13 +21,13 @@ FICO,505,deposits,OUT,,,,,,,,0000814547-25-000030,,,,not a bank
 FICO,505,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000814547-25-000030,R7,Depreciation and amortization,14952000.0000,library map
 FICO,505,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000814547-25-000030,R5,Diluted (in dollars per share),26.5400,library map
 FICO,505,dividends_paid,not_presented,,,,,,,,0000814547-25-000030,,,,no face line
-FICO,505,dividends_per_share,not_presented,,,,,,,,0000814547-25-000030,,,,no face line
+FICO,505,dividends_per_share,not_presented,,,,,,,,0000814547-25-000030,,,,no face line and no note fact
 FICO,505,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000814547-25-000030,R3,Goodwill,783340000.0000,library map
 FICO,505,gross_profit,not_presented,,,,,,,,0000814547-25-000030,,,,no face line
 FICO,505,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Income before income taxes,802595000.0000,library map
 FICO,505,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Provision for income taxes,150649000.0000,library map
 FICO,505,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000814547-25-000030,R5,"Interest expense, net",133647000.0000,combined line (library or label demote)
-FICO,505,interest_income,not_presented,,,,,,,,0000814547-25-000030,,,,no face line
+FICO,505,interest_income,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000814547-25-000030,R5,"Interest expense, net",133647000.0000,interest income only inside a net/other face line between OI and pretax
 FICO,505,inventory,not_presented,,,,,,,,0000814547-25-000030,,,,no face line
 FICO,505,loans_net,OUT,,,,,,,,0000814547-25-000030,,,,not a bank
 FICO,505,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Net income,651946000.0000,library map

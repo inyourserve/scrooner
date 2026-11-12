@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 QSR,374,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001618756-26-000017,R3,Accounts and drafts payable,866000000.0000,library map
 QSR,374,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-6,N,,sec_api,0001618756-26-000017,R3,"Accounts and notes receivable, net of allowance of $54 and $57, respectively",794000000.0000,combined line (library or label demote)
-QSR,374,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001618756-26-000017,,,,note-sourced default tag (no face line)
+QSR,374,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001618756-26-000017,,,69000000.0000,note fact present in the filing (FSN value)
 QSR,374,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001618756-26-000017,R5,Basic net income per share (in dollars per share),2.3600,library map
 QSR,374,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001618756-26-000017,R10,Payments for additions of property and equipment,265000000.0000,library map
 QSR,374,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001618756-26-000017,R3,Cash and cash equivalents,1163000000.0000,combined line (library or label demote)
@@ -27,14 +27,14 @@ QSR,374,gross_profit,not_presented,,,,,,,,0001618756-26-000017,,,,no face line
 QSR,374,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001618756-26-000017,R5,Income from continuing operations before income taxes,1684000000.0000,library map
 QSR,374,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001618756-26-000017,R5,Income tax expense (benefit) from continuing operations,483000000.0000,library map
 QSR,374,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001618756-26-000017,R5,"Interest expense, net",-516000000.0000,combined line (library or label demote)
-QSR,374,interest_income,not_presented,,,,,,,,0001618756-26-000017,,,,no face line
+QSR,374,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001618756-26-000017,,,31000000.0000,note fact present in the filing (FSN value)
 QSR,374,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001618756-26-000017,R3,"Inventories, net",205000000.0000,library map
 QSR,374,loans_net,OUT,,,,,,,,0001618756-26-000017,,,,not a bank
 QSR,374,net_income,not_presented,,,,,,,,0001618756-26-000017,,,,no face line
 QSR,374,net_interest_income,OUT,,,,,,,,0001618756-26-000017,,,,not a bank
 QSR,374,noninterest_expense,OUT,,,,,,,,0001618756-26-000017,,,,not a bank
 QSR,374,noninterest_income,OUT,,,,,,,,0001618756-26-000017,,,,not a bank
-QSR,374,operating_expenses,not_presented,,,,,,,,0001618756-26-000017,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+QSR,374,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001618756-26-000017,R5,Total operating costs and expenses,7232000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 QSR,374,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001618756-26-000017,R5,Income from operations,2202000000.0000,library map
 QSR,374,other_income_expense_net,not_presented,,,,,,,,0001618756-26-000017,,,,no face line
 QSR,374,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001618756-26-000017,R3,"Property and equipment, net of accumulated depreciation and amortization of $1,245 and $1,087, respectively",2303000000.0000,library map

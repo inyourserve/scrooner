@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ANF,887,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001018840-26-000012,R4,Accounts payable,377465000.0000,library map
 ANF,887,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001018840-26-000012,R4,Receivables,146757000.0000,combined line (library or label demote)
-ANF,887,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001018840-26-000012,,,,note-sourced default tag (no face line)
+ANF,887,amortization_of_intangibles,not_presented,,,,,,,,0001018840-26-000012,,,,no face line and no note fact
 ANF,887,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001018840-26-000012,R3,Basic,10.7100,library map
 ANF,887,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001018840-26-000012,R7,Purchases of property and equipment,240774000.0000,library map
 ANF,887,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001018840-26-000012,R4,Cash and equivalents,759540000.0000,library map
@@ -21,13 +21,13 @@ ANF,887,deposits,OUT,,,,,,,,0001018840-26-000012,,,,not a bank
 ANF,887,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001018840-26-000012,R7,Depreciation and amortization,155021000.0000,library map
 ANF,887,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001018840-26-000012,R3,Diluted,10.4600,library map
 ANF,887,dividends_paid,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
-ANF,887,dividends_per_share,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
+ANF,887,dividends_per_share,not_presented,,,,,,,,0001018840-26-000012,,,,no face line and no note fact
 ANF,887,goodwill,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
 ANF,887,gross_profit,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
 ANF,887,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0001018840-26-000012,R3,Income (Loss) before income taxes,720772000.0000,library map
 ANF,887,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,Effective tax rate,205777000.0000,library map
 ANF,887,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,"Interest Expense, Operating",2375000.0000,library map
-ANF,887,interest_income,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
+ANF,887,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,Interest and Other Income,24004000.0000,interest income only inside a net/other face line between OI and pretax
 ANF,887,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001018840-26-000012,R4,Inventories,601218000.0000,library map
 ANF,887,loans_net,OUT,,,,,,,,0001018840-26-000012,,,,not a bank
 ANF,887,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,"Net Income (Loss) Attributable to Parent, Total",506921000.0000,library map

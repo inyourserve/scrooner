@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SHW,155,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Accounts payable,2354200000.0000,library map
 SHW,155,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,"Accounts receivable, net",2791200000.0000,library map
-SHW,155,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000089800-26-000008,,,,note-sourced default tag (no face line)
+SHW,155,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000089800-26-000008,,,336600000.0000,note fact present in the filing (FSN value)
 SHW,155,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000089800-26-000008,R3,Basic (in dollars per share),10.3700,library map
 SHW,155,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000089800-26-000008,R7,Capital expenditures,797600000.0000,library map
 SHW,155,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Cash and cash equivalents,207200000.0000,library map
@@ -27,7 +27,7 @@ SHW,155,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000089800-26
 SHW,155,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Income before income taxes,3338200000.0000,library map
 SHW,155,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Income taxes,769700000.0000,library map
 SHW,155,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000089800-26-000008,R3,Interest expense,465000000.0000,library map
-SHW,155,interest_income,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
+SHW,155,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Interest income,11200000.0000,interest income only inside a net/other face line between OI and pretax
 SHW,155,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Inventories,2318200000.0000,library map
 SHW,155,loans_net,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Net income,2568500000.0000,library map

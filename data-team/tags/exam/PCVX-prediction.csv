@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 PCVX,726,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001649094-26-000007,R3,Accounts payable,70904000.0000,library map
 PCVX,726,accounts_receivable,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
-PCVX,726,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001649094-26-000007,,,,note-sourced default tag (no face line)
+PCVX,726,amortization_of_intangibles,not_presented,,,,,,,,0001649094-26-000007,,,,no face line and no note fact
 PCVX,726,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001649094-26-000007,R5,"Net loss per share, basic (in dollars per share)",-5.6300,library map
 PCVX,726,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001649094-26-000007,R9,Purchases of property and equipment,13713000.0000,library map
 PCVX,726,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001649094-26-000007,R3,Cash and cash equivalents,173959000.0000,library map
 PCVX,726,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001649094-26-000007,R9,Net cash provided by financing activities,2014000.0000,library map
 PCVX,726,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001649094-26-000007,R9,Net cash provided by (used in) investing activities,437354000.0000,library map
-PCVX,726,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001649094-26-000007,,,,note-sourced default tag (no face line)
-PCVX,726,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001649094-26-000007,,,,note-sourced default tag (no face line)
+PCVX,726,cash_paid_for_income_taxes,not_presented,,,,,,,,0001649094-26-000007,,,,no face line and no note fact
+PCVX,726,cash_paid_for_interest,not_presented,,,,,,,,0001649094-26-000007,,,,no face line and no note fact
 PCVX,726,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001649094-26-000007,R9,Accounts payable,19906000.0000,library map
 PCVX,726,cf_ar_change,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
 PCVX,726,cf_inventory_change,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
@@ -21,7 +21,7 @@ PCVX,726,deposits,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
 PCVX,726,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001649094-26-000007,R9,Depreciation and amortization,16396000.0000,library map
 PCVX,726,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001649094-26-000007,R5,"Net loss per share, diluted (in dollars per share)",-5.6300,library map
 PCVX,726,dividends_paid,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
-PCVX,726,dividends_per_share,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
+PCVX,726,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,0,,,,sec_api,0001649094-26-000007,,,0.0000,note fact present in the filing (FSN value)
 PCVX,726,goodwill,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
 PCVX,726,gross_profit,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
 PCVX,726,income_before_tax,not_presented,,,,,,,,0001649094-26-000007,,,,no face line
@@ -34,7 +34,7 @@ PCVX,726,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001649094-2
 PCVX,726,net_interest_income,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
 PCVX,726,noninterest_expense,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
 PCVX,726,noninterest_income,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
-PCVX,726,operating_expenses,not_presented,,,,,,,,0001649094-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
+PCVX,726,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001649094-26-000007,R5,Total operating expenses,923675000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
 PCVX,726,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001649094-26-000007,R5,Loss from operations,-923675000.0000,library map
 PCVX,726,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001649094-26-000007,R5,Other income (expense),37329000.0000,library map
 PCVX,726,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001649094-26-000007,R3,"Property and equipment, net",257370000.0000,library map

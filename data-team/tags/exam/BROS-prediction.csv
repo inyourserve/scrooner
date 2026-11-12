@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BROS,882,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001866581-26-000006,R3,Accounts payable,37625000.0000,library map
 BROS,882,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001866581-26-000006,R3,"Accounts receivable, net",18387000.0000,library map
-BROS,882,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001866581-26-000006,,,,note-sourced default tag (no face line)
+BROS,882,amortization_of_intangibles,not_presented,,,,,,,,0001866581-26-000006,,,,no face line and no note fact
 BROS,882,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001866581-26-000006,R5,Basic (in dollars per share),0.6400,library map
 BROS,882,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001866581-26-000006,R10,Purchases of property and equipment,241134000.0000,library map
 BROS,882,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001866581-26-000006,R3,Cash and cash equivalents,269404000.0000,library map
@@ -21,13 +21,13 @@ BROS,882,deposits,OUT,,,,,,,,0001866581-26-000006,,,,not a bank
 BROS,882,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001866581-26-000006,R10,Depreciation and amortization,115133000.0000,library map
 BROS,882,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001866581-26-000006,R5,Diluted (in dollars per share),0.6400,library map
 BROS,882,dividends_paid,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
-BROS,882,dividends_per_share,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
+BROS,882,dividends_per_share,not_presented,,,,,,,,0001866581-26-000006,,,,no face line and no note fact
 BROS,882,goodwill,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
 BROS,882,gross_profit,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
 BROS,882,income_before_tax,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
 BROS,882,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001866581-26-000006,R5,Income tax expense,18348000.0000,library map
 BROS,882,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001866581-26-000006,R5,"Interest expense, net",-28305000.0000,combined line (library or label demote)
-BROS,882,interest_income,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
+BROS,882,interest_income,not_presented,,,,,,,,0001866581-26-000006,,,,no face line and no note fact
 BROS,882,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001866581-26-000006,R3,"Inventories, net",48917000.0000,library map
 BROS,882,loans_net,OUT,,,,,,,,0001866581-26-000006,,,,not a bank
 BROS,882,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001866581-26-000006,R5,Net income attributable to Dutch Bros Inc.,79842000.0000,library map

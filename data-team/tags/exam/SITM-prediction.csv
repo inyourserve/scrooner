@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SITM,553,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001451809-26-000012,R3,Accounts payable,21327000.0000,library map
 SITM,553,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001451809-26-000012,R3,"Accounts receivable, net",45040000.0000,library map
-SITM,553,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001451809-26-000012,,,,note-sourced default tag (no face line)
+SITM,553,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001451809-26-000012,,,16600000.0000,note fact present in the filing (FSN value)
 SITM,553,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001451809-26-000012,R5,"Net loss per share attributable to common stockholders, basic (in dollars per share)",-1.7200,library map
 SITM,553,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,Purchase of property and equipment,52028000.0000,library map
 SITM,553,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,sec_api,0001451809-26-000012,R3,Cash and cash equivalents,16759000.0000,combined line (library or label demote)
 SITM,553,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,Net cash provided by (used in) financing activities,351365000.0000,library map
 SITM,553,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001451809-26-000012,R7,Net cash (used in) provided by investing activities,-427866000.0000,library map
 SITM,553,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,"Income taxes paid, net of refunds",402000.0000,library map
-SITM,553,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001451809-26-000012,,,,note-sourced default tag (no face line)
+SITM,553,cash_paid_for_interest,not_presented,,,,,,,,0001451809-26-000012,,,,no face line and no note fact
 SITM,553,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,Accounts payable,4302000.0000,library map
 SITM,553,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,"Accounts receivable, net",6831000.0000,library map
 SITM,553,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,Inventories,11997000.0000,library map
@@ -21,13 +21,13 @@ SITM,553,deposits,OUT,,,,,,,,0001451809-26-000012,,,,not a bank
 SITM,553,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001451809-26-000012,R7,Depreciation and amortization expense,40189000.0000,library map
 SITM,553,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001451809-26-000012,R5,"Net loss per share attributable to common stockholders, diluted (in dollars per share)",-1.7200,library map
 SITM,553,dividends_paid,not_presented,,,,,,,,0001451809-26-000012,,,,no face line
-SITM,553,dividends_per_share,not_presented,,,,,,,,0001451809-26-000012,,,,no face line
+SITM,553,dividends_per_share,not_presented,,,,,,,,0001451809-26-000012,,,,no face line and no note fact
 SITM,553,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001451809-26-000012,R3,Goodwill,87098000.0000,library map
 SITM,553,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001451809-26-000012,R5,Gross profit,174986000.0000,library map
 SITM,553,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001451809-26-000012,R5,Loss before income taxes,-42305000.0000,library map
 SITM,553,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001451809-26-000012,R5,Income tax expense,598000.0000,library map
 SITM,553,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001451809-26-000012,R5,Interest income,24830000.0000,combined line (library or label demote)
-SITM,553,interest_income,not_presented,,,,,,,,0001451809-26-000012,,,,no face line
+SITM,553,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0001451809-26-000012,R5,Interest income,24830000.0000,interest income only inside a net/other face line between OI and pretax
 SITM,553,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001451809-26-000012,R3,Inventories,81557000.0000,library map
 SITM,553,loans_net,OUT,,,,,,,,0001451809-26-000012,,,,not a bank
 SITM,553,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001451809-26-000012,R5,Net loss,-42903000.0000,library map

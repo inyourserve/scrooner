@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 DHI,282,accounts_payable,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
 DHI,282,accounts_receivable,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
-DHI,282,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000882184-25-000081,,,,note-sourced default tag (no face line)
+DHI,282,amortization_of_intangibles,not_presented,,,,,,,,0000882184-25-000081,,,,no face line and no note fact
 DHI,282,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000882184-25-000081,R4,"Earnings Per Share, Basic",11.6200,library map
 DHI,282,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000882184-25-000081,R7,Expenditures for property and equipment,137400000.0000,library map
 DHI,282,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000882184-25-000081,R2,Cash and cash equivalents,2985400000.0000,library map
 DHI,282,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000882184-25-000081,R7,Net cash used in financing activities,-4762900000.0000,library map
 DHI,282,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000882184-25-000081,R7,Net cash used in investing activities,-168700000.0000,library map
 DHI,282,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0000882184-25-000081,R7,"Income taxes paid, net",1020500000.0000,library map
-DHI,282,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000882184-25-000081,,,,note-sourced default tag (no face line)
+DHI,282,cash_paid_for_interest,not_presented,,,,,,,,0000882184-25-000081,,,,no face line and no note fact
 DHI,282,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0000882184-25-000081,R7,"Increase (decrease) in accounts payable, accrued expenses and other liabilities",83700000.0000,combined line (library or label demote)
 DHI,282,cf_ar_change,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
 DHI,282,cf_inventory_change,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
@@ -27,7 +27,7 @@ DHI,282,gross_profit,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
 DHI,282,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000882184-25-000081,R4,Income before income taxes,4739900000.0000,library map
 DHI,282,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000882184-25-000081,R4,Income tax expense,1119000000.0000,library map
 DHI,282,interest_expense,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
-DHI,282,interest_income,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
+DHI,282,interest_income,not_presented,,,,,,,,0000882184-25-000081,,,,no face line and no note fact
 DHI,282,inventory,not_presented,,,,,,,,0000882184-25-000081,,,,no face line
 DHI,282,loans_net,OUT,,,,,,,,0000882184-25-000081,,,,not a bank
 DHI,282,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000882184-25-000081,R4,"Net income attributable to D.R. Horton, Inc.",3585200000.0000,library map

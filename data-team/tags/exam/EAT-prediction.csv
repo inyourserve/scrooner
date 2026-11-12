@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 EAT,764,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,Accounts payable,168900000.0000,library map
 EAT,764,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,"Accounts receivable, net",81400000.0000,library map
-EAT,764,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000703351-26-000029,,,,note-sourced default tag (no face line)
+EAT,764,amortization_of_intangibles,not_presented,,,,,,,,0000703351-26-000029,,,,no face line and no note fact
 EAT,764,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000703351-26-000029,R3,Basic net income per share,11.1600,library map
 EAT,764,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000703351-26-000029,R5,Payments for property and equipment,231900000.0000,library map
 EAT,764,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,Cash and cash equivalents,110000000.0000,library map
@@ -21,13 +21,13 @@ EAT,764,deposits,OUT,,,,,,,,0000703351-26-000029,,,,not a bank
 EAT,764,depreciation_and_amortization,not_presented,,,,,,,,0000703351-26-000029,,,,no face line
 EAT,764,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000703351-26-000029,R3,Diluted net income per share,10.8700,library map
 EAT,764,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,0,-5,N,,sec_api,0000703351-26-000029,R5,Payments of dividends,0.0000,library map
-EAT,764,dividends_per_share,not_presented,,,,,,,,0000703351-26-000029,,,,no face line
+EAT,764,dividends_per_share,not_presented,,,,,,,,0000703351-26-000029,,,,no face line and no note fact
 EAT,764,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,Goodwill,194500000.0000,library map
 EAT,764,gross_profit,not_presented,,,,,,,,0000703351-26-000029,,,,no face line
 EAT,764,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,Income before income taxes,580900000.0000,library map
 EAT,764,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,Provision for income taxes,93900000.0000,library map
 EAT,764,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,Interest expenses,40500000.0000,library map
-EAT,764,interest_income,not_presented,,,,,,,,0000703351-26-000029,,,,no face line
+EAT,764,interest_income,not_presented,,,,,,,,0000703351-26-000029,,,,no face line and no note fact
 EAT,764,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,Inventories,34500000.0000,library map
 EAT,764,loans_net,OUT,,,,,,,,0000703351-26-000029,,,,not a bank
 EAT,764,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,Net income,487000000.0000,library map

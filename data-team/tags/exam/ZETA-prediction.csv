@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 ZETA,815,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-068598,R2,Accounts payable,40136000.0000,library map
 ZETA,815,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-068598,R2,"Accounts receivable, net of allowance of $3,832 and $4,291 as of December 31, 2025 and 2024, respectively",322391000.0000,library map
-ZETA,815,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-068598,,,,note-sourced default tag (no face line)
+ZETA,815,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-068598,,,46560000.0000,note fact present in the filing (FSN value)
 ZETA,815,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-068598,R4,Basic loss per share,-0.1400,library map
 ZETA,815,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-068598,R8,Capital expenditures,13815000.0000,library map
 ZETA,815,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-068598,R2,Cash and cash equivalents,319764000.0000,library map
@@ -21,13 +21,13 @@ ZETA,815,deposits,OUT,,,,,,,,0001193125-26-068598,,,,not a bank
 ZETA,815,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-068598,R8,Depreciation and amortization,72039000.0000,library map
 ZETA,815,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-068598,R4,Diluted loss per share,-0.1400,library map
 ZETA,815,dividends_paid,not_presented,,,,,,,,0001193125-26-068598,,,,no face line
-ZETA,815,dividends_per_share,not_presented,,,,,,,,0001193125-26-068598,,,,no face line
+ZETA,815,dividends_per_share,not_presented,,,,,,,,0001193125-26-068598,,,,no face line and no note fact
 ZETA,815,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-068598,R2,Goodwill,527886000.0000,library map
 ZETA,815,gross_profit,not_presented,,,,,,,,0001193125-26-068598,,,,no face line
 ZETA,815,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001193125-26-068598,R4,Loss before income taxes,-33087000.0000,library map
 ZETA,815,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-068598,R4,Income tax (benefit) / provision,-1578000.0000,library map
 ZETA,815,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-068598,R4,"Interest expenses, net",371000.0000,combined line (library or label demote)
-ZETA,815,interest_income,not_presented,,,,,,,,0001193125-26-068598,,,,no face line
+ZETA,815,interest_income,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-068598,R4,"Interest expenses, net",371000.0000,interest income only inside a net/other face line between OI and pretax
 ZETA,815,inventory,not_presented,,,,,,,,0001193125-26-068598,,,,no face line
 ZETA,815,loans_net,OUT,,,,,,,,0001193125-26-068598,,,,not a bank
 ZETA,815,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-068598,R4,Net loss,-31509000.0000,library map

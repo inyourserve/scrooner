@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 AWI,852,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001193125-26-065183,R3,Accounts payable and accrued expenses,237100000.0000,combined line (library or label demote)
 AWI,852,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-065183,R3,"Accounts and notes receivable, net",130300000.0000,combined line (library or label demote)
-AWI,852,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-065183,,,,note-sourced default tag (no face line)
+AWI,852,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-065183,,,25400000.0000,note fact present in the filing (FSN value)
 AWI,852,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-065183,R2,Basic,7.1300,library map
 AWI,852,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001193125-26-065183,R7,"Purchases of property, plant and equipment",109400000.0000,library map
 AWI,852,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-065183,R3,Cash and cash equivalents,112700000.0000,library map
@@ -27,7 +27,7 @@ AWI,852,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001193125-26
 AWI,852,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,Earnings before income taxes,400300000.0000,library map
 AWI,852,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,Income tax expense,91600000.0000,library map
 AWI,852,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,Interest expense,33000000.0000,library map
-AWI,852,interest_income,not_presented,,,,,,,,0001193125-26-065183,,,,no face line
+AWI,852,interest_income,not_presented,,,,,,,,0001193125-26-065183,,,,no face line and no note fact
 AWI,852,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-065183,R3,"Inventories, net",124600000.0000,library map
 AWI,852,loans_net,OUT,,,,,,,,0001193125-26-065183,,,,not a bank
 AWI,852,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,Net earnings,308700000.0000,library map

@@ -1,13 +1,13 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 RIVN,500,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001874178-26-000008,R3,Accounts payable,595000000.0000,library map
 RIVN,500,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001874178-26-000008,R3,"Accounts receivable, net (Note 2)",555000000.0000,library map
-RIVN,500,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001874178-26-000008,,,,note-sourced default tag (no face line)
+RIVN,500,amortization_of_intangibles,not_presented,,,,,,,,0001874178-26-000008,,,,no face line and no note fact
 RIVN,500,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001874178-26-000008,R5,"Net loss per share attributable to Class A and Class B common stockholders, basic (in dollars per share)",-3.0700,library map
 RIVN,500,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,Capital expenditures,1710000000.0000,library map
 RIVN,500,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001874178-26-000008,R3,Cash and cash equivalents (Note 6),3579000000.0000,library map
 RIVN,500,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,Net cash provided by financing activities,886000000.0000,library map
 RIVN,500,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001874178-26-000008,R9,Net cash used in investing activities,-1828000000.0000,library map
-RIVN,500,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001874178-26-000008,,,,note-sourced default tag (no face line)
+RIVN,500,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001874178-26-000008,,,8000000.0000,note fact present in the filing (FSN value)
 RIVN,500,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,Cash paid for interest,222000000.0000,library map
 RIVN,500,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,Accounts payable and accrued liabilities,571000000.0000,combined line (library or label demote)
 RIVN,500,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,"Accounts receivable, net",112000000.0000,library map
@@ -21,7 +21,7 @@ RIVN,500,deposits,OUT,,,,,,,,0001874178-26-000008,,,,not a bank
 RIVN,500,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001874178-26-000008,R9,Depreciation and amortization,784000000.0000,library map
 RIVN,500,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001874178-26-000008,R5,"Net loss per share attributable to Class A and Class B common stockholders, diluted (in dollars per share)",-3.0700,library map
 RIVN,500,dividends_paid,not_presented,,,,,,,,0001874178-26-000008,,,,no face line
-RIVN,500,dividends_per_share,not_presented,,,,,,,,0001874178-26-000008,,,,no face line
+RIVN,500,dividends_per_share,not_presented,,,,,,,,0001874178-26-000008,,,,no face line and no note fact
 RIVN,500,goodwill,not_presented,,,,,,,,0001874178-26-000008,,,,no face line
 RIVN,500,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001874178-26-000008,R5,Gross (loss) profit,144000000.0000,library map
 RIVN,500,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001874178-26-000008,R5,Loss before income taxes,-3620000000.0000,library map

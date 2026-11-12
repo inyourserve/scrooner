@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 URBN,831,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-137916,R2,Accounts payable,327903000.0000,library map
 URBN,831,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-137916,R2,"Accounts receivable, net of allowance for doubtful accounts of $1,384 and $1,465, respectively",95668000.0000,library map
-URBN,831,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-137916,,,,note-sourced default tag (no face line)
+URBN,831,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-137916,,,,no face line and no note fact
 URBN,831,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-137916,R4,Basic,5.1500,library map
 URBN,831,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-137916,R7,Cash paid for property and equipment,260168000.0000,library map
 URBN,831,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-137916,R2,Cash and cash equivalents,369206000.0000,library map
 URBN,831,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-137916,R7,Net cash used in financing activities,-191369000.0000,library map
 URBN,831,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-137916,R7,Net cash used in investing activities,-311652000.0000,library map
-URBN,831,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-137916,,,,note-sourced default tag (no face line)
-URBN,831,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-137916,,,,note-sourced default tag (no face line)
+URBN,831,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-137916,,,124612000.0000,note fact present in the filing (FSN value)
+URBN,831,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-137916,,,,no face line and no note fact
 URBN,831,cf_ap_change,not_presented,,,,,,,,0001193125-26-137916,,,,no face line
 URBN,831,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001193125-26-137916,R7,Receivables,19506000.0000,library map
 URBN,831,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-137916,R7,Inventory,72755000.0000,library map
@@ -21,7 +21,7 @@ URBN,831,deposits,OUT,,,,,,,,0001193125-26-137916,,,,not a bank
 URBN,831,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-137916,R7,Depreciation and amortization,128529000.0000,library map
 URBN,831,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-137916,R4,Diluted,5.0600,library map
 URBN,831,dividends_paid,not_presented,,,,,,,,0001193125-26-137916,,,,no face line
-URBN,831,dividends_per_share,not_presented,,,,,,,,0001193125-26-137916,,,,no face line
+URBN,831,dividends_per_share,not_presented,,,,,,,,0001193125-26-137916,,,,no face line and no note fact
 URBN,831,goodwill,not_presented,,,,,,,,0001193125-26-137916,,,,no face line
 URBN,831,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-137916,R4,Gross profit,2217753000.0000,library map
 URBN,831,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-137916,R4,Income before income taxes,596897000.0000,library map

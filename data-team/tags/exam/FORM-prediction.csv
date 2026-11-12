@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 FORM,789,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001039399-26-000009,R3,Accounts payable,47436000.0000,library map
 FORM,789,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001039399-26-000009,R3,"Accounts receivable, net",125416000.0000,library map
-FORM,789,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001039399-26-000009,,,,note-sourced default tag (no face line)
+FORM,789,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001039399-26-000009,,,2463000.0000,note fact present in the filing (FSN value)
 FORM,789,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001039399-26-000009,R5,Basic (in USD per share),0.7000,library map
 FORM,789,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001039399-26-000009,R8,"Acquisition of property, plant and equipment",103658000.0000,library map
 FORM,789,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001039399-26-000009,R3,Cash and cash equivalents,103330000.0000,library map
@@ -21,7 +21,7 @@ FORM,789,deposits,OUT,,,,,,,,0001039399-26-000009,,,,not a bank
 FORM,789,depreciation_and_amortization,not_presented,,,,,,,,0001039399-26-000009,,,,single component only
 FORM,789,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001039399-26-000009,R5,Diluted (in USD per share),0.6900,library map
 FORM,789,dividends_paid,not_presented,,,,,,,,0001039399-26-000009,,,,no face line
-FORM,789,dividends_per_share,not_presented,,,,,,,,0001039399-26-000009,,,,no face line
+FORM,789,dividends_per_share,not_presented,,,,,,,,0001039399-26-000009,,,,no face line and no note fact
 FORM,789,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001039399-26-000009,R3,Goodwill,216029000.0000,library map
 FORM,789,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001039399-26-000009,R5,Gross profit,308851000.0000,library map
 FORM,789,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001039399-26-000009,R5,Income before income taxes and equity investment,69391000.0000,library map

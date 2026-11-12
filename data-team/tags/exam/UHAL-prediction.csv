@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 UHAL,983,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-241850,R2,Accounts payable and accrued expenses,850294000.0000,combined line (library or label demote)
 UHAL,983,accounts_receivable,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
-UHAL,983,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-241850,,,,note-sourced default tag (no face line)
+UHAL,983,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-241850,,,,no face line and no note fact
 UHAL,983,basic_eps,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-241850,R8,"Property, plant and equipment",3154325000.0000,library map
 UHAL,983,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-241850,R2,Cash and cash equivalents,1120147000.0000,library map
@@ -21,7 +21,7 @@ UHAL,983,deposits,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
 UHAL,983,depreciation_and_amortization,not_presented,,,,,,,,0001193125-26-241850,,,,single component only
 UHAL,983,diluted_eps,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,dividends_paid,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
-UHAL,983,dividends_per_share,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
+UHAL,983,dividends_per_share,not_presented,,,,,,,,0001193125-26-241850,,,,no face line and no note fact
 UHAL,983,goodwill,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,gross_profit,OUT,,,,,,,,0001193125-26-241850,,,,sector template (bank/insurer)
 UHAL,983,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-241850,R4,Total pretax earnings,112634000.0000,library map
@@ -41,7 +41,7 @@ UHAL,983,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,
 UHAL,983,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
 UHAL,983,research_and_development,OUT,,,,,,,,0001193125-26-241850,,,,sector template (bank/insurer)
 UHAL,983,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001193125-26-241850,R4,Total revenues,6037819000.0000,library map
-UHAL,983,sbc,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
+UHAL,983,sbc,not_presented,,,,,,,,0001193125-26-241850,,,,no face line and no note fact
 UHAL,983,sga_expense,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,share_buybacks,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,shares_outstanding,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
@@ -51,4 +51,4 @@ UHAL,983,total_debt,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,total_interest_income,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
 UHAL,983,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-241850,R2,Total liabilities,13891138000.0000,library map
 UHAL,983,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001193125-26-241850,R4,Weighted average common shares outstanding: basic,196077880.0000,library map
-UHAL,983,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-241850,,,,note-sourced default tag (no face line)
+UHAL,983,weighted_diluted_shares,not_presented,,,,,,,,0001193125-26-241850,,,,no face line and no note fact

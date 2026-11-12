@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 WAT,266,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-062604,R2,Accounts payable,103778000.0000,library map
 WAT,266,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-062604,R2,"Accounts receivable, net",828844000.0000,library map
-WAT,266,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-062604,,,,note-sourced default tag (no face line)
+WAT,266,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-062604,,,118000000.0000,note fact present in the filing (FSN value)
 WAT,266,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-062604,R4,Net income per basic common share,10.8000,library map
 WAT,266,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,Y,PaymentsForProceedsFromProductiveAssets,sec_api,0001193125-26-062604,R6,"Additions to property, plant, equipment and software capitalization",112745000.0000,library map
 WAT,266,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-062604,R2,Cash and cash equivalents,587831000.0000,library map
@@ -21,7 +21,7 @@ WAT,266,deposits,OUT,,,,,,,,0001193125-26-062604,,,,not a bank
 WAT,266,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-3,N,,sec_api,0001193125-26-062604,R6,Depreciation,88144000.0000,printed face components (duration sum; total_debt founder sum)
 WAT,266,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-062604,R4,Net income per diluted common share,10.7600,library map
 WAT,266,dividends_paid,not_presented,,,,,,,,0001193125-26-062604,,,,no face line
-WAT,266,dividends_per_share,not_presented,,,,,,,,0001193125-26-062604,,,,no face line
+WAT,266,dividends_per_share,not_presented,,,,,,,,0001193125-26-062604,,,,no face line and no note fact
 WAT,266,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-062604,R2,Goodwill,1340081000.0000,library map
 WAT,266,gross_profit,not_presented,,,,,,,,0001193125-26-062604,,,,no face line
 WAT,266,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-062604,R4,Income before income taxes,754878000.0000,library map

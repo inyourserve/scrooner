@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CLX,676,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Accounts payable and accrued liabilities,1600000000.0000,combined line (library or label demote)
 CLX,676,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Receivables, net",791000000.0000,combined line (library or label demote)
-CLX,676,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000021076-26-000034,,,,note-sourced default tag (no face line)
+CLX,676,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021076-26-000034,,,28000000.0000,note fact present in the filing (FSN value)
 CLX,676,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021076-26-000034,R3,Basic net earnings per share (in dollars per share),4.8200,library map
 CLX,676,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Capital expenditures,207000000.0000,library map
 CLX,676,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Cash and cash equivalents,143000000.0000,library map
@@ -27,7 +27,7 @@ CLX,676,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000021076-26
 CLX,676,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Earnings before income taxes,791000000.0000,library map
 CLX,676,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Income taxes,190000000.0000,library map
 CLX,676,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Interest expense,130000000.0000,library map
-CLX,676,interest_income,not_presented,,,,,,,,0000021076-26-000034,,,,no face line
+CLX,676,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0000021076-26-000034,,,8000000.0000,note fact present in the filing (FSN value)
 CLX,676,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Inventories, net",777000000.0000,library map
 CLX,676,loans_net,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
 CLX,676,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Net earnings attributable to Clorox,587000000.0000,library map

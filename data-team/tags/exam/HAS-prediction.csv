@@ -50,5 +50,5 @@ HAS,559,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000046080-26-0000
 HAS,559,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000046080-26-000011,R3,Current portion of long-term debt,497000000.0000,printed face components (duration sum; total_debt founder sum)
 HAS,559,total_interest_income,OUT,,,,,,,,0000046080-26-000011,,,,not a bank
 HAS,559,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000046080-26-000011,R3,Total liabilities,4986500000.0000,library map
-HAS,559,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000046080-26-000011,,,,note-sourced default tag (no face line)
-HAS,559,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000046080-26-000011,,,,note-sourced default tag (no face line)
+HAS,559,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000046080-26-000011,,,140200000.0000,note fact present in the filing (FSN value)
+HAS,559,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000046080-26-000011,,,140200000.0000,note fact present in the filing (FSN value)

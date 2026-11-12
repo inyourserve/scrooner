@@ -1,14 +1,14 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 SYM,406,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,Accounts payable,286669000.0000,library map
 SYM,406,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,Accounts receivable,186705000.0000,library map
-SYM,406,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001837240-25-000278,,,,note-sourced default tag (no face line)
+SYM,406,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001837240-25-000278,,,14500000.0000,note fact present in the filing (FSN value)
 SYM,406,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001837240-25-000278,R5,Basic (in dollars per share),-0.1600,library map
 SYM,406,capex,not_presented,,,,,,,,0001837240-25-000278,,,,no face line
 SYM,406,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,Cash and cash equivalents,1244993000.0000,library map
 SYM,406,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001837240-25-000278,R9,Net cash provided by (used in) financing activities,668000.0000,library map
 SYM,406,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001837240-25-000278,R9,Net cash provided by (used in) investing activities,-350742000.0000,library map
-SYM,406,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001837240-25-000278,,,,note-sourced default tag (no face line)
-SYM,406,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001837240-25-000278,,,,note-sourced default tag (no face line)
+SYM,406,cash_paid_for_income_taxes,not_presented,,,,,,,,0001837240-25-000278,,,,no face line and no note fact
+SYM,406,cash_paid_for_interest,not_presented,,,,,,,,0001837240-25-000278,,,,no face line and no note fact
 SYM,406,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001837240-25-000278,R9,Accounts payable,96904000.0000,library map
 SYM,406,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001837240-25-000278,R9,Accounts receivable,-15075000.0000,library map
 SYM,406,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001837240-25-000278,R9,Inventories,58876000.0000,library map
@@ -21,13 +21,13 @@ SYM,406,deposits,OUT,,,,,,,,0001837240-25-000278,,,,not a bank
 SYM,406,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001837240-25-000278,R9,Depreciation and amortization,39604000.0000,library map
 SYM,406,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001837240-25-000278,R5,Diluted (in dollars per share),-0.1600,library map
 SYM,406,dividends_paid,combined,us-gaap:PaymentsOfCapitalDistribution,CF,+,-3,N,,sec_api,0001837240-25-000278,R9,Distributions to or on behalf of Symbotic Holdings LLC partners,1175000.0000,combined line (library or label demote)
-SYM,406,dividends_per_share,not_presented,,,,,,,,0001837240-25-000278,,,,no face line
+SYM,406,dividends_per_share,not_presented,,,,,,,,0001837240-25-000278,,,,no face line and no note fact
 SYM,406,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,Goodwill,59871000.0000,library map
 SYM,406,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001837240-25-000278,R5,Gross profit,422610000.0000,library map
 SYM,406,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0001837240-25-000278,R5,Loss before income tax and equity method investment,-78943000.0000,library map
 SYM,406,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001837240-25-000278,R5,Income tax benefit (expense),-1627000.0000,library map
 SYM,406,interest_expense,not_presented,,,,,,,,0001837240-25-000278,,,,no face line
-SYM,406,interest_income,not_presented,,,,,,,,0001837240-25-000278,,,,no face line
+SYM,406,interest_income,not_presented,,,,,,,,0001837240-25-000278,,,,no face line and no note fact
 SYM,406,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,Inventories,164390000.0000,library map
 SYM,406,loans_net,OUT,,,,,,,,0001837240-25-000278,,,,not a bank
 SYM,406,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001837240-25-000278,R5,Net loss attributable to common stockholders,-16937000.0000,library map

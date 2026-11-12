@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MAA,569,accounts_payable,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
 MAA,569,accounts_receivable,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
-MAA,569,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-041208,,,,note-sourced default tag (no face line)
+MAA,569,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-041208,,,,no face line and no note fact
 MAA,569,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-041208,R4,Net income available for MAA common shareholders,3.7900,library map
 MAA,569,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-3,N,,sec_api,0001193125-26-041208,R8,Capital improvements and other,360238000.0000,combined line (library or label demote)
 MAA,569,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-041208,R2,Cash and cash equivalents,60258000.0000,library map
@@ -27,7 +27,7 @@ MAA,569,gross_profit,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
 MAA,569,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-041208,R4,Income before income tax expense,459086000.0000,library map
 MAA,569,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-041208,R4,Income tax expense,4595000.0000,library map
 MAA,569,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-041208,R4,Interest expense,185257000.0000,library map
-MAA,569,interest_income,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
+MAA,569,interest_income,not_presented,,,,,,,,0001193125-26-041208,,,,no face line and no note fact
 MAA,569,inventory,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
 MAA,569,loans_net,OUT,,,,,,,,0001193125-26-041208,,,,not a bank
 MAA,569,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,0001193125-26-041208,R4,Net income,446909000.0000,library map
@@ -50,5 +50,5 @@ MAA,569,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-0412
 MAA,569,total_debt,combined,us-gaap:UnsecuredDebt,BS,+,-3,N,,sec_api,0001193125-26-041208,R2,"Unsecured notes payable, net",5044979000.0000,combined line (library or label demote)
 MAA,569,total_interest_income,OUT,,,,,,,,0001193125-26-041208,,,,not a bank
 MAA,569,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-041208,R2,Total liabilities,6135738000.0000,library map
-MAA,569,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-041208,,,,note-sourced default tag (no face line)
-MAA,569,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-041208,,,,note-sourced default tag (no face line)
+MAA,569,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-041208,,,116954000.0000,note fact present in the filing (FSN value)
+MAA,569,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-041208,,,117149000.0000,note fact present in the filing (FSN value)

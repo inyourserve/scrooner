@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 MXL,893,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001288469-26-000011,R3,Accounts payable,37916000.0000,library map
 MXL,893,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001288469-26-000011,R3,"Accounts receivable, net",46122000.0000,library map
-MXL,893,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001288469-26-000011,,,,note-sourced default tag (no face line)
+MXL,893,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001288469-26-000011,,,13313000.0000,note fact present in the filing (FSN value)
 MXL,893,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001288469-26-000011,R5,Basic ( in usd per share),-1.5800,library map
 MXL,893,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001288469-26-000011,R9,Purchases of property and equipment,12598000.0000,library map
 MXL,893,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001288469-26-000011,R3,Cash and cash equivalents,72806000.0000,library map
@@ -21,7 +21,7 @@ MXL,893,deposits,OUT,,,,,,,,0001288469-26-000011,,,,not a bank
 MXL,893,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001288469-26-000011,R9,Amortization and depreciation,43992000.0000,library map
 MXL,893,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001288469-26-000011,R5,Diluted (in usd per share),-1.5800,library map
 MXL,893,dividends_paid,not_presented,,,,,,,,0001288469-26-000011,,,,no face line
-MXL,893,dividends_per_share,not_presented,,,,,,,,0001288469-26-000011,,,,no face line
+MXL,893,dividends_per_share,not_presented,,,,,,,,0001288469-26-000011,,,,no face line and no note fact
 MXL,893,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001288469-26-000011,R3,Goodwill,318588000.0000,library map
 MXL,893,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001288469-26-000011,R5,Gross profit,265814000.0000,library map
 MXL,893,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001288469-26-000011,R5,Loss before income taxes,-140894000.0000,library map
