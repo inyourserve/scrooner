@@ -99,7 +99,8 @@ class _Conn:
 
 
 @pytest.mark.unit
-def test_resolve_latest_filed_batches_by_company_and_commits_each_batch():
+def test_resolve_latest_filed_batches_by_company_and_commits_each_batch(monkeypatch):
+    monkeypatch.setattr(m, "tag_map_company_ids", lambda conn, ids: [])  # no tag-map companies here
     conn = _Conn()
     totals = m.resolve_latest_filed(conn, {"0000000001", "0000000002"})
     assert totals["considered"] == 2
