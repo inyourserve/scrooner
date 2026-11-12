@@ -27,6 +27,8 @@ for r in m:
         st[c][con] = "sourced"
     if r["decision"] == "concept" and r["tag"] == "EarningsPerShareBasicAndDiluted":
         st[c]["basic_eps"] = st[c]["diluted_eps"] = "sourced"
+    if r["decision"] in ("not_presented", "not_in_template") and r["decided_by"] in ("standard_only", "fy_ruling"):  # a concept-level reasoned blank
+        st[c].setdefault(base(r["canonical_concept"]), f"{r['decision']} ({r['reason_class']})")
     if r["decision"] == "combined":
         for k in (r["components"] or "").split(";"):
             st[c].setdefault(base(k), "combined (reasoned blank)")

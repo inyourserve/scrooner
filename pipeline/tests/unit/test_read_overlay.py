@@ -125,3 +125,20 @@ def test_a_fy_ruling_cuts_the_serving_row_to_tagless_status_rows_or_swaps_the_ta
                          ("not_presented", "", "2025-12-31", "2025-12-31", "shares_per_class_only")]
     cost = sorted((r["tag"], r["era_from"], r["era_to"]) for r in out if r["ticker"] == "COST")
     assert cost == [("PaymentsOfDividends", "2026-01-01", "2026-08-31"), ("PaymentsOfDividendsCommonStock", "2025-08-31", "2025-12-31")]
+
+
+def test_an_extension_tag_never_serves_and_a_sum_with_one_is_withdrawn_only_over_that_parts_era():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("standard_only", D / "standard_only.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {**{k: "" for k in TM}, "company_id": "1", "cik": "1", "rank": "1", "ticker": "X", "stmt": "IS", "decision": "component",
+            "parent_concept": "operating_expenses_resolved", "combine_sign": "1", "decided_by": "library"}
+    rows = [{**base, "taxonomy": "us-gaap", "tag": "ResearchAndDevelopmentExpense", "era_from": "2015-03-31", "era_to": "2026-09-30"},
+            {**base, "taxonomy": "custom", "tag": "ImpairmentAndRestructuringExpenses", "era_from": "2018-06-30", "era_to": "2018-06-30"}]
+    out, n = mod.apply(rows)
+    serving = sorted((r["tag"], r["era_from"], r["era_to"]) for r in out if r["decision"] == "component")
+    assert serving == [("ResearchAndDevelopmentExpense", "2015-03-31", "2018-06-29"), ("ResearchAndDevelopmentExpense", "2018-07-01", "2026-09-30")]
+    blank = [(r["era_from"], r["era_to"], r["reason_class"], r["tag"]) for r in out if r["decision"] == "not_presented"]
+    assert blank == [("2018-06-30", "2018-06-30", "held_custom_extension_no_fact", "")]
+    assert mod.apply(out)[1] == 0  # rerun-safe
