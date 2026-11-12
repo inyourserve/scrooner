@@ -47,7 +47,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Interest paid | 87000000 | 87000000 | 22000000 | 22000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Total income taxes paid | 426000000 | 426000000 | 449000000 | 449000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-013098 R8.htm period ..2025-12-31 |
 | total_debt | component_in_note | us-gaap:SeniorNotes | R70.htm | CORPORATE BORROWINGS - Schedule of Borrowings (Details) |  |  |  |  |  | FILING-CHECKED | check: machine-full-filing / only component tag(s) SeniorNotes in the filing (R70.htm 'CORPORATE BORROWINGS - Schedule of Borrowings (Details)'); the data point itself is not reported |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 1608492642 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 1608492642 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -59,3 +59,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - weighted_basic_shares: API missing (us-gaap:WeightedAverageNumberOfSharesOutstandingBasic)
 - weighted_diluted_shares: API missing (us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding)
 - accounts_receivable: API missing (bam:AccountsReceivableAndOtherNet)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

@@ -13,7 +13,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R4.htm | Total revenue | 4482000000 | 4482000000 | 3653000000 | 3653000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
-| cost_of_revenue | component sum | us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization[member: Cost of services]+us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization[member: Cost of services] | R4.htm | Cost of services + Cost of services | 2971000000 |  | 2488000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization | R4.htm | Cost of services | 2758000000 |  | 2294000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / matched by printed label (tag outside the usual set) / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
 | gross_profit | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (954 tags across all 91 R pages, face and notes) of 0001104659-26-020653; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | combined | us-gaap:CostsAndExpenses | R4.htm | Total operating costs and expenses | 3905000000 | 3905000000 | 3366000000 | 3366000000 | Y | FILING-CHECKED | check: machine-full-filing / CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
 | sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R4.htm | Selling, general and administrative, including stock-based compensation | 514000000 | 514000000 | 421000000 | 421000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001104659-26-020653 R4.htm period ..2025-12-31 |
@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R60.htm | Cash paid for interest, net of amounts capitalized | 232000000 | 232000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Supplemental Disclosures to Consolidated Statements of Cash Flows (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R60.htm | Total cash paid for income taxes, net | 123000000 | 123000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Supplemental Disclosures to Consolidated Statements of Cash Flows (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent | R2.htm | Current portion of debt + Long-term debt, including $597 million and $588 million measured at fair value, respectively | 5100000000 | 5100000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; no finance lease liability fact in the filing; operating leases never included |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 250474288 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 23991058 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001558370-16-003609 R4.htm prints 'Total Revenue' on us-gaap:SalesRevenueNet = 4795000000 (FILING-CHECKED)
@@ -86,6 +86,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - revenue: era 10-K 0001558370-19-001329 R4.htm prints 'Total revenue' on us-gaap:Revenues = 8040000000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization[member: Cost of services]+us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization[member: Cost of services])
+- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization)
 - basic_eps: API missing (us-gaap:IncomeLossFromContinuingOperationsPerBasicShare)
 - diluted_eps: API missing (us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

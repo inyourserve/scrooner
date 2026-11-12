@@ -46,7 +46,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Cash paid for interest | 298700000 | 298700000 | 411400000 | 411400000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-012572 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Cash paid for income taxes, net of refunds received | 131500000 | 131500000 | 118200000 | 118200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-012572 R8.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability(note) | R5.htm | Short-term debt and current portion of long-term debt + Long-term debt + finance lease liabilities (note) | 3679800000 | 3679800000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; finance lease liabilities 69700000 from the lease note (no face line carries them); operating leases never included |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R6.htm | Outstanding shares (in shares) | 295000000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R6.htm | Outstanding shares (in shares) | 295000000 | 295000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read

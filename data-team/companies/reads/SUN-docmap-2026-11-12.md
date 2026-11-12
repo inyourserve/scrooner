@@ -34,7 +34,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R3.htm | Property, plant and equipment, net | 13408000000 | 13408000000 | 7674000000 | 7674000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
 | goodwill | mapped | us-gaap:Goodwill | R3.htm | Goodwill | 3026000000 | 3026000000 | 1477000000 | 1477000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
 | total_assets | mapped | us-gaap:Assets | R3.htm | Total assets | 28362000000 | 28362000000 | 14375000000 | 14375000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
-| accounts_payable | component sum | us-gaap:AccountsPayableCurrent[member: Accounts payable]+us-gaap:AccountsPayableCurrent[member: Accounts payable] | R3.htm | Accounts payable + Accounts payable | 2816000000 |  | 1454000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R3.htm | Accounts payable | 331000000 |  | 199000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
 | current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R3.htm | Total current liabilities | 3997000000 | 3997000000 | 1947000000 | 1947000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
 | total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total liabilities | 20353000000 | 20353000000 | 10307000000 | 10307000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001552275-26-000021 R3.htm period ..2025-12-31 |
 | stockholders_equity | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of StockholdersEquity in MetaLinks.json (1133 tags across all 105 R pages, face and notes) of 0001552275-26-000021; label search over every tag in the filing (custom included) found no candidate |
@@ -89,4 +89,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Mismatches (printed vs API)
 - basic_eps: API missing (sun:NetIncomeLossAvailableToCommonUnits)
 - accounts_receivable: API missing (us-gaap:AccountsReceivableNetCurrent)
-- accounts_payable: API missing (us-gaap:AccountsPayableCurrent[member: Accounts payable]+us-gaap:AccountsPayableCurrent[member: Accounts payable])
+- accounts_payable: API missing (us-gaap:AccountsPayableCurrent)

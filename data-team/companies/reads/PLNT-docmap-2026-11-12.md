@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Cash paid for interest | 100247000 | 100247000 | 90853000 | 90853000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001637207-26-000011 R7.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R95.htm | Net cash paid for income taxes | 21450000 | 21450000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R95.htm 'Income taxes - Additional information (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:LongTermDebtCurrent+us-gaap:FinanceLeaseLiability(note) | R3.htm | Current maturities of long-term debt + finance lease liabilities (note) | 24851000 | 24851000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; finance lease liabilities 976000 from the lease note (no face line carries them); operating leases never included |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 80762000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 80446000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001564590-16-014027 R4.htm prints 'Total revenue' on us-gaap:SalesRevenueNet = 330537000 (FILING-CHECKED)
@@ -98,3 +98,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - diluted_eps: API missing (us-gaap:EarningsPerShareDiluted)
 - weighted_basic_shares: API missing (us-gaap:WeightedAverageNumberOfSharesOutstandingBasic)
 - weighted_diluted_shares: API missing (us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding)
+- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
