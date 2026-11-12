@@ -295,9 +295,13 @@ for cid, rs in by_co.items():
         if r and not any(("BS", t) in idx for t in ("CashAndCashEquivalentsAtCarryingValue", "Cash")):
             r.update(decision="excluded", canonical_concept="", reason_class="bank_cash_perimeter",
                      reason="bank cash and due from banks (+ deposits with banks): bank-template cash perimeter pending", decided_by="library")
-        for t in ("InterestIncomeExpenseNet", "InterestAndDividendIncomeOperating"):
+        for t, con in (("InterestIncomeExpenseNet", "net_interest_income"), ("InterestAndDividendIncomeOperating", "interest_income"),
+                       ("InterestIncomeOperating", "interest_income")):
             r = idx.get(("IS", t))
-            if r:
+            if r and "net_interest_income" in CATALOG:  # 0122 added the bank headline: the face line is the concept
+                r.update(decision="concept", canonical_concept=con, reason_class="",
+                         reason="bank income statement face line (bank template headline; concept from 0122)", decided_by="library")
+            elif r and t != "InterestIncomeOperating":
                 r.update(decision="excluded", canonical_concept="", reason_class="catalog_gap_bank_nii",
                          reason="bank NII / interest income is a bank-template headline; catalog has no net_interest_income concept yet (Engineering)", decided_by="library")
     # income before tax by calc position (+1 beside the income-tax line under one parent): structure, not label

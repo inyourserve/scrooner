@@ -220,7 +220,6 @@ company_id,template,data_point
 3,general,net_income_growth_5y_cagr
 3,general,net_income_growth_yoy
 3,general,net_income_resolved
-3,general,net_interest_income
 3,general,net_lease_revenue
 3,general,net_margin
 3,general,ocf_to_net_income
@@ -382,7 +381,6 @@ company_id,template,data_point
 4,general,net_income_growth_5y_cagr
 4,general,net_income_growth_yoy
 4,general,net_income_resolved
-4,general,net_interest_income
 4,general,net_lease_revenue
 4,general,net_margin
 4,general,ocf_to_net_income
@@ -544,7 +542,6 @@ company_id,template,data_point
 9,general,net_income_growth_5y_cagr
 9,general,net_income_growth_yoy
 9,general,net_income_resolved
-9,general,net_interest_income
 9,general,net_lease_revenue
 9,general,net_margin
 9,general,ocf_to_net_income
@@ -706,7 +703,6 @@ company_id,template,data_point
 85,general,net_income_growth_5y_cagr
 85,general,net_income_growth_yoy
 85,general,net_income_resolved
-85,general,net_interest_income
 85,general,net_lease_revenue
 85,general,net_margin
 85,general,ocf_to_net_income
@@ -868,7 +864,6 @@ company_id,template,data_point
 134,general,net_income_growth_5y_cagr
 134,general,net_income_growth_yoy
 134,general,net_income_resolved
-134,general,net_interest_income
 134,general,net_lease_revenue
 134,general,net_margin
 134,general,ocf_to_net_income
@@ -1030,7 +1025,6 @@ company_id,template,data_point
 251,general,net_income_growth_5y_cagr
 251,general,net_income_growth_yoy
 251,general,net_income_resolved
-251,general,net_interest_income
 251,general,net_lease_revenue
 251,general,net_margin
 251,general,ocf_to_net_income
@@ -1192,7 +1186,6 @@ company_id,template,data_point
 279,general,net_income_growth_5y_cagr
 279,general,net_income_growth_yoy
 279,general,net_income_resolved
-279,general,net_interest_income
 279,general,net_lease_revenue
 279,general,net_margin
 279,general,ocf_to_net_income
@@ -1354,7 +1347,6 @@ company_id,template,data_point
 608,general,net_income_growth_5y_cagr
 608,general,net_income_growth_yoy
 608,general,net_income_resolved
-608,general,net_interest_income
 608,general,net_lease_revenue
 608,general,net_margin
 608,general,ocf_to_net_income
@@ -1516,7 +1508,6 @@ company_id,template,data_point
 643,general,net_income_growth_5y_cagr
 643,general,net_income_growth_yoy
 643,general,net_income_resolved
-643,general,net_interest_income
 643,general,net_lease_revenue
 643,general,net_margin
 643,general,ocf_to_net_income
@@ -1678,7 +1669,6 @@ company_id,template,data_point
 666,general,net_income_growth_5y_cagr
 666,general,net_income_growth_yoy
 666,general,net_income_resolved
-666,general,net_interest_income
 666,general,net_lease_revenue
 666,general,net_margin
 666,general,ocf_to_net_income
@@ -2069,7 +2059,6 @@ company_id,template,data_point
 1042,general,net_income_growth_5y_cagr
 1042,general,net_income_growth_yoy
 1042,general,net_income_resolved
-1042,general,net_interest_income
 1042,general,net_lease_revenue
 1042,general,net_margin
 1042,general,ocf_to_net_income
@@ -2231,7 +2220,6 @@ company_id,template,data_point
 1086,general,net_income_growth_5y_cagr
 1086,general,net_income_growth_yoy
 1086,general,net_income_resolved
-1086,general,net_interest_income
 1086,general,net_lease_revenue
 1086,general,net_margin
 1086,general,ocf_to_net_income
@@ -2393,7 +2381,6 @@ company_id,template,data_point
 1104,general,net_income_growth_5y_cagr
 1104,general,net_income_growth_yoy
 1104,general,net_income_resolved
-1104,general,net_interest_income
 1104,general,net_lease_revenue
 1104,general,net_margin
 1104,general,ocf_to_net_income
@@ -2555,7 +2542,6 @@ company_id,template,data_point
 1105,general,net_income_growth_5y_cagr
 1105,general,net_income_growth_yoy
 1105,general,net_income_resolved
-1105,general,net_interest_income
 1105,general,net_lease_revenue
 1105,general,net_margin
 1105,general,ocf_to_net_income
@@ -2717,7 +2703,6 @@ company_id,template,data_point
 1123,general,net_income_growth_5y_cagr
 1123,general,net_income_growth_yoy
 1123,general,net_income_resolved
-1123,general,net_interest_income
 1123,general,net_lease_revenue
 1123,general,net_margin
 1123,general,ocf_to_net_income
@@ -2879,7 +2864,6 @@ company_id,template,data_point
 1134,general,net_income_growth_5y_cagr
 1134,general,net_income_growth_yoy
 1134,general,net_income_resolved
-1134,general,net_interest_income
 1134,general,net_lease_revenue
 1134,general,net_margin
 1134,general,ocf_to_net_income
@@ -3041,7 +3025,6 @@ company_id,template,data_point
 1164,general,net_income_growth_5y_cagr
 1164,general,net_income_growth_yoy
 1164,general,net_income_resolved
-1164,general,net_interest_income
 1164,general,net_lease_revenue
 1164,general,net_margin
 1164,general,ocf_to_net_income
@@ -3203,7 +3186,6 @@ company_id,template,data_point
 1182,general,net_income_growth_5y_cagr
 1182,general,net_income_growth_yoy
 1182,general,net_income_resolved
-1182,general,net_interest_income
 1182,general,net_lease_revenue
 1182,general,net_margin
 1182,general,ocf_to_net_income
@@ -3365,7 +3347,6 @@ company_id,template,data_point
 1207,general,net_income_growth_5y_cagr
 1207,general,net_income_growth_yoy
 1207,general,net_income_resolved
-1207,general,net_interest_income
 1207,general,net_lease_revenue
 1207,general,net_margin
 1207,general,ocf_to_net_income
@@ -3527,7 +3508,6 @@ company_id,template,data_point
 1236,general,net_income_growth_5y_cagr
 1236,general,net_income_growth_yoy
 1236,general,net_income_resolved
-1236,general,net_interest_income
 1236,general,net_lease_revenue
 1236,general,net_margin
 1236,general,ocf_to_net_income
@@ -3689,7 +3669,6 @@ company_id,template,data_point
 1263,general,net_income_growth_5y_cagr
 1263,general,net_income_growth_yoy
 1263,general,net_income_resolved
-1263,general,net_interest_income
 1263,general,net_lease_revenue
 1263,general,net_margin
 1263,general,ocf_to_net_income
@@ -3851,7 +3830,6 @@ company_id,template,data_point
 1321,general,net_income_growth_5y_cagr
 1321,general,net_income_growth_yoy
 1321,general,net_income_resolved
-1321,general,net_interest_income
 1321,general,net_lease_revenue
 1321,general,net_margin
 1321,general,ocf_to_net_income
@@ -4013,7 +3991,6 @@ company_id,template,data_point
 1354,general,net_income_growth_5y_cagr
 1354,general,net_income_growth_yoy
 1354,general,net_income_resolved
-1354,general,net_interest_income
 1354,general,net_lease_revenue
 1354,general,net_margin
 1354,general,ocf_to_net_income
@@ -4175,7 +4152,6 @@ company_id,template,data_point
 1649,general,net_income_growth_5y_cagr
 1649,general,net_income_growth_yoy
 1649,general,net_income_resolved
-1649,general,net_interest_income
 1649,general,net_lease_revenue
 1649,general,net_margin
 1649,general,ocf_to_net_income
@@ -4328,7 +4304,6 @@ company_id,template,data_point
 1767,broker_am,net_income_growth_5y_cagr
 1767,broker_am,net_income_growth_yoy
 1767,broker_am,net_income_resolved
-1767,broker_am,net_interest_income
 1767,broker_am,net_lease_revenue
 1767,broker_am,net_margin
 1767,broker_am,ocf_to_net_income
@@ -4478,7 +4453,6 @@ company_id,template,data_point
 1807,broker_am,net_income_growth_5y_cagr
 1807,broker_am,net_income_growth_yoy
 1807,broker_am,net_income_resolved
-1807,broker_am,net_interest_income
 1807,broker_am,net_lease_revenue
 1807,broker_am,net_margin
 1807,broker_am,ocf_to_net_income
@@ -4637,7 +4611,6 @@ company_id,template,data_point
 1857,general,net_income_growth_5y_cagr
 1857,general,net_income_growth_yoy
 1857,general,net_income_resolved
-1857,general,net_interest_income
 1857,general,net_lease_revenue
 1857,general,net_margin
 1857,general,ocf_to_net_income
@@ -4799,7 +4772,6 @@ company_id,template,data_point
 2328,general,net_income_growth_5y_cagr
 2328,general,net_income_growth_yoy
 2328,general,net_income_resolved
-2328,general,net_interest_income
 2328,general,net_lease_revenue
 2328,general,net_margin
 2328,general,ocf_to_net_income
@@ -4961,7 +4933,6 @@ company_id,template,data_point
 2726,general,net_income_growth_5y_cagr
 2726,general,net_income_growth_yoy
 2726,general,net_income_resolved
-2726,general,net_interest_income
 2726,general,net_lease_revenue
 2726,general,net_margin
 2726,general,ocf_to_net_income
@@ -5123,7 +5094,6 @@ company_id,template,data_point
 2733,general,net_income_growth_5y_cagr
 2733,general,net_income_growth_yoy
 2733,general,net_income_resolved
-2733,general,net_interest_income
 2733,general,net_lease_revenue
 2733,general,net_margin
 2733,general,ocf_to_net_income
@@ -5285,7 +5255,6 @@ company_id,template,data_point
 2848,general,net_income_growth_5y_cagr
 2848,general,net_income_growth_yoy
 2848,general,net_income_resolved
-2848,general,net_interest_income
 2848,general,net_lease_revenue
 2848,general,net_margin
 2848,general,ocf_to_net_income
@@ -5447,7 +5416,6 @@ company_id,template,data_point
 3007,general,net_income_growth_5y_cagr
 3007,general,net_income_growth_yoy
 3007,general,net_income_resolved
-3007,general,net_interest_income
 3007,general,net_lease_revenue
 3007,general,net_margin
 3007,general,ocf_to_net_income
@@ -5609,7 +5577,6 @@ company_id,template,data_point
 3083,general,net_income_growth_5y_cagr
 3083,general,net_income_growth_yoy
 3083,general,net_income_resolved
-3083,general,net_interest_income
 3083,general,net_lease_revenue
 3083,general,net_margin
 3083,general,ocf_to_net_income
@@ -5771,7 +5738,6 @@ company_id,template,data_point
 3398,general,net_income_growth_5y_cagr
 3398,general,net_income_growth_yoy
 3398,general,net_income_resolved
-3398,general,net_interest_income
 3398,general,net_lease_revenue
 3398,general,net_margin
 3398,general,ocf_to_net_income
@@ -5933,7 +5899,6 @@ company_id,template,data_point
 3418,general,net_income_growth_5y_cagr
 3418,general,net_income_growth_yoy
 3418,general,net_income_resolved
-3418,general,net_interest_income
 3418,general,net_lease_revenue
 3418,general,net_margin
 3418,general,ocf_to_net_income
@@ -6095,7 +6060,6 @@ company_id,template,data_point
 3932,general,net_income_growth_5y_cagr
 3932,general,net_income_growth_yoy
 3932,general,net_income_resolved
-3932,general,net_interest_income
 3932,general,net_lease_revenue
 3932,general,net_margin
 3932,general,ocf_to_net_income
@@ -6257,7 +6221,6 @@ company_id,template,data_point
 4015,general,net_income_growth_5y_cagr
 4015,general,net_income_growth_yoy
 4015,general,net_income_resolved
-4015,general,net_interest_income
 4015,general,net_lease_revenue
 4015,general,net_margin
 4015,general,ocf_to_net_income
@@ -6419,7 +6382,6 @@ company_id,template,data_point
 4841,general,net_income_growth_5y_cagr
 4841,general,net_income_growth_yoy
 4841,general,net_income_resolved
-4841,general,net_interest_income
 4841,general,net_lease_revenue
 4841,general,net_margin
 4841,general,ocf_to_net_income
@@ -6581,7 +6543,6 @@ company_id,template,data_point
 4945,general,net_income_growth_5y_cagr
 4945,general,net_income_growth_yoy
 4945,general,net_income_resolved
-4945,general,net_interest_income
 4945,general,net_lease_revenue
 4945,general,net_margin
 4945,general,ocf_to_net_income
@@ -6743,7 +6704,6 @@ company_id,template,data_point
 4969,general,net_income_growth_5y_cagr
 4969,general,net_income_growth_yoy
 4969,general,net_income_resolved
-4969,general,net_interest_income
 4969,general,net_lease_revenue
 4969,general,net_margin
 4969,general,ocf_to_net_income
@@ -6905,7 +6865,6 @@ company_id,template,data_point
 5050,general,net_income_growth_5y_cagr
 5050,general,net_income_growth_yoy
 5050,general,net_income_resolved
-5050,general,net_interest_income
 5050,general,net_lease_revenue
 5050,general,net_margin
 5050,general,ocf_to_net_income
@@ -7067,7 +7026,6 @@ company_id,template,data_point
 5058,general,net_income_growth_5y_cagr
 5058,general,net_income_growth_yoy
 5058,general,net_income_resolved
-5058,general,net_interest_income
 5058,general,net_lease_revenue
 5058,general,net_margin
 5058,general,ocf_to_net_income
@@ -7229,7 +7187,6 @@ company_id,template,data_point
 5116,general,net_income_growth_5y_cagr
 5116,general,net_income_growth_yoy
 5116,general,net_income_resolved
-5116,general,net_interest_income
 5116,general,net_lease_revenue
 5116,general,net_margin
 5116,general,ocf_to_net_income
@@ -7391,7 +7348,6 @@ company_id,template,data_point
 5203,general,net_income_growth_5y_cagr
 5203,general,net_income_growth_yoy
 5203,general,net_income_resolved
-5203,general,net_interest_income
 5203,general,net_lease_revenue
 5203,general,net_margin
 5203,general,ocf_to_net_income
@@ -7553,7 +7509,6 @@ company_id,template,data_point
 5351,general,net_income_growth_5y_cagr
 5351,general,net_income_growth_yoy
 5351,general,net_income_resolved
-5351,general,net_interest_income
 5351,general,net_lease_revenue
 5351,general,net_margin
 5351,general,ocf_to_net_income
@@ -7715,7 +7670,6 @@ company_id,template,data_point
 5718,general,net_income_growth_5y_cagr
 5718,general,net_income_growth_yoy
 5718,general,net_income_resolved
-5718,general,net_interest_income
 5718,general,net_lease_revenue
 5718,general,net_margin
 5718,general,ocf_to_net_income
@@ -7877,7 +7831,6 @@ company_id,template,data_point
 5761,general,net_income_growth_5y_cagr
 5761,general,net_income_growth_yoy
 5761,general,net_income_resolved
-5761,general,net_interest_income
 5761,general,net_lease_revenue
 5761,general,net_margin
 5761,general,ocf_to_net_income
