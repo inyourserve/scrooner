@@ -1,55 +1,95 @@
 # PLXS document-first map 2026-11-12 (read-only, bottom-up)
 
-Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is the tool finding no matching face line, not a by-hand verdict.
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.
 
 ## Filings opened
 - 10-K 0000785786-25-000064 (CIK 0000785786, filed 2025-11-14): COVER R1.htm, CI R2.htm, BS R3.htm, BSP R4.htm, CF R6.htm
+- 10-K 0000785786-15-000044 (CIK 0000785786, filed FY2015 era): COVER R1.htm, IS R2.htm, BS R3.htm, BSP R4.htm, CI R5.htm, CF R6.htm
+- 10-K 0000785786-18-000051 (CIK 0000785786, era filing): COVER R1.htm, CI R2.htm, BS R3.htm, BSP R4.htm, CF R6.htm
+- 10-K 0000785786-20-000102 (CIK 0000785786, era filing): COVER R1.htm, CI R2.htm, BS R3.htm, BSP R4.htm, CF R6.htm
 - companyfacts CIK0000785786.json (one call).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| revenue | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| cost_of_revenue | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| gross_profit | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| operating_expenses | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| sga_expense | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| research_and_development | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| operating_income | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| interest_expense | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| income_before_tax | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| income_tax_expense | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| net_income | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| basic_eps | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| diluted_eps | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| weighted_basic_shares | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| weighted_diluted_shares | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | AUTO: statement page not identified in FilingSummary; not hand-verified |
-| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R3.htm | Cash and cash equivalents | 306464000 | 306464000 | 345109000 | 345109000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R3.htm | Accounts receivable, net of allowances of $2,381 and $3,189, respectively | 656573000 | 656573000 | 622366000 | 622366000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| inventory | mapped | us-gaap:InventoryNet | R3.htm | Inventories | 1229839000 | 1229839000 | 1311434000 | 1311434000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| current_assets | mapped | us-gaap:AssetsCurrent | R3.htm | Total current assets | 2398793000 | 2398793000 | 2477150000 | 2477150000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization | R3.htm | Property, plant and equipment, net | 546052000 | 546052000 | 501112000 | 501112000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| goodwill | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R3.htm read; no face row matched the goodwill tag/label rules; not hand-verified |
-| total_assets | mapped | us-gaap:Assets | R3.htm | Total assets | 3137110000 | 3137110000 | 3153821000 | 3153821000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R3.htm | Accounts payable | 726597000 | 726597000 | 606378000 | 606378000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R3.htm | Total current liabilities | 1518683000 | 1518683000 | 1643294000 | 1643294000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total liabilities | 1682522000 | 1682522000 | 1828996000 | 1828996000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| stockholders_equity | mapped | us-gaap:StockholdersEquity | R3.htm | Total shareholders’ equity | 1454588000 | 1454588000 | 1324825000 | 1324825000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
-| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R6.htm | Cash flows provided by operating activities | 249231000 | 249231000 | 436502000 | 436502000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R6.htm | Cash flows used in investing activities | -95611000 | -95611000 | -94947000 | -94947000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R6.htm | Cash flows used in financing activities | -196404000 | -196404000 | -255586000 | -255586000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R6.htm | Payments for property, plant and equipment | -95264000 | 95264000 | -95182000 | 95182000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R6.htm | Depreciation and amortization | 77792000 | 77792000 | 77847000 | 77847000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| sbc | mapped | us-gaap:ShareBasedCompensation | R6.htm | Share-based compensation expense and related charges | 30268000 | 30268000 | 30314000 | 30314000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| dividends_paid | not_presented |  | R6.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: R6.htm read; no face row matched the dividends_paid tag/label rules; not hand-verified |
-| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R6.htm | Repurchases of common stock | -65336000 | 65336000 | -55686000 | 55686000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R6.htm | Interest paid | 12339000 | 12339000 | 29519000 | 29519000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R6.htm | Income taxes paid | 44782000 | 44782000 | 46223000 | 46223000 | Y | FILING-CHECKED | accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
-| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | AUTO: no standard debt line on the BS face; not hand-verified |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 26828000 | 26828000 |  |  | Y | FILING-CHECKED | balance-sheet date 2025-09-27; single row |
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R80.htm | Revenue from Contract with Customer | 4032966000 | 4032966000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R80.htm 'Revenue from Contracts with Customers - Schedule of Disaggregation of Revenue (D' (MetaLinks.json presentation) |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R73.htm | Cost of sales | 3626452000 | 3626452000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R73.htm 'Reportable Segments, Geographic Information and Major Customers - Schedule of Re' (MetaLinks.json presentation) |
+| gross_profit | mapped | us-gaap:GrossProfit | R2.htm | Gross profit | 406514000 | 406514000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R2.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
+| operating_expenses | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingExpenses in MetaLinks.json (793 tags across all 85 R pages, face and notes) of 0000785786-25-000064; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:GrossProfit 'Gross profit / Gross Profit / Aggregate revenue less cost of' R2; us-gaap:OperatingIncomeLoss 'Operating income / Segment income / Operating Income (Loss) ' R2,R73 |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R73.htm | Selling and administrative expenses | 199460000 | 199460000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R73.htm 'Reportable Segments, Geographic Information and Major Customers - Schedule of Re' (MetaLinks.json presentation) |
+| research_and_development | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (793 tags across all 85 R pages, face and notes) of 0000785786-25-000064; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:DeferredTaxAssetsInProcessResearchAndDevelopment 'Research and development capitalization / Deferred Tax Asset' R62; us-gaap:EffectiveIncomeTaxRateReconciliationTaxCredits 'Tax credits, net / Effective Income Tax Rate Reconciliation,' R61 |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R73.htm | Segment income | 202371000 | 202371000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R73.htm 'Reportable Segments, Geographic Information and Major Customers - Schedule of Re' (MetaLinks.json presentation) |
+| interest_expense | mapped | us-gaap:InterestExpense | R73.htm | Interest Expense | -11605000 | 11605000 |  |  | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R73.htm 'Reportable Segments, Geographic Information and Major Customers - Schedule of Re' (MetaLinks.json presentation) |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R59.htm | Income before income taxes | 188018000 | 188018000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R59.htm 'Income Taxes - Schedule of Domestic and Foreign Components of Income (Loss) Befo' (MetaLinks.json presentation) |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R60.htm | Income Tax Expense (Benefit) | 15133000 | 15133000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Income Taxes - Schedule of Income Tax Expense (Benefit) (Details)' (MetaLinks.json presentation) |
+| net_income | mapped | us-gaap:NetIncomeLoss | R65.htm | Net income | 172885000 | 172885000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R65.htm 'Earnings Per Share - Reconciliation of Amounts Utilized in Computation of Basic ' (MetaLinks.json presentation) |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R65.htm | Basic (in dollars per share) | 6390 | 6.39 |  |  | N (printed 6390 vs API 6.39) | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R65.htm 'Earnings Per Share - Reconciliation of Amounts Utilized in Computation of Basic ' (MetaLinks.json presentation) |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R65.htm | Diluted (in dollars per share) | 6260 | 6.26 |  |  | N (printed 6260 vs API 6.26) | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R65.htm 'Earnings Per Share - Reconciliation of Amounts Utilized in Computation of Basic ' (MetaLinks.json presentation) |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R65.htm | Basic weighted average common shares outstanding (in shares) | 27038000 | 27038000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R65.htm 'Earnings Per Share - Reconciliation of Amounts Utilized in Computation of Basic ' (MetaLinks.json presentation) |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R65.htm | Diluted weighted average shares outstanding (in shares) | 27616000 | 27616000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R65.htm 'Earnings Per Share - Reconciliation of Amounts Utilized in Computation of Basic ' (MetaLinks.json presentation) |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R3.htm | Cash and cash equivalents | 306464000 | 306464000 | 345109000 | 345109000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R3.htm | Accounts receivable, net of allowances of $2,381 and $3,189, respectively | 656573000 | 656573000 | 622366000 | 622366000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| inventory | mapped | us-gaap:InventoryNet | R3.htm | Inventories | 1229839000 | 1229839000 | 1311434000 | 1311434000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R3.htm | Total current assets | 2398793000 | 2398793000 | 2477150000 | 2477150000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization | R3.htm | Property, plant and equipment, net | 546052000 | 546052000 | 501112000 | 501112000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| goodwill | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of Goodwill in MetaLinks.json (793 tags across all 85 R pages, face and notes) of 0000785786-25-000064; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:AssetImpairmentCharges 'Asset impairment charges / Asset Impairment Charges / Amount' R6 |
+| total_assets | mapped | us-gaap:Assets | R3.htm | Total assets | 3137110000 | 3137110000 | 3153821000 | 3153821000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R3.htm | Accounts payable | 726597000 | 726597000 | 606378000 | 606378000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R3.htm | Total current liabilities | 1518683000 | 1518683000 | 1643294000 | 1643294000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total liabilities | 1682522000 | 1682522000 | 1828996000 | 1828996000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R3.htm | Total shareholders’ equity | 1454588000 | 1454588000 | 1324825000 | 1324825000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R3.htm period ..2025-09-27 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R6.htm | Cash flows provided by operating activities | 249231000 | 249231000 | 436502000 | 436502000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R6.htm | Cash flows used in investing activities | -95611000 | -95611000 | -94947000 | -94947000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R6.htm | Cash flows used in financing activities | -196404000 | -196404000 | -255586000 | -255586000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R6.htm | Payments for property, plant and equipment | -95264000 | 95264000 | -95182000 | 95182000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R6.htm | Depreciation and amortization | 77792000 | 77792000 | 77847000 | 77847000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R6.htm | Share-based compensation expense and related charges | 30268000 | 30268000 | 30314000 | 30314000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| dividends_paid | not_presented |  | R6.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends in MetaLinks.json (793 tags across all 85 R pages, face and notes) of 0000785786-25-000064; label search over every tag in the filing (custom included) found no candidate |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R6.htm | Repurchases of common stock | -65336000 | 65336000 | -55686000 | 55686000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R6.htm | Interest paid | 12339000 | 12339000 | 29519000 | 29519000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R6.htm | Income taxes paid | 44782000 | 44782000 | 46223000 | 46223000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000785786-25-000064 R6.htm period ..2025-09-27 |
+| total_debt | mapped | us-gaap:LongTermDebt | R52.htm | Long-term debt | 100000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R52.htm 'Debt, Finance Lease and Other Financing Obligations- Narrative (Details)' (MetaLinks.json presentation) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 26828000 | 26828000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-09-27; single row |
 
-## Era checks (tag changes in the last ~5 years)
-none found in companyfacts
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- revenue: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Net sales' on us-gaap:SalesRevenueNet = 2654290000 (FILING-CHECKED)
+- cost_of_revenue: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Cost of sales' on us-gaap:CostOfGoodsAndServicesSold = 2414740000 (FILING-CHECKED)
+- gross_profit: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Gross profit' on us-gaap:GrossProfit = 239550000 (FILING-CHECKED)
+- sga_expense: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Selling, General and Administrative Expense' on us-gaap:SellingGeneralAndAdministrativeExpense = 122423000 (FILING-CHECKED)
+- operating_income: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Operating income' on us-gaap:OperatingIncomeLoss = 115436000 (FILING-CHECKED)
+- interest_expense: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Interest expense' on us-gaap:InterestExpense = -13964000 (FILING-CHECKED)
+- income_before_tax: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Income before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments = 106295000 (FILING-CHECKED)
+- income_tax_expense: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Income tax expense (benefit)' on us-gaap:IncomeTaxExpenseBenefit = 11963000 (FILING-CHECKED)
+- net_income: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Net income' on us-gaap:NetIncomeLoss = 94332000 (FILING-CHECKED)
+- basic_eps: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Earnings Per Share, Basic' on us-gaap:EarningsPerShareBasic = 2.81 (FILING-CHECKED)
+- diluted_eps: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Earnings Per Share, Diluted' on us-gaap:EarningsPerShareDiluted = 2.74 (FILING-CHECKED)
+- weighted_basic_shares: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Basic' on us-gaap:WeightedAverageNumberOfSharesOutstandingBasic = 33618000 (FILING-CHECKED)
+- weighted_diluted_shares: FY2015 10-K 0000785786-15-000044 R2.htm prints 'Diluted' on us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding = 34379000 (FILING-CHECKED)
+- cash_and_equivalents: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Cash and Cash Equivalents, at Carrying Value' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 357106000 (FILING-CHECKED)
+- accounts_receivable: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Accounts receivable, net of allowances of $879 and $1,188, respectively' on us-gaap:AccountsReceivableNetCurrent = 384680000 (FILING-CHECKED)
+- inventory: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Inventories' on us-gaap:InventoryNet = 569371000 (FILING-CHECKED)
+- current_assets: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Total current assets' on us-gaap:AssetsCurrent = 1344725000 (FILING-CHECKED)
+- ppe_net: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Property, Plant and Equipment, Net' on us-gaap:PropertyPlantAndEquipmentNet = 317351000 (FILING-CHECKED)
+- total_assets: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Total assets' on us-gaap:Assets = 1702388000 (FILING-CHECKED)
+- accounts_payable: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Accounts payable' on us-gaap:AccountsPayableCurrent = 400710000 (FILING-CHECKED)
+- current_liabilities: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Total current liabilities' on us-gaap:LiabilitiesCurrent = 579298000 (FILING-CHECKED)
+- total_liabilities: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Liabilities' on us-gaap:Liabilities = 860116000 (FILING-CHECKED)
+- stockholders_equity: FY2015 10-K 0000785786-15-000044 R3.htm prints 'Total shareholders' equity' on us-gaap:StockholdersEquity = 842272000 (FILING-CHECKED)
+- cfo: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Cash flows provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 76572000 (FILING-CHECKED)
+- cash_flow_investing: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Cash flows used in investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivities = -34669000 (FILING-CHECKED)
+- cash_flow_financing: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Cash flows (used in) provided by financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivities = -26203000 (FILING-CHECKED)
+- capex: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Payments to Acquire Property, Plant, and Equipment' on us-gaap:PaymentsToAcquirePropertyPlantAndEquipment = 35076000 (FILING-CHECKED)
+- depreciation_and_amortization: FY2015 10-K 0000785786-15-000044 R6.htm read; no row matched (auto)
+- sbc: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Share-based Compensation' on us-gaap:ShareBasedCompensation = 13252000 (FILING-CHECKED)
+- share_buybacks: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Purchases of common stock' on us-gaap:PaymentsForRepurchaseOfCommonStock = -30000000 (FILING-CHECKED)
+- cash_paid_for_interest: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Interest Paid' on us-gaap:InterestPaid = 13483000 (FILING-CHECKED)
+- cash_paid_for_income_taxes: FY2015 10-K 0000785786-15-000044 R6.htm prints 'Income Taxes Paid' on us-gaap:IncomeTaxesPaid = 11157000 (FILING-CHECKED)
+- revenue: 10-K 0000785786-18-000051 statement not identified (auto)
+- cash_paid_for_interest: era 10-K 0000785786-18-000051 R6.htm prints 'Interest paid' on us-gaap:InterestPaid = 12030000 (FILING-CHECKED)
+- revenue: 10-K 0000785786-20-000102 statement not identified (auto)
+- ppe_net: era 10-K 0000785786-20-000102 R3.htm prints 'Property, plant and equipment, net' on us-gaap:PropertyPlantAndEquipmentNet = 383661000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-none beyond sign differences
+- basic_eps: N (printed 6390 vs API 6.39) (us-gaap:EarningsPerShareBasic)
+- diluted_eps: N (printed 6260 vs API 6.26) (us-gaap:EarningsPerShareDiluted)
+- total_debt: API missing (us-gaap:LongTermDebt)
