@@ -76,6 +76,17 @@ Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712
 
 - FOUNDER APPROVAL 2026-11-09 ~22:10 IST (manager session): "Yes approved", in reply to: "I approve writing FSN values per (company, data point) on Ritwik's conditions C1-C8, and the top-100 and 1,000-company writes tonight once Ritwik clears the dry run." Ruling: branch review/ruling-done-gate-c4-2026-11-09. Every Ritwik condition stays binding (C7 cohort dry run first; Ritwik clears the C2 valued-to-blank table and the data_points list before each dispatch). The recorded founder decision of 2026-11-01 (doc 02, item 5) goes to doc 02 next.
 
+## Founder decision 2026-11-11: move to the new system (typed in Dhairya's session, relayed to Ritwik)
+Founder's words: "Why we are working on new systems? Because old was not reliable. So why you are so focused to preserve old things? Move to new. Use just old learning not the system."
+Approver amendments (Ritwik, Mac session), binding for both Ritwik sessions:
+- **C2 amended.** Old canonical_fact values no longer gate a write. "valued→no-row vs the before-image" becomes a diff report (`valued_to_blank.json`), kept for learning. No pair is held because of old values. G2(c) (C2-held pairs keep old rows) is dropped.
+- **Kept, judged on the new system alone.** The gate is criterion 4 / N1: every template key gets a filing-traceable new value or an evidenced reason, with zero reasonless keys. Template keys come from the calendar (and v1.2 TP for printed year-to-date), not from the old table. Why this is kept: the MDT loss (252 keys) was a new-system coverage hole, not an old-value question.
+- **C4 / restore dropped.** No restore to old values. A served cell_proof DISAGREE is re-written as a defect blank (N2). Rollback of a write = re-run the new system. The before-image is still taken, as an audit record only.
+- **G2(a)/(b):** reason rows are keyed on the template calendar, not on before-image keys.
+- **Unchanged:** criteria 1, 2 (filings stored) and 5; N1; N2; the Verifier draw against the filings; EPS never derived; C6 (DPS) and C8 (debt, total liabilities) holds until proven; C5 (company_value_owner empty).
+- **Nightly:** the old normalize/map path stops writing for the 1,000 once the new nightly lands. No further per-cell protection work.
+- **Top-100 C7:** cleared on these criteria once the select_plan output shows them. Not yet received (2026-11-11).
+
 ## Waiting on the founder
 
 - Restore stage for any company whose `cell_proof` disagrees after the write (founder's typed words).

@@ -15,6 +15,7 @@ from datetime import date
 from typing import Any, Callable, Protocol
 
 import psycopg
+from scrooner_pipeline.fsn_store.stmt_effective import effective_stmt_sql
 
 
 class LineDecision(Protocol):
@@ -128,10 +129,10 @@ def map_filing(
         cur.execute("select period from fsn.filing where id = %s", (filing_id,))
         period = cur.fetchone()[0]
         cur.execute(
-            """
-            select l.report, l.line, l.stmt, t.tag, t.version, t.custom, l.inpth
+            f"""
+            select l.report, l.line, {effective_stmt_sql("l")}, t.tag, t.version, t.custom, l.inpth
             from fsn.line l join fsn.tag t on t.id = l.tag_id
-            where l.filing_id = %s and l.stmt in ('BS', 'IS', 'CF')
+            where l.filing_id = %s and {effective_stmt_sql("l")} in ('BS', 'IS', 'CF')
             order by l.report, l.line
             """,
             (filing_id,),
