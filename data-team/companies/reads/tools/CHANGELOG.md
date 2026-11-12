@@ -18,3 +18,7 @@ Earlier 2026-11-12 rulings already in the tool: FY2015-to-latest eras (FY2015 10
 8. NOTE values use the data point's scale: EPS unscaled, share counts by the page's shares scale (ESNT EPS 6970 → 6.97; CTVA weighted shares 680,000 → 680,000,000).
 9. Component sums compare each part's companyfacts value with the sign printed on the face (a gain shown negative inside expenses, AAON).
 10. REIT capex never includes accrued / non-cash supplemental lines (`CapitalExpendituresIncurredButNotYetPaid`, HR); fixture row added to test_5.
+
+## 2026-11-12 (later): debt leases and capex turnarounds (founder 2026-11-04 item 5; Dhairya 2026-11-12)
+11. **total_debt includes finance lease liabilities** (current + noncurrent), never operating leases. Not added again when a debt line already carries leases (by tag or label, e.g. LongTermDebtAndCapitalLeaseObligations); the lease-note total (`FinanceLeaseLiability`, or current + noncurrent, same accession and BS date) is used only when no face line carries finance leases. test_1 (now 1,550 = 1,500 debt once + 50 finance leases) and test_8.
+12. **capex includes turnaround expenditures** only when printed in investing activities (between the CFO and CFI totals). test_9.

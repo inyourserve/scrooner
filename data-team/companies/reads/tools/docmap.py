@@ -188,6 +188,8 @@ DP = [  # (data point, statement, tags in preference order, label regex)
     ("cash_paid_for_interest", "CF", ["InterestPaidNet", "InterestPaid"], r"^interest paid|cash paid for interest"),
     ("cash_paid_for_income_taxes", "CF", ["IncomeTaxesPaidNet", "IncomeTaxesPaid"], r"income taxes paid|cash paid for income taxes"),
 ]
+FIN_LEASE_TAGS = ["FinanceLeaseLiability", "FinanceLeaseLiabilityCurrent", "FinanceLeaseLiabilityNoncurrent",
+                  "CapitalLeaseObligations", "CapitalLeaseObligationsCurrent", "CapitalLeaseObligationsNoncurrent"]
 REIT_CAPEX = ["PaymentsToDevelopRealEstateAssets", "PaymentsForCapitalImprovements",
               "PaymentsForLeasingCostsCommissionsAndTenantImprovements", "PaymentsToAcquireAndDevelopRealEstate",
               "PaymentsForConstructionInProcess"]
@@ -581,6 +583,17 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                          "opex_note": "SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12)"}
         elif dp == "capex":
             r = match_row(page, dp, tags, rx)
+            if r is not None and "parts" not in r:
+                rows_ = page["rows"]
+                i_cfo = next((i for i, x in enumerate(rows_) if x["tag"].split(":")[-1].startswith("NetCashProvidedByUsedInOperatingActivities")), -1)
+                i_cfi = next((i for i, x in enumerate(rows_) if x["tag"].split(":")[-1].startswith("NetCashProvidedByUsedInInvestingActivities")), len(rows_))
+                ta = [x for x in rows_[i_cfo + 1:i_cfi] if _has(x) and re.search(r"turnaround", x["label"], re.I) and x is not r]
+                if ta:
+                    parts = [r] + ta
+                    r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
+                         "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
+                         "parts": parts, "opex_status": "component sum",
+                         "opex_note": "capex includes turnaround expenditures printed in investing activities (Dhairya 2026-11-12)"}
             if r is None:
                 parts = [x for x in page["rows"] if _has(x) and x["tag"] and (
                     x["tag"].split(":")[-1] in REIT_CAPEX
@@ -674,7 +687,9 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         if any(v == "API missing" for v in verdicts):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | printed face value has no companyfacts fact for the same accession/period | {accn} {reps[stmt][1]} | FILING-CHECKED |")
         out.append(rec)
-    # total debt: sum of debt rows printed on the BS
+    # total debt: printed BS debt lines + finance lease liabilities (current and noncurrent), never operating leases
+    # (founder 2026-11-04 item 5, Dhairya 2026-11-12). Leases are not added again when a debt line already carries them
+    # (by tag or label); the note total is used only when no face line carries finance leases.
     bs = pages.get("BS")
     if bs and bs["rows"]:
         parts = [x for x in bs["rows"] if x["tag"].split(":")[-1] in DEBT_TAGS and x["tag"].startswith("us-gaap")
@@ -682,14 +697,39 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         cols = pick_cols(bs, "BS")
         rec = {"ticker": tic, "data_point": "total_debt", "stmt": "BS", "r_page": reps["BS"][1],
                "evidence_class": "FILING-CHECKED", "era_from_note": ""}
+        lease_in_debt = any(re.search(r"Lease", p["tag"]) or re.search(r"finance lease|capital lease|lease obligations", p["label"], re.I)
+                            for p in parts)
+        fl_face = [x for x in bs["rows"] if _has(x) and x["tag"].split(":")[-1] in FIN_LEASE_TAGS
+                   and not re.search(r"operating", x["label"], re.I)]
+        lease_note = ""
         if parts and cols:
-            pv0 = sum((p["vals"][cols[0]] or 0) for p in parts if cols[0] < len(p["vals"])) * bs["scale"]
-            api0 = [api_value(cf, p["tag"], accn, bs["cols"][cols[0]][1], None) for p in parts]
+            end0 = bs["cols"][cols[0]][1]
+            extra = [] if lease_in_debt else fl_face
+            allp = parts + extra
+            pv0 = sum((p["vals"][cols[0]] or 0) for p in allp if cols[0] < len(p["vals"])) * bs["scale"]
+            api0 = [api_value(cf, p["tag"], accn, end0, None) for p in allp]
             av0 = sum(api0) if all(a is not None for a in api0) else None
-            rec.update(status="component sum", tags="+".join(p["tag"] for p in parts),
-                       label=" + ".join(p["label"] for p in parts)[:120], fy0_printed=fmt(pv0), fy0_api=fmt(av0),
+            if lease_in_debt:
+                lease_note = "finance leases already inside a debt line (tag/label): not added again"
+            elif extra:
+                lease_note = "finance lease liabilities printed on the BS face added"
+            else:
+                fl_tot = api_value(cf, "us-gaap:FinanceLeaseLiability", accn, end0, None)
+                if fl_tot is None:
+                    cur = api_value(cf, "us-gaap:FinanceLeaseLiabilityCurrent", accn, end0, None)
+                    non = api_value(cf, "us-gaap:FinanceLeaseLiabilityNoncurrent", accn, end0, None)
+                    fl_tot = (cur or 0) + (non or 0) if (cur is not None or non is not None) else None
+                if fl_tot:
+                    pv0 += fl_tot
+                    av0 = av0 + fl_tot if av0 is not None else None
+                    allp = allp + [{"tag": "us-gaap:FinanceLeaseLiability(note)", "label": "finance lease liabilities (note)"}]
+                    lease_note = f"finance lease liabilities {fmt(fl_tot)} from the lease note (no face line carries them)"
+                else:
+                    lease_note = "no finance lease liability fact in the filing"
+            rec.update(status="component sum", tags="+".join(p["tag"] for p in allp),
+                       label=" + ".join(p["label"] for p in allp)[:120], fy0_printed=fmt(pv0), fy0_api=fmt(av0),
                        match="Y" if av0 is not None and abs(pv0 - av0) < 0.5 else ("API missing" if av0 is None else "N"),
-                       note="sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check)")
+                       note="printed BS debt lines; " + lease_note + "; operating leases never included")
         else:
             rec.update(status="not_presented", note="AUTO: no standard debt line on the BS face; not hand-verified")
         out.append(rec)

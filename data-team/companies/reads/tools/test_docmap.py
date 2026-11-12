@@ -48,6 +48,8 @@ BS = _page("CONSOLIDATED BALANCE SHEETS", [
     _row("us-gaap:LongTermDebt", "Debt", "1,500", "1,400"),
     _row("us-gaap:Assets", "Total assets", "5,000", "4,800"),          # co-registrant block repeats the parent
     _row("us-gaap:LongTermDebt", "Debt", "1,500", "1,400"),
+    _row("us-gaap:FinanceLeaseLiabilityNoncurrent", "Finance lease liabilities", "50", "45"),
+    _row("us-gaap:OperatingLeaseLiabilityNoncurrent", "Operating lease liabilities", "70", "65"),
 ], months=False)
 CF = _page("CONSOLIDATED STATEMENTS OF CASH FLOWS", [
     _row("us-gaap:Depreciation", "Depreciation", "60", "55"),
@@ -80,6 +82,7 @@ def _cf():
         "SellingAndMarketingExpense": dur(50e6, 40e6), "OperatingIncomeLoss": dur(300e6, 250e6),
         "InterestAndDebtExpense": dur(20e6, 18e6), "NetIncomeLoss": dur(200e6, 180e6),
         "Assets": inst(5000e6, 4800e6), "LongTermDebt": inst(1500e6, 1400e6),
+        "FinanceLeaseLiabilityNoncurrent": inst(50e6, 45e6), "OperatingLeaseLiabilityNoncurrent": inst(70e6, 65e6),
         "Depreciation": dur(60e6, 55e6), "AdjustmentForAmortization": dur(40e6, 35e6),
         "PaymentsToDevelopRealEstateAssets": dur(300e6, 250e6), "PaymentsOfDividends": dur(120e6, 110e6),
     }
@@ -122,7 +125,8 @@ def _read(tmp_path):
 
 def test_1_coregistrant_debt_counted_once(tmp_path):
     rows = _read(tmp_path)
-    assert rows["total_debt"]["fy0_printed"] == "1500000000"   # not 3,000 (PLD 70,074 vs 35,037)
+    # debt counted once (not 3,000: PLD 70,074 vs 35,037) + face finance leases 50; operating leases 70 never
+    assert rows["total_debt"]["fy0_printed"] == "1550000000"
 
 
 def test_2_note_hit_never_from_a_vie_note(tmp_path):
@@ -160,3 +164,26 @@ def test_7_sga_is_never_ga_alone(tmp_path):
     rows = _read(tmp_path)
     assert rows["sga_expense"]["status"] == "component sum"
     assert rows["sga_expense"]["fy0_printed"] == "150000000"
+
+
+def test_8_total_debt_includes_finance_leases_never_operating(tmp_path):
+    rows = _read(tmp_path)
+    assert "FinanceLeaseLiabilityNoncurrent" in rows["total_debt"]["tags"]
+    assert "OperatingLease" not in rows["total_debt"]["tags"]
+
+
+def test_9_capex_includes_turnarounds_in_investing(tmp_path):
+    global CF
+    saved = CF
+    CF = _page("CONSOLIDATED STATEMENTS OF CASH FLOWS", [
+        _row("us-gaap:NetCashProvidedByUsedInOperatingActivities", "Net cash provided by operating activities", "500", "450"),
+        _row("us-gaap:PaymentsToAcquirePropertyPlantAndEquipment", "Expenditures for property, plant and equipment", "(200)", "(180)"),
+        _row("zz:PaymentsForDeferredTurnaroundCosts", "Expenditures for deferred turnaround costs", "(80)", "(60)"),
+        _row("us-gaap:NetCashProvidedByUsedInInvestingActivities", "Net cash used in investing activities", "(280)", "(240)"),
+    ])
+    try:
+        rows = _read(tmp_path)
+    finally:
+        CF = saved
+    assert rows["capex"]["status"] == "component sum"
+    assert rows["capex"]["fy0_printed"] == "-280000000"
