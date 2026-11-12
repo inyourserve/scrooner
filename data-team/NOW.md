@@ -29,6 +29,11 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - The live catalog analytics.canonical_concept (83 concepts) is the authority; validate concept keys against the DB. concepts_catalog.csv is left as the tag library maintains it (its coverage test treats every listed concept as required, so the bank-only net_interest_income needs a template condition there first).
 - data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv: 168 decision rows the 1,000-company expander could not apply (columns source, tag, stmt, decision, concept, missing, companies_affected), for the Tag Expert to complete.
 
+## Founder decision 2026-11-12 (chosen in Dhairya's session): custom-tag value source
+
+- Lines printed only under a company's own (extension) tag take their VALUE from the filing's own XBRL via SEC's FSN data (fsn.value, undimensioned, same accession and period), checked against the printed R page. Standard us-gaap tags stay on the SEC company API (core.fact). Each cell records value_source = sec_api or fsn_xbrl. Reason: companyfacts carries only us-gaap/dei/ecd/ffd; FSN equals the filing XBRL (20/20 filings, 22,774/22,774 numbers).
+- Also standing: full latest-10-K read per company is a certification requirement (founder 2026-11-12, "read as much as possible, test as much as possible"). Reads: data-team/companies/reads/.
+
 ## Live numbers 2026-11-11 ~07:30 UTC
 
 - Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).

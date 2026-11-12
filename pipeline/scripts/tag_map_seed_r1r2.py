@@ -42,13 +42,26 @@ REPO = Path(__file__).resolve().parents[2]
 COHORT_CSV = REPO / "data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv"
 DEFAULT_GLOBS = [
     str(REPO / "data-team/47-fsn-store/company_tag_map/ranks_*.csv"),
+    str(REPO / "data-team/47-fsn-store/company_tag_map/rulings_*.csv"),
     str(REPO / "data-team/tags/decisions/companies-*-exceptions-*.csv"),
     str(REPO / "data-team/tags/decisions/std-tags-rank-*.csv"),
     str(REPO / "data-team/tags/library/fsn-*.csv"),
+    str(REPO / "data-team/tags/library/needs-detail-answers-*.csv"),
+    str(REPO / "data-team/tags/library/company-overrides.csv"),
 ]
 
 RULE_LIBRARY = "tagmap.library@1"
 RULE_COMPANY = "tagmap.company@1"
+RULE_RULING = "tagmap.ruling@1"
+ALIASES = {  # card / company-file spellings -> analytics.canonical_concept names (checked, never guessed)
+    "d_and_a": "depreciation_and_amortization_resolved",
+    "cash": "cash_and_equivalents_resolved",
+    "weighted_average_basic_shares": "weighted_basic_shares",
+    "weighted_average_diluted_shares": "weighted_diluted_shares",
+    "cash_paid_interest": "cash_paid_for_interest",
+    "cash_paid_taxes": "cash_paid_for_income_taxes",
+    "cash_paid_for_taxes": "cash_paid_for_income_taxes",
+}
 FLOOR = date(2014, 1, 1)
 SEED_STMTS = ("IS", "BS", "CF", "CI")
 QUERY_STMTS = SEED_STMTS + ("UN",)  # UN is fetched, then relabelled to its effective statement or dropped
@@ -65,7 +78,7 @@ PLUS_REASON = re.compile(r"\bsum\b|component sum|capex =|INCLUDE in capex", re.I
 COLUMNS = [
     "company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept",
     "combine_sign", "components", "reason_class", "reason", "era_from", "era_to", "evidence_adsh",
-    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id",
+    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id", "scale",
 ]
 
 
@@ -115,9 +128,13 @@ def _tag(raw: str) -> tuple[str | None, str]:
 def _entry(**kw) -> dict:
     base = {"taxonomy": None, "company": None, "decision": "", "concept": "", "sign": "", "components": [],
             "applies_to": "", "era": (None, None), "reason": "", "exceptions": [], "source": "", "rule_id": RULE_LIBRARY,
-            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "detail_note": "", "exceptions_text": ""}
+            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scale": 1, "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
     base.update(kw)
     return base
+
+
+def tag_present(r: dict) -> bool:
+    return bool(r.get("tag", "").strip())
 
 
 def parse_company_rows(rows: list[dict], source: str) -> list[dict]:
@@ -132,10 +149,15 @@ def parse_company_rows(rows: list[dict], source: str) -> list[dict]:
         sign = r.get("sign", "")
         if DECISION_MAP.get(dec) == "component" and not sign and PLUS_REASON.search(reason):
             sign = "+1"
-        for raw_tag in [t.strip() for t in r.get("tag", "").split(" + ")] or [""]:  # 'A + B' = two component rows
+        concept = r.get("concept", "")
+        note = ""
+        if ";" in concept and tag_present(r) and DECISION_MAP.get(dec) in ("concept", "component", "combined"):
+            note = f"one decision names several concepts ({concept}); a company_tag_map key carries one concept"
+            dec = "needs_detail"
+        for raw_tag in [t.strip() for t in re.split(r"\s\+\s|\|", r.get("tag", ""))] or [""]:  # 'A + B', 'A|B': one row per tag
             tx, tag = _tag(raw_tag)
             out.append(_entry(
-                taxonomy=tx, company=int(r["company_id"]), decision=dec, concept=r.get("concept", ""),
+                taxonomy=tx, company=int(r["company_id"]), decision=dec, concept=concept, detail_note=note,
                 reason=reason, sign=sign, home_stmts=[stmt],
                 era=(parse_period(r.get("era_from", ""), False), parse_period(r.get("era_to", ""), True)),
                 source=source, rule_id=RULE_COMPANY, prio=0, kind="company_tag" if tag else "company_concept")
@@ -169,13 +191,19 @@ def parse_tag_rows(rows: list[dict], source: str) -> list[dict]:
             exc, exc_free = parse_exceptions(exc_txt), ""
         except ValueError:
             exc, exc_free = [], exc_txt  # free-text exceptions are not machine-evaluated; carried as a note
+        ruling = source.startswith("rulings_")
+        pattern = r["tag"].lower().startswith("presentation elements")  # the card's pattern row (name suffix + datatype)
         out.append(_entry(
-            taxonomy=tx, tag=tag, home_stmts=stmts, decision=r.get("decision", "").lower(),
+            taxonomy=tx, tag="*presentation*" if pattern else tag, home_stmts=stmts, decision=r.get("decision", "").lower(),
+            kind="pattern" if pattern else "tag", cond=parse_condition(r.get("condition", "")),
+            reason_class=r.get("reason_class", "") or ("presentation_only" if pattern else ""),
+            rule_id=RULE_RULING if ruling else RULE_LIBRARY,
             concept=r.get("canonical_concept_key") or r.get("concept_key") or r.get("concept", ""),
             sign=r.get("sign", "") if not card else "",
             applies_to=r.get("applies_to", ""), era=(lo, hi), reason=r.get("evidence") or r.get("reason", ""),
             components=_split(r.get("components", "")), exceptions=exc, exceptions_text=exc_free,
-            source="tag-card" if card else source, prio=1 if card else 2))
+            source="ruling:dhairya-2026-11-12" if ruling else ("tag-card" if card else source),
+            prio=0.5 if ruling else (1 if card else 2)))
     return out
 
 
@@ -199,8 +227,70 @@ def parse_ranks_rows(rows: list[dict], source: str) -> list[dict]:
     return out
 
 
-def parse_source(name: str, rows: list[dict]) -> list[dict]:
+def parse_scale(text: str) -> int:
+    """'scale fix x1,000,000 (printed in millions, stored unscaled)' -> 1000000; no stated scale -> 1.
+    Only company-override rows may carry a scale (the seeder rejects it elsewhere)."""
+    m = re.search(r"(?:scale\D{0,20}|[x\u00d7]\s*)(1(?:,000)+|10+)\b", text, re.I)
+    return int(m.group(1).replace(",", "")) if m else 1
+
+
+def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]) -> list[dict]:
+    """library/company-overrides.csv: company-scoped, filing-checked; only FILING-CHECKED rows are loaded (anything
+    else is skipped). Every scope in the file names the read filing or era ('read era', 'FY2025 10-K', 'latest 10-K',
+    'filings with the unscaled value'), so a row applies to the key's LATEST era unless the scope says 'all'."""
+    out = []
+    for raw in rows:
+        r = {_hk(k): (v or "").strip() for k, v in raw.items() if k}
+        if r.get("status", "").upper() != "FILING-CHECKED" or r.get("cik", "") not in cik_to_id:
+            continue
+        tx, tag = _tag(r["tag"])
+        concept, dec, note = r.get("concept", ""), "concept", ""
+        if concept.startswith("("):  # a parenthesised note instead of a concept key
+            if concept.strip("() ").lower() == "excluded":
+                dec, concept = "excluded", ""
+            else:
+                dec, note = "needs_detail", f"override concept column holds a note, not a concept key: {concept}"
+        scope = r.get("scope", "")
+        yr = re.fullmatch(r"(\d{4})\+", scope.strip())
+        out.append(_entry(
+            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision=dec, concept=concept, detail_note=note,
+            home_stmts=[r["stmt"].upper()], reason=f"{r.get('evidence', '')}; {r.get('note', '')}".strip("; "),
+            source="company-override:" + source, rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
+            reason_class="company_override_excluded" if dec == "excluded" else "",
+            era=(date(int(yr.group(1)), 1, 1), None) if yr else (None, None),
+            scale=parse_scale(r.get("note", "") + " " + r.get("scope", "")),
+            scope_latest=not yr and "all" not in scope.lower().split()))
+    return out
+
+
+def apply_answers(entries: list[dict], answers: list[dict]) -> int:
+    """Tag Expert answers to the needs_detail list (needs-detail-answers-*.csv): the answer replaces every entry that
+    produced the row (same source, tag, stmt, decision, concept). Combined members are DISPLAY ONLY (composition,
+    stored in components); they are never summed into a concept. The label condition / rule text travels in the
+    reason for the mapper to read. Returns the number of entries changed."""
+    idx = {(a["source"], a["tag"], a["stmt"].upper(), a["decision"], a["concept"]): a for a in answers if a["status"] == "closed"}
+    n = 0
+    for e in entries:
+        for stmt in e["home_stmts"]:
+            a = idx.get((e["source"], e["tag"], stmt, e["decision"], e["concept"]))
+            if not a:
+                continue
+            fd = DECISION_MAP.get(a["final_decision"], a["final_decision"])
+            e["decision"] = fd
+            e["sign"] = a["sign"] or e["sign"]
+            if fd == "combined":
+                e["components"] = _split(a["members"])
+            extra = " | ".join(x for x in (a["label_condition"], a["rule"]) if x)
+            e["reason"] = f"{e['reason']} | {extra}" if extra else e["reason"]
+            e["detail_note"] = ""
+            n += 1
+    return n
+
+
+def parse_source(name: str, rows: list[dict], cik_to_id: dict | None = None) -> list[dict]:
     head = {_hk(k) for k in (rows[0] if rows else {})}
+    if {"company", "scope", "status"} <= head and "cik" in head:
+        return parse_override_rows(rows, name, cik_to_id or {})
     if "company_id" in head and "evidence_adsh" in head:
         ents = parse_ranks_rows(rows, name)
     else:
@@ -228,16 +318,17 @@ def parse_exceptions(text: str) -> list[tuple[int | None, tuple[date | None, dat
 
 
 def applies(entry: dict, company_id: int, templates: set[str]) -> bool:
-    """Company rows: only that company. Tag rows: explicit numeric company ids or 'sector:'/'template:' names restrict;
-    empty, 'all...' and any other descriptive text (tag cards: 'classified balance sheets (828 cos)') applies to all."""
+    """Company rows: only that company. Tag rows: a restriction only when EVERY token is a company id or a
+    'sector:'/'template:' name; empty, 'all...' and any descriptive text (tag cards, which may contain digits and
+    commas: 'WTFC 1,503,981') applies to all."""
     if entry["company"] is not None:
         return entry["company"] == company_id
     toks = _split(entry["applies_to"])
-    ids = {int(t) for t in toks if t.isdigit()}
-    names = {re.sub(r"^(sector|template|sector_template)\s*:\s*", "", t, flags=re.I).strip().lower()
-             for t in toks if re.match(r"(sector|template|sector_template)\s*:", t, re.I)}
-    if not ids and not names:
+    pref = re.compile(r"(sector|template|sector_template)\s*:", re.I)
+    if not toks or not all(t.isdigit() or pref.match(t) for t in toks):
         return True
+    ids = {int(t) for t in toks if t.isdigit()}
+    names = {pref.sub("", t).strip().lower() for t in toks if pref.match(t)}
     return company_id in ids or bool(names & {x.lower() for x in templates})
 
 
@@ -268,10 +359,25 @@ def clip(era: tuple[date, date | None], include: tuple, excludes: list[tuple]) -
     return [(a, None if b == date.max else b) for a, b in pieces]
 
 
+def presentation_match(tag: str, datatype: str | None, abstract: bool) -> bool:
+    """Card pattern: name suffix AND datatype (not only the abstract flag): *Axis -> axis, *Domain/*Member -> member,
+    *Abstract, StatementTable, StatementLineItems -> no datatype / abstract. Custom or standard."""
+    if tag.endswith("Axis"):
+        return datatype == "axis"
+    if tag.endswith("Domain") or tag.endswith("Member"):
+        return datatype == "member"
+    if tag.endswith("Abstract") or tag in ("StatementTable", "StatementLineItems"):
+        return datatype is None or abstract
+    return False
+
+
 def build_index(entries: list[dict]) -> dict[tuple[str, str], list[dict]]:
     """(tag, stmt) -> entries; company rows first, then tag-level rows in source order. Concept-level rows excluded."""
-    idx: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    idx: dict = defaultdict(list)
     for e in sorted((x for x in entries if x["kind"] != "company_concept"), key=lambda x: x["prio"]):
+        if e["kind"] == "pattern":
+            idx["__pattern__"].append(e)
+            continue
         for stmt in e["home_stmts"]:
             idx[(e["tag"], stmt)].append(e)
     return idx
@@ -295,7 +401,7 @@ def parse_condition(text: str) -> list[tuple[str, str]]:
     on the label is only made when no neighbouring row label looks like the line the tag is wanted for."""
     out = []
     for tok in [t.strip() for t in re.split(r"\s+and\s+", text or "") if t.strip()]:
-        m = re.match(r"(copresent:|absent:|label!~|label~|near~)(.+)$", tok)
+        m = re.match(r"(copresent:|absent:|label!~|label~|near~|amb_label~|ambiguous_if@[A-Z]+:)(.+)$", tok)
         if not m:
             raise ValueError(f"unsupported condition {tok!r}")
         out.append((m.group(1), m.group(2).strip()))
@@ -344,6 +450,10 @@ def cond_ok(cond: list[tuple[str, str]], row: tuple, printed: dict) -> str:
             return "bad"
         if kind == "label~" and not re.search(arg, lab, re.I):
             return "bad"
+        if kind == "amb_label~" and (not lab or re.search(arg, lab, re.I)):
+            state = "amb"  # the perimeter may differ (net of ..., preferred, impairment ...): needs a decision, not a guess
+        if kind.startswith("ambiguous_if@") and set(arg.split(",")) & printed.get((row[FID], kind[13:-1]), set()):
+            state = "amb"  # e.g. a plain cash line is printed on the BS: the CF ending-cash rule decides
         if kind == "label!~":
             if not lab:
                 state = "amb"
@@ -387,7 +497,12 @@ def _expand_key(company_id, templates, taxonomy, tag, stmt, appear, annual, inde
     for e_idx, era in enumerate([(a, b) for a, b, _ in all_eras]):
         company_taken: list[tuple] = []
         taken: list[tuple] = []  # tag-level pieces already claimed
-        for e in index.get((tag, stmt), []):
+        datatype = next(iter(appear.values()))
+        datatype = datatype[20] if len(datatype) > 20 else None
+        pats = [e for e in index.get("__pattern__", []) if presentation_match(tag, datatype, any(r[4] for r in appear.values()))]
+        for e in sorted(index.get((tag, stmt), []) + pats, key=lambda x: x["prio"]):
+            if e["scope_latest"] and e_idx != len(all_eras) - 1:
+                continue
             if (e["decision"] == "component") != (phase == 2) and e["decision"] != "review":
                 continue
             if e["decision"] == "review" and phase == 2:
@@ -406,8 +521,8 @@ def _expand_key(company_id, templates, taxonomy, tag, stmt, appear, annual, inde
                   and not (e["decision"] == "component" and e["concept"] in totals[r[FID]])}
             bad = {p: r for p, r in in_era.items() if states[p] == "bad"}
             if any(v == "amb" for v in states.values()):
-                res["needs_detail"].append(dict(e, detail_note="label demotion ambiguous: a neighbouring row label "
-                                                "looks like the wanted line, or no label (FSN plabels can shift one row)"))
+                res["needs_detail"].append(dict(e, detail_note="ambiguous per-filing condition (label wording, a neighbouring "
+                                                "label, or a same-filing co-presence the rule cannot decide)"))
             variants = [(e, ok)]
             if e["else_reason"] and bad:
                 variants.append((dict(e, decision="excluded", reason=e["else_reason"], concept="", kind="condition"),
@@ -446,6 +561,7 @@ def library_row(e: dict) -> dict:
     sign = e["sign"].strip()
     row = {"decision": dec, "canonical_concept": "", "parent_concept": "", "combine_sign": "",
            "components": "", "reason_class": "", "reason": e["reason"]}
+    row["scale"] = e["scale"]
     if dec in ("concept", "combined"):
         row["canonical_concept"] = e["concept"]
         if dec == "combined":
@@ -579,7 +695,7 @@ nd as (select v.filing_id, v.tag_id, bool_or(v.dim_id = 0 and v.coreg = '') as n
 select distinct on (f.company_id, split_part(t.version, '/', 1), t.custom, t.tag, l.stmt, f.id)
        f.company_id, case when t.custom then 'custom' else split_part(t.version, '/', 1) end as taxonomy,
        t.tag, l.stmt, t.abstract, f.id, f.accession, f.period, f.form, f.amendment, f.fy, f.accepted,
-       l.report, l.line, l.plabel, t.id as tag_id, coalesce(nd.nondim, false) as nondim, l.prev_label, l.next_label, coalesce(nd.coreg, false) as coreg
+       l.report, l.line, l.plabel, t.id as tag_id, coalesce(nd.nondim, false) as nondim, l.prev_label, l.next_label, coalesce(nd.coreg, false) as coreg, t.datatype
   from fl l
   join fsn.filing f on f.id = l.filing_id
   join fsn.tag t on t.id = l.tag_id
@@ -613,11 +729,32 @@ CATEGORIES = {
 }
 
 
-def load_sources(patterns: list[str]) -> tuple[list[dict], list[str]]:
-    entries, files = [], sorted({p for g in patterns for p in glob.glob(g)})
+def resolve_concepts(entries: list[dict], valid: set[str]) -> dict[str, set[str]]:
+    """Apply ALIASES to every concept key a row would write (concept / combined concept, component parent) and
+    return {unknown key: sources}. Excluded rows carry no concept."""
+    unknown: dict[str, set[str]] = defaultdict(set)
+    for e in entries:
+        if e["decision"] not in ("concept", "combined", "component") or not e["concept"]:
+            continue
+        e["concept"] = ALIASES.get(e["concept"], e["concept"])
+        if e["raw"] is not None:
+            col = "parent_concept" if e["decision"] == "component" else "canonical_concept"
+            e["raw"][col] = e["concept"]
+        if e["concept"] not in valid:
+            unknown[e["concept"]].add(e["source"])
+    return unknown
+
+
+def load_sources(patterns: list[str], cik_to_id: dict | None = None) -> tuple[list[dict], list[str]]:
+    entries, answers, files = [], [], sorted({p for g in patterns for p in glob.glob(g)})
     for path in files:
         with open(path, newline="") as f:
-            entries += parse_source(Path(path).name, list(csv.DictReader(f)))
+            rows = list(csv.DictReader(f))
+        if rows and "final_decision" in rows[0]:
+            answers += [{_hk(k): (v or "").strip() for k, v in r.items()} for r in rows]
+            continue
+        entries += parse_source(Path(path).name, rows, cik_to_id)
+    apply_answers(entries, answers)
     return entries, [Path(p).name for p in files]
 
 
@@ -675,16 +812,21 @@ def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, st
 
 
 def cmd_seed(args) -> None:
-    entries, files = load_sources(args.decisions or DEFAULT_GLOBS)
+    with open(COHORT_CSV, newline="") as f:
+        cohort = {int(r["company_id"]): r["cik"] for r in csv.DictReader(f)}
+    entries, files = load_sources(args.decisions or DEFAULT_GLOBS, {v: k for k, v in cohort.items()})
     attach_conditions(entries, load_conditions())
     index = build_index(entries)
     free_exc = sorted({(e["source"], e["tag"]) for e in entries if e["exceptions_text"]})
-    with open(COHORT_CSV, newline="") as f:
-        cohort = {int(r["company_id"]): r["cik"] for r in csv.DictReader(f)}
     ids = sorted(cohort)
     conn = connect()
     valid = {r[0] for r in conn.execute("select name from analytics.canonical_concept").fetchall()}
-    valid |= {v.removesuffix("_resolved") for v in valid}
+    unknown = resolve_concepts(entries, valid)
+    if unknown:  # fail loudly: a concept key the catalogue does not know must be fixed at the source, not dropped
+        print("UNKNOWN CONCEPT KEYS (not in analytics.canonical_concept, no alias):", file=sys.stderr)
+        for key, srcs in sorted(unknown.items()):
+            print(f"  {key}: {sorted(srcs)}", file=sys.stderr)
+        sys.exit(2)
     out_path = Path(args.out)
     stats = {"overrides": 0, "review_keys": 0, "needs_detail": defaultdict(set), "unknown_concept": defaultdict(set)}
     by_decision: dict[str, int] = defaultdict(int)
@@ -730,6 +872,7 @@ def cmd_seed(args) -> None:
                     and e["decision"] in ("concept", "excluded") and (e["concept"] or e["decision"] == "excluded")):
                 row = dict(e["raw"])
                 row["decided_by"], row["rule_id"] = e["source"], RULE_COMPANY
+                row["scale"] = 1
                 w.writerow(row)
                 passthrough += 1
                 by_decision[e["decision"]] += 1

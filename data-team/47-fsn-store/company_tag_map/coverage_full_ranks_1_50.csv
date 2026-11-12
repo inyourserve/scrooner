@@ -1345,7 +1345,7 @@ company_id,ticker,template,data_point,status
 1807,MS,broker_am,revenue_sanity,sourced
 1807,MS,broker_am,sbc,sourced
 1807,MS,broker_am,sga_expense,read-verified pass of: template-OUT candidate (Verifier draw)
-1807,MS,broker_am,share_buybacks,sourced
+1807,MS,broker_am,share_buybacks,combined (reasoned blank)
 1807,MS,broker_am,shares_outstanding,sourced
 1807,MS,broker_am,stockholders_equity,sourced
 1807,MS,broker_am,total_assets,sourced

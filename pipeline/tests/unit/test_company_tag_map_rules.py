@@ -235,7 +235,7 @@ def test_selection_path_never_takes_an_absolute_value():
     from pathlib import Path
 
     src = (Path(__file__).resolve().parents[2] / "src/scrooner_pipeline/mapper/company_tag_map.py").read_text()
-    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l and 'abs(gp["value"]' not in l)
+    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l and 'abs(gp["value"]' not in l and 'abs(eps["value"]' not in l)
     assert "abs(" not in code  # the only abs() is the tie-tolerance difference of two totals
     row = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, ERA, None)
     cells, _ = run([row], {("us-gaap", "T"): {7: fact("-5", 1)}})
@@ -419,6 +419,156 @@ def test_bank_cash_is_the_cash_flow_ending_line_as_a_concept_row_not_a_balance_s
     cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
     assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
 
+
+SH, EPS, NIID, SO = 31, 32, 33, 34
+SCALE_INFO = {
+    SH: ("weighted_basic_shares", "income_statement"), EPS: ("basic_eps_resolved", "income_statement"),
+    NIID: ("net_income", "income_statement"), SO: ("shares_outstanding_resolved", "balance_sheet"),
+}
+
+
+def _scale_rows():
+    return [MapRow("us-gaap", t, "IS", "concept", c, None, 1, ERA, None) for t, c in
+            (("WASO", SH), ("Eps", EPS), ("NetIncomeLoss", NIID))]
+
+
+def _scale(shares, so=None):
+    facts = {("us-gaap", "WASO"): {7: fact(shares, 1)}, ("us-gaap", "Eps"): {7: fact("11.5", 2)},
+             ("us-gaap", "NetIncomeLoss"): {7: fact("8200000000", 3)}}
+    rows = _scale_rows()
+    info = dict(SCALE_INFO)
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    if so:
+        rows.append(MapRow("us-gaap", "SO", "BS", "concept", SO, None, 1, ERA, None))
+        facts[("us-gaap", "SO")] = {8: Fact(Decimal(so), 4, END, False, 10, "A-10")}
+        periods[8] = (END, END, "instant")
+    return build_cells(rows, facts, info, {}, {}, periods)
+
+
+def test_scale_sanity_blocks_unscaled_weighted_shares_mcd_shape_and_passes_the_scaled_value():
+    cells, stats = _scale("713.4")  # MCD: millions tagged unscaled; companyfacts carries the raw value
+    assert {c["canonical_concept_id"] for c in cells} == {EPS, NIID}  # EPS and NI stay as served
+    (b,) = [b for b in stats["blanks"] if b["reason_code"] == "filer_scale_error"]
+    assert b["state"] == "defect" and b["concept_name"] == "weighted_basic_shares" and "713.4" in b["reason"]
+    cells, stats = _scale("713400000")  # 11.5 x 713.4M = 8.2B: ties to net income
+    assert {c["canonical_concept_id"] for c in cells} == {SH, EPS, NIID} and stats["held"] == []
+    cells, stats = _scale("700000000")  # a 2% gap (NCI / preferred / rounding) is not a scale error
+    assert SH in {c["canonical_concept_id"] for c in cells}
+
+
+def test_scale_sanity_blocks_a_share_count_far_below_the_companys_other_share_facts():
+    cells, stats = _scale("713400000", so="7134")  # shares outstanding 100000x too small vs the weighted count
+    assert SO not in {c["canonical_concept_id"] for c in cells} and SH in {c["canonical_concept_id"] for c in cells}
+    assert [b["reason_code"] for b in stats["blanks"]] == ["filer_scale_error"]
+
+
+def _scaled_rows(scale, decided_by):
+    rows = _scale_rows()
+    w = rows[0]
+    rows[0] = MapRow(w.taxonomy, w.tag, w.stmt, w.decision, w.canonical_concept_id, None, 1, ERA, None, scale=Decimal(scale),
+                     decided_by=decided_by, evidence_adsh="0000063908-26-000035", evidence_report=3)
+    return rows
+
+
+def _run_scaled(scale, decided_by, shares="713.4"):
+    facts = {("us-gaap", "WASO"): {7: fact(shares, 1)}, ("us-gaap", "Eps"): {7: fact("11.5", 2)},
+             ("us-gaap", "NetIncomeLoss"): {7: fact("8200000000", 3)}}
+    return build_cells(_scaled_rows(scale, decided_by), facts, dict(SCALE_INFO), {}, {}, {7: (date(2020, 1, 1), END, "duration")})
+
+
+def test_scale_from_a_company_override_is_applied_in_decimal_with_provenance():
+    cells, stats = _run_scaled("1000000", "company_override")  # MCD weighted_basic_shares x1,000,000
+    sh = [c for c in cells if c["canonical_concept_id"] == SH][0]
+    assert sh["value"] == Decimal("713400000") and isinstance(sh["value"], Decimal)
+    assert "scale x1,000,000 from override 0000063908-26-000035 R3" in sh["serve_note"]
+    assert stats["held"] == []
+    # an explicit override scale is exempt from the sanity block (the override owns the claim)
+    cells, stats = _run_scaled("1000", "company_override")
+    assert SH in {c["canonical_concept_id"] for c in cells} and stats["held"] == []
+
+
+def test_scale_from_a_non_override_source_is_ignored_by_the_mapper_and_refused_by_the_seeder():
+    from scrooner_pipeline.mapper.company_tag_map_seed import normalize
+
+    cells, stats = _run_scaled("1000000", "library")  # not an override: served unscaled, then the sanity block fires
+    assert SH not in {c["canonical_concept_id"] for c in cells}
+    assert [b["reason_code"] for b in stats["blanks"]] == ["filer_scale_error"]
+    raw = {"company_id": 1, "taxonomy": "us-gaap", "tag": "WASO", "stmt": "IS", "decision": "concept",
+           "canonical_concept": "weighted_basic_shares", "era_from": "2015-01-01", "scale": "1000000",
+           "decided_by": "library", "rule_id": "tm.r@1", "evidence_adsh": "0000063908-26-000035"}
+    import pytest as _pt
+    with _pt.raises(ValueError, match="scale .* refused"):
+        normalize(raw, {}, {"weighted_basic_shares": 5})
+    ok = normalize({**raw, "decided_by": "company_override"}, {}, {"weighted_basic_shares": 5})
+    assert ok["scale"] == Decimal("1000000")
+    with _pt.raises(ValueError, match="evidence_adsh"):
+        normalize({**raw, "decided_by": "company_override", "evidence_adsh": None}, {}, {"weighted_basic_shares": 5})
+
+
+def test_cash_flow_and_ci_rows_serve_their_catalog_concepts_sbc_da_comprehensive_income():
+    info = {41: ("sbc", "income_statement"), 42: ("depreciation_and_amortization_resolved", "income_statement"), 43: ("comprehensive_income", "income_statement")}
+    rows = [MapRow("us-gaap", t, st, "concept", c, None, 1, ERA, None) for t, st, c in (("ShareBasedCompensation", "CF", 41), ("DepreciationAndAmortization", "CF", 42), ("ComprehensiveIncomeNetOfTax", "CI", 43))]
+    facts = {("us-gaap", r.tag): {7: fact("5", i + 1)} for i, r in enumerate(rows)}
+    cells, stats = build_cells(rows, facts, info)
+    assert {c["canonical_concept_id"] for c in cells} == {41, 42, 43} and stats["stmt_mismatch_rows"] == 0
+
+
+def test_eras_in_fsn_month_ends_match_true_52_53_week_period_ends():
+    single = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, date(2025, 10, 31), date(2025, 10, 31))  # AMAT-style one-period era
+    rng = MapRow("us-gaap", "U", "IS", "concept", 99, None, 1, date(2025, 10, 31), date(2026, 7, 31))
+    info = {**INFO, 99: ("other", "income_statement")}
+    facts = {("us-gaap", "T"): {7: Fact(Decimal("1"), 1, date(2025, 10, 26), False, 10, "A-10")},
+             ("us-gaap", "U"): {8: Fact(Decimal("2"), 2, date(2025, 10, 26), False, 10, "A-10"),
+                                9: Fact(Decimal("3"), 3, date(2025, 7, 27), False, 10, "A-10")}}
+    cells, _ = build_cells([single, rng], facts, info)
+    got = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
+    assert (OPEX, 7) in got and (99, 8) in got  # true end 2025-10-26 rounds to the era's 2025-10-31
+    assert (99, 9) not in got  # 2025-07-27 rounds to 2025-07-31: before the era
+
+
+def test_latest_filing_that_has_a_listed_tag_wins_not_a_newer_filing_without_it():
+    from datetime import date as d
+
+    a = MapRow("us-gaap", "TagA", "IS", "concept", OPEX, None, 1, ERA, None)
+    b = MapRow("us-gaap", "TagB", "IS", "concept", OPEX, None, 1, ERA, None)
+    facts = {("us-gaap", "TagA"): {7: Fact(Decimal("5"), 1, END, False, 20, "A-20", d(2021, 2, 1))},
+             ("us-gaap", "TagB"): {7: Fact(Decimal("5"), 2, END, False, 21, "A-21", d(2021, 3, 1))}}
+    cells, stats = build_cells([a, b], facts, INFO)  # filing 22 (newer) has neither tag: irrelevant
+    assert [c["source_fact_ids"] for c in cells] == [[2]] and stats["held"] == []
+
+
+def test_facts_that_exist_but_none_authoritative_give_a_reasoned_blank_never_a_value():
+    row = MapRow("us-gaap", "Assets", "IS", "concept", OPEX, None, 1, ERA, None)
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    cells, stats = build_cells([row], {}, INFO, {}, {}, periods, {}, {("us-gaap", "Assets"): {7: 5}})
+    assert cells == []
+    (b,) = stats["blanks"]
+    assert (b["state"], b["reason_code"], b["defect_class"], b["owner"]) == ("defect", "no_authoritative_fact", "ingestion", "data_engineer_l1")
+    assert "5 fact(s) under Assets" in b["reason"]
+
+
+def test_held_status_rows_are_defects_guard_hidden_never_not_presented():
+    def st(decision, rc):
+        return MapRow(None, None, "IS", decision, OPEX, None, None, ERA, None, None, "status", "tagmap.fy_status@1", reason_class=rc)
+
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    for rc, owner in (("held_c8", "verifier"), ("held_r2", "standardization_lead"), ("held_cover_page", "sector_analyst"), ("held_read_verified_fail_x", "verifier")):
+        _, stats = build_cells([st("not_presented", rc)], {}, INFO, {}, {}, periods)
+        (b,) = stats["blanks"]
+        assert (b["state"], b["defect_class"], b["owner"], b["reason_code"]) == ("defect", "guard_hidden", owner, rc)
+    _, stats = build_cells([st("not_in_template", "combined_line")], {}, INFO, {}, {}, periods)
+    assert [(b["state"], b["reason_code"]) for b in stats["blanks"]] == [("not_in_template", "combined_line")]
+
+
+def test_total_debt_components_sum_by_the_founder_definition_without_calc_parents():
+    rows = [MapRow("us-gaap", t, "BS", "component", None, DEBT, 1, ERA, None) for t in ("DebtCurrent", "LongTermDebtNoncurrent")]  # no evidence_cal_parent
+    facts = {("us-gaap", "DebtCurrent"): {7: fact("999", 1)}, ("us-gaap", "LongTermDebtNoncurrent"): {7: fact("8000", 2)}}
+    cells, stats = build_cells(rows, facts, INST_INFO, {}, {})
+    assert [c["value"] for c in cells] == [Decimal("8999")] and stats["held"] == []
+    # the same set under any other instant concept stays refused
+    rows2 = [MapRow("us-gaap", t, "BS", "component", None, INV, 1, ERA, None) for t in ("DebtCurrent", "LongTermDebtNoncurrent")]
+    cells, stats = build_cells(rows2, facts, INST_INFO, {}, {})
+    assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
 
 def test_status_rows_with_a_candidate_marker_still_load():
     # a tagless status row records why the cell is blank; it never serves a value, so it is not held

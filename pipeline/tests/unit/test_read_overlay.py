@@ -104,3 +104,64 @@ def test_every_unserved_fy_cell_gets_one_tagless_status_row_and_open_and_served_
     assert got == {"total_debt_resolved": ("not_presented", "held_c8", "", "", "2025-12-31"),
                    "dividends_paid_resolved": ("not_in_template", "not_in_template_read_verified", "", "", "2025-12-31")}
     assert not [r for r in csv.DictReader(open(p["out"])) if r["decided_by"] == "read_status"]
+
+
+def test_a_fy_ruling_cuts_the_serving_row_to_tagless_status_rows_or_swaps_the_tag_only_over_the_two_fy_ends(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("apply_fy_rulings", D / "apply_fy_rulings.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {k: "" for k in TM}
+    meta = {"company_id": "9", "cik": "1", "rank": "1", "stmt": "BS", "decision": "concept", "taxonomy": "us-gaap", "decided_by": "library"}
+    rows = [{**base, **meta, "ticker": "META", "tag": "CommonStockSharesOutstanding", "canonical_concept": "shares_outstanding_resolved",
+             "era_from": "2015-03-31", "era_to": "2026-09-30"},
+            {**base, **meta, "ticker": "COST", "stmt": "CF", "tag": "PaymentsOfDividends", "canonical_concept": "dividends_paid_resolved",
+             "era_from": "2025-08-31", "era_to": "2026-08-31"}]
+    out = mod.apply(rows, {"9": ["2024-12-31", "2025-12-31"]})
+    meta_rows = sorted((r["decision"], r["tag"], r["era_from"], r["era_to"], r["reason_class"]) for r in out if r["ticker"] == "META")
+    assert meta_rows == [("concept", "CommonStockSharesOutstanding", "2015-03-31", "2024-12-30", ""),
+                         ("concept", "CommonStockSharesOutstanding", "2026-01-01", "2026-09-30", ""),
+                         ("not_presented", "", "2024-12-31", "2024-12-31", "shares_per_class_only"),
+                         ("not_presented", "", "2025-12-31", "2025-12-31", "shares_per_class_only")]
+    cost = sorted((r["tag"], r["era_from"], r["era_to"]) for r in out if r["ticker"] == "COST")
+    assert cost == [("PaymentsOfDividends", "2026-01-01", "2026-08-31"), ("PaymentsOfDividendsCommonStock", "2025-08-31", "2025-12-31")]
+
+
+
+def test_extension_tags_are_served_from_the_filings_own_xbrl_and_standard_tags_from_the_sec_api():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("value_source", D / "value_source.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    got = [mod.source({"decision": d, "taxonomy": t}) for d, t in
+           (("concept", "us-gaap"), ("component", "custom"), ("concept", "avgo"), ("combined", "ge"), ("excluded", "custom"), ("not_presented", ""))]
+    assert got == ["sec_api", "fsn_xbrl", "fsn_xbrl", "fsn_xbrl", "", ""]
+
+
+def test_a_component_sum_with_an_extension_part_reads_every_part_from_fsn_xbrl_over_that_parts_era_only():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("value_source", D / "value_source.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {"company_id": "1", "decision": "component", "parent_concept": "operating_expenses_resolved"}
+    rows = [{**base, "taxonomy": "us-gaap", "tag": "ResearchAndDevelopmentExpense", "era_from": "2015-03-31", "era_to": "2026-09-30"},
+            {**base, "taxonomy": "custom", "tag": "ImpairmentAndRestructuringExpenses", "era_from": "2018-06-30", "era_to": "2018-06-30"}]
+    out = mod.single_source_sums(rows)
+    rd = [(r["era_from"], r["era_to"], r["value_source"]) for r in out if r["tag"] == "ResearchAndDevelopmentExpense"]
+    assert rd == [("2015-03-31", "2018-06-29", "sec_api"), ("2018-06-30", "2018-06-30", "fsn_xbrl"), ("2018-07-01", "2026-09-30", "sec_api")]
+    assert mod.single_source_sums(out) == out
+
+
+def test_one_statement_serves_a_concept_per_period_and_the_lower_statement_keeps_only_the_periods_outside():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("cross_stmt", D / "cross_stmt.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {**{k: "" for k in TM}, "company_id": "1", "decision": "concept", "canonical_concept": "sbc", "value_source": "sec_api"}
+    rows = [{**base, "stmt": "IS", "tag": "AllocatedShareBasedCompensationExpense", "era_from": "2015-03-31", "era_to": "2022-12-31"},
+            {**base, "stmt": "CF", "tag": "ShareBasedCompensation", "era_from": "2016-03-31", "era_to": "2026-09-30"}]
+    out, cut = mod.apply(rows)
+    got = sorted((r["stmt"], r["decision"], r["era_from"], r["era_to"]) for r in out)
+    assert cut == 1 and got == [("CF", "concept", "2016-03-31", "2026-09-30"), ("IS", "concept", "2015-03-31", "2016-03-30"),
+                                ("IS", "excluded", "2016-03-31", "2022-12-31")]
+    assert mod.apply(out)[1] == 0

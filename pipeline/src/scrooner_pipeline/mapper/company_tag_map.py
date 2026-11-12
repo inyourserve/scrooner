@@ -49,6 +49,7 @@ from typing import Any
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.fsn_dates import nearest_month_ends
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
 
@@ -62,6 +63,13 @@ FAMILY = "company_tag_map"
 STATEMENT_CODE = {"income_statement": "IS", "balance_sheet": "BS", "cash_flow": "CF"}
 EXTRA_STMT = {
     # bank cash: where the BS splits cash, cash = the cash-flow statement's printed ending-cash line (a concept row)
+    # catalog concepts filed under income_statement whose library rows sit on another face (found in the 18-company
+    # plan: sbc and D&A are cash-flow lines, comprehensive income has its own statement)
+    "sbc": {"CF", "EQ"},
+    "depreciation_and_amortization": {"CF"},
+    "depreciation_and_amortization_resolved": {"CF"},
+    "amortization_of_intangibles": {"CF"},
+    "comprehensive_income": {"CI"},
     "cash_and_equivalents": {"CF"},
     "cash_and_equivalents_resolved": {"CF"},
     "dividends_per_share": {"IS", "EQ"},
@@ -97,6 +105,10 @@ class MapRow:
     serve_note: str | None = None
     map_id: int | None = None
     reason_class: str | None = None
+    scale: Decimal = Decimal(1)
+    decided_by: str | None = None
+    evidence_adsh: str | None = None
+    evidence_report: int | None = None
 
 
 @dataclass(frozen=True)
@@ -132,9 +144,17 @@ def load_tag_map_company_ids(
 def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
     with conn.cursor() as cur:
         cur.execute(
-            """
+            "select count(*) from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'company_tag_map' and column_name = 'scale'"
+        )
+        scale_col = (
+            "scale" if cur.fetchone()[0] else "1::numeric"
+        )  # 0123 adds the column
+        cur.execute(
+            f"""
             select taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign,
-                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class
+                   era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class,
+                   {scale_col} as scale, decided_by, evidence_adsh, evidence_report
             from analytics.company_tag_map where company_id = %s
             """,
             (company_id,),
@@ -158,6 +178,10 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
                 serve_note=r[14],
                 map_id=r[15],
                 reason_class=r[16],
+                scale=Decimal(r[17]),
+                decided_by=r[18],
+                evidence_adsh=r[19],
+                evidence_report=r[20],
             )
             for r in cur.fetchall()
         ]
@@ -281,6 +305,32 @@ def _merge_predecessor_facts(conn, company_id, tags, out) -> None:
                 out[(taxonomy, tag)][period_id] = new
 
 
+def _load_no_authoritative(
+    conn, company_id: int, tags: set[tuple[str | None, str | None]]
+):
+    """(taxonomy, tag) -> {period_id: fact count} for periods where the tag has facts but NONE is authoritative
+    (an unresolved cross-filing conflict, core.fact.is_authoritative = false on every copy). Read only to give the
+    cell a reason: a non-authoritative row is never a value."""
+    out: dict[tuple[str | None, str | None], dict[int, int]] = defaultdict(dict)
+    if not tags:
+        return out
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select c.taxonomy, c.tag, f.period_id, count(*)
+            from core.fact f join core.concept c on c.id = f.concept_id
+            where f.company_id = %s and c.tag = any(%s)
+            group by c.taxonomy, c.tag, f.period_id
+            having not bool_or(f.is_authoritative)
+            """,
+            (company_id, sorted({t for _, t in tags if t is not None})),
+        )
+        for taxonomy, tag, period_id, n in cur.fetchall():
+            if (taxonomy, tag) in tags:
+                out[(taxonomy, tag)][period_id] = n
+    return out
+
+
 def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):
     """(arcs, dcml): arcs[accession] = {(parent_tag, child_tag)} from fsn.calc_arc; dcml[(accession, tag, ddate)]
     = smallest decimals printed for that non-dimensional value (for the tie tolerance)."""
@@ -318,18 +368,82 @@ def load_calc_evidence(conn: psycopg.Connection, accessions: set[str]):
     return arcs, dcml
 
 
+# Owners of a HELD cell (a definition or evidence the library has not settled): the cell is a defect that is
+# guard-hidden, never "not presented". C8 (debt lane) and C6 (DPS) await a verified rule, R2 (no BS-parenthetical
+# share count) a standardization ruling, cover-page / tax-note / conditional-template points a sector decision.
+HELD_OWNERS = (
+    ("held_c8", "verifier"),
+    ("held_c6", "verifier"),
+    ("held_r2", "standardization_lead"),
+    ("held_cover_page", "sector_analyst"),
+    ("held_tax_note", "sector_analyst"),
+    ("held_template_seed", "sector_analyst"),
+    ("held_read_verified_fail", "verifier"),
+)
+
+
+def _status_fields(row: MapRow) -> dict:
+    """state / defect fields of a tagless status row's blank. reason_class held_* -> defect + guard_hidden (never
+    shown as not_presented); everything else keeps the row's own decision as the state."""
+    rc = (row.reason_class or "").lower()
+    if rc.startswith("held_"):
+        owner = next(
+            (o for pre, o in HELD_OWNERS if rc.startswith(pre)), "standardization_lead"
+        )
+        return {
+            "state": "defect",
+            "defect_class": "guard_hidden",
+            "owner": owner,
+            "reason_code": rc,
+        }
+    out = {"state": row.decision}
+    if rc:
+        out["reason_code"] = rc
+    return out
+
+
 def _in_era(row: MapRow, end: date) -> bool:
-    return row.era_from <= end <= (row.era_to or _FAR)
+    """The map's eras are FSN dates (rounded to the nearest month end); a fact's period end is the TRUE end (a
+    52/53-week year ends days off a month end). A true end is inside an era when it is, or its month-end
+    rounding is (common/fsn_dates.nearest_month_ends)."""
+    hi = row.era_to or _FAR
+    return any(row.era_from <= x <= hi for x in {end} | nearest_month_ends(end))
 
 
 def _sign(row: MapRow) -> int:
     return int(row.sign or 1)
 
 
+def _is_override(row: MapRow) -> bool:
+    return (
+        (row.decided_by or "").lower().replace("-", "_").startswith("company_override")
+    )
+
+
+def _mult(row: MapRow) -> Decimal:
+    """served value = sign x scale x STORED value (Decimal). A scale other than 1 is valid only on a row from a
+    filing-checked company override; any other row is served unscaled (and the seeder refuses to load it)."""
+    scale = row.scale if row.scale == 1 or _is_override(row) else Decimal(1)
+    return Decimal(_sign(row)) * scale
+
+
+def _scaled(row: MapRow) -> bool:
+    return row.scale != 1 and _is_override(row)
+
+
 def _note(pairs) -> str | None:
     """The label note of the rows that built a cell (e.g. 'face line including restricted cash, as printed').
     canonical_fact has no per-cell note column: the note is returned with the cell and stays on the map row."""
-    notes = sorted({r.serve_note for r, _ in pairs if r.serve_note})
+    notes_set = {r.serve_note for r, _ in pairs if r.serve_note}
+    for r, _ in pairs:
+        if _scaled(
+            r
+        ):  # provenance of a filing-checked scale: what the filer printed, what is stored, the source
+            notes_set.add(
+                f"filer printed in scaled units, stored unscaled; scale x{r.scale:,} from override "
+                f"{r.evidence_adsh} R{r.evidence_report}"
+            )
+    notes = sorted(notes_set)
     return "; ".join(notes) or None
 
 
@@ -350,13 +464,19 @@ def _descendants(arcs: set[tuple[str, str]], tag: str) -> set[str]:
 
 
 def _check_components(
-    comps: list[tuple[MapRow, Fact]], arcs: dict[str, set[tuple[str, str]]]
+    comps: list[tuple[MapRow, Fact]],
+    arcs: dict[str, set[tuple[str, str]]],
+    founder_definition: bool = False,
 ) -> str | None:
-    """Reason code if the component set must not be summed (rules 2 and 3), else None."""
+    """Reason code if the component set must not be summed (rules 2 and 3), else None. total_debt is the
+    founder's definition (doc 02, 2026-11-04): its listed debt lines are summed as defined, not as one calc
+    parent's children, so only the single-filing and ambiguity checks apply."""
     if any(f.ambiguous for _, f in comps):
         return "ambiguous_values_in_filing"
     if len({f.filing_id for _, f in comps}) != 1:
         return "components_from_different_filings"
+    if founder_definition:
+        return None
     acc = comps[0][1].accession
     filing_arcs = arcs.get(acc, set())
     if not filing_arcs:
@@ -398,6 +518,7 @@ def build_cells(
     dcml: dict[tuple[str, str | None, date], int] | None = None,
     periods: dict[int, tuple[date, date, str]] | None = None,
     alt_facts: dict[tuple[str | None, str | None], dict[int, Fact]] | None = None,
+    no_auth: dict[tuple[str | None, str | None], dict[int, int]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement)."""
     arcs = arcs or {}
@@ -460,7 +581,7 @@ def build_cells(
             # tag order. Two listed tags printing different values in that same latest filing: reasoned blank.
             newest = max((f.filed or date.min, f.filing_id) for _, f in d)
             d = [(r, f) for r, f in d if (f.filed or date.min, f.filing_id) == newest]
-            if len({f.value * _sign(r) for r, f in d}) > 1 or any(
+            if len({f.value * _mult(r) for r, f in d}) > 1 or any(
                 f.ambiguous for _, f in d
             ):
                 stats["conflict_cells"] += 1
@@ -468,11 +589,11 @@ def build_cells(
                 conflicts.add(key)
                 continue
             ref = d[0][1]
-            ref_value = ref.value * _sign(d[0][0])
+            ref_value = ref.value * _mult(d[0][0])
             # rule 1: the printed concept wins; components of the SAME filing must still tie (rule 2)
             same = [(r, f) for r, f in c if f.filing_id == ref.filing_id]
             if same:
-                total = sum(f.value * _sign(r) for r, f in same)
+                total = sum(f.value * _mult(r) for r, f in same)
                 tol = tol_of(
                     [dcml.get((f.accession, r.tag, f.end)) for r, f in same]
                     + [dcml.get((ref.accession, d[0][0].tag, ref.end))]
@@ -487,6 +608,7 @@ def build_cells(
                     "value": ref_value,
                     "source_fact_ids": sorted({f.fact_id for _, f in d}),
                     "serve_note": _note(d),
+                    "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
                     "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
                 }
@@ -497,7 +619,7 @@ def build_cells(
             # D3 / doc 02: instants are never derived; the only instant component sum is total debt
             hold(key, "instant_component_sum_not_allowed")
             continue
-        reason = _check_components(c, arcs)
+        reason = _check_components(c, arcs, _base(pname) == "total_debt")
         if reason:
             hold(key, reason)
             continue
@@ -505,15 +627,17 @@ def build_cells(
             {
                 "canonical_concept_id": key[0],
                 "period_id": key[1],
-                "value": sum((f.value * _sign(r) for r, f in c), Decimal(0)),
+                "value": sum((f.value * _mult(r) for r, f in c), Decimal(0)),
                 "source_fact_ids": sorted({f.fact_id for _, f in c}),
                 "serve_note": _note(c),
+                "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
                 "_from_components": True,
                 "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
             }
         )
     cells = _opex_tie(cells, concept_info, dcml, stats)
+    cells = _scale_sanity(cells, concept_info, periods, stats)
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
     held_keys = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
     name_to_id = {n: i for i, (n, _) in concept_info.items()}
@@ -540,7 +664,7 @@ def build_cells(
                         "tag": row.tag,
                         "plabel": row.evidence_plabel or row.tag,
                         "components": list(row.components or ()),
-                        "value": fact.value * _sign(row),
+                        "value": fact.value * _mult(row),
                         "source_fact_ids": [fact.fact_id],
                         "tag_map_id": row.map_id,
                     }
@@ -594,7 +718,7 @@ def build_cells(
                     "canonical_concept_id": concept,
                     "concept_name": concept_info[concept][0],
                     "period_id": period_id,
-                    "state": row.decision,
+                    **_status_fields(row),
                     "reason": row.reason,
                     "rule_id": row.rule_id,
                     "period_start": start,
@@ -659,6 +783,53 @@ def build_cells(
                     }
                 )
                 held_now.add(key)
+    # A listed tag has facts for a period inside the row's era but none of them is authoritative: the cell is a
+    # reasoned blank (an open data defect upstream of the mapper), never a value from a non-authoritative copy.
+    value_now2 = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
+    held_now2 = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]} | {
+        (b["canonical_concept_id"], b["period_id"])
+        for b in stats["blanks"]
+        if b.get("canonical_concept_id")
+    }
+    for row in rows:
+        if row.decision not in ("concept", "component") or row.tag is None:
+            continue
+        target = (
+            row.parent_concept_id
+            if row.decision == "component"
+            else row.canonical_concept_id
+        )
+        if target is None or not stmt_ok(target, row.stmt):
+            continue
+        for period_id, n in sorted(
+            (no_auth or {}).get((row.taxonomy, row.tag), {}).items()
+        ):
+            key = (target, period_id)
+            if period_id not in periods or key in value_now2 or key in held_now2:
+                continue
+            start, end, ptype = periods[period_id]
+            if not _in_era(row, end):
+                continue
+            grain = _grain(start, end, ptype)
+            if grain is None:
+                continue
+            stats["blanks"].append(
+                {
+                    "canonical_concept_id": target,
+                    "concept_name": concept_info[target][0],
+                    "period_id": period_id,
+                    "state": "defect",
+                    "defect_class": "ingestion",
+                    "owner": "data_engineer_l1",
+                    "reason_code": "no_authoritative_fact",
+                    "reason": f"{n} fact(s) under {row.tag} for this period, none authoritative (unresolved cross-filing conflict)",
+                    "rule_id": RULE_ID,
+                    "period_start": start,
+                    "period_end": end,
+                    "grain": grain,
+                }
+            )
+            held_now2.add(key)
     for concept, period_id in sorted(conflicts):
         if period_id not in (periods or {}):
             continue
@@ -687,6 +858,98 @@ def build_cells(
 
 def _base(name: str) -> str:
     return name.removesuffix("_resolved")
+
+
+SHARE_CONCEPTS = {
+    "weighted_basic_shares",
+    "weighted_diluted_shares",
+    "shares_outstanding",
+}
+SCALE_RATIO = Decimal(
+    100
+)  # a gross mismatch (a unit-scale error), never rounding / NCI / preferred
+
+
+def _scale_sanity(cells: list[dict], concept_info, periods, stats: dict) -> list[dict]:
+    """Scale sanity, never a silent rescale (filer_scale_error). A share-count cell is BLOCKED when it is 100x or
+    more off (a) the company's other share facts of the same period end, or (b) the per-share identity:
+    |EPS x weighted shares| against net income. EPS and net income stay as served."""
+    by_name: dict[tuple[str, int], dict] = {}
+    for c in cells:
+        by_name[(_base(concept_info[c["canonical_concept_id"]][0]), c["period_id"])] = c
+    blocked: dict[int, str] = {}  # id(cell) -> reason
+
+    def block(cell: dict, why: str) -> None:
+        if not cell.get(
+            "_scaled"
+        ):  # an explicit filing-checked override scale is exempt from the sanity block
+            blocked.setdefault(id(cell), why)
+
+    eps_of = {
+        "weighted_basic_shares": "basic_eps",
+        "weighted_diluted_shares": "diluted_eps",
+    }
+    for (name, pid), cell in list(by_name.items()):
+        eps_name = eps_of.get(name)
+        if eps_name is None:
+            continue
+        eps, ni = by_name.get((eps_name, pid)), by_name.get(("net_income", pid))
+        if eps and ni and ni["value"] != 0 and eps["value"] != 0:
+            ratio = abs(eps["value"] * cell["value"] / ni["value"])
+            if ratio >= SCALE_RATIO or ratio <= 1 / SCALE_RATIO:
+                block(
+                    cell,
+                    f"{name} {cell['value']} x {eps_name} {eps['value']} is {ratio:.6g}x net income {ni['value']}: implausible unit scale",
+                )
+    ends: dict = defaultdict(list)  # period end -> share cells of that date
+    for (name, pid), cell in by_name.items():
+        if name in SHARE_CONCEPTS and pid in (periods or {}) and cell["value"] > 0:
+            ends[periods[pid][1]].append((name, cell))
+    for group in ends.values():
+        if len(group) < 2:
+            continue
+        hi = max(group, key=lambda g: g[1]["value"])
+        for name, cell in group:
+            if hi[1]["value"] / cell["value"] >= SCALE_RATIO:
+                block(
+                    cell,
+                    f"{name} {cell['value']} is {hi[1]['value'] / cell['value']:.6g}x smaller than {hi[0]} {hi[1]['value']} of the same date: implausible unit scale",
+                )
+    kept = []
+    for c in cells:
+        why = blocked.get(id(c))
+        if why is None:
+            kept.append(c)
+            continue
+        pid = c["period_id"]
+        stats["held"].append(
+            {
+                "canonical_concept_id": c["canonical_concept_id"],
+                "period_id": pid,
+                "reason": "filer_scale_error",
+            }
+        )
+        if pid in (periods or {}):
+            start, end, ptype = periods[pid]
+            grain = _grain(start, end, ptype)
+            if grain:
+                stats["blanks"].append(
+                    {
+                        "canonical_concept_id": c["canonical_concept_id"],
+                        "concept_name": concept_info[c["canonical_concept_id"]][0],
+                        "period_id": pid,
+                        "state": "defect",
+                        "defect_class": "finding_open",
+                        "owner": "tag_mapper",
+                        "reason_code": "filer_scale_error",
+                        "reason": why,
+                        "rule_id": RULE_ID,
+                        "period_start": start,
+                        "period_end": end,
+                        "grain": grain,
+                    }
+                )
+    return kept
 
 
 def _opex_tie(cells: list[dict], concept_info, dcml, stats: dict) -> list[dict]:
@@ -757,6 +1020,7 @@ def resolve_for_company(
     managed_concept_ids: set[int],
     concept_info: dict[int, tuple[str, str]],
     run_id: str | None = None,
+    commit: bool = True,
 ) -> dict:
     """Rebuild this company's canonical_fact rows from its tag map. Deletes every concept resolve() manages
     (plus every concept the map targets), so no value of the old path survives for a tag-map company."""
@@ -785,8 +1049,9 @@ def resolve_for_company(
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
     periods = _load_periods(conn, company_id)
+    no_auth = _load_no_authoritative(conn, company_id, used)
     cells, stats = build_cells(
-        rows, facts, concept_info, arcs, dcml, periods, alt_facts
+        rows, facts, concept_info, arcs, dcml, periods, alt_facts, no_auth
     )
     targets = set(managed_concept_ids)
     for r in rows:
@@ -853,9 +1118,13 @@ def resolve_for_company(
                     "blank reasons need the rule_run id of the resolve run"
                 )
             _write_blanks(conn, company_id, run_id, stats["blanks"], concept_info)
-        conn.commit()
+        if commit:
+            conn.commit()
     stats["resolved"] = len(cells)
     stats["held_cells"] = len(stats["held"])
+    stats["cells"] = (
+        cells  # the written rows (the write path protects exactly these keys)
+    )
     stats["blank_cells"] = len(stats["blanks"])
     stats["combined_line_cells"] = len(stats["combined_lines"])
     logger.info(
@@ -864,7 +1133,7 @@ def resolve_for_company(
         **{
             k: v
             for k, v in stats.items()
-            if k not in ("held", "blanks", "blank_conflicts", "combined_lines")
+            if k not in ("held", "blanks", "blank_conflicts", "combined_lines", "cells")
         },
     )
     return stats
@@ -907,3 +1176,19 @@ def load_concept_info(conn: psycopg.Connection) -> dict[int, tuple[str, str]]:
     with conn.cursor() as cur:
         cur.execute("select id, name, statement from analytics.canonical_concept")
         return {i: (n, s) for i, n, s in cur.fetchall()}
+
+
+def without_tag_map_ciks(conn: psycopg.Connection, ciks: set[str]) -> set[str]:
+    """For the stages that rewrite canonical_fact after resolve (fallbacks, fills, dedup, split rebase): when rule
+    company_tag_map.select@1 is ON, companies that have company_tag_map rows are skipped (the tag-map write path
+    owns their cells). Flag off: returns ciks unchanged, no query."""
+    if not enabled() or not ciks:
+        return ciks
+    with conn.cursor() as cur:
+        cur.execute(
+            """select c.cik from core.company c
+               where c.cik = any(%s) and exists (select 1 from analytics.company_tag_map m where m.company_id = c.id)""",
+            (sorted(ciks),),
+        )
+        skip = {r[0] for r in cur.fetchall()}
+    return ciks - skip

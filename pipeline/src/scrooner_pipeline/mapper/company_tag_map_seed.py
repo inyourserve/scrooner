@@ -19,6 +19,7 @@ import json
 import re
 from collections import Counter, defaultdict
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
 from typing import Any
@@ -62,7 +63,7 @@ def held_by_verifier(raw: dict) -> bool:
 
 
 COLUMNS = (
-    "company_id cik taxonomy tag stmt decision canonical_concept_id parent_concept_id sign serve_note components "
+    "company_id cik taxonomy tag stmt decision canonical_concept_id parent_concept_id sign scale serve_note components "
     "reason_class reason era_from era_to evidence_adsh evidence_report evidence_line evidence_plabel "
     "evidence_cal_parent decided_by rule_id"
 ).split()
@@ -158,6 +159,21 @@ def normalize(
         n[f"{side}_id"] = _int(n[f"{side}_id"])
     raw_sign = r.get("sign") if r.get("sign") is not None else r.get("combine_sign")
     n["sign"] = 1 if raw_sign is None else int(raw_sign)
+    n["scale"] = (
+        Decimal(str(r.get("scale"))) if r.get("scale") is not None else Decimal(1)
+    )
+    if n["scale"] <= 0:
+        raise ValueError("scale must be > 0")
+    if (
+        n["scale"] != 1
+    ):  # a scale is valid only from a filing-checked company override, with its evidence
+        by = str(n["decided_by"] or "").lower().replace("-", "_")
+        if not by.startswith("company_override"):
+            raise ValueError(
+                f"scale {n['scale']} refused: only a company override (decided_by company_override) may scale"
+            )
+        if not (n["evidence_adsh"] or "").strip():
+            raise ValueError("scale needs the override's evidence_adsh")
     for k in ("evidence_report", "evidence_line"):
         n[k] = _int(n[k])
     n["era_from"], n["era_to"] = _date(n["era_from"]), _date(n["era_to"])
@@ -264,10 +280,10 @@ def check_overlaps(rows: list[dict]) -> list[str]:
 
 INSERT = (
     "insert into analytics.company_tag_map (company_id, cik, taxonomy, tag, stmt, decision, canonical_concept_id, "
-    "parent_concept_id, sign, components, serve_note, reason_class, reason, era_from, era_to, evidence_adsh, "
+    "parent_concept_id, sign, scale, components, serve_note, reason_class, reason, era_from, era_to, evidence_adsh, "
     "evidence_report, evidence_line, evidence_plabel, evidence_cal_parent, decided_by, rule_id) values "
     "(%(company_id)s, %(cik)s, %(taxonomy)s, %(tag)s, %(stmt)s, %(decision)s, %(canonical_concept_id)s, "
-    "%(parent_concept_id)s, %(sign)s, %(components)s, %(serve_note)s, %(reason_class)s, %(reason)s, %(era_from)s, "
+    "%(parent_concept_id)s, %(sign)s, %(scale)s, %(components)s, %(serve_note)s, %(reason_class)s, %(reason)s, %(era_from)s, "
     "%(era_to)s, %(evidence_adsh)s, %(evidence_report)s, %(evidence_line)s, %(evidence_plabel)s, "
     "%(evidence_cal_parent)s, %(decided_by)s, %(rule_id)s)"
 )
