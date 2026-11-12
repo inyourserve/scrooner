@@ -100,3 +100,15 @@ Guard: when a label would demote a line, check it against the calc position and 
 - CAT "interest expense excluding Financial Products" is a segment component, not consolidated interest expense.
 - Brokers (MS): "Total non-interest expenses" = operating expenses; "Customer and other receivables/payables" = combined (tags `OtherReceivables` and `Payables`, 0000895421-26-000086); `PaymentsForProceedsFromProductiveAssets` on "premises, equipment and software" = capex.
 - Never use a rounded note figure when the face prints the value under another tag: AMD amortization 2,254M on the CF (`AdjustmentForAmortization`) vs 2,300M in the note (the iprx/face rule, debt.md §8-9).
+
+## P. Full 10-K reads of 12 more companies (Dhairya 2026-11-12; CSCO CVX DELL GE GEV GOOG GS HD INTC JNJ JPM KO; 7.8% FAIL; FILING-CHECKED)
+- CVX `Revenues` 189,031M = "Total revenues and other income"; revenue = "Sales and other operating revenues" 184,432M (0000093410-26-000078 R3). Same trap as COP: a "total" that adds other income is not revenue.
+- CSCO undimensioned `AmortizationOfIntangibleAssets` = the opex portion only (916M); total amortization 1,863M (R67).
+- JNJ "interest expense, net of portion capitalized" is clean (the expensed amount), not a net-interest perimeter.
+- JNJ latest 10-K: the incl-NCI equity and comprehensive-income tags are the only lines (no parent and no NCI line): equity maps by the rule in TOP-TAGS row 70.
+- GE `AllocatedShareBasedCompensationExpense` is after tax (R126): never SBC at GE.
+- GE prints no consolidated cost of revenue; Equipment and Services cost lines only (R3): cost of revenue = their sum under ruling (a) (printed duration components, same section).
+- JPM: "cash and due from banks" + "deposits with banks" = CF ending cash 343,338M. Serving the BS sum would be a derived instant (doc 02 item 4); the CF ending-cash line is a PRINTED instant with the same value: proposal = serve it, labelled. Ruling asked of Dhairya.
+- DELL, GOOG, INTC "Interest and other, net" / other income and expense totals include interest: combined.
+- HD's latest 10-K uses `IncomeTaxesPaidNet` (R68), not `IncomeTaxesPaid`.
+- Tooling: the SEC companyconcept API returns 404 for custom prefixes; use companyfacts for custom tags.
