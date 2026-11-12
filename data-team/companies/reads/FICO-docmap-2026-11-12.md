@@ -105,4 +105,4 @@ none beyond sign differences
 - operating_expenses: agree (R5 'Total operating expenses' CostsAndExpenses 1,269,179 includes cost of revenues 351,480: combined, never opex)
 - sga_expense: agree (R5 SG&A 681,099)
 - shares_outstanding: agree (R4 common stock shares outstanding 21,381,000 at 2026-09-30)
-- total_debt: agree (R3 current maturities 337,500 + long-term debt 4,921,604 = 5,259,104 (thousands))
+- total_debt: disagree (finance-lease rule (founder 2026-11-04 item 5, Dhairya 2026-11-13): the face debt lines (R3 337,500 + 4,921,604) exclude leases; finance lease liabilities are only in the leases note (R90: current 2,485 + non-current 492 = 2,977); total debt 5,262,081 (FY1 399,541 + 2,656,150 + 3,266 + 3,941 = 3,062,898). Operating leases not included)

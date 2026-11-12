@@ -101,7 +101,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - inventory: agree (R3 Inventories 4,008.8)
 - operating_expenses: agree (R4 has no total opex line and no gross profit line; the only lead is operating income)
 - research_and_development: agree (no R&D line on R4)
-- total_debt: agree (R3 25.0 + 5,756.4 = 5,781.4 ($M); no other borrowing line)
+- total_debt: agree (R3 25.0 + 5,756.4 = 5,781.4 ($M); no other borrowing line; finance-lease rule checked: R60 debt schedule 'Total debt' 5,826.3 includes Finance lease liability 67.3 (and nets to the face 5,781.4 after issuance costs): leases already inside, nothing added)
 - total_liabilities: agree (R3 Total liabilities 11,468.5)
 - weighted_basic_shares: disagree (R71 prints 48,700,000 shares ('$ in Millions' scales dollars only); the tool multiplied shares by the dollar scale)
 - weighted_diluted_shares: disagree (R71 prints 49,500,000 shares ('$ in Millions' scales dollars only); the tool multiplied shares by the dollar scale)

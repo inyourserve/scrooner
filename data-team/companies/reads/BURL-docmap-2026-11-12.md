@@ -102,5 +102,5 @@ none beyond sign differences
 - operating_expenses: agree (R2 'Total costs and expenses' CostsAndExpenses 10,750,792 includes cost of sales 6,486,922: combined, never opex)
 - operating_income: agree (R2 prints no operating income line (costs and expenses then income before tax); the lead is other nonoperating income)
 - research_and_development: agree (no R&D line; the lead is a tax credit carryforward (R87))
-- total_debt: agree (R4 current maturities of long term debt and other current debt 70,591 + long term debt 2,011,735 = 2,082,326 (thousands))
+- total_debt: agree (R4 current maturities of long term debt and other current debt 70,591 + long term debt 2,011,735 = 2,082,326 (thousands); finance-lease rule checked: debt lines are LongTermDebtAndCapitalLeaseObligations(Current) and R52 lists FinanceLeaseLiability inside long-term debt: nothing added)
 - total_liabilities: agree (R4 prints no total liabilities line; Liabilities is not in the filing)

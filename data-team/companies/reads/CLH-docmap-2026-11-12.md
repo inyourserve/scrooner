@@ -101,5 +101,5 @@ none beyond sign differences
 - research_and_development: agree (no R&D line on R5; the only lead is a tax credit carryforward (R91))
 - revenue: agree (R5 Total revenues 6,030,837)
 - total_assets: agree (R3 Total assets 7,624,056)
-- total_debt: agree (R3 current portion 12,600 + long-term 2,763,563 = 2,776,163 (thousands); no lease or other borrowing line under debt)
+- total_debt: disagree (finance-lease rule (founder 2026-11-04 item 5, Dhairya 2026-11-13): the face debt lines (R3 12,600 + 2,763,563) exclude leases; finance lease liabilities sit in accrued expenses and other long-term liabilities (R104: current 33,125 + long-term 196,192 = 229,317, = FinanceLeaseLiability R107); total debt 3,005,480 (FY1 15,102 + 2,771,117 + 25,330 + 161,375 = 2,972,924). Operating leases not included)
 - total_liabilities: agree (R3 goes from total other liabilities to equity: no total liabilities line)

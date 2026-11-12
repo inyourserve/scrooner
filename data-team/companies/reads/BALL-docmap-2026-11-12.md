@@ -103,4 +103,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - research_and_development: agree (no R&D line; leads are deferred-tax IPR&D and tax-credit rate items (R88, R61))
 - sbc: agree (not on the R6 face; R110 'Share based compensation expense' AllocatedShareBasedCompensationExpense 28)
 - shares_outstanding: agree (no CommonStockSharesOutstanding at the BS date (R4/R5 print issued shares; the equity roll uses SharesOutstanding; cover count never used): not_presented)
-- total_debt: agree (R4 short-term debt and current portion 21 + long-term debt 6,991 = 7,012 ())
+- total_debt: agree (R4 short-term debt and current portion 21 + long-term debt 6,991 = 7,012 (USD millions); finance-lease rule checked: R80 long-term debt includes 'Finance lease obligations' and short-term debt includes 'Short-term finance leases': leases already inside, nothing added)
