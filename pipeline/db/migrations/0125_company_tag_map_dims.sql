@@ -6,7 +6,10 @@
 -- dims is the FSN store's own segment string (fsn.dim.segments), e.g. 'ProductOrService=Product;' or, for a line
 -- sliced on two axes, 'BusinessSegments=Gaming;ProductOrService=Gaming;'. '' = no dimension (every row so far).
 -- The fsn_xbrl value path reads fsn.value through fsn.dim.segments = dims, consolidated (coreg ''), iprx 0.
--- A dimensioned row only feeds a component sum (or is excluded): it is never a concept on its own.
+-- A dimensioned row only feeds a component sum (or is excluded). One exception (Tag Expert ruling AE.3, Dhairya
+-- 2026-11-13): a face line printed only under a single class-of-stock member (STZ diluted shares, Class A) IS the
+-- data point, so a 'concept' row may carry dims of exactly one ClassOfStock member (the FSN axis name of
+-- us-gaap:StatementClassOfStockAxis). Segment and other slices stay component or excluded.
 -- NOT applied: needs the founder's typed words. Number: renumber on landing to the next contiguous file on main.
 alter table analytics.company_tag_map
     add column if not exists dims text not null default ''
@@ -15,7 +18,8 @@ alter table analytics.company_tag_map
 alter table analytics.company_tag_map drop constraint if exists company_tag_map_dims_decision_check;
 alter table analytics.company_tag_map
     add constraint company_tag_map_dims_decision_check
-        check (dims = '' or decision in ('component', 'excluded'));
+        check (dims = '' or decision in ('component', 'excluded')
+               or (decision = 'concept' and dims ~ '^ClassOfStock=[A-Za-z0-9_:.-]+;$'));
 
 create or replace function analytics.company_tag_map_no_overlap() returns trigger
 language plpgsql as $$
