@@ -162,6 +162,54 @@ def resolve_facts_cmd(
     typer.echo(f"resolve-facts: {stats}")
 
 
+@app.command("docmap-load")
+def docmap_load_cmd(
+    reads: Path = typer.Argument(
+        ...,
+        help="Directory of <TICKER>-docmap-<date>.csv reads (data-team/companies/reads).",
+    ),
+    conflicts_out: Path = typer.Option(
+        ...,
+        "--conflicts-out",
+        help="CSV of every docmap/library disagreement (for the Tag Expert).",
+    ),
+    rejects_out: Path = typer.Option(
+        None,
+        "--rejects-out",
+        help="CSV of rejected docmap rows (unknown status, unknown concept, ...).",
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write (one transaction per company). Default: dry run."
+    ),
+) -> None:
+    """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
+    default: plans, validates and lists conflicts, writes nothing."""
+    from scrooner_pipeline.mapper.docmap_loader import load, write_listing
+
+    with get_connection() as conn:
+        stats = load(conn, sorted(reads.glob("*-docmap-*.csv")), apply=apply)
+    write_listing(conflicts_out, stats["conflicts"])
+    if rejects_out:
+        write_listing(rejects_out, stats["rejects"])
+    comps = stats["companies"]
+    typer.echo(
+        f"docmap-load: files={stats['files']} rows={stats['rows']} companies={len(comps)} "
+        f"added={sum(c['added'] for c in comps.values())} removed={sum(c['removed'] for c in comps.values())} "
+        f"library_cut={sum(c['library_cut'] for c in comps.values())} "
+        f"library_deleted={sum(c['library_deleted'] for c in comps.values())} "
+        f"conflicts={len(stats['conflicts'])} rejects={len(stats['rejects'])} blocked={len(stats['blocked'])} "
+        f"applied={stats['applied']}"
+    )
+    for key, why in sorted(stats["blocked"].items()):
+        typer.echo(f"  blocked {key}: {why}")
+    changed = sorted(
+        c["company_id"]
+        for c in comps.values()
+        if c["added"] or c["removed"] or c["library_cut"] or c["library_deleted"]
+    )
+    typer.echo(f"changed company ids: {','.join(map(str, changed))}")
+
+
 @app.command("seed-company-tag-map")
 def seed_company_tag_map_cmd(
     path: Path = typer.Argument(
