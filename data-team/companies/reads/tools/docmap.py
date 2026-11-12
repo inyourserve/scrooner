@@ -309,6 +309,50 @@ def match_row(page: dict, dp: str, tags: list[str], rx: str) -> dict | None:
     return None
 
 
+def _has(r: dict) -> bool:
+    return any(v is not None for v in r["vals"])
+
+
+def opex_row(page: dict) -> tuple[dict | None, str, str]:
+    """Operating expenses never include cost of revenue (Dhairya ruling 2026-11-12).
+    1. A printed total opex line that excludes COGS -> mapped.
+    2. Else every face line between gross profit and operating income, summed, tied exactly to GP - OI -> component sum.
+    3. A total (e.g. CostsAndExpenses) that includes COGS -> combined, never opex."""
+    rows = page["rows"]
+    loc = lambda tags, rx: next((i for i, r in enumerate(rows) if _has(r) and (
+        r["tag"].split(":")[-1] in tags or re.search(rx, r["label"], re.I))), None)
+    i_gp = loc(["GrossProfit"], r"^gross (profit|margin)")
+    i_oi = loc(["OperatingIncomeLoss"], r"^(total )?operating (income|profit|earnings)|income from operations")
+    i_cogs = loc(["CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices"],
+                 r"^(total )?cost of (revenues?|sales|goods|products|services)")
+    i_tot = next((i for i, r in enumerate(rows) if _has(r) and (r["tag"].split(":")[-1] in ("OperatingExpenses", "CostsAndExpenses")
+                  or re.search(r"^total (operating )?(costs and )?expenses", r["label"], re.I))), None)
+    v = lambda i: rows[i]["vals"][0] if rows[i]["vals"] else None
+    if i_tot is not None:
+        tot = rows[i_tot]
+        if i_gp is not None and i_oi is not None and None not in (v(i_gp), v(i_oi), v(i_tot)):
+            if abs(abs(v(i_tot)) - abs(v(i_gp) - v(i_oi))) < 0.5:
+                return tot, "mapped", "printed total opex line excludes cost of revenue (= GP - OI)"
+        elif i_gp is None and tot["tag"].endswith(":CostsAndExpenses"):
+            return tot, "combined", "CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex"
+        elif i_gp is None and (i_cogs is None or i_cogs > i_tot):
+            return tot, "mapped", "printed total opex line; no cost-of-revenue line above it"
+        if i_cogs is not None and i_cogs < i_tot and (i_gp is None or i_gp > i_tot):
+            return tot, "combined", "printed total includes cost of revenue: combined, never opex"
+    if i_gp is not None and i_oi is not None and i_gp < i_oi:
+        parts = [rows[i] for i in range(i_gp + 1, i_oi) if _has(rows[i]) and rows[i]["tag"]]
+        if parts and None not in (v(i_gp), v(i_oi)):
+            total = sum((p["vals"][0] or 0) for p in parts)
+            if abs(abs(total) - abs(v(i_gp) - v(i_oi))) < 0.5:
+                return ({"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
+                         "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
+                         "parts": parts}, "component sum", "every face line between gross profit and operating income; ties to GP - OI")
+            return None, "", f"face lines between gross profit and operating income sum to {fmt(total)}, not GP - OI {fmt(v(i_gp) - v(i_oi))}"
+    if i_tot is not None:
+        return None, "", "a total-expense line exists but its COGS perimeter could not be established"
+    return None, "", "no total opex line and no gross profit / operating income pair to tie components"
+
+
 def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     cik = row["cik"].zfill(10)
     tic = row["ticker"]
@@ -340,7 +384,15 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
             out.append(rec)
             continue
         r = None
-        if dp == "depreciation_and_amortization":
+        if dp == "operating_expenses":
+            r, opex_status, opex_note = opex_row(page)
+            if r is None:
+                rec.update(status="not_presented", evidence_class="FILING-CHECKED",
+                           note=f"AUTO: {reps[stmt][1]} read; {opex_note}; not hand-verified")
+                out.append(rec)
+                continue
+            r = dict(r, opex_status=opex_status, opex_note=opex_note)
+        elif dp == "depreciation_and_amortization":
             r = match_row(page, dp, tags, rx)
             if r is None:
                 parts = [x for x in page["rows"] if x["tag"].split(":")[-1] in DA_PARTS]
@@ -374,7 +426,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
             else:
                 av = api_value(cf, r["tag"], accn, end, months)
             vals.append((pv, av, end))
-        status = "component sum" if "parts" in r else "mapped"
+        status = r.get("opex_status") or ("component sum" if "parts" in r else "mapped")
         how = ("company extension tag, matched by printed label" if not r["tag"].startswith("us-gaap")
                else ("matched by printed label (tag outside the usual set)" if r.get("by_label") else ""))
         rec.update(status=status, tags=r["tag"], label=r["label"][:120], evidence_class="FILING-CHECKED")
@@ -393,6 +445,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 verdicts.append(f"N (printed {fmt(pv)} vs API {fmt(av)})")
         rec["match"] = next((v for v in verdicts if v.startswith("N") or v == "API missing"), verdicts[0] if verdicts else "")
         if vals:
+            if r.get("opex_note"):
+                how = r["opex_note"] + ("; " + how if how else "")
             rec["note"] = (how + " | " if how else "") + f"accn {accn} {reps[stmt][1]} period ..{vals[0][2].isoformat()}"
         if any(v.startswith("N") for v in verdicts):
             quirks.append(f"| new | {tic} | {dp} | {r['tag']} | printed vs companyfacts mismatch: {'; '.join(v for v in verdicts if v.startswith('N'))} | {accn} {reps[stmt][1]} | FILING-CHECKED |")

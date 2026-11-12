@@ -1,0 +1,39 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+PLXS,revenue,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,cost_of_revenue,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,gross_profit,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,operating_expenses,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,sga_expense,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,research_and_development,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,operating_income,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,interest_expense,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,income_before_tax,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,income_tax_expense,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,net_income,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,basic_eps,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,diluted_eps,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,weighted_basic_shares,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,weighted_diluted_shares,not_presented,,IS,,,,,,,,,FILING-CHECKED,AUTO: statement page not identified in FilingSummary; not hand-verified
+PLXS,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,R3.htm,Cash and cash equivalents,306464000,306464000,345109000,345109000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,R3.htm,"Accounts receivable, net of allowances of $2,381 and $3,189, respectively",656573000,656573000,622366000,622366000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,inventory,mapped,us-gaap:InventoryNet,BS,R3.htm,Inventories,1229839000,1229839000,1311434000,1311434000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,current_assets,mapped,us-gaap:AssetsCurrent,BS,R3.htm,Total current assets,2398793000,2398793000,2477150000,2477150000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,R3.htm,"Property, plant and equipment, net",546052000,546052000,501112000,501112000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,goodwill,not_presented,,BS,R3.htm,,,,,,,,FILING-CHECKED,AUTO: R3.htm read; no face row matched the goodwill tag/label rules; not hand-verified
+PLXS,total_assets,mapped,us-gaap:Assets,BS,R3.htm,Total assets,3137110000,3137110000,3153821000,3153821000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,R3.htm,Accounts payable,726597000,726597000,606378000,606378000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,R3.htm,Total current liabilities,1518683000,1518683000,1643294000,1643294000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,total_liabilities,mapped,us-gaap:Liabilities,BS,R3.htm,Total liabilities,1682522000,1682522000,1828996000,1828996000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R3.htm,Total shareholders’ equity,1454588000,1454588000,1324825000,1324825000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R3.htm period ..2025-09-27
+PLXS,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R6.htm,Cash flows provided by operating activities,249231000,249231000,436502000,436502000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R6.htm,Cash flows used in investing activities,-95611000,-95611000,-94947000,-94947000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R6.htm,Cash flows used in financing activities,-196404000,-196404000,-255586000,-255586000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,R6.htm,"Payments for property, plant and equipment",-95264000,95264000,-95182000,95182000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,R6.htm,Depreciation and amortization,77792000,77792000,77847000,77847000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R6.htm,Share-based compensation expense and related charges,30268000,30268000,30314000,30314000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,dividends_paid,not_presented,,CF,R6.htm,,,,,,,,FILING-CHECKED,AUTO: R6.htm read; no face row matched the dividends_paid tag/label rules; not hand-verified
+PLXS,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,R6.htm,Repurchases of common stock,-65336000,65336000,-55686000,55686000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,R6.htm,Interest paid,12339000,12339000,29519000,29519000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,R6.htm,Income taxes paid,44782000,44782000,46223000,46223000,Y,tag covers last 5 FY in companyfacts,FILING-CHECKED,accn 0000785786-25-000064 R6.htm period ..2025-09-27
+PLXS,total_debt,not_presented,,BS,R3.htm,,,,,,,,FILING-CHECKED,AUTO: no standard debt line on the BS face; not hand-verified
+PLXS,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BSP,R4.htm,"Common stock, shares outstanding (in shares)",26828000,26828000,,,Y,,FILING-CHECKED,balance-sheet date 2025-09-27; single row
