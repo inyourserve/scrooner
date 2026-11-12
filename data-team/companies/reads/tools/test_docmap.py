@@ -54,6 +54,7 @@ CF = _page("CONSOLIDATED STATEMENTS OF CASH FLOWS", [
     _row("us-gaap:AdjustmentForAmortization", "Amortization", "40", "35"),
     _row("us-gaap:PaymentsToDevelopRealEstateAssets", "Development of real estate", "(300)", "(250)"),
     _row("zz:PaymentsForPropertyImprovements", "Property improvements", "(30)", "(25)"),
+    _row("us-gaap:CapitalExpendituresIncurredButNotYetPaid", "Invoices accrued for construction and tenant improvements", "45", "40"),
     _row("us-gaap:PaymentsOfDividends", "Dividends paid on common and preferred stock", "(120)", "(110)"),
 ])
 FS = ("<FilingSummary><MyReports>"
@@ -144,6 +145,7 @@ def test_4_interest_and_debt_expense_label(tmp_path):
 
 
 def test_5_reit_capex_component_sum(tmp_path):
+    # the accrued (non-cash) supplemental line is never part of capex (HR)
     rows = _read(tmp_path)
     assert rows["capex"]["status"] == "component sum"
     assert rows["capex"]["fy0_printed"] == "-330000000"

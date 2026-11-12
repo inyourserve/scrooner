@@ -485,8 +485,8 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
                     if ci is None:
                         ci = next((i for i, v in enumerate(row_["vals"]) if v is not None), None)
                     if ci is not None:
-                        sc = pg["shares_scale"] if dp == "shares_outstanding" else pg["scale"]
-                        pv, plabel, rs = row_["vals"][ci] * sc, row_["label"], [rr] + [x for x in rs if x != rr]
+                        pv = scaled(row_["vals"][ci], dp, pg) if dp != "shares_outstanding" else row_["vals"][ci] * pg["shares_scale"]
+                        plabel, rs = row_["label"], [rr] + [x for x in rs if x != rr]
                         break
             if pv is None:
                 m = ""
@@ -585,7 +585,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 parts = [x for x in page["rows"] if _has(x) and x["tag"] and (
                     x["tag"].split(":")[-1] in REIT_CAPEX
                     or re.search(r"(property|building|capital) improvements|tenant improvements|leasing (costs|commissions)|^development", x["label"], re.I))
-                    and not re.search(r"proceeds|sale|disposition", x["label"], re.I)]
+                    and not re.search(r"proceeds|sale|disposition|accrued|non-?cash|not yet paid|incurred but", x["label"], re.I)
+                    and not x["tag"].endswith(("CapitalExpendituresIncurredButNotYetPaid", "NoncashOrPartNoncashAcquisitionValueOfAssetsAcquired1"))]
                 if parts:
                     r = {"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
                          "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
@@ -621,7 +622,12 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 av = None
                 parts_api = [api_value(cf, p["tag"], accn, end, months) for p in r["parts"]]
                 if all(a is not None for a in parts_api):
-                    av = sum(parts_api)
+                    # a part printed with the opposite sign of its fact (e.g. a gain shown negative inside expenses)
+                    signed = []
+                    for p, a in zip(r["parts"], parts_api):
+                        pv_p = p["vals"][ci] if ci < len(p["vals"]) else None
+                        signed.append(-a if pv_p is not None and a and (pv_p < 0) != (a < 0) else a)
+                    av = sum(signed)
             else:
                 av = api_value(cf, r["tag"], accn, end, months)
             vals.append((pv, av, end))

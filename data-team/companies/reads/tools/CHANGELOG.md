@@ -13,3 +13,8 @@ Every fixture fails on the previous tool and passes on this one (7/7 each way).
 7. **SG&A is never G&A alone** when a selling or marketing line is printed: component sum of G&A + every selling/marketing line (LYFT 1,877,231,000 ties companyfacts). test_7.
 
 Earlier 2026-11-12 rulings already in the tool: FY2015-to-latest eras (FY2015 10-K opened), whole-filing (MetaLinks) resolution of face misses with `check: machine-full-filing`, opex never includes cost of revenue, interest gross-only (net line combined), D&A with accretion combined, shares at the BS date (cover count never used), buyback withholding / NCI-preferred dividends / interest-notes-financing receivables excluded, bank and insurer OUT data points (SIC).
+
+## 2026-11-12 (later): three fixes found in the ranks 901-1000 mismatch rows
+8. NOTE values use the data point's scale: EPS unscaled, share counts by the page's shares scale (ESNT EPS 6970 → 6.97; CTVA weighted shares 680,000 → 680,000,000).
+9. Component sums compare each part's companyfacts value with the sign printed on the face (a gain shown negative inside expenses, AAON).
+10. REIT capex never includes accrued / non-cash supplemental lines (`CapitalExpendituresIncurredButNotYetPaid`, HR); fixture row added to test_5.
