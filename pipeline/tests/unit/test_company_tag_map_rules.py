@@ -569,3 +569,17 @@ def test_total_debt_components_sum_by_the_founder_definition_without_calc_parent
     rows2 = [MapRow("us-gaap", t, "BS", "component", None, INV, 1, ERA, None) for t in ("DebtCurrent", "LongTermDebtNoncurrent")]
     cells, stats = build_cells(rows2, facts, INST_INFO, {}, {})
     assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
+
+def test_status_rows_with_a_candidate_marker_still_load():
+    # a tagless status row records why the cell is blank; it never serves a value, so it is not held
+    from scrooner_pipeline.mapper.company_tag_map_seed import held_by_verifier
+
+    status = {
+        "decision": "not_presented",
+        "decided_by": "fy_status",
+        "rule_id": "tagmap.fy_status@1",
+        "reason_class": "held_read_verified_pass_of_note_sourced_candidate",
+    }
+    candidate = {"decision": "concept", "decided_by": "note_sourced"}
+    assert held_by_verifier(status) is False
+    assert held_by_verifier(candidate) is True
