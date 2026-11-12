@@ -20,10 +20,11 @@ print('## Blind exam (predictions committed before each docmap; graded by tools/
 tick = sorted({r['ticker'] for r in G}, key=lambda x: T.get(x, {}).get('docmap_first_commit', ''))
 print(f"Companies graded: {len(tick)}; rows graded {len(G)}; key errors set aside {sum(r['result']=='key_error' for r in R)}; key rows not hand-verified by the reader (set aside) {sum(r['result']=='key_unverified' for r in R)}; no_prediction {sum(r['result']=='no_prediction' for r in R)}.\n")
 print('| Scope | Rows | Accuracy | Error upper bound (CP 95%) |\n|---|---|---|---|')
-H = [r for r in G if r.get('key_evidence', 'hand') in ('hand', '')]; M = [r for r in G if r.get('key_evidence') == 'machine']
+H = [r for r in G if r.get('key_evidence') == 'hand']; M = [r for r in G if r.get('key_evidence') == 'machine']; TL = [r for r in G if r.get('key_evidence') in ('tool', '')]
 print(line(H, 'HEADLINE: hand-verified key rows'))
 print(line(M, 'Machine full-filing key rows'))
-print(line(G, 'All graded rows (hand + machine)'))
+print(line(TL, "Tool key rows (no 'check: hand', not machine-full-filing)"))
+print(line(G, 'All graded rows (hand + machine + tool)'))
 for i in range(0, len(tick), 100):
     ts = set(tick[i:i+100]); print(line([r for r in G if r['ticker'] in ts], f'Companies {i+1}-{i+len(ts)} (in grading order)'))
 for s in ('BS', 'IS', 'CF', 'NOTE-type'):
