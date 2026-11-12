@@ -34,7 +34,7 @@ DOW,429,net_income,not_presented,,,,,,,,0001751788-26-000018,,,,no face line
 DOW,429,net_interest_income,OUT,,,,,,,,0001751788-26-000018,,,,not a bank
 DOW,429,noninterest_expense,OUT,,,,,,,,0001751788-26-000018,,,,not a bank
 DOW,429,noninterest_income,OUT,,,,,,,,0001751788-26-000018,,,,not a bank
-DOW,429,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001751788-26-000018,R3,Research and development expenses,752000000.0000,printed opex lines (duration sum)
+DOW,429,operating_expenses,not_presented,,,,,,,,0001751788-26-000018,,,,no opex total and no GP/COR anchor
 DOW,429,operating_income,not_presented,,,,,,,,0001751788-26-000018,,,,no face line
 DOW,429,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001751788-26-000018,R3,Sundry income (expense) - net,140000000.0000,combined line (library or label demote)
 DOW,429,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001751788-26-000018,R5,Net property,22250000000.0000,library map

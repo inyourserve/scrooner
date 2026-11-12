@@ -34,7 +34,7 @@ GM,171,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001467858-26-
 GM,171,net_interest_income,OUT,,,,,,,,0001467858-26-000013,,,,not a bank
 GM,171,noninterest_expense,OUT,,,,,,,,0001467858-26-000013,,,,not a bank
 GM,171,noninterest_income,OUT,,,,,,,,0001467858-26-000013,,,,not a bank
-GM,171,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,Y,CostsAndExpenses,sec_api,0001467858-26-000013,R3,Total costs and expenses,182110000000.0000,printed opex total tag
+GM,171,operating_expenses,not_presented,,,,,,,,0001467858-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 GM,171,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001467858-26-000013,R3,Operating income (loss),2909000000.0000,library map
 GM,171,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001467858-26-000013,R3,"Interest income and other non-operating income, net (Note 19)",1535000000.0000,combined line (library or label demote)
 GM,171,ppe_net,not_presented,,,,,,,,0001467858-26-000013,,,,no face line

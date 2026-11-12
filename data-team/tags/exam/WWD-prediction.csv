@@ -34,7 +34,7 @@ WWD,457,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-25
 WWD,457,net_interest_income,OUT,,,,,,,,0001193125-25-296204,,,,not a bank
 WWD,457,noninterest_expense,OUT,,,,,,,,0001193125-25-296204,,,,not a bank
 WWD,457,noninterest_income,OUT,,,,,,,,0001193125-25-296204,,,,not a bank
-WWD,457,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-25-296204,R2,"Selling, general and administrative expenses",329823000.0000,printed opex lines (duration sum)
+WWD,457,operating_expenses,not_presented,,,,,,,,0001193125-25-296204,,,,no opex total and no GP/COR anchor
 WWD,457,operating_income,not_presented,,,,,,,,0001193125-25-296204,,,,no face line
 WWD,457,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-25-296204,R2,"Other income expense, net",84010000.0000,library map
 WWD,457,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-25-296204,R4,"Property, plant and equipment, net",986623000.0000,library map

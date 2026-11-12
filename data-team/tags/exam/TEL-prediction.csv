@@ -34,7 +34,7 @@ TEL,202,net_income,not_presented,,,,,,,,0001104659-25-109150,,,,no face line
 TEL,202,net_interest_income,OUT,,,,,,,,0001104659-25-109150,,,,not a bank
 TEL,202,noninterest_expense,OUT,,,,,,,,0001104659-25-109150,,,,not a bank
 TEL,202,noninterest_income,OUT,,,,,,,,0001104659-25-109150,,,,not a bank
-TEL,202,operating_expenses,not_presented,,,,,,,,0001104659-25-109150,,,,no face line
+TEL,202,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:ResearchAndDevelopmentAndEngineeringExpense;custom:BusinessAcquisitionCostOfAcquiredEntityTransactionCostsAndBusinessCombinationIntegrationRelatedCosts;custom:RestructuringAndAssetImpairmentChargesCreditsAndDisposalGroupNotDiscontinuedOperationGainLossOnDisposal,IS,+,-6,N,,fsn_xbrl,0001104659-25-109150,R2,"Selling, general, and administrative expenses",1866000000.0000,every face line between GP/COR and OI; ties to GP - OI
 TEL,202,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-25-109150,R2,Operating income,3211000000.0000,library map
 TEL,202,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001104659-25-109150,R2,"Other expense, net",-13000000.0000,library map
 TEL,202,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001104659-25-109150,R4,"Property, plant, and equipment, net",4312000000.0000,library map

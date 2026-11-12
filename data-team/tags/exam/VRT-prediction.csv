@@ -34,7 +34,7 @@ VRT,161,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001674101-26
 VRT,161,net_interest_income,OUT,,,,,,,,0001674101-26-000008,,,,not a bank
 VRT,161,noninterest_expense,OUT,,,,,,,,0001674101-26-000008,,,,not a bank
 VRT,161,noninterest_income,OUT,,,,,,,,0001674101-26-000008,,,,not a bank
-VRT,161,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001674101-26-000008,R3,"Selling, general and administrative expenses",1617800000.0000,printed opex lines (duration sum)
+VRT,161,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:AmortizationOfIntangibleAssetsExcludingCostsOfSales;us-gaap:RestructuringCharges;us-gaap:ForeignCurrencyTransactionGainLossBeforeTax;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,fsn_xbrl,0001674101-26-000008,R3,"Selling, general and administrative expenses",1617800000.0000,every face line between GP/COR and OI; ties to GP - OI
 VRT,161,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001674101-26-000008,R3,Operating profit (loss),1829700000.0000,library map
 VRT,161,other_income_expense_net,not_presented,,,,,,,,0001674101-26-000008,,,,no face line
 VRT,161,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001674101-26-000008,R5,"Property, plant and equipment, net",921800000.0000,library map

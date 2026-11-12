@@ -34,7 +34,7 @@ FIX,234,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26
 FIX,234,net_interest_income,OUT,,,,,,,,0001104659-26-017530,,,,not a bank
 FIX,234,noninterest_expense,OUT,,,,,,,,0001104659-26-017530,,,,not a bank
 FIX,234,noninterest_income,OUT,,,,,,,,0001104659-26-017530,,,,not a bank
-FIX,234,operating_expenses,not_presented,,,,,,,,0001104659-26-017530,,,,no face line
+FIX,234,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnDispositionOfAssets,IS,+,-3,N,,sec_api,0001104659-26-017530,R4,"SELLING, GENERAL AND ADMINISTRATIVE EXPENSES",883284000.0000,every face line between GP/COR and OI; ties to GP - OI
 FIX,234,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-017530,R4,Operating income,1314589000.0000,library map
 FIX,234,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001104659-26-017530,R4,Other,-258000.0000,library map
 FIX,234,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-017530,R2,"PROPERTY AND EQUIPMENT, NET",387952000.0000,library map

@@ -34,7 +34,7 @@ SO,992,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0000
 SO,992,net_interest_income,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
 SO,992,noninterest_expense,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
 SO,992,noninterest_income,OUT,,,,,,,,0000092122-26-000006,,,,not a bank
-SO,992,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,Total operating expenses,22268000000.0000,CostsAndExpenses value check (structural)
+SO,992,operating_expenses,not_presented,,,,,,,,0000092122-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 SO,992,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,Operating Income,7285000000.0000,library map
 SO,992,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000092122-26-000006,R3,"Other income (expense), net",500000000.0000,library map
 SO,992,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000092122-26-000006,R8,"Total property, plant, and equipment",114369000000.0000,library map

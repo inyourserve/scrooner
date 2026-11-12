@@ -34,7 +34,7 @@ ALSN,735,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-2
 ALSN,735,net_interest_income,OUT,,,,,,,,0001193125-26-065627,,,,not a bank
 ALSN,735,noninterest_expense,OUT,,,,,,,,0001193125-26-065627,,,,not a bank
 ALSN,735,noninterest_income,OUT,,,,,,,,0001193125-26-065627,,,,not a bank
-ALSN,735,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,"Selling, general and administrative",380000000.0000,printed opex lines (duration sum)
+ALSN,735,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:ImpairmentOfLongLivedAssetsHeldForUse,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,"Selling, general and administrative",380000000.0000,every face line between GP/COR and OI; ties to GP - OI
 ALSN,735,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,Operating income,880000000.0000,library map
 ALSN,735,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001193125-26-065627,R4,"Other income (expense), net",16000000.0000,library map
 ALSN,735,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-065627,R2,"Property, plant and equipment, net",862000000.0000,library map

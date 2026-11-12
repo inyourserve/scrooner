@@ -34,7 +34,7 @@ CROX,942,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001334036-2
 CROX,942,net_interest_income,OUT,,,,,,,,0001334036-26-000006,,,,not a bank
 CROX,942,noninterest_expense,OUT,,,,,,,,0001334036-26-000006,,,,not a bank
 CROX,942,noninterest_income,OUT,,,,,,,,0001334036-26-000006,,,,not a bank
-CROX,942,operating_expenses,not_presented,,,,,,,,0001334036-26-000006,,,,no face line
+CROX,942,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherAssetImpairmentCharges,IS,+,-3,Y,AssetImpairmentCharges,sec_api,0001334036-26-000006,R3,"Selling, general and administrative expense",1469425000.0000,every face line between GP/COR and OI; ties to GP - OI
 CROX,942,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,Income from operations,149515000.0000,library map
 CROX,942,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001334036-26-000006,R3,"Other income (expense), net",63000.0000,library map
 CROX,942,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001334036-26-000006,R5,"Property and equipment, net",238191000.0000,library map

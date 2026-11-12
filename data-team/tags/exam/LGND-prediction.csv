@@ -34,7 +34,7 @@ LGND,943,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000886163-2
 LGND,943,net_interest_income,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
 LGND,943,noninterest_expense,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
 LGND,943,noninterest_income,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
-LGND,943,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Research and development,81182000.0000,printed opex lines (duration sum)
+LGND,943,operating_expenses,not_presented,,,,,,,,0000886163-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 LGND,943,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Operating income (loss) from continuing operations,41002000.0000,library map
 LGND,943,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000886163-26-000006,R5,"Other non-operating expense, net",-89000.0000,library map
 LGND,943,ppe_net,not_presented,,,,,,,,0000886163-26-000006,,,,no face line

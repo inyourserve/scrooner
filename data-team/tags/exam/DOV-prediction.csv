@@ -34,7 +34,7 @@ DOV,368,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000029905-26
 DOV,368,net_interest_income,OUT,,,,,,,,0000029905-26-000009,,,,not a bank
 DOV,368,noninterest_expense,OUT,,,,,,,,0000029905-26-000009,,,,not a bank
 DOV,368,noninterest_income,OUT,,,,,,,,0000029905-26-000009,,,,not a bank
-DOV,368,operating_expenses,not_presented,,,,,,,,0000029905-26-000009,,,,no face line
+DOV,368,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000029905-26-000009,R3,"Selling, general and administrative expenses",1844808000.0000,every face line between GP/COR and OI; ties to GP - OI
 DOV,368,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000029905-26-000009,R3,Operating earnings,1373361000.0000,library map
 DOV,368,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000029905-26-000009,R3,"Other income, net",32987000.0000,library map
 DOV,368,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000029905-26-000009,R6,"Property, plant and equipment, net",1119623000.0000,library map

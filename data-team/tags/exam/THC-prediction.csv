@@ -34,7 +34,7 @@ THC,432,net_income,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
 THC,432,net_interest_income,OUT,,,,,,,,0000070318-26-000012,,,,not a bank
 THC,432,noninterest_expense,OUT,,,,,,,,0000070318-26-000012,,,,not a bank
 THC,432,noninterest_income,OUT,,,,,,,,0000070318-26-000012,,,,not a bank
-THC,432,operating_expenses,not_presented,,,,,,,,0000070318-26-000012,,,,no face line
+THC,432,operating_expenses,not_presented,,,,,,,,0000070318-26-000012,,,,no opex total and no GP/COR anchor
 THC,432,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000070318-26-000012,R5,Operating income,3508000000.0000,library map
 THC,432,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000070318-26-000012,R5,"Other non-operating income, net",117000000.0000,library map
 THC,432,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000070318-26-000012,R3,"Property and equipment, at cost, less accumulated depreciation and amortization ($6,680 at December 31, 2025 and $5,809 at December 31, 2024)",6315000000.0000,library map

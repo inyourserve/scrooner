@@ -34,7 +34,7 @@ ZETA,815,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 ZETA,815,net_interest_income,OUT,,,,,,,,0001193125-26-068598,,,,not a bank
 ZETA,815,noninterest_expense,OUT,,,,,,,,0001193125-26-068598,,,,not a bank
 ZETA,815,noninterest_income,OUT,,,,,,,,0001193125-26-068598,,,,not a bank
-ZETA,815,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001193125-26-068598,R4,General and administrative expenses,233024000.0000,printed opex lines (duration sum)
+ZETA,815,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:DepreciationAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001193125-26-068598,R4,General and administrative expenses,233024000.0000,every face line between GP/COR and OI; ties to GP - OI
 ZETA,815,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-068598,R4,Income / (loss) from operations,5372000.0000,library map
 ZETA,815,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-068598,R4,Total other expenses,-38459000.0000,library map
 ZETA,815,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-068598,R2,"Property and equipment, net",15393000.0000,library map

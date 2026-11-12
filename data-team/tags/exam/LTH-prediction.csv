@@ -34,7 +34,7 @@ LTH,741,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001869198-26
 LTH,741,net_interest_income,OUT,,,,,,,,0001869198-26-000010,,,,not a bank
 LTH,741,noninterest_expense,OUT,,,,,,,,0001869198-26-000010,,,,not a bank
 LTH,741,noninterest_income,OUT,,,,,,,,0001869198-26-000010,,,,not a bank
-LTH,741,operating_expenses,not_presented,,,,,,,,0001869198-26-000010,,,,no face line
+LTH,741,operating_expenses,component_sum,us-gaap:OperatingLeaseExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,sec_api,0001869198-26-000010,R5,Rent,339170000.0000,every face line between GP/COR and OI; ties to GP - OI
 LTH,741,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001869198-26-000010,R5,Income from operations,481293000.0000,library map
 LTH,741,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001869198-26-000010,R5,Other income,94241000.0000,library map
 LTH,741,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001869198-26-000010,R3,"Property and equipment, net",3633229000.0000,library map

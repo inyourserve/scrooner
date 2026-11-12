@@ -34,7 +34,7 @@ WY,552,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-
 WY,552,net_interest_income,OUT,,,,,,,,0001193125-26-051422,,,,not a bank
 WY,552,noninterest_expense,OUT,,,,,,,,0001193125-26-051422,,,,not a bank
 WY,552,noninterest_income,OUT,,,,,,,,0001193125-26-051422,,,,not a bank
-WY,552,operating_expenses,not_presented,,,,,,,,0001193125-26-051422,,,,no face line
+WY,552,operating_expenses,component_sum,us-gaap:SellingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:GainLossOnSaleOfProperty;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001193125-26-051422,R2,Selling expenses,92000000.0000,every face line between GP/COR and OI; ties to GP - OI
 WY,552,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-051422,R2,Operating income,731000000.0000,library map
 WY,552,other_income_expense_net,not_presented,,,,,,,,0001193125-26-051422,,,,no face line
 WY,552,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-051422,R5,"Property and equipment, net (Note 7)",2420000000.0000,library map

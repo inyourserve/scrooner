@@ -34,7 +34,7 @@ NVT,408,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26
 NVT,408,net_interest_income,OUT,,,,,,,,0001628280-26-008608,,,,not a bank
 NVT,408,noninterest_expense,OUT,,,,,,,,0001628280-26-008608,,,,not a bank
 NVT,408,noninterest_income,OUT,,,,,,,,0001628280-26-008608,,,,not a bank
-NVT,408,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001628280-26-008608,R3,"Selling, general and administrative",773800000.0000,printed opex lines (duration sum)
+NVT,408,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001628280-26-008608,R3,"Selling, general and administrative",773800000.0000,every face line between GP/COR and OI; ties to GP - OI
 NVT,408,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008608,R3,Operating income,616800000.0000,library map
 NVT,408,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-008608,R3,Other expense (income),8200000.0000,library map
 NVT,408,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-008608,R5,"Property, plant and equipment, net",434500000.0000,library map

@@ -34,7 +34,7 @@ AKAM,603,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001086222-2
 AKAM,603,net_interest_income,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
 AKAM,603,noninterest_expense,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
 AKAM,603,noninterest_income,OUT,,,,,,,,0001086222-26-000022,,,,not a bank
-AKAM,603,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Research and development,513560000.0000,printed opex lines (duration sum)
+AKAM,603,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringAndRelatedCostIncurredCost,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Research and development,513560000.0000,every face line between GP/COR and OI; ties to GP - OI
 AKAM,603,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001086222-26-000022,R5,Income from operations,566944000.0000,library map
 AKAM,603,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001086222-26-000022,R5,"Other expense, net",-4588000.0000,library map
 AKAM,603,ppe_net,not_presented,,,,,,,,0001086222-26-000022,,,,no face line

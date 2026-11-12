@@ -34,7 +34,7 @@ KKR,165,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001404912-26
 KKR,165,net_interest_income,OUT,,,,,,,,0001404912-26-000007,,,,not a bank
 KKR,165,noninterest_expense,OUT,,,,,,,,0001404912-26-000007,,,,not a bank
 KKR,165,noninterest_income,OUT,,,,,,,,0001404912-26-000007,,,,not a bank
-KKR,165,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001404912-26-000007,R6,Total Expenses,19012315000.0000,printed opex total tag
+KKR,165,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001404912-26-000007,R6,Total Expenses,19012315000.0000,sector template total
 KKR,165,operating_income,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,other_income_expense_net,not_presented,,,,,,,,0001404912-26-000007,,,,no face line
 KKR,165,ppe_net,not_presented,,,,,,,,0001404912-26-000007,,,,no face line

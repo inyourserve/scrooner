@@ -34,7 +34,7 @@ NIQ,990,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-26
 NIQ,990,net_interest_income,OUT,,,,,,,,0001628280-26-012572,,,,not a bank
 NIQ,990,noninterest_expense,OUT,,,,,,,,0001628280-26-012572,,,,not a bank
 NIQ,990,noninterest_income,OUT,,,,,,,,0001628280-26-012572,,,,not a bank
-NIQ,990,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001628280-26-012572,R3,"Selling, general and administrative expenses",1597700000.0000,printed opex lines (duration sum)
+NIQ,990,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:RestructuringCharges;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0001628280-26-012572,R3,"Selling, general and administrative expenses",1597700000.0000,every face line between GP/COR and OI; ties to GP - OI
 NIQ,990,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-012572,R3,Operating income (loss),85400000.0000,library map
 NIQ,990,other_income_expense_net,not_presented,,,,,,,,0001628280-26-012572,,,,no face line
 NIQ,990,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-012572,R5,"Property and equipment, net",208200000.0000,library map

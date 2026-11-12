@@ -34,7 +34,7 @@ ANF,887,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001018840-26
 ANF,887,net_interest_income,OUT,,,,,,,,0001018840-26-000012,,,,not a bank
 ANF,887,noninterest_expense,OUT,,,,,,,,0001018840-26-000012,,,,not a bank
 ANF,887,noninterest_income,OUT,,,,,,,,0001018840-26-000012,,,,not a bank
-ANF,887,operating_expenses,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
+ANF,887,operating_expenses,component_sum,us-gaap:SellingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,Selling Expense,1809633000.0000,every face line between GP/COR and OI; ties to GP - OI
 ANF,887,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001018840-26-000012,R3,Operating Income (Loss),699143000.0000,library map
 ANF,887,other_income_expense_net,not_presented,,,,,,,,0001018840-26-000012,,,,no face line
 ANF,887,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001018840-26-000012,R4,"Property and equipment, net",674079000.0000,library map

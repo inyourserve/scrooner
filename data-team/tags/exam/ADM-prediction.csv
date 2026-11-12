@@ -34,7 +34,7 @@ ADM,276,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000007084-26
 ADM,276,net_interest_income,OUT,,,,,,,,0000007084-26-000011,,,,not a bank
 ADM,276,noninterest_expense,OUT,,,,,,,,0000007084-26-000011,,,,not a bank
 ADM,276,noninterest_income,OUT,,,,,,,,0000007084-26-000011,,,,not a bank
-ADM,276,operating_expenses,not_presented,,,,,,,,0000007084-26-000011,,,,no face line
+ADM,276,operating_expenses,not_presented,,,,,,,,0000007084-26-000011,,,,no opex total and no GP/COR anchor
 ADM,276,operating_income,not_presented,,,,,,,,0000007084-26-000011,,,,no face line
 ADM,276,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000007084-26-000011,R3,Other (income) - net,150000000.0000,library map
 ADM,276,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000007084-26-000011,R5,"Property, plant, and equipment, net",11179000000.0000,library map

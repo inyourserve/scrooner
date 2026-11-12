@@ -34,7 +34,7 @@ SMCI,444,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001375365-2
 SMCI,444,net_interest_income,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
 SMCI,444,noninterest_expense,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
 SMCI,444,noninterest_income,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
-SMCI,444,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Total operating expenses,1456765000.0000,printed opex total tag
+SMCI,444,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Total operating expenses,1456765000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 SMCI,444,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Income from operations,2770486000.0000,library map
 SMCI,444,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0001375365-26-000022,R5,"Other income (expense), net",26432000.0000,library map
 SMCI,444,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Property, plant, and equipment, net",625553000.0000,library map

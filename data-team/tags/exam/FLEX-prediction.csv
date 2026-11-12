@@ -34,7 +34,7 @@ FLEX,317,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000866374-2
 FLEX,317,net_interest_income,OUT,,,,,,,,0000866374-26-000012,,,,not a bank
 FLEX,317,noninterest_expense,OUT,,,,,,,,0000866374-26-000012,,,,not a bank
 FLEX,317,noninterest_income,OUT,,,,,,,,0000866374-26-000012,,,,not a bank
-FLEX,317,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,"Selling, general and administrative expenses",1052000000.0000,printed opex lines (duration sum)
+FLEX,317,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,"Selling, general and administrative expenses",1052000000.0000,every face line between GP/COR and OI; ties to GP - OI
 FLEX,317,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000866374-26-000012,R5,Operating income,1368000000.0000,library map
 FLEX,317,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000866374-26-000012,R5,"Other charges (income), net",-30000000.0000,library map
 FLEX,317,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000866374-26-000012,R3,"Property and equipment, net",2505000000.0000,library map

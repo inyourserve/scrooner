@@ -34,7 +34,7 @@ PAYX,278,net_income,not_presented,,,,,,,,0001193125-26-307785,,,,no face line
 PAYX,278,net_interest_income,OUT,,,,,,,,0001193125-26-307785,,,,not a bank
 PAYX,278,noninterest_expense,OUT,,,,,,,,0001193125-26-307785,,,,not a bank
 PAYX,278,noninterest_income,OUT,,,,,,,,0001193125-26-307785,,,,not a bank
-PAYX,278,operating_expenses,not_presented,,,,,,,,0001193125-26-307785,,,,no face line
+PAYX,278,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-307785,R2,"Selling, general and administrative expenses",2327000000.0000,every face line between GP/COR and OI; ties to GP - OI
 PAYX,278,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-307785,R2,Operating income,2510500000.0000,library map
 PAYX,278,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-307785,R2,"Other income, net",69900000.0000,combined line (library or label demote)
 PAYX,278,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-307785,R3,"Property and equipment, net of accumulated depreciation",588900000.0000,library map

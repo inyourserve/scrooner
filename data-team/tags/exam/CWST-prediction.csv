@@ -34,7 +34,7 @@ CWST,974,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000911177-2
 CWST,974,net_interest_income,OUT,,,,,,,,0000911177-26-000008,,,,not a bank
 CWST,974,noninterest_expense,OUT,,,,,,,,0000911177-26-000008,,,,not a bank
 CWST,974,noninterest_income,OUT,,,,,,,,0000911177-26-000008,,,,not a bank
-CWST,974,operating_expenses,not_presented,,,,,,,,0000911177-26-000008,,,,no face line
+CWST,974,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringSettlementAndImpairmentProvisions;custom:LandfillClosureCreditChargeNet;custom:LandfillCappingChargeRecovery;us-gaap:GainLossRelatedToLitigationSettlement,IS,+,-3,N,,fsn_xbrl,0000911177-26-000008,R5,General and administration,224219000.0000,every face line between GP/COR and OI; ties to GP - OI
 CWST,974,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000911177-26-000008,R5,Operating income,63669000.0000,library map
 CWST,974,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000911177-26-000008,R5,"Other expense, net",-50617000.0000,combined line (library or label demote)
 CWST,974,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000911177-26-000008,R3,"Property and equipment, net of accumulated depreciation and amortization of $1,495,563 and $1,302,324, respectively",1289409000.0000,library map

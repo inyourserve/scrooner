@@ -34,7 +34,7 @@ OKE,207,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001039684-26
 OKE,207,net_interest_income,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,noninterest_expense,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,noninterest_income,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
-OKE,207,operating_expenses,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
+OKE,207,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:DepreciationDepletionAndAmortization;us-gaap:TaxesOther;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,Y,TaxesExcludingIncomeAndExciseTaxes,sec_api,0001039684-26-000006,R3,Operations and maintenance,2585000000.0000,every face line between GP/COR and OI; ties to GP - OI
 OKE,207,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Operating income,5741000000.0000,library map
 OKE,207,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,"Other income, net",146000000.0000,library map
 OKE,207,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001039684-26-000006,R7,"Net property, plant and equipment (Note E)",47861000000.0000,library map

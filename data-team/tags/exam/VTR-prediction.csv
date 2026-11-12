@@ -34,7 +34,7 @@ VTR,264,net_income,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
 VTR,264,net_interest_income,OUT,,,,,,,,0000740260-26-000006,,,,not a bank
 VTR,264,noninterest_expense,OUT,,,,,,,,0000740260-26-000006,,,,not a bank
 VTR,264,noninterest_income,OUT,,,,,,,,0000740260-26-000006,,,,not a bank
-VTR,264,operating_expenses,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
+VTR,264,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000740260-26-000006,R6,Total expenses,5629659000.0000,total includes cost of revenue
 VTR,264,operating_income,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
 VTR,264,other_income_expense_net,not_presented,,,,,,,,0000740260-26-000006,,,,no face line
 VTR,264,ppe_net,not_presented,,,,,,,,0000740260-26-000006,,,,no face line

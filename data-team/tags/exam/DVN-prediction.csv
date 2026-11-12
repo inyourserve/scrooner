@@ -34,7 +34,7 @@ DVN,219,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 DVN,219,net_interest_income,OUT,,,,,,,,0001193125-26-056485,,,,not a bank
 DVN,219,noninterest_expense,OUT,,,,,,,,0001193125-26-056485,,,,not a bank
 DVN,219,noninterest_income,OUT,,,,,,,,0001193125-26-056485,,,,not a bank
-DVN,219,operating_expenses,not_presented,,,,,,,,0001193125-26-056485,,,,no face line
+DVN,219,operating_expenses,not_presented,,,,,,,,0001193125-26-056485,,,,no opex total and no GP/COR anchor
 DVN,219,operating_income,not_presented,,,,,,,,0001193125-26-056485,,,,no face line
 DVN,219,other_income_expense_net,not_presented,,,,,,,,0001193125-26-056485,,,,no face line
 DVN,219,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-056485,R3,"Property and equipment, net",25419000000.0000,library map

@@ -34,7 +34,7 @@ DUK,124,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 DUK,124,net_interest_income,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,noninterest_expense,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
 DUK,124,noninterest_income,OUT,,,,,,,,0001326160-26-000014,,,,not a bank
-DUK,124,operating_expenses,not_presented,,,,,,,,0001326160-26-000014,,,,no face line
+DUK,124,operating_expenses,not_presented,,,,,,,,0001326160-26-000014,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 DUK,124,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,Operating Income,8626000000.0000,library map
 DUK,124,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001326160-26-000014,R3,"Other income and expenses, net",669000000.0000,library map
 DUK,124,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001326160-26-000014,R6,"Net property, plant and equipment",129959000000.0000,library map

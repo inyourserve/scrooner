@@ -34,7 +34,7 @@ BXP,725,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001037540-26
 BXP,725,net_interest_income,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
 BXP,725,noninterest_expense,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
 BXP,725,noninterest_income,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
-BXP,725,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,General and administrative,168789000.0000,printed opex lines (duration sum)
+BXP,725,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Total expenses,2470606000.0000,total includes cost of revenue
 BXP,725,operating_income,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,other_income_expense_net,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
 BXP,725,ppe_net,not_presented,,,,,,,,0001037540-26-000006,,,,no face line

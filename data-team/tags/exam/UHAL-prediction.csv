@@ -34,7 +34,7 @@ UHAL,983,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 UHAL,983,net_interest_income,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
 UHAL,983,noninterest_expense,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
 UHAL,983,noninterest_income,OUT,,,,,,,,0001193125-26-241850,,,,not a bank
-UHAL,983,operating_expenses,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
+UHAL,983,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-241850,R4,"Costs and expenses, amount",5605198000.0000,"total includes cost of revenue: combined, never opex"
 UHAL,983,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-241850,R4,Earnings from operations,432621000.0000,library map
 UHAL,983,other_income_expense_net,not_presented,,,,,,,,0001193125-26-241850,,,,no face line
 UHAL,983,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-241850,R2,"Total property, plant and equipment",16380445000.0000,library map

@@ -34,7 +34,7 @@ ZTS,319,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001555280-26
 ZTS,319,net_interest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
 ZTS,319,noninterest_expense,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
 ZTS,319,noninterest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Selling, general and administrative expenses",2378000000.0000,printed opex lines (duration sum)
+ZTS,319,operating_expenses,not_presented,,,,,,,,0001555280-26-000011,,,,no opex total and no GP/COR anchor
 ZTS,319,operating_income,not_presented,,,,,,,,0001555280-26-000011,,,,no face line
 ZTS,319,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Other (income)/deductionsnet,36000000.0000,combined line (library or label demote)
 ZTS,319,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Property, plant and equipment, less accumulated depreciation of $2,925 in 2025 and $2,635 in 2024",3681000000.0000,library map

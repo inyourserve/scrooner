@@ -34,7 +34,7 @@ LAMR,529,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001090425-2
 LAMR,529,net_interest_income,OUT,,,,,,,,0001090425-26-000008,,,,not a bank
 LAMR,529,noninterest_expense,OUT,,,,,,,,0001090425-26-000008,,,,not a bank
 LAMR,529,noninterest_income,OUT,,,,,,,,0001090425-26-000008,,,,not a bank
-LAMR,529,operating_expenses,not_presented,,,,,,,,0001090425-26-000008,,,,no face line
+LAMR,529,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;custom:CorporateExpensesExcludingDepreciationAndAmortization;us-gaap:DepreciationAmortizationAndAccretionNet;us-gaap:GainLossOnDispositionOfAssets1,IS,+,-3,N,,fsn_xbrl,0001090425-26-000008,R5,General and administrative expenses (exclusive of depreciation and amortization),368747000.0000,every face line between GP/COR and OI; ties to GP - OI
 LAMR,529,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001090425-26-000008,R5,Operating income,774059000.0000,library map
 LAMR,529,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001090425-26-000008,R5,Total other expense (income),-159664000.0000,combined line (library or label demote)
 LAMR,529,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001090425-26-000008,R3,"Net property, plant and equipment",1678900000.0000,library map

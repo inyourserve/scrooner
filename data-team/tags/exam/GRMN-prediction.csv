@@ -34,7 +34,7 @@ GRMN,223,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 GRMN,223,net_interest_income,OUT,,,,,,,,0001193125-26-056028,,,,not a bank
 GRMN,223,noninterest_expense,OUT,,,,,,,,0001193125-26-056028,,,,not a bank
 GRMN,223,noninterest_income,OUT,,,,,,,,0001193125-26-056028,,,,not a bank
-GRMN,223,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Total operating expense,2380227000.0000,printed opex total tag
+GRMN,223,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Total operating expense,2380227000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 GRMN,223,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Operating income,1876076000.0000,library map
 GRMN,223,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-056028,R2,Other income,1738000.0000,library map
 GRMN,223,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-056028,R4,"Property and equipment, net",1375348000.0000,library map

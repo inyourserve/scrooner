@@ -34,7 +34,7 @@ CHRD,770,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001486159-2
 CHRD,770,net_interest_income,OUT,,,,,,,,0001486159-26-000005,,,,not a bank
 CHRD,770,noninterest_expense,OUT,,,,,,,,0001486159-26-000005,,,,not a bank
 CHRD,770,noninterest_income,OUT,,,,,,,,0001486159-26-000005,,,,not a bank
-CHRD,770,operating_expenses,not_presented,,,,,,,,0001486159-26-000005,,,,no face line
+CHRD,770,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001486159-26-000005,R5,Total operating expenses,4688412000.0000,"total includes cost of revenue: combined, never opex"
 CHRD,770,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001486159-26-000005,R5,Operating income,197425000.0000,library map
 CHRD,770,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001486159-26-000005,R5,"Other income, net",15042000.0000,library map
 CHRD,770,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001486159-26-000005,R3,"Total property, plant and equipment, net",11336529000.0000,library map

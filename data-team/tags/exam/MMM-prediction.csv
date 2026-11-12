@@ -34,7 +34,7 @@ MMM,147,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000066740-26
 MMM,147,net_interest_income,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,noninterest_expense,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,noninterest_income,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
-MMM,147,operating_expenses,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
+MMM,147,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:ResearchDevelopmentAndRelatedExpenses;us-gaap:GainLossOnSaleOfBusiness,IS,+,-6,N,,fsn_xbrl,0000066740-26-000014,R3,"Selling, general and administrative expenses",3997000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MMM,147,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Operating income (loss),4629000000.0000,library map
 MMM,147,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000066740-26-000014,R3,"Other expense (income), net",-416000000.0000,combined line (library or label demote)
 MMM,147,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0000066740-26-000014,R5,"Property, plant and equipment  net",7101000000.0000,library map

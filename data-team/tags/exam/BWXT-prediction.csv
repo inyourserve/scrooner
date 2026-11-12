@@ -34,7 +34,7 @@ BWXT,606,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001486957-2
 BWXT,606,net_interest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
 BWXT,606,noninterest_expense,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
 BWXT,606,noninterest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,printed opex lines (duration sum)
+BWXT,606,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-3,Y,GainLossOnDispositionOfAssets,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,every face line between GP/COR and OI; ties to GP - OI
 BWXT,606,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Operating Income,404459000.0000,library map
 BWXT,606,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Other Income (Expense),33975000.0000,library map
 BWXT,606,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Property, Plant and Equipment, Net",1585136000.0000,library map

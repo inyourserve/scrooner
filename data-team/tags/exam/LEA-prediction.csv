@@ -34,7 +34,7 @@ LEA,938,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000842162-26
 LEA,938,net_interest_income,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
 LEA,938,noninterest_expense,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
 LEA,938,noninterest_income,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
-LEA,938,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,"Selling, general and administrative expenses",707600000.0000,printed opex lines (duration sum)
+LEA,938,operating_expenses,not_presented,,,,,,,,0000842162-26-000011,,,,no opex total and no GP/COR anchor
 LEA,938,operating_income,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
 LEA,938,other_income_expense_net,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
 LEA,938,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,"Property, plant and equipment, net",2913100000.0000,library map

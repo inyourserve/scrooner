@@ -34,7 +34,7 @@ BLCO,945,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001860742-2
 BLCO,945,net_interest_income,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
 BLCO,945,noninterest_expense,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
 BLCO,945,noninterest_income,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
-BLCO,945,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Total expenses,4988000000.0000,CostsAndExpenses value check (structural)
+BLCO,945,operating_expenses,not_presented,,,,,,,,0001860742-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 BLCO,945,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Operating income,113000000.0000,library map
 BLCO,945,other_income_expense_net,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
 BLCO,945,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,"Property, plant and equipment, net",1762000000.0000,library map

@@ -34,7 +34,7 @@ BRK-A,981,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-
 BRK-A,981,net_interest_income,OUT,,,,,,,,0001193125-26-083899,,,,not a bank
 BRK-A,981,noninterest_expense,OUT,,,,,,,,0001193125-26-083899,,,,not a bank
 BRK-A,981,noninterest_income,OUT,,,,,,,,0001193125-26-083899,,,,not a bank
-BRK-A,981,operating_expenses,not_presented,,,,,,,,0001193125-26-083899,,,,no face line
+BRK-A,981,operating_expenses,not_presented,,,,,,,,0001193125-26-083899,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 BRK-A,981,operating_income,not_presented,,,,,,,,0001193125-26-083899,,,,no face line
 BRK-A,981,other_income_expense_net,not_presented,,,,,,,,0001193125-26-083899,,,,no face line
 BRK-A,981,ppe_net,not_presented,,,,,,,,0001193125-26-083899,,,,no face line

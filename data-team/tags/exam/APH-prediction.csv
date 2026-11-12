@@ -34,7 +34,7 @@ APH,121,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26
 APH,121,net_interest_income,OUT,,,,,,,,0001104659-26-013549,,,,not a bank
 APH,121,noninterest_expense,OUT,,,,,,,,0001104659-26-013549,,,,not a bank
 APH,121,noninterest_income,OUT,,,,,,,,0001104659-26-013549,,,,not a bank
-APH,121,operating_expenses,not_presented,,,,,,,,0001104659-26-013549,,,,no face line
+APH,121,operating_expenses,component_sum,custom:AcquisitionRelatedExpenses;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,BusinessCombinationAcquisitionRelatedCosts,fsn_xbrl,0001104659-26-013549,R3,Acquisition-related expenses,103400000.0000,every face line between GP/COR and OI; ties to GP - OI
 APH,121,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-013549,R3,Operating income,5868600000.0000,library map
 APH,121,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001104659-26-013549,R3,"Other income (expense), net",99900000.0000,library map
 APH,121,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-013549,R5,"Property, plant and equipment, net",2305600000.0000,library map

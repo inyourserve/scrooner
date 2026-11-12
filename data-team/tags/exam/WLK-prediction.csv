@@ -34,7 +34,7 @@ WLK,793,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26
 WLK,793,net_interest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
 WLK,793,noninterest_expense,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
 WLK,793,noninterest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,printed opex lines (duration sum)
+WLK,793,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:AmortizationOfIntangibleAssets;custom:RestructuringTransactionAndIntegrationCost,IS,+,-6,N,,fsn_xbrl,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,every face line between GP/COR and OI; ties to GP - OI
 WLK,793,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income (loss) from operations,-1578000000.0000,library map
 WLK,793,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Other income, net",152000000.0000,combined line (library or label demote)
 WLK,793,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Property, plant and equipment, net",8605000000.0000,library map

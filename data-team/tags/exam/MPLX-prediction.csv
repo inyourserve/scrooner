@@ -34,7 +34,7 @@ MPLX,208,net_income,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,net_interest_income,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
 MPLX,208,noninterest_expense,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
 MPLX,208,noninterest_income,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
-MPLX,208,operating_expenses,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
+MPLX,208,operating_expenses,not_presented,,,,,,,,0001552000-26-000009,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MPLX,208,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,Income from operations,5943000000.0000,library map
 MPLX,208,other_income_expense_net,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001552000-26-000009,R5,"Property, plant and equipment, net",21698000000.0000,library map

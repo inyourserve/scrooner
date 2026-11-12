@@ -34,7 +34,7 @@ FICO,505,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000814547-2
 FICO,505,net_interest_income,OUT,,,,,,,,0000814547-25-000030,,,,not a bank
 FICO,505,noninterest_expense,OUT,,,,,,,,0000814547-25-000030,,,,not a bank
 FICO,505,noninterest_income,OUT,,,,,,,,0000814547-25-000030,,,,not a bank
-FICO,505,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Research and development,188347000.0000,printed opex lines (duration sum)
+FICO,505,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GainLossOnSaleOfBusiness,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Research and development,188347000.0000,every face line between GP/COR and OI; ties to GP - OI
 FICO,505,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,Operating income,924850000.0000,library map
 FICO,505,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000814547-25-000030,R5,"Other income, net",11392000.0000,library map
 FICO,505,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,Y,PropertyPlantAndEquipmentNet,sec_api,0000814547-25-000030,R3,"Property and equipment, net",67713000.0000,library map

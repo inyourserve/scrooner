@@ -34,7 +34,7 @@ LNG,204,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000003570-26
 LNG,204,net_interest_income,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,noninterest_expense,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,noninterest_income,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
-LNG,204,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,"Selling, general and administrative expense",383000000.0000,printed opex lines (duration sum)
+LNG,204,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Operating and maintenance expense,1966000000.0000,"total includes cost of revenue: combined, never opex"
 LNG,204,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Income from operations,9112000000.0000,library map
 LNG,204,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,"Other income, net",20000000.0000,library map
 LNG,204,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000003570-26-000005,R4,"Property, plant and equipment, net of accumulated depreciation",35755000000.0000,library map

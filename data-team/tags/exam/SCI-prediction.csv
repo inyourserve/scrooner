@@ -34,7 +34,7 @@ SCI,652,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 SCI,652,net_interest_income,OUT,,,,,,,,0001628280-26-007695,,,,not a bank
 SCI,652,noninterest_expense,OUT,,,,,,,,0001628280-26-007695,,,,not a bank
 SCI,652,noninterest_income,OUT,,,,,,,,0001628280-26-007695,,,,not a bank
-SCI,652,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Corporate general and administrative expenses,166158000.0000,printed opex lines (duration sum)
+SCI,652,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;custom:GainLossOnDivestituresAndImpairmentChargesNet,IS,+,-3,N,,fsn_xbrl,0001628280-26-007695,R4,Corporate general and administrative expenses,166158000.0000,every face line between GP/COR and OI; ties to GP - OI
 SCI,652,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,Operating income,978087000.0000,library map
 SCI,652,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-007695,R4,"Other income, net",7591000.0000,combined line (library or label demote)
 SCI,652,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-007695,R6,"Property and equipment, net",2751761000.0000,library map

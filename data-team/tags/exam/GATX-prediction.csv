@@ -34,7 +34,7 @@ GATX,949,net_income,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
 GATX,949,net_interest_income,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
 GATX,949,noninterest_expense,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
 GATX,949,noninterest_income,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
-GATX,949,operating_expenses,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,operating_expenses,not_presented,,,,,,,,0000040211-26-000018,,,,no opex total and no GP/COR anchor
 GATX,949,operating_income,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
 GATX,949,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,CI,-,-5,N,,sec_api,0000040211-26-000018,R6,Other expense,-400000.0000,library map
 GATX,949,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Net operating assets and facilities,11410900000.0000,library map

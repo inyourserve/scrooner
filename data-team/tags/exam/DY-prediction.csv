@@ -34,7 +34,7 @@ DY,818,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000067215-26-
 DY,818,net_interest_income,OUT,,,,,,,,0000067215-26-000008,,,,not a bank
 DY,818,noninterest_expense,OUT,,,,,,,,0000067215-26-000008,,,,not a bank
 DY,818,noninterest_income,OUT,,,,,,,,0000067215-26-000008,,,,not a bank
-DY,818,operating_expenses,not_presented,,,,,,,,0000067215-26-000008,,,,no face line
+DY,818,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000067215-26-000008,R5,Total,5120845000.0000,total includes cost of revenue
 DY,818,operating_income,not_presented,,,,,,,,0000067215-26-000008,,,,no face line
 DY,818,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000067215-26-000008,R5,"Other income, net",16588000.0000,combined line (library or label demote)
 DY,818,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000067215-26-000008,R3,"Property and equipment, net",575376000.0000,library map

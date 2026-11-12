@@ -34,7 +34,7 @@ FTAI,498,net_income,not_presented,,,,,,,,0001628280-26-012940,,,,no face line
 FTAI,498,net_interest_income,OUT,,,,,,,,0001628280-26-012940,,,,not a bank
 FTAI,498,noninterest_expense,OUT,,,,,,,,0001628280-26-012940,,,,not a bank
 FTAI,498,noninterest_income,OUT,,,,,,,,0001628280-26-012940,,,,not a bank
-FTAI,498,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,Y,OperatingCostsAndExpenses,sec_api,0001628280-26-012940,R5,Operating expenses,152541000.0000,printed opex lines (duration sum)
+FTAI,498,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-012940,R5,Total expenses,1766122000.0000,total includes cost of revenue
 FTAI,498,operating_income,not_presented,,,,,,,,0001628280-26-012940,,,,no face line
 FTAI,498,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-012940,R5,Other income,73586000.0000,library map
 FTAI,498,ppe_net,not_presented,,,,,,,,0001628280-26-012940,,,,no face line

@@ -34,7 +34,7 @@ SUNB,334,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-2
 SUNB,334,net_interest_income,OUT,,,,,,,,0001628280-26-044888,,,,not a bank
 SUNB,334,noninterest_expense,OUT,,,,,,,,0001628280-26-044888,,,,not a bank
 SUNB,334,noninterest_income,OUT,,,,,,,,0001628280-26-044888,,,,not a bank
-SUNB,334,operating_expenses,not_presented,,,,,,,,0001628280-26-044888,,,,no face line
+SUNB,334,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-6,N,,sec_api,0001628280-26-044888,R5,"Selling, general and administrative expense",1651000000.0000,every face line between GP/COR and OI; ties to GP - OI
 SUNB,334,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-044888,R5,Operating income,2181000000.0000,library map
 SUNB,334,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-044888,R5,"Other (income) expense, net",7000000.0000,library map
 SUNB,334,ppe_net,not_presented,,,,,,,,0001628280-26-044888,,,,no face line

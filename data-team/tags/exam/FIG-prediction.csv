@@ -34,7 +34,7 @@ FIG,650,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26
 FIG,650,net_interest_income,OUT,,,,,,,,0001628280-26-009228,,,,not a bank
 FIG,650,noninterest_expense,OUT,,,,,,,,0001628280-26-009228,,,,not a bank
 FIG,650,noninterest_income,OUT,,,,,,,,0001628280-26-009228,,,,not a bank
-FIG,650,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-009228,R5,Total operating expenses,2160718000.0000,printed opex total tag
+FIG,650,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-009228,R5,Total operating expenses,2160718000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 FIG,650,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-009228,R5,Loss from operations,-1290457000.0000,library map
 FIG,650,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-009228,R5,"Other income, net",64815000.0000,combined line (library or label demote)
 FIG,650,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-009228,R3,"Property and equipment, net",19996000.0000,library map

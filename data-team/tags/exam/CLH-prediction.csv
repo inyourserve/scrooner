@@ -34,7 +34,7 @@ CLH,501,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000822818-26
 CLH,501,net_interest_income,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
 CLH,501,noninterest_expense,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
 CLH,501,noninterest_income,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
-CLH,501,operating_expenses,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:AccretionOfEnvironmentalLiabilities;us-gaap:DepreciationDepletionAndAmortization,IS,+,-3,N,,fsn_xbrl,0000822818-26-000009,R5,"Selling, general and administrative expenses",752534000.0000,every face line between GP/COR and OI; ties to GP - OI
 CLH,501,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Income from operations,673372000.0000,library map
 CLH,501,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,"Other income (expense), net",5200000.0000,library map
 CLH,501,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,"Property, plant and equipment, net",2541067000.0000,library map

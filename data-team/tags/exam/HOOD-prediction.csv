@@ -34,7 +34,7 @@ HOOD,135,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001783879-2
 HOOD,135,net_interest_income,OUT,,,,,,,,0001783879-26-000023,,,,not a bank
 HOOD,135,noninterest_expense,OUT,,,,,,,,0001783879-26-000023,,,,not a bank
 HOOD,135,noninterest_income,OUT,,,,,,,,0001783879-26-000023,,,,not a bank
-HOOD,135,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001783879-26-000023,R5,Total operating expenses,2379000000.0000,printed opex total tag
+HOOD,135,operating_expenses,not_presented,,,,,,,,0001783879-26-000023,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 HOOD,135,operating_income,not_presented,,,,,,,,0001783879-26-000023,,,,no face line
 HOOD,135,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001783879-26-000023,R5,"Other income, net",14000000.0000,library map
 HOOD,135,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001783879-26-000023,R3,"Property, software, and equipment, net",154000000.0000,library map

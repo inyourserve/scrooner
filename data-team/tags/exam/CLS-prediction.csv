@@ -34,7 +34,7 @@ CLS,305,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001030894-26
 CLS,305,net_interest_income,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,noninterest_expense,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,noninterest_income,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
-CLS,305,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,"Selling, general and administrative expenses",259900000.0000,printed opex lines (duration sum)
+CLS,305,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets;custom:RestructuringAndOtherChargesNetOfRecoveries,IS,+,-5,N,,fsn_xbrl,0001030894-26-000011,R5,"Selling, general and administrative expenses",259900000.0000,every face line between GP/COR and OI; ties to GP - OI
 CLS,305,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Earnings from operations,1040700000.0000,library map
 CLS,305,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001030894-26-000011,R5,Miscellaneous expense (income),-4900000.0000,library map
 CLS,305,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,"Property, plant and equipment, net",586000000.0000,library map

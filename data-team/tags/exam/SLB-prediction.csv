@@ -34,7 +34,7 @@ SLB,175,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 SLB,175,net_interest_income,OUT,,,,,,,,0001193125-26-021017,,,,not a bank
 SLB,175,noninterest_expense,OUT,,,,,,,,0001193125-26-021017,,,,not a bank
 SLB,175,noninterest_income,OUT,,,,,,,,0001193125-26-021017,,,,not a bank
-SLB,175,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001193125-26-021017,R2,Research & engineering,709000000.0000,printed opex lines (duration sum)
+SLB,175,operating_expenses,not_presented,,,,,,,,0001193125-26-021017,,,,no opex total and no GP/COR anchor
 SLB,175,operating_income,not_presented,,,,,,,,0001193125-26-021017,,,,no face line
 SLB,175,other_income_expense_net,not_presented,,,,,,,,0001193125-26-021017,,,,no face line
 SLB,175,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-021017,R4,Fixed Assets less accumulated depreciation,7894000000.0000,library map

@@ -34,7 +34,7 @@ CELH,854,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001341766-2
 CELH,854,net_interest_income,OUT,,,,,,,,0001341766-26-000024,,,,not a bank
 CELH,854,noninterest_expense,OUT,,,,,,,,0001341766-26-000024,,,,not a bank
 CELH,854,noninterest_income,OUT,,,,,,,,0001341766-26-000024,,,,not a bank
-CELH,854,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001341766-26-000024,R5,"Selling, general and administrative expenses",798810000.0000,printed opex lines (duration sum)
+CELH,854,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001341766-26-000024,R5,"Selling, general and administrative expenses",798810000.0000,every face line between GP/COR and OI; ties to GP - OI
 CELH,854,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001341766-26-000024,R5,Income from operations,141062000.0000,library map
 CELH,854,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001341766-26-000024,R5,"Other, net",11863000.0000,library map
 CELH,854,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001341766-26-000024,R3,"Property, plant and equipment-net",87910000.0000,library map

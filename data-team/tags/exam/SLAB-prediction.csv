@@ -34,7 +34,7 @@ SLAB,833,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001038074-2
 SLAB,833,net_interest_income,OUT,,,,,,,,0001038074-26-000005,,,,not a bank
 SLAB,833,noninterest_expense,OUT,,,,,,,,0001038074-26-000005,,,,not a bank
 SLAB,833,noninterest_income,OUT,,,,,,,,0001038074-26-000005,,,,not a bank
-SLAB,833,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001038074-26-000005,R5,Operating expenses,527524000.0000,printed opex total tag
+SLAB,833,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001038074-26-000005,R5,Operating expenses,527524000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 SLAB,833,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001038074-26-000005,R5,Operating loss,-70541000.0000,library map
 SLAB,833,other_income_expense_net,not_presented,,,,,,,,0001038074-26-000005,,,,no face line
 SLAB,833,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001038074-26-000005,R3,"Property and equipment, net",128643000.0000,library map

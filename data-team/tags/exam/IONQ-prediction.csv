@@ -34,7 +34,7 @@ IONQ,617,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 IONQ,617,net_interest_income,OUT,,,,,,,,0001193125-26-071562,,,,not a bank
 IONQ,617,noninterest_expense,OUT,,,,,,,,0001193125-26-071562,,,,not a bank
 IONQ,617,noninterest_income,OUT,,,,,,,,0001193125-26-071562,,,,not a bank
-IONQ,617,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-071562,R4,Research and development,305705000.0000,printed opex lines (duration sum)
+IONQ,617,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-3,N,,sec_api,0001193125-26-071562,R4,Research and development,305705000.0000,every face line between GP/COR and OI; ties to GP - OI
 IONQ,617,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-071562,R4,Loss from operations,-633715000.0000,library map
 IONQ,617,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncome,sec_api,0001193125-26-071562,R4,"Other income (expense), net",29000.0000,library map
 IONQ,617,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071562,R2,"Property and equipment, net",120145000.0000,library map

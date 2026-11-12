@@ -34,7 +34,7 @@ PINS,542,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001506293-2
 PINS,542,net_interest_income,OUT,,,,,,,,0001506293-26-000021,,,,not a bank
 PINS,542,noninterest_expense,OUT,,,,,,,,0001506293-26-000021,,,,not a bank
 PINS,542,noninterest_income,OUT,,,,,,,,0001506293-26-000021,,,,not a bank
-PINS,542,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001506293-26-000021,R5,Research and development,1427447000.0000,printed opex lines (duration sum)
+PINS,542,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001506293-26-000021,R5,Research and development,1427447000.0000,every face line between GP/COR and OI; ties to GP - OI
 PINS,542,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001506293-26-000021,R5,Income (loss) from operations,319883000.0000,library map
 PINS,542,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001506293-26-000021,R5,"Other income (expense), net",15514000.0000,library map
 PINS,542,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001506293-26-000021,R3,"Property and equipment, net",66451000.0000,library map

@@ -34,7 +34,7 @@ ODFL,281,net_income,not_presented,,,,,,,,0001193125-26-067161,,,,no face line
 ODFL,281,net_interest_income,OUT,,,,,,,,0001193125-26-067161,,,,not a bank
 ODFL,281,noninterest_expense,OUT,,,,,,,,0001193125-26-067161,,,,not a bank
 ODFL,281,noninterest_income,OUT,,,,,,,,0001193125-26-067161,,,,not a bank
-ODFL,281,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-067161,R4,Total operating expenses,4135344000.0000,CostsAndExpenses value check (structural)
+ODFL,281,operating_expenses,not_presented,,,,,,,,0001193125-26-067161,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ODFL,281,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067161,R4,Operating income,1361045000.0000,library map
 ODFL,281,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-067161,R4,"Other expense, net",-3586000.0000,library map
 ODFL,281,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-067161,R2,Net property and equipment,4504204000.0000,library map

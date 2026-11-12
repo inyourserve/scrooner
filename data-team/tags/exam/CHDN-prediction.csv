@@ -34,7 +34,7 @@ CHDN,963,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000020212-2
 CHDN,963,net_interest_income,OUT,,,,,,,,0000020212-26-000025,,,,not a bank
 CHDN,963,noninterest_expense,OUT,,,,,,,,0000020212-26-000025,,,,not a bank
 CHDN,963,noninterest_income,OUT,,,,,,,,0000020212-26-000025,,,,not a bank
-CHDN,963,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0000020212-26-000025,R3,Total operating expense,2242100000.0000,printed opex total tag
+CHDN,963,operating_expenses,not_presented,,,,,,,,0000020212-26-000025,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CHDN,963,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000020212-26-000025,R3,Operating income,683800000.0000,library map
 CHDN,963,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,Y,OtherNonoperatingIncome,sec_api,0000020212-26-000025,R3,"Miscellaneous, net",6900000.0000,library map
 CHDN,963,ppe_net,not_presented,,,,,,,,0000020212-26-000025,,,,no face line

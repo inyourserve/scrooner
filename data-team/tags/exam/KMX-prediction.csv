@@ -34,7 +34,7 @@ KMX,827,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetEarningsMember,sec_
 KMX,827,net_interest_income,OUT,,,,,,,,0001170010-26-000021,,,,not a bank
 KMX,827,noninterest_expense,OUT,,,,,,,,0001170010-26-000021,,,,not a bank
 KMX,827,noninterest_income,OUT,,,,,,,,0001170010-26-000021,,,,not a bank
-KMX,827,operating_expenses,not_presented,,,,,,,,0001170010-26-000021,,,,no face line
+KMX,827,operating_expenses,not_presented,,,,,,,,0001170010-26-000021,,,,no opex total and no GP/COR anchor
 KMX,827,operating_income,not_presented,,,,,,,,0001170010-26-000021,,,,no face line
 KMX,827,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001170010-26-000021,R2,Nonoperating Income (Expense),7067000.0000,combined line (library or label demote)
 KMX,827,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001170010-26-000021,R4,"Property and equipment, net",4070293000.0000,library map

@@ -34,7 +34,7 @@ GAP,792,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26
 GAP,792,net_interest_income,OUT,,,,,,,,0001628280-26-018573,,,,not a bank
 GAP,792,noninterest_expense,OUT,,,,,,,,0001628280-26-018573,,,,not a bank
 GAP,792,noninterest_income,OUT,,,,,,,,0001628280-26-018573,,,,not a bank
-GAP,792,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001628280-26-018573,R6,Operating expenses,5153000000.0000,printed opex total tag
+GAP,792,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001628280-26-018573,R6,Operating expenses,5153000000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 GAP,792,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-018573,R6,Operating income,1115000000.0000,library map
 GAP,792,other_income_expense_net,not_presented,,,,,,,,0001628280-26-018573,,,,no face line
 GAP,792,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-018573,R4,"Property and equipment, net of accumulated depreciation",2507000000.0000,library map

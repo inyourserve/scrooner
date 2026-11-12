@@ -34,7 +34,7 @@ IVZ,609,net_income,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,net_interest_income,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
 IVZ,609,noninterest_expense,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
 IVZ,609,noninterest_income,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
-IVZ,609,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0000914208-26-000079,R5,Total operating expenses,7072800000.0000,printed opex total tag
+IVZ,609,operating_expenses,not_presented,,,,,,,,0000914208-26-000079,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 IVZ,609,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0000914208-26-000079,R5,Operating income/(loss),-695700000.0000,library map
 IVZ,609,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000914208-26-000079,R5,"Other gains/(losses), net",55900000.0000,library map
 IVZ,609,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000914208-26-000079,R3,"Property, equipment and software, net",378900000.0000,library map

@@ -34,7 +34,7 @@ CUBE,753,net_income,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,net_interest_income,OUT,,,,,,,,0001298675-26-000010,,,,not a bank
 CUBE,753,noninterest_expense,OUT,,,,,,,,0001298675-26-000010,,,,not a bank
 CUBE,753,noninterest_income,OUT,,,,,,,,0001298675-26-000010,,,,not a bank
-CUBE,753,operating_expenses,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
+CUBE,753,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001298675-26-000010,R4,Total operating expenses,674211000.0000,total includes cost of revenue
 CUBE,753,operating_income,not_presented,,,,,,,,0001298675-26-000010,,,,no face line
 CUBE,753,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001298675-26-000010,R4,Other,2721000.0000,library map
 CUBE,753,ppe_net,not_presented,,,,,,,,0001298675-26-000010,,,,no face line

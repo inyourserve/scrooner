@@ -34,7 +34,7 @@ WM,131,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-
 WM,131,net_interest_income,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
 WM,131,noninterest_expense,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
 WM,131,noninterest_income,OUT,,,,,,,,0001104659-26-012049,,,,not a bank
-WM,131,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,"Selling, general and administrative",2722000000.0000,printed opex lines (duration sum)
+WM,131,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:RestructuringCharges;custom:GainLossFromDivestituresAssetImpairmentsAndUnusualItems,IS,+,-6,N,,fsn_xbrl,0001104659-26-012049,R4,"Selling, general and administrative",2722000000.0000,every face line between GP/COR and OI; ties to GP - OI
 WM,131,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,Income from operations,4308000000.0000,library map
 WM,131,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001104659-26-012049,R4,"Other, net",20000000.0000,library map
 WM,131,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001104659-26-012049,R2,"Property and equipment, net of accumulated depreciation and depletion of $25,096 and $23,777, respectively",20378000000.0000,library map

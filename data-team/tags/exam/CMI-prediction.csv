@@ -34,7 +34,7 @@ CMI,177,net_income,not_presented,,,,,,,,0000026172-26-000009,,,,no face line
 CMI,177,net_interest_income,OUT,,,,,,,,0000026172-26-000009,,,,not a bank
 CMI,177,noninterest_expense,OUT,,,,,,,,0000026172-26-000009,,,,not a bank
 CMI,177,noninterest_income,OUT,,,,,,,,0000026172-26-000009,,,,not a bank
-CMI,177,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000026172-26-000009,R3,"Selling, general and administrative expenses",3125000000.0000,printed opex lines (duration sum)
+CMI,177,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:IncomeLossFromEquityMethodInvestments;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000026172-26-000009,R3,"Selling, general and administrative expenses",3125000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CMI,177,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000026172-26-000009,R3,OPERATING INCOME,4025000000.0000,library map
 CMI,177,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000026172-26-000009,R3,"Other income, net (Note 21)",267000000.0000,library map
 CMI,177,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000026172-26-000009,R5,"Property, plant and equipment, net (Note 7)",6958000000.0000,library map

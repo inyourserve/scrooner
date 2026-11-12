@@ -34,7 +34,7 @@ MOS,933,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001285785-26
 MOS,933,net_interest_income,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
 MOS,933,noninterest_expense,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
 MOS,933,noninterest_income,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
-MOS,933,operating_expenses,not_presented,,,,,,,,0001285785-26-000017,,,,no face line
+MOS,933,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,"Selling, general and administrative expenses",533900000.0000,every face line between GP/COR and OI; ties to GP - OI
 MOS,933,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Operating earnings,821500000.0000,library map
 MOS,933,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Other income (expense),307400000.0000,library map
 MOS,933,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,"Property, plant and equipment, net",13982600000.0000,library map

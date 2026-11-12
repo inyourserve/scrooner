@@ -34,7 +34,7 @@ ACA,842,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001739445-26
 ACA,842,net_interest_income,OUT,,,,,,,,0001739445-26-000029,,,,not a bank
 ACA,842,noninterest_expense,OUT,,,,,,,,0001739445-26-000029,,,,not a bank
 ACA,842,noninterest_income,OUT,,,,,,,,0001739445-26-000029,,,,not a bank
-ACA,842,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001739445-26-000029,R3,Total operating costs,305300000.0000,CostsAndExpenses value check (structural)
+ACA,842,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001739445-26-000029,R3,Total operating costs,305300000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 ACA,842,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001739445-26-000029,R3,Operating profit,341900000.0000,library map
 ACA,842,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001739445-26-000029,R3,Other nonoperating (income) expense,1600000.0000,library map
 ACA,842,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001739445-26-000029,R6,"Property, plant, and equipment, net",2097800000.0000,library map

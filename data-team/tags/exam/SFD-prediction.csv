@@ -34,7 +34,7 @@ SFD,836,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000091388-26
 SFD,836,net_interest_income,OUT,,,,,,,,0000091388-26-000014,,,,not a bank
 SFD,836,noninterest_expense,OUT,,,,,,,,0000091388-26-000014,,,,not a bank
 SFD,836,noninterest_income,OUT,,,,,,,,0000091388-26-000014,,,,not a bank
-SFD,836,operating_expenses,not_presented,,,,,,,,0000091388-26-000014,,,,no face line
+SFD,836,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000091388-26-000014,R3,"Selling, general and administrative expenses",849000000.0000,every face line between GP/COR and OI; ties to GP - OI
 SFD,836,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000091388-26-000014,R3,Operating profit (loss),1292000000.0000,library map
 SFD,836,other_income_expense_net,not_presented,,,,,,,,0000091388-26-000014,,,,no face line
 SFD,836,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000091388-26-000014,R5,"Property, plant and equipment, net",3226000000.0000,library map

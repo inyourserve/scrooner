@@ -34,7 +34,7 @@ TER,233,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 TER,233,net_interest_income,OUT,,,,,,,,0001193125-26-059002,,,,not a bank
 TER,233,noninterest_expense,OUT,,,,,,,,0001193125-26-059002,,,,not a bank
 TER,233,noninterest_income,OUT,,,,,,,,0001193125-26-059002,,,,not a bank
-TER,233,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-059002,R4,Total operating expenses,1207294000.0000,printed opex total tag
+TER,233,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-059002,R4,Total operating expenses,1207294000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 TER,233,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-059002,R4,Income from operations,650051000.0000,library map
 TER,233,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-059002,R4,"Other (income) expense, net",-5641000.0000,library map
 TER,233,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-059002,R2,"Property, plant and equipment, net",562999000.0000,library map

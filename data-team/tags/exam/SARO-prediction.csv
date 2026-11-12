@@ -34,7 +34,7 @@ SARO,855,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 SARO,855,net_interest_income,OUT,,,,,,,,0001193125-26-072618,,,,not a bank
 SARO,855,noninterest_expense,OUT,,,,,,,,0001193125-26-072618,,,,not a bank
 SARO,855,noninterest_income,OUT,,,,,,,,0001193125-26-072618,,,,not a bank
-SARO,855,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,"Selling, general and administrative expense",247703000.0000,printed opex lines (duration sum)
+SARO,855,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationAcquisitionRelatedCosts,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,"Selling, general and administrative expense",247703000.0000,every face line between GP/COR and OI; ties to GP - OI
 SARO,855,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-072618,R4,Operating income,551069000.0000,library map
 SARO,855,other_income_expense_net,not_presented,,,,,,,,0001193125-26-072618,,,,no face line
 SARO,855,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-072618,R2,"Property, plant and equipment, net",579971000.0000,library map

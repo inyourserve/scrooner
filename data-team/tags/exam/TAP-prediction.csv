@@ -34,7 +34,7 @@ TAP,829,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000024545-26
 TAP,829,net_interest_income,OUT,,,,,,,,0000024545-26-000006,,,,not a bank
 TAP,829,noninterest_expense,OUT,,,,,,,,0000024545-26-000006,,,,not a bank
 TAP,829,noninterest_income,OUT,,,,,,,,0000024545-26-000006,,,,not a bank
-TAP,829,operating_expenses,not_presented,,,,,,,,0000024545-26-000006,,,,no face line
+TAP,829,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000024545-26-000006,R3,"Marketing, general and administrative expenses",2643900000.0000,every face line between GP/COR and OI; ties to GP - OI
 TAP,829,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0000024545-26-000006,R3,Operating income (loss),-2336900000.0000,library map
 TAP,829,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000024545-26-000006,R3,"Other non-operating income (expense), net",31800000.0000,library map
 TAP,829,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000024545-26-000006,R5,"Property, plant and equipment, net",4768700000.0000,library map

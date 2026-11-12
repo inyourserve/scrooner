@@ -34,7 +34,7 @@ WMG,509,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001319161-25
 WMG,509,net_interest_income,OUT,,,,,,,,0001319161-25-000034,,,,not a bank
 WMG,509,noninterest_expense,OUT,,,,,,,,0001319161-25-000034,,,,not a bank
 WMG,509,noninterest_income,OUT,,,,,,,,0001319161-25-000034,,,,not a bank
-WMG,509,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001319161-25-000034,R5,"Selling, general and administrative expenses",1889000000.0000,printed opex lines (duration sum)
+WMG,509,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnSaleOfBusiness,IS,+,-6,N,,sec_api,0001319161-25-000034,R5,"Selling, general and administrative expenses",1889000000.0000,every face line between GP/COR and OI; ties to GP - OI
 WMG,509,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001319161-25-000034,R5,Operating income,694000000.0000,library map
 WMG,509,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001319161-25-000034,R5,"Other expense, net",-42000000.0000,library map
 WMG,509,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001319161-25-000034,R3,"Property, plant and equipment, net",441000000.0000,library map

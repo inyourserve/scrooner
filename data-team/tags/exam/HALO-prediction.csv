@@ -34,7 +34,7 @@ HALO,565,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001159036-2
 HALO,565,net_interest_income,OUT,,,,,,,,0001159036-26-000024,,,,not a bank
 HALO,565,noninterest_expense,OUT,,,,,,,,0001159036-26-000024,,,,not a bank
 HALO,565,noninterest_income,OUT,,,,,,,,0001159036-26-000024,,,,not a bank
-HALO,565,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,Y,ResearchAndDevelopmentExpense,sec_api,0001159036-26-000024,R5,Amortization of intangibles,76662000.0000,printed opex lines (duration sum)
+HALO,565,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;us-gaap:ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,IS,+,-3,Y,ResearchAndDevelopmentExpense,sec_api,0001159036-26-000024,R5,Amortization of intangibles,76662000.0000,every face line between GP/COR and OI; ties to GP - OI
 HALO,565,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001159036-26-000024,R5,Operating income,469006000.0000,library map
 HALO,565,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001159036-26-000024,R5,"Investment and other income, net",21472000.0000,library map
 HALO,565,ppe_net,not_presented,,,,,,,,0001159036-26-000024,,,,no face line

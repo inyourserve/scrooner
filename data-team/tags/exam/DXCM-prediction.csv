@@ -34,7 +34,7 @@ DXCM,322,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001093557-2
 DXCM,322,net_interest_income,OUT,,,,,,,,0001093557-26-000027,,,,not a bank
 DXCM,322,noninterest_expense,OUT,,,,,,,,0001093557-26-000027,,,,not a bank
 DXCM,322,noninterest_income,OUT,,,,,,,,0001093557-26-000027,,,,not a bank
-DXCM,322,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Total operating expenses,1890100000.0000,printed opex total tag
+DXCM,322,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Total operating expenses,1890100000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 DXCM,322,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,Operating income,911800000.0000,library map
 DXCM,322,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001093557-26-000027,R5,"Other income, net",176600000.0000,library map
 DXCM,322,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0001093557-26-000027,R3,"Property and equipment, net",1559900000.0000,library map

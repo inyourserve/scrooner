@@ -34,7 +34,7 @@ CHWY,761,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001766502-2
 CHWY,761,net_interest_income,OUT,,,,,,,,0001766502-26-000034,,,,not a bank
 CHWY,761,noninterest_expense,OUT,,,,,,,,0001766502-26-000034,,,,not a bank
 CHWY,761,noninterest_income,OUT,,,,,,,,0001766502-26-000034,,,,not a bank
-CHWY,761,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Total operating expenses,3499600000.0000,printed opex total tag
+CHWY,761,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Total operating expenses,3499600000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 CHWY,761,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001766502-26-000034,R5,Income (loss) from operations,254300000.0000,library map
 CHWY,761,other_income_expense_net,not_presented,,,,,,,,0001766502-26-000034,,,,no face line
 CHWY,761,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001766502-26-000034,R3,"Property and equipment, net",552300000.0000,library map

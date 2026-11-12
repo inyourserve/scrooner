@@ -34,7 +34,7 @@ HRL,648,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000048465-25
 HRL,648,net_interest_income,OUT,,,,,,,,0000048465-25-000059,,,,not a bank
 HRL,648,noninterest_expense,OUT,,,,,,,,0000048465-25-000059,,,,not a bank
 HRL,648,noninterest_income,OUT,,,,,,,,0000048465-25-000059,,,,not a bank
-HRL,648,operating_expenses,not_presented,,,,,,,,0000048465-25-000059,,,,no face line
+HRL,648,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-3,N,,sec_api,0000048465-25-000059,R3,"Selling, General, and Administrative",996624000.0000,every face line between GP/COR and OI; ties to GP - OI
 HRL,648,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000048465-25-000059,R3,Operating Income,718603000.0000,library map
 HRL,648,other_income_expense_net,not_presented,,,,,,,,0000048465-25-000059,,,,no face line
 HRL,648,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000048465-25-000059,R5,"Property, Plant, and Equipment, Net",2238770000.0000,library map

@@ -34,7 +34,7 @@ TTD,954,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001671933-26
 TTD,954,net_interest_income,OUT,,,,,,,,0001671933-26-000014,,,,not a bank
 TTD,954,noninterest_expense,OUT,,,,,,,,0001671933-26-000014,,,,not a bank
 TTD,954,noninterest_income,OUT,,,,,,,,0001671933-26-000014,,,,not a bank
-TTD,954,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Sales and marketing,644300000.0000,printed opex lines (duration sum)
+TTD,954,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Sales and marketing,644300000.0000,every face line between GP/COR and OI; ties to GP - OI
 TTD,954,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,Income from operations,589321000.0000,library map
 TTD,954,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001671933-26-000014,R5,"Total other income, net",69434000.0000,combined line (library or label demote)
 TTD,954,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001671933-26-000014,R3,"Property and equipment, net",396819000.0000,library map

@@ -34,7 +34,7 @@ ARCC,573,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001287750-2
 ARCC,573,net_interest_income,OUT,,,,,,,,0001287750-26-000006,,,,not a bank
 ARCC,573,noninterest_expense,OUT,,,,,,,,0001287750-26-000006,,,,not a bank
 ARCC,573,noninterest_income,OUT,,,,,,,,0001287750-26-000006,,,,not a bank
-ARCC,573,operating_expenses,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
+ARCC,573,operating_expenses,not_presented,,,,,,,,0001287750-26-000006,,,,no opex total and no GP/COR anchor
 ARCC,573,operating_income,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,other_income_expense_net,not_presented,,,,,,,,0001287750-26-000006,,,,no face line
 ARCC,573,ppe_net,not_presented,,,,,,,,0001287750-26-000006,,,,no face line

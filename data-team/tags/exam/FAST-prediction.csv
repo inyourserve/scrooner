@@ -34,7 +34,7 @@ FAST,209,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000815556-2
 FAST,209,net_interest_income,OUT,,,,,,,,0000815556-26-000009,,,,not a bank
 FAST,209,noninterest_expense,OUT,,,,,,,,0000815556-26-000009,,,,not a bank
 FAST,209,noninterest_income,OUT,,,,,,,,0000815556-26-000009,,,,not a bank
-FAST,209,operating_expenses,not_presented,,,,,,,,0000815556-26-000009,,,,no face line
+FAST,209,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,"Selling, general, and administrative expenses",2035500000.0000,every face line between GP/COR and OI; ties to GP - OI
 FAST,209,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Operating income,1655700000.0000,library map
 FAST,209,other_income_expense_net,not_presented,,,,,,,,0000815556-26-000009,,,,no face line
 FAST,209,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,"Property and equipment, net",1131600000.0000,library map

@@ -34,7 +34,7 @@ PCVX,726,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001649094-2
 PCVX,726,net_interest_income,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
 PCVX,726,noninterest_expense,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
 PCVX,726,noninterest_income,OUT,,,,,,,,0001649094-26-000007,,,,not a bank
-PCVX,726,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001649094-26-000007,R5,Total operating expenses,923675000.0000,printed opex total tag
+PCVX,726,operating_expenses,not_presented,,,,,,,,0001649094-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 PCVX,726,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001649094-26-000007,R5,Loss from operations,-923675000.0000,library map
 PCVX,726,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001649094-26-000007,R5,Other income (expense),37329000.0000,library map
 PCVX,726,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001649094-26-000007,R3,"Property and equipment, net",257370000.0000,library map

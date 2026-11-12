@@ -34,7 +34,7 @@ DRS,724,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001833756-26
 DRS,724,net_interest_income,OUT,,,,,,,,0001833756-26-000013,,,,not a bank
 DRS,724,noninterest_expense,OUT,,,,,,,,0001833756-26-000013,,,,not a bank
 DRS,724,noninterest_income,OUT,,,,,,,,0001833756-26-000013,,,,not a bank
-DRS,724,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,General and administrative expenses,497000000.0000,printed opex lines (duration sum)
+DRS,724,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,General and administrative expenses,497000000.0000,every face line between GP/COR and OI; ties to GP - OI
 DRS,724,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001833756-26-000013,R3,Operating earnings,348000000.0000,library map
 DRS,724,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001833756-26-000013,R3,"Other, net",-4000000.0000,library map
 DRS,724,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001833756-26-000013,R5,"Property, plant and equipment, net",512000000.0000,library map

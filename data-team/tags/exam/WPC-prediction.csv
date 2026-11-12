@@ -34,7 +34,7 @@ WPC,533,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001025378-26
 WPC,533,net_interest_income,OUT,,,,,,,,0001025378-26-000036,,,,not a bank
 WPC,533,noninterest_expense,OUT,,,,,,,,0001025378-26-000036,,,,not a bank
 WPC,533,noninterest_income,OUT,,,,,,,,0001025378-26-000036,,,,not a bank
-WPC,533,operating_expenses,not_presented,,,,,,,,0001025378-26-000036,,,,no face line
+WPC,533,operating_expenses,not_presented,,,,,,,,0001025378-26-000036,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 WPC,533,operating_income,not_presented,,,,,,,,0001025378-26-000036,,,,no face line
 WPC,533,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001025378-26-000036,R5,Non-operating income,16951000.0000,library map
 WPC,533,ppe_net,not_presented,,,,,,,,0001025378-26-000036,,,,no face line

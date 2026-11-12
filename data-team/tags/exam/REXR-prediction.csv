@@ -34,7 +34,7 @@ REXR,781,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001571283-2
 REXR,781,net_interest_income,OUT,,,,,,,,0001571283-26-000006,,,,not a bank
 REXR,781,noninterest_expense,OUT,,,,,,,,0001571283-26-000006,,,,not a bank
 REXR,781,noninterest_income,OUT,,,,,,,,0001571283-26-000006,,,,not a bank
-REXR,781,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,sec_api,0001571283-26-000006,R5,General and administrative,78856000.0000,printed opex lines (duration sum)
+REXR,781,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001571283-26-000006,R5,TOTAL OPERATING EXPENSES,622500000.0000,total includes cost of revenue
 REXR,781,operating_income,not_presented,,,,,,,,0001571283-26-000006,,,,no face line
 REXR,781,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001571283-26-000006,R5,TOTAL OTHER EXPENSES,-177514000.0000,combined line (library or label demote)
 REXR,781,ppe_net,not_presented,,,,,,,,0001571283-26-000006,,,,no face line

@@ -34,7 +34,7 @@ MCO,149,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26
 MCO,149,net_interest_income,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
 MCO,149,noninterest_expense,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
 MCO,149,noninterest_income,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
-MCO,149,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,"Selling, general and administrative",1803000000.0000,printed opex lines (duration sum)
+MCO,149,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Total expenses,4367000000.0000,"total includes cost of revenue: combined, never opex"
 MCO,149,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Operating income,3351000000.0000,library map
 MCO,149,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-009136,R3,"Other non-operating (expense) income, net",-31000000.0000,library map
 MCO,149,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-009136,R5,"Property and equipment, net of accumulated depreciation of $1,572 in 2025 and $1,453 in 2024",722000000.0000,library map

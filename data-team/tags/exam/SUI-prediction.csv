@@ -34,7 +34,7 @@ SUI,545,net_income,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
 SUI,545,net_interest_income,OUT,,,,,,,,0000912593-26-000086,,,,not a bank
 SUI,545,noninterest_expense,OUT,,,,,,,,0000912593-26-000086,,,,not a bank
 SUI,545,noninterest_income,OUT,,,,,,,,0000912593-26-000086,,,,not a bank
-SUI,545,operating_expenses,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
+SUI,545,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0000912593-26-000086,R5,Total Expenses,2534300000.0000,total includes cost of revenue
 SUI,545,operating_income,not_presented,,,,,,,,0000912593-26-000086,,,,no face line
 SUI,545,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000912593-26-000086,R5,"Other income / (expense), net",133900000.0000,library map
 SUI,545,ppe_net,not_presented,,,,,,,,0000912593-26-000086,,,,no face line

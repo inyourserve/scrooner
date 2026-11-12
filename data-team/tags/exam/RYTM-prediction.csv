@@ -34,7 +34,7 @@ RYTM,948,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-2
 RYTM,948,net_interest_income,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
 RYTM,948,noninterest_expense,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
 RYTM,948,noninterest_income,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
-RYTM,948,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Research and development,167340000.0000,printed opex lines (duration sum)
+RYTM,948,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Research and development,167340000.0000,every face line between GP/COR and OI; ties to GP - OI
 RYTM,948,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-012399,R5,Loss from operations,-192016000.0000,library map
 RYTM,948,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,"Other income, net",1264000.0000,library map
 RYTM,948,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,"Property and equipment, net",1104000.0000,library map

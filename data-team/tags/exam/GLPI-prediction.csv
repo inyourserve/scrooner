@@ -34,7 +34,7 @@ GLPI,639,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001575965-2
 GLPI,639,net_interest_income,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,noninterest_expense,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
 GLPI,639,noninterest_income,OUT,,,,,,,,0001575965-26-000032,,,,not a bank
-GLPI,639,operating_expenses,not_presented,,,,,,,,0001575965-26-000032,,,,no face line
+GLPI,639,operating_expenses,not_presented,,,,,,,,0001575965-26-000032,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 GLPI,639,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001575965-26-000032,R5,Income from operations,1201453000.0000,library map
 GLPI,639,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001575965-26-000032,R5,Total other expenses,-348868000.0000,combined line (library or label demote)
 GLPI,639,ppe_net,not_presented,,,,,,,,0001575965-26-000032,,,,no face line

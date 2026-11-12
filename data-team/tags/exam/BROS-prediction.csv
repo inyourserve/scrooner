@@ -34,7 +34,7 @@ BROS,882,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001866581-2
 BROS,882,net_interest_income,OUT,,,,,,,,0001866581-26-000006,,,,not a bank
 BROS,882,noninterest_expense,OUT,,,,,,,,0001866581-26-000006,,,,not a bank
 BROS,882,noninterest_income,OUT,,,,,,,,0001866581-26-000006,,,,not a bank
-BROS,882,operating_expenses,not_presented,,,,,,,,0001866581-26-000006,,,,no face line
+BROS,882,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001866581-26-000006,R5,"Selling, general and administrative",262766000.0000,every face line between GP/COR and OI; ties to GP - OI
 BROS,882,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001866581-26-000006,R5,Income from operations,161180000.0000,library map
 BROS,882,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001866581-26-000006,R5,Other income,2748000.0000,library map
 BROS,882,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001866581-26-000006,R3,"Property and equipment, net",824502000.0000,library map

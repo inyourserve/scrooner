@@ -34,7 +34,7 @@ LUV,458,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000092380-26
 LUV,458,net_interest_income,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,noninterest_expense,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
 LUV,458,noninterest_income,OUT,,,,,,,,0000092380-26-000004,,,,not a bank
-LUV,458,operating_expenses,not_presented,,,,,,,,0000092380-26-000004,,,,no face line
+LUV,458,operating_expenses,not_presented,,,,,,,,0000092380-26-000004,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 LUV,458,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,OPERATING INCOME,428000000.0000,library map
 LUV,458,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000092380-26-000004,R5,"Other (gains) losses, net",43000000.0000,library map
 LUV,458,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0000092380-26-000004,R3,"Property and equipment, net",20245000000.0000,library map

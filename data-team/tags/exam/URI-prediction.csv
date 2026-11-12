@@ -34,7 +34,7 @@ URI,191,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001067701-26
 URI,191,net_interest_income,OUT,,,,,,,,0001067701-26-000007,,,,not a bank
 URI,191,noninterest_expense,OUT,,,,,,,,0001067701-26-000007,,,,not a bank
 URI,191,noninterest_income,OUT,,,,,,,,0001067701-26-000007,,,,not a bank
-URI,191,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,"Selling, general and administrative expenses",1732000000.0000,printed opex lines (duration sum)
+URI,191,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:DepreciationAndAmortization,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,"Selling, general and administrative expenses",1732000000.0000,every face line between GP/COR and OI; ties to GP - OI
 URI,191,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,Operating income,3973000000.0000,library map
 URI,191,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001067701-26-000007,R5,"Other income, net",81000000.0000,library map
 URI,191,ppe_net,not_presented,,,,,,,,0001067701-26-000007,,,,no face line

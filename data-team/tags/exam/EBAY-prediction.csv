@@ -34,7 +34,7 @@ EBAY,224,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001065088-2
 EBAY,224,net_interest_income,OUT,,,,,,,,0001065088-26-000027,,,,not a bank
 EBAY,224,noninterest_expense,OUT,,,,,,,,0001065088-26-000027,,,,not a bank
 EBAY,224,noninterest_income,OUT,,,,,,,,0001065088-26-000027,,,,not a bank
-EBAY,224,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Total operating expenses,5654000000.0000,printed opex total tag
+EBAY,224,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Total operating expenses,5654000000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 EBAY,224,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001065088-26-000027,R5,Income from operations,2277000000.0000,library map
 EBAY,224,other_income_expense_net,combined,custom:InterestAndOtherNet,IS,+,-6,N,,fsn_xbrl,0001065088-26-000027,R5,"Interest income and other, net",271000000.0000,combined line (library or label demote)
 EBAY,224,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001065088-26-000027,R3,"Property and equipment, net",1338000000.0000,library map

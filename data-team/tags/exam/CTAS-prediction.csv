@@ -34,7 +34,7 @@ CTAS,148,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000723254-2
 CTAS,148,net_interest_income,OUT,,,,,,,,0000723254-26-000028,,,,not a bank
 CTAS,148,noninterest_expense,OUT,,,,,,,,0000723254-26-000028,,,,not a bank
 CTAS,148,noninterest_income,OUT,,,,,,,,0000723254-26-000028,,,,not a bank
-CTAS,148,operating_expenses,not_presented,,,,,,,,0000723254-26-000028,,,,no face line
+CTAS,148,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationAcquisitionRelatedCosts,IS,+,-3,N,,sec_api,0000723254-26-000028,R3,Selling and administrative expenses,3086145000.0000,every face line between GP/COR and OI; ties to GP - OI
 CTAS,148,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000723254-26-000028,R3,Operating income,2606512000.0000,library map
 CTAS,148,other_income_expense_net,not_presented,,,,,,,,0000723254-26-000028,,,,no face line
 CTAS,148,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000723254-26-000028,R6,"Property and equipment, net",1740501000.0000,library map

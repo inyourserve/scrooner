@@ -34,7 +34,7 @@ NFG,820,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000070145-25
 NFG,820,net_interest_income,OUT,,,,,,,,0000070145-25-000039,,,,not a bank
 NFG,820,noninterest_expense,OUT,,,,,,,,0000070145-25-000039,,,,not a bank
 NFG,820,noninterest_income,OUT,,,,,,,,0000070145-25-000039,,,,not a bank
-NFG,820,operating_expenses,not_presented,,,,,,,,0000070145-25-000039,,,,no face line
+NFG,820,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Total Operating Expenses,1464082000.0000,"total includes cost of revenue: combined, never opex"
 NFG,820,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Operating Income,813459000.0000,library map
 NFG,820,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000070145-25-000039,R3,Other Income (Deductions),36428000.0000,library map
 NFG,820,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000070145-25-000039,R5,"Property, Plant and Equipment, Net, Total",7712642000.0000,library map

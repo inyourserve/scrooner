@@ -34,7 +34,7 @@ UTHR,415,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001082554-2
 UTHR,415,net_interest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
 UTHR,415,noninterest_expense,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
 UTHR,415,noninterest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,printed opex lines (duration sum)
+UTHR,415,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,every face line between GP/COR and OI; ties to GP - OI
 UTHR,415,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Operating income,1492500000.0000,library map
 UTHR,415,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,"Other income (expense), net",48900000.0000,library map
 UTHR,415,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Property, plant, and equipment, net",1729700000.0000,library map

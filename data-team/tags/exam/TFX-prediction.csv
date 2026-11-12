@@ -34,7 +34,7 @@ TFX,980,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000096943-26
 TFX,980,net_interest_income,OUT,,,,,,,,0000096943-26-000019,,,,not a bank
 TFX,980,noninterest_expense,OUT,,,,,,,,0000096943-26-000019,,,,not a bank
 TFX,980,noninterest_income,OUT,,,,,,,,0000096943-26-000019,,,,not a bank
-TFX,980,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000096943-26-000019,R3,"Selling, general and administrative expenses",720169000.0000,printed opex lines (duration sum)
+TFX,980,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:DefinedBenefitPlanRecognizedNetGainLossDueToSettlements1;custom:RestructuringAndImpairmentProvisions;us-gaap:GainLossOnDispositionOfAssets1,IS,+,-3,N,,fsn_xbrl,0000096943-26-000019,R3,"Selling, general and administrative expenses",720169000.0000,every face line between GP/COR and OI; ties to GP - OI
 TFX,980,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000096943-26-000019,R3,Income from continuing operations before interest and taxes,118373000.0000,library map
 TFX,980,other_income_expense_net,not_presented,,,,,,,,0000096943-26-000019,,,,no face line
 TFX,980,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000096943-26-000019,R6,"Property, plant and equipment, net",498281000.0000,library map

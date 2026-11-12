@@ -34,7 +34,7 @@ CLX,676,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021076-26
 CLX,676,net_interest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
 CLX,676,noninterest_expense,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
 CLX,676,noninterest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Selling and administrative expenses,1066000000.0000,printed opex lines (duration sum)
+CLX,676,operating_expenses,not_presented,,,,,,,,0000021076-26-000034,,,,no opex total and no GP/COR anchor
 CLX,676,operating_income,not_presented,,,,,,,,0000021076-26-000034,,,,no face line
 CLX,676,other_income_expense_net,not_presented,,,,,,,,0000021076-26-000034,,,,no face line
 CLX,676,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Property, plant and equipment, net",1512000000.0000,library map

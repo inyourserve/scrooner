@@ -34,7 +34,7 @@ LNT,483,net_income,not_presented,,,,,,,,0000352541-26-000007,,,,no face line
 LNT,483,net_interest_income,OUT,,,,,,,,0000352541-26-000007,,,,not a bank
 LNT,483,noninterest_expense,OUT,,,,,,,,0000352541-26-000007,,,,not a bank
 LNT,483,noninterest_income,OUT,,,,,,,,0000352541-26-000007,,,,not a bank
-LNT,483,operating_expenses,not_presented,,,,,,,,0000352541-26-000007,,,,no face line
+LNT,483,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000352541-26-000007,R2,Total operating expenses,3337000000.0000,"total includes cost of revenue: combined, never opex"
 LNT,483,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000352541-26-000007,R2,Operating income (loss),1025000000.0000,library map
 LNT,483,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000352541-26-000007,R2,Other,-1000000.0000,library map
 LNT,483,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000352541-26-000007,R3,"Property, plant and equipment, net",20344000000.0000,library map

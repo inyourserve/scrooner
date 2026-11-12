@@ -34,7 +34,7 @@ AUR,706,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001828108-26
 AUR,706,net_interest_income,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,noninterest_expense,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,noninterest_income,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
-AUR,706,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001828108-26-000016,R5,Research and development,745000000.0000,printed opex lines (duration sum)
+AUR,706,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001828108-26-000016,R5,Research and development,745000000.0000,every face line between GP/COR and OI; ties to GP - OI
 AUR,706,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Loss from operations,-901000000.0000,library map
 AUR,706,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001828108-26-000016,R5,"Other income, net",56000000.0000,library map
 AUR,706,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001828108-26-000016,R3,"Property and equipment, net",103000000.0000,library map

@@ -34,7 +34,7 @@ VG,331,net_income,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
 VG,331,net_interest_income,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
 VG,331,noninterest_expense,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
 VG,331,noninterest_income,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
-VG,331,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Operating and maintenance expense,975000000.0000,printed opex lines (duration sum)
+VG,331,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:InsuranceRecoveries,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Operating and maintenance expense,975000000.0000,every face line between GP/COR and OI; ties to GP - OI
 VG,331,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,INCOME FROM OPERATIONS,5156000000.0000,library map
 VG,331,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0002007855-26-000013,R5,Total other income (expense),-1793000000.0000,combined line (library or label demote)
 VG,331,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,"Property, plant and equipment, net",46588000000.0000,library map

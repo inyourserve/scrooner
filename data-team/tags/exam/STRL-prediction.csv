@@ -34,7 +34,7 @@ STRL,597,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailabl
 STRL,597,net_interest_income,OUT,,,,,,,,0000874238-26-000024,,,,not a bank
 STRL,597,noninterest_expense,OUT,,,,,,,,0000874238-26-000024,,,,not a bank
 STRL,597,noninterest_income,OUT,,,,,,,,0000874238-26-000024,,,,not a bank
-STRL,597,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000874238-26-000024,R3,General and administrative expense,154814000.0000,printed opex lines (duration sum)
+STRL,597,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationAcquisitionRelatedCosts;custom:BusinessCombinationEarnOutExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,fsn_xbrl,0000874238-26-000024,R3,General and administrative expense,154814000.0000,every face line between GP/COR and OI; ties to GP - OI
 STRL,597,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000874238-26-000024,R3,Operating income,405916000.0000,library map
 STRL,597,other_income_expense_net,not_presented,,,,,,,,0000874238-26-000024,,,,no face line
 STRL,597,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000874238-26-000024,R4,"Property and equipment, net",278269000.0000,library map

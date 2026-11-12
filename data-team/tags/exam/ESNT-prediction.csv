@@ -34,7 +34,7 @@ ESNT,957,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001448893-2
 ESNT,957,net_interest_income,OUT,,,,,,,,0001448893-26-000009,,,,not a bank
 ESNT,957,noninterest_expense,OUT,,,,,,,,0001448893-26-000009,,,,not a bank
 ESNT,957,noninterest_income,OUT,,,,,,,,0001448893-26-000009,,,,not a bank
-ESNT,957,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,Total losses and expenses,439073000.0000,printed opex total tag
+ESNT,957,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001448893-26-000009,R5,Total losses and expenses,439073000.0000,sector template total
 ESNT,957,operating_income,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
 ESNT,957,other_income_expense_net,not_presented,,,,,,,,0001448893-26-000009,,,,no face line
 ESNT,957,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001448893-26-000009,R3,"Property, equipment and software (at cost, less accumulated depreciation of $71,466 in 2025 and $72,270 in 2024)",49189000.0000,library map

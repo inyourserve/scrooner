@@ -34,7 +34,7 @@ EGP,672,net_income,not_presented,,,,,,,,0000049600-26-000010,,,,no face line
 EGP,672,net_interest_income,OUT,,,,,,,,0000049600-26-000010,,,,not a bank
 EGP,672,noninterest_expense,OUT,,,,,,,,0000049600-26-000010,,,,not a bank
 EGP,672,noninterest_income,OUT,,,,,,,,0000049600-26-000010,,,,not a bank
-EGP,672,operating_expenses,not_presented,,,,,,,,0000049600-26-000010,,,,no face line
+EGP,672,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,Y,CostOfRevenueAbstract,sec_api,0000049600-26-000010,R4,Expenses,433774000.0000,total includes cost of revenue
 EGP,672,operating_income,not_presented,,,,,,,,0000049600-26-000010,,,,no face line
 EGP,672,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,Y,OtherOperatingIncomeExpenseNet,sec_api,0000049600-26-000010,R4,Other,2009000.0000,combined line (library or label demote)
 EGP,672,ppe_net,not_presented,,,,,,,,0000049600-26-000010,,,,no face line

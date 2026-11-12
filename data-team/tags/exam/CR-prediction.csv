@@ -34,7 +34,7 @@ CR,621,net_income,not_presented,,,,,,,,0001944013-26-000095,,,,no face line
 CR,621,net_interest_income,OUT,,,,,,,,0001944013-26-000095,,,,not a bank
 CR,621,noninterest_expense,OUT,,,,,,,,0001944013-26-000095,,,,not a bank
 CR,621,noninterest_income,OUT,,,,,,,,0001944013-26-000095,,,,not a bank
-CR,621,operating_expenses,not_presented,,,,,,,,0001944013-26-000095,,,,no face line
+CR,621,operating_expenses,not_presented,,,,,,,,0001944013-26-000095,,,,opex lines do not tie to GP - OI
 CR,621,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001944013-26-000095,R3,Operating profit,424200000.0000,library map
 CR,621,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001944013-26-000095,R3,"Miscellaneous income, net",8700000.0000,library map
 CR,621,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001944013-26-000095,R5,"Property, plant and equipment, net",278800000.0000,library map

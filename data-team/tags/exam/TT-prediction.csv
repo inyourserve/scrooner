@@ -34,7 +34,7 @@ TT,116,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-
 TT,116,net_interest_income,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,noninterest_expense,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,noninterest_income,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
-TT,116,operating_expenses,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
+TT,116,operating_expenses,not_presented,,,,,,,,0001628280-26-005731,,,,no opex total and no GP/COR anchor
 TT,116,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,Operating income (loss),3967400000.0000,library map
 TT,116,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001628280-26-005731,R3,"Other, net",-62100000.0000,combined line (library or label demote)
 TT,116,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-005731,R5,"Property, plant and equipment, net",2251300000.0000,library map

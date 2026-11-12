@@ -71,7 +71,7 @@ def main(lines_path, ticker, rank, libdir):
     L = [json.loads(l) for l in open(lines_path) if l.strip()]
     L = [l for l in L if not l.get('missing')]
     for l in L:
-        for k in ('pth', 'cu', 'neg'):
+        for k in ('pth', 'cu', 'neg', 'r', 'ln'):
             try: l[k] = int(l.get(k) or 0)
             except (TypeError, ValueError): l[k] = 0
         if l.get('val') == '': l['val'] = None
@@ -125,25 +125,41 @@ def main(lines_path, ticker, rank, libdir):
             if bank and hit: status, chosen, rule = 'mapped', [pick(hit)], 'bank template tag'
             elif not bank: status, rule = 'OUT', 'not a bank'
         elif dp == 'operating_expenses':
-            def v(tag):
-                x = [l for l in L if l['tag'] == tag and l['st'] in ('IS', 'CI', 'UN') and not l['pth'] and l['val'] not in (None, '')]
-                return (float(x[0]['val']), x[0]) if x else (None, None)
-            tot = [t for t in ('OperatingExpenses', 'NoninterestExpense', 'BenefitsLossesAndExpenses') if v(t)[0] is not None]
-            ce, cel = v('CostsAndExpenses'); oi, _ = v('OperatingIncomeLoss'); gp, _ = v('GrossProfit')
-            revs = [float(l['val']) for d, l in cand['revenue'] if d == 'map']
-            rev = max(revs, key=abs) if revs else None
-            cor = any(d == 'map' for d, l in cand['cost_of_revenue'])
-            near = lambda a, b: a is not None and b is not None and abs(a - b) <= max(abs(b) * 0.002, 1)
-            if tot:
-                status, chosen, rule = 'mapped', [v(tot[0])[1]], 'printed opex total tag'
-            elif ce is not None and oi is not None and ((rev is not None and near(ce, rev - oi) and not cor) or (gp is not None and near(ce, gp - oi))):
-                status, chosen, rule = 'mapped', [cel], 'CostsAndExpenses value check (structural)'
+            # Dhairya ruling 2026-11-12 (canonical_concept 53/208): opex = costs below cost of revenue down to OI; never incl. COR
+            IS_ = [l for l in L if l['st'] == 'IS' and not l['pth']]
+            def first(tag):
+                x = [l for l in IS_ if l['tag'] == tag and l['val'] is not None]
+                return x[0] if x else None
+            fv = lambda l: float(l['val']) if l is not None and l['val'] is not None else None
+            oil, gpl = first('OperatingIncomeLoss'), first('GrossProfit')
+            corl = next((l for d, l in cand['cost_of_revenue'] if l['st'] == 'IS'), None)
+            revs = [l for d, l in cand['revenue'] if d == 'map' and l['st'] == 'IS']
+            rev = max((fv(l) for l in revs), key=abs) if revs else None
+            oi, gp, cor = fv(oil), fv(gpl), fv(corl)
+            if gp is None and rev is not None and cor is not None: gp = rev - cor
+            near = lambda a, b: a is not None and b is not None and abs(a - b) <= max(abs(b) * 0.0005, 1)
+            tmpl = [t for t in ('NoninterestExpense', 'BenefitsLossesAndExpenses') if first(t)]
+            tot = [l for l in IS_ if l['tag'] in ('OperatingExpenses', 'CostsAndExpenses', 'OperatingCostsAndExpenses') and l['val'] is not None]
+            excl = [l for l in tot if gp is not None and oi is not None and near(fv(l), gp - oi)]
+            incl = [l for l in tot if l not in excl]
+            if tmpl and (bank or insurer or corl is None):
+                status, chosen, rule = 'mapped', [first(tmpl[0])], 'sector template total'
+            elif excl:
+                status, chosen, rule = 'mapped', [excl[0]], 'printed opex total excluding cost of revenue (ties to GP - OI)'
+            elif gp is not None and oi is not None and oil is not None:
+                start = gpl or corl
+                band = [l for l in IS_ if l['r'] == oil['r'] and start is not None and l['r'] == start['r'] and start['ln'] < l['ln'] < oil['ln']
+                        and l['val'] is not None and l['tag'] not in ('GrossProfit', 'OperatingExpenses', 'CostsAndExpenses', 'OperatingCostsAndExpenses') and not l['tag'].endswith('Abstract')]
+                if band and near(sum((-fv(l) if l.get('cr') == 'C' else fv(l)) for l in band), gp - oi):
+                    status, chosen, rule = 'component_sum', band, 'every face line between GP/COR and OI; ties to GP - OI'
+                elif incl:
+                    status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue: combined, never opex'
+                else:
+                    status, rule = 'not_presented', 'opex lines do not tie to GP - OI'
+            elif incl:
+                status, chosen, rule = ('combined', [incl[0]], 'total includes cost of revenue') if cor is not None else ('not_presented', [], 'one-step corporate IS with no cost of revenue: not_presented (ruling 5)')
             else:
-                parts = [l for l in L if l['st'] == 'IS' and not l['pth'] and l['val'] not in (None, '') and l['tag'] in (
-                    'SellingGeneralAndAdministrativeExpense', 'ResearchAndDevelopmentExpense', 'SellingAndMarketingExpense', 'GeneralAndAdministrativeExpense',
-                    'ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost', 'AmortizationOfIntangibleAssets', 'RestructuringCharges', 'OtherCostAndExpenseOperating')]
-                if len(parts) >= 2:
-                    status, chosen, rule = 'component_sum', parts, 'printed opex lines (duration sum)'
+                status, rule = 'not_presented', 'no opex total and no GP/COR anchor'
         elif maps:
             status, chosen, rule = 'mapped', [pick(maps)], 'library map'
         elif comps and (dp in DURATION_SUM) and len({l['st'] for l in comps}) >= 1:

@@ -34,7 +34,7 @@ IMO,190,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000049938-26
 IMO,190,net_interest_income,OUT,,,,,,,,0000049938-26-000009,,,,not a bank
 IMO,190,noninterest_expense,OUT,,,,,,,,0000049938-26-000009,,,,not a bank
 IMO,190,noninterest_income,OUT,,,,,,,,0000049938-26-000009,,,,not a bank
-IMO,190,operating_expenses,not_presented,,,,,,,,0000049938-26-000009,,,,no face line
+IMO,190,operating_expenses,not_presented,,,,,,,,0000049938-26-000009,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 IMO,190,operating_income,not_presented,,,,,,,,0000049938-26-000009,,,,no face line
 IMO,190,other_income_expense_net,not_presented,,,,,,,,0000049938-26-000009,,,,no face line
 IMO,190,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000049938-26-000009,R6,"Property, plant and equipment, less accumulated depreciation and depletion",30863000000.0000,library map

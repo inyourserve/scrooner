@@ -34,7 +34,7 @@ FN,589,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001408710-26-
 FN,589,net_interest_income,OUT,,,,,,,,0001408710-26-000028,,,,not a bank
 FN,589,noninterest_expense,OUT,,,,,,,,0001408710-26-000028,,,,not a bank
 FN,589,noninterest_income,OUT,,,,,,,,0001408710-26-000028,,,,not a bank
-FN,589,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,"Selling, general and administrative expenses",93507000.0000,printed opex lines (duration sum)
+FN,589,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,"Selling, general and administrative expenses",93507000.0000,every face line between GP/COR and OI; ties to GP - OI
 FN,589,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,Operating income,462887000.0000,library map
 FN,589,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001408710-26-000028,R5,"Other income (expense), net",57026000.0000,library map
 FN,589,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001408710-26-000028,R3,"Property, plant and equipment, net",615067000.0000,library map

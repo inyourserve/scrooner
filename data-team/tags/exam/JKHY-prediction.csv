@@ -34,7 +34,7 @@ JKHY,660,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000779152-2
 JKHY,660,net_interest_income,OUT,,,,,,,,0000779152-26-000067,,,,not a bank
 JKHY,660,noninterest_expense,OUT,,,,,,,,0000779152-26-000067,,,,not a bank
 JKHY,660,noninterest_income,OUT,,,,,,,,0000779152-26-000067,,,,not a bank
-JKHY,660,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000779152-26-000067,R2,Research and Development,176445000.0000,printed opex lines (duration sum)
+JKHY,660,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000779152-26-000067,R2,Research and Development,176445000.0000,every face line between GP/COR and OI; ties to GP - OI
 JKHY,660,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000779152-26-000067,R2,OPERATING INCOME,635033000.0000,library map
 JKHY,660,other_income_expense_net,not_presented,,,,,,,,0000779152-26-000067,,,,no face line
 JKHY,660,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000779152-26-000067,R3,"PROPERTY AND EQUIPMENT, net",220470000.0000,library map

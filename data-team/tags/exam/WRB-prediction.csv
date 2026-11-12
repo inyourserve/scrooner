@@ -34,7 +34,7 @@ WRB,352,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000011544-26
 WRB,352,net_interest_income,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,noninterest_expense,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
 WRB,352,noninterest_income,OUT,,,,,,,,0000011544-26-000005,,,,not a bank
-WRB,352,operating_expenses,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
+WRB,352,operating_expenses,not_presented,,,,,,,,0000011544-26-000005,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 WRB,352,operating_income,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,other_income_expense_net,not_presented,,,,,,,,0000011544-26-000005,,,,no face line
 WRB,352,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000011544-26-000005,R4,"Property, furniture and equipment",596235000.0000,library map

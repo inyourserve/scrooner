@@ -34,7 +34,7 @@ EQIX,120,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001101239-2
 EQIX,120,net_interest_income,OUT,,,,,,,,0001101239-26-000032,,,,not a bank
 EQIX,120,noninterest_expense,OUT,,,,,,,,0001101239-26-000032,,,,not a bank
 EQIX,120,noninterest_income,OUT,,,,,,,,0001101239-26-000032,,,,not a bank
-EQIX,120,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001101239-26-000032,R5,Sales and marketing,903000000.0000,printed opex lines (duration sum)
+EQIX,120,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:AssetImpairmentCharges;us-gaap:GainLossOnDispositionOfAssets1,IS,+,-6,Y,ImpairmentOfLongLivedAssetsToBeDisposedOf,sec_api,0001101239-26-000032,R5,Sales and marketing,903000000.0000,every face line between GP/COR and OI; ties to GP - OI
 EQIX,120,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001101239-26-000032,R5,Income from operations,1848000000.0000,library map
 EQIX,120,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001101239-26-000032,R5,Other income (expense),-7000000.0000,library map
 EQIX,120,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0001101239-26-000032,R3,"Property, plant and equipment, net",23584000000.0000,library map

@@ -34,7 +34,7 @@ AA,659,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-
 AA,659,net_interest_income,OUT,,,,,,,,0001193125-26-077167,,,,not a bank
 AA,659,noninterest_expense,OUT,,,,,,,,0001193125-26-077167,,,,not a bank
 AA,659,noninterest_income,OUT,,,,,,,,0001193125-26-077167,,,,not a bank
-AA,659,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001193125-26-077167,R2,"Selling, general administrative, and other expenses",299000000.0000,printed opex lines (duration sum)
+AA,659,operating_expenses,not_presented,,,,,,,,0001193125-26-077167,,,,no opex total and no GP/COR anchor
 AA,659,operating_income,not_presented,,,,,,,,0001193125-26-077167,,,,no face line
 AA,659,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001193125-26-077167,R2,"Other (income) expenses, net (U)",1057000000.0000,combined line (library or label demote)
 AA,659,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-077167,R4,"Properties, plants, and equipment, net (K)",6700000000.0000,library map

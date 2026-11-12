@@ -34,7 +34,7 @@ SXT,965,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001140361-26
 SXT,965,net_interest_income,OUT,,,,,,,,0001140361-26-005311,,,,not a bank
 SXT,965,noninterest_expense,OUT,,,,,,,,0001140361-26-005311,,,,not a bank
 SXT,965,noninterest_income,OUT,,,,,,,,0001140361-26-005311,,,,not a bank
-SXT,965,operating_expenses,not_presented,,,,,,,,0001140361-26-005311,,,,no face line
+SXT,965,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Selling and administrative expenses,332172000.0000,every face line between GP/COR and OI; ties to GP - OI
 SXT,965,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001140361-26-005311,R2,Operating income,207128000.0000,library map
 SXT,965,other_income_expense_net,not_presented,,,,,,,,0001140361-26-005311,,,,no face line
 SXT,965,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001140361-26-005311,R5,"Property, plant, and equipment, net",539296000.0000,library map

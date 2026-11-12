@@ -34,7 +34,7 @@ IQV,260,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 IQV,260,net_interest_income,OUT,,,,,,,,0001628280-26-008322,,,,not a bank
 IQV,260,noninterest_expense,OUT,,,,,,,,0001628280-26-008322,,,,not a bank
 IQV,260,noninterest_income,OUT,,,,,,,,0001628280-26-008322,,,,not a bank
-IQV,260,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001628280-26-008322,R3,"Selling, general and administrative expenses",1999000000.0000,printed opex lines (duration sum)
+IQV,260,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001628280-26-008322,R3,"Selling, general and administrative expenses",1999000000.0000,every face line between GP/COR and OI; ties to GP - OI
 IQV,260,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008322,R3,Income from operations,2182000000.0000,library map
 IQV,260,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-008322,R3,"Other income, net",99000000.0000,library map
 IQV,260,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-008322,R6,"Property and equipment, net",533000000.0000,library map

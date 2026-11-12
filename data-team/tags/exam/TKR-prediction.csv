@@ -34,7 +34,7 @@ TKR,811,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000098362-26
 TKR,811,net_interest_income,OUT,,,,,,,,0000098362-26-000012,,,,not a bank
 TKR,811,noninterest_expense,OUT,,,,,,,,0000098362-26-000012,,,,not a bank
 TKR,811,noninterest_income,OUT,,,,,,,,0000098362-26-000012,,,,not a bank
-TKR,811,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0000098362-26-000012,R3,"Selling, general and administrative expenses",748300000.0000,printed opex lines (duration sum)
+TKR,811,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringSettlementAndImpairmentProvisions;us-gaap:GainsLossesOnSalesOfOtherRealEstate,IS,+,-5,N,,sec_api,0000098362-26-000012,R3,"Selling, general and administrative expenses",748300000.0000,every face line between GP/COR and OI; ties to GP - OI
 TKR,811,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000098362-26-000012,R3,Operating Income,540600000.0000,library map
 TKR,811,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000098362-26-000012,R3,"Other expense, net",-8800000.0000,library map
 TKR,811,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000098362-26-000012,R5,"Property, Plant and Equipment, Net",1357600000.0000,library map

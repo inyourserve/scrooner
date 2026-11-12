@@ -34,7 +34,7 @@ BURL,506,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 BURL,506,net_interest_income,OUT,,,,,,,,0001193125-26-116001,,,,not a bank
 BURL,506,noninterest_expense,OUT,,,,,,,,0001193125-26-116001,,,,not a bank
 BURL,506,noninterest_income,OUT,,,,,,,,0001193125-26-116001,,,,not a bank
-BURL,506,operating_expenses,not_presented,,,,,,,,0001193125-26-116001,,,,no face line
+BURL,506,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-116001,R2,Total costs and expenses,10750792000.0000,total includes cost of revenue
 BURL,506,operating_income,not_presented,,,,,,,,0001193125-26-116001,,,,no face line
 BURL,506,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-116001,R2,Other income - net,31287000.0000,library map
 BURL,506,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-116001,R4,Property and equipmentnet,3164218000.0000,library map

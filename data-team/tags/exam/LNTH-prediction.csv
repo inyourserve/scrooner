@@ -34,7 +34,7 @@ LNTH,885,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 LNTH,885,net_interest_income,OUT,,,,,,,,0001193125-26-073498,,,,not a bank
 LNTH,885,noninterest_expense,OUT,,,,,,,,0001193125-26-073498,,,,not a bank
 LNTH,885,noninterest_income,OUT,,,,,,,,0001193125-26-073498,,,,not a bank
-LNTH,885,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Sales and marketing,178691000.0000,printed opex lines (duration sum)
+LNTH,885,operating_expenses,not_presented,,,,,,,,0001193125-26-073498,,,,opex lines do not tie to GP - OI
 LNTH,885,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,Operating income,310832000.0000,library map
 LNTH,885,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-073498,R4,"Other income, net",31326000.0000,library map
 LNTH,885,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001193125-26-073498,R2,"Property, plant and equipment, net",163686000.0000,library map

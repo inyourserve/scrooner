@@ -34,7 +34,7 @@ WEC,297,net_income,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
 WEC,297,net_interest_income,OUT,,,,,,,,0000783325-26-000018,,,,not a bank
 WEC,297,noninterest_expense,OUT,,,,,,,,0000783325-26-000018,,,,not a bank
 WEC,297,noninterest_income,OUT,,,,,,,,0000783325-26-000018,,,,not a bank
-WEC,297,operating_expenses,not_presented,,,,,,,,0000783325-26-000018,,,,no face line
+WEC,297,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;custom:ImpairmentsRelatedToIllinoisSegment;us-gaap:DepreciationDepletionAndAmortization;us-gaap:TaxesExcludingIncomeAndExciseTaxes,IS,+,-5,N,,fsn_xbrl,0000783325-26-000018,R3,Other operation and maintenance,2400800000.0000,every face line between GP/COR and OI; ties to GP - OI
 WEC,297,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000783325-26-000018,R3,Operating income,2244900000.0000,library map
 WEC,297,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000783325-26-000018,R3,"Other income, net",107900000.0000,library map
 WEC,297,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000783325-26-000018,R5,"Property, plant, and equipment, net of accumulated depreciation and amortization of $12,411.5 and $11,611.9, respectively",38278100000.0000,library map

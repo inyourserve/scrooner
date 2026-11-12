@@ -34,7 +34,7 @@ WH,972,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001722684-26-
 WH,972,net_interest_income,OUT,,,,,,,,0001722684-26-000007,,,,not a bank
 WH,972,noninterest_expense,OUT,,,,,,,,0001722684-26-000007,,,,not a bank
 WH,972,noninterest_income,OUT,,,,,,,,0001722684-26-000007,,,,not a bank
-WH,972,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001722684-26-000007,R3,Operating,168000000.0000,printed opex lines (duration sum)
+WH,972,operating_expenses,not_presented,,,,,,,,0001722684-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 WH,972,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001722684-26-000007,R3,Operating income,402000000.0000,library map
 WH,972,other_income_expense_net,not_presented,,,,,,,,0001722684-26-000007,,,,no face line
 WH,972,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001722684-26-000007,R5,"Property and equipment, net",104000000.0000,library map

@@ -34,7 +34,7 @@ MSCI,269,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001408198-2
 MSCI,269,net_interest_income,OUT,,,,,,,,0001408198-26-000011,,,,not a bank
 MSCI,269,noninterest_expense,OUT,,,,,,,,0001408198-26-000011,,,,not a bank
 MSCI,269,noninterest_income,OUT,,,,,,,,0001408198-26-000011,,,,not a bank
-MSCI,269,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001408198-26-000011,R5,Selling and marketing,319829000.0000,printed opex lines (duration sum)
+MSCI,269,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:Depreciation,IS,+,-3,Y,DepreciationDepletionAndAmortization,sec_api,0001408198-26-000011,R5,Selling and marketing,319829000.0000,every face line between GP/COR and OI; ties to GP - OI
 MSCI,269,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001408198-26-000011,R5,Operating income,1713567000.0000,library map
 MSCI,269,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001408198-26-000011,R5,Other expense (income),-25434000.0000,library map
 MSCI,269,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001408198-26-000011,R3,"Property, equipment and leasehold improvements, net",87299000.0000,library map

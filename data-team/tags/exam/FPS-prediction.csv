@@ -34,7 +34,7 @@ FPS,814,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0002080126-26
 FPS,814,net_interest_income,OUT,,,,,,,,0002080126-26-000035,,,,not a bank
 FPS,814,noninterest_expense,OUT,,,,,,,,0002080126-26-000035,,,,not a bank
 FPS,814,noninterest_income,OUT,,,,,,,,0002080126-26-000035,,,,not a bank
-FPS,814,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0002080126-26-000035,R5,Total Operating Expenses,315111000.0000,printed opex total tag
+FPS,814,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0002080126-26-000035,R5,Total Operating Expenses,315111000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 FPS,814,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0002080126-26-000035,R5,Income from Operations,182489000.0000,library map
 FPS,814,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0002080126-26-000035,R5,Other expense,-749000.0000,library map
 FPS,814,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0002080126-26-000035,R3,"Property and equipment, net",204957000.0000,library map

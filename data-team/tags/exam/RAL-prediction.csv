@@ -34,7 +34,7 @@ RAL,834,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0002041385-26
 RAL,834,net_interest_income,OUT,,,,,,,,0002041385-26-000023,,,,not a bank
 RAL,834,noninterest_expense,OUT,,,,,,,,0002041385-26-000023,,,,not a bank
 RAL,834,noninterest_income,OUT,,,,,,,,0002041385-26-000023,,,,not a bank
-RAL,834,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0002041385-26-000023,R5,"Selling, general, and administrative",616600000.0000,printed opex lines (duration sum)
+RAL,834,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSaleOfPropertyPlantEquipment;us-gaap:GoodwillImpairmentLoss,IS,+,-5,N,,sec_api,0002041385-26-000023,R5,"Selling, general, and administrative",616600000.0000,every face line between GP/COR and OI; ties to GP - OI
 RAL,834,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0002041385-26-000023,R5,Operating (loss) profit,-1183000000.0000,library map
 RAL,834,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0002041385-26-000023,R5,"Other non-operating expenses, net",-1100000.0000,library map
 RAL,834,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0002041385-26-000023,R3,"Property, plant, and equipment, net",214200000.0000,library map

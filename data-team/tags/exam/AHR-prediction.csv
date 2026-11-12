@@ -34,7 +34,7 @@ AHR,630,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 AHR,630,net_interest_income,OUT,,,,,,,,0001193125-26-082692,,,,not a bank
 AHR,630,noninterest_expense,OUT,,,,,,,,0001193125-26-082692,,,,not a bank
 AHR,630,noninterest_income,OUT,,,,,,,,0001193125-26-082692,,,,not a bank
-AHR,630,operating_expenses,not_presented,,,,,,,,0001193125-26-082692,,,,no face line
+AHR,630,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-082692,R4,Total expenses,2096360000.0000,total includes cost of revenue
 AHR,630,operating_income,not_presented,,,,,,,,0001193125-26-082692,,,,no face line
 AHR,630,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-082692,R4,Total net other expense,-115116000.0000,library map
 AHR,630,ppe_net,not_presented,,,,,,,,0001193125-26-082692,,,,no face line

@@ -34,7 +34,7 @@ TTC,723,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000737758-25
 TTC,723,net_interest_income,OUT,,,,,,,,0000737758-25-000115,,,,not a bank
 TTC,723,noninterest_expense,OUT,,,,,,,,0000737758-25-000115,,,,not a bank
 TTC,723,noninterest_income,OUT,,,,,,,,0000737758-25-000115,,,,not a bank
-TTC,723,operating_expenses,not_presented,,,,,,,,0000737758-25-000115,,,,no face line
+TTC,723,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,"Selling, general and administrative expense",1013800000.0000,every face line between GP/COR and OI; ties to GP - OI
 TTC,723,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,Operating earnings,409900000.0000,library map
 TTC,723,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000737758-25-000115,R3,"Other income, net",26800000.0000,library map
 TTC,723,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000737758-25-000115,R6,"Property, plant, and equipment, net",615800000.0000,library map

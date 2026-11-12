@@ -34,7 +34,7 @@ OLLI,969,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001140361-2
 OLLI,969,net_interest_income,OUT,,,,,,,,0001140361-26-010409,,,,not a bank
 OLLI,969,noninterest_expense,OUT,,,,,,,,0001140361-26-010409,,,,not a bank
 OLLI,969,noninterest_income,OUT,,,,,,,,0001140361-26-010409,,,,not a bank
-OLLI,969,operating_expenses,not_presented,,,,,,,,0001140361-26-010409,,,,no face line
+OLLI,969,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:PreOpeningCosts,IS,+,-3,N,,sec_api,0001140361-26-010409,R3,"Selling, general, and administrative expenses",709002000.0000,every face line between GP/COR and OI; ties to GP - OI
 OLLI,969,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001140361-26-010409,R3,Operating income,297665000.0000,library map
 OLLI,969,other_income_expense_net,not_presented,,,,,,,,0001140361-26-010409,,,,no face line
 OLLI,969,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001140361-26-010409,R4,"Property and equipment, net",382242000.0000,library map

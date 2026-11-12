@@ -34,7 +34,7 @@ XPO,424,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 XPO,424,net_interest_income,OUT,,,,,,,,0001166003-26-000016,,,,not a bank
 XPO,424,noninterest_expense,OUT,,,,,,,,0001166003-26-000016,,,,not a bank
 XPO,424,noninterest_income,OUT,,,,,,,,0001166003-26-000016,,,,not a bank
-XPO,424,operating_expenses,not_presented,,,,,,,,0001166003-26-000016,,,,no face line
+XPO,424,operating_expenses,not_presented,,,,,,,,0001166003-26-000016,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 XPO,424,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001166003-26-000016,R5,Operating income,656000000.0000,library map
 XPO,424,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001166003-26-000016,R5,Other income,6000000.0000,library map
 XPO,424,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001166003-26-000016,R3,"Property and equipment, net of $2,360 and $2,019 in accumulated depreciation, respectively",3664000000.0000,library map

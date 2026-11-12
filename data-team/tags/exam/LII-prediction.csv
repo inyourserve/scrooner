@@ -34,7 +34,7 @@ LII,608,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001069202-26
 LII,608,net_interest_income,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
 LII,608,noninterest_expense,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
 LII,608,noninterest_income,OUT,,,,,,,,0001069202-26-000028,,,,not a bank
-LII,608,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,"Selling, general and administrative expenses",681400000.0000,printed opex lines (duration sum)
+LII,608,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:RestructuringCharges;us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf;custom:GainLossonDispositionofBusinessandRelatedProperty;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-5,N,,fsn_xbrl,0001069202-26-000028,R5,"Selling, general and administrative expenses",681400000.0000,every face line between GP/COR and OI; ties to GP - OI
 LII,608,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001069202-26-000028,R5,Operating income,1041500000.0000,library map
 LII,608,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001069202-26-000028,R5,"Other expense, net",-3400000.0000,library map
 LII,608,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001069202-26-000028,R3,"Total property, plant and equipment, net",887200000.0000,library map

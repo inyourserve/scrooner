@@ -34,7 +34,7 @@ LEN,472,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 LEN,472,net_interest_income,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,noninterest_expense,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
 LEN,472,noninterest_income,OUT,,,,,,,,0001628280-26-003870,,,,not a bank
-LEN,472,operating_expenses,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
+LEN,472,operating_expenses,not_presented,,,,,,,,0001628280-26-003870,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 LEN,472,operating_income,not_presented,,,,,,,,0001628280-26-003870,,,,no face line
 LEN,472,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-003870,R5,"Other income (expense), net and other gains (losses), net",-62352000.0000,combined line (library or label demote)
 LEN,472,ppe_net,not_presented,,,,,,,,0001628280-26-003870,,,,no face line

@@ -34,7 +34,7 @@ MSA,864,net_income,mapped,us-gaap:NetIncomeLoss,UN,+,-3,N,,sec_api,0000066570-26
 MSA,864,net_interest_income,OUT,,,,,,,,0000066570-26-000005,,,,not a bank
 MSA,864,noninterest_expense,OUT,,,,,,,,0000066570-26-000005,,,,not a bank
 MSA,864,noninterest_income,OUT,,,,,,,,0000066570-26-000005,,,,not a bank
-MSA,864,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,"Selling, general and administrative",414254000.0000,printed opex lines (duration sum)
+MSA,864,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges;us-gaap:ForeignCurrencyTransactionGainLossBeforeTax;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal;us-gaap:ProductLiabilityAccrualPeriodExpense,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,"Selling, general and administrative",414254000.0000,every face line between GP/COR and OI; ties to GP - OI
 MSA,864,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,Operating income,371818000.0000,library map
 MSA,864,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000066570-26-000005,R3,"Other income, net (Note 17)",26379000.0000,library map
 MSA,864,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000066570-26-000005,R5,"Property, plant and equipment, net (Note 6)",283063000.0000,library map

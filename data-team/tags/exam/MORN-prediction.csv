@@ -34,7 +34,7 @@ MORN,812,net_income,not_presented,,,,,,,,0001289419-26-000013,,,,no face line
 MORN,812,net_interest_income,OUT,,,,,,,,0001289419-26-000013,,,,not a bank
 MORN,812,noninterest_expense,OUT,,,,,,,,0001289419-26-000013,,,,not a bank
 MORN,812,noninterest_income,OUT,,,,,,,,0001289419-26-000013,,,,not a bank
-MORN,812,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001289419-26-000013,R2,Sales and marketing,467000000.0000,printed opex lines (duration sum)
+MORN,812,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;custom:GainOrLossOnDispositionOfAssets;custom:OtherOperatingIncomeIorLossNet,IS,+,-5,N,,fsn_xbrl,0001289419-26-000013,R2,Sales and marketing,467000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MORN,812,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001289419-26-000013,R2,Operating income,526600000.0000,library map
 MORN,812,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001289419-26-000013,R2,"Other income (expense), net",1000000.0000,library map
 MORN,812,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001289419-26-000013,R4,"Property, equipment, and capitalized software, net",231900000.0000,library map

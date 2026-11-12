@@ -34,7 +34,7 @@ BMNR,588,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001493152-2
 BMNR,588,net_interest_income,OUT,,,,,,,,0001493152-25-024679,,,,not a bank
 BMNR,588,noninterest_expense,OUT,,,,,,,,0001493152-25-024679,,,,not a bank
 BMNR,588,noninterest_income,OUT,,,,,,,,0001493152-25-024679,,,,not a bank
-BMNR,588,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,-,-3,N,,sec_api,0001493152-25-024679,R4,Total operating expenses,-443901000.0000,printed opex total tag
+BMNR,588,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,-,-3,N,,sec_api,0001493152-25-024679,R4,Total operating expenses,-443901000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 BMNR,588,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001493152-25-024679,R4,Income (loss) from operations,444211000.0000,library map
 BMNR,588,other_income_expense_net,not_presented,,,,,,,,0001493152-25-024679,,,,no face line
 BMNR,588,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001493152-25-024679,R2,"Property and equipment, net",516000.0000,library map

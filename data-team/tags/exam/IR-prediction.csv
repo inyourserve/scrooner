@@ -34,7 +34,7 @@ IR,340,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-
 IR,340,net_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
 IR,340,noninterest_expense,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
 IR,340,noninterest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,printed opex lines (duration sum)
+IR,340,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,OtherCostAndExpenseOperating,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,every face line between GP/COR and OI; ties to GP - OI
 IR,340,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Operating Income,1144600000.0000,library map
 IR,340,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,"Other income, net",44600000.0000,library map
 IR,340,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,"Property, plant and equipment, net of accumulated depreciation of $689.6 and $567.5, respectively",930300000.0000,library map

@@ -34,7 +34,7 @@ NNN,797,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,000
 NNN,797,net_interest_income,OUT,,,,,,,,0001193125-26-045617,,,,not a bank
 NNN,797,noninterest_expense,OUT,,,,,,,,0001193125-26-045617,,,,not a bank
 NNN,797,noninterest_income,OUT,,,,,,,,0001193125-26-045617,,,,not a bank
-NNN,797,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-045617,R4,Total operating expenses,384947000.0000,printed opex total tag
+NNN,797,operating_expenses,not_presented,,,,,,,,0001193125-26-045617,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 NNN,797,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-045617,R4,Earnings from operations,589486000.0000,library map
 NNN,797,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-045617,R4,Total other expenses (revenues),-199709000.0000,library map
 NNN,797,ppe_net,not_presented,,,,,,,,0001193125-26-045617,,,,no face line

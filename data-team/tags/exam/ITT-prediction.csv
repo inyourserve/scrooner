@@ -34,7 +34,7 @@ ITT,480,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000216228-26
 ITT,480,net_interest_income,OUT,,,,,,,,0000216228-26-000012,,,,not a bank
 ITT,480,noninterest_expense,OUT,,,,,,,,0000216228-26-000012,,,,not a bank
 ITT,480,noninterest_income,OUT,,,,,,,,0000216228-26-000012,,,,not a bank
-ITT,480,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000216228-26-000012,R2,General and administrative expenses,368400000.0000,printed opex lines (duration sum)
+ITT,480,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSaleOfBusiness,IS,+,-5,N,,sec_api,0000216228-26-000012,R2,General and administrative expenses,368400000.0000,every face line between GP/COR and OI; ties to GP - OI
 ITT,480,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000216228-26-000012,R2,Operating income,684500000.0000,library map
 ITT,480,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000216228-26-000012,R2,"Other non-operating income, net",4400000.0000,library map
 ITT,480,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000216228-26-000012,R7,"Plant, property and equipment, net",627000000.0000,library map

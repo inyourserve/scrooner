@@ -34,7 +34,7 @@ AYI,740,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001144215-25
 AYI,740,net_interest_income,OUT,,,,,,,,0001144215-25-000082,,,,not a bank
 AYI,740,noninterest_expense,OUT,,,,,,,,0001144215-25-000082,,,,not a bank
 AYI,740,noninterest_income,OUT,,,,,,,,0001144215-25-000082,,,,not a bank
-AYI,740,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,"Selling, distribution, and administrative expenses",1484900000.0000,printed opex lines (duration sum)
+AYI,740,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,"Selling, distribution, and administrative expenses",1484900000.0000,every face line between GP/COR and OI; ties to GP - OI
 AYI,740,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001144215-25-000082,R5,Operating profit,563900000.0000,library map
 AYI,740,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001144215-25-000082,R5,"Miscellaneous expense, net",-41700000.0000,library map
 AYI,740,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001144215-25-000082,R3,"Property, plant, and equipment, net",343200000.0000,library map

@@ -34,7 +34,7 @@ GME,571,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001326380-26
 GME,571,net_interest_income,OUT,,,,,,,,0001326380-26-000013,,,,not a bank
 GME,571,noninterest_expense,OUT,,,,,,,,0001326380-26-000013,,,,not a bank
 GME,571,noninterest_income,OUT,,,,,,,,0001326380-26-000013,,,,not a bank
-GME,571,operating_expenses,not_presented,,,,,,,,0001326380-26-000013,,,,no face line
+GME,571,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,"Selling, general, and administrative expenses",910200000.0000,every face line between GP/COR and OI; ties to GP - OI
 GME,571,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,Operating income (loss),232100000.0000,library map
 GME,571,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001326380-26-000013,R5,"Other (income) expense, net",12000000.0000,library map
 GME,571,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001326380-26-000013,R3,"Property and equipment, net of accumulated depreciation of $488.2 and $684.2, respectively",48300000.0000,library map

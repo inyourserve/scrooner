@@ -34,7 +34,7 @@ ESE,892,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-25
 ESE,892,net_interest_income,OUT,,,,,,,,0001104659-25-117276,,,,not a bank
 ESE,892,noninterest_expense,OUT,,,,,,,,0001104659-25-117276,,,,not a bank
 ESE,892,noninterest_income,OUT,,,,,,,,0001104659-25-117276,,,,not a bank
-ESE,892,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001104659-25-117276,R2,"Selling, general and administrative expenses",234638000.0000,printed opex lines (duration sum)
+ESE,892,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-25-117276,R2,Total costs and expenses,942535000.0000,total includes cost of revenue
 ESE,892,operating_income,not_presented,,,,,,,,0001104659-25-117276,,,,no face line
 ESE,892,other_income_expense_net,not_presented,,,,,,,,0001104659-25-117276,,,,no face line
 ESE,892,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-25-117276,R5,"Net property, plant and equipment",172493000.0000,library map

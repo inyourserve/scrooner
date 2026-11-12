@@ -34,7 +34,7 @@ ALLE,577,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001579241-2
 ALLE,577,net_interest_income,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
 ALLE,577,noninterest_expense,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
 ALLE,577,noninterest_income,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
-ALLE,577,operating_expenses,not_presented,,,,,,,,0001579241-26-000007,,,,no face line
+ALLE,577,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Selling and administrative expenses,978800000.0000,every face line between GP/COR and OI; ties to GP - OI
 ALLE,577,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Operating income,859500000.0000,library map
 ALLE,577,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,"Other income, net",9900000.0000,library map
 ALLE,577,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,"Property, plant and equipment, net",444600000.0000,library map

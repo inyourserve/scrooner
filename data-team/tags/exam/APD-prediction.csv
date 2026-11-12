@@ -34,7 +34,7 @@ APD,185,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000002969-25
 APD,185,net_interest_income,OUT,,,,,,,,0000002969-25-000055,,,,not a bank
 APD,185,noninterest_expense,OUT,,,,,,,,0000002969-25-000055,,,,not a bank
 APD,185,noninterest_income,OUT,,,,,,,,0000002969-25-000055,,,,not a bank
-APD,185,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0000002969-25-000055,R3,Selling and administrative expense,906100000.0000,printed opex lines (duration sum)
+APD,185,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges;custom:ShareholderActivismCosts;us-gaap:GainLossOnSaleOfBusiness;custom:OtherIncomeExpenseNet,IS,+,-5,N,,fsn_xbrl,0000002969-25-000055,R3,Selling and administrative expense,906100000.0000,every face line between GP/COR and OI; ties to GP - OI
 APD,185,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0000002969-25-000055,R3,Operating Income (Loss),-877000000.0000,library map
 APD,185,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000002969-25-000055,R3,"Other non-operating income (expense), net",2600000.0000,library map
 APD,185,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000002969-25-000055,R6,"Plant and equipment, net",25337800000.0000,library map

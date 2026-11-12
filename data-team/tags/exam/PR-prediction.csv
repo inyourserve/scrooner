@@ -34,7 +34,7 @@ PR,446,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001658566-26-
 PR,446,net_interest_income,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,noninterest_expense,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
 PR,446,noninterest_income,OUT,,,,,,,,0001658566-26-000035,,,,not a bank
-PR,446,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Total operating expenses,3602482000.0000,printed opex total tag
+PR,446,operating_expenses,not_presented,,,,,,,,0001658566-26-000035,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 PR,446,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001658566-26-000035,R5,Income from operations,1462729000.0000,library map
 PR,446,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncomeAndExpensesAbstract,sec_api,0001658566-26-000035,R5,Other income (expense),27844000.0000,library map
 PR,446,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001658566-26-000035,R3,"Other property and equipment, net",57051000.0000,library map

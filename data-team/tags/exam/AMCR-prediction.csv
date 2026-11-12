@@ -34,7 +34,7 @@ AMCR,450,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001748790-2
 AMCR,450,net_interest_income,OUT,,,,,,,,0001748790-26-000022,,,,not a bank
 AMCR,450,noninterest_expense,OUT,,,,,,,,0001748790-26-000022,,,,not a bank
 AMCR,450,noninterest_income,OUT,,,,,,,,0001748790-26-000022,,,,not a bank
-AMCR,450,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001748790-26-000022,R3,"Selling, general, and administrative expenses",1931000000.0000,printed opex lines (duration sum)
+AMCR,450,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:AmortizationofAcquiredIntangibleAssetsinBusinessCombinations;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCostsAndAssetImpairmentCharges;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,fsn_xbrl,0001748790-26-000022,R3,"Selling, general, and administrative expenses",1931000000.0000,every face line between GP/COR and OI; ties to GP - OI
 AMCR,450,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001748790-26-000022,R3,Operating income,1899000000.0000,library map
 AMCR,450,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001748790-26-000022,R3,"Other non-operating income/(expenses), net",-7000000.0000,library map
 AMCR,450,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001748790-26-000022,R6,"Property, plant, and equipment, net",7409000000.0000,library map

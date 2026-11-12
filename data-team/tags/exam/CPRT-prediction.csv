@@ -34,7 +34,7 @@ CPRT,377,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 CPRT,377,net_interest_income,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,noninterest_expense,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
 CPRT,377,noninterest_income,OUT,,,,,,,,0001193125-26-405731,,,,not a bank
-CPRT,377,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingCostsAndExpenses,sec_api,0001193125-26-405731,R4,Total operating expenses,3013619000.0000,CostsAndExpenses value check (structural)
+CPRT,377,operating_expenses,not_presented,,,,,,,,0001193125-26-405731,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CPRT,377,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,Operating income,1652590000.0000,library map
 CPRT,377,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-405731,R4,"Other income (expense), net",464000.0000,library map
 CPRT,377,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-405731,R2,"Property and equipment, net",3733220000.0000,library map

@@ -34,7 +34,7 @@ HL,690,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-
 HL,690,net_interest_income,OUT,,,,,,,,0001193125-26-055059,,,,not a bank
 HL,690,noninterest_expense,OUT,,,,,,,,0001193125-26-055059,,,,not a bank
 HL,690,noninterest_income,OUT,,,,,,,,0001193125-26-055059,,,,not a bank
-HL,690,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-055059,R4,Total other operating expenses,107408000.0000,printed opex total tag
+HL,690,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-055059,R4,Total other operating expenses,107408000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 HL,690,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-055059,R4,Income (loss) from operations,514795000.0000,library map
 HL,690,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-055059,R4,Other income,-726000.0000,library map
 HL,690,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-055059,R2,"Properties, plants, equipment and mine development, net",2840827000.0000,library map

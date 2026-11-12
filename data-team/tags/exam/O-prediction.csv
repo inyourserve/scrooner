@@ -34,7 +34,7 @@ O,225,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000726728-26-0
 O,225,net_interest_income,OUT,,,,,,,,0000726728-26-000011,,,,not a bank
 O,225,noninterest_expense,OUT,,,,,,,,0000726728-26-000011,,,,not a bank
 O,225,noninterest_income,OUT,,,,,,,,0000726728-26-000011,,,,not a bank
-O,225,operating_expenses,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
+O,225,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000726728-26-000011,R5,Total expenses,4785982000.0000,total includes cost of revenue
 O,225,operating_income,not_presented,,,,,,,,0000726728-26-000011,,,,no face line
 O,225,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000726728-26-000011,R5,"Other income, net",29417000.0000,library map
 O,225,ppe_net,not_presented,,,,,,,,0000726728-26-000011,,,,no face line

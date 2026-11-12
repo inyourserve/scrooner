@@ -34,7 +34,7 @@ SJM,572,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000091419-26
 SJM,572,net_interest_income,OUT,,,,,,,,0000091419-26-000050,,,,not a bank
 SJM,572,noninterest_expense,OUT,,,,,,,,0000091419-26-000050,,,,not a bank
 SJM,572,noninterest_income,OUT,,,,,,,,0000091419-26-000050,,,,not a bank
-SJM,572,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0000091419-26-000050,R3,"Selling, distribution, and administrative expenses",1496600000.0000,printed opex lines (duration sum)
+SJM,572,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill;us-gaap:RestructuringCharges;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0000091419-26-000050,R3,"Selling, distribution, and administrative expenses",1496600000.0000,every face line between GP/COR and OI; ties to GP - OI
 SJM,572,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000091419-26-000050,R3,Operating Income (Loss),360200000.0000,library map
 SJM,572,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000091419-26-000050,R3,Other income (expense)  net,-41400000.0000,library map
 SJM,572,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000091419-26-000050,R5,"Total Property, Plant, and Equipment",3032100000.0000,library map

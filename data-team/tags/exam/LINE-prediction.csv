@@ -34,7 +34,7 @@ LINE,825,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001868159-2
 LINE,825,net_interest_income,OUT,,,,,,,,0001868159-26-000012,,,,not a bank
 LINE,825,noninterest_expense,OUT,,,,,,,,0001868159-26-000012,,,,not a bank
 LINE,825,noninterest_income,OUT,,,,,,,,0001868159-26-000012,,,,not a bank
-LINE,825,operating_expenses,not_presented,,,,,,,,0001868159-26-000012,,,,no face line
+LINE,825,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:Depreciation;us-gaap:AdjustmentForAmortization;custom:AcquisitionTransactionAndOtherExpenses;us-gaap:GoodwillImpairmentLoss;us-gaap:RestructuringCostsAndAssetImpairmentCharges,IS,+,-6,N,,fsn_xbrl,0001868159-26-000012,R5,General and administrative expense,574000000.0000,every face line between GP/COR and OI; ties to GP - OI
 LINE,825,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001868159-26-000012,R5,Income from operations,181000000.0000,library map
 LINE,825,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001868159-26-000012,R5,"Other nonoperating income (expense), net",-50000000.0000,library map
 LINE,825,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001868159-26-000012,R3,"Property, plant, and equipment, net",11338000000.0000,library map

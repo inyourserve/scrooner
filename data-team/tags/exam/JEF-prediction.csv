@@ -34,7 +34,7 @@ JEF,691,net_income,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
 JEF,691,net_interest_income,OUT,,,,,,,,0000096223-26-000009,,,,not a bank
 JEF,691,noninterest_expense,OUT,,,,,,,,0000096223-26-000009,,,,not a bank
 JEF,691,noninterest_income,OUT,,,,,,,,0000096223-26-000009,,,,not a bank
-JEF,691,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0000096223-26-000009,R5,Total non-interest expenses,6472762000.0000,printed opex total tag
+JEF,691,operating_expenses,not_presented,,,,,,,,0000096223-26-000009,,,,no opex total and no GP/COR anchor
 JEF,691,operating_income,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
 JEF,691,other_income_expense_net,not_presented,,,,,,,,0000096223-26-000009,,,,no face line
 JEF,691,ppe_net,not_presented,,,,,,,,0000096223-26-000009,,,,no face line

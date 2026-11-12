@@ -34,7 +34,7 @@ MOG-A,627,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-
 MOG-A,627,net_interest_income,OUT,,,,,,,,0001628280-25-054103,,,,not a bank
 MOG-A,627,noninterest_expense,OUT,,,,,,,,0001628280-25-054103,,,,not a bank
 MOG-A,627,noninterest_income,OUT,,,,,,,,0001628280-25-054103,,,,not a bank
-MOG-A,627,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001628280-25-054103,R3,Research and development,93671000.0000,printed opex lines (duration sum)
+MOG-A,627,operating_expenses,not_presented,,,,,,,,0001628280-25-054103,,,,no opex total and no GP/COR anchor
 MOG-A,627,operating_income,not_presented,,,,,,,,0001628280-25-054103,,,,no face line
 MOG-A,627,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,Y,OtherOperatingIncomeExpenseNet,sec_api,0001628280-25-054103,R3,Other,-9597000.0000,library map
 MOG-A,627,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-25-054103,R5,"Property, plant and equipment, net",1019906000.0000,library map

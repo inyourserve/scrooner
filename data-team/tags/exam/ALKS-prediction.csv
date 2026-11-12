@@ -34,7 +34,7 @@ ALKS,862,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 ALKS,862,net_interest_income,OUT,,,,,,,,0001193125-26-068925,,,,not a bank
 ALKS,862,noninterest_expense,OUT,,,,,,,,0001193125-26-068925,,,,not a bank
 ALKS,862,noninterest_income,OUT,,,,,,,,0001193125-26-068925,,,,not a bank
-ALKS,862,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-068925,R4,Research and development,323964000.0000,printed opex lines (duration sum)
+ALKS,862,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-068925,R4,Research and development,323964000.0000,every face line between GP/COR and OI; ties to GP - OI
 ALKS,862,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-068925,R4,OPERATING INCOME FROM CONTINUING OPERATIONS,253956000.0000,library map
 ALKS,862,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-068925,R4,"Other income (expense), net",4467000.0000,library map
 ALKS,862,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-068925,R2,"PROPERTY, PLANT AND EQUIPMENT, NET",221722000.0000,library map

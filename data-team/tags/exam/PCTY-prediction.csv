@@ -34,7 +34,7 @@ PCTY,754,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001591698-2
 PCTY,754,net_interest_income,OUT,,,,,,,,0001591698-26-000069,,,,not a bank
 PCTY,754,noninterest_expense,OUT,,,,,,,,0001591698-26-000069,,,,not a bank
 PCTY,754,noninterest_income,OUT,,,,,,,,0001591698-26-000069,,,,not a bank
-PCTY,754,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001591698-26-000069,R5,Total operating expenses,839509000.0000,printed opex total tag
+PCTY,754,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001591698-26-000069,R5,Total operating expenses,839509000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 PCTY,754,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001591698-26-000069,R5,Operating income,385993000.0000,library map
 PCTY,754,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001591698-26-000069,R5,Other income,1310000.0000,combined line (library or label demote)
 PCTY,754,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001591698-26-000069,R3,"Property and equipment, net",71403000.0000,library map

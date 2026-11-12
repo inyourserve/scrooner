@@ -34,7 +34,7 @@ INVH,515,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001687229-2
 INVH,515,net_interest_income,OUT,,,,,,,,0001687229-26-000016,,,,not a bank
 INVH,515,noninterest_expense,OUT,,,,,,,,0001687229-26-000016,,,,not a bank
 INVH,515,noninterest_income,OUT,,,,,,,,0001687229-26-000016,,,,not a bank
-INVH,515,operating_expenses,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
+INVH,515,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001687229-26-000016,R5,Total expenses,2341670000.0000,total includes cost of revenue
 INVH,515,operating_income,not_presented,,,,,,,,0001687229-26-000016,,,,no face line
 INVH,515,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001687229-26-000016,R5,"Other, net",-4345000.0000,library map
 INVH,515,ppe_net,not_presented,,,,,,,,0001687229-26-000016,,,,no face line

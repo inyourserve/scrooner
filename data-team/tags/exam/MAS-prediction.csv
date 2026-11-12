@@ -34,7 +34,7 @@ MAS,536,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000062996-26
 MAS,536,net_interest_income,OUT,,,,,,,,0000062996-26-000005,,,,not a bank
 MAS,536,noninterest_expense,OUT,,,,,,,,0000062996-26-000005,,,,not a bank
 MAS,536,noninterest_income,OUT,,,,,,,,0000062996-26-000005,,,,not a bank
-MAS,536,operating_expenses,not_presented,,,,,,,,0000062996-26-000005,,,,no face line
+MAS,536,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill,IS,+,-6,N,,sec_api,0000062996-26-000005,R5,"Selling, general and administrative expenses",1426000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MAS,536,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000062996-26-000005,R5,Operating profit,1248000000.0000,library map
 MAS,536,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000062996-26-000005,R5,"Other, net",-12000000.0000,library map
 MAS,536,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000062996-26-000005,R3,"Property and equipment, net",1195000000.0000,library map

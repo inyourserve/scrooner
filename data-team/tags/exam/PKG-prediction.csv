@@ -34,7 +34,7 @@ PKG,438,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26
 PKG,438,net_interest_income,OUT,,,,,,,,0001193125-26-074129,,,,not a bank
 PKG,438,noninterest_expense,OUT,,,,,,,,0001193125-26-074129,,,,not a bank
 PKG,438,noninterest_income,OUT,,,,,,,,0001193125-26-074129,,,,not a bank
-PKG,438,operating_expenses,not_presented,,,,,,,,0001193125-26-074129,,,,no face line
+PKG,438,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,OperatingCostsAndExpenses,sec_api,0001193125-26-074129,R2,Selling and administrative expenses,634200000.0000,every face line between GP/COR and OI; ties to GP - OI
 PKG,438,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-074129,R2,Income from operations,1107000000.0000,library map
 PKG,438,other_income_expense_net,not_presented,,,,,,,,0001193125-26-074129,,,,no face line
 PKG,438,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-074129,R4,"Property, plant and equipment, net",4985100000.0000,library map

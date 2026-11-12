@@ -34,7 +34,7 @@ REG,575,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 REG,575,net_interest_income,OUT,,,,,,,,0001193125-26-051668,,,,not a bank
 REG,575,noninterest_expense,OUT,,,,,,,,0001193125-26-051668,,,,not a bank
 REG,575,noninterest_income,OUT,,,,,,,,0001193125-26-051668,,,,not a bank
-REG,575,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051668,R4,Total operating expenses,970459000.0000,printed opex total tag
+REG,575,operating_expenses,not_presented,,,,,,,,0001193125-26-051668,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 REG,575,operating_income,not_presented,,,,,,,,0001193125-26-051668,,,,no face line
 REG,575,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-051668,R4,"Total other expense, net",-175613000.0000,combined line (library or label demote)
 REG,575,ppe_net,not_presented,,,,,,,,0001193125-26-051668,,,,no face line

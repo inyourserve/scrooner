@@ -34,7 +34,7 @@ VMC,316,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26
 VMC,316,net_interest_income,OUT,,,,,,,,0001628280-26-009546,,,,not a bank
 VMC,316,noninterest_expense,OUT,,,,,,,,0001628280-26-009546,,,,not a bank
 VMC,316,noninterest_income,OUT,,,,,,,,0001628280-26-009546,,,,not a bank
-VMC,316,operating_expenses,not_presented,,,,,,,,0001628280-26-009546,,,,no face line
+VMC,316,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnDispositionOfAssets1;us-gaap:AssetImpairmentCharges;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,OtherCostAndExpenseOperating,sec_api,0001628280-26-009546,R3,"Selling, administrative and general expenses",564100000.0000,every face line between GP/COR and OI; ties to GP - OI
 VMC,316,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-009546,R3,Operating earnings,1619600000.0000,library map
 VMC,316,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001628280-26-009546,R3,"Other nonoperating expense, net",-3200000.0000,library map
 VMC,316,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0001628280-26-009546,R4,"Property, plant & equipment, net",8148600000.0000,library map

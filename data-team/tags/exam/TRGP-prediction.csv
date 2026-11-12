@@ -34,7 +34,7 @@ TRGP,200,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-2
 TRGP,200,net_interest_income,OUT,,,,,,,,0001193125-26-059296,,,,not a bank
 TRGP,200,noninterest_expense,OUT,,,,,,,,0001193125-26-059296,,,,not a bank
 TRGP,200,noninterest_income,OUT,,,,,,,,0001193125-26-059296,,,,not a bank
-TRGP,200,operating_expenses,not_presented,,,,,,,,0001193125-26-059296,,,,no face line
+TRGP,200,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-5,N,,sec_api,0001193125-26-059296,R4,Operating expenses,1298300000.0000,"total includes cost of revenue: combined, never opex"
 TRGP,200,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059296,R4,Income (loss) from operations,3331200000.0000,library map
 TRGP,200,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-059296,R4,"Other, net",-3800000.0000,library map
 TRGP,200,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-059296,R2,"Property, plant and equipment, net",20534800000.0000,library map

@@ -34,7 +34,7 @@ LOGI,531,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailabl
 LOGI,531,net_interest_income,OUT,,,,,,,,0001032975-26-000021,,,,not a bank
 LOGI,531,noninterest_expense,OUT,,,,,,,,0001032975-26-000021,,,,not a bank
 LOGI,531,noninterest_income,OUT,,,,,,,,0001032975-26-000021,,,,not a bank
-LOGI,531,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Total operating expenses,1316143000.0000,printed opex total tag
+LOGI,531,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Total operating expenses,1316143000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 LOGI,531,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,Operating income,775194000.0000,library map
 LOGI,531,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001032975-26-000021,R3,"Other income (expense), net",3079000.0000,library map
 LOGI,531,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001032975-26-000021,R5,"Property, plant and equipment, net",116454000.0000,library map

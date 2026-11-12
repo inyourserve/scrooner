@@ -34,7 +34,7 @@ CHD,388,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26
 CHD,388,net_interest_income,OUT,,,,,,,,0001193125-26-048139,,,,not a bank
 CHD,388,noninterest_expense,OUT,,,,,,,,0001193125-26-048139,,,,not a bank
 CHD,388,noninterest_income,OUT,,,,,,,,0001193125-26-048139,,,,not a bank
-CHD,388,operating_expenses,not_presented,,,,,,,,0001193125-26-048139,,,,no face line
+CHD,388,operating_expenses,component_sum,us-gaap:MarketingAndAdvertisingExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-048139,R2,Marketing expenses,708900000.0000,every face line between GP/COR and OI; ties to GP - OI
 CHD,388,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-048139,R2,Income from Operations,1077600000.0000,library map
 CHD,388,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-048139,R2,"Other income (expense), net",-56900000.0000,library map
 CHD,388,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-048139,R4,"Property, Plant and Equipment, Net",822800000.0000,library map

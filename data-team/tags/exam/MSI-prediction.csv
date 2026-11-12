@@ -34,7 +34,7 @@ MSI,166,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000068505-26
 MSI,166,net_interest_income,OUT,,,,,,,,0000068505-26-000010,,,,not a bank
 MSI,166,noninterest_expense,OUT,,,,,,,,0000068505-26-000010,,,,not a bank
 MSI,166,noninterest_income,OUT,,,,,,,,0000068505-26-000010,,,,not a bank
-MSI,166,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,"Selling, general and administrative expenses",1870000000.0000,printed opex lines (duration sum)
+MSI,166,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,"Selling, general and administrative expenses",1870000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MSI,166,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,Operating earnings,2988000000.0000,library map
 MSI,166,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000068505-26-000010,R3,"Other, net",126000000.0000,library map
 MSI,166,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000068505-26-000010,R5,"Property, plant and equipment, net",1165000000.0000,library map

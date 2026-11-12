@@ -34,7 +34,7 @@ ECHO,390,net_income,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
 ECHO,390,net_interest_income,OUT,,,,,,,,0001104659-26-021817,,,,not a bank
 ECHO,390,noninterest_expense,OUT,,,,,,,,0001104659-26-021817,,,,not a bank
 ECHO,390,noninterest_income,OUT,,,,,,,,0001104659-26-021817,,,,not a bank
-ECHO,390,operating_expenses,not_presented,,,,,,,,0001104659-26-021817,,,,no face line
+ECHO,390,operating_expenses,component_sum,us-gaap:OtherCostOfOperatingRevenue;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;custom:AssetImpairmentChargesAndOther,IS,+,-3,Y,DepreciationAndAmortization,fsn_xbrl,0001104659-26-021817,R4,Cost of sales - equipment and other,1685099000.0000,every face line between GP/COR and OI; ties to GP - OI
 ECHO,390,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-021817,R4,Operating income (loss),-17723146000.0000,library map
 ECHO,390,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-021817,R4,"Other, net (Note 6)",122812000.0000,library map
 ECHO,390,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0001104659-26-021817,R2,"Property and equipment, net",2243515000.0000,library map

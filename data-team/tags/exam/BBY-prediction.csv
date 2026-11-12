@@ -34,7 +34,7 @@ BBY,456,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000764478-26
 BBY,456,net_interest_income,OUT,,,,,,,,0000764478-26-000009,,,,not a bank
 BBY,456,noninterest_expense,OUT,,,,,,,,0000764478-26-000009,,,,not a bank
 BBY,456,noninterest_income,OUT,,,,,,,,0000764478-26-000009,,,,not a bank
-BBY,456,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,"Selling, general and administrative expenses",7623000000.0000,printed opex lines (duration sum)
+BBY,456,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,"Selling, general and administrative expenses",7623000000.0000,every face line between GP/COR and OI; ties to GP - OI
 BBY,456,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000764478-26-000009,R5,Operating income,1389000000.0000,library map
 BBY,456,other_income_expense_net,not_presented,,,,,,,,0000764478-26-000009,,,,no face line
 BBY,456,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000764478-26-000009,R3,Net property and equipment,1986000000.0000,library map

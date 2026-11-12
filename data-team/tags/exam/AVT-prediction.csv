@@ -34,7 +34,7 @@ AVT,832,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26
 AVT,832,net_interest_income,OUT,,,,,,,,0001104659-26-096346,,,,not a bank
 AVT,832,noninterest_expense,OUT,,,,,,,,0001104659-26-096346,,,,not a bank
 AVT,832,noninterest_income,OUT,,,,,,,,0001104659-26-096346,,,,not a bank
-AVT,832,operating_expenses,not_presented,,,,,,,,0001104659-26-096346,,,,no face line
+AVT,832,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringIntegrationAndOtherCharges,IS,+,-3,N,,fsn_xbrl,0001104659-26-096346,R4,"Selling, general and administrative expenses",2022408000.0000,every face line between GP/COR and OI; ties to GP - OI
 AVT,832,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-096346,R4,Operating income,724782000.0000,library map
 AVT,832,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001104659-26-096346,R4,"Other expense, net",-6631000.0000,library map
 AVT,832,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-096346,R2,"Property, plant and equipment, net",644574000.0000,library map

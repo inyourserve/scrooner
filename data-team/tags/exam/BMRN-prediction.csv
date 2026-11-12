@@ -34,7 +34,7 @@ BMRN,670,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001048477-2
 BMRN,670,net_interest_income,OUT,,,,,,,,0001048477-26-000004,,,,not a bank
 BMRN,670,noninterest_expense,OUT,,,,,,,,0001048477-26-000004,,,,not a bank
 BMRN,670,noninterest_income,OUT,,,,,,,,0001048477-26-000004,,,,not a bank
-BMRN,670,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001048477-26-000004,R3,Research and development,921930000.0000,printed opex lines (duration sum)
+BMRN,670,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnDispositionOfAssets1,IS,+,-3,N,,sec_api,0001048477-26-000004,R3,Research and development,921930000.0000,every face line between GP/COR and OI; ties to GP - OI
 BMRN,670,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001048477-26-000004,R3,INCOME FROM OPERATIONS,409478000.0000,library map
 BMRN,670,other_income_expense_net,not_presented,,,,,,,,0001048477-26-000004,,,,no face line
 BMRN,670,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001048477-26-000004,R6,"Property, plant and equipment, net",952508000.0000,library map

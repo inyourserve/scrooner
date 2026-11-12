@@ -34,7 +34,7 @@ BSY,685,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001031308-26
 BSY,685,net_interest_income,OUT,,,,,,,,0001031308-26-000007,,,,not a bank
 BSY,685,noninterest_expense,OUT,,,,,,,,0001031308-26-000007,,,,not a bank
 BSY,685,noninterest_income,OUT,,,,,,,,0001031308-26-000007,,,,not a bank
-BSY,685,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Total operating expenses,861628000.0000,printed opex total tag
+BSY,685,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Total operating expenses,861628000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 BSY,685,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,Income from operations,362621000.0000,library map
 BSY,685,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001031308-26-000007,R5,"Other income (expense), net",547000.0000,library map
 BSY,685,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001031308-26-000007,R3,"Property and equipment, net",36031000.0000,library map

@@ -34,7 +34,7 @@ BDX,229,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000010795-25
 BDX,229,net_interest_income,OUT,,,,,,,,0000010795-25-000099,,,,not a bank
 BDX,229,noninterest_expense,OUT,,,,,,,,0000010795-25-000099,,,,not a bank
 BDX,229,noninterest_income,OUT,,,,,,,,0000010795-25-000099,,,,not a bank
-BDX,229,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000010795-25-000099,R3,Selling and administrative expense,5278000000.0000,printed opex lines (duration sum)
+BDX,229,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;custom:IntegrationRestructuringAndTransactionExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,fsn_xbrl,0000010795-25-000099,R3,Selling and administrative expense,5278000000.0000,every face line between GP/COR and OI; ties to GP - OI
 BDX,229,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000010795-25-000099,R3,Operating Income,2579000000.0000,library map
 BDX,229,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000010795-25-000099,R3,"Other expense, net",-123000000.0000,library map
 BDX,229,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000010795-25-000099,R5,"Property, Plant and Equipment, Net",6997000000.0000,library map

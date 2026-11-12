@@ -34,7 +34,7 @@ FLUT,596,net_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
 FLUT,596,net_interest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
 FLUT,596,noninterest_expense,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
 FLUT,596,noninterest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
-FLUT,596,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Technology, research and development expenses",991000000.0000,printed opex lines (duration sum)
+FLUT,596,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Technology, research and development expenses",991000000.0000,every face line between GP/COR and OI; ties to GP - OI
 FLUT,596,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Operating profit (loss),36000000.0000,library map
 FLUT,596,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Other income (expense), net",358000000.0000,library map
 FLUT,596,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,"Property and equipment, net",630000000.0000,library map

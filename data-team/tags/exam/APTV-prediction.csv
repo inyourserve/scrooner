@@ -34,7 +34,7 @@ APTV,737,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001521332-2
 APTV,737,net_interest_income,OUT,,,,,,,,0001521332-26-000009,,,,not a bank
 APTV,737,noninterest_expense,OUT,,,,,,,,0001521332-26-000009,,,,not a bank
 APTV,737,noninterest_income,OUT,,,,,,,,0001521332-26-000009,,,,not a bank
-APTV,737,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,"Selling, general and administrative",1673000000.0000,printed opex lines (duration sum)
+APTV,737,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GoodwillImpairmentLoss,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,"Selling, general and administrative",1673000000.0000,every face line between GP/COR and OI; ties to GP - OI
 APTV,737,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,Operating income,1184000000.0000,library map
 APTV,737,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001521332-26-000009,R3,"Other income (expense), net",50000000.0000,library map
 APTV,737,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001521332-26-000009,R5,"Property, net",3774000000.0000,library map

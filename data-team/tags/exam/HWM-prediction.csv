@@ -34,7 +34,7 @@ HWM,138,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000004281-26
 HWM,138,net_interest_income,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,noninterest_expense,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,noninterest_income,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
-HWM,138,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,"Selling, general administrative, and other expenses",370000000.0000,printed opex lines (duration sum)
+HWM,138,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:DepreciationAndAmortization;us-gaap:RestructuringCostsAndAssetImpairmentCharges,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,"Selling, general administrative, and other expenses",370000000.0000,every face line between GP/COR and OI; ties to GP - OI
 HWM,138,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Operating income,2046000000.0000,library map
 HWM,138,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000004281-26-000012,R3,"Other expense, net (F)",-40000000.0000,combined line (library or label demote)
 HWM,138,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000004281-26-000012,R5,"Properties, plants, and equipment, net (N)",2593000000.0000,library map

@@ -34,7 +34,7 @@ CEG,122,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001868275-26
 CEG,122,net_interest_income,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,noninterest_expense,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
 CEG,122,noninterest_income,OUT,,,,,,,,0001868275-26-000032,,,,not a bank
-CEG,122,operating_expenses,mapped,us-gaap:CostsAndExpenses,CI,+,-6,N,,sec_api,0001868275-26-000032,R9,Total operating expenses,22447000000.0000,CostsAndExpenses value check (structural)
+CEG,122,operating_expenses,not_presented,,,,,,,,0001868275-26-000032,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CEG,122,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,Operating income (loss),3086000000.0000,library map
 CEG,122,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001868275-26-000032,R3,"Other, net",936000000.0000,library map
 CEG,122,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001868275-26-000032,R5,"Property, plant, and equipment (net of accumulated depreciation and amortization of $19,072 and $18,088, respectively)",22474000000.0000,library map

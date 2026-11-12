@@ -34,7 +34,7 @@ AIT,614,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000109563-26
 AIT,614,net_interest_income,OUT,,,,,,,,0000109563-26-000033,,,,not a bank
 AIT,614,noninterest_expense,OUT,,,,,,,,0000109563-26-000033,,,,not a bank
 AIT,614,noninterest_income,OUT,,,,,,,,0000109563-26-000033,,,,not a bank
-AIT,614,operating_expenses,not_presented,,,,,,,,0000109563-26-000033,,,,no face line
+AIT,614,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000109563-26-000033,R3,"Selling, distribution, and administrative expense, including depreciation",957316000.0000,every face line between GP/COR and OI; ties to GP - OI
 AIT,614,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000109563-26-000033,R3,Operating income,549469000.0000,library map
 AIT,614,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000109563-26-000033,R3,"Other income, net",2743000.0000,library map
 AIT,614,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000109563-26-000033,R5,Property  net,131651000.0000,library map

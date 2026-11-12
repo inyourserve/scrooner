@@ -20,12 +20,24 @@ def cp_upper(k, n, a=0.05):
         lo, hi = (p, hi) if cdf(p) > a / 2 else (lo, p)
     return hi
 def main(pdir, ddir, *only):
-    rows = []
+    rows = []; keyed = {}
     for dm in sorted(glob.glob(f'{ddir}/*-docmap-*.csv')):
         tk = os.path.basename(dm).split('-docmap')[0]
         if only and tk not in only: continue
         pf = f'{pdir}/{tk}-prediction.csv'
         pred = {r['data_point']: r for r in csv.DictReader(open(pf))} if os.path.exists(pf) else None
+        K = {r['data_point']: r for r in csv.DictReader(open(dm))}
+        def num(x):
+            try: return float(x)
+            except (TypeError, ValueError): return None
+        o, rv, oi, cr = (num(K.get(d, {}).get('fy0_api')) for d in ('operating_expenses', 'revenue', 'operating_income', 'cost_of_revenue'))
+        ko = K.get('operating_expenses', {}); kc = K.get('cost_of_revenue', {})
+        cor_present = norm_status(kc.get('status')) in ('mapped', 'component_sum', 'combined')
+        ce = 'costsandexpenses' in tagset(ko.get('tags'))
+        incl = bool(o is not None and rv is not None and oi is not None and abs(o - (rv - oi)) <= max(abs(o) * 0.0005, 1) and cor_present)
+        incl = incl or (ce and cor_present and o is not None and cr is not None and abs(o) > abs(cr))
+        onestep = ce and not cor_present and norm_status(kc.get('status')) != 'out'
+        keyed[tk] = {'cor': incl or onestep}
         for k in csv.DictReader(open(dm)):
             dp = k['data_point']
             if pred is None: rows.append(dict(ticker=tk, data_point=dp, result='no_prediction', error_class='', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
@@ -33,6 +45,8 @@ def main(pdir, ddir, *only):
             if p is None: rows.append(dict(ticker=tk, data_point=dp, result='wrong', error_class='missed', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
             ks, ps = norm_status(k['status']), norm_status(p['status'])
             err = ''
+            if dp == 'operating_expenses' and norm_status(k['status']) == 'mapped' and keyed.get(tk, {}).get('cor'):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: opex total includes cost of revenue (Dhairya ruling 2026-11-12)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'shares_outstanding' and 'entitycommonstocksharesoutstanding' in tagset(k['tags']):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: dei cover count (Dhairya ruling 2026-11-12)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if ks != ps: err = 'status'

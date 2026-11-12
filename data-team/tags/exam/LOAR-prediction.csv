@@ -34,7 +34,7 @@ LOAR,952,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0002000178-2
 LOAR,952,net_interest_income,OUT,,,,,,,,0002000178-26-000003,,,,not a bank
 LOAR,952,noninterest_expense,OUT,,,,,,,,0002000178-26-000003,,,,not a bank
 LOAR,952,noninterest_income,OUT,,,,,,,,0002000178-26-000003,,,,not a bank
-LOAR,952,operating_expenses,not_presented,,,,,,,,0002000178-26-000003,,,,no face line
+LOAR,952,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:TransactionExpenses;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,fsn_xbrl,0002000178-26-000003,R4,"Selling, general and administrative expenses",143642000.0000,every face line between GP/COR and OI; ties to GP - OI
 LOAR,952,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0002000178-26-000003,R4,Operating income,106243000.0000,library map
 LOAR,952,other_income_expense_net,not_presented,,,,,,,,0002000178-26-000003,,,,no face line
 LOAR,952,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0002000178-26-000003,R2,"Property, plant and equipment, net",82536000.0000,library map

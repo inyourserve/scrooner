@@ -34,7 +34,7 @@ AWI,852,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26
 AWI,852,net_interest_income,OUT,,,,,,,,0001193125-26-065183,,,,not a bank
 AWI,852,noninterest_expense,OUT,,,,,,,,0001193125-26-065183,,,,not a bank
 AWI,852,noninterest_income,OUT,,,,,,,,0001193125-26-065183,,,,not a bank
-AWI,852,operating_expenses,not_presented,,,,,,,,0001193125-26-065183,,,,no face line
+AWI,852,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1;us-gaap:GainLossOnSaleOfPropertyPlantEquipment;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,"Selling, general and administrative expenses",339500000.0000,every face line between GP/COR and OI; ties to GP - OI
 AWI,852,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,Operating income,430900000.0000,library map
 AWI,852,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-065183,R2,"Other non-operating (income), net",2400000.0000,combined line (library or label demote)
 AWI,852,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-065183,R3,"Property, plant, and equipment, net",630700000.0000,library map

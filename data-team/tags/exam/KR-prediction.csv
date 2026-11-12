@@ -34,7 +34,7 @@ KR,289,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-
 KR,289,net_interest_income,OUT,,,,,,,,0001104659-26-037723,,,,not a bank
 KR,289,noninterest_expense,OUT,,,,,,,,0001104659-26-037723,,,,not a bank
 KR,289,noninterest_income,OUT,,,,,,,,0001104659-26-037723,,,,not a bank
-KR,289,operating_expenses,not_presented,,,,,,,,0001104659-26-037723,,,,no face line
+KR,289,operating_expenses,component_sum,custom:OperatingGeneralAndAdministrativeExpense;custom:OperatingLeaseExpenseNetOfSubleaseIncome;us-gaap:DepreciationDepletionAndAmortization,IS,+,-6,N,,fsn_xbrl,0001104659-26-037723,R4,"Operating, general and administrative",28308000000.0000,every face line between GP/COR and OI; ties to GP - OI
 KR,289,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-037723,R4,Operating profit,1890000000.0000,library map
 KR,289,other_income_expense_net,not_presented,,,,,,,,0001104659-26-037723,,,,no face line
 KR,289,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001104659-26-037723,R2,"Property, plant and equipment, net",24260000000.0000,library map

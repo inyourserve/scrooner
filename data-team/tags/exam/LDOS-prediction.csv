@@ -34,7 +34,7 @@ LDOS,520,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001336920-2
 LDOS,520,net_interest_income,OUT,,,,,,,,0001336920-26-000030,,,,not a bank
 LDOS,520,noninterest_expense,OUT,,,,,,,,0001336920-26-000030,,,,not a bank
 LDOS,520,noninterest_income,OUT,,,,,,,,0001336920-26-000030,,,,not a bank
-LDOS,520,operating_expenses,not_presented,,,,,,,,0001336920-26-000030,,,,no face line
+LDOS,520,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:AcquisitionIntegrationAndRestructuringCosts;us-gaap:GoodwillAndIntangibleAssetImpairment;custom:AssetImpairmentChargesExcludingGoodwill;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-6,Y,AssetImpairmentCharges,fsn_xbrl,0001336920-26-000030,R5,"Selling, general and administrative expenses",999000000.0000,every face line between GP/COR and OI; ties to GP - OI
 LDOS,520,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001336920-26-000030,R5,Operating income,2109000000.0000,library map
 LDOS,520,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001336920-26-000030,R5,"Other income (expense), net",3000000.0000,library map
 LDOS,520,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001336920-26-000030,R3,"Property, plant and equipment, net",961000000.0000,library map

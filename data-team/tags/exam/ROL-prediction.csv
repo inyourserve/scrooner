@@ -34,7 +34,7 @@ ROL,514,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000084839-26
 ROL,514,net_interest_income,OUT,,,,,,,,0000084839-26-000008,,,,not a bank
 ROL,514,noninterest_expense,OUT,,,,,,,,0000084839-26-000008,,,,not a bank
 ROL,514,noninterest_income,OUT,,,,,,,,0000084839-26-000008,,,,not a bank
-ROL,514,operating_expenses,not_presented,,,,,,,,0000084839-26-000008,,,,no face line
+ROL,514,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCosts;us-gaap:CostDepreciationAmortizationAndDepletion,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,"Sales, general and administrative",1133232000.0000,every face line between GP/COR and OI; ties to GP - OI
 ROL,514,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,OPERATING INCOME,726068000.0000,library map
 ROL,514,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000084839-26-000008,R5,"Other (income) expense, net",3416000.0000,library map
 ROL,514,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000084839-26-000008,R3,"Equipment and property, net of accumulated depreciation of $237,815 and $382,266, respectively",126187000.0000,library map

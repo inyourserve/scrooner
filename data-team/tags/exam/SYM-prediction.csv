@@ -34,7 +34,7 @@ SYM,406,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001837240-25
 SYM,406,net_interest_income,OUT,,,,,,,,0001837240-25-000278,,,,not a bank
 SYM,406,noninterest_expense,OUT,,,,,,,,0001837240-25-000278,,,,not a bank
 SYM,406,noninterest_income,OUT,,,,,,,,0001837240-25-000278,,,,not a bank
-SYM,406,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001837240-25-000278,R5,Total operating expenses,537616000.0000,printed opex total tag
+SYM,406,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001837240-25-000278,R5,Total operating expenses,537616000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 SYM,406,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001837240-25-000278,R5,Operating loss,-115006000.0000,library map
 SYM,406,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001837240-25-000278,R5,"Other income, net",36063000.0000,library map
 SYM,406,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001837240-25-000278,R3,"Property and equipment, net",117649000.0000,library map

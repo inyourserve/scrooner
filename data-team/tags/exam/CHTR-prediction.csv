@@ -34,7 +34,7 @@ CHTR,555,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001091667-2
 CHTR,555,net_interest_income,OUT,,,,,,,,0001091667-26-000017,,,,not a bank
 CHTR,555,noninterest_expense,OUT,,,,,,,,0001091667-26-000017,,,,not a bank
 CHTR,555,noninterest_income,OUT,,,,,,,,0001091667-26-000017,,,,not a bank
-CHTR,555,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001091667-26-000017,R5,Operating costs and expenses (exclusive of items shown separately below),32739000000.0000,printed opex total tag
+CHTR,555,operating_expenses,not_presented,,,,,,,,0001091667-26-000017,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CHTR,555,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001091667-26-000017,R5,Income from operations,12908000000.0000,library map
 CHTR,555,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001091667-26-000017,R5,"Other expenses, net",-408000000.0000,combined line (library or label demote)
 CHTR,555,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001091667-26-000017,R3,"Property, plant and equipment, net of accumulated depreciation of $41,514 and $39,409, respectively",46444000000.0000,library map

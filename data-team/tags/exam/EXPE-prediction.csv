@@ -34,7 +34,7 @@ EXPE,318,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001324424-2
 EXPE,318,net_interest_income,OUT,,,,,,,,0001324424-26-000008,,,,not a bank
 EXPE,318,noninterest_expense,OUT,,,,,,,,0001324424-26-000008,,,,not a bank
 EXPE,318,noninterest_income,OUT,,,,,,,,0001324424-26-000008,,,,not a bank
-EXPE,318,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001324424-26-000008,R3,Selling and marketing - direct,7349000000.0000,printed opex lines (duration sum)
+EXPE,318,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;custom:IndirectSellingAndMarketingExpenses;custom:TechnologyandContentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;custom:LegalReservesOccupancyTaxAndOther;us-gaap:RestructuringCharges,IS,+,-6,N,,fsn_xbrl,0001324424-26-000008,R3,Selling and marketing - direct,7349000000.0000,every face line between GP/COR and OI; ties to GP - OI
 EXPE,318,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001324424-26-000008,R3,Operating income,1871000000.0000,library map
 EXPE,318,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001324424-26-000008,R3,"Other, net",-236000000.0000,library map
 EXPE,318,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001324424-26-000008,R6,"Property and equipment, net",2447000000.0000,library map

@@ -34,7 +34,7 @@ FCFS,732,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000840489-2
 FCFS,732,net_interest_income,OUT,,,,,,,,0000840489-26-000032,,,,not a bank
 FCFS,732,noninterest_expense,OUT,,,,,,,,0000840489-26-000032,,,,not a bank
 FCFS,732,noninterest_income,OUT,,,,,,,,0000840489-26-000032,,,,not a bank
-FCFS,732,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000840489-26-000032,R5,Total expenses and other income,1393044000.0000,printed opex total tag
+FCFS,732,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0000840489-26-000032,R5,Operating expenses,933729000.0000,total includes cost of revenue
 FCFS,732,operating_income,not_presented,,,,,,,,0000840489-26-000032,,,,no face line
 FCFS,732,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000840489-26-000032,R5,Other Nonoperating Income (Expense),15884000.0000,library map
 FCFS,732,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000840489-26-000032,R3,"Property and equipment, net",808050000.0000,library map

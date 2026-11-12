@@ -34,7 +34,7 @@ ABNB,112,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001559720-2
 ABNB,112,net_interest_income,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,noninterest_expense,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,noninterest_income,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
-ABNB,112,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Product development,2354000000.0000,printed opex lines (duration sum)
+ABNB,112,operating_expenses,component_sum,custom:OperationsAndSupportExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,fsn_xbrl,0001559720-26-000004,R5,Operations and support,1327000000.0000,every face line between GP/COR and OI; ties to GP - OI
 ABNB,112,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Income from operations,2544000000.0000,library map
 ABNB,112,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001559720-26-000004,R5,"Other expense, net",-112000000.0000,library map
 ABNB,112,ppe_net,not_presented,,,,,,,,0001559720-26-000004,,,,no face line

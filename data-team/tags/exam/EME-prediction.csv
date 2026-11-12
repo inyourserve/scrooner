@@ -34,7 +34,7 @@ EME,324,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000105634-26
 EME,324,net_interest_income,OUT,,,,,,,,0000105634-26-000025,,,,not a bank
 EME,324,noninterest_expense,OUT,,,,,,,,0000105634-26-000025,,,,not a bank
 EME,324,noninterest_income,OUT,,,,,,,,0000105634-26-000025,,,,not a bank
-EME,324,operating_expenses,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
+EME,324,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnSaleOfBusiness;us-gaap:AssetImpairmentCharges,IS,+,-3,N,,sec_api,0000105634-26-000025,R5,"Selling, general and administrative expenses",1714446000.0000,every face line between GP/COR and OI; ties to GP - OI
 EME,324,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000105634-26-000025,R5,Operating income,1713418000.0000,library map
 EME,324,other_income_expense_net,not_presented,,,,,,,,0000105634-26-000025,,,,no face line
 EME,324,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000105634-26-000025,R3,"Property, plant, and equipment, net",253277000.0000,library map

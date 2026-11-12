@@ -34,7 +34,7 @@ VAL,936,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000314808-26
 VAL,936,net_interest_income,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
 VAL,936,noninterest_expense,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
 VAL,936,noninterest_income,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
-VAL,936,operating_expenses,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,operating_expenses,component_sum,us-gaap:AssetImpairmentCharges;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-5,Y,CostOfGoodsAndServicesSoldDepreciation,sec_api,0000314808-26-000029,R3,Loss on impairment,27300000.0000,every face line between GP/COR and OI; ties to GP - OI
 VAL,936,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,OPERATING INCOME,477000000.0000,library map
 VAL,936,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,"Other, net",103300000.0000,library map
 VAL,936,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,"Property and equipment, net",2088800000.0000,library map

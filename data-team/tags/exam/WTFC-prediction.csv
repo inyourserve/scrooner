@@ -34,7 +34,7 @@ WTFC,708,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001015328-2
 WTFC,708,net_interest_income,not_presented,,,,,,,,0001015328-26-000007,,,,no face line
 WTFC,708,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001015328-26-000007,R5,Total non-interest expense,1512032000.0000,bank template tag
 WTFC,708,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-3,N,,sec_api,0001015328-26-000007,R5,Total non-interest income,501940000.0000,bank template tag
-WTFC,708,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001015328-26-000007,R5,Total non-interest expense,1512032000.0000,printed opex total tag
+WTFC,708,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001015328-26-000007,R5,Total non-interest expense,1512032000.0000,sector template total
 WTFC,708,operating_income,not_presented,,,,,,,,0001015328-26-000007,,,,no face line
 WTFC,708,other_income_expense_net,not_presented,,,,,,,,0001015328-26-000007,,,,no face line
 WTFC,708,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001015328-26-000007,R3,"Premises, software and equipment, net",781611000.0000,library map

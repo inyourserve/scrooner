@@ -34,7 +34,7 @@ VSAT,790,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 VSAT,790,net_interest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
 VSAT,790,noninterest_expense,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
 VSAT,790,noninterest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Selling, general and administrative (including ground network (FY25), satellite (FY24) impairment and related charges, net - see Note 1)",999476000.0000,printed opex lines (duration sum)
+VSAT,790,operating_expenses,not_presented,,,,,,,,0001193125-26-248290,,,,no opex total and no GP/COR anchor
 VSAT,790,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from operations,108125000.0000,library map
 VSAT,790,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Other income (expense), net",163012000.0000,library map
 VSAT,790,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Property, equipment and satellites, net",7272637000.0000,library map

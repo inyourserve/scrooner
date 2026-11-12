@@ -34,7 +34,7 @@ DLB,960,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001308547-25
 DLB,960,net_interest_income,OUT,,,,,,,,0001308547-25-000007,,,,not a bank
 DLB,960,noninterest_expense,OUT,,,,,,,,0001308547-25-000007,,,,not a bank
 DLB,960,noninterest_income,OUT,,,,,,,,0001308547-25-000007,,,,not a bank
-DLB,960,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001308547-25-000007,R5,Total operating expenses,924039000.0000,printed opex total tag
+DLB,960,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001308547-25-000007,R5,Total operating expenses,924039000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 DLB,960,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001308547-25-000007,R5,Operating income,264959000.0000,library map
 DLB,960,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001308547-25-000007,R5,"Other income/(expense), net",23150000.0000,library map
 DLB,960,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001308547-25-000007,R3,"Property, plant and equipment, net",470608000.0000,library map

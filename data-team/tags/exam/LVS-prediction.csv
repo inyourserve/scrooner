@@ -34,7 +34,7 @@ LVS,391,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001300514-26
 LVS,391,net_interest_income,OUT,,,,,,,,0001300514-26-000013,,,,not a bank
 LVS,391,noninterest_expense,OUT,,,,,,,,0001300514-26-000013,,,,not a bank
 LVS,391,noninterest_income,OUT,,,,,,,,0001300514-26-000013,,,,not a bank
-LVS,391,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001300514-26-000013,R4,Total operating expenses,10199000000.0000,CostsAndExpenses value check (structural)
+LVS,391,operating_expenses,not_presented,,,,,,,,0001300514-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 LVS,391,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001300514-26-000013,R4,Operating income,2818000000.0000,library map
 LVS,391,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001300514-26-000013,R4,Other income (expense),-15000000.0000,library map
 LVS,391,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001300514-26-000013,R3,"Property and equipment, net",11673000000.0000,library map

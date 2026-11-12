@@ -34,7 +34,7 @@ AES,669,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000874761-26
 AES,669,net_interest_income,OUT,,,,,,,,0000874761-26-000063,,,,not a bank
 AES,669,noninterest_expense,OUT,,,,,,,,0000874761-26-000063,,,,not a bank
 AES,669,noninterest_income,OUT,,,,,,,,0000874761-26-000063,,,,not a bank
-AES,669,operating_expenses,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
+AES,669,operating_expenses,not_presented,,,,,,,,0000874761-26-000063,,,,no opex total and no GP/COR anchor
 AES,669,operating_income,not_presented,,,,,,,,0000874761-26-000063,,,,no face line
 AES,669,other_income_expense_net,combined,us-gaap:OtherNonoperatingExpense,IS,+,-6,N,,sec_api,0000874761-26-000063,R4,Other non-operating expense,113000000.0000,combined line (library or label demote)
 AES,669,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000874761-26-000063,R3,"Property, Plant and Equipment, Net, Total",37818000000.0000,library map

@@ -34,7 +34,7 @@ CGNX,739,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000851205-2
 CGNX,739,net_interest_income,OUT,,,,,,,,0000851205-26-000012,,,,not a bank
 CGNX,739,noninterest_expense,OUT,,,,,,,,0000851205-26-000012,,,,not a bank
 CGNX,739,noninterest_income,OUT,,,,,,,,0000851205-26-000012,,,,not a bank
-CGNX,739,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000851205-26-000012,R3,"Research, development, and engineering expenses",138970000.0000,printed opex lines (duration sum)
+CGNX,739,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:LossGainFromCatastrophes,IS,+,-3,N,,fsn_xbrl,0000851205-26-000012,R3,"Research, development, and engineering expenses",138970000.0000,every face line between GP/COR and OI; ties to GP - OI
 CGNX,739,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000851205-26-000012,R3,Operating income,162566000.0000,library map
 CGNX,739,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000851205-26-000012,R3,Other income (expense),7368000.0000,library map
 CGNX,739,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000851205-26-000012,R6,"Property, plant, and equipment, net",86015000.0000,library map

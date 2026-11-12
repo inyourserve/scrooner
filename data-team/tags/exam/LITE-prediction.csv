@@ -34,7 +34,7 @@ LITE,174,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001628280-2
 LITE,174,net_interest_income,OUT,,,,,,,,0001628280-26-057358,,,,not a bank
 LITE,174,noninterest_expense,OUT,,,,,,,,0001628280-26-057358,,,,not a bank
 LITE,174,noninterest_income,OUT,,,,,,,,0001628280-26-057358,,,,not a bank
-LITE,174,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001628280-26-057358,R3,Total operating expenses,731100000.0000,printed opex total tag
+LITE,174,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001628280-26-057358,R3,Total operating expenses,731100000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 LITE,174,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-057358,R3,Income (loss) from operations,524800000.0000,library map
 LITE,174,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-057358,R3,"Other income, net",53300000.0000,library map
 LITE,174,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-057358,R5,"Property, plant and equipment, net",1159100000.0000,library map

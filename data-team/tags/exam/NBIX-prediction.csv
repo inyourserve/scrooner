@@ -34,7 +34,7 @@ NBIX,564,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000914475-2
 NBIX,564,net_interest_income,OUT,,,,,,,,0000914475-26-000007,,,,not a bank
 NBIX,564,noninterest_expense,OUT,,,,,,,,0000914475-26-000007,,,,not a bank
 NBIX,564,noninterest_income,OUT,,,,,,,,0000914475-26-000007,,,,not a bank
-NBIX,564,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,ResearchAndDevelopmentExpenseExcludingResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,sec_api,0000914475-26-000007,R5,Research and development,1015700000.0000,printed opex lines (duration sum)
+NBIX,564,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,ResearchAndDevelopmentExpenseExcludingResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,sec_api,0000914475-26-000007,R5,Research and development,1015700000.0000,every face line between GP/COR and OI; ties to GP - OI
 NBIX,564,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000914475-26-000007,R5,Operating income,619100000.0000,library map
 NBIX,564,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000914475-26-000007,R5,"Total other income (expense), net",86300000.0000,combined line (library or label demote)
 NBIX,564,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000914475-26-000007,R3,"Property and equipment, net",89800000.0000,library map

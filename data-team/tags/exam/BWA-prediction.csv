@@ -34,7 +34,7 @@ BWA,623,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000908255-26
 BWA,623,net_interest_income,OUT,,,,,,,,0000908255-26-000011,,,,not a bank
 BWA,623,noninterest_expense,OUT,,,,,,,,0000908255-26-000011,,,,not a bank
 BWA,623,noninterest_income,OUT,,,,,,,,0000908255-26-000011,,,,not a bank
-BWA,623,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000908255-26-000011,R5,"Selling, general and administrative expenses",1304000000.0000,printed opex lines (duration sum)
+BWA,623,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:AssetImpairmentCharges,IS,+,-6,N,,sec_api,0000908255-26-000011,R5,"Selling, general and administrative expenses",1304000000.0000,every face line between GP/COR and OI; ties to GP - OI
 BWA,623,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000908255-26-000011,R5,Operating income,536000000.0000,library map
 BWA,623,other_income_expense_net,not_presented,,,,,,,,0000908255-26-000011,,,,no face line
 BWA,623,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000908255-26-000011,R3,"Property, plant and equipment, net",3330000000.0000,library map

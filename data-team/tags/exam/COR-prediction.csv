@@ -34,7 +34,7 @@ COR,189,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001140859-25
 COR,189,net_interest_income,OUT,,,,,,,,0001140859-25-000131,,,,not a bank
 COR,189,noninterest_expense,OUT,,,,,,,,0001140859-25-000131,,,,not a bank
 COR,189,noninterest_income,OUT,,,,,,,,0001140859-25-000131,,,,not a bank
-COR,189,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,"Distribution, selling, and administrative",6493842000.0000,printed opex lines (duration sum)
+COR,189,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationNonproduction;us-gaap:AmortizationOfIntangibleAssets;us-gaap:LitigationSettlementExpense;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringCharges;us-gaap:GoodwillImpairmentLoss,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,"Distribution, selling, and administrative",6493842000.0000,every face line between GP/COR and OI; ties to GP - OI
 COR,189,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001140859-25-000131,R5,Operating income,2628601000.0000,library map
 COR,189,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001140859-25-000131,R5,"Other loss (income), net",-78717000.0000,combined line (library or label demote)
 COR,189,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001140859-25-000131,R3,"Property and equipment, net",2539076000.0000,library map

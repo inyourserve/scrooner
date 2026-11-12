@@ -34,7 +34,7 @@ ALV,766,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 ALV,766,net_interest_income,OUT,,,,,,,,0001193125-26-058162,,,,not a bank
 ALV,766,noninterest_expense,OUT,,,,,,,,0001193125-26-058162,,,,not a bank
 ALV,766,noninterest_income,OUT,,,,,,,,0001193125-26-058162,,,,not a bank
-ALV,766,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,"Selling, general and administrative expenses",571000000.0000,printed opex lines (duration sum)
+ALV,766,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,"Selling, general and administrative expenses",571000000.0000,every face line between GP/COR and OI; ties to GP - OI
 ALV,766,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-058162,R2,Operating income,1088000000.0000,library map
 ALV,766,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001193125-26-058162,R2,"Other non-operating items, net",-15000000.0000,library map
 ALV,766,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-058162,R6,"Property, plant and equipment, net",2417000000.0000,library map

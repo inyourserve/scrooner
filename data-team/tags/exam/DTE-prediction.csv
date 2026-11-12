@@ -34,7 +34,7 @@ DTE,362,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000936340-26
 DTE,362,net_interest_income,OUT,,,,,,,,0000936340-26-000054,,,,not a bank
 DTE,362,noninterest_expense,OUT,,,,,,,,0000936340-26-000054,,,,not a bank
 DTE,362,noninterest_income,OUT,,,,,,,,0000936340-26-000054,,,,not a bank
-DTE,362,operating_expenses,not_presented,,,,,,,,0000936340-26-000054,,,,no face line
+DTE,362,operating_expenses,not_presented,,,,,,,,0000936340-26-000054,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 DTE,362,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000936340-26-000054,R3,Operating Income,2374000000.0000,library map
 DTE,362,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000936340-26-000054,R3,Other (Income) and Deductions,-824000000.0000,combined line (library or label demote)
 DTE,362,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000936340-26-000054,R6,Total Property,33653000000.0000,library map

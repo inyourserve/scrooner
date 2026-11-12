@@ -34,7 +34,7 @@ UDR,651,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000074208-26
 UDR,651,net_interest_income,OUT,,,,,,,,0000074208-26-000013,,,,not a bank
 UDR,651,noninterest_expense,OUT,,,,,,,,0000074208-26-000013,,,,not a bank
 UDR,651,noninterest_income,OUT,,,,,,,,0000074208-26-000013,,,,not a bank
-UDR,651,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,Other operating expenses,30734000.0000,printed opex lines (duration sum)
+UDR,651,operating_expenses,component_sum,us-gaap:RealEstateTaxesAndInsurance;custom:PropertyManagementCostsOperating;us-gaap:OtherCostAndExpenseOperating;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;custom:CasualtyRelatedRecoveriesChargesNet;us-gaap:OtherDepreciationAndAmortization;us-gaap:GainsLossesOnSalesOfInvestmentRealEstate,IS,+,-3,N,,fsn_xbrl,0000074208-26-000013,R4,Real estate taxes and insurance,233817000.0000,every face line between GP/COR and OI; ties to GP - OI
 UDR,651,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,Operating income,553606000.0000,library map
 UDR,651,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000074208-26-000013,R4,"Interest income and other income/(expense), net",19175000.0000,combined line (library or label demote)
 UDR,651,ppe_net,not_presented,,,,,,,,0000074208-26-000013,,,,no face line

@@ -34,7 +34,7 @@ KMI,170,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001506307-26
 KMI,170,net_interest_income,OUT,,,,,,,,0001506307-26-000011,,,,not a bank
 KMI,170,noninterest_expense,OUT,,,,,,,,0001506307-26-000011,,,,not a bank
 KMI,170,noninterest_income,OUT,,,,,,,,0001506307-26-000011,,,,not a bank
-KMI,170,operating_expenses,not_presented,,,,,,,,0001506307-26-000011,,,,no face line
+KMI,170,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0001506307-26-000011,R3,Operations and maintenance,3057000000.0000,"total includes cost of revenue: combined, never opex"
 KMI,170,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001506307-26-000011,R3,Operating Income,4724000000.0000,library map
 KMI,170,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001506307-26-000011,R3,"Other, net (Note 3)",173000000.0000,library map
 KMI,170,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001506307-26-000011,R6,"Property, plant, and equipment, net",39331000000.0000,library map

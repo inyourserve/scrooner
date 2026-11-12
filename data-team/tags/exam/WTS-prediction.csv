@@ -34,7 +34,7 @@ WTS,620,net_income,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
 WTS,620,net_interest_income,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
 WTS,620,noninterest_expense,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
 WTS,620,noninterest_income,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
-WTS,620,operating_expenses,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,"Selling, general and administrative expenses",734200000.0000,every face line between GP/COR and OI; ties to GP - OI
 WTS,620,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,OPERATING INCOME,448100000.0000,library map
 WTS,620,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001104659-26-018541,R2,"Other expense (income), net",-1300000.0000,library map
 WTS,620,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,"Property, plant and equipment, net",297100000.0000,library map

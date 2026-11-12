@@ -34,7 +34,7 @@ MANH,592,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 MANH,592,net_interest_income,OUT,,,,,,,,0001193125-26-037138,,,,not a bank
 MANH,592,noninterest_expense,OUT,,,,,,,,0001193125-26-037138,,,,not a bank
 MANH,592,noninterest_income,OUT,,,,,,,,0001193125-26-037138,,,,not a bank
-MANH,592,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001193125-26-037138,R2,Research and development,145062000.0000,printed opex lines (duration sum)
+MANH,592,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001193125-26-037138,R2,Research and development,145062000.0000,every face line between GP/COR and OI; ties to GP - OI
 MANH,592,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-037138,R2,Operating income,279800000.0000,library map
 MANH,592,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-037138,R2,"Other income (loss), net",1705000.0000,library map
 MANH,592,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-037138,R4,"Property and equipment, net",23120000.0000,library map

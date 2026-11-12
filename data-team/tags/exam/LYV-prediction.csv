@@ -34,7 +34,7 @@ LYV,273,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001335258-26
 LYV,273,net_interest_income,OUT,,,,,,,,0001335258-26-000009,,,,not a bank
 LYV,273,noninterest_expense,OUT,,,,,,,,0001335258-26-000009,,,,not a bank
 LYV,273,noninterest_income,OUT,,,,,,,,0001335258-26-000009,,,,not a bank
-LYV,273,operating_expenses,not_presented,,,,,,,,0001335258-26-000009,,,,no face line
+LYV,273,operating_expenses,not_presented,,,,,,,,0001335258-26-000009,,,,no opex total and no GP/COR anchor
 LYV,273,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001335258-26-000009,R5,Operating income,1251217000.0000,library map
 LYV,273,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001335258-26-000009,R5,"Other expense (income), net",-57528000.0000,library map
 LYV,273,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001335258-26-000009,R3,"Property, plant and equipment, net",3415771000.0000,library map

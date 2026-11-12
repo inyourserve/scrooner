@@ -34,7 +34,7 @@ NRG,425,net_income,not_presented,,,,,,,,0001013871-26-000004,,,,no face line
 NRG,425,net_interest_income,OUT,,,,,,,,0001013871-26-000004,,,,not a bank
 NRG,425,noninterest_expense,OUT,,,,,,,,0001013871-26-000004,,,,not a bank
 NRG,425,noninterest_income,OUT,,,,,,,,0001013871-26-000004,,,,not a bank
-NRG,425,operating_expenses,not_presented,,,,,,,,0001013871-26-000004,,,,no face line
+NRG,425,operating_expenses,component_sum,us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;custom:BusinessCombinationAcquisitionAndIntegrationCosts;us-gaap:GainLossOnSaleOfOtherAssets,IS,+,-6,N,,fsn_xbrl,0001013871-26-000004,R3,Depreciation and amortization,1406000000.0000,every face line between GP/COR and OI; ties to GP - OI
 NRG,425,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001013871-26-000004,R3,Operating Income,1845000000.0000,library map
 NRG,425,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001013871-26-000004,R3,"Other income, net",68000000.0000,library map
 NRG,425,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001013871-26-000004,R6,"Property, plant and equipment, net",3632000000.0000,library map

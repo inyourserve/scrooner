@@ -34,7 +34,7 @@ IEX,490,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000832101-26
 IEX,490,net_interest_income,OUT,,,,,,,,0000832101-26-000003,,,,not a bank
 IEX,490,noninterest_expense,OUT,,,,,,,,0000832101-26-000003,,,,not a bank
 IEX,490,noninterest_income,OUT,,,,,,,,0000832101-26-000003,,,,not a bank
-IEX,490,operating_expenses,not_presented,,,,,,,,0000832101-26-000003,,,,no face line
+IEX,490,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCostsAndAssetImpairmentCharges,IS,+,-5,N,,sec_api,0000832101-26-000003,R3,"Selling, general and administrative expenses",818800000.0000,every face line between GP/COR and OI; ties to GP - OI
 IEX,490,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000832101-26-000003,R3,Operating income,699300000.0000,library map
 IEX,490,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000832101-26-000003,R3,Other expense (income)  net,-2300000.0000,library map
 IEX,490,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000832101-26-000003,R5,"Property, plant and equipment  net",468000000.0000,library map

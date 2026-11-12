@@ -34,7 +34,7 @@ CDW,464,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001402057-26
 CDW,464,net_interest_income,OUT,,,,,,,,0001402057-26-000011,,,,not a bank
 CDW,464,noninterest_expense,OUT,,,,,,,,0001402057-26-000011,,,,not a bank
 CDW,464,noninterest_income,OUT,,,,,,,,0001402057-26-000011,,,,not a bank
-CDW,464,operating_expenses,not_presented,,,,,,,,0001402057-26-000011,,,,no face line
+CDW,464,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Selling and administrative expenses,3217800000.0000,every face line between GP/COR and OI; ties to GP - OI
 CDW,464,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001402057-26-000011,R5,Operating income,1655600000.0000,library map
 CDW,464,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001402057-26-000011,R5,"Other expense, net",-800000.0000,library map
 CDW,464,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001402057-26-000011,R3,"Property and equipment, net",171500000.0000,library map

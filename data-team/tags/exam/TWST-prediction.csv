@@ -34,7 +34,7 @@ TWST,782,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001581280-2
 TWST,782,net_interest_income,OUT,,,,,,,,0001581280-25-000025,,,,not a bank
 TWST,782,noninterest_expense,OUT,,,,,,,,0001581280-25-000025,,,,not a bank
 TWST,782,noninterest_income,OUT,,,,,,,,0001581280-25-000025,,,,not a bank
-TWST,782,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001581280-25-000025,R5,Research and development expenses,80285000.0000,printed opex lines (duration sum)
+TWST,782,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCosts;custom:ChangeInFairValueOfContingentConsiderationAndIndemnityHoldback;us-gaap:AssetImpairmentCharges,IS,+,-3,N,,fsn_xbrl,0001581280-25-000025,R5,Research and development expenses,80285000.0000,every face line between GP/COR and OI; ties to GP - OI
 TWST,782,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001581280-25-000025,R5,Loss from operations,-136259000.0000,library map
 TWST,782,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001581280-25-000025,R5,"Other income (expense), net",-903000.0000,library map
 TWST,782,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001581280-25-000025,R3,"Property and equipment, net",102283000.0000,library map

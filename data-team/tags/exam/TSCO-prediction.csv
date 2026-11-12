@@ -34,7 +34,7 @@ TSCO,493,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000916365-2
 TSCO,493,net_interest_income,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
 TSCO,493,noninterest_expense,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
 TSCO,493,noninterest_income,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
-TSCO,493,operating_expenses,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization,IS,+,-3,Y,DepreciationAndAmortization,sec_api,0000916365-26-000014,R3,"Selling, general and administrative expenses",3693108000.0000,every face line between GP/COR and OI; ties to GP - OI
 TSCO,493,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Operating income,1467389000.0000,library map
 TSCO,493,other_income_expense_net,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
 TSCO,493,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,"Property and equipment, net",3026544000.0000,library map

@@ -34,7 +34,7 @@ PPG,402,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000079879-26
 PPG,402,net_interest_income,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,noninterest_expense,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,noninterest_income,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
-PPG,402,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000079879-26-000046,R3,"Selling, general and administrative",3439000000.0000,printed opex lines (duration sum)
+PPG,402,operating_expenses,not_presented,,,,,,,,0000079879-26-000046,,,,no opex total and no GP/COR anchor
 PPG,402,operating_income,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
 PPG,402,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000079879-26-000046,R3,"Other charges/(income), net",-6000000.0000,library map
 PPG,402,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,"Property, plant and equipment, net",4005000000.0000,library map

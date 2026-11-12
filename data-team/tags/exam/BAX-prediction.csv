@@ -34,7 +34,7 @@ BAX,584,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001628280-26
 BAX,584,net_interest_income,OUT,,,,,,,,0001628280-26-007733,,,,not a bank
 BAX,584,noninterest_expense,OUT,,,,,,,,0001628280-26-007733,,,,not a bank
 BAX,584,noninterest_income,OUT,,,,,,,,0001628280-26-007733,,,,not a bank
-BAX,584,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001628280-26-007733,R5,"Selling, general and administrative expenses",2890000000.0000,printed opex lines (duration sum)
+BAX,584,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001628280-26-007733,R5,"Selling, general and administrative expenses",2890000000.0000,every face line between GP/COR and OI; ties to GP - OI
 BAX,584,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001628280-26-007733,R5,Operating income (loss),-308000000.0000,library map
 BAX,584,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-007733,R5,"Other (income) expense, net",41000000.0000,library map
 BAX,584,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0001628280-26-007733,R3,"Property, plant and equipment, net",2910000000.0000,library map

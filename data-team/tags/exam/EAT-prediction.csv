@@ -34,7 +34,7 @@ EAT,764,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000703351-26
 EAT,764,net_interest_income,OUT,,,,,,,,0000703351-26-000029,,,,not a bank
 EAT,764,noninterest_expense,OUT,,,,,,,,0000703351-26-000029,,,,not a bank
 EAT,764,noninterest_income,OUT,,,,,,,,0000703351-26-000029,,,,not a bank
-EAT,764,operating_expenses,not_presented,,,,,,,,0000703351-26-000029,,,,no face line
+EAT,764,operating_expenses,component_sum,custom:RestaurantLabor;custom:RestaurantExpenses;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:GeneralAndAdministrativeExpense;custom:OtherGainsAndCharges,IS,+,-5,N,,fsn_xbrl,0000703351-26-000029,R3,Restaurant labor,1810200000.0000,every face line between GP/COR and OI; ties to GP - OI
 EAT,764,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,Operating income,619900000.0000,library map
 EAT,764,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000703351-26-000029,R3,"Other income, net",1500000.0000,library map
 EAT,764,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000703351-26-000029,R4,Net property and equipment,967400000.0000,library map

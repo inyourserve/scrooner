@@ -34,7 +34,7 @@ VMI,762,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailable
 VMI,762,net_interest_income,OUT,,,,,,,,0000102729-26-000007,,,,not a bank
 VMI,762,noninterest_expense,OUT,,,,,,,,0000102729-26-000007,,,,not a bank
 VMI,762,noninterest_income,OUT,,,,,,,,0000102729-26-000007,,,,not a bank
-VMI,762,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000102729-26-000007,R2,"Selling, general, and administrative expenses",717633000.0000,printed opex lines (duration sum)
+VMI,762,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000102729-26-000007,R2,"Selling, general, and administrative expenses",717633000.0000,every face line between GP/COR and OI; ties to GP - OI
 VMI,762,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000102729-26-000007,R2,Operating income,415576000.0000,library map
 VMI,762,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000102729-26-000007,R2,Other,-9168000.0000,library map
 VMI,762,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000102729-26-000007,R4,"Property, plant, and equipment, net",673863000.0000,library map

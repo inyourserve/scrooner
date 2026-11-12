@@ -34,7 +34,7 @@ WMS,712,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001604028-26
 WMS,712,net_interest_income,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
 WMS,712,noninterest_expense,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
 WMS,712,noninterest_income,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
-WMS,712,operating_expenses,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,operating_expenses,component_sum,custom:SellingGeneralAndAdministrativeExpenseExcludingEmployeeStockOptionPlanSpecialDividendCompensation;us-gaap:GainLossOnDispositionOfAssets1;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,fsn_xbrl,0001604028-26-000019,R5,"Selling, general and administrative",469549000.0000,every face line between GP/COR and OI; ties to GP - OI
 WMS,712,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Income from operations,619202000.0000,library map
 WMS,712,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,"Interest income and other, net",34455000.0000,combined line (library or label demote)
 WMS,712,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,"Property, plant and equipment, net",1217165000.0000,library map

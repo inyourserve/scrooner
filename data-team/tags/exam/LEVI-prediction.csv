@@ -34,7 +34,7 @@ LEVI,799,net_income,not_presented,,,,,,,,0000094845-26-000008,,,,no face line
 LEVI,799,net_interest_income,OUT,,,,,,,,0000094845-26-000008,,,,not a bank
 LEVI,799,noninterest_expense,OUT,,,,,,,,0000094845-26-000008,,,,not a bank
 LEVI,799,noninterest_income,OUT,,,,,,,,0000094845-26-000008,,,,not a bank
-LEVI,799,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,"Selling, general and administrative expenses",3173200000.0000,printed opex lines (duration sum)
+LEVI,799,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,"Selling, general and administrative expenses",3173200000.0000,every face line between GP/COR and OI; ties to GP - OI
 LEVI,799,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,Operating income,677600000.0000,library map
 LEVI,799,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000094845-26-000008,R5,"Other income (expense), net",5000000.0000,library map
 LEVI,799,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000094845-26-000008,R3,"Property, plant and equipment, net",681800000.0000,library map

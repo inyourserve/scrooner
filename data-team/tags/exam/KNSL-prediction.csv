@@ -34,7 +34,7 @@ KNSL,774,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001669162-2
 KNSL,774,net_interest_income,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
 KNSL,774,noninterest_expense,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
 KNSL,774,noninterest_income,OUT,,,,,,,,0001669162-26-000015,,,,not a bank
-KNSL,774,operating_expenses,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
+KNSL,774,operating_expenses,not_presented,,,,,,,,0001669162-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 KNSL,774,operating_income,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
 KNSL,774,other_income_expense_net,not_presented,,,,,,,,0001669162-26-000015,,,,no face line
 KNSL,774,ppe_net,not_presented,,,,,,,,0001669162-26-000015,,,,no face line

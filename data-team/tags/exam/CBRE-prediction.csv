@@ -34,7 +34,7 @@ CBRE,283,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001138118-2
 CBRE,283,net_interest_income,OUT,,,,,,,,0001138118-26-000005,,,,not a bank
 CBRE,283,noninterest_expense,OUT,,,,,,,,0001138118-26-000005,,,,not a bank
 CBRE,283,noninterest_income,OUT,,,,,,,,0001138118-26-000005,,,,not a bank
-CBRE,283,operating_expenses,not_presented,,,,,,,,0001138118-26-000005,,,,no face line
+CBRE,283,operating_expenses,not_presented,,,,,,,,0001138118-26-000005,,,,opex lines do not tie to GP - OI
 CBRE,283,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001138118-26-000005,R5,Operating income,1753000000.0000,library map
 CBRE,283,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001138118-26-000005,R5,Other income,19000000.0000,library map
 CBRE,283,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001138118-26-000005,R3,"Property and equipment, net of accumulated depreciation and amortization of $2,137 and $1,795 at December 31, 2025 and 2024, respectively",1049000000.0000,library map

@@ -34,7 +34,7 @@ TPR,398,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001116132-26
 TPR,398,net_interest_income,OUT,,,,,,,,0001116132-26-000018,,,,not a bank
 TPR,398,noninterest_expense,OUT,,,,,,,,0001116132-26-000018,,,,not a bank
 TPR,398,noninterest_income,OUT,,,,,,,,0001116132-26-000018,,,,not a bank
-TPR,398,operating_expenses,not_presented,,,,,,,,0001116132-26-000018,,,,no face line
+TPR,398,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-5,Y,OtherSellingGeneralAndAdministrativeExpense,sec_api,0001116132-26-000018,R5,"Other selling, general and administrative expenses",4314600000.0000,every face line between GP/COR and OI; ties to GP - OI
 TPR,398,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001116132-26-000018,R5,Operating income (loss),1914400000.0000,library map
 TPR,398,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001116132-26-000018,R5,Other expense (income),1400000.0000,library map
 TPR,398,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001116132-26-000018,R3,"Property and equipment, net of accumulated depreciation of $1,264.2 and $1,215.0, respectively",502100000.0000,library map

@@ -34,7 +34,7 @@ AVY,578,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000008818-26
 AVY,578,net_interest_income,OUT,,,,,,,,0000008818-26-000015,,,,not a bank
 AVY,578,noninterest_expense,OUT,,,,,,,,0000008818-26-000015,,,,not a bank
 AVY,578,noninterest_income,OUT,,,,,,,,0000008818-26-000015,,,,not a bank
-AVY,578,operating_expenses,not_presented,,,,,,,,0000008818-26-000015,,,,no face line
+AVY,578,operating_expenses,not_presented,,,,,,,,0000008818-26-000015,,,,no opex total and no GP/COR anchor
 AVY,578,operating_income,not_presented,,,,,,,,0000008818-26-000015,,,,no face line
 AVY,578,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000008818-26-000015,R5,"Other non-operating expense (income), net",14200000.0000,library map
 AVY,578,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0000008818-26-000015,R3,"Property, plant and equipment, net",1607700000.0000,library map

@@ -34,7 +34,7 @@ NWSA,512,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001564708-2
 NWSA,512,net_interest_income,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,noninterest_expense,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
 NWSA,512,noninterest_income,OUT,,,,,,,,0001564708-26-000175,,,,not a bank
-NWSA,512,operating_expenses,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
+NWSA,512,operating_expenses,not_presented,,,,,,,,0001564708-26-000175,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 NWSA,512,operating_income,not_presented,,,,,,,,0001564708-26-000175,,,,no face line
 NWSA,512,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001564708-26-000175,R3,"Other, net",-4000000.0000,library map
 NWSA,512,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001564708-26-000175,R6,"Property, plant and equipment, net",1398000000.0000,library map

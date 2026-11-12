@@ -34,7 +34,7 @@ WCC,504,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26
 WCC,504,net_interest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
 WCC,504,noninterest_expense,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
 WCC,504,noninterest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,operating_expenses,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
+WCC,504,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Selling, general and administrative expense",3541400000.0000,every face line between GP/COR and OI; ties to GP - OI
 WCC,504,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income from operations,1233000000.0000,library map
 WCC,504,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Other, net",9600000.0000,library map
 WCC,504,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,"Property, buildings and equipment, net",466800000.0000,library map

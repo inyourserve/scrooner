@@ -34,7 +34,7 @@ DPZ,693,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 DPZ,693,net_interest_income,OUT,,,,,,,,0001193125-26-062321,,,,not a bank
 DPZ,693,noninterest_expense,OUT,,,,,,,,0001193125-26-062321,,,,not a bank
 DPZ,693,noninterest_income,OUT,,,,,,,,0001193125-26-062321,,,,not a bank
-DPZ,693,operating_expenses,not_presented,,,,,,,,0001193125-26-062321,,,,no face line
+DPZ,693,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:AdvertisingExpense;us-gaap:GainLossOnSaleOfOtherAssets,IS,+,-3,N,,sec_api,0001193125-26-062321,R4,General and administrative,464120000.0000,every face line between GP/COR and OI; ties to GP - OI
 DPZ,693,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-062321,R4,Income from operations,953974000.0000,library map
 DPZ,693,other_income_expense_net,not_presented,,,,,,,,0001193125-26-062321,,,,no face line
 DPZ,693,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-062321,R2,"Property, plant and equipment, net",324022000.0000,library map

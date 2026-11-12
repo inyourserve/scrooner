@@ -34,7 +34,7 @@ OXY,198,net_income,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
 OXY,198,net_interest_income,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
 OXY,198,noninterest_expense,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
 OXY,198,noninterest_income,OUT,,,,,,,,0001628280-26-009059,,,,not a bank
-OXY,198,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0001628280-26-009059,R5,"Selling, general and administrative expense",986000000.0000,printed opex lines (duration sum)
+OXY,198,operating_expenses,not_presented,,,,,,,,0001628280-26-009059,,,,no opex total and no GP/COR anchor
 OXY,198,operating_income,not_presented,,,,,,,,0001628280-26-009059,,,,no face line
 OXY,198,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,Y,CostsAndOtherDeductions,sec_api,0001628280-26-009059,R5,Total,76000000.0000,combined line (library or label demote)
 OXY,198,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-009059,R3,"Total property, plant and equipment, net",63643000000.0000,library map

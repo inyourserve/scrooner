@@ -34,7 +34,7 @@ NLY,566,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001043219-26
 NLY,566,net_interest_income,OUT,,,,,,,,0001043219-26-000013,,,,not a bank
 NLY,566,noninterest_expense,OUT,,,,,,,,0001043219-26-000013,,,,not a bank
 NLY,566,noninterest_income,OUT,,,,,,,,0001043219-26-000013,,,,not a bank
-NLY,566,operating_expenses,not_presented,,,,,,,,0001043219-26-000013,,,,no face line
+NLY,566,operating_expenses,not_presented,,,,,,,,0001043219-26-000013,,,,no opex total and no GP/COR anchor
 NLY,566,operating_income,not_presented,,,,,,,,0001043219-26-000013,,,,no face line
 NLY,566,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001043219-26-000013,R5,"Other, net",51121000.0000,library map
 NLY,566,ppe_net,not_presented,,,,,,,,0001043219-26-000013,,,,no face line

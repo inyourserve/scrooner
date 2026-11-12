@@ -34,7 +34,7 @@ MSGS,813,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,00
 MSGS,813,net_interest_income,OUT,,,,,,,,0001628280-26-056812,,,,not a bank
 MSGS,813,noninterest_expense,OUT,,,,,,,,0001628280-26-056812,,,,not a bank
 MSGS,813,noninterest_income,OUT,,,,,,,,0001628280-26-056812,,,,not a bank
-MSGS,813,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001628280-26-056812,R5,"Selling, general and administrative expenses",285995000.0000,printed opex lines (duration sum)
+MSGS,813,operating_expenses,not_presented,,,,,,,,0001628280-26-056812,,,,no opex total and no GP/COR anchor
 MSGS,813,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-056812,R5,Operating income,28868000.0000,library map
 MSGS,813,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-056812,R5,"Miscellaneous income (expense), net",7261000.0000,library map
 MSGS,813,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-056812,R3,"Property and equipment, net",27163000.0000,library map

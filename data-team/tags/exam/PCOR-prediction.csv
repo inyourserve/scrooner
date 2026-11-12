@@ -34,7 +34,7 @@ PCOR,757,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-2
 PCOR,757,net_interest_income,OUT,,,,,,,,0001628280-26-011055,,,,not a bank
 PCOR,757,noninterest_expense,OUT,,,,,,,,0001628280-26-011055,,,,not a bank
 PCOR,757,noninterest_income,OUT,,,,,,,,0001628280-26-011055,,,,not a bank
-PCOR,757,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-011055,R5,Total operating expenses,1176020000.0000,printed opex total tag
+PCOR,757,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-011055,R5,Total operating expenses,1176020000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 PCOR,757,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-011055,R5,Loss from operations,-124343000.0000,library map
 PCOR,757,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-011055,R5,"Other income (expense), net",2309000.0000,library map
 PCOR,757,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-011055,R3,"Property and equipment, net",48624000.0000,library map

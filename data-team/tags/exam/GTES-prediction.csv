@@ -34,7 +34,7 @@ GTES,883,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-2
 GTES,883,net_interest_income,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
 GTES,883,noninterest_expense,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
 GTES,883,noninterest_income,OUT,,,,,,,,0001628280-26-007719,,,,not a bank
-GTES,883,operating_expenses,not_presented,,,,,,,,0001628280-26-007719,,,,no face line
+GTES,883,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:ImpairmentOfLongLivedAssetsHeldForUse;custom:RestructuringChargesIncludingAdjustments;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,fsn_xbrl,0001628280-26-007719,R3,"Selling, general and administrative expenses",876100000.0000,every face line between GP/COR and OI; ties to GP - OI
 GTES,883,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Operating income from continuing operations,465300000.0000,library map
 GTES,883,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-007719,R3,Other (income) expenses,800000.0000,library map
 GTES,883,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-007719,R7,"Property, plant and equipment, net",609000000.0000,library map

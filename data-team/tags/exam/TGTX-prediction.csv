@@ -34,7 +34,7 @@ TGTX,777,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-2
 TGTX,777,net_interest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
 TGTX,777,noninterest_expense,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
 TGTX,777,noninterest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Total research and development,160215000.0000,printed opex lines (duration sum)
+TGTX,777,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingExpenses,sec_api,0001437749-26-006133,R4,Total costs and expenses,492963000.0000,"total includes cost of revenue: combined, never opex"
 TGTX,777,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Operating income,123324000.0000,library map
 TGTX,777,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncome,sec_api,0001437749-26-006133,R4,Other income,10793000.0000,library map
 TGTX,777,ppe_net,not_presented,,,,,,,,0001437749-26-006133,,,,no face line

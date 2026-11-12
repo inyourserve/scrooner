@@ -34,7 +34,7 @@ RGLD,449,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000085535-2
 RGLD,449,net_interest_income,OUT,,,,,,,,0000085535-26-000008,,,,not a bank
 RGLD,449,noninterest_expense,OUT,,,,,,,,0000085535-26-000008,,,,not a bank
 RGLD,449,noninterest_income,OUT,,,,,,,,0000085535-26-000008,,,,not a bank
-RGLD,449,operating_expenses,not_presented,,,,,,,,0000085535-26-000008,,,,no face line
+RGLD,449,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,General and administrative,49183000.0000,every face line between GP/COR and OI; ties to GP - OI
 RGLD,449,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000085535-26-000008,R5,Operating income,638167000.0000,library map
 RGLD,449,other_income_expense_net,combined,custom:InterestAndOtherExpense,IS,+,-3,N,,fsn_xbrl,0000085535-26-000008,R5,Interest and other expense,29022000.0000,combined line (library or label demote)
 RGLD,449,ppe_net,not_presented,,,,,,,,0000085535-26-000008,,,,no face line

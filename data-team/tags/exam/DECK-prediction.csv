@@ -34,7 +34,7 @@ DECK,628,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 DECK,628,net_interest_income,OUT,,,,,,,,0001628280-26-037664,,,,not a bank
 DECK,628,noninterest_expense,OUT,,,,,,,,0001628280-26-037664,,,,not a bank
 DECK,628,noninterest_income,OUT,,,,,,,,0001628280-26-037664,,,,not a bank
-DECK,628,operating_expenses,not_presented,,,,,,,,0001628280-26-037664,,,,no face line
+DECK,628,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-037664,R5,"Selling, general, and administrative expenses (Note 13)",1894823000.0000,every face line between GP/COR and OI; ties to GP - OI
 DECK,628,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-037664,R5,Income from operations (Note 13),1262903000.0000,library map
 DECK,628,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-037664,R5,"Other (income) expense, net",2370000.0000,library map
 DECK,628,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-037664,R3,"Property and equipment, net of accumulated depreciation ($457,173 and $402,964 as of March 31, 2026, and March 31, 2025, respectively) (Note 3)",337782000.0000,library map

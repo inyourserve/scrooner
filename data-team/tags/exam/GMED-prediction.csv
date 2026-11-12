@@ -34,7 +34,7 @@ GMED,686,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 GMED,686,net_interest_income,OUT,,,,,,,,0001628280-26-011209,,,,not a bank
 GMED,686,noninterest_expense,OUT,,,,,,,,0001628280-26-011209,,,,not a bank
 GMED,686,noninterest_income,OUT,,,,,,,,0001628280-26-011209,,,,not a bank
-GMED,686,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001628280-26-011209,R5,Research and development,147246000.0000,printed opex lines (duration sum)
+GMED,686,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringCosts,IS,+,-3,N,,sec_api,0001628280-26-011209,R5,Research and development,147246000.0000,every face line between GP/COR and OI; ties to GP - OI
 GMED,686,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-011209,R5,Operating income/(loss),479816000.0000,library map
 GMED,686,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherNonoperatingIncome,sec_api,0001628280-26-011209,R5,Other income/(expense),3413000.0000,library map
 GMED,686,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-011209,R3,"Property and equipment, net",564452000.0000,library map

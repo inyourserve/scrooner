@@ -34,7 +34,7 @@ GGG,580,net_income,not_presented,,,,,,,,0000042888-26-000081,,,,no face line
 GGG,580,net_interest_income,OUT,,,,,,,,0000042888-26-000081,,,,not a bank
 GGG,580,noninterest_expense,OUT,,,,,,,,0000042888-26-000081,,,,not a bank
 GGG,580,noninterest_income,OUT,,,,,,,,0000042888-26-000081,,,,not a bank
-GGG,580,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,Product development,82297000.0000,printed opex lines (duration sum)
+GGG,580,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherNonrecurringIncomeExpense;us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,Product development,82297000.0000,every face line between GP/COR and OI; ties to GP - OI
 GGG,580,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,Operating Earnings,624797000.0000,library map
 GGG,580,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000042888-26-000081,R3,"Other (income) expense, net",19296000.0000,library map
 GGG,580,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000042888-26-000081,R5,"Property, Plant and Equipment, net",755064000.0000,library map

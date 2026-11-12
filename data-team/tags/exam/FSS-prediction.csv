@@ -34,7 +34,7 @@ FSS,870,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26
 FSS,870,net_interest_income,OUT,,,,,,,,0001628280-26-011576,,,,not a bank
 FSS,870,noninterest_expense,OUT,,,,,,,,0001628280-26-011576,,,,not a bank
 FSS,870,noninterest_income,OUT,,,,,,,,0001628280-26-011576,,,,not a bank
-FSS,870,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,"Selling, engineering, general and administrative expenses",255900000.0000,printed opex lines (duration sum)
+FSS,870,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;custom:Acquisitionandintegrationrelatedexpenses,IS,+,-5,N,,fsn_xbrl,0001628280-26-011576,R3,"Selling, engineering, general and administrative expenses",255900000.0000,every face line between GP/COR and OI; ties to GP - OI
 FSS,870,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-011576,R3,Operating income,340900000.0000,library map
 FSS,870,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001628280-26-011576,R3,"Other expense, net",-2300000.0000,library map
 FSS,870,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-011576,R6,"Properties and equipment, net",274600000.0000,library map

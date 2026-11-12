@@ -34,7 +34,7 @@ CAH,206,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000721371-26
 CAH,206,net_interest_income,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,noninterest_expense,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,noninterest_income,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
-CAH,206,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Distribution, selling, general, and administrative expenses",6132000000.0000,printed opex lines (duration sum)
+CAH,206,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;custom:Amortizationandotheracquisitionrelatedcosts;custom:AcquisitionRelatedCashAndShareBasedCompensationCosts;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:GainLossRelatedToLitigationSettlement,IS,+,-6,N,,fsn_xbrl,0000721371-26-000038,R3,"Distribution, selling, general, and administrative expenses",6132000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CAH,206,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,Operating earnings,2613000000.0000,library map
 CAH,206,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Other (income)/expense, net",31000000.0000,library map
 CAH,206,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,"Property and equipment, net",3031000000.0000,library map

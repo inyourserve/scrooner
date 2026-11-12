@@ -34,7 +34,7 @@ JBL,348,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-25
 JBL,348,net_interest_income,OUT,,,,,,,,0001628280-25-045293,,,,not a bank
 JBL,348,noninterest_expense,OUT,,,,,,,,0001628280-25-045293,,,,not a bank
 JBL,348,noninterest_income,OUT,,,,,,,,0001628280-25-045293,,,,not a bank
-JBL,348,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001628280-25-045293,R5,"Selling, general and administrative",1122000000.0000,printed opex lines (duration sum)
+JBL,348,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GainLossOnSaleOfBusiness;custom:AcquisitionAndDivestitureRelatedCharges,IS,+,-6,N,,fsn_xbrl,0001628280-25-045293,R5,"Selling, general and administrative",1122000000.0000,every face line between GP/COR and OI; ties to GP - OI
 JBL,348,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-25-045293,R5,Operating income,1182000000.0000,library map
 JBL,348,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-25-045293,R5,Other expense,-97000000.0000,library map
 JBL,348,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-25-045293,R3,"Property, plant and equipment, net of accumulated depreciation",2847000000.0000,library map

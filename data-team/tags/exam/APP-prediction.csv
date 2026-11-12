@@ -34,7 +34,7 @@ APP,137,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001751008-26
 APP,137,net_interest_income,OUT,,,,,,,,0001751008-26-000010,,,,not a bank
 APP,137,noninterest_expense,OUT,,,,,,,,0001751008-26-000010,,,,not a bank
 APP,137,noninterest_income,OUT,,,,,,,,0001751008-26-000010,,,,not a bank
-APP,137,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Sales and marketing,203651000.0000,printed opex lines (duration sum)
+APP,137,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Sales and marketing,203651000.0000,every face line between GP/COR and OI; ties to GP - OI
 APP,137,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,Income from operations,4151914000.0000,library map
 APP,137,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001751008-26-000010,R5,"Other income, net",8012000.0000,library map
 APP,137,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001751008-26-000010,R3,"Property and equipment, net",122445000.0000,library map

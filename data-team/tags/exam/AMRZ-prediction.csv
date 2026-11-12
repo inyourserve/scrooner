@@ -34,7 +34,7 @@ AMRZ,443,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002035989-2
 AMRZ,443,net_interest_income,OUT,,,,,,,,0002035989-26-000017,,,,not a bank
 AMRZ,443,noninterest_expense,OUT,,,,,,,,0002035989-26-000017,,,,not a bank
 AMRZ,443,noninterest_income,OUT,,,,,,,,0002035989-26-000017,,,,not a bank
-AMRZ,443,operating_expenses,not_presented,,,,,,,,0002035989-26-000017,,,,no face line
+AMRZ,443,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnSaleOfPropertyPlantEquipment;us-gaap:AssetImpairmentCharges,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,"Selling, general and administrative expenses",1128000000.0000,every face line between GP/COR and OI; ties to GP - OI
 AMRZ,443,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,Operating income,1906000000.0000,library map
 AMRZ,443,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0002035989-26-000017,R3,"Other non-operating income (expense), net",4000000.0000,library map
 AMRZ,443,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0002035989-26-000017,R5,"Property, plant and equipment, net",7935000000.0000,library map

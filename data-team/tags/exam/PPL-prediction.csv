@@ -34,7 +34,7 @@ PPL,369,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000922224-26
 PPL,369,net_interest_income,OUT,,,,,,,,0000922224-26-000008,,,,not a bank
 PPL,369,noninterest_expense,OUT,,,,,,,,0000922224-26-000008,,,,not a bank
 PPL,369,noninterest_income,OUT,,,,,,,,0000922224-26-000008,,,,not a bank
-PPL,369,operating_expenses,not_presented,,,,,,,,0000922224-26-000008,,,,no face line
+PPL,369,operating_expenses,not_presented,,,,,,,,0000922224-26-000008,,,,no opex total and no GP/COR anchor
 PPL,369,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,Operating Income,2129000000.0000,library map
 PPL,369,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000922224-26-000008,R2,Other Income (Expense) - net,151000000.0000,library map
 PPL,369,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000922224-26-000008,R6,"Property, Plant and Equipment, net",36132000000.0000,library map

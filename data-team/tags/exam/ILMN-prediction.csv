@@ -34,7 +34,7 @@ ILMN,280,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001110803-2
 ILMN,280,net_interest_income,OUT,,,,,,,,0001110803-26-000024,,,,not a bank
 ILMN,280,noninterest_expense,OUT,,,,,,,,0001110803-26-000024,,,,not a bank
 ILMN,280,noninterest_income,OUT,,,,,,,,0001110803-26-000024,,,,not a bank
-ILMN,280,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,Total operating expense,2063000000.0000,printed opex total tag
+ILMN,280,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,Total operating expense,2063000000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 ILMN,280,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,Income (loss) from operations,807000000.0000,library map
 ILMN,280,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001110803-26-000024,R5,"Other income (expense), net",340000000.0000,library map
 ILMN,280,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001110803-26-000024,R3,"Property and equipment, net",759000000.0000,library map

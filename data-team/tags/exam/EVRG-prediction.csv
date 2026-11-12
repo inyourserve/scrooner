@@ -34,7 +34,7 @@ EVRG,459,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001711269-2
 EVRG,459,net_interest_income,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
 EVRG,459,noninterest_expense,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
 EVRG,459,noninterest_income,OUT,,,,,,,,0001711269-26-000017,,,,not a bank
-EVRG,459,operating_expenses,mapped,us-gaap:CostsAndExpenses,CI,+,-5,N,,sec_api,0001711269-26-000017,R3,Total Operating Expenses,4428700000.0000,CostsAndExpenses value check (structural)
+EVRG,459,operating_expenses,not_presented,,,,,,,,0001711269-26-000017,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 EVRG,459,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,INCOME FROM OPERATIONS,1532900000.0000,library map
 EVRG,459,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-5,N,,sec_api,0001711269-26-000017,R9,Other income,46400000.0000,combined line (library or label demote)
 EVRG,459,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001711269-26-000017,R4,"PROPERTY, PLANT AND EQUIPMENT, NET, includes $119.4 and $126.5 related to variable interest entity, respectively",26301500000.0000,library map

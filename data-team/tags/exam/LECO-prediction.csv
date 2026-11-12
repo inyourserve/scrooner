@@ -34,7 +34,7 @@ LECO,550,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000059527-2
 LECO,550,net_interest_income,OUT,,,,,,,,0000059527-26-000006,,,,not a bank
 LECO,550,noninterest_expense,OUT,,,,,,,,0000059527-26-000006,,,,not a bank
 LECO,550,noninterest_income,OUT,,,,,,,,0000059527-26-000006,,,,not a bank
-LECO,550,operating_expenses,not_presented,,,,,,,,0000059527-26-000006,,,,no face line
+LECO,550,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,"Selling, general & administrative expenses",797994000.0000,every face line between GP/COR and OI; ties to GP - OI
 LECO,550,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,Operating income,718059000.0000,library map
 LECO,550,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000059527-26-000006,R2,Other income (Note 12),8952000.0000,combined line (library or label demote)
 LECO,550,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000059527-26-000006,R4,"Property, plant and equipment (Note 1)",702762000.0000,library map

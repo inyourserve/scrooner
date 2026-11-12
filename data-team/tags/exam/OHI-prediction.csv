@@ -34,7 +34,7 @@ OHI,563,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,EarningsPerShareBasic,
 OHI,563,net_interest_income,OUT,,,,,,,,0000888491-26-000008,,,,not a bank
 OHI,563,noninterest_expense,OUT,,,,,,,,0000888491-26-000008,,,,not a bank
 OHI,563,noninterest_income,OUT,,,,,,,,0000888491-26-000008,,,,not a bank
-OHI,563,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000888491-26-000008,R4,Total expenses,688022000.0000,printed opex total tag
+OHI,563,operating_expenses,not_presented,,,,,,,,0000888491-26-000008,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 OHI,563,operating_income,not_presented,,,,,,,,0000888491-26-000008,,,,no face line
 OHI,563,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000888491-26-000008,R4,Total other income,122356000.0000,library map
 OHI,563,ppe_net,not_presented,,,,,,,,0000888491-26-000008,,,,no face line

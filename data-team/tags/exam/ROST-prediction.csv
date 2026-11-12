@@ -34,7 +34,7 @@ ROST,168,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000745732-2
 ROST,168,net_interest_income,OUT,,,,,,,,0000745732-26-000006,,,,not a bank
 ROST,168,noninterest_expense,OUT,,,,,,,,0000745732-26-000006,,,,not a bank
 ROST,168,noninterest_income,OUT,,,,,,,,0000745732-26-000006,,,,not a bank
-ROST,168,operating_expenses,not_presented,,,,,,,,0000745732-26-000006,,,,no face line
+ROST,168,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000745732-26-000006,R3,"Selling, general and administrative",3595946000.0000,every face line between GP/COR and OI; ties to GP - OI
 ROST,168,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000745732-26-000006,R3,Operating income,2707357000.0000,library map
 ROST,168,other_income_expense_net,not_presented,,,,,,,,0000745732-26-000006,,,,no face line
 ROST,168,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000745732-26-000006,R5,"Property and equipment, net",4088760000.0000,library map

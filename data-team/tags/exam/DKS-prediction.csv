@@ -34,7 +34,7 @@ DKS,586,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailable
 DKS,586,net_interest_income,OUT,,,,,,,,0001089063-26-000007,,,,not a bank
 DKS,586,noninterest_expense,OUT,,,,,,,,0001089063-26-000007,,,,not a bank
 DKS,586,noninterest_income,OUT,,,,,,,,0001089063-26-000007,,,,not a bank
-DKS,586,operating_expenses,not_presented,,,,,,,,0001089063-26-000007,,,,no face line
+DKS,586,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:BusinessCombinationMergerAndIntegrationCosts;us-gaap:PreOpeningCosts,IS,+,-3,N,,fsn_xbrl,0001089063-26-000007,R3,"Selling, general and administrative expenses",4338162000.0000,every face line between GP/COR and OI; ties to GP - OI
 DKS,586,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001089063-26-000007,R3,OPERATING INCOME,1095909000.0000,library map
 DKS,586,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001089063-26-000007,R3,Other income,110327000.0000,library map
 DKS,586,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001089063-26-000007,R6,"Property and equipment, net",3512776000.0000,library map

@@ -34,7 +34,7 @@ GWRE,562,net_income,not_presented,,,,,,,,0001528396-26-000046,,,,no face line
 GWRE,562,net_interest_income,OUT,,,,,,,,0001528396-26-000046,,,,not a bank
 GWRE,562,noninterest_expense,OUT,,,,,,,,0001528396-26-000046,,,,not a bank
 GWRE,562,noninterest_income,OUT,,,,,,,,0001528396-26-000046,,,,not a bank
-GWRE,562,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Total operating expenses,797494000.0000,printed opex total tag
+GWRE,562,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Total operating expenses,797494000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 GWRE,562,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001528396-26-000046,R5,Income (loss) from operations,149874000.0000,library map
 GWRE,562,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001528396-26-000046,R5,"Other income (expense), net",-20997000.0000,library map
 GWRE,562,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001528396-26-000046,R3,"Property and equipment, net",67800000.0000,library map

@@ -34,7 +34,7 @@ CMC,846,net_income,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
 CMC,846,net_interest_income,OUT,,,,,,,,0000022444-26-000065,,,,not a bank
 CMC,846,noninterest_expense,OUT,,,,,,,,0000022444-26-000065,,,,not a bank
 CMC,846,noninterest_income,OUT,,,,,,,,0000022444-26-000065,,,,not a bank
-CMC,846,operating_expenses,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
+CMC,846,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000022444-26-000065,R3,Net costs and operating expenses,8682893000.0000,total includes cost of revenue
 CMC,846,operating_income,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
 CMC,846,other_income_expense_net,not_presented,,,,,,,,0000022444-26-000065,,,,no face line
 CMC,846,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000022444-26-000065,R5,"Property, plant and equipment, net",3453714000.0000,library map

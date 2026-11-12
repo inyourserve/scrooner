@@ -34,7 +34,7 @@ ALB,646,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000915913-26
 ALB,646,net_interest_income,OUT,,,,,,,,0000915913-26-000018,,,,not a bank
 ALB,646,noninterest_expense,OUT,,,,,,,,0000915913-26-000018,,,,not a bank
 ALB,646,noninterest_income,OUT,,,,,,,,0000915913-26-000018,,,,not a bank
-ALB,646,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000915913-26-000018,R3,"Selling, general and administrative expenses",550036000.0000,printed opex lines (duration sum)
+ALB,646,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf;custom:RestructuringChargesAndAssetWriteOffs;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSaleOfBusiness,IS,+,-3,N,,fsn_xbrl,0000915913-26-000018,R3,"Selling, general and administrative expenses",550036000.0000,every face line between GP/COR and OI; ties to GP - OI
 ALB,646,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0000915913-26-000018,R3,Operating (loss) profit,-367084000.0000,library map
 ALB,646,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000915913-26-000018,R3,"Other income, net",22662000.0000,library map
 ALB,646,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,Y,PropertyPlantAndEquipmentNet,sec_api,0000915913-26-000018,R6,"Net property, plant and equipment",8612411000.0000,library map

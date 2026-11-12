@@ -34,7 +34,7 @@ EXR,345,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001289490-26
 EXR,345,net_interest_income,OUT,,,,,,,,0001289490-26-000011,,,,not a bank
 EXR,345,noninterest_expense,OUT,,,,,,,,0001289490-26-000011,,,,not a bank
 EXR,345,noninterest_income,OUT,,,,,,,,0001289490-26-000011,,,,not a bank
-EXR,345,operating_expenses,not_presented,,,,,,,,0001289490-26-000011,,,,no face line
+EXR,345,operating_expenses,component_sum,custom:TenantReinsuranceExpense;custom:AssetAcquisitionAcquisitionRelatedCosts;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;custom:GainsLossesOnRealEstateTransactionsAndEarnOutFromPriorAcquisitionAndSaleOfOtherAssets;custom:GainLossOnImpairmentOfIntangibleAssetIndefiniteLived,IS,+,-3,Y,DirectPremiumsEarned;OtherDepreciationAndAmortization,fsn_xbrl,0001289490-26-000011,R5,Tenant reinsurance,68873000.0000,every face line between GP/COR and OI; ties to GP - OI
 EXR,345,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001289490-26-000011,R5,Income from operations,1412691000.0000,library map
 EXR,345,other_income_expense_net,not_presented,,,,,,,,0001289490-26-000011,,,,no face line
 EXR,345,ppe_net,not_presented,,,,,,,,0001289490-26-000011,,,,no face line

@@ -34,7 +34,7 @@ FRHC,632,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000924805-2
 FRHC,632,net_interest_income,OUT,,,,,,,,0000924805-26-000012,,,,not a bank
 FRHC,632,noninterest_expense,OUT,,,,,,,,0000924805-26-000012,,,,not a bank
 FRHC,632,noninterest_income,OUT,,,,,,,,0000924805-26-000012,,,,not a bank
-FRHC,632,operating_expenses,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
+FRHC,632,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000924805-26-000012,R4,TOTAL EXPENSE,1965326000.0000,total includes cost of revenue
 FRHC,632,operating_income,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
 FRHC,632,other_income_expense_net,not_presented,,,,,,,,0000924805-26-000012,,,,no face line
 FRHC,632,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000924805-26-000012,R3,"Fixed assets, net",358396000.0000,library map

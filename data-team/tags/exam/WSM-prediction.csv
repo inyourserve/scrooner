@@ -34,7 +34,7 @@ WSM,346,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000719955-26
 WSM,346,net_interest_income,OUT,,,,,,,,0000719955-26-000059,,,,not a bank
 WSM,346,noninterest_expense,OUT,,,,,,,,0000719955-26-000059,,,,not a bank
 WSM,346,noninterest_income,OUT,,,,,,,,0000719955-26-000059,,,,not a bank
-WSM,346,operating_expenses,not_presented,,,,,,,,0000719955-26-000059,,,,no face line
+WSM,346,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000719955-26-000059,R3,"Selling, general and administrative expenses",2187329000.0000,every face line between GP/COR and OI; ties to GP - OI
 WSM,346,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000719955-26-000059,R3,Operating income,1415722000.0000,library map
 WSM,346,other_income_expense_net,not_presented,,,,,,,,0000719955-26-000059,,,,no face line
 WSM,346,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000719955-26-000059,R5,"Property and equipment, net",1095158000.0000,library map

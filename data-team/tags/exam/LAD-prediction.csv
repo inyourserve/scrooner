@@ -34,7 +34,7 @@ LAD,888,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001023128-26
 LAD,888,net_interest_income,OUT,,,,,,,,0001023128-26-000015,,,,not a bank
 LAD,888,noninterest_expense,OUT,,,,,,,,0001023128-26-000015,,,,not a bank
 LAD,888,noninterest_income,OUT,,,,,,,,0001023128-26-000015,,,,not a bank
-LAD,888,operating_expenses,not_presented,,,,,,,,0001023128-26-000015,,,,no face line
+LAD,888,operating_expenses,component_sum,us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:AssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,Financing operations income (loss),74600000.0000,every face line between GP/COR and OI; ties to GP - OI
 LAD,888,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,Operating income,1594700000.0000,library map
 LAD,888,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001023128-26-000015,R5,"Other income, net",17400000.0000,library map
 LAD,888,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001023128-26-000015,R3,"Property and equipment, net of accumulated depreciation of $1,004.9 and $825.5",4936000000.0000,library map

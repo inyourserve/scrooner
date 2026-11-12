@@ -34,7 +34,7 @@ WCN,267,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26
 WCN,267,net_interest_income,OUT,,,,,,,,0001104659-26-013700,,,,not a bank
 WCN,267,noninterest_expense,OUT,,,,,,,,0001104659-26-013700,,,,not a bank
 WCN,267,noninterest_income,OUT,,,,,,,,0001104659-26-013700,,,,not a bank
-WCN,267,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,"Selling, general and administrative",959544000.0000,printed opex lines (duration sum)
+WCN,267,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets;custom:ImpairmentsAndOtherOperatingCharges,IS,+,-3,N,,fsn_xbrl,0001104659-26-013700,R4,"Selling, general and administrative",959544000.0000,every face line between GP/COR and OI; ties to GP - OI
 WCN,267,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,Operating income,1710174000.0000,library map
 WCN,267,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-013700,R4,"Other income, net",30154000.0000,library map
 WCN,267,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-013700,R2,"Property and equipment, net",8733327000.0000,library map

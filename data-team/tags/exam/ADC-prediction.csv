@@ -34,7 +34,7 @@ ADC,772,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000917251-26
 ADC,772,net_interest_income,OUT,,,,,,,,0000917251-26-000013,,,,not a bank
 ADC,772,noninterest_expense,OUT,,,,,,,,0000917251-26-000013,,,,not a bank
 ADC,772,noninterest_income,OUT,,,,,,,,0000917251-26-000013,,,,not a bank
-ADC,772,operating_expenses,not_presented,,,,,,,,0000917251-26-000013,,,,no face line
+ADC,772,operating_expenses,not_presented,,,,,,,,0000917251-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ADC,772,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000917251-26-000013,R5,Income from Operations,340395000.0000,library map
 ADC,772,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000917251-26-000013,R5,Other income,941000.0000,library map
 ADC,772,ppe_net,not_presented,,,,,,,,0000917251-26-000013,,,,no face line

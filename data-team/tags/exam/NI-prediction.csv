@@ -34,7 +34,7 @@ NI,448,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001111711-26-
 NI,448,net_interest_income,OUT,,,,,,,,0001111711-26-000027,,,,not a bank
 NI,448,noninterest_expense,OUT,,,,,,,,0001111711-26-000027,,,,not a bank
 NI,448,noninterest_income,OUT,,,,,,,,0001111711-26-000027,,,,not a bank
-NI,448,operating_expenses,not_presented,,,,,,,,0001111711-26-000027,,,,no face line
+NI,448,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-5,N,,sec_api,0001111711-26-000027,R3,Total Operating Expenses,4806900000.0000,"total includes cost of revenue: combined, never opex"
 NI,448,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001111711-26-000027,R3,Operating Income,1835300000.0000,library map
 NI,448,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001111711-26-000027,R3,"Other, net",20100000.0000,library map
 NI,448,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001111711-26-000027,R6,"Net Property, Plant and Equipment",28688200000.0000,library map

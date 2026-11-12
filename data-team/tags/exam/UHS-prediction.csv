@@ -34,7 +34,7 @@ UHS,654,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 UHS,654,net_interest_income,OUT,,,,,,,,0001193125-26-071676,,,,not a bank
 UHS,654,noninterest_expense,OUT,,,,,,,,0001193125-26-071676,,,,not a bank
 UHS,654,noninterest_income,OUT,,,,,,,,0001193125-26-071676,,,,not a bank
-UHS,654,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-071676,R2,"Operating Expenses, Total",15370814000.0000,printed opex total tag
+UHS,654,operating_expenses,not_presented,,,,,,,,0001193125-26-071676,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 UHS,654,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-071676,R2,Income from operations,1994015000.0000,library map
 UHS,654,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-071676,R2,"Other (income) expense, net",134194000.0000,library map
 UHS,654,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071676,R4,"Property, plant and equipment, net, Total",7008097000.0000,library map

@@ -34,7 +34,7 @@ MDGL,684,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-2
 MDGL,684,net_interest_income,OUT,,,,,,,,0001628280-26-009514,,,,not a bank
 MDGL,684,noninterest_expense,OUT,,,,,,,,0001628280-26-009514,,,,not a bank
 MDGL,684,noninterest_income,OUT,,,,,,,,0001628280-26-009514,,,,not a bank
-MDGL,684,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-009514,R5,Total operating expenses,1258500000.0000,printed opex total tag
+MDGL,684,operating_expenses,not_presented,,,,,,,,0001628280-26-009514,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MDGL,684,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-009514,R5,Loss from operations,-300097000.0000,library map
 MDGL,684,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-009514,R5,"Other expense, net",-463000.0000,library map
 MDGL,684,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-009514,R3,"Property and equipment, net",1499000.0000,library map

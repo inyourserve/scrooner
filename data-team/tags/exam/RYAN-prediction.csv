@@ -34,7 +34,7 @@ RYAN,664,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001849253-2
 RYAN,664,net_interest_income,OUT,,,,,,,,0001849253-26-000006,,,,not a bank
 RYAN,664,noninterest_expense,OUT,,,,,,,,0001849253-26-000006,,,,not a bank
 RYAN,664,noninterest_income,OUT,,,,,,,,0001849253-26-000006,,,,not a bank
-RYAN,664,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001849253-26-000006,R3,Total operating expenses,2557486000.0000,printed opex total tag
+RYAN,664,operating_expenses,not_presented,,,,,,,,0001849253-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 RYAN,664,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001849253-26-000006,R3,OPERATING INCOME,493640000.0000,library map
 RYAN,664,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001849253-26-000006,R3,Other non-operating loss (income),692000.0000,library map
 RYAN,664,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001849253-26-000006,R5,Property and equipment  net,69461000.0000,library map

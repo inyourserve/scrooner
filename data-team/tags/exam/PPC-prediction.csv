@@ -34,7 +34,7 @@ PPC,865,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000802481-26
 PPC,865,net_interest_income,OUT,,,,,,,,0000802481-26-000011,,,,not a bank
 PPC,865,noninterest_expense,OUT,,,,,,,,0000802481-26-000011,,,,not a bank
 PPC,865,noninterest_income,OUT,,,,,,,,0000802481-26-000011,,,,not a bank
-PPC,865,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,"Selling, general and administrative expense",713250000.0000,printed opex lines (duration sum)
+PPC,865,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,"Selling, general and administrative expense",713250000.0000,every face line between GP/COR and OI; ties to GP - OI
 PPC,865,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,Operating income,1613539000.0000,library map
 PPC,865,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000802481-26-000011,R5,"Miscellaneous, net",5646000.0000,library map
 PPC,865,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,Y,PropertyPlantAndEquipmentNet,sec_api,0000802481-26-000011,R3,"Property, plant and equipment, net",3533027000.0000,library map

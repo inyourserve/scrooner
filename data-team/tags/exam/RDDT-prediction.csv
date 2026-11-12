@@ -34,7 +34,7 @@ RDDT,344,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001713445-2
 RDDT,344,net_interest_income,OUT,,,,,,,,0001713445-26-000022,,,,not a bank
 RDDT,344,noninterest_expense,OUT,,,,,,,,0001713445-26-000022,,,,not a bank
 RDDT,344,noninterest_income,OUT,,,,,,,,0001713445-26-000022,,,,not a bank
-RDDT,344,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,Research and development,783145000.0000,printed opex lines (duration sum)
+RDDT,344,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,Research and development,783145000.0000,every face line between GP/COR and OI; ties to GP - OI
 RDDT,344,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,Income (loss) from operations,441984000.0000,library map
 RDDT,344,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001713445-26-000022,R5,"Other income (expense), net",86706000.0000,combined line (library or label demote)
 RDDT,344,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001713445-26-000022,R3,"Property and equipment, net",12710000.0000,library map

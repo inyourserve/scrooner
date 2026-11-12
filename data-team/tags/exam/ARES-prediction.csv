@@ -34,7 +34,7 @@ ARES,293,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 ARES,293,net_interest_income,OUT,,,,,,,,0001628280-26-011413,,,,not a bank
 ARES,293,noninterest_expense,OUT,,,,,,,,0001628280-26-011413,,,,not a bank
 ARES,293,noninterest_income,OUT,,,,,,,,0001628280-26-011413,,,,not a bank
-ARES,293,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-011413,R5,Total expenses,4708766000.0000,printed opex total tag
+ARES,293,operating_expenses,not_presented,,,,,,,,0001628280-26-011413,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ARES,293,operating_income,not_presented,,,,,,,,0001628280-26-011413,,,,no face line
 ARES,293,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-011413,R5,"Total other income (expense), net",394177000.0000,combined line (library or label demote)
 ARES,293,ppe_net,not_presented,,,,,,,,0001628280-26-011413,,,,no face line

@@ -34,7 +34,7 @@ MTD,299,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,EarningsPerShareBasic,
 MTD,299,net_interest_income,OUT,,,,,,,,0001037646-26-000011,,,,not a bank
 MTD,299,noninterest_expense,OUT,,,,,,,,0001037646-26-000011,,,,not a bank
 MTD,299,noninterest_income,OUT,,,,,,,,0001037646-26-000011,,,,not a bank
-MTD,299,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,Research and development,199373000.0000,printed opex lines (duration sum)
+MTD,299,operating_expenses,not_presented,,,,,,,,0001037646-26-000011,,,,no opex total and no GP/COR anchor
 MTD,299,operating_income,not_presented,,,,,,,,0001037646-26-000011,,,,no face line
 MTD,299,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001037646-26-000011,R3,"Other Charges (Income), Net",16802000.0000,library map
 MTD,299,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001037646-26-000011,R5,"Property, plant and equipment, Net",845636000.0000,library map

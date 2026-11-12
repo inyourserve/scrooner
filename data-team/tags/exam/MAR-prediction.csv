@@ -34,7 +34,7 @@ MAR,117,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001048286-26
 MAR,117,net_interest_income,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
 MAR,117,noninterest_expense,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
 MAR,117,noninterest_income,OUT,,,,,,,,0001048286-26-000007,,,,not a bank
-MAR,117,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,Costs and expenses,22045000000.0000,CostsAndExpenses value check (structural)
+MAR,117,operating_expenses,not_presented,,,,,,,,0001048286-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MAR,117,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,OPERATING INCOME,4141000000.0000,library map
 MAR,117,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001048286-26-000007,R3,"Gains and other income, net",9000000.0000,library map
 MAR,117,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001048286-26-000007,R5,"Property and equipment, net",1954000000.0000,library map

@@ -34,7 +34,7 @@ AOS,784,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000091142-26
 AOS,784,net_interest_income,OUT,,,,,,,,0000091142-26-000008,,,,not a bank
 AOS,784,noninterest_expense,OUT,,,,,,,,0000091142-26-000008,,,,not a bank
 AOS,784,noninterest_income,OUT,,,,,,,,0000091142-26-000008,,,,not a bank
-AOS,784,operating_expenses,not_presented,,,,,,,,0000091142-26-000008,,,,no face line
+AOS,784,operating_expenses,not_presented,,,,,,,,0000091142-26-000008,,,,no opex total and no GP/COR anchor
 AOS,784,operating_income,not_presented,,,,,,,,0000091142-26-000008,,,,no face line
 AOS,784,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000091142-26-000008,R5,"Other income, net",600000.0000,library map
 AOS,784,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000091142-26-000008,R3,"Net property, plant and equipment",635100000.0000,library map

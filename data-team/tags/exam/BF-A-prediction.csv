@@ -34,7 +34,7 @@ BF-A,570,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000014693-2
 BF-A,570,net_interest_income,OUT,,,,,,,,0000014693-26-000024,,,,not a bank
 BF-A,570,noninterest_expense,OUT,,,,,,,,0000014693-26-000024,,,,not a bank
 BF-A,570,noninterest_income,OUT,,,,,,,,0000014693-26-000024,,,,not a bank
-BF-A,570,operating_expenses,not_presented,,,,,,,,0000014693-26-000024,,,,no face line
+BF-A,570,operating_expenses,component_sum,us-gaap:AdvertisingExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCharges;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal;us-gaap:ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,fsn_xbrl,0000014693-26-000024,R3,Advertising expenses,462000000.0000,every face line between GP/COR and OI; ties to GP - OI
 BF-A,570,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000014693-26-000024,R3,Operating income,1001000000.0000,library map
 BF-A,570,other_income_expense_net,not_presented,,,,,,,,0000014693-26-000024,,,,no face line
 BF-A,570,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000014693-26-000024,R5,"Property, plant, and equipment, net",1116000000.0000,library map

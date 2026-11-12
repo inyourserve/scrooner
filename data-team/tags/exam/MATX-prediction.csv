@@ -34,7 +34,7 @@ MATX,857,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-2
 MATX,857,net_interest_income,OUT,,,,,,,,0001104659-26-020944,,,,not a bank
 MATX,857,noninterest_expense,OUT,,,,,,,,0001104659-26-020944,,,,not a bank
 MATX,857,noninterest_income,OUT,,,,,,,,0001104659-26-020944,,,,not a bank
-MATX,857,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001104659-26-020944,R2,Total Costs and Expenses,2844700000.0000,CostsAndExpenses value check (structural)
+MATX,857,operating_expenses,not_presented,,,,,,,,0001104659-26-020944,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MATX,857,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-020944,R2,Operating Income,499800000.0000,library map
 MATX,857,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001104659-26-020944,R2,"Other income (expense), net",9100000.0000,library map
 MATX,857,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-020944,R3,"Property and equipment, net",2499400000.0000,library map

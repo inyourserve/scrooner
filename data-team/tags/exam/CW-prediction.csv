@@ -34,7 +34,7 @@ CW,469,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-
 CW,469,net_interest_income,OUT,,,,,,,,0001628280-26-007587,,,,not a bank
 CW,469,noninterest_expense,OUT,,,,,,,,0001628280-26-007587,,,,not a bank
 CW,469,noninterest_income,OUT,,,,,,,,0001628280-26-007587,,,,not a bank
-CW,469,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001628280-26-007587,R3,Research and development expenses,95161000.0000,printed opex lines (duration sum)
+CW,469,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001628280-26-007587,R3,Research and development expenses,95161000.0000,every face line between GP/COR and OI; ties to GP - OI
 CW,469,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-007587,R3,Operating income,633521000.0000,library map
 CW,469,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-007587,R3,"Other income, net",29637000.0000,library map
 CW,469,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-007587,R5,"Property, plant, and equipment, net",382200000.0000,library map

@@ -34,7 +34,7 @@ VRSK,386,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001437749-2
 VRSK,386,net_interest_income,OUT,,,,,,,,0001437749-26-004452,,,,not a bank
 VRSK,386,noninterest_expense,OUT,,,,,,,,0001437749-26-004452,,,,not a bank
 VRSK,386,noninterest_income,OUT,,,,,,,,0001437749-26-004452,,,,not a bank
-VRSK,386,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,"Selling, general and administrative",458200000.0000,printed opex lines (duration sum)
+VRSK,386,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,"Selling, general and administrative",458200000.0000,every face line between GP/COR and OI; ties to GP - OI
 VRSK,386,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001437749-26-004452,R4,Operating income,1343900000.0000,library map
 VRSK,386,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001437749-26-004452,R4,"Total other expense, net",-172600000.0000,combined line (library or label demote)
 VRSK,386,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0001437749-26-004452,R2,"Fixed assets, net",582800000.0000,library map

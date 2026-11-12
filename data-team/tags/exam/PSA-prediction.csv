@@ -34,7 +34,7 @@ PSA,228,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 PSA,228,net_interest_income,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
 PSA,228,noninterest_expense,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
 PSA,228,noninterest_income,OUT,,,,,,,,0001628280-26-007696,,,,not a bank
-PSA,228,operating_expenses,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
+PSA,228,operating_expenses,not_presented,,,,,,,,0001628280-26-007696,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 PSA,228,operating_income,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,other_income_expense_net,not_presented,,,,,,,,0001628280-26-007696,,,,no face line
 PSA,228,ppe_net,not_presented,,,,,,,,0001628280-26-007696,,,,no face line

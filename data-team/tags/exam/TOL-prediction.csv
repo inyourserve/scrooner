@@ -34,7 +34,7 @@ TOL,612,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000794170-25
 TOL,612,net_interest_income,OUT,,,,,,,,0000794170-25-000112,,,,not a bank
 TOL,612,noninterest_expense,OUT,,,,,,,,0000794170-25-000112,,,,not a bank
 TOL,612,noninterest_income,OUT,,,,,,,,0000794170-25-000112,,,,not a bank
-TOL,612,operating_expenses,not_presented,,,,,,,,0000794170-25-000112,,,,no face line
+TOL,612,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000794170-25-000112,R5,"Selling, general and administrative",1033622000.0000,every face line between GP/COR and OI; ties to GP - OI
 TOL,612,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000794170-25-000112,R5,Income from operations,1720614000.0000,library map
 TOL,612,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000794170-25-000112,R5,Other income  net,51703000.0000,library map
 TOL,612,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000794170-25-000112,R3,"Property, construction, and office equipment  net",273397000.0000,library map

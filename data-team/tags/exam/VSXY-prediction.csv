@@ -34,7 +34,7 @@ VSXY,853,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001856437-2
 VSXY,853,net_interest_income,OUT,,,,,,,,0001856437-26-000004,,,,not a bank
 VSXY,853,noninterest_expense,OUT,,,,,,,,0001856437-26-000004,,,,not a bank
 VSXY,853,noninterest_income,OUT,,,,,,,,0001856437-26-000004,,,,not a bank
-VSXY,853,operating_expenses,not_presented,,,,,,,,0001856437-26-000004,,,,no face line
+VSXY,853,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001856437-26-000004,R3,"General, Administrative and Store Operating Expenses",2113000000.0000,every face line between GP/COR and OI; ties to GP - OI
 VSXY,853,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001856437-26-000004,R3,Operating Income,271000000.0000,library map
 VSXY,853,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001856437-26-000004,R3,Other Income (Loss),7000000.0000,library map
 VSXY,853,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001856437-26-000004,R5,"Property and Equipment, Net",731000000.0000,library map

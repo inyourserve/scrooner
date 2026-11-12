@@ -34,7 +34,7 @@ VST,231,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001692819-26
 VST,231,net_interest_income,OUT,,,,,,,,0001692819-26-000006,,,,not a bank
 VST,231,noninterest_expense,OUT,,,,,,,,0001692819-26-000006,,,,not a bank
 VST,231,noninterest_income,OUT,,,,,,,,0001692819-26-000006,,,,not a bank
-VST,231,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001692819-26-000006,R3,Operating costs,2803000000.0000,printed opex lines (duration sum)
+VST,231,operating_expenses,not_presented,,,,,,,,0001692819-26-000006,,,,no opex total and no GP/COR anchor
 VST,231,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001692819-26-000006,R3,Operating income,1906000000.0000,library map
 VST,231,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-6,N,,sec_api,0001692819-26-000006,R3,"Other income, net",394000000.0000,combined line (library or label demote)
 VST,231,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001692819-26-000006,R6,"Property, plant, and equipment  net",19846000000.0000,library map

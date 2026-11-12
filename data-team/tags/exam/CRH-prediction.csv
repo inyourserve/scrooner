@@ -34,7 +34,7 @@ CRH,220,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26
 CRH,220,net_interest_income,OUT,,,,,,,,0001628280-26-009043,,,,not a bank
 CRH,220,noninterest_expense,OUT,,,,,,,,0001628280-26-009043,,,,not a bank
 CRH,220,noninterest_income,OUT,,,,,,,,0001628280-26-009043,,,,not a bank
-CRH,220,operating_expenses,not_presented,,,,,,,,0001628280-26-009043,,,,no face line
+CRH,220,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnSaleOfPropertyPlantEquipment;us-gaap:AssetImpairmentCharges,IS,+,-6,N,,sec_api,0001628280-26-009043,R3,"Selling, general and administrative expenses",8283000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CRH,220,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009043,R3,Operating income,5440000000.0000,library map
 CRH,220,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-009043,R3,"Other nonoperating income (expense), net",29000000.0000,library map
 CRH,220,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-009043,R6,"Property, plant and equipment, net",24937000000.0000,library map

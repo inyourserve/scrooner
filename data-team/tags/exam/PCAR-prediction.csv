@@ -34,7 +34,7 @@ PCAR,210,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-2
 PCAR,210,net_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,noninterest_expense,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,noninterest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,printed opex lines (duration sum)
+PCAR,210,operating_expenses,not_presented,,,,,,,,0001193125-26-057025,,,,no opex total and no GP/COR anchor
 PCAR,210,operating_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-057025,R2,"Interest and other expenses (income), net",-284300000.0000,combined line (library or label demote)
 PCAR,210,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,"Property, plant and equipment, net",4505300000.0000,library map

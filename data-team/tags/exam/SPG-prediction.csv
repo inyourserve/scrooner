@@ -34,7 +34,7 @@ SPG,186,net_income,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
 SPG,186,net_interest_income,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
 SPG,186,noninterest_expense,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
 SPG,186,noninterest_income,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
-SPG,186,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Total operating expenses,3189109000.0000,CostsAndExpenses value check (structural)
+SPG,186,operating_expenses,component_sum,us-gaap:DepreciationAndAmortization;us-gaap:RealEstateTaxExpense;us-gaap:CostOfPropertyRepairsAndMaintenance;us-gaap:MarketingAndAdvertisingExpense;custom:HomeAndRegionalOfficeCosts;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,fsn_xbrl,0001104659-26-019419,R4,Depreciation and amortization,1426423000.0000,every face line between GP/COR and OI; ties to GP - OI
 SPG,186,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,OPERATING INCOME BEFORE OTHER ITEMS,3175396000.0000,library map
 SPG,186,other_income_expense_net,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
 SPG,186,ppe_net,not_presented,,,,,,,,0001104659-26-019419,,,,no face line

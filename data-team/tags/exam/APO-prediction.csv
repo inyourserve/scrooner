@@ -34,7 +34,7 @@ APO,187,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001858681-26
 APO,187,net_interest_income,OUT,,,,,,,,0001858681-26-000013,,,,not a bank
 APO,187,noninterest_expense,OUT,,,,,,,,0001858681-26-000013,,,,not a bank
 APO,187,noninterest_income,OUT,,,,,,,,0001858681-26-000013,,,,not a bank
-APO,187,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001858681-26-000013,R5,Total Expenses,25289000000.0000,printed opex total tag
+APO,187,operating_expenses,not_presented,,,,,,,,0001858681-26-000013,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 APO,187,operating_income,not_presented,,,,,,,,0001858681-26-000013,,,,no face line
 APO,187,other_income_expense_net,not_presented,,,,,,,,0001858681-26-000013,,,,no face line
 APO,187,ppe_net,not_presented,,,,,,,,0001858681-26-000013,,,,no face line

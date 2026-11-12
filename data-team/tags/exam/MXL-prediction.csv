@@ -34,7 +34,7 @@ MXL,893,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001288469-26
 MXL,893,net_interest_income,OUT,,,,,,,,0001288469-26-000011,,,,not a bank
 MXL,893,noninterest_expense,OUT,,,,,,,,0001288469-26-000011,,,,not a bank
 MXL,893,noninterest_income,OUT,,,,,,,,0001288469-26-000011,,,,not a bank
-MXL,893,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001288469-26-000011,R5,Total operating expenses,392704000.0000,printed opex total tag
+MXL,893,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001288469-26-000011,R5,Total operating expenses,392704000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 MXL,893,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001288469-26-000011,R5,Loss from operations,-126890000.0000,library map
 MXL,893,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001288469-26-000011,R5,"Other expense, net",-7333000.0000,library map
 MXL,893,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001288469-26-000011,R3,"Property and equipment, net",48873000.0000,library map

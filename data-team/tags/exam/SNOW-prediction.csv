@@ -34,7 +34,7 @@ SNOW,111,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001640147-2
 SNOW,111,net_interest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
 SNOW,111,noninterest_expense,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
 SNOW,111,noninterest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Total operating expenses,4581306000.0000,printed opex total tag
+SNOW,111,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Total operating expenses,4581306000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 SNOW,111,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Operating loss,-1435165000.0000,library map
 SNOW,111,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,"Other income (expense), net",-59003000.0000,library map
 SNOW,111,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Property and equipment, net",248611000.0000,library map

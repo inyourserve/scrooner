@@ -34,7 +34,7 @@ FERG,258,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002011641-2
 FERG,258,net_interest_income,OUT,,,,,,,,0002011641-25-000027,,,,not a bank
 FERG,258,noninterest_expense,OUT,,,,,,,,0002011641-25-000027,,,,not a bank
 FERG,258,noninterest_income,OUT,,,,,,,,0002011641-25-000027,,,,not a bank
-FERG,258,operating_expenses,not_presented,,,,,,,,0002011641-25-000027,,,,no face line
+FERG,258,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCostsAndAssetImpairmentCharges;us-gaap:DepreciationAndAmortization,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,"Selling, general and administrative expenses",6376000000.0000,every face line between GP/COR and OI; ties to GP - OI
 FERG,258,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,Operating profit,2606000000.0000,library map
 FERG,258,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0002011641-25-000027,R3,"Other income (expense), net",7000000.0000,combined line (library or label demote)
 FERG,258,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0002011641-25-000027,R6,"Property, plant and equipment, net",1846000000.0000,library map

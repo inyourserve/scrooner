@@ -34,7 +34,7 @@ AMH,645,net_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,net_interest_income,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
 AMH,645,noninterest_expense,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
 AMH,645,noninterest_income,OUT,,,,,,,,0001562401-26-000010,,,,not a bank
-AMH,645,operating_expenses,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
+AMH,645,operating_expenses,not_presented,,,,,,,,0001562401-26-000010,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 AMH,645,operating_income,not_presented,,,,,,,,0001562401-26-000010,,,,no face line
 AMH,645,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0001562401-26-000010,R5,"Other income and expense, net",15660000.0000,library map
 AMH,645,ppe_net,not_presented,,,,,,,,0001562401-26-000010,,,,no face line

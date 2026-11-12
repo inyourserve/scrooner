@@ -34,7 +34,7 @@ ROIV,396,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001635088-2
 ROIV,396,net_interest_income,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
 ROIV,396,noninterest_expense,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
 ROIV,396,noninterest_income,OUT,,,,,,,,0001635088-26-000061,,,,not a bank
-ROIV,396,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001635088-26-000061,R5,Total operating expenses,1293563000.0000,printed opex total tag
+ROIV,396,operating_expenses,not_presented,,,,,,,,0001635088-26-000061,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ROIV,396,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001635088-26-000061,R5,(Loss) income from operations,-515068000.0000,library map
 ROIV,396,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001635088-26-000061,R5,"Other (income) expense, net",4012000.0000,library map
 ROIV,396,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001635088-26-000061,R3,"Property and equipment, net",11986000.0000,library map

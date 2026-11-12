@@ -34,7 +34,7 @@ DINO,421,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001915657-2
 DINO,421,net_interest_income,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
 DINO,421,noninterest_expense,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
 DINO,421,noninterest_income,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
-DINO,421,operating_expenses,not_presented,,,,,,,,0001915657-26-000016,,,,no face line
+DINO,421,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,"Selling, general and administrative expenses",456000000.0000,every face line between GP/COR and OI; ties to GP - OI
 DINO,421,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Income from operations,927000000.0000,library map
 DINO,421,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001915657-26-000016,R5,"Other income (expense), net (Note 5)",-53000000.0000,library map
 DINO,421,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,"Properties, plants and equipment, net",6533000000.0000,library map

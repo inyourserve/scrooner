@@ -34,7 +34,7 @@ BRKR,771,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001193125-2
 BRKR,771,net_interest_income,OUT,,,,,,,,0001193125-26-082523,,,,not a bank
 BRKR,771,noninterest_expense,OUT,,,,,,,,0001193125-26-082523,,,,not a bank
 BRKR,771,noninterest_income,OUT,,,,,,,,0001193125-26-082523,,,,not a bank
-BRKR,771,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-082523,R4,Total operating expenses,1509500000.0000,printed opex total tag
+BRKR,771,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-082523,R4,Total operating expenses,1509500000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 BRKR,771,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-082523,R4,Operating income,68200000.0000,library map
 BRKR,771,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-082523,R4,"Interest and other expense, net",-46200000.0000,combined line (library or label demote)
 BRKR,771,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-082523,R2,"Property, plant and equipment, net",744800000.0000,library map

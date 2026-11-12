@@ -34,7 +34,7 @@ RRX,689,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000082811-26
 RRX,689,net_interest_income,OUT,,,,,,,,0000082811-26-000054,,,,not a bank
 RRX,689,noninterest_expense,OUT,,,,,,,,0000082811-26-000054,,,,not a bank
 RRX,689,noninterest_income,OUT,,,,,,,,0000082811-26-000054,,,,not a bank
-RRX,689,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,Y,CostsAndExpenses,sec_api,0000082811-26-000054,R3,Total Operating Expenses,1537000000.0000,printed opex total tag
+RRX,689,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,Y,CostsAndExpenses,sec_api,0000082811-26-000054,R3,Total Operating Expenses,1537000000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 RRX,689,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000082811-26-000054,R3,Income from Operations,680800000.0000,library map
 RRX,689,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000082811-26-000054,R3,"Other Expense (Income), Net",-2800000.0000,library map
 RRX,689,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000082811-26-000054,R5,"Net Property, Plant and Equipment",911800000.0000,library map

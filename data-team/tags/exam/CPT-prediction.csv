@@ -34,7 +34,7 @@ CPT,699,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 CPT,699,net_interest_income,OUT,,,,,,,,0001628280-26-007697,,,,not a bank
 CPT,699,noninterest_expense,OUT,,,,,,,,0001628280-26-007697,,,,not a bank
 CPT,699,noninterest_income,OUT,,,,,,,,0001628280-26-007697,,,,not a bank
-CPT,699,operating_expenses,not_presented,,,,,,,,0001628280-26-007697,,,,no face line
+CPT,699,operating_expenses,not_presented,,,,,,,,0001628280-26-007697,,,,no opex total and no GP/COR anchor
 CPT,699,operating_income,not_presented,,,,,,,,0001628280-26-007697,,,,no face line
 CPT,699,other_income_expense_net,not_presented,,,,,,,,0001628280-26-007697,,,,no face line
 CPT,699,ppe_net,not_presented,,,,,,,,0001628280-26-007697,,,,no face line

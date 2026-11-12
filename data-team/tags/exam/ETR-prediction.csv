@@ -34,7 +34,7 @@ ETR,995,net_income,not_presented,,,,,,,,0000065984-26-000174,,,,no face line
 ETR,995,net_interest_income,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,noninterest_expense,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
 ETR,995,noninterest_income,OUT,,,,,,,,0000065984-26-000174,,,,not a bank
-ETR,995,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Costs and Expenses, Total",9744408000.0000,CostsAndExpenses value check (structural)
+ETR,995,operating_expenses,not_presented,,,,,,,,0000065984-26-000174,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ETR,995,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000065984-26-000174,R2,"Operating Income (Loss), Total",3202278000.0000,library map
 ETR,995,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000065984-26-000174,R2,Other Nonoperating Income (Expense),-92421000.0000,library map
 ETR,995,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000065984-26-000174,R6,"Public Utilities, Property, Plant and Equipment, Net, Total",52854614000.0000,library map

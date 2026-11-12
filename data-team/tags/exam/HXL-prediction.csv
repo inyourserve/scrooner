@@ -34,7 +34,7 @@ HXL,871,net_income,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
 HXL,871,net_interest_income,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
 HXL,871,noninterest_expense,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
 HXL,871,noninterest_income,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
-HXL,871,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Selling, general and administrative expenses",169000000.0000,printed opex lines (duration sum)
+HXL,871,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Selling, general and administrative expenses",169000000.0000,every face line between GP/COR and OI; ties to GP - OI
 HXL,871,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Operating income,171600000.0000,library map
 HXL,871,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Other expense (income),1100000.0000,library map
 HXL,871,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,"Property, plant and equipment, net",1611500000.0000,library map

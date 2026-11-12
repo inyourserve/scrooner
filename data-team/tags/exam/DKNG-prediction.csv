@@ -34,7 +34,7 @@ DKNG,733,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001883685-2
 DKNG,733,net_interest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
 DKNG,733,noninterest_expense,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
 DKNG,733,noninterest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
-DKNG,733,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Sales and marketing,1379880000.0000,printed opex lines (duration sum)
+DKNG,733,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;custom:ProductAndTechnologyExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,fsn_xbrl,0001883685-26-000013,R5,Sales and marketing,1379880000.0000,every face line between GP/COR and OI; ties to GP - OI
 DKNG,733,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001883685-26-000013,R5,Income (loss) from operations,-15817000.0000,library map
 DKNG,733,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,"Other gain (loss), net",38024000.0000,library map
 DKNG,733,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,"Property and equipment, net",51081000.0000,library map

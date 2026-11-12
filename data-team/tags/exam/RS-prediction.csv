@@ -34,7 +34,7 @@ RS,441,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,NetIncomeLossAvailableT
 RS,441,net_interest_income,OUT,,,,,,,,0001104659-26-020651,,,,not a bank
 RS,441,noninterest_expense,OUT,,,,,,,,0001104659-26-020651,,,,not a bank
 RS,441,noninterest_income,OUT,,,,,,,,0001104659-26-020651,,,,not a bank
-RS,441,operating_expenses,not_presented,,,,,,,,0001104659-26-020651,,,,no face line
+RS,441,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges,IS,+,-5,N,,sec_api,0001104659-26-020651,R2,"Warehouse, delivery, selling, general and administrative",2806700000.0000,every face line between GP/COR and OI; ties to GP - OI
 RS,441,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-020651,R2,Operating income,1012700000.0000,library map
 RS,441,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001104659-26-020651,R2,"Other income, net",12200000.0000,library map
 RS,441,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-020651,R4,"Property, plant and equipment, net",2633300000.0000,library map

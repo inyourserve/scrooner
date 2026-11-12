@@ -34,7 +34,7 @@ BBIO,590,net_income,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
 BBIO,590,net_interest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
 BBIO,590,noninterest_expense,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
 BBIO,590,noninterest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,printed opex lines (duration sum)
+BBIO,590,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,every face line between GP/COR and OI; ties to GP - OI
 BBIO,590,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss from operations,-523411000.0000,library map
 BBIO,590,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Other income, net",43058000.0000,library map
 BBIO,590,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Property and equipment, net",5366000.0000,library map

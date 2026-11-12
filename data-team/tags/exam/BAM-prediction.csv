@@ -34,7 +34,7 @@ BAM,982,net_income,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,net_interest_income,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,noninterest_expense,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
 BAM,982,noninterest_income,OUT,,,,,,,,0001628280-26-013098,,,,not a bank
-BAM,982,operating_expenses,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
+BAM,982,operating_expenses,not_presented,,,,,,,,0001628280-26-013098,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 BAM,982,operating_income,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,other_income_expense_net,not_presented,,,,,,,,0001628280-26-013098,,,,no face line
 BAM,982,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-013098,R3,"Property, plant and equipment, net",92000000.0000,library map

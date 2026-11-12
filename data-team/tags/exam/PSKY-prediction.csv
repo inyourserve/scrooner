@@ -34,7 +34,7 @@ PSKY,677,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0002041610-2
 PSKY,677,net_interest_income,OUT,,,,,,,,0002041610-26-000011,,,,not a bank
 PSKY,677,noninterest_expense,OUT,,,,,,,,0002041610-26-000011,,,,not a bank
 PSKY,677,noninterest_income,OUT,,,,,,,,0002041610-26-000011,,,,not a bank
-PSKY,677,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0002041610-26-000011,R3,Total segment expenses,12364000000.0000,CostsAndExpenses value check (structural)
+PSKY,677,operating_expenses,not_presented,,,,,,,,0002041610-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 PSKY,677,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0002041610-26-000011,R3,Operating income (loss),-95000000.0000,library map
 PSKY,677,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0002041610-26-000011,R3,"Other items, net",-39000000.0000,library map
 PSKY,677,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0002041610-26-000011,R5,"Property and equipment, net",2195000000.0000,library map

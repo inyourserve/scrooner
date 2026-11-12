@@ -34,7 +34,7 @@ L,417,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000060086-26-0
 L,417,net_interest_income,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
 L,417,noninterest_expense,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
 L,417,noninterest_income,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
-L,417,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Total,16171000000.0000,printed opex total tag
+L,417,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Total,16171000000.0000,sector template total
 L,417,operating_income,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
 L,417,other_income_expense_net,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
 L,417,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,"Property, plant and equipment",10695000000.0000,library map

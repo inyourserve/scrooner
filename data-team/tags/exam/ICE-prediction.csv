@@ -34,7 +34,7 @@ ICE,130,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001571949-26
 ICE,130,net_interest_income,OUT,,,,,,,,0001571949-26-000004,,,,not a bank
 ICE,130,noninterest_expense,OUT,,,,,,,,0001571949-26-000004,,,,not a bank
 ICE,130,noninterest_income,OUT,,,,,,,,0001571949-26-000004,,,,not a bank
-ICE,130,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001571949-26-000004,R5,Total operating expenses,5002000000.0000,printed opex total tag
+ICE,130,operating_expenses,not_presented,,,,,,,,0001571949-26-000004,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ICE,130,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001571949-26-000004,R5,Operating income,4929000000.0000,library map
 ICE,130,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001571949-26-000004,R5,"Other income/(expense), net",101000000.0000,library map
 ICE,130,ppe_net,not_presented,,,,,,,,0001571949-26-000004,,,,no face line

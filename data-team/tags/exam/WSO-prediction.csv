@@ -34,7 +34,7 @@ WSO,644,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26
 WSO,644,net_interest_income,OUT,,,,,,,,0001193125-26-082486,,,,not a bank
 WSO,644,noninterest_expense,OUT,,,,,,,,0001193125-26-082486,,,,not a bank
 WSO,644,noninterest_income,OUT,,,,,,,,0001193125-26-082486,,,,not a bank
-WSO,644,operating_expenses,not_presented,,,,,,,,0001193125-26-082486,,,,no face line
+WSO,644,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-082486,R2,"Selling, general and administrative expenses",1337882000.0000,every face line between GP/COR and OI; ties to GP - OI
 WSO,644,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-082486,R2,Operating income,720347000.0000,library map
 WSO,644,other_income_expense_net,not_presented,,,,,,,,0001193125-26-082486,,,,no face line
 WSO,644,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-082486,R4,"Property and equipment, net",136012000.0000,library map

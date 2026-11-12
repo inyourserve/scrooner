@@ -34,7 +34,7 @@ CAVA,879,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 CAVA,879,net_interest_income,OUT,,,,,,,,0001628280-26-011296,,,,not a bank
 CAVA,879,noninterest_expense,OUT,,,,,,,,0001628280-26-011296,,,,not a bank
 CAVA,879,noninterest_income,OUT,,,,,,,,0001628280-26-011296,,,,not a bank
-CAVA,879,operating_expenses,not_presented,,,,,,,,0001628280-26-011296,,,,no face line
+CAVA,879,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-011296,R5,Total operating expenses,1124379000.0000,"total includes cost of revenue: combined, never opex"
 CAVA,879,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-011296,R5,Income from operations,55285000.0000,library map
 CAVA,879,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-011296,R5,"Other income, net",469000.0000,combined line (library or label demote)
 CAVA,879,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-011296,R3,"Property and equipment, net",457501000.0000,library map

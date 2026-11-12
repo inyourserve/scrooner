@@ -34,7 +34,7 @@ ELF,878,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001600033-26
 ELF,878,net_interest_income,OUT,,,,,,,,0001600033-26-000020,,,,not a bank
 ELF,878,noninterest_expense,OUT,,,,,,,,0001600033-26-000020,,,,not a bank
 ELF,878,noninterest_income,OUT,,,,,,,,0001600033-26-000020,,,,not a bank
-ELF,878,operating_expenses,not_presented,,,,,,,,0001600033-26-000020,,,,no face line
+ELF,878,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,"Selling, general and administrative expenses",1026066000.0000,every face line between GP/COR and OI; ties to GP - OI
 ELF,878,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,Operating income,73632000.0000,library map
 ELF,878,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001600033-26-000020,R5,"Other income, net",2785000.0000,library map
 ELF,878,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001600033-26-000020,R3,"Property and equipment, net",41496000.0000,library map

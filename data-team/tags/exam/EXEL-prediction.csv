@@ -34,7 +34,7 @@ EXEL,521,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000939767-2
 EXEL,521,net_interest_income,OUT,,,,,,,,0000939767-26-000021,,,,not a bank
 EXEL,521,noninterest_expense,OUT,,,,,,,,0000939767-26-000021,,,,not a bank
 EXEL,521,noninterest_income,OUT,,,,,,,,0000939767-26-000021,,,,not a bank
-EXEL,521,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000939767-26-000021,R5,Research and development,825001000.0000,printed opex lines (duration sum)
+EXEL,521,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfLongLivedAssetsHeldForUse;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000939767-26-000021,R5,Research and development,825001000.0000,every face line between GP/COR and OI; ties to GP - OI
 EXEL,521,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000939767-26-000021,R5,Income from operations,872191000.0000,library map
 EXEL,521,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000939767-26-000021,R5,"Other income (expenses), net",-198000.0000,library map
 EXEL,521,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000939767-26-000021,R3,"Property and equipment, net",98960000.0000,library map

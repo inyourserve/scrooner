@@ -34,7 +34,7 @@ ZBH,477,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26
 ZBH,477,net_interest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
 ZBH,477,noninterest_expense,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
 ZBH,477,noninterest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,printed opex lines (duration sum)
+ZBH,477,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCostReductionInitiatives;custom:AcquisitionIntegrationDivestitureAndRelatedExpenses,IS,+,-5,N,,fsn_xbrl,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,every face line between GP/COR and OI; ties to GP - OI
 ZBH,477,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Operating Profit,1098100000.0000,library map
 ZBH,477,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Other income (expense), net",25500000.0000,library map
 ZBH,477,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Property, plant and equipment, net",2207100000.0000,library map

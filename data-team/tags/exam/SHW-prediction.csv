@@ -34,7 +34,7 @@ SHW,155,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000089800-26
 SHW,155,net_interest_income,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,noninterest_expense,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,noninterest_income,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
-SHW,155,operating_expenses,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
+SHW,155,operating_expenses,not_presented,,,,,,,,0000089800-26-000008,,,,no opex total and no GP/COR anchor
 SHW,155,operating_income,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
 SHW,155,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000089800-26-000008,R3,Other expense (income) - net,-20900000.0000,library map
 SHW,155,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,"Property, plant and equipment, net",4137400000.0000,library map

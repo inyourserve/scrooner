@@ -34,7 +34,7 @@ NTAP,277,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-2
 NTAP,277,net_interest_income,OUT,,,,,,,,0001193125-26-259683,,,,not a bank
 NTAP,277,noninterest_expense,OUT,,,,,,,,0001193125-26-259683,,,,not a bank
 NTAP,277,noninterest_income,OUT,,,,,,,,0001193125-26-259683,,,,not a bank
-NTAP,277,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001193125-26-259683,R4,Total operating expenses,3225000000.0000,printed opex total tag
+NTAP,277,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001193125-26-259683,R4,Total operating expenses,3225000000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 NTAP,277,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-259683,R4,Income from operations,1674000000.0000,library map
 NTAP,277,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001193125-26-259683,R4,"Other (expense) income, net",-26000000.0000,combined line (library or label demote)
 NTAP,277,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-259683,R2,"Property and equipment, net",592000000.0000,library map

@@ -34,7 +34,7 @@ RVMD,288,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 RVMD,288,net_interest_income,OUT,,,,,,,,0001193125-26-071563,,,,not a bank
 RVMD,288,noninterest_expense,OUT,,,,,,,,0001193125-26-071563,,,,not a bank
 RVMD,288,noninterest_income,OUT,,,,,,,,0001193125-26-071563,,,,not a bank
-RVMD,288,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-071563,R4,Total operating expenses,1182369000.0000,printed opex total tag
+RVMD,288,operating_expenses,not_presented,,,,,,,,0001193125-26-071563,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 RVMD,288,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-071563,R4,Loss from operations,-1182369000.0000,library map
 RVMD,288,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-071563,R4,"Total non-operating income, net",51068000.0000,combined line (library or label demote)
 RVMD,288,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071563,R2,"Property and equipment, net",33194000.0000,library map

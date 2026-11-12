@@ -34,7 +34,7 @@ BTSG,615,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 BTSG,615,net_interest_income,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
 BTSG,615,noninterest_expense,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
 BTSG,615,noninterest_income,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
-BTSG,615,operating_expenses,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,"Selling, general, and administrative expenses",1222525000.0000,every face line between GP/COR and OI; ties to GP - OI
 BTSG,615,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Operating income,295252000.0000,library map
 BTSG,615,other_income_expense_net,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
 BTSG,615,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,"Property and equipment, net of accumulated depreciation of $404,878 and $339,892 at December 31, 2025 and 2024, respectively",204689000.0000,library map

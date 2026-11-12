@@ -34,7 +34,7 @@ NVR,518,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000906163-26
 NVR,518,net_interest_income,OUT,,,,,,,,0000906163-26-000018,,,,not a bank
 NVR,518,noninterest_expense,OUT,,,,,,,,0000906163-26-000018,,,,not a bank
 NVR,518,noninterest_income,OUT,,,,,,,,0000906163-26-000018,,,,not a bank
-NVR,518,operating_expenses,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
+NVR,518,operating_expenses,not_presented,,,,,,,,0000906163-26-000018,,,,no opex total and no GP/COR anchor
 NVR,518,operating_income,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,other_income_expense_net,not_presented,,,,,,,,0000906163-26-000018,,,,no face line
 NVR,518,ppe_net,not_presented,,,,,,,,0000906163-26-000018,,,,no face line

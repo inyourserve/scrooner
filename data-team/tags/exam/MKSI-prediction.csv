@@ -34,7 +34,7 @@ MKSI,544,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-2
 MKSI,544,net_interest_income,OUT,,,,,,,,0001193125-26-066820,,,,not a bank
 MKSI,544,noninterest_expense,OUT,,,,,,,,0001193125-26-066820,,,,not a bank
 MKSI,544,noninterest_income,OUT,,,,,,,,0001193125-26-066820,,,,not a bank
-MKSI,544,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,Y,RestructuringAndOtherCharges,sec_api,0001193125-26-066820,R4,Research and development,299000000.0000,printed opex lines (duration sum)
+MKSI,544,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringCharges;custom:FeesAndExpensesRelatedToAmendmentsToTermLoan;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillAndIntangibleAssetImpairment;us-gaap:GainLossOnSaleOfPropertyPlantEquipment,IS,+,-6,Y,RestructuringAndOtherCharges,fsn_xbrl,0001193125-26-066820,R4,Research and development,299000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MKSI,544,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-066820,R4,Income (loss) from operations,528000000.0000,library map
 MKSI,544,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001193125-26-066820,R4,"Other expense (income), net",-16000000.0000,library map
 MKSI,544,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-066820,R2,"Property, plant and equipment, net",810000000.0000,library map

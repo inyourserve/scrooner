@@ -34,7 +34,7 @@ NTSK,828,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 NTSK,828,net_interest_income,OUT,,,,,,,,0001193125-26-135011,,,,not a bank
 NTSK,828,noninterest_expense,OUT,,,,,,,,0001193125-26-135011,,,,not a bank
 NTSK,828,noninterest_income,OUT,,,,,,,,0001193125-26-135011,,,,not a bank
-NTSK,828,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-135011,R4,Sales and marketing,393742000.0000,printed opex lines (duration sum)
+NTSK,828,operating_expenses,mapped,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-135011,R4,Total operating expenses,1135248000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 NTSK,828,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-135011,R4,Loss from operations,-652579000.0000,library map
 NTSK,828,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-135011,R4,"Other income, net",18782000.0000,library map
 NTSK,828,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-135011,R2,"Property and equipment, net",93876000.0000,library map

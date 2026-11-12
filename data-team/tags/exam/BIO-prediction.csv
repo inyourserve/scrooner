@@ -34,7 +34,7 @@ BIO,721,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000012208-26
 BIO,721,net_interest_income,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
 BIO,721,noninterest_expense,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
 BIO,721,noninterest_income,OUT,,,,,,,,0000012208-26-000010,,,,not a bank
-BIO,721,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,"Selling, general and administrative expense",844300000.0000,printed opex lines (duration sum)
+BIO,721,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,"Selling, general and administrative expense",844300000.0000,every face line between GP/COR and OI; ties to GP - OI
 BIO,721,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,Income from operations,47200000.0000,library map
 BIO,721,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000012208-26-000010,R5,"Other income, net",90300000.0000,library map
 BIO,721,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000012208-26-000010,R3,"Property, plant and equipment, net",539900000.0000,library map

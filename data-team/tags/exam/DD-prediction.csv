@@ -34,7 +34,7 @@ DD,485,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001666700-26-
 DD,485,net_interest_income,OUT,,,,,,,,0001666700-26-000013,,,,not a bank
 DD,485,noninterest_expense,OUT,,,,,,,,0001666700-26-000013,,,,not a bank
 DD,485,noninterest_income,OUT,,,,,,,,0001666700-26-000013,,,,not a bank
-DD,485,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001666700-26-000013,R3,Research and development expenses,193000000.0000,printed opex lines (duration sum)
+DD,485,operating_expenses,not_presented,,,,,,,,0001666700-26-000013,,,,no opex total and no GP/COR anchor
 DD,485,operating_income,not_presented,,,,,,,,0001666700-26-000013,,,,no face line
 DD,485,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001666700-26-000013,R3,Sundry income (expense) - net,14000000.0000,combined line (library or label demote)
 DD,485,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001666700-26-000013,R5,"Total property, plant and equipment  net",3464000000.0000,library map

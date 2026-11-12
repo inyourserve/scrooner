@@ -34,7 +34,7 @@ LHX,253,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000202058-26
 LHX,253,net_interest_income,OUT,,,,,,,,0000202058-26-000015,,,,not a bank
 LHX,253,noninterest_expense,OUT,,,,,,,,0000202058-26-000015,,,,not a bank
 LHX,253,noninterest_income,OUT,,,,,,,,0000202058-26-000015,,,,not a bank
-LHX,253,operating_expenses,not_presented,,,,,,,,0000202058-26-000015,,,,no face line
+LHX,253,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,General and administrative expenses,3430000000.0000,every face line between GP/COR and OI; ties to GP - OI
 LHX,253,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,Operating income,2110000000.0000,library map
 LHX,253,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000202058-26-000015,R3,"Non-service FAS pension income and other, net",419000000.0000,library map
 LHX,253,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000202058-26-000015,R5,"Property, plant and equipment, net",2665000000.0000,library map

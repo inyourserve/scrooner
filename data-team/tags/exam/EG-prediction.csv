@@ -34,7 +34,7 @@ EG,532,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,0001
 EG,532,net_interest_income,OUT,,,,,,,,0001095073-26-000006,,,,not a bank
 EG,532,noninterest_expense,OUT,,,,,,,,0001095073-26-000006,,,,not a bank
 EG,532,noninterest_income,OUT,,,,,,,,0001095073-26-000006,,,,not a bank
-EG,532,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001095073-26-000006,R5,Total claims and expenses,15609000000.0000,printed opex total tag
+EG,532,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001095073-26-000006,R5,Total claims and expenses,15609000000.0000,sector template total
 EG,532,operating_income,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
 EG,532,other_income_expense_net,not_presented,,,,,,,,0001095073-26-000006,,,,no face line
 EG,532,ppe_net,not_presented,,,,,,,,0001095073-26-000006,,,,no face line

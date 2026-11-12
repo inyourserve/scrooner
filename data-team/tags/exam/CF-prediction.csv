@@ -34,7 +34,7 @@ CF,474,net_income,not_presented,,,,,,,,0001324404-26-000007,,,,no face line
 CF,474,net_interest_income,OUT,,,,,,,,0001324404-26-000007,,,,not a bank
 CF,474,noninterest_expense,OUT,,,,,,,,0001324404-26-000007,,,,not a bank
 CF,474,noninterest_income,OUT,,,,,,,,0001324404-26-000007,,,,not a bank
-CF,474,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001324404-26-000007,R3,"Selling, general and administrative expenses",364000000.0000,printed opex lines (duration sum)
+CF,474,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:RestructuringCharges;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:OtherOperatingIncomeExpenseNet;custom:EquityInEarningsOfOperatingAffiliates,IS,+,-6,N,,fsn_xbrl,0001324404-26-000007,R3,"Selling, general and administrative expenses",364000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CF,474,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001324404-26-000007,R3,Operating earnings,2300000000.0000,library map
 CF,474,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001324404-26-000007,R3,Other non-operatingnet,19000000.0000,library map
 CF,474,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001324404-26-000007,R5,"Property, plant and equipmentnet (amount related to VIE2025: $361)",6715000000.0000,library map

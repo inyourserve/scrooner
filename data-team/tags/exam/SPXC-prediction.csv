@@ -34,7 +34,7 @@ SPXC,775,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,00
 SPXC,775,net_interest_income,OUT,,,,,,,,0000088205-26-000008,,,,not a bank
 SPXC,775,noninterest_expense,OUT,,,,,,,,0000088205-26-000008,,,,not a bank
 SPXC,775,noninterest_income,OUT,,,,,,,,0000088205-26-000008,,,,not a bank
-SPXC,775,operating_expenses,not_presented,,,,,,,,0000088205-26-000008,,,,no face line
+SPXC,775,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:AmortizationOfIntangibleAssetsSellingGeneralAndAdministrative;custom:SpecialChargesNet;us-gaap:GoodwillAndIntangibleAssetImpairment;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,SpecialCharges,fsn_xbrl,0000088205-26-000008,R3,"Selling, general and administrative",477600000.0000,every face line between GP/COR and OI; ties to GP - OI
 SPXC,775,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000088205-26-000008,R3,Operating income,350400000.0000,library map
 SPXC,775,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000088205-26-000008,R3,"Other income (expense), net",8500000.0000,library map
 SPXC,775,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000088205-26-000008,R6,"Property, plant and equipment, net",290800000.0000,library map

@@ -34,7 +34,7 @@ INSM,440,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001104506-2
 INSM,440,net_interest_income,OUT,,,,,,,,0001104506-26-000009,,,,not a bank
 INSM,440,noninterest_expense,OUT,,,,,,,,0001104506-26-000009,,,,not a bank
 INSM,440,noninterest_income,OUT,,,,,,,,0001104506-26-000009,,,,not a bank
-INSM,440,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,Y,GeneralAndAdministrativeExpense,sec_api,0001104506-26-000009,R5,Research and development,771093000.0000,printed opex lines (duration sum)
+INSM,440,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1,IS,+,-3,Y,GeneralAndAdministrativeExpense,sec_api,0001104506-26-000009,R5,Research and development,771093000.0000,every face line between GP/COR and OI; ties to GP - OI
 INSM,440,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104506-26-000009,R5,Operating loss,-1246769000.0000,library map
 INSM,440,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001104506-26-000009,R5,"Other (expense) income, net",-1841000.0000,library map
 INSM,440,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104506-26-000009,R3,"Fixed assets, net",102942000.0000,library map

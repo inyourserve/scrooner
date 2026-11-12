@@ -34,7 +34,7 @@ INTU,141,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000896878-2
 INTU,141,net_interest_income,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
 INTU,141,noninterest_expense,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
 INTU,141,noninterest_income,OUT,,,,,,,,0000896878-26-000037,,,,not a bank
-INTU,141,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Total costs and expenses,15564000000.0000,CostsAndExpenses value check (structural)
+INTU,141,operating_expenses,not_presented,,,,,,,,0000896878-26-000037,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 INTU,141,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,Operating income,5884000000.0000,library map
 INTU,141,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000896878-26-000037,R3,"Interest and other income, net",389000000.0000,combined line (library or label demote)
 INTU,141,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000896878-26-000037,R5,"Property and equipment, net",1023000000.0000,library map

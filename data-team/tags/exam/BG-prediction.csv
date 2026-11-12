@@ -34,7 +34,7 @@ BG,447,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-
 BG,447,net_interest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
 BG,447,noninterest_expense,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
 BG,447,noninterest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,operating_expenses,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
+BG,447,operating_expenses,not_presented,,,,,,,,0001628280-26-009842,,,,no opex total and no GP/COR anchor
 BG,447,operating_income,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
 BG,447,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Other income  net,289000000.0000,library map
 BG,447,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,"Property, plant and equipment, net (Note 7)",11678000000.0000,library map

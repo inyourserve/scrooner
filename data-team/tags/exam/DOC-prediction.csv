@@ -34,7 +34,7 @@ DOC,583,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 DOC,583,net_interest_income,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
 DOC,583,noninterest_expense,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
 DOC,583,noninterest_income,OUT,,,,,,,,0001628280-26-005044,,,,not a bank
-DOC,583,operating_expenses,not_presented,,,,,,,,0001628280-26-005044,,,,no face line
+DOC,583,operating_expenses,not_presented,,,,,,,,0001628280-26-005044,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 DOC,583,operating_income,not_presented,,,,,,,,0001628280-26-005044,,,,no face line
 DOC,583,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-005044,R5,"Other income (expense), net",479000.0000,library map
 DOC,583,ppe_net,not_presented,,,,,,,,0001628280-26-005044,,,,no face line

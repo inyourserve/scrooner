@@ -34,7 +34,7 @@ EXE,428,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 EXE,428,net_interest_income,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,noninterest_expense,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
 EXE,428,noninterest_income,OUT,,,,,,,,0000895126-26-000011,,,,not a bank
-EXE,428,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Total operating expenses,9653000000.0000,CostsAndExpenses value check (structural)
+EXE,428,operating_expenses,not_presented,,,,,,,,0000895126-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 EXE,428,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,Income (loss) from operations,2471000000.0000,library map
 EXE,428,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000895126-26-000011,R5,"Other income, net",42000000.0000,library map
 EXE,428,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000895126-26-000011,R3,"Total property and equipment, net",24355000000.0000,library map

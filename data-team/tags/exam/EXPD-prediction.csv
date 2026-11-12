@@ -34,7 +34,7 @@ EXPD,380,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 EXPD,380,net_interest_income,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
 EXPD,380,noninterest_expense,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
 EXPD,380,noninterest_income,OUT,,,,,,,,0001193125-26-071569,,,,not a bank
-EXPD,380,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,Total operating expenses,10016463000.0000,CostsAndExpenses value check (structural)
+EXPD,380,operating_expenses,not_presented,,,,,,,,0001193125-26-071569,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 EXPD,380,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,Operating income,1052546000.0000,library map
 EXPD,380,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-071569,R4,"Other, net",5802000.0000,library map
 EXPD,380,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-071569,R2,"Property and equipment, net",462122000.0000,library map

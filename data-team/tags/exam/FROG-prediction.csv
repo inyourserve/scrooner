@@ -34,7 +34,7 @@ FROG,682,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 FROG,682,net_interest_income,OUT,,,,,,,,0001193125-26-051382,,,,not a bank
 FROG,682,noninterest_expense,OUT,,,,,,,,0001193125-26-051382,,,,not a bank
 FROG,682,noninterest_income,OUT,,,,,,,,0001193125-26-051382,,,,not a bank
-FROG,682,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051382,R4,Total operating expenses,500240000.0000,printed opex total tag
+FROG,682,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051382,R4,Total operating expenses,500240000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 FROG,682,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-051382,R4,Operating loss,-91853000.0000,library map
 FROG,682,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-051382,R4,"Interest and other income, net",25816000.0000,combined line (library or label demote)
 FROG,682,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-051382,R2,"Property and equipment, net",5536000.0000,library map

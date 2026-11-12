@@ -34,7 +34,7 @@ KMB,300,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 KMB,300,net_interest_income,OUT,,,,,,,,0001628280-26-007567,,,,not a bank
 KMB,300,noninterest_expense,OUT,,,,,,,,0001628280-26-007567,,,,not a bank
 KMB,300,noninterest_income,OUT,,,,,,,,0001628280-26-007567,,,,not a bank
-KMB,300,operating_expenses,not_presented,,,,,,,,0001628280-26-007567,,,,no face line
+KMB,300,operating_expenses,component_sum,custom:MarketingResearchAndGeneralExpense;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,Y,MarketingResearchAndGeneralExpenses,fsn_xbrl,0001628280-26-007567,R3,"Marketing, research and general expenses",3528000000.0000,every face line between GP/COR and OI; ties to GP - OI
 KMB,300,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-007567,R3,Operating Profit,2351000000.0000,library map
 KMB,300,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,Y,NonoperatingIncomeExpense,sec_api,0001628280-26-007567,R3,Nonoperating expense,-67000000.0000,library map
 KMB,300,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-007567,R5,"Property, Plant and Equipment, Net",6775000000.0000,library map

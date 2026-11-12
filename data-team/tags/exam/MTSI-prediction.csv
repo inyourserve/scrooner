@@ -34,7 +34,7 @@ MTSI,452,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001493594-2
 MTSI,452,net_interest_income,OUT,,,,,,,,0001493594-25-000054,,,,not a bank
 MTSI,452,noninterest_expense,OUT,,,,,,,,0001493594-25-000054,,,,not a bank
 MTSI,452,noninterest_income,OUT,,,,,,,,0001493594-25-000054,,,,not a bank
-MTSI,452,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001493594-25-000054,R5,Total operating expenses,399350000.0000,printed opex total tag
+MTSI,452,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001493594-25-000054,R5,Total operating expenses,399350000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 MTSI,452,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001493594-25-000054,R5,Income from operations,129652000.0000,library map
 MTSI,452,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001493594-25-000054,R5,"Gain on acquired assets and other income (expense), net",10084000.0000,library map
 MTSI,452,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001493594-25-000054,R3,"Property and equipment, net",230291000.0000,library map

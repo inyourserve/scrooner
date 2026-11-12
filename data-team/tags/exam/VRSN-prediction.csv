@@ -34,7 +34,7 @@ VRSN,358,net_income,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,net_interest_income,OUT,,,,,,,,0001014473-26-000006,,,,not a bank
 VRSN,358,noninterest_expense,OUT,,,,,,,,0001014473-26-000006,,,,not a bank
 VRSN,358,noninterest_income,OUT,,,,,,,,0001014473-26-000006,,,,not a bank
-VRSN,358,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,Research and development,103600000.0000,printed opex lines (duration sum)
+VRSN,358,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,Research and development,103600000.0000,every face line between GP/COR and OI; ties to GP - OI
 VRSN,358,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001014473-26-000006,R5,Operating income,1121000000.0000,library map
 VRSN,358,other_income_expense_net,not_presented,,,,,,,,0001014473-26-000006,,,,no face line
 VRSN,358,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001014473-26-000006,R3,"Property and equipment, net",213700000.0000,library map

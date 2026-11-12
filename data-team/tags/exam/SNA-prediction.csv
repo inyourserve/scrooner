@@ -34,7 +34,7 @@ SNA,462,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000091440-26
 SNA,462,net_interest_income,OUT,,,,,,,,0000091440-26-000045,,,,not a bank
 SNA,462,noninterest_expense,OUT,,,,,,,,0000091440-26-000045,,,,not a bank
 SNA,462,noninterest_income,OUT,,,,,,,,0000091440-26-000045,,,,not a bank
-SNA,462,operating_expenses,not_presented,,,,,,,,0000091440-26-000045,,,,no face line
+SNA,462,operating_expenses,not_presented,,,,,,,,0000091440-26-000045,,,,no opex total and no GP/COR anchor
 SNA,462,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000091440-26-000045,R3,Operating earnings,1327700000.0000,library map
 SNA,462,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000091440-26-000045,R3,Other income (expense)  net,58700000.0000,library map
 SNA,462,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000091440-26-000045,R5,Property and equipment  net,552300000.0000,library map

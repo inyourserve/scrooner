@@ -34,7 +34,7 @@ TSN,527,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000100493-25
 TSN,527,net_interest_income,OUT,,,,,,,,0000100493-25-000095,,,,not a bank
 TSN,527,noninterest_expense,OUT,,,,,,,,0000100493-25-000095,,,,not a bank
 TSN,527,noninterest_income,OUT,,,,,,,,0000100493-25-000095,,,,not a bank
-TSN,527,operating_expenses,not_presented,,,,,,,,0000100493-25-000095,,,,no face line
+TSN,527,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,"Selling, General and Administrative",2121000000.0000,every face line between GP/COR and OI; ties to GP - OI
 TSN,527,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,Operating Income (Loss),1098000000.0000,library map
 TSN,527,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000100493-25-000095,R3,"Other, net",47000000.0000,library map
 TSN,527,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000100493-25-000095,R5,"Net Property, Plant and Equipment",9204000000.0000,library map

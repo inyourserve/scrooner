@@ -34,7 +34,7 @@ DGX,376,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001022079-26
 DGX,376,net_interest_income,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
 DGX,376,noninterest_expense,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
 DGX,376,noninterest_income,OUT,,,,,,,,0001022079-26-000015,,,,not a bank
-DGX,376,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,"Selling, general and administrative",1967000000.0000,printed opex lines (duration sum)
+DGX,376,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,"Selling, general and administrative",1967000000.0000,every face line between GP/COR and OI; ties to GP - OI
 DGX,376,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,Operating income,1556000000.0000,library map
 DGX,376,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001022079-26-000015,R5,Other Nonoperating Income (Expense),26000000.0000,library map
 DGX,376,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001022079-26-000015,R3,"Property, plant and equipment, net",2203000000.0000,library map

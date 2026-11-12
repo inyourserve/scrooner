@@ -34,7 +34,7 @@ EQT,313,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000033213-26
 EQT,313,net_interest_income,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
 EQT,313,noninterest_expense,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
 EQT,313,noninterest_income,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
-EQT,313,operating_expenses,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Operating and maintenance,225131000.0000,"total includes cost of revenue: combined, never opex"
 EQT,313,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Operating income,3249619000.0000,library map
 EQT,313,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Other income,4826000.0000,library map
 EQT,313,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,"Net property, plant and equipment",33557808000.0000,library map

@@ -34,7 +34,7 @@ MOH,662,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001179929-26
 MOH,662,net_interest_income,OUT,,,,,,,,0001179929-26-000005,,,,not a bank
 MOH,662,noninterest_expense,OUT,,,,,,,,0001179929-26-000005,,,,not a bank
 MOH,662,noninterest_income,OUT,,,,,,,,0001179929-26-000005,,,,not a bank
-MOH,662,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0001179929-26-000005,R3,General and administrative expenses,3009000000.0000,printed opex lines (duration sum)
+MOH,662,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;custom:PremiumTaxExpenses;us-gaap:DepreciationAndAmortization;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,fsn_xbrl,0001179929-26-000005,R3,General and administrative expenses,3009000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MOH,662,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001179929-26-000005,R3,Operating income,781000000.0000,library map
 MOH,662,other_income_expense_net,not_presented,,,,,,,,0001179929-26-000005,,,,no face line
 MOH,662,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001179929-26-000005,R5,"Property, equipment, and capitalized software, net",301000000.0000,library map

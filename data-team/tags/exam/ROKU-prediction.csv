@@ -34,7 +34,7 @@ ROKU,416,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 ROKU,416,net_interest_income,OUT,,,,,,,,0001628280-26-008114,,,,not a bank
 ROKU,416,noninterest_expense,OUT,,,,,,,,0001628280-26-008114,,,,not a bank
 ROKU,416,noninterest_income,OUT,,,,,,,,0001628280-26-008114,,,,not a bank
-ROKU,416,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Total operating expenses,2080048000.0000,printed opex total tag
+ROKU,416,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,Total operating expenses,2080048000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 ROKU,416,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-008114,R5,Loss from operations,-5624000.0000,library map
 ROKU,416,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-008114,R5,"Other income, net",101428000.0000,library map
 ROKU,416,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-008114,R3,"Property and equipment, net",173577000.0000,library map

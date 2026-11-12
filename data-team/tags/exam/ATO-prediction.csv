@@ -34,7 +34,7 @@ ATO,350,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,IncomeLossFromContinui
 ATO,350,net_interest_income,OUT,,,,,,,,0000731802-25-000056,,,,not a bank
 ATO,350,noninterest_expense,OUT,,,,,,,,0000731802-25-000056,,,,not a bank
 ATO,350,noninterest_income,OUT,,,,,,,,0000731802-25-000056,,,,not a bank
-ATO,350,operating_expenses,not_presented,,,,,,,,0000731802-25-000056,,,,no face line
+ATO,350,operating_expenses,not_presented,,,,,,,,0000731802-25-000056,,,,no opex total and no GP/COR anchor
 ATO,350,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000731802-25-000056,R5,Operating income,1559971000.0000,library map
 ATO,350,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000731802-25-000056,R5,Other non-operating income,89741000.0000,library map
 ATO,350,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000731802-25-000056,R3,"Net property, plant and equipment",25292990000.0000,library map

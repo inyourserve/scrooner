@@ -34,7 +34,7 @@ MDLZ,153,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-2
 MDLZ,153,net_interest_income,OUT,,,,,,,,0001628280-26-005345,,,,not a bank
 MDLZ,153,noninterest_expense,OUT,,,,,,,,0001628280-26-005345,,,,not a bank
 MDLZ,153,noninterest_income,OUT,,,,,,,,0001628280-26-005345,,,,not a bank
-MDLZ,153,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001628280-26-005345,R3,"Selling, general and administrative expenses",7173000000.0000,printed opex lines (duration sum)
+MDLZ,153,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions;custom:GainLossOnAcquisitionAndDispositionOfBusiness;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,fsn_xbrl,0001628280-26-005345,R3,"Selling, general and administrative expenses",7173000000.0000,every face line between GP/COR and OI; ties to GP - OI
 MDLZ,153,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-005345,R3,Operating income,3548000000.0000,library map
 MDLZ,153,other_income_expense_net,combined,custom:InterestAndOtherNonoperatingIncomeExpense,IS,-,-6,Y,OtherNonoperatingIncomeExpense,fsn_xbrl,0001628280-26-005345,R3,"Interest and other expense, net",-282000000.0000,combined line (library or label demote)
 MDLZ,153,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-005345,R5,"Property, plant and equipment, net",10667000000.0000,library map

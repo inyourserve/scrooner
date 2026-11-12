@@ -34,7 +34,7 @@ DASH,154,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001792789-2
 DASH,154,net_interest_income,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,noninterest_expense,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,noninterest_income,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
-DASH,154,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Sales and marketing,2476000000.0000,printed opex lines (duration sum)
+DASH,154,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Sales and marketing,2476000000.0000,every face line between GP/COR and OI; ties to GP - OI
 DASH,154,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Income (loss) from operations,723000000.0000,library map
 DASH,154,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,"Other income (expense), net",5000000.0000,library map
 DASH,154,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,"Property and equipment, net",1067000000.0000,library map

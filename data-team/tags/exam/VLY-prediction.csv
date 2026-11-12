@@ -34,7 +34,7 @@ VLY,859,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000714310-26
 VLY,859,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Net Interest Income,1763644000.0000,bank template tag
 VLY,859,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Total non-interest expense,1142126000.0000,bank template tag
 VLY,859,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Total non-interest income,262126000.0000,bank template tag
-VLY,859,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Total non-interest expense,1142126000.0000,printed opex total tag
+VLY,859,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0000714310-26-000017,R5,Total non-interest expense,1142126000.0000,sector template total
 VLY,859,operating_income,not_presented,,,,,,,,0000714310-26-000017,,,,no face line
 VLY,859,other_income_expense_net,not_presented,,,,,,,,0000714310-26-000017,,,,no face line
 VLY,859,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000714310-26-000017,R3,"Premises and equipment, net",330757000.0000,library map

@@ -34,7 +34,7 @@ ROK,247,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001024478-25
 ROK,247,net_interest_income,OUT,,,,,,,,0001024478-25-000116,,,,not a bank
 ROK,247,noninterest_expense,OUT,,,,,,,,0001024478-25-000116,,,,not a bank
 ROK,247,noninterest_income,OUT,,,,,,,,0001024478-25-000116,,,,not a bank
-ROK,247,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001024478-25-000116,R5,"Selling, general and administrative expenses",1914000000.0000,printed opex lines (duration sum)
+ROK,247,operating_expenses,not_presented,,,,,,,,0001024478-25-000116,,,,no opex total and no GP/COR anchor
 ROK,247,operating_income,not_presented,,,,,,,,0001024478-25-000116,,,,no face line
 ROK,247,other_income_expense_net,not_presented,,,,,,,,0001024478-25-000116,,,,no face line
 ROK,247,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001024478-25-000116,R3,"Property, net of accumulated depreciation",797000000.0000,library map

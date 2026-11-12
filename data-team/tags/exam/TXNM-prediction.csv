@@ -34,7 +34,7 @@ TXNM,1000,net_income,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
 TXNM,1000,net_interest_income,OUT,,,,,,,,0001108426-26-000006,,,,not a bank
 TXNM,1000,noninterest_expense,OUT,,,,,,,,0001108426-26-000006,,,,not a bank
 TXNM,1000,noninterest_income,OUT,,,,,,,,0001108426-26-000006,,,,not a bank
-TXNM,1000,operating_expenses,not_presented,,,,,,,,0001108426-26-000006,,,,no face line
+TXNM,1000,operating_expenses,not_presented,,,,,,,,0001108426-26-000006,,,,no opex total and no GP/COR anchor
 TXNM,1000,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001108426-26-000006,R3,Operating income,441179000.0000,library map
 TXNM,1000,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001108426-26-000006,R3,Net other income and (deductions),10356000.0000,library map
 TXNM,1000,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001108426-26-000006,R7,Net utility plant,9311435000.0000,library map

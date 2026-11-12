@@ -34,7 +34,7 @@ CDE,516,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000215466-26
 CDE,516,net_interest_income,OUT,,,,,,,,0000215466-26-000004,,,,not a bank
 CDE,516,noninterest_expense,OUT,,,,,,,,0000215466-26-000004,,,,not a bank
 CDE,516,noninterest_income,OUT,,,,,,,,0000215466-26-000004,,,,not a bank
-CDE,516,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000215466-26-000004,R6,Total costs and expenses,1363113000.0000,printed opex total tag
+CDE,516,operating_expenses,not_presented,,,,,,,,0000215466-26-000004,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CDE,516,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000215466-26-000004,R6,Income (loss) from operations,707013000.0000,library map
 CDE,516,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000215466-26-000004,R6,"Other, net",6922000.0000,library map
 CDE,516,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000215466-26-000004,R4,"Property, plant and equipment and mining properties, net",2744884000.0000,library map

@@ -34,7 +34,7 @@ BIIB,309,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000875045-2
 BIIB,309,net_interest_income,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,noninterest_expense,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,noninterest_income,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
-BIIB,309,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Research and development,1778600000.0000,printed opex lines (duration sum)
+BIIB,309,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Total cost and expense,8334100000.0000,total includes cost of revenue
 BIIB,309,operating_income,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000875045-26-000013,R3,"Other (income) expense, net",-305600000.0000,combined line (library or label demote)
 BIIB,309,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,"Property, plant and equipment, net",3055400000.0000,library map

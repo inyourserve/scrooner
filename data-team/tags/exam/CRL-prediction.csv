@@ -34,7 +34,7 @@ CRL,548,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001100682-26
 CRL,548,net_interest_income,OUT,,,,,,,,0001100682-26-000022,,,,not a bank
 CRL,548,noninterest_expense,OUT,,,,,,,,0001100682-26-000022,,,,not a bank
 CRL,548,noninterest_income,OUT,,,,,,,,0001100682-26-000022,,,,not a bank
-CRL,548,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001100682-26-000022,R3,"Selling, general and administrative",743073000.0000,printed opex lines (duration sum)
+CRL,548,operating_expenses,not_presented,,,,,,,,0001100682-26-000022,,,,no opex total and no GP/COR anchor
 CRL,548,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001100682-26-000022,R3,Operating income,25162000.0000,library map
 CRL,548,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001100682-26-000022,R3,"Other income (expense), net",-22576000.0000,library map
 CRL,548,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001100682-26-000022,R5,"Property, plant and equipment, net",1655219000.0000,library map

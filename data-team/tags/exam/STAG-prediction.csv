@@ -34,7 +34,7 @@ STAG,868,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001479094-2
 STAG,868,net_interest_income,OUT,,,,,,,,0001479094-26-000009,,,,not a bank
 STAG,868,noninterest_expense,OUT,,,,,,,,0001479094-26-000009,,,,not a bank
 STAG,868,noninterest_income,OUT,,,,,,,,0001479094-26-000009,,,,not a bank
-STAG,868,operating_expenses,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
+STAG,868,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001479094-26-000009,R3,Total expenses,528241000.0000,total includes cost of revenue
 STAG,868,operating_income,not_presented,,,,,,,,0001479094-26-000009,,,,no face line
 STAG,868,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001479094-26-000009,R3,Total other income (expense),-37673000.0000,combined line (library or label demote)
 STAG,868,ppe_net,not_presented,,,,,,,,0001479094-26-000009,,,,no face line

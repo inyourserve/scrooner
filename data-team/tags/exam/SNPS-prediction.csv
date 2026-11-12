@@ -34,7 +34,7 @@ SNPS,140,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000883241-2
 SNPS,140,net_interest_income,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,noninterest_expense,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,noninterest_income,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
-SNPS,140,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Total operating expenses,4515702000.0000,printed opex total tag
+SNPS,140,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Total operating expenses,4515702000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 SNPS,140,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Operating income,914927000.0000,library map
 SNPS,140,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,"Other income (expense), net",924944000.0000,combined line (library or label demote)
 SNPS,140,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,"Property and equipment, net",696693000.0000,library map

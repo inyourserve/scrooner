@@ -34,7 +34,7 @@ RCL,172,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000884887-26
 RCL,172,net_interest_income,OUT,,,,,,,,0000884887-26-000007,,,,not a bank
 RCL,172,noninterest_expense,OUT,,,,,,,,0000884887-26-000007,,,,not a bank
 RCL,172,noninterest_income,OUT,,,,,,,,0000884887-26-000007,,,,not a bank
-RCL,172,operating_expenses,not_presented,,,,,,,,0000884887-26-000007,,,,no face line
+RCL,172,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-6,N,,sec_api,0000884887-26-000007,R3,"Marketing, selling and administrative expenses",2223000000.0000,every face line between GP/COR and OI; ties to GP - OI
 RCL,172,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000884887-26-000007,R3,Operating Income,4910000000.0000,library map
 RCL,172,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000884887-26-000007,R3,Other income (expense),17000000.0000,library map
 RCL,172,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000884887-26-000007,R4,"Property and equipment, net",35696000000.0000,library map

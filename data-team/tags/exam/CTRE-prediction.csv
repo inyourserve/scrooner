@@ -34,7 +34,7 @@ CTRE,758,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-2
 CTRE,758,net_interest_income,OUT,,,,,,,,0001628280-26-007664,,,,not a bank
 CTRE,758,noninterest_expense,OUT,,,,,,,,0001628280-26-007664,,,,not a bank
 CTRE,758,noninterest_income,OUT,,,,,,,,0001628280-26-007664,,,,not a bank
-CTRE,758,operating_expenses,not_presented,,,,,,,,0001628280-26-007664,,,,no face line
+CTRE,758,operating_expenses,not_presented,,,,,,,,0001628280-26-007664,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CTRE,758,operating_income,not_presented,,,,,,,,0001628280-26-007664,,,,no face line
 CTRE,758,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-007664,R5,"Other income, net",4350000.0000,library map
 CTRE,758,ppe_net,not_presented,,,,,,,,0001628280-26-007664,,,,no face line

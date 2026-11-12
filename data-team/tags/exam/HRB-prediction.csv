@@ -34,7 +34,7 @@ HRB,931,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000012659-26
 HRB,931,net_interest_income,OUT,,,,,,,,0000012659-26-000026,,,,not a bank
 HRB,931,noninterest_expense,OUT,,,,,,,,0000012659-26-000026,,,,not a bank
 HRB,931,noninterest_income,OUT,,,,,,,,0000012659-26-000026,,,,not a bank
-HRB,931,operating_expenses,not_presented,,,,,,,,0000012659-26-000026,,,,no face line
+HRB,931,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000012659-26-000026,R3,Total operating expenses,3037706000.0000,total includes cost of revenue
 HRB,931,operating_income,not_presented,,,,,,,,0000012659-26-000026,,,,no face line
 HRB,931,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000012659-26-000026,R3,"Other income (expense), net",26813000.0000,library map
 HRB,931,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000012659-26-000026,R5,"Property and equipment, at cost, less accumulated depreciation and amortization of $863,795 and $828,744",141456000.0000,library map

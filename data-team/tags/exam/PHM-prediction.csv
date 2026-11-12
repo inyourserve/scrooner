@@ -34,7 +34,7 @@ PHM,435,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000822416-26
 PHM,435,net_interest_income,OUT,,,,,,,,0000822416-26-000007,,,,not a bank
 PHM,435,noninterest_expense,OUT,,,,,,,,0000822416-26-000007,,,,not a bank
 PHM,435,noninterest_income,OUT,,,,,,,,0000822416-26-000007,,,,not a bank
-PHM,435,operating_expenses,not_presented,,,,,,,,0000822416-26-000007,,,,no face line
+PHM,435,operating_expenses,not_presented,,,,,,,,0000822416-26-000007,,,,no opex total and no GP/COR anchor
 PHM,435,operating_income,not_presented,,,,,,,,0000822416-26-000007,,,,no face line
 PHM,435,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000822416-26-000007,R5,"Other income (expense), net",-91502000.0000,combined line (library or label demote)
 PHM,435,ppe_net,not_presented,,,,,,,,0000822416-26-000007,,,,no face line

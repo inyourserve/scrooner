@@ -34,7 +34,7 @@ CCK,610,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26
 CCK,610,net_interest_income,OUT,,,,,,,,0001628280-26-012904,,,,not a bank
 CCK,610,noninterest_expense,OUT,,,,,,,,0001628280-26-012904,,,,not a bank
 CCK,610,noninterest_income,OUT,,,,,,,,0001628280-26-012904,,,,not a bank
-CCK,610,operating_expenses,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
+CCK,610,operating_expenses,component_sum,us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOther,IS,+,-6,N,,fsn_xbrl,0001628280-26-012904,R3,Depreciation and amortization,456000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CCK,610,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-012904,R3,Income from operations,1553000000.0000,library map
 CCK,610,other_income_expense_net,not_presented,,,,,,,,0001628280-26-012904,,,,no face line
 CCK,610,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-012904,R5,"Property, plant, and equipment, net",5187000000.0000,library map

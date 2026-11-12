@@ -34,7 +34,7 @@ PCG,302,net_income,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,net_interest_income,OUT,,,,,,,,0001004980-26-000009,,,,not a bank
 PCG,302,noninterest_expense,OUT,,,,,,,,0001004980-26-000009,,,,not a bank
 PCG,302,noninterest_income,OUT,,,,,,,,0001004980-26-000009,,,,not a bank
-PCG,302,operating_expenses,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
+PCG,302,operating_expenses,not_presented,,,,,,,,0001004980-26-000009,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 PCG,302,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001004980-26-000009,R3,Operating Income,4749000000.0000,library map
 PCG,302,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001004980-26-000009,R3,"Other income, net",182000000.0000,library map
 PCG,302,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001004980-26-000009,R6,"Net property, plant, and equipment",96348000000.0000,library map

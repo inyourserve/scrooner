@@ -34,7 +34,7 @@ VRNS,977,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-2
 VRNS,977,net_interest_income,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
 VRNS,977,noninterest_expense,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
 VRNS,977,noninterest_income,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
-VRNS,977,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Total operating expenses,638072000.0000,printed opex total tag
+VRNS,977,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Total operating expenses,638072000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 VRNS,977,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Operating loss,-146514000.0000,library map
 VRNS,977,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,"Financial income, net",30194000.0000,combined line (library or label demote)
 VRNS,977,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,"Property and equipment, net",36032000.0000,library map

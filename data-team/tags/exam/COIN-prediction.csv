@@ -34,7 +34,7 @@ COIN,256,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001679788-2
 COIN,256,net_interest_income,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,noninterest_expense,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
 COIN,256,noninterest_income,OUT,,,,,,,,0001679788-26-000015,,,,not a bank
-COIN,256,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Total operating expenses,5745884000.0000,printed opex total tag
+COIN,256,operating_expenses,not_presented,,,,,,,,0001679788-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 COIN,256,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,Operating income (loss),1435441000.0000,library map
 COIN,256,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001679788-26-000015,R5,"Other income, net",700894000.0000,library map
 COIN,256,ppe_net,not_presented,,,,,,,,0001679788-26-000015,,,,no face line

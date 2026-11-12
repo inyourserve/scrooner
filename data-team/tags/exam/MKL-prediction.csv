@@ -34,7 +34,7 @@ MKL,414,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001096343-26
 MKL,414,net_interest_income,OUT,,,,,,,,0001096343-26-000020,,,,not a bank
 MKL,414,noninterest_expense,OUT,,,,,,,,0001096343-26-000020,,,,not a bank
 MKL,414,noninterest_income,OUT,,,,,,,,0001096343-26-000020,,,,not a bank
-MKL,414,operating_expenses,not_presented,,,,,,,,0001096343-26-000020,,,,no face line
+MKL,414,operating_expenses,not_presented,,,,,,,,0001096343-26-000020,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MKL,414,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001096343-26-000020,R4,Operating Income,3194852000.0000,library map
 MKL,414,other_income_expense_net,not_presented,,,,,,,,0001096343-26-000020,,,,no face line
 MKL,414,ppe_net,not_presented,,,,,,,,0001096343-26-000020,,,,no face line

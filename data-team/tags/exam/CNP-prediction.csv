@@ -34,7 +34,7 @@ CNP,367,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001130310-26
 CNP,367,net_interest_income,OUT,,,,,,,,0001130310-26-000008,,,,not a bank
 CNP,367,noninterest_expense,OUT,,,,,,,,0001130310-26-000008,,,,not a bank
 CNP,367,noninterest_income,OUT,,,,,,,,0001130310-26-000008,,,,not a bank
-CNP,367,operating_expenses,not_presented,,,,,,,,0001130310-26-000008,,,,no face line
+CNP,367,operating_expenses,component_sum,us-gaap:CostOfGoodsAndServicesSold;us-gaap:UtilitiesOperatingExpenseMaintenanceOperationsAndOtherCostsAndExpenses;us-gaap:DepreciationDepletionAndAmortization;us-gaap:TaxesExcludingIncomeAndExciseTaxes,IS,+,-6,N,,sec_api,0001130310-26-000008,R3,"Non-utility cost of revenues, including natural gas",4000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CNP,367,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001130310-26-000008,R3,Operating Income,2110000000.0000,library map
 CNP,367,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001130310-26-000008,R3,"Other income, net",85000000.0000,library map
 CNP,367,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001130310-26-000008,R6,"Property, plant and equipment, net",34056000000.0000,library map

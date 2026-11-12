@@ -34,7 +34,7 @@ CAG,869,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0001104659-26
 CAG,869,net_interest_income,OUT,,,,,,,,0001104659-26-083905,,,,not a bank
 CAG,869,noninterest_expense,OUT,,,,,,,,0001104659-26-083905,,,,not a bank
 CAG,869,noninterest_income,OUT,,,,,,,,0001104659-26-083905,,,,not a bank
-CAG,869,operating_expenses,not_presented,,,,,,,,0001104659-26-083905,,,,no face line
+CAG,869,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill;us-gaap:GainLossOnSaleOfBusiness,IS,+,-5,N,,sec_api,0001104659-26-083905,R2,"Selling, general and administrative expenses",1439400000.0000,every face line between GP/COR and OI; ties to GP - OI
 CAG,869,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0001104659-26-083905,R2,Operating profit (loss),-1628400000.0000,library map
 CAG,869,other_income_expense_net,not_presented,,,,,,,,0001104659-26-083905,,,,no face line
 CAG,869,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0001104659-26-083905,R4,"Property, plant and equipment, net",2862900000.0000,library map

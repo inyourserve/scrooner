@@ -34,7 +34,7 @@ TLN,502,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001622536-26
 TLN,502,net_interest_income,OUT,,,,,,,,0001622536-26-000017,,,,not a bank
 TLN,502,noninterest_expense,OUT,,,,,,,,0001622536-26-000017,,,,not a bank
 TLN,502,noninterest_income,OUT,,,,,,,,0001622536-26-000017,,,,not a bank
-TLN,502,operating_expenses,not_presented,,,,,,,,0001622536-26-000017,,,,no face line
+TLN,502,operating_expenses,not_presented,,,,,,,,0001622536-26-000017,,,,no opex total and no GP/COR anchor
 TLN,502,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001622536-26-000017,R3,Operating Income (Loss),-90000000.0000,library map
 TLN,502,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001622536-26-000017,R3,"Other non-operating income (expense), net",10000000.0000,library map
 TLN,502,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001622536-26-000017,R6,"Property, plant and equipment, net (Note 7)",7546000000.0000,library map

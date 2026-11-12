@@ -34,7 +34,7 @@ STZ,418,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000016918-26
 STZ,418,net_interest_income,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
 STZ,418,noninterest_expense,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
 STZ,418,noninterest_income,OUT,,,,,,,,0000016918-26-000011,,,,not a bank
-STZ,418,operating_expenses,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
+STZ,418,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillAndIntangibleAssetImpairment;custom:AssetImpairmentAndRelatedExpenses;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal,IS,+,-5,N,,fsn_xbrl,0000016918-26-000011,R5,"Selling, general, and administrative expenses",1848400000.0000,every face line between GP/COR and OI; ties to GP - OI
 STZ,418,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000016918-26-000011,R5,Operating income (loss),2721400000.0000,library map
 STZ,418,other_income_expense_net,not_presented,,,,,,,,0000016918-26-000011,,,,no face line
 STZ,418,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000016918-26-000011,R3,"Property, plant, and equipment, net",8520900000.0000,library map

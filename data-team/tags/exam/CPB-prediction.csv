@@ -34,7 +34,7 @@ CPB,941,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000016732-26
 CPB,941,net_interest_income,OUT,,,,,,,,0000016732-26-000026,,,,not a bank
 CPB,941,noninterest_expense,OUT,,,,,,,,0000016732-26-000026,,,,not a bank
 CPB,941,noninterest_income,OUT,,,,,,,,0000016732-26-000026,,,,not a bank
-CPB,941,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000016732-26-000026,R4,Marketing and selling expenses,907000000.0000,printed opex lines (duration sum)
+CPB,941,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:OtherNonoperatingIncomeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000016732-26-000026,R4,Marketing and selling expenses,907000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CPB,941,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000016732-26-000026,R4,Earnings before interest and taxes,852000000.0000,library map
 CPB,941,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000016732-26-000026,R4,Other expenses / (income),-171000000.0000,library map
 CPB,941,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000016732-26-000026,R6,"Plant assets, net of depreciation",2868000000.0000,library map

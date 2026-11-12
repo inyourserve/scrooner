@@ -34,7 +34,7 @@ CCL,304,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000815097-26
 CCL,304,net_interest_income,OUT,,,,,,,,0000815097-26-000007,,,,not a bank
 CCL,304,noninterest_expense,OUT,,,,,,,,0000815097-26-000007,,,,not a bank
 CCL,304,noninterest_income,OUT,,,,,,,,0000815097-26-000007,,,,not a bank
-CCL,304,operating_expenses,not_presented,,,,,,,,0000815097-26-000007,,,,no face line
+CCL,304,operating_expenses,not_presented,,,,,,,,0000815097-26-000007,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 CCL,304,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000815097-26-000007,R3,Operating Income,4483000000.0000,library map
 CCL,304,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000815097-26-000007,R3,"Other income (expense), net",-4000000.0000,library map
 CCL,304,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000815097-26-000007,R5,"Property and Equipment, Net",43494000000.0000,library map

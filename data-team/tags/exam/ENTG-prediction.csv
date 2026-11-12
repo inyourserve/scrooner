@@ -34,7 +34,7 @@ ENTG,437,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001101302-2
 ENTG,437,net_interest_income,OUT,,,,,,,,0001101302-26-000012,,,,not a bank
 ENTG,437,noninterest_expense,OUT,,,,,,,,0001101302-26-000012,,,,not a bank
 ENTG,437,noninterest_income,OUT,,,,,,,,0001101302-26-000012,,,,not a bank
-ENTG,437,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001101302-26-000012,R5,"Selling, general and administrative expenses",450600000.0000,printed opex lines (duration sum)
+ENTG,437,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:GainLossOnContractTermination,IS,+,-5,N,,sec_api,0001101302-26-000012,R5,"Selling, general and administrative expenses",450600000.0000,every face line between GP/COR and OI; ties to GP - OI
 ENTG,437,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001101302-26-000012,R5,Operating income,455900000.0000,library map
 ENTG,437,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001101302-26-000012,R5,"Other expense, net",-9400000.0000,library map
 ENTG,437,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001101302-26-000012,R3,"Property, plant and equipment, net",1636100000.0000,library map

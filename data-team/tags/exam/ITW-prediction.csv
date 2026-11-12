@@ -34,7 +34,7 @@ ITW,164,net_income,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
 ITW,164,net_interest_income,OUT,,,,,,,,0000049826-26-000008,,,,not a bank
 ITW,164,noninterest_expense,OUT,,,,,,,,0000049826-26-000008,,,,not a bank
 ITW,164,noninterest_income,OUT,,,,,,,,0000049826-26-000008,,,,not a bank
-ITW,164,operating_expenses,not_presented,,,,,,,,0000049826-26-000008,,,,no face line
+ITW,164,operating_expenses,component_sum,custom:SellingAdministrativeAndResearchAndDevelopmentExpenses;custom:AmortizationandImpairmentofIntangibleAssets,IS,+,-6,N,,fsn_xbrl,0000049826-26-000008,R3,"Selling, administrative, and research and development expenses",2779000000.0000,every face line between GP/COR and OI; ties to GP - OI
 ITW,164,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000049826-26-000008,R3,Operating Income,4216000000.0000,library map
 ITW,164,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,Y,OtherNonoperatingIncome,sec_api,0000049826-26-000008,R3,Other income (expense),42000000.0000,combined line (library or label demote)
 ITW,164,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000049826-26-000008,R5,Net plant and equipment,2230000000.0000,library map

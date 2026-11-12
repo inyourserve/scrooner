@@ -34,7 +34,7 @@ CQP,336,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001383650-26
 CQP,336,net_interest_income,OUT,,,,,,,,0001383650-26-000005,,,,not a bank
 CQP,336,noninterest_expense,OUT,,,,,,,,0001383650-26-000005,,,,not a bank
 CQP,336,noninterest_income,OUT,,,,,,,,0001383650-26-000005,,,,not a bank
-CQP,336,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0001383650-26-000005,R3,General and administrative expense,105000000.0000,printed opex lines (duration sum)
+CQP,336,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0001383650-26-000005,R3,Operating and maintenance expense,1109000000.0000,"total includes cost of revenue: combined, never opex"
 CQP,336,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001383650-26-000005,R3,Income from operations,3706000000.0000,library map
 CQP,336,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,Y,OtherNonoperatingIncomeAffiliate,sec_api,0001383650-26-000005,R3,Other incomeaffiliate,24000000.0000,library map
 CQP,336,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001383650-26-000005,R4,"Property, plant and equipment, net of accumulated depreciation",15259000000.0000,library map

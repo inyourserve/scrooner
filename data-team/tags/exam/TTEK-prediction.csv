@@ -34,7 +34,7 @@ TTEK,750,net_income,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
 TTEK,750,net_interest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
 TTEK,750,noninterest_expense,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
 TTEK,750,noninterest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,operating_expenses,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
+TTEK,750,operating_expenses,component_sum,custom:SellingGeneralAndAdministrativeExpensesIncludingDepreciationAndAmortizationOfIntangibleAssets;us-gaap:LegalFees;us-gaap:GoodwillImpairmentLoss;custom:BusinessCombinationAcquisitionAndIntegrationRelatedExpenses;us-gaap:OperatingLeaseImpairmentLoss;custom:FairValueAdjustmentsToContingentConsideration,IS,+,-3,Y,BusinessCombinationAcquisitionAndIntegrationRelatedCosts,fsn_xbrl,0000831641-25-000032,R5,"Selling, general and administrative expenses",357737000.0000,every face line between GP/COR and OI; ties to GP - OI
 TTEK,750,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income from operations,408419000.0000,library map
 TTEK,750,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,0,-3,N,,sec_api,0000831641-25-000032,R5,Other non-operating income,0.0000,library map
 TTEK,750,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Property and equipment, net",66148000.0000,library map

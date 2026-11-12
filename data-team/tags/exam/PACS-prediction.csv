@@ -34,7 +34,7 @@ PACS,822,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0002001184-2
 PACS,822,net_interest_income,OUT,,,,,,,,0002001184-26-000005,,,,not a bank
 PACS,822,noninterest_expense,OUT,,,,,,,,0002001184-26-000005,,,,not a bank
 PACS,822,noninterest_income,OUT,,,,,,,,0002001184-26-000005,,,,not a bank
-PACS,822,operating_expenses,not_presented,,,,,,,,0002001184-26-000005,,,,no face line
+PACS,822,operating_expenses,component_sum,us-gaap:OperatingLeaseExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization,IS,+,-3,N,,sec_api,0002001184-26-000005,R5,Rent - cost of services,378908000.0000,every face line between GP/COR and OI; ties to GP - OI
 PACS,822,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0002001184-26-000005,R5,Operating income,309595000.0000,library map
 PACS,822,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0002001184-26-000005,R5,"Other income (expense), net",3218000.0000,library map
 PACS,822,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0002001184-26-000005,R3,"Property and equipment, net",1201096000.0000,library map

@@ -34,7 +34,7 @@ VICI,375,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001705696-2
 VICI,375,net_interest_income,OUT,,,,,,,,0001705696-26-000034,,,,not a bank
 VICI,375,noninterest_expense,OUT,,,,,,,,0001705696-26-000034,,,,not a bank
 VICI,375,noninterest_income,OUT,,,,,,,,0001705696-26-000034,,,,not a bank
-VICI,375,operating_expenses,not_presented,,,,,,,,0001705696-26-000034,,,,no face line
+VICI,375,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0001705696-26-000034,R5,Total expenses,358544000.0000,total includes cost of revenue
 VICI,375,operating_income,not_presented,,,,,,,,0001705696-26-000034,,,,no face line
 VICI,375,other_income_expense_net,not_presented,,,,,,,,0001705696-26-000034,,,,no face line
 VICI,375,ppe_net,not_presented,,,,,,,,0001705696-26-000034,,,,no face line

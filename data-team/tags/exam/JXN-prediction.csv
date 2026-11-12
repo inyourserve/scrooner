@@ -34,7 +34,7 @@ JXN,752,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001822993-26
 JXN,752,net_interest_income,OUT,,,,,,,,0001822993-26-000022,,,,not a bank
 JXN,752,noninterest_expense,OUT,,,,,,,,0001822993-26-000022,,,,not a bank
 JXN,752,noninterest_income,OUT,,,,,,,,0001822993-26-000022,,,,not a bank
-JXN,752,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001822993-26-000022,R5,Total benefits and expenses,6797000000.0000,printed opex total tag
+JXN,752,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001822993-26-000022,R5,Total benefits and expenses,6797000000.0000,sector template total
 JXN,752,operating_income,not_presented,,,,,,,,0001822993-26-000022,,,,no face line
 JXN,752,other_income_expense_net,not_presented,,,,,,,,0001822993-26-000022,,,,no face line
 JXN,752,ppe_net,not_presented,,,,,,,,0001822993-26-000022,,,,no face line

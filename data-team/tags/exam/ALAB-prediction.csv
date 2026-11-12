@@ -34,7 +34,7 @@ ALAB,240,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001736297-2
 ALAB,240,net_interest_income,OUT,,,,,,,,0001736297-26-000010,,,,not a bank
 ALAB,240,noninterest_expense,OUT,,,,,,,,0001736297-26-000010,,,,not a bank
 ALAB,240,noninterest_income,OUT,,,,,,,,0001736297-26-000010,,,,not a bank
-ALAB,240,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001736297-26-000010,R5,Total operating expenses,471838000.0000,printed opex total tag
+ALAB,240,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001736297-26-000010,R5,Total operating expenses,471838000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 ALAB,240,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001736297-26-000010,R5,Operating income (loss),173423000.0000,library map
 ALAB,240,other_income_expense_net,not_presented,,,,,,,,0001736297-26-000010,,,,no face line
 ALAB,240,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001736297-26-000010,R3,"Property and equipment, net",92038000.0000,library map

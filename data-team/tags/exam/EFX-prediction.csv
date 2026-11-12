@@ -34,7 +34,7 @@ EFX,463,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000033185-26
 EFX,463,net_interest_income,OUT,,,,,,,,0000033185-26-000010,,,,not a bank
 EFX,463,noninterest_expense,OUT,,,,,,,,0000033185-26-000010,,,,not a bank
 EFX,463,noninterest_income,OUT,,,,,,,,0000033185-26-000010,,,,not a bank
-EFX,463,operating_expenses,not_presented,,,,,,,,0000033185-26-000010,,,,no face line
+EFX,463,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,"Selling, general and administrative expenses",1614200000.0000,every face line between GP/COR and OI; ties to GP - OI
 EFX,463,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,Operating income,1095200000.0000,library map
 EFX,463,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000033185-26-000010,R3,"Other income (expense), net",12000000.0000,library map
 EFX,463,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000033185-26-000010,R5,"Total property and equipment, net",1932400000.0000,library map

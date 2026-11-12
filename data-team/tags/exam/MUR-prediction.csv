@@ -34,7 +34,7 @@ MUR,934,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 MUR,934,net_interest_income,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
 MUR,934,noninterest_expense,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
 MUR,934,noninterest_income,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
-MUR,934,operating_expenses,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Total costs and expenses,2417586000.0000,"total includes cost of revenue: combined, never opex"
 MUR,934,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Operating income from continuing operations,301237000.0000,library map
 MUR,934,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,Y,NonoperatingIncomeExpenseAbstract,sec_api,0001628280-26-011709,R5,Other income (loss),-22299000.0000,library map
 MUR,934,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,"Property, plant and equipment, at cost less accumulated depreciation, depletion and amortization of $15,068,149 in 2025 and $13,811,539 in 2024",8136346000.0000,library map

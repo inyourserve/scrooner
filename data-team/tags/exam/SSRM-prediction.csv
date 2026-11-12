@@ -34,7 +34,7 @@ SSRM,889,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000921638-2
 SSRM,889,net_interest_income,OUT,,,,,,,,0000921638-26-000035,,,,not a bank
 SSRM,889,noninterest_expense,OUT,,,,,,,,0000921638-26-000035,,,,not a bank
 SSRM,889,noninterest_income,OUT,,,,,,,,0000921638-26-000035,,,,not a bank
-SSRM,889,operating_expenses,not_presented,,,,,,,,0000921638-26-000035,,,,no face line
+SSRM,889,operating_expenses,component_sum,us-gaap:DepreciationAndAmortization;us-gaap:GeneralAndAdministrativeExpense;custom:ExplorationAndEvaluation;custom:AssetRetirementObligationCosts;us-gaap:OtherAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;custom:CareAndMaintenanceExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,fsn_xbrl,0000921638-26-000035,R3,"Depreciation, depletion, and amortization",116178000.0000,every face line between GP/COR and OI; ties to GP - OI
 SSRM,889,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000921638-26-000035,R3,Operating income (loss),461442000.0000,library map
 SSRM,889,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000921638-26-000035,R3,Other income (expense),26346000.0000,library map
 SSRM,889,ppe_net,not_presented,,,,,,,,0000921638-26-000035,,,,no face line

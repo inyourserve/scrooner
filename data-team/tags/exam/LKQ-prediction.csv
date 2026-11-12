@@ -34,7 +34,7 @@ LKQ,970,net_income,not_presented,,,,,,,,0001065696-26-000012,,,,no face line
 LKQ,970,net_interest_income,OUT,,,,,,,,0001065696-26-000012,,,,not a bank
 LKQ,970,noninterest_expense,OUT,,,,,,,,0001065696-26-000012,,,,not a bank
 LKQ,970,noninterest_income,OUT,,,,,,,,0001065696-26-000012,,,,not a bank
-LKQ,970,operating_expenses,not_presented,,,,,,,,0001065696-26-000012,,,,no face line
+LKQ,970,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringChargesAndBusinessCombinationAcquisitionRelatedCosts;us-gaap:GoodwillImpairmentLoss;us-gaap:DepreciationAndAmortization,IS,+,-6,N,,fsn_xbrl,0001065696-26-000012,R3,"Selling, general and administrative expenses",3813000000.0000,every face line between GP/COR and OI; ties to GP - OI
 LKQ,970,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001065696-26-000012,R3,Operating income,993000000.0000,library map
 LKQ,970,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001065696-26-000012,R3,"Total other expense, net",193000000.0000,combined line (library or label demote)
 LKQ,970,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001065696-26-000012,R5,"Property, plant and equipment, net",1452000000.0000,library map

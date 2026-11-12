@@ -34,7 +34,7 @@ NXPI,211,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001413447-2
 NXPI,211,net_interest_income,OUT,,,,,,,,0001413447-26-000008,,,,not a bank
 NXPI,211,noninterest_expense,OUT,,,,,,,,0001413447-26-000008,,,,not a bank
 NXPI,211,noninterest_income,OUT,,,,,,,,0001413447-26-000008,,,,not a bank
-NXPI,211,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Total operating expenses,3681000000.0000,printed opex total tag
+NXPI,211,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfAcquisitionCosts;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Research and development,2360000000.0000,every face line between GP/COR and OI; ties to GP - OI
 NXPI,211,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001413447-26-000008,R3,Operating income (loss),3047000000.0000,library map
 NXPI,211,other_income_expense_net,not_presented,,,,,,,,0001413447-26-000008,,,,no face line
 NXPI,211,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001413447-26-000008,R5,"Property, plant and equipment, net",2977000000.0000,library map

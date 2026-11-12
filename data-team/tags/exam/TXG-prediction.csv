@@ -34,7 +34,7 @@ TXG,751,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26
 TXG,751,net_interest_income,OUT,,,,,,,,0001628280-26-007822,,,,not a bank
 TXG,751,noninterest_expense,OUT,,,,,,,,0001628280-26-007822,,,,not a bank
 TXG,751,noninterest_income,OUT,,,,,,,,0001628280-26-007822,,,,not a bank
-TXG,751,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-007822,R5,Total operating expenses,504866000.0000,printed opex total tag
+TXG,751,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-007822,R5,Total operating expenses,504866000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 TXG,751,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-007822,R5,Loss from operations,-60985000.0000,library map
 TXG,751,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-007822,R5,"Other income (expense), net",1030000.0000,library map
 TXG,751,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-007822,R3,"Property and equipment, net",226711000.0000,library map

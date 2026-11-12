@@ -34,7 +34,7 @@ CTSH,329,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001058290-2
 CTSH,329,net_interest_income,OUT,,,,,,,,0001058290-26-000008,,,,not a bank
 CTSH,329,noninterest_expense,OUT,,,,,,,,0001058290-26-000008,,,,not a bank
 CTSH,329,noninterest_income,OUT,,,,,,,,0001058290-26-000008,,,,not a bank
-CTSH,329,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,"Selling, general and administrative expenses",3240000000.0000,printed opex lines (duration sum)
+CTSH,329,operating_expenses,not_presented,,,,,,,,0001058290-26-000008,,,,opex lines do not tie to GP - OI
 CTSH,329,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,Income from operations,3389000000.0000,library map
 CTSH,329,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001058290-26-000008,R5,"Other, net",4000000.0000,library map
 CTSH,329,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001058290-26-000008,R3,"Property and equipment, net",933000000.0000,library map

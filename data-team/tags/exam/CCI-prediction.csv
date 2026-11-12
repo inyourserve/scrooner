@@ -34,7 +34,7 @@ CCI,303,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 CCI,303,net_interest_income,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,noninterest_expense,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,noninterest_income,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
-CCI,303,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,"Selling, general and administrative",383000000.0000,printed opex lines (duration sum)
+CCI,303,operating_expenses,component_sum,us-gaap:CostOfGoodsAndServicesSold;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;custom:AcquisitionAndIntegrationCosts;us-gaap:DepreciationAmortizationAndAccretionNet;us-gaap:RestructuringCharges,IS,+,-6,N,,fsn_xbrl,0001051470-26-000016,R5,Services and other,113000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CCI,303,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Operating income (loss),2075000000.0000,library map
 CCI,303,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Other income (expense),3000000.0000,library map
 CCI,303,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,"Property and equipment, net",6273000000.0000,library map

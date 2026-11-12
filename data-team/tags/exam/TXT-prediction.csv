@@ -34,7 +34,7 @@ TXT,585,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000217346-26
 TXT,585,net_interest_income,OUT,,,,,,,,0000217346-26-000006,,,,not a bank
 TXT,585,noninterest_expense,OUT,,,,,,,,0000217346-26-000006,,,,not a bank
 TXT,585,noninterest_income,OUT,,,,,,,,0000217346-26-000006,,,,not a bank
-TXT,585,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0000217346-26-000006,R3,Research and development costs,521000000.0000,printed opex lines (duration sum)
+TXT,585,operating_expenses,not_presented,,,,,,,,0000217346-26-000006,,,,no opex total and no GP/COR anchor
 TXT,585,operating_income,not_presented,,,,,,,,0000217346-26-000006,,,,no face line
 TXT,585,other_income_expense_net,not_presented,,,,,,,,0000217346-26-000006,,,,no face line
 TXT,585,ppe_net,not_presented,,,,,,,,0000217346-26-000006,,,,no face line

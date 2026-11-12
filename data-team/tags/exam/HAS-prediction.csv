@@ -34,7 +34,7 @@ HAS,559,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000046080-26
 HAS,559,net_interest_income,OUT,,,,,,,,0000046080-26-000011,,,,not a bank
 HAS,559,noninterest_expense,OUT,,,,,,,,0000046080-26-000011,,,,not a bank
 HAS,559,noninterest_income,OUT,,,,,,,,0000046080-26-000011,,,,not a bank
-HAS,559,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000046080-26-000011,R5,Product development,385600000.0000,printed opex lines (duration sum)
+HAS,559,operating_expenses,component_sum,custom:ProgramProductionCostAmortization;us-gaap:RoyaltyExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AdvertisingExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,fsn_xbrl,0000046080-26-000011,R5,Program cost amortization,35800000.0000,every face line between GP/COR and OI; ties to GP - OI
 HAS,559,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000046080-26-000011,R5,Operating profit (loss),11100000.0000,library map
 HAS,559,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000046080-26-000011,R5,"Other (income) expense, net",21700000.0000,library map
 HAS,559,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000046080-26-000011,R3,"Property, plant and equipment, net",247800000.0000,library map

@@ -34,7 +34,7 @@ CNH,547,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001567094-26
 CNH,547,net_interest_income,OUT,,,,,,,,0001567094-26-000006,,,,not a bank
 CNH,547,noninterest_expense,OUT,,,,,,,,0001567094-26-000006,,,,not a bank
 CNH,547,noninterest_income,OUT,,,,,,,,0001567094-26-000006,,,,not a bank
-CNH,547,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001567094-26-000006,R3,"Selling, general and administrative expenses",1876000000.0000,printed opex lines (duration sum)
+CNH,547,operating_expenses,not_presented,,,,,,,,0001567094-26-000006,,,,no opex total and no GP/COR anchor
 CNH,547,operating_income,not_presented,,,,,,,,0001567094-26-000006,,,,no face line
 CNH,547,other_income_expense_net,not_presented,,,,,,,,0001567094-26-000006,,,,no face line
 CNH,547,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001567094-26-000006,R5,"Property, plant and equipment, net",2181000000.0000,library map

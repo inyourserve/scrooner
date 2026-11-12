@@ -34,7 +34,7 @@ SOFI,467,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001818874-2
 SOFI,467,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001818874-26-000013,R5,Net interest income,2218956000.0000,bank template tag
 SOFI,467,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001818874-26-000013,R5,Total noninterest expense,3057178000.0000,bank template tag
 SOFI,467,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-3,N,,sec_api,0001818874-26-000013,R5,Total noninterest income,1394398000.0000,bank template tag
-SOFI,467,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001818874-26-000013,R5,Total noninterest expense,3057178000.0000,printed opex total tag
+SOFI,467,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001818874-26-000013,R5,Total noninterest expense,3057178000.0000,sector template total
 SOFI,467,operating_income,not_presented,,,,,,,,0001818874-26-000013,,,,no face line
 SOFI,467,other_income_expense_net,not_presented,,,,,,,,0001818874-26-000013,,,,no face line
 SOFI,467,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001818874-26-000013,R3,"Property, equipment and software",416448000.0000,library map

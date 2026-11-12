@@ -34,7 +34,7 @@ LSTR,955,net_income,not_presented,,,,,,,,0001193125-26-064756,,,,no face line
 LSTR,955,net_interest_income,OUT,,,,,,,,0001193125-26-064756,,,,not a bank
 LSTR,955,noninterest_expense,OUT,,,,,,,,0001193125-26-064756,,,,not a bank
 LSTR,955,noninterest_income,OUT,,,,,,,,0001193125-26-064756,,,,not a bank
-LSTR,955,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-064756,R4,"Other operating costs, net of gains on asset sales/dispositions",61586000.0000,printed opex lines (duration sum)
+LSTR,955,operating_expenses,not_presented,,,,,,,,0001193125-26-064756,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 LSTR,955,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-064756,R4,Operating income,151577000.0000,library map
 LSTR,955,other_income_expense_net,not_presented,,,,,,,,0001193125-26-064756,,,,no face line
 LSTR,955,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-064756,R2,"Operating property, less accumulated depreciation and amortization of $473,642 and $456,547",261322000.0000,library map

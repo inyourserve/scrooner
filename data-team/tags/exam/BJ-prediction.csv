@@ -34,7 +34,7 @@ BJ,587,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001531152-26-
 BJ,587,net_interest_income,OUT,,,,,,,,0001531152-26-000007,,,,not a bank
 BJ,587,noninterest_expense,OUT,,,,,,,,0001531152-26-000007,,,,not a bank
 BJ,587,noninterest_income,OUT,,,,,,,,0001531152-26-000007,,,,not a bank
-BJ,587,operating_expenses,not_presented,,,,,,,,0001531152-26-000007,,,,no face line
+BJ,587,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:PreOpeningCosts,IS,+,-3,N,,sec_api,0001531152-26-000007,R5,"Selling, general and administrative expenses",3153577000.0000,every face line between GP/COR and OI; ties to GP - OI
 BJ,587,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001531152-26-000007,R5,Operating income,816604000.0000,library map
 BJ,587,other_income_expense_net,not_presented,,,,,,,,0001531152-26-000007,,,,no face line
 BJ,587,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001531152-26-000007,R3,"Property and equipment, net",2364552000.0000,library map

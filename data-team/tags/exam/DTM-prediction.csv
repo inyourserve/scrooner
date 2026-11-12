@@ -34,7 +34,7 @@ DTM,600,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001842022-26
 DTM,600,net_interest_income,OUT,,,,,,,,0001842022-26-000003,,,,not a bank
 DTM,600,noninterest_expense,OUT,,,,,,,,0001842022-26-000003,,,,not a bank
 DTM,600,noninterest_income,OUT,,,,,,,,0001842022-26-000003,,,,not a bank
-DTM,600,operating_expenses,not_presented,,,,,,,,0001842022-26-000003,,,,no face line
+DTM,600,operating_expenses,not_presented,,,,,,,,0001842022-26-000003,,,,no opex total and no GP/COR anchor
 DTM,600,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001842022-26-000003,R3,Operating Income,614000000.0000,library map
 DTM,600,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001842022-26-000003,R3,Other income,5000000.0000,library map
 DTM,600,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001842022-26-000003,R5,"Net Property, plant, and equipment",5766000000.0000,library map

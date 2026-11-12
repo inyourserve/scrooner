@@ -34,7 +34,7 @@ FDX,183,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001048911-26
 FDX,183,net_interest_income,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,noninterest_expense,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
 FDX,183,noninterest_income,OUT,,,,,,,,0001048911-26-000105,,,,not a bank
-FDX,183,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001048911-26-000105,R5,Total operating expenses,89257000000.0000,CostsAndExpenses value check (structural)
+FDX,183,operating_expenses,not_presented,,,,,,,,0001048911-26-000105,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 FDX,183,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001048911-26-000105,R5,OPERATING INCOME,5463000000.0000,library map
 FDX,183,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001048911-26-000105,R5,"Other, net",-22000000.0000,library map
 FDX,183,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001048911-26-000105,R3,Net property and equipment,42044000000.0000,library map

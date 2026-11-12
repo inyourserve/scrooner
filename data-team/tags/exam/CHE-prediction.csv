@@ -34,7 +34,7 @@ CHE,876,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,EarningsPerShareBasic,
 CHE,876,net_interest_income,OUT,,,,,,,,0001562762-26-000020,,,,not a bank
 CHE,876,noninterest_expense,OUT,,,,,,,,0001562762-26-000020,,,,not a bank
 CHE,876,noninterest_income,OUT,,,,,,,,0001562762-26-000020,,,,not a bank
-CHE,876,operating_expenses,not_presented,,,,,,,,0001562762-26-000020,,,,no face line
+CHE,876,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:Depreciation;us-gaap:AdjustmentForAmortization;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-3,N,,sec_api,0001562762-26-000020,R2,"Selling, general and administrative expenses",417188000.0000,every face line between GP/COR and OI; ties to GP - OI
 CHE,876,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001562762-26-000020,R2,Income from operations,338246000.0000,library map
 CHE,876,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001562762-26-000020,R2,Other income - net (Note 10),19282000.0000,combined line (library or label demote)
 CHE,876,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001562762-26-000020,R3,"Properties and equipment, at cost, less accumulated depreciation (Note 13)",205662000.0000,library map

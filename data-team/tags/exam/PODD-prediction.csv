@@ -34,7 +34,7 @@ PODD,707,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001145197-2
 PODD,707,net_interest_income,OUT,,,,,,,,0001145197-26-000028,,,,not a bank
 PODD,707,noninterest_expense,OUT,,,,,,,,0001145197-26-000028,,,,not a bank
 PODD,707,noninterest_income,OUT,,,,,,,,0001145197-26-000028,,,,not a bank
-PODD,707,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001145197-26-000028,R5,Research and development expenses,301100000.0000,printed opex lines (duration sum)
+PODD,707,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001145197-26-000028,R5,Research and development expenses,301100000.0000,every face line between GP/COR and OI; ties to GP - OI
 PODD,707,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001145197-26-000028,R5,Operating income,473800000.0000,library map
 PODD,707,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001145197-26-000028,R5,"Other income (expense), net",14300000.0000,library map
 PODD,707,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,Y,PropertyPlantAndEquipmentNet,sec_api,0001145197-26-000028,R3,"Property, plant and equipment, net",819500000.0000,library map

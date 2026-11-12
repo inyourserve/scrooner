@@ -34,7 +34,7 @@ CINF,373,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000020286-2
 CINF,373,net_interest_income,OUT,,,,,,,,0000020286-26-000008,,,,not a bank
 CINF,373,noninterest_expense,OUT,,,,,,,,0000020286-26-000008,,,,not a bank
 CINF,373,noninterest_income,OUT,,,,,,,,0000020286-26-000008,,,,not a bank
-CINF,373,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0000020286-26-000008,R5,Total benefits and expenses,9651000000.0000,printed opex total tag
+CINF,373,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0000020286-26-000008,R5,Total benefits and expenses,9651000000.0000,sector template total
 CINF,373,operating_income,not_presented,,,,,,,,0000020286-26-000008,,,,no face line
 CINF,373,other_income_expense_net,not_presented,,,,,,,,0000020286-26-000008,,,,no face line
 CINF,373,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000020286-26-000008,R3,"Land, building and equipment, net, for company use (accumulated depreciation: 2025$367; 2024$347)",219000000.0000,library map

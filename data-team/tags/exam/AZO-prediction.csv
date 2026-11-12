@@ -34,7 +34,7 @@ AZO,230,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-25
 AZO,230,net_interest_income,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
 AZO,230,noninterest_expense,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
 AZO,230,noninterest_income,OUT,,,,,,,,0001104659-25-102611,,,,not a bank
-AZO,230,operating_expenses,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
+AZO,230,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,"Operating, selling, general and administrative expenses",6356318000.0000,every face line between GP/COR and OI; ties to GP - OI
 AZO,230,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-25-102611,R2,Operating profit,3610156000.0000,library map
 AZO,230,other_income_expense_net,not_presented,,,,,,,,0001104659-25-102611,,,,no face line
 AZO,230,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-25-102611,R4,"Property and equipment, net",7062509000.0000,library map

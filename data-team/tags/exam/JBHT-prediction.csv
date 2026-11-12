@@ -34,7 +34,7 @@ JBHT,433,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-2
 JBHT,433,net_interest_income,OUT,,,,,,,,0001437749-26-005294,,,,not a bank
 JBHT,433,noninterest_expense,OUT,,,,,,,,0001437749-26-005294,,,,not a bank
 JBHT,433,noninterest_income,OUT,,,,,,,,0001437749-26-005294,,,,not a bank
-JBHT,433,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001437749-26-005294,R4,Total operating expenses,11134027000.0000,CostsAndExpenses value check (structural)
+JBHT,433,operating_expenses,not_presented,,,,,,,,0001437749-26-005294,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 JBHT,433,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-005294,R4,Operating income,865069000.0000,library map
 JBHT,433,other_income_expense_net,not_presented,,,,,,,,0001437749-26-005294,,,,no face line
 JBHT,433,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001437749-26-005294,R2,Net property and equipment,5538101000.0000,library map

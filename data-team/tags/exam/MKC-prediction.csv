@@ -34,7 +34,7 @@ MKC,607,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26
 MKC,607,net_interest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,noninterest_expense,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,noninterest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
-MKC,607,operating_expenses,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;custom:SpecialCharges,IS,+,-5,N,,fsn_xbrl,0000063754-26-000037,R3,"Selling, general and administrative expense",1500300000.0000,every face line between GP/COR and OI; ties to GP - OI
 MKC,607,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Operating income,1070800000.0000,library map
 MKC,607,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,"Other income, net",38400000.0000,library map
 MKC,607,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,"Property, plant and equipment, net",1448800000.0000,library map

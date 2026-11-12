@@ -34,7 +34,7 @@ SBAC,453,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001034054-2
 SBAC,453,net_interest_income,OUT,,,,,,,,0001034054-26-000002,,,,not a bank
 SBAC,453,noninterest_expense,OUT,,,,,,,,0001034054-26-000002,,,,not a bank
 SBAC,453,noninterest_income,OUT,,,,,,,,0001034054-26-000002,,,,not a bank
-SBAC,453,operating_expenses,not_presented,,,,,,,,0001034054-26-000002,,,,no face line
+SBAC,453,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001034054-26-000002,R4,Total operating expenses,1472353000.0000,"total includes cost of revenue: combined, never opex"
 SBAC,453,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001034054-26-000002,R4,Operating income,1342786000.0000,library map
 SBAC,453,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001034054-26-000002,R4,"Other income (expense), net",366209000.0000,library map
 SBAC,453,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001034054-26-000002,R2,"Property and equipment, net",3401799000.0000,library map

@@ -34,7 +34,7 @@ HUT,776,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26
 HUT,776,net_interest_income,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
 HUT,776,noninterest_expense,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
 HUT,776,noninterest_income,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
-HUT,776,operating_expenses,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,operating_expenses,not_presented,,,,,,,,0001104659-26-019392,,,,opex lines do not tie to GP - OI
 HUT,776,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,Operating (loss) income,-321994000.0000,library map
 HUT,776,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,Total other income (expense),22160000.0000,combined line (library or label demote)
 HUT,776,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,"Property and equipment, net",643244000.0000,library map

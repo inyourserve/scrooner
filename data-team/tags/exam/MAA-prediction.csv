@@ -34,7 +34,7 @@ MAA,569,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,000
 MAA,569,net_interest_income,OUT,,,,,,,,0001193125-26-041208,,,,not a bank
 MAA,569,noninterest_expense,OUT,,,,,,,,0001193125-26-041208,,,,not a bank
 MAA,569,noninterest_income,OUT,,,,,,,,0001193125-26-041208,,,,not a bank
-MAA,569,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-041208,R4,Property management expenses,74779000.0000,printed opex lines (duration sum)
+MAA,569,operating_expenses,not_presented,,,,,,,,0001193125-26-041208,,,,no opex total and no GP/COR anchor
 MAA,569,operating_income,not_presented,,,,,,,,0001193125-26-041208,,,,no face line
 MAA,569,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-041208,R4,Other non-operating expense (income),-47161000.0000,library map
 MAA,569,ppe_net,not_presented,,,,,,,,0001193125-26-041208,,,,no face line

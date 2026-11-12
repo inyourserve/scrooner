@@ -34,7 +34,7 @@ RMBS,730,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 RMBS,730,net_interest_income,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
 RMBS,730,noninterest_expense,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
 RMBS,730,noninterest_income,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
-RMBS,730,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Total operating expenses,302997000.0000,printed opex total tag
+RMBS,730,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Total operating expenses,302997000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 RMBS,730,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Operating income,260218000.0000,library map
 RMBS,730,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0001193125-26-057101,R4,"Interest income and other income (expense), net",23111000.0000,combined line (library or label demote)
 RMBS,730,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,"Property and equipment, net",113051000.0000,library map

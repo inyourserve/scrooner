@@ -34,7 +34,7 @@ CTVA,996,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001755672-2
 CTVA,996,net_interest_income,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
 CTVA,996,noninterest_expense,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
 CTVA,996,noninterest_income,OUT,,,,,,,,0001755672-26-000004,,,,not a bank
-CTVA,996,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001755672-26-000004,R3,Research and Development Expense,1474000000.0000,printed opex lines (duration sum)
+CTVA,996,operating_expenses,not_presented,,,,,,,,0001755672-26-000004,,,,no opex total and no GP/COR anchor
 CTVA,996,operating_income,not_presented,,,,,,,,0001755672-26-000004,,,,no face line
 CTVA,996,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001755672-26-000004,R3,Other income (expense) - net,-570000000.0000,combined line (library or label demote)
 CTVA,996,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001755672-26-000004,R5,"Net Property, Plant and Equipment",4220000000.0000,library map

@@ -34,7 +34,7 @@ IREN,715,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001878848-2
 IREN,715,net_interest_income,OUT,,,,,,,,0001878848-26-000052,,,,not a bank
 IREN,715,noninterest_expense,OUT,,,,,,,,0001878848-26-000052,,,,not a bank
 IREN,715,noninterest_income,OUT,,,,,,,,0001878848-26-000052,,,,not a bank
-IREN,715,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,sec_api,0001878848-26-000052,R5,"Selling, general and administrative expenses",449115000.0000,printed opex lines (duration sum)
+IREN,715,operating_expenses,not_presented,,,,,,,,0001878848-26-000052,,,,opex lines do not tie to GP - OI
 IREN,715,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001878848-26-000052,R5,Operating (loss) income,-1046714000.0000,library map
 IREN,715,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001878848-26-000052,R5,Other non-operating income,72000.0000,library map
 IREN,715,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001878848-26-000052,R3,"Property, plant and equipment, net",6753183000.0000,library map

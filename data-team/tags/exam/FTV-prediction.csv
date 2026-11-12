@@ -34,7 +34,7 @@ FTV,484,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,Y,ProfitLoss,sec_api,000
 FTV,484,net_interest_income,OUT,,,,,,,,0001659166-26-000007,,,,not a bank
 FTV,484,noninterest_expense,OUT,,,,,,,,0001659166-26-000007,,,,not a bank
 FTV,484,noninterest_income,OUT,,,,,,,,0001659166-26-000007,,,,not a bank
-FTV,484,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,"Selling, general, and administrative",1661700000.0000,printed opex lines (duration sum)
+FTV,484,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,"Selling, general, and administrative",1661700000.0000,every face line between GP/COR and OI; ties to GP - OI
 FTV,484,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,Operating profit,720200000.0000,library map
 FTV,484,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001659166-26-000007,R5,"Other non-operating income (expenses), net",2500000.0000,library map
 FTV,484,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001659166-26-000007,R3,"Property, plant and equipment, net",269800000.0000,library map

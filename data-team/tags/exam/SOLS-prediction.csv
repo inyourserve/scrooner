@@ -34,7 +34,7 @@ SOLS,731,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0002064953-2
 SOLS,731,net_interest_income,OUT,,,,,,,,0002064953-26-000008,,,,not a bank
 SOLS,731,noninterest_expense,OUT,,,,,,,,0002064953-26-000008,,,,not a bank
 SOLS,731,noninterest_income,OUT,,,,,,,,0002064953-26-000008,,,,not a bank
-SOLS,731,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Research and development expenses,97000000.0000,printed opex lines (duration sum)
+SOLS,731,operating_expenses,not_presented,,,,,,,,0002064953-26-000008,,,,no opex total and no GP/COR anchor
 SOLS,731,operating_income,not_presented,,,,,,,,0002064953-26-000008,,,,no face line
 SOLS,731,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0002064953-26-000008,R3,Other expense (income),60000000.0000,library map
 SOLS,731,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0002064953-26-000008,R6,"Property, plant and equipment  net",2055000000.0000,library map

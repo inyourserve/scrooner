@@ -34,7 +34,7 @@ CLF,867,net_income,not_presented,,,,,,,,0000764065-26-000025,,,,no face line
 CLF,867,net_interest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
 CLF,867,noninterest_expense,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
 CLF,867,noninterest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,printed opex lines (duration sum)
+CLF,867,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:TangibleAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CLF,867,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Operating income (loss),-1579000000.0000,library map
 CLF,867,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Other non-operating income,1000000.0000,library map
 CLF,867,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,"Property, plant and equipment, net",9481000000.0000,library map

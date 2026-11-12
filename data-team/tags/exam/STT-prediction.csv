@@ -34,7 +34,7 @@ STT,251,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000093751-26
 STT,251,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0000093751-26-000124,R3,Net interest income,2960000000.0000,bank template tag
 STT,251,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000093751-26-000124,R3,Total expenses,10154000000.0000,bank template tag
 STT,251,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-6,N,,sec_api,0000093751-26-000124,R3,Total fee revenue,10980000000.0000,bank template tag
-STT,251,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000093751-26-000124,R3,Total expenses,10154000000.0000,printed opex total tag
+STT,251,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000093751-26-000124,R3,Total expenses,10154000000.0000,sector template total
 STT,251,operating_income,not_presented,,,,,,,,0000093751-26-000124,,,,no face line
 STT,251,other_income_expense_net,not_presented,,,,,,,,0000093751-26-000124,,,,no face line
 STT,251,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000093751-26-000124,R6,"Premises and equipment (net of accumulated depreciation of $7,046 and $6,461)",3174000000.0000,library map

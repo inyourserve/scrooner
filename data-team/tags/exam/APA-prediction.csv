@@ -34,7 +34,7 @@ APA,495,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001841666-26
 APA,495,net_interest_income,OUT,,,,,,,,0001841666-26-000015,,,,not a bank
 APA,495,noninterest_expense,OUT,,,,,,,,0001841666-26-000015,,,,not a bank
 APA,495,noninterest_income,OUT,,,,,,,,0001841666-26-000015,,,,not a bank
-APA,495,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001841666-26-000015,R3,General and administrative,350000000.0000,printed opex lines (duration sum)
+APA,495,operating_expenses,not_presented,,,,,,,,0001841666-26-000015,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 APA,495,operating_income,not_presented,,,,,,,,0001841666-26-000015,,,,no face line
 APA,495,other_income_expense_net,not_presented,,,,,,,,0001841666-26-000015,,,,no face line
 APA,495,ppe_net,not_presented,,,,,,,,0001841666-26-000015,,,,no face line

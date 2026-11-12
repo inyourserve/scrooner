@@ -34,7 +34,7 @@ VMRK,413,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 VMRK,413,net_interest_income,OUT,,,,,,,,0001193125-26-051433,,,,not a bank
 VMRK,413,noninterest_expense,OUT,,,,,,,,0001193125-26-051433,,,,not a bank
 VMRK,413,noninterest_income,OUT,,,,,,,,0001193125-26-051433,,,,not a bank
-VMRK,413,operating_expenses,not_presented,,,,,,,,0001193125-26-051433,,,,no face line
+VMRK,413,operating_expenses,not_presented,,,,,,,,0001193125-26-051433,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 VMRK,413,operating_income,not_presented,,,,,,,,0001193125-26-051433,,,,no face line
 VMRK,413,other_income_expense_net,combined,us-gaap:OtherNonoperatingExpense,IS,+,-3,N,,sec_api,0001193125-26-051433,R4,Other expenses,60485000.0000,combined line (library or label demote)
 VMRK,413,ppe_net,not_presented,,,,,,,,0001193125-26-051433,,,,no face line

@@ -34,7 +34,7 @@ WST,360,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000105770-26
 WST,360,net_interest_income,OUT,,,,,,,,0000105770-26-000010,,,,not a bank
 WST,360,noninterest_expense,OUT,,,,,,,,0000105770-26-000010,,,,not a bank
 WST,360,noninterest_income,OUT,,,,,,,,0000105770-26-000010,,,,not a bank
-WST,360,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Research and development,74300000.0000,printed opex lines (duration sum)
+WST,360,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:OtherIncomeExpense,IS,+,-5,N,,fsn_xbrl,0000105770-26-000010,R3,Research and development,74300000.0000,every face line between GP/COR and OI; ties to GP - OI
 WST,360,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000105770-26-000010,R3,Operating profit,584900000.0000,library map
 WST,360,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000105770-26-000010,R3,Other nonoperating expense (income),-1000000.0000,library map
 WST,360,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000105770-26-000010,R6,"Property, plant and equipment, net",1726400000.0000,library map

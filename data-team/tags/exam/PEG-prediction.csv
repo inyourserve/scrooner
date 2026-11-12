@@ -34,7 +34,7 @@ PEG,296,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 PEG,296,net_interest_income,OUT,,,,,,,,0001193125-26-077446,,,,not a bank
 PEG,296,noninterest_expense,OUT,,,,,,,,0001193125-26-077446,,,,not a bank
 PEG,296,noninterest_income,OUT,,,,,,,,0001193125-26-077446,,,,not a bank
-PEG,296,operating_expenses,not_presented,,,,,,,,0001193125-26-077446,,,,no face line
+PEG,296,operating_expenses,component_sum,us-gaap:UtilitiesOperatingExpenseMaintenanceAndOperations;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,Operation and Maintenance,3772000000.0000,every face line between GP/COR and OI; ties to GP - OI
 PEG,296,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,OPERATING INCOME,2980000000.0000,library map
 PEG,296,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001193125-26-077446,R2,Net Other Income (Deductions),145000000.0000,library map
 PEG,296,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-077446,R5,"Net Property, Plant and Equipment",42064000000.0000,library map

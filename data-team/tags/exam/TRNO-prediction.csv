@@ -34,7 +34,7 @@ TRNO,860,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001476150-2
 TRNO,860,net_interest_income,OUT,,,,,,,,0001476150-26-000011,,,,not a bank
 TRNO,860,noninterest_expense,OUT,,,,,,,,0001476150-26-000011,,,,not a bank
 TRNO,860,noninterest_income,OUT,,,,,,,,0001476150-26-000011,,,,not a bank
-TRNO,860,operating_expenses,not_presented,,,,,,,,0001476150-26-000011,,,,no face line
+TRNO,860,operating_expenses,not_presented,,,,,,,,0001476150-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 TRNO,860,operating_income,not_presented,,,,,,,,0001476150-26-000011,,,,no face line
 TRNO,860,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001476150-26-000011,R5,Total other income,210905000.0000,combined line (library or label demote)
 TRNO,860,ppe_net,not_presented,,,,,,,,0001476150-26-000011,,,,no face line

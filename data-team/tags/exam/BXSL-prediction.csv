@@ -34,7 +34,7 @@ BXSL,979,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001736035-2
 BXSL,979,net_interest_income,OUT,,,,,,,,0001736035-26-000004,,,,not a bank
 BXSL,979,noninterest_expense,OUT,,,,,,,,0001736035-26-000004,,,,not a bank
 BXSL,979,noninterest_income,OUT,,,,,,,,0001736035-26-000004,,,,not a bank
-BXSL,979,operating_expenses,not_presented,,,,,,,,0001736035-26-000004,,,,no face line
+BXSL,979,operating_expenses,not_presented,,,,,,,,0001736035-26-000004,,,,no opex total and no GP/COR anchor
 BXSL,979,operating_income,not_presented,,,,,,,,0001736035-26-000004,,,,no face line
 BXSL,979,other_income_expense_net,not_presented,,,,,,,,0001736035-26-000004,,,,no face line
 BXSL,979,ppe_net,not_presented,,,,,,,,0001736035-26-000004,,,,no face line

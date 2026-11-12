@@ -34,7 +34,7 @@ FTI,357,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001681459-26
 FTI,357,net_interest_income,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,noninterest_expense,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
 FTI,357,noninterest_income,OUT,,,,,,,,0001681459-26-000010,,,,not a bank
-FTI,357,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001681459-26-000010,R3,"Selling, general and administrative expense",705300000.0000,printed opex lines (duration sum)
+FTI,357,operating_expenses,not_presented,,,,,,,,0001681459-26-000010,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 FTI,357,operating_income,not_presented,,,,,,,,0001681459-26-000010,,,,no face line
 FTI,357,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001681459-26-000010,R3,"Other income (expense), net (Note 18)",-57700000.0000,library map
 FTI,357,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001681459-26-000010,R6,"Property, plant and equipment, net (Note 12)",2285300000.0000,library map

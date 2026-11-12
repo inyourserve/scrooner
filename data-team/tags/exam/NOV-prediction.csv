@@ -34,7 +34,7 @@ NOV,875,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 NOV,875,net_interest_income,OUT,,,,,,,,0001193125-26-048350,,,,not a bank
 NOV,875,noninterest_expense,OUT,,,,,,,,0001193125-26-048350,,,,not a bank
 NOV,875,noninterest_income,OUT,,,,,,,,0001193125-26-048350,,,,not a bank
-NOV,875,operating_expenses,not_presented,,,,,,,,0001193125-26-048350,,,,no face line
+NOV,875,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges,IS,+,-6,N,,sec_api,0001193125-26-048350,R4,"Selling, general and administrative",1203000000.0000,every face line between GP/COR and OI; ties to GP - OI
 NOV,875,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-048350,R4,Operating profit,494000000.0000,library map
 NOV,875,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001193125-26-048350,R4,"Other expense, net",-66000000.0000,library map
 NOV,875,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-048350,R2,"Property, plant and equipment, net",2050000000.0000,library map

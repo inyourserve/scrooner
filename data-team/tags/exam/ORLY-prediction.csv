@@ -34,7 +34,7 @@ ORLY,179,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000898173-2
 ORLY,179,net_interest_income,OUT,,,,,,,,0000898173-26-000009,,,,not a bank
 ORLY,179,noninterest_expense,OUT,,,,,,,,0000898173-26-000009,,,,not a bank
 ORLY,179,noninterest_income,OUT,,,,,,,,0000898173-26-000009,,,,not a bank
-ORLY,179,operating_expenses,not_presented,,,,,,,,0000898173-26-000009,,,,no face line
+ORLY,179,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000898173-26-000009,R4,"Selling, general and administrative expenses",5713529000.0000,every face line between GP/COR and OI; ties to GP - OI
 ORLY,179,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000898173-26-000009,R4,Operating income,3460612000.0000,library map
 ORLY,179,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000898173-26-000009,R4,"Other, net",7300000.0000,library map
 ORLY,179,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000898173-26-000009,R2,Net property and equipment,6257425000.0000,library map

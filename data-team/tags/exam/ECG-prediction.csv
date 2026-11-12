@@ -34,7 +34,7 @@ ECG,975,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0002015845-26
 ECG,975,net_interest_income,OUT,,,,,,,,0002015845-26-000010,,,,not a bank
 ECG,975,noninterest_expense,OUT,,,,,,,,0002015845-26-000010,,,,not a bank
 ECG,975,noninterest_income,OUT,,,,,,,,0002015845-26-000010,,,,not a bank
-ECG,975,operating_expenses,not_presented,,,,,,,,0002015845-26-000010,,,,no face line
+ECG,975,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0002015845-26-000010,R3,"Selling, general and administrative expenses",189338000.0000,every face line between GP/COR and OI; ties to GP - OI
 ECG,975,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0002015845-26-000010,R3,Operating income,264750000.0000,library map
 ECG,975,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,N,,sec_api,0002015845-26-000010,R3,"Other income, net",9939000.0000,combined line (library or label demote)
 ECG,975,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0002015845-26-000010,R6,"Property, plant and equipment, net of accumulated depreciation of $174,914 and $157,278, respectively",168498000.0000,library map

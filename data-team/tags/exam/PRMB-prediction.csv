@@ -34,7 +34,7 @@ PRMB,847,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-2
 PRMB,847,net_interest_income,OUT,,,,,,,,0001628280-26-012779,,,,not a bank
 PRMB,847,noninterest_expense,OUT,,,,,,,,0001628280-26-012779,,,,not a bank
 PRMB,847,noninterest_income,OUT,,,,,,,,0001628280-26-012779,,,,not a bank
-PRMB,847,operating_expenses,not_presented,,,,,,,,0001628280-26-012779,,,,no face line
+PRMB,847,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationIntegrationRelatedCosts;us-gaap:ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,"Selling, general and administrative expenses",1390400000.0000,every face line between GP/COR and OI; ties to GP - OI
 PRMB,847,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,Operating income,430400000.0000,library map
 PRMB,847,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-012779,R5,"Other income, net",59700000.0000,library map
 PRMB,847,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-012779,R3,"Property, plant and equipment, net",2185500000.0000,library map

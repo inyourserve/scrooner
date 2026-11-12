@@ -34,7 +34,7 @@ SSD,841,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26
 SSD,841,net_interest_income,OUT,,,,,,,,0001628280-26-012920,,,,not a bank
 SSD,841,noninterest_expense,OUT,,,,,,,,0001628280-26-012920,,,,not a bank
 SSD,841,noninterest_income,OUT,,,,,,,,0001628280-26-012920,,,,not a bank
-SSD,841,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-012920,R5,Total operating expenses,626977000.0000,printed opex total tag
+SSD,841,operating_expenses,component_sum,custom:ResearchAndDevelopmentAndOtherEngineering;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;custom:BusinessCombinationAcquisitionAndIntegrationRelatedCosts;us-gaap:GainLossOnDispositionOfAssets,IS,+,-3,N,,fsn_xbrl,0001628280-26-012920,R5,Research and development and other engineering,82483000.0000,every face line between GP/COR and OI; ties to GP - OI
 SSD,841,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-012920,R5,Income from operations,458065000.0000,library map
 SSD,841,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-012920,R5,"Interest income, net and other financing costs",8337000.0000,combined line (library or label demote)
 SSD,841,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-012920,R3,"Property, plant and equipment, net",627854000.0000,library map

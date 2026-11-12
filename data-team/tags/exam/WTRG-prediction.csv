@@ -34,7 +34,7 @@ WTRG,631,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000078128-2
 WTRG,631,net_interest_income,OUT,,,,,,,,0000078128-26-000050,,,,not a bank
 WTRG,631,noninterest_expense,OUT,,,,,,,,0000078128-26-000050,,,,not a bank
 WTRG,631,noninterest_income,OUT,,,,,,,,0000078128-26-000050,,,,not a bank
-WTRG,631,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000078128-26-000050,R4,Total operating expenses,1553664000.0000,CostsAndExpenses value check (structural)
+WTRG,631,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000078128-26-000050,R4,Total operating expenses,1553664000.0000,"total includes cost of revenue: combined, never opex"
 WTRG,631,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000078128-26-000050,R4,Operating income,920951000.0000,library map
 WTRG,631,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000078128-26-000050,R4,Other,-1337000.0000,library map
 WTRG,631,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000078128-26-000050,R2,"Net property, plant and equipment",14263682000.0000,library map

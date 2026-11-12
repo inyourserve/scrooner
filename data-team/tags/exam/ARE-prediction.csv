@@ -34,7 +34,7 @@ ARE,835,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001035443-26
 ARE,835,net_interest_income,OUT,,,,,,,,0001035443-26-000013,,,,not a bank
 ARE,835,noninterest_expense,OUT,,,,,,,,0001035443-26-000013,,,,not a bank
 ARE,835,noninterest_income,OUT,,,,,,,,0001035443-26-000013,,,,not a bank
-ARE,835,operating_expenses,not_presented,,,,,,,,0001035443-26-000013,,,,no face line
+ARE,835,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001035443-26-000013,R5,Total expenses,4819753000.0000,total includes cost of revenue
 ARE,835,operating_income,not_presented,,,,,,,,0001035443-26-000013,,,,no face line
 ARE,835,other_income_expense_net,not_presented,,,,,,,,0001035443-26-000013,,,,no face line
 ARE,835,ppe_net,not_presented,,,,,,,,0001035443-26-000013,,,,no face line

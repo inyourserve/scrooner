@@ -34,7 +34,7 @@ CPAY,371,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001175454-2
 CPAY,371,net_interest_income,OUT,,,,,,,,0001175454-26-000018,,,,not a bank
 CPAY,371,noninterest_expense,OUT,,,,,,,,0001175454-26-000018,,,,not a bank
 CPAY,371,noninterest_income,OUT,,,,,,,,0001175454-26-000018,,,,not a bank
-CPAY,371,operating_expenses,not_presented,,,,,,,,0001175454-26-000018,,,,no face line
+CPAY,371,operating_expenses,not_presented,,,,,,,,0001175454-26-000018,,,,no opex total and no GP/COR anchor
 CPAY,371,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001175454-26-000018,R5,Operating income,1994108000.0000,library map
 CPAY,371,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001175454-26-000018,R5,"Other expense (income), net",-46985000.0000,library map
 CPAY,371,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001175454-26-000018,R3,"Property and equipment, net",472310000.0000,library map

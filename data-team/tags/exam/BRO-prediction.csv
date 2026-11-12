@@ -34,7 +34,7 @@ BRO,409,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26
 BRO,409,net_interest_income,OUT,,,,,,,,0001193125-26-046984,,,,not a bank
 BRO,409,noninterest_expense,OUT,,,,,,,,0001193125-26-046984,,,,not a bank
 BRO,409,noninterest_income,OUT,,,,,,,,0001193125-26-046984,,,,not a bank
-BRO,409,operating_expenses,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
+BRO,409,operating_expenses,not_presented,,,,,,,,0001193125-26-046984,,,,no opex total and no GP/COR anchor
 BRO,409,operating_income,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
 BRO,409,other_income_expense_net,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
 BRO,409,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-046984,R4,"Fixed assets, net",367000000.0000,library map

@@ -34,7 +34,7 @@ CL,169,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-
 CL,169,net_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
 CL,169,noninterest_expense,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
 CL,169,noninterest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,operating_expenses,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
+CL,169,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,"Selling, general and administrative expenses",7903000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CL,169,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Operating profit,3306000000.0000,library map
 CL,169,other_income_expense_net,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
 CL,169,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Property, plant and equipment, net",4660000000.0000,library map

@@ -34,7 +34,7 @@ CVNA,265,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001690820-2
 CVNA,265,net_interest_income,OUT,,,,,,,,0001690820-26-000009,,,,not a bank
 CVNA,265,noninterest_expense,OUT,,,,,,,,0001690820-26-000009,,,,not a bank
 CVNA,265,noninterest_income,OUT,,,,,,,,0001690820-26-000009,,,,not a bank
-CVNA,265,operating_expenses,not_presented,,,,,,,,0001690820-26-000009,,,,no face line
+CVNA,265,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001690820-26-000009,R5,"Selling, general and administrative expenses, including $32, $31, and $33, respectively, to related parties",2308000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CVNA,265,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001690820-26-000009,R5,Operating income (loss),1881000000.0000,library map
 CVNA,265,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001690820-26-000009,R5,"Other expense (income), net",-2250000000.0000,library map
 CVNA,265,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001690820-26-000009,R3,"Property and equipment, net",2814000000.0000,library map

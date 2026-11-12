@@ -34,7 +34,7 @@ WULF,956,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001083301-2
 WULF,956,net_interest_income,OUT,,,,,,,,0001083301-26-000031,,,,not a bank
 WULF,956,noninterest_expense,OUT,,,,,,,,0001083301-26-000031,,,,not a bank
 WULF,956,noninterest_income,OUT,,,,,,,,0001083301-26-000031,,,,not a bank
-WULF,956,operating_expenses,not_presented,,,,,,,,0001083301-26-000031,,,,no face line
+WULF,956,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001083301-26-000031,R5,Total costs and expenses,354668000.0000,"total includes cost of revenue: combined, never opex"
 WULF,956,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001083301-26-000031,R5,Operating loss,-186213000.0000,library map
 WULF,956,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,N,,sec_api,0001083301-26-000031,R5,Other income,39044000.0000,combined line (library or label demote)
 WULF,956,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001083301-26-000031,R3,"Property, plant and equipment, net",1507699000.0000,library map

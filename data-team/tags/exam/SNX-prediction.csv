@@ -34,7 +34,7 @@ SNX,455,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,EarningsPerShareBasic,
 SNX,455,net_interest_income,OUT,,,,,,,,0001628280-26-003598,,,,not a bank
 SNX,455,noninterest_expense,OUT,,,,,,,,0001628280-26-003598,,,,not a bank
 SNX,455,noninterest_income,OUT,,,,,,,,0001628280-26-003598,,,,not a bank
-SNX,455,operating_expenses,not_presented,,,,,,,,0001628280-26-003598,,,,no face line
+SNX,455,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationIntegrationRelatedCosts,IS,+,-3,N,,sec_api,0001628280-26-003598,R5,"Selling, general and administrative expenses",2946883000.0000,every face line between GP/COR and OI; ties to GP - OI
 SNX,455,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-003598,R5,Operating income,1414919000.0000,library map
 SNX,455,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-003598,R5,"Other expense, net",-1057000.0000,library map
 SNX,455,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-003598,R3,"Property and equipment, net",496291000.0000,library map

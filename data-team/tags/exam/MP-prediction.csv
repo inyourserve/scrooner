@@ -34,7 +34,7 @@ MP,849,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001801368-26-
 MP,849,net_interest_income,OUT,,,,,,,,0001801368-26-000008,,,,not a bank
 MP,849,noninterest_expense,OUT,,,,,,,,0001801368-26-000008,,,,not a bank
 MP,849,noninterest_income,OUT,,,,,,,,0001801368-26-000008,,,,not a bank
-MP,849,operating_expenses,not_presented,,,,,,,,0001801368-26-000008,,,,no face line
+MP,849,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001801368-26-000008,R5,"Total operating costs and expenses, net",424831000.0000,"total includes cost of revenue: combined, never opex"
 MP,849,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001801368-26-000008,R5,Operating loss,-149374000.0000,library map
 MP,849,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0001801368-26-000008,R5,"Other income, net",63081000.0000,library map
 MP,849,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001801368-26-000008,R3,"Property, plant and equipment, net",1369817000.0000,library map

@@ -34,7 +34,7 @@ ELS,626,net_income,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,net_interest_income,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
 ELS,626,noninterest_expense,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
 ELS,626,noninterest_income,OUT,,,,,,,,0001628280-26-008722,,,,not a bank
-ELS,626,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001628280-26-008722,R5,Total expenses,1140033000.0000,CostsAndExpenses value check (structural)
+ELS,626,operating_expenses,not_presented,,,,,,,,0001628280-26-008722,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ELS,626,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008722,R5,Income before taxes and other items,391349000.0000,library map
 ELS,626,other_income_expense_net,not_presented,,,,,,,,0001628280-26-008722,,,,no face line
 ELS,626,ppe_net,not_presented,,,,,,,,0001628280-26-008722,,,,no face line

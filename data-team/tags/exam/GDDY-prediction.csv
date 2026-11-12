@@ -34,7 +34,7 @@ GDDY,574,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001609711-2
 GDDY,574,net_interest_income,OUT,,,,,,,,0001609711-26-000010,,,,not a bank
 GDDY,574,noninterest_expense,OUT,,,,,,,,0001609711-26-000010,,,,not a bank
 GDDY,574,noninterest_income,OUT,,,,,,,,0001609711-26-000010,,,,not a bank
-GDDY,574,operating_expenses,not_presented,,,,,,,,0001609711-26-000010,,,,no face line
+GDDY,574,operating_expenses,component_sum,custom:TechnologyRelatedCosts;us-gaap:MarketingAndAdvertisingExpense;custom:CustomerServiceExpense;us-gaap:GeneralAndAdministrativeExpense;custom:RestructuringChargesAndGainLossOnDispositionOfPropertyPlantEquipment;us-gaap:DepreciationDepletionAndAmortization,IS,+,-5,Y,ResearchAndDevelopmentExpenseMember;RestructuringCharges;CostDepreciationAmortizationAndDepletion,fsn_xbrl,0001609711-26-000010,R5,Technology and development,841500000.0000,every face line between GP/COR and OI; ties to GP - OI
 GDDY,574,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001609711-26-000010,R5,Operating income,1127300000.0000,library map
 GDDY,574,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001609711-26-000010,R5,"Other income (expense), net",42300000.0000,library map
 GDDY,574,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001609711-26-000010,R3,"Property and equipment, net",145400000.0000,library map

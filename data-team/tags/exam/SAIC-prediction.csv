@@ -34,7 +34,7 @@ SAIC,976,net_income,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
 SAIC,976,net_interest_income,OUT,,,,,,,,0001571123-26-000029,,,,not a bank
 SAIC,976,noninterest_expense,OUT,,,,,,,,0001571123-26-000029,,,,not a bank
 SAIC,976,noninterest_income,OUT,,,,,,,,0001571123-26-000029,,,,not a bank
-SAIC,976,operating_expenses,not_presented,,,,,,,,0001571123-26-000029,,,,no face line
+SAIC,976,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DisposalGroupNotDiscontinuedOperationGainLossOnDisposal;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,"Selling, general and administrative expenses",350000000.0000,every face line between GP/COR and OI; ties to GP - OI
 SAIC,976,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001571123-26-000029,R3,Operating income,521000000.0000,library map
 SAIC,976,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001571123-26-000029,R3,"Other (income) expense, net",-6000000.0000,library map
 SAIC,976,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001571123-26-000029,R5,"Property, plant, and equipment, net",110000000.0000,library map

@@ -34,7 +34,7 @@ ARMK,541,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001584509-2
 ARMK,541,net_interest_income,OUT,,,,,,,,0001584509-25-000219,,,,not a bank
 ARMK,541,noninterest_expense,OUT,,,,,,,,0001584509-25-000219,,,,not a bank
 ARMK,541,noninterest_income,OUT,,,,,,,,0001584509-25-000219,,,,not a bank
-ARMK,541,operating_expenses,not_presented,,,,,,,,0001584509-25-000219,,,,no face line
+ARMK,541,operating_expenses,component_sum,us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,Y,DepreciationDepletionAndAmortization,sec_api,0001584509-25-000219,R5,Depreciation and amortization,476345000.0000,every face line between GP/COR and OI; ties to GP - OI
 ARMK,541,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001584509-25-000219,R5,Operating income,791846000.0000,library map
 ARMK,541,other_income_expense_net,not_presented,,,,,,,,0001584509-25-000219,,,,no face line
 ARMK,541,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001584509-25-000219,R3,"Property and Equipment, net:",1734489000.0000,library map

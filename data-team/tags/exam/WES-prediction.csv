@@ -34,7 +34,7 @@ WES,475,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001423902-26
 WES,475,net_interest_income,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
 WES,475,noninterest_expense,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
 WES,475,noninterest_income,OUT,,,,,,,,0001423902-26-000030,,,,not a bank
-WES,475,operating_expenses,not_presented,,,,,,,,0001423902-26-000030,,,,no face line
+WES,475,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,Operation and maintenance,915896000.0000,"total includes cost of revenue: combined, never opex"
 WES,475,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,Operating income (loss),1601402000.0000,library map
 WES,475,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001423902-26-000030,R3,"Other income (expense), net",16629000.0000,library map
 WES,475,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001423902-26-000030,R5,"Net property, plant, and equipment",11220908000.0000,library map

@@ -34,7 +34,7 @@ CSL,581,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000790051-26
 CSL,581,net_interest_income,OUT,,,,,,,,0000790051-26-000012,,,,not a bank
 CSL,581,noninterest_expense,OUT,,,,,,,,0000790051-26-000012,,,,not a bank
 CSL,581,noninterest_income,OUT,,,,,,,,0000790051-26-000012,,,,not a bank
-CSL,581,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000790051-26-000012,R3,Selling and administrative expenses,745400000.0000,printed opex lines (duration sum)
+CSL,581,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0000790051-26-000012,R3,Selling and administrative expenses,745400000.0000,every face line between GP/COR and OI; ties to GP - OI
 CSL,581,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000790051-26-000012,R3,Operating income,1002500000.0000,library map
 CSL,581,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000790051-26-000012,R3,"Other non-operating expense (income), net",-1100000.0000,library map
 CSL,581,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000790051-26-000012,R4,"Property, plant, and equipment, net of accumulated depreciation of $774.0 and $702.5",807100000.0000,library map

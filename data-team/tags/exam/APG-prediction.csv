@@ -34,7 +34,7 @@ APG,491,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26
 APG,491,net_interest_income,OUT,,,,,,,,0001628280-26-011620,,,,not a bank
 APG,491,noninterest_expense,OUT,,,,,,,,0001628280-26-011620,,,,not a bank
 APG,491,noninterest_income,OUT,,,,,,,,0001628280-26-011620,,,,not a bank
-APG,491,operating_expenses,not_presented,,,,,,,,0001628280-26-011620,,,,no face line
+APG,491,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-011620,R5,"Selling, general, and administrative expenses",1933000000.0000,every face line between GP/COR and OI; ties to GP - OI
 APG,491,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-011620,R5,Operating income,554000000.0000,library map
 APG,491,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-011620,R5,"Other expense, net",-141000000.0000,library map
 APG,491,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001628280-26-011620,R3,"Property and equipment, net",397000000.0000,library map

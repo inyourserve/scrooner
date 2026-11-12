@@ -34,7 +34,7 @@ RGEN,700,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-2
 RGEN,700,net_interest_income,OUT,,,,,,,,0001193125-26-076528,,,,not a bank
 RGEN,700,noninterest_expense,OUT,,,,,,,,0001193125-26-076528,,,,not a bank
 RGEN,700,noninterest_income,OUT,,,,,,,,0001193125-26-076528,,,,not a bank
-RGEN,700,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-076528,R4,Research and development,54177000.0000,printed opex lines (duration sum)
+RGEN,700,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1,IS,+,-3,N,,sec_api,0001193125-26-076528,R4,Research and development,54177000.0000,every face line between GP/COR and OI; ties to GP - OI
 RGEN,700,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-076528,R4,Income (loss) from operations,55167000.0000,library map
 RGEN,700,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-076528,R4,"Other income (expense), net",2815000.0000,library map
 RGEN,700,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-076528,R2,"Property, plant and equipment, net",186614000.0000,library map

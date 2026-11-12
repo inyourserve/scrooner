@@ -34,7 +34,7 @@ AMP,262,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000820027-26
 AMP,262,net_interest_income,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
 AMP,262,noninterest_expense,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
 AMP,262,noninterest_income,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
-AMP,262,operating_expenses,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
+AMP,262,operating_expenses,not_presented,,,,,,,,0000820027-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 AMP,262,operating_income,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
 AMP,262,other_income_expense_net,not_presented,,,,,,,,0000820027-26-000011,,,,no face line
 AMP,262,ppe_net,not_presented,,,,,,,,0000820027-26-000011,,,,no face line

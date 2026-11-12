@@ -34,7 +34,7 @@ PAA,479,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001070423-26
 PAA,479,net_interest_income,OUT,,,,,,,,0001070423-26-000014,,,,not a bank
 PAA,479,noninterest_expense,OUT,,,,,,,,0001070423-26-000014,,,,not a bank
 PAA,479,noninterest_income,OUT,,,,,,,,0001070423-26-000014,,,,not a bank
-PAA,479,operating_expenses,not_presented,,,,,,,,0001070423-26-000014,,,,no face line
+PAA,479,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0001070423-26-000014,R5,Field operating costs,1154000000.0000,"total includes cost of revenue: combined, never opex"
 PAA,479,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001070423-26-000014,R5,OPERATING INCOME,1434000000.0000,library map
 PAA,479,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001070423-26-000014,R5,"Other income, net",108000000.0000,library map
 PAA,479,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001070423-26-000014,R3,"Property and equipment, net",16860000000.0000,library map

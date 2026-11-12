@@ -34,7 +34,7 @@ LH,378,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000920148-26-
 LH,378,net_interest_income,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
 LH,378,noninterest_expense,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
 LH,378,noninterest_income,OUT,,,,,,,,0000920148-26-000111,,,,not a bank
-LH,378,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,"Selling, general, and administrative expenses",2216300000.0000,printed opex lines (duration sum)
+LH,378,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:AssetImpairmentCharges;custom:NetRestructuringAndOtherCharges,IS,+,-5,N,,fsn_xbrl,0000920148-26-000111,R5,"Selling, general, and administrative expenses",2216300000.0000,every face line between GP/COR and OI; ties to GP - OI
 LH,378,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000920148-26-000111,R5,Operating income,1384700000.0000,library map
 LH,378,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000920148-26-000111,R5,"Other, net",-55000000.0000,library map
 LH,378,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000920148-26-000111,R3,"Property, plant, and equipment, net",3081500000.0000,library map

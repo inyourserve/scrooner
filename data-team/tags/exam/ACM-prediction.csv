@@ -34,7 +34,7 @@ ACM,824,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000868857-25
 ACM,824,net_interest_income,OUT,,,,,,,,0000868857-25-000013,,,,not a bank
 ACM,824,noninterest_expense,OUT,,,,,,,,0000868857-25-000013,,,,not a bank
 ACM,824,noninterest_income,OUT,,,,,,,,0000868857-25-000013,,,,not a bank
-ACM,824,operating_expenses,not_presented,,,,,,,,0000868857-25-000013,,,,no face line
+ACM,824,operating_expenses,component_sum,us-gaap:IncomeLossFromEquityMethodInvestments;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions,IS,+,-3,N,,sec_api,0000868857-25-000013,R5,Equity in earnings of joint ventures,27013000.0000,every face line between GP/COR and OI; ties to GP - OI
 ACM,824,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000868857-25-000013,R5,Income from operations,1026522000.0000,library map
 ACM,824,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0000868857-25-000013,R5,Other income,10457000.0000,combined line (library or label demote)
 ACM,824,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000868857-25-000013,R3,PROPERTY AND EQUIPMENTNET,416164000.0000,library map

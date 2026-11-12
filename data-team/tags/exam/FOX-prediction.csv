@@ -34,7 +34,7 @@ FOX,400,net_income,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
 FOX,400,net_interest_income,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
 FOX,400,noninterest_expense,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
 FOX,400,noninterest_income,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
-FOX,400,operating_expenses,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,operating_expenses,not_presented,,,,,,,,0001628280-26-053960,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 FOX,400,operating_income,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
 FOX,400,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-053960,R3,"Non-operating other, net",-773000000.0000,library map
 FOX,400,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,"Property and equipment, net",1842000000.0000,library map

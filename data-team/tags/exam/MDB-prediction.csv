@@ -34,7 +34,7 @@ MDB,361,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26
 MDB,361,net_interest_income,OUT,,,,,,,,0001628280-26-016799,,,,not a bank
 MDB,361,noninterest_expense,OUT,,,,,,,,0001628280-26-016799,,,,not a bank
 MDB,361,noninterest_income,OUT,,,,,,,,0001628280-26-016799,,,,not a bank
-MDB,361,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-016799,R5,Total operating expenses,1904707000.0000,printed opex total tag
+MDB,361,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-016799,R5,Total operating expenses,1904707000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
 MDB,361,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-016799,R5,Loss from operations,-136968000.0000,library map
 MDB,361,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-016799,R5,"Other expense, net",-4188000.0000,library map
 MDB,361,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,Y,PropertyPlantAndEquipmentNet,sec_api,0001628280-26-016799,R3,"Property and equipment, net",39773000.0000,library map

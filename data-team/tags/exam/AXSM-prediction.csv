@@ -34,7 +34,7 @@ AXSM,780,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-2
 AXSM,780,net_interest_income,OUT,,,,,,,,0001193125-26-064267,,,,not a bank
 AXSM,780,noninterest_expense,OUT,,,,,,,,0001193125-26-064267,,,,not a bank
 AXSM,780,noninterest_income,OUT,,,,,,,,0001193125-26-064267,,,,not a bank
-AXSM,780,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001193125-26-064267,R4,Research and development,183279000.0000,printed opex lines (duration sum)
+AXSM,780,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:ChangeInFairValueOfContingentConsiderations;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,fsn_xbrl,0001193125-26-064267,R4,Research and development,183279000.0000,every face line between GP/COR and OI; ties to GP - OI
 AXSM,780,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-064267,R4,Loss from operations,-166762000.0000,library map
 AXSM,780,other_income_expense_net,not_presented,,,,,,,,0001193125-26-064267,,,,no face line
 AXSM,780,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-064267,R2,"Equipment, net",562000.0000,library map

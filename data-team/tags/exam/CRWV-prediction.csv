@@ -34,7 +34,7 @@ CRWV,323,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001769628-2
 CRWV,323,net_interest_income,OUT,,,,,,,,0001769628-26-000104,,,,not a bank
 CRWV,323,noninterest_expense,OUT,,,,,,,,0001769628-26-000104,,,,not a bank
 CRWV,323,noninterest_income,OUT,,,,,,,,0001769628-26-000104,,,,not a bank
-CRWV,323,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001769628-26-000104,R5,Sales and marketing,144000000.0000,printed opex lines (duration sum)
+CRWV,323,operating_expenses,component_sum,custom:TechnologyAndInfrastructure;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,fsn_xbrl,0001769628-26-000104,R5,Technology and infrastructure,2929000000.0000,every face line between GP/COR and OI; ties to GP - OI
 CRWV,323,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001769628-26-000104,R5,Operating income (loss),-46000000.0000,library map
 CRWV,323,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001769628-26-000104,R5,"Other income, net",33000000.0000,library map
 CRWV,323,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001769628-26-000104,R3,"Property and equipment, net",30557000000.0000,library map

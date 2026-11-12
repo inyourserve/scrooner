@@ -34,7 +34,7 @@ CNC,310,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001071739-26
 CNC,310,net_interest_income,OUT,,,,,,,,0001071739-26-000049,,,,not a bank
 CNC,310,noninterest_expense,OUT,,,,,,,,0001071739-26-000049,,,,not a bank
 CNC,310,noninterest_income,OUT,,,,,,,,0001071739-26-000049,,,,not a bank
-CNC,310,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001071739-26-000049,R5,"Selling, general and administrative expenses",12904000000.0000,printed opex lines (duration sum)
+CNC,310,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001071739-26-000049,R5,Total operating expenses,202400000000.0000,"total includes cost of revenue: combined, never opex"
 CNC,310,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001071739-26-000049,R5,Earnings (loss) from operations,-7623000000.0000,library map
 CNC,310,other_income_expense_net,not_presented,,,,,,,,0001071739-26-000049,,,,no face line
 CNC,310,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001071739-26-000049,R3,"Property, software and equipment, net",2037000000.0000,library map

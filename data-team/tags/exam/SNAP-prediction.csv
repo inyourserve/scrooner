@@ -34,7 +34,7 @@ SNAP,679,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001564408-2
 SNAP,679,net_interest_income,OUT,,,,,,,,0001564408-26-000013,,,,not a bank
 SNAP,679,noninterest_expense,OUT,,,,,,,,0001564408-26-000013,,,,not a bank
 SNAP,679,noninterest_income,OUT,,,,,,,,0001564408-26-000013,,,,not a bank
-SNAP,679,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001564408-26-000013,R4,Research and development,1793601000.0000,printed opex lines (duration sum)
+SNAP,679,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001564408-26-000013,R4,Research and development,1793601000.0000,every face line between GP/COR and OI; ties to GP - OI
 SNAP,679,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001564408-26-000013,R4,Operating loss,-532167000.0000,library map
 SNAP,679,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001564408-26-000013,R4,"Other income (expense), net",68870000.0000,library map
 SNAP,679,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001564408-26-000013,R6,"Property and equipment, net",578075000.0000,library map

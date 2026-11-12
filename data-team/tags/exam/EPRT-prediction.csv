@@ -34,7 +34,7 @@ EPRT,967,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001728951-2
 EPRT,967,net_interest_income,OUT,,,,,,,,0001728951-26-000008,,,,not a bank
 EPRT,967,noninterest_expense,OUT,,,,,,,,0001728951-26-000008,,,,not a bank
 EPRT,967,noninterest_income,OUT,,,,,,,,0001728951-26-000008,,,,not a bank
-EPRT,967,operating_expenses,not_presented,,,,,,,,0001728951-26-000008,,,,no face line
+EPRT,967,operating_expenses,not_presented,,,,,,,,0001728951-26-000008,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 EPRT,967,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001728951-26-000008,R5,Income from operations,359921000.0000,library map
 EPRT,967,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,0,-3,N,,sec_api,0001728951-26-000008,R5,Other income,0.0000,combined line (library or label demote)
 EPRT,967,ppe_net,not_presented,,,,,,,,0001728951-26-000008,,,,no face line

@@ -34,7 +34,7 @@ OTIS,359,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001781335-2
 OTIS,359,net_interest_income,OUT,,,,,,,,0001781335-26-000011,,,,not a bank
 OTIS,359,noninterest_expense,OUT,,,,,,,,0001781335-26-000011,,,,not a bank
 OTIS,359,noninterest_income,OUT,,,,,,,,0001781335-26-000011,,,,not a bank
-OTIS,359,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001781335-26-000011,R3,Research and development,152000000.0000,printed opex lines (duration sum)
+OTIS,359,operating_expenses,not_presented,,,,,,,,0001781335-26-000011,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 OTIS,359,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001781335-26-000011,R3,Operating profit,2133000000.0000,library map
 OTIS,359,other_income_expense_net,not_presented,,,,,,,,0001781335-26-000011,,,,no face line
 OTIS,359,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001781335-26-000011,R5,"Fixed assets, net",743000000.0000,library map

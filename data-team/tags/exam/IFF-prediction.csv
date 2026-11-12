@@ -34,7 +34,7 @@ IFF,410,net_income,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
 IFF,410,net_interest_income,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,noninterest_expense,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,noninterest_income,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
-IFF,410,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,Y,RestructuringandOtherCharges,sec_api,0000051253-26-000006,R3,Research and development expenses,694000000.0000,printed opex lines (duration sum)
+IFF,410,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:GainLossOnSaleOfPropertyPlantEquipment,IS,+,-6,Y,RestructuringandOtherCharges,sec_api,0000051253-26-000006,R3,Research and development expenses,694000000.0000,every face line between GP/COR and OI; ties to GP - OI
 IFF,410,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,Operating (loss) profit,-382000000.0000,library map
 IFF,410,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,"Other expense, net",-65000000.0000,library map
 IFF,410,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,"Property, plant and equipment, net",4029000000.0000,library map

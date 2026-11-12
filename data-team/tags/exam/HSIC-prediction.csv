@@ -34,7 +34,7 @@ HSIC,720,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001000228-2
 HSIC,720,net_interest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
 HSIC,720,noninterest_expense,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
 HSIC,720,noninterest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,printed opex lines (duration sum)
+HSIC,720,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,every face line between GP/COR and OI; ties to GP - OI
 HSIC,720,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Operating income,653000000.0000,library map
 HSIC,720,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001000228-26-000013,R4,"Other, net",-3000000.0000,library map
 HSIC,720,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001000228-26-000013,R2,"Property and equipment, net",621000000.0000,library map

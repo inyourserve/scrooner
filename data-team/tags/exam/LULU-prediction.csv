@@ -34,7 +34,7 @@ LULU,688,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001397187-2
 LULU,688,net_interest_income,OUT,,,,,,,,0001397187-26-000020,,,,not a bank
 LULU,688,noninterest_expense,OUT,,,,,,,,0001397187-26-000020,,,,not a bank
 LULU,688,noninterest_income,OUT,,,,,,,,0001397187-26-000020,,,,not a bank
-LULU,688,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,"Selling, general and administrative expenses",4066556000.0000,printed opex lines (duration sum)
+LULU,688,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCostsAndAssetImpairmentCharges;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,"Selling, general and administrative expenses",4066556000.0000,every face line between GP/COR and OI; ties to GP - OI
 LULU,688,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,Income from operations,2210615000.0000,library map
 LULU,688,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001397187-26-000020,R5,"Other income (expense), net",28352000.0000,library map
 LULU,688,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001397187-26-000020,R3,"Property and equipment, net",2033720000.0000,library map

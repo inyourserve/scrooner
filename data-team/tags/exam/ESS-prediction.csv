@@ -34,7 +34,7 @@ ESS,492,net_income,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,net_interest_income,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
 ESS,492,noninterest_expense,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
 ESS,492,noninterest_income,OUT,,,,,,,,0000920522-26-000003,,,,not a bank
-ESS,492,operating_expenses,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
+ESS,492,operating_expenses,not_presented,,,,,,,,0000920522-26-000003,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 ESS,492,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000920522-26-000003,R5,Earnings from operations,899316000.0000,library map
 ESS,492,other_income_expense_net,not_presented,,,,,,,,0000920522-26-000003,,,,no face line
 ESS,492,ppe_net,not_presented,,,,,,,,0000920522-26-000003,,,,no face line

@@ -34,7 +34,7 @@ KNSA,890,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-2
 KNSA,890,net_interest_income,OUT,,,,,,,,0001104659-26-019168,,,,not a bank
 KNSA,890,noninterest_expense,OUT,,,,,,,,0001104659-26-019168,,,,not a bank
 KNSA,890,noninterest_income,OUT,,,,,,,,0001104659-26-019168,,,,not a bank
-KNSA,890,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,Research and development,96853000.0000,printed opex lines (duration sum)
+KNSA,890,operating_expenses,not_presented,,,,,,,,0001104659-26-019168,,,,opex lines do not tie to GP - OI
 KNSA,890,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,Income (loss) from operations,77221000.0000,library map
 KNSA,890,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,N,,sec_api,0001104659-26-019168,R4,"Other income, net",11647000.0000,combined line (library or label demote)
 KNSA,890,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-019168,R2,"Property and equipment, net",1943000.0000,library map

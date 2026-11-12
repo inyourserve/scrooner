@@ -34,7 +34,7 @@ FIS,470,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001136893-26
 FIS,470,net_interest_income,OUT,,,,,,,,0001136893-26-000013,,,,not a bank
 FIS,470,noninterest_expense,OUT,,,,,,,,0001136893-26-000013,,,,not a bank
 FIS,470,noninterest_income,OUT,,,,,,,,0001136893-26-000013,,,,not a bank
-FIS,470,operating_expenses,not_presented,,,,,,,,0001136893-26-000013,,,,no face line
+FIS,470,operating_expenses,not_presented,,,,,,,,0001136893-26-000013,,,,opex lines do not tie to GP - OI
 FIS,470,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001136893-26-000013,R5,Operating income,1741000000.0000,library map
 FIS,470,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001136893-26-000013,R5,"Other income (expense), net",-198000000.0000,library map
 FIS,470,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001136893-26-000013,R3,"Property and equipment, net",691000000.0000,library map

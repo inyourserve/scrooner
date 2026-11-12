@@ -34,7 +34,7 @@ PNW,604,net_income,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,net_interest_income,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,noninterest_expense,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,noninterest_income,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
-PNW,604,operating_expenses,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
+PNW,604,operating_expenses,component_sum,us-gaap:UtilitiesOperatingExpenseMaintenanceAndOperations;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,sec_api,0000764622-26-000011,R3,Operations and maintenance,1185065000.0000,every face line between GP/COR and OI; ties to GP - OI
 PNW,604,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000764622-26-000011,R3,OPERATING INCOME,1067630000.0000,library map
 PNW,604,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,Y,CostsAndExpenses,sec_api,0000764622-26-000011,R3,Total,92707000.0000,combined line (library or label demote)
 PNW,604,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000764622-26-000011,R6,"Total property, plant and equipment",20720104000.0000,library map

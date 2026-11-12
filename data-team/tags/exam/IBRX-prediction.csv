@@ -34,7 +34,7 @@ IBRX,710,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001326110-2
 IBRX,710,net_interest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
 IBRX,710,noninterest_expense,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
 IBRX,710,noninterest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,operating_expenses,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
+IBRX,710,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Total operating costs and expenses,369315000.0000,"total includes cost of revenue: combined, never opex"
 IBRX,710,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Loss from operations,-256027000.0000,library map
 IBRX,710,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,"Other expense, net",-2174000.0000,library map
 IBRX,710,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Property, plant and equipment, net",114264000.0000,library map

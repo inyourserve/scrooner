@@ -34,7 +34,7 @@ MAC,884,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000912242-26
 MAC,884,net_interest_income,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
 MAC,884,noninterest_expense,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
 MAC,884,noninterest_income,OUT,,,,,,,,0000912242-26-000016,,,,not a bank
-MAC,884,operating_expenses,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
+MAC,884,operating_expenses,not_presented,,,,,,,,0000912242-26-000016,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 MAC,884,operating_income,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,other_income_expense_net,not_presented,,,,,,,,0000912242-26-000016,,,,no face line
 MAC,884,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000912242-26-000016,R3,"Property, net",6688128000.0000,library map

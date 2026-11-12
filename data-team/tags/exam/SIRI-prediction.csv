@@ -34,7 +34,7 @@ SIRI,742,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000908937-2
 SIRI,742,net_interest_income,OUT,,,,,,,,0000908937-26-000006,,,,not a bank
 SIRI,742,noninterest_expense,OUT,,,,,,,,0000908937-26-000006,,,,not a bank
 SIRI,742,noninterest_income,OUT,,,,,,,,0000908937-26-000006,,,,not a bank
-SIRI,742,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0000908937-26-000006,R3,Total operating expenses,7087000000.0000,CostsAndExpenses value check (structural)
+SIRI,742,operating_expenses,not_presented,,,,,,,,0000908937-26-000006,,,,one-step corporate IS with no cost of revenue: not_presented (ruling 5)
 SIRI,742,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000908937-26-000006,R3,Income (loss) from operations,1471000000.0000,library map
 SIRI,742,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000908937-26-000006,R3,"Other income (expense), net",44000000.0000,library map
 SIRI,742,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000908937-26-000006,R5,"Property and equipment, net",2260000000.0000,library map

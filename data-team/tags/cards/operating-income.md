@@ -115,3 +115,10 @@ Relayed lessons (FILING-CHECKED by the named role; not re-opened by me):
 - Insurer "Income from operations before income tax expense" (ALL) is pretax, not operating income.
 - Cost of revenue = the line directly above Gross profit as printed (LMT 0001193125-16-476010 l13; later 0001628280-26-004195 l13, not the same-label subtotal at l10); a CostOfRevenue "total costs and expenses" with no gross-profit line is not cost of revenue (BA incl. Boeing Capital interest); no total cost line = sum of lines under the cost heading (VZ, TMUS, T, DIS 2014-18; ruling (a)).
 - Not interest expense: MET "interest credited to policyholder account balances"; HPE financing interest inside cost of sales; HOOD "net interest revenues".
+
+## 11. operating_expenses definition (Dhairya ruling 2026-11-12; applies analytics.canonical_concept 53 / 208, "SG&A + R&D…", resolved = gross profit − operating income)
+1. Opex = operating costs below cost of revenue, down to operating income; never includes cost of revenue.
+2. A printed total that excludes cost of revenue (ties to GP − OI: MRVL 2,857.8) is mapped.
+3. Otherwise: component sum of EVERY face line between gross profit (or cost of revenue) and operating income, tying EXACTLY to GP − OI (credit-typed lines enter negated: QCOM R&D 9,042 + SG&A 3,110 + other 39 = 12,191 = 44,284 − 19,738 − 12,355), else blank with a reason.
+4. CostsAndExpenses or any total that includes cost of revenue → combined, never opex (ACN, MPC, VRTX, STX, SPGI, UBER, T, TMUS, BMY, NEM, SCCO, WELL keyed otherwise: reader key errors).
+5. One-step IS with no cost-of-revenue line: banks/insurers → sector template (NoninterestExpense, BenefitsLossesAndExpenses); a corporate one-step IS → not_presented, never the total (this REPLACES the earlier Visa "no COR line → CostsAndExpenses = opex" exception; MCD, UNP likewise).
