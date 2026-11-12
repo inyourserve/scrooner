@@ -50,7 +50,7 @@ IS,InterestExpense,map,interest_expense_resolved,,,"""…, net"" label = net per
 CF,OtherNoncashIncomeExpense,excluded,,,component_no_concept,operating adjustment without a concept,,2490,52,pattern
 CF,IncreaseDecreaseInAccountsReceivable,map,cf_ar_change,,,IncreaseDecreaseInReceivables wider; CMI notes perimeter,,2459,55,explicit
 CI,NetIncomeLoss,excluded,,,identity_check_line,CI start line: IS is the source,,2450,53,pattern
-CI,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,component,,comprehensive_income,component_no_concept,OCI component / NCI share,,2429,50,pattern
+CI,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,component,,comprehensive_income,component_no_concept,"total comprehensive income INCLUDING NCI; NOT comprehensive income attributable to the parent (PG 15,801M, PM)","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",2429,50,pattern
 CF,ProfitLoss,excluded,,,identity_check_line,"CF start line: same tag as IS, different role",Engineering 2026-11-11 item 3,2413,53,explicit
 CF,PaymentsToAcquireBusinessesNetOfCashAcquired,excluded,,,component_no_concept,cash-flow component without a concept,,2401,65,pattern
 IS,OtherNonoperatingIncomeExpense,map,other_income_expense_net,,,"NonoperatingIncomeExpense can CONTAIN interest (DLH, ODFL calc); ""Interest and other"" = combined",operating-income.md §7,2394,53,explicit
@@ -224,7 +224,7 @@ CF,ProceedsFromSaleAndMaturityOfMarketableSecurities,excluded,,,component_no_con
 EQ,StockIssuedDuringPeriodValueStockOptionsExercised,excluded,,,movement_line,equity roll-forward line,,460,17,pattern
 EQ,SharesPaidForTaxWithholdingForShareBasedCompensation,excluded,,,movement_line,equity roll-forward line,,459,17,pattern
 BS,OtherLiabilities,excluded,,,component_no_concept,balance-sheet component without a concept,,456,11,pattern
-IS,NoninterestExpense,component,,,component_no_concept,"bank lines (safe tags, 29-30/30); no catalog concept yet: bank template",interest.md; INDEX,455,9,explicit
+IS,NoninterestExpense,component,,,component_no_concept,"bank lines (safe tags, 29-30/30); at brokers ""Total non-interest expenses"" = the operating-expense total (MS); no bank/broker concept yet: sector template","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED); interest.md",455,9,explicit
 CF,InterestPaid,excluded,,,supplemental,"InterestPaid is cash, not expense",interest.md §6,454,35,explicit
 CF,ProvisionForDoubtfulAccounts,excluded,,,component_no_concept,operating adjustment without a concept,,452,12,pattern
 CF,ProceedsFromSaleOfProductiveAssets,excluded,,,component_no_concept,cash-flow component without a concept,,448,12,pattern
@@ -365,8 +365,8 @@ BS,SalesAndExciseTaxPayableCurrent,excluded,,,component_no_concept,balance-sheet
 BS,InventoryWorkInProcessNetOfReserves,component,,inventory,component_no_concept,FG is the face TOTAL at GAP NKE AZO SYY LULU (single line),balance-sheet-equity-inventory-other.md §2,202,5,explicit
 IS,RevenuesNetOfInterestExpense,map,revenue_sanity_resolved,,,broker/card-issuer net revenue (AXP GS JPM MS): sector-template perimeter; currently held hold_sector_net_revenue,revenue playbook §2,201,5,explicit
 BS,AvailableForSaleSecuritiesDebtSecurities,excluded,,,component_no_concept,balance-sheet component without a concept,,197,7,pattern
-IS,InvestmentIncomeNet,excluded,,,component_no_concept,income-statement component without a concept,,194,5,pattern
-IS,MarketingExpense,component,,sga_expense,component_no_concept,,,193,5,explicit
+IS,InvestmentIncomeNet,excluded,,,component_no_concept,"can be the face ""Interest income"" line (MU 1,084M): read the label before treating it as investment income","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",194,5,pattern
+IS,MarketingExpense,component,,sga_expense,component_no_concept,"the S&M component of SG&A (AMZN ""Sales and marketing"" 47,129M); SG&A = S&M + G&A when printed separately","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",193,5,explicit
 BS,CashCashEquivalentsAndShortTermInvestments,excluded,,,combined_perimeter,cash + short-term investments combined,cash.md,191,5,explicit
 IS,ExplorationExpense,excluded,,,component_no_concept,income-statement component without a concept,,189,4,pattern
 EQ,NoncontrollingInterestIncreaseFromSubsidiaryEquityIssuance,excluded,,,movement_line,equity roll-forward line,,189,10,pattern
@@ -416,7 +416,7 @@ IS,NetIncomeLossAttributableToNonredeemableNoncontrollingInterest,component,,net
 IS,ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,excluded,,,component_no_concept,income-statement component without a concept,,113,6,pattern
 IS,OperatingCostsAndExpenses,excluded,,,subtotal_not_in_catalog,four perimeters (incl. COGS; CVX/AJG include interest): never cost_of_revenue or opex by name,operating-income.md,111,4,explicit
 IS,PremiumsEarnedNet,component,,,component_no_concept,insurer template lines (also managed care UNH HUM MOH),insurance-and-managed-care.md,111,3,explicit
-IS,CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,component,,cost_of_revenue_resolved,combined_perimeter,cost of sales EXCLUDING D&A: perimeter ruling pending (36 latest 10-Ks),cost_of_revenue playbook §3,108,4,explicit
+IS,CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue_resolved,,,"cost of revenue served with the label flag ""excl. D&A"" (LIN 17,389M); never derive gross profit from it","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",108,4,explicit
 IS,PolicyholderBenefitsAndClaimsIncurredNet,component,,,component_no_concept,insurer template lines (also managed care UNH HUM MOH),insurance-and-managed-care.md,108,4,explicit
 IS,GoodwillImpairmentLoss,excluded,,,component_no_concept,income-statement component without a concept,,105,7,pattern
 IS,DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerBasicShare,excluded,,,per_share_detail,continuing/discontinued EPS split: not total EPS,,104,5,explicit
@@ -447,3 +447,7 @@ IS,IncomeLossAttributableToParent,map,income_before_tax_resolved,,,"standard lab
 BS,CommonStockSharesOutstanding,map,shares_outstanding_resolved,,,BS parenthetical (inpth=1; 407 of 632 latest 10-Ks); never the dei cover count (PGR prints none: not_presented); EQ rows period-end only,fsn-balance-sheet-liabilities-equity.md; net-income-and-shares.md §7,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
 BS,IntangibleAssetsNetIncludingGoodwill,combined,,,line_presented_combined_with_others,"includes goodwill (POWL R3, CB, TJX); never read goodwill or intangibles from it",fsn-balance-sheet-assets.md,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
 BS,PublicUtilitiesPropertyPlantAndEquipmentNet,map,ppe_net_resolved,,,utility face PP&E net,fsn-balance-sheet-assets.md,,,Tag Expert 2026-11-11 reconcile vs fsn-* cards
+BS,AccountsPayableTradeCurrent,map,accounts_payable,,,"the face AP line when no AccountsPayableCurrent is printed (META 2021+, ABT, DHR); a component when beside AccountsPayableCurrent (META FY2019 ""Partners payable"" 886M)","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED); balance-sheet §8",,,explicit
+CF,IncreaseDecreaseInAccountsAndOtherReceivables,map,cf_ar_change,,,the AR change line (LLY); a wider-perimeter flag only when AccountsReceivable change is also printed,"Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit
+BS,CustomerAndOtherReceivables,combined,,,line_presented_combined_with_others,"broker ""Customer and other receivables"" (MS): combined","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit
+CF,PaymentsForProceedsFromProductiveAssets,map,capex_resolved,,,"net purchases of premises, equipment and software at MS = capex; check the label for disposals netted (""…, net"" = combined, SPG/TDG/CI)","Dhairya full 10-K reads 2026-11-11 (24 top-50 cos, FILING-CHECKED)",,,explicit

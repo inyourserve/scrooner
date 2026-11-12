@@ -91,3 +91,12 @@ A label rule can demote a correct line when the filer's label linkbase is wrong.
 | ETSY | 0001370637-18-000020 R7 | two rows with one label (10,301)K / (6,417)K |
 | FICO | (fsn-balance-sheet-assets) | "…Current" label on a noncurrent position (DATA-INFERRED) |
 Guard: when a label would demote a line, check it against the calc position and the value (e.g. a "Goodwill" tag whose value equals the goodwill note) before demoting; a demotion that breaks the statement's calc tie is a label error, not a component.
+
+## O. Full 10-K reads of 24 top-50 companies (Dhairya 2026-11-11; FILING-CHECKED, latest 10-K; 2.1% FAIL on 1,031 data points)
+- `MarketingExpense` = the S&M component of SG&A (AMZN "Sales and marketing" 47,129M). `AccountsPayableTradeCurrent` is META's face AP tag (2021+).
+- `CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization` = cost of revenue, labelled "excl. D&A" (LIN 17,389M).
+- `InvestmentIncomeNet` can be the face "Interest income" (MU 1,084M). `IncreaseDecreaseInAccountsAndOtherReceivables` is LLY's AR change line.
+- `ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest` is NOT comprehensive income attributable to the parent (PG 15,801M, PM).
+- CAT "interest expense excluding Financial Products" is a segment component, not consolidated interest expense.
+- Brokers (MS): "Total non-interest expenses" = operating expenses; "Customer and other receivables/payables" = combined; `PaymentsForProceedsFromProductiveAssets` on "premises, equipment and software" = capex.
+- Never use a rounded note figure when the face prints the value under another tag: AMD amortization 2,254M on the CF (`AdjustmentForAmortization`) vs 2,300M in the note (the iprx/face rule, debt.md §8-9).
