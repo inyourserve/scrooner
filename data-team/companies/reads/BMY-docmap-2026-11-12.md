@@ -1,0 +1,74 @@
+# BMY document-first map, 2026-11-12 (read-only, built bottom-up from the 10-K)
+
+Latest 10-K: accession 0000014272-26-000004, period end 2025-12-31. Evidence: R pages of FilingSummary (face statements + notes opened: R1.htm, R3.htm, R4.htm, R5.htm, R6.htm, R7.htm, R51.htm, R54.htm, R57.htm, R59.htm, R62.htm, R64.htm, R66.htm, R72.htm, R76.htm, R77.htm, R78.htm, R79.htm, R82.htm, R85.htm, R93.htm, R94.htm, R95.htm, R97.htm, R98.htm, R101.htm, R102.htm, R108.htm, R110.htm, R115.htm, R125.htm), values compared with data.sec.gov companyfacts (undimensioned, same accession). Values below are scaled to full units (USD, shares, USD/share). match = printed vs API; Y(abs) = same magnitude, sign differs (expense/outflow printed negative, tag positive).  Custom (company-prefix) tags are not in companyfacts: match NA.
+
+Face statements: R3 earnings, R4 comprehensive income, R5 balance sheet, R7 cash flows. FY0 = FY2025.
+
+| data_point | status | tags | page | label | fy0 printed | fy0 api | fy1 printed | fy1 api | match | note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | Revenues | R3.htm | Total Revenues | 48194000000 | 48194000000 | 48300000000 | 48300000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cost_of_revenue | mapped | CostOfGoodsAndServicesSold | R3.htm | Cost of products sold | 13936000000 | 13936000000 | 13968000000 | 13968000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| gross_profit | not_presented |  |  |  |  |  |  |  |  | IS prints Total Revenues, Cost of products sold, SG&A, R&D, Acquired IPRD, amortization, Other (income)/expense, Total Expenses; no gross profit line (agrees with Ritwik) |
+| operating_expenses | mapped | CostsAndExpenses | R3.htm | Total Expenses | 38866000000 | 38866000000 | 56679000000 | 56679000000 | Y/Y | printed 'Total Expenses' (includes cost of products sold) / fy0=2025-12-31 fy1=2024-12-31 |
+| sga_expense | mapped | SellingGeneralAndAdministrativeExpense | R3.htm | Selling, general and administrative | 7267000000 | 7267000000 | 8414000000 | 8414000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| research_and_development | mapped | ResearchAndDevelopmentExpense | R3.htm | Research and development | 9951000000 | 9951000000 | 11159000000 | 11159000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| operating_income | not_presented |  |  |  |  |  |  |  |  | no operating income subtotal on the IS (agrees with Ritwik) |
+| interest_expense | mapped | InterestExpenseNonoperating | R72.htm | Interest expense | 1891000000 | 1891000000 | 1947000000 | 1947000000 | Y/Y | NOT on the IS face but printed in note 'Other (income)/expense, net' (R72) 'Interest expense' 1,891; Ritwik's not_presented is true for the face only / fy0=2025-12-31 fy1=2024-12-31 |
+| interest_income | mapped | InvestmentIncomeInterest | R72.htm | Investment income | -586000000 | 586000000 | -478000000 | 478000000 | Y(abs)/Y(abs) | note R72 'Investment income' printed (586) inside Other (income)/expense, net; not on the IS face / fy0=2025-12-31 fy1=2024-12-31 |
+| other_income_expense_net | mapped | OtherNonoperatingIncomeExpense | R3.htm | Other (income)/expense, net | 674000000 | -674000000 | 893000000 | -893000000 | Y(abs)/Y(abs) | IS 'Other (income)/expense, net' 674 (printed as an expense; tag sign opposite) / fy0=2025-12-31 fy1=2024-12-31 |
+| income_before_tax | mapped | IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R3.htm | Earnings/(Loss) before income taxes | 9328000000 | 9328000000 | -8379000000 | -8379000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| income_tax_expense | mapped | IncomeTaxExpenseBenefit | R3.htm | Income tax provision | 2272000000 | 2272000000 | 554000000 | 554000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| net_income | mapped | NetIncomeLoss | R3.htm | Net earnings/(loss) attributable to BMS | 7054000000 | 7054000000 | -8948000000 | -8948000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| basic_eps | mapped | EarningsPerShareBasic | R3.htm | Basic (in dollars per share) | 3.47 | 3.47 | -4.41 | -4.41 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| diluted_eps | mapped | EarningsPerShareDiluted | R3.htm | Diluted (in dollars per share) | 3.46 | 3.46 | -4.41 | -4.41 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| weighted_basic_shares | mapped | WeightedAverageNumberOfSharesOutstandingBasic | R85.htm | Weighted-average common shares outstanding - basic (in share | 2034000000 | 2034000000 | 2027000000 | 2027000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| weighted_diluted_shares | mapped | WeightedAverageNumberOfDilutedSharesOutstanding | R85.htm | Weighted-average common shares outstanding - diluted (in sha | 2039000000 | 2039000000 | 2027000000 | 2027000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| dividends_per_share | mapped | CommonStockDividendsPerShareDeclared | R115.htm | Dividends declared (in usd per share) | 2.49 | 2.49 | 2.42 | 2.42 | Y/Y | Equity note R115 'Dividends declared (in usd per share)' / fy0=2025-12-31 fy1=2024-12-31 |
+| comprehensive_income | mapped | ComprehensiveIncomeNetOfTax | R4.htm | Comprehensive income/(loss) attributable to BMS | 6767000000 | 6767000000 | -8640000000 | -8640000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cash_and_equivalents | mapped | CashAndCashEquivalentsAtCarryingValue | R5.htm | Cash and cash equivalents | 10209000000 | 10209000000 | 10346000000 | 10346000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| accounts_receivable | mapped | ReceivablesNetCurrent | R5.htm | Receivables | 11414000000 | 11414000000 | 10747000000 | 10747000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| inventory | mapped | InventoryNet | R5.htm | Inventories | 2690000000 | 2690000000 | 2557000000 | 2557000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| current_assets | mapped | AssetsCurrent | R5.htm | Total Current assets | 29390000000 | 29390000000 | 29780000000 | 29780000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| ppe_net | mapped | PropertyPlantAndEquipmentNet | R5.htm | Property, plant and equipment | 7543000000 | 7543000000 | 7136000000 | 7136000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| goodwill | mapped | Goodwill | R5.htm | Goodwill | 21754000000 | 21754000000 | 21719000000 | 21719000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| total_assets | mapped | Assets | R5.htm | Total Assets | 90038000000 | 90038000000 | 92603000000 | 92603000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| accounts_payable | mapped | AccountsPayableCurrent | R5.htm | Accounts payable | 3575000000 | 3575000000 | 3602000000 | 3602000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| current_liabilities | mapped | LiabilitiesCurrent | R5.htm | Total Current liabilities | 23417000000 | 23417000000 | 23774000000 | 23774000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| total_liabilities | mapped | Liabilities | R5.htm | Total Liabilities | 71533000000 | 71533000000 | 76215000000 | 76215000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| total_debt | component sum | DebtCurrent;LongTermDebtNoncurrent | R5.htm | Short-term debt obligations + Long-term debt | 45111000000 | 45111000000 | 49649000000 | 49649000000 | Y/Y | instant sum: 'Short-term debt obligations' + 'Long-term debt'; finance leases not separately printed on BS / fy0=2025-12-31 fy1=2024-12-31 |
+| stockholders_equity | mapped | StockholdersEquity | R5.htm | Total BMS Shareholders’ Equity | 18473000000 | 18473000000 | 16335000000 | 16335000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| shares_outstanding | mapped | dei:EntityCommonStockSharesOutstanding | R1.htm | Entity Common Stock, Shares Outstanding (cover, as of cover  | 2,036,473,705 | 2036473705 |  |  | Y/NA | cover dei / cover date not period end; dei facts in companyfacts lack the class dimension |
+| cfo | mapped | NetCashProvidedByUsedInOperatingActivities | R7.htm | Net cash provided by operating activities | 14156000000 | 14156000000 | 15190000000 | 15190000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | R7.htm | Net cash provided by/(used in) investing activities | -4132000000 | -4132000000 | -21352000000 | -21352000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | R7.htm | Net cash provided by/(used in) financing activities | -10348000000 | -10348000000 | 5127000000 | 5127000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| capex | mapped | PaymentsToAcquirePropertyPlantAndEquipment | R7.htm | Capital expenditures | -1311000000 | 1311000000 | -1248000000 | 1248000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| depreciation_and_amortization | mapped | DepreciationDepletionAndAmortization | R7.htm | Depreciation and amortization, net | 4011000000 | 4011000000 | 9600000000 | 9600000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| amortization_of_intangibles | mapped | bmy:AmortizationofAcquiredIntangibleAssets | R3.htm | Amortization of acquired intangible assets | 3317000000 |  | 8872000000 |  | NA/NA | IS 'Amortization of acquired intangible assets' 3,317 (custom tag; companyfacts has no value) / API MISSING: AmortizationofAcquiredIntangib:custom_tag_not_in_companyfacts / fy0=2025-12-31 fy1=2024-12-31 |
+| sbc | mapped | ShareBasedCompensation | R7.htm | Stock-based compensation | 553000000 | 553000000 | 507000000 | 507000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| dividends_paid | mapped | PaymentsOfDividends | R7.htm | Dividends | -5045000000 | 5045000000 | -4863000000 | 4863000000 | Y(abs)/Y(abs) | 'Dividends' (tag PaymentsOfDividends: includes any non-common dividends) / fy0=2025-12-31 fy1=2024-12-31 |
+| share_buybacks | mapped | PaymentsForRepurchaseOfCommonStock | R7.htm | Repurchase of common stock | 0 | 0 | 0 | 0 | Y/Y | 'Repurchase of common stock' 0 in FY2025 and FY2024 / fy0=2025-12-31 fy1=2024-12-31 |
+| cf_ar_change | mapped | IncreaseDecreaseInReceivables | R7.htm | Receivables | -295000000 | 295000000 | 264000000 | -264000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cf_inventory_change | mapped | IncreaseDecreaseInInventories | R7.htm | Inventories | -184000000 | 184000000 | -486000000 | 486000000 | Y(abs)/Y(abs) | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cf_ap_change | mapped | IncreaseDecreaseInAccountsPayable | R7.htm | Accounts payable | -2000000 | -2000000 | 184000000 | 184000000 | Y/Y | auto: first candidate tag on face / fy0=2025-12-31 fy1=2024-12-31 |
+| cash_paid_for_interest | mapped | InterestPaidNet | R94.htm | Interest payments | 2100000000 | 2100000000 | 1800000000 | 1800000000 | Y/Y | Financing arrangements note R94 narrative 'Interest payments' $2.1 billion (rounded narrative, not a statement line) -- low precision / fy0=2025-12-31 fy1=2024-12-31 |
+| cash_paid_for_income_taxes | mapped | IncomeTaxesPaidNet | R82.htm | Income tax payments | 3264000000 | 3264000000 | 3900000000 | 3900000000 | Y/Y | Income tax note R82 'Income tax payments' / fy0=2025-12-31 fy1=2024-12-31 |
+
+## Disagreements with cloud Ritwik (companies-51-100-exceptions-2026-11-11.csv)
+1 PARTIAL DISAGREEMENT: interest_expense. Ritwik: not_presented, 'BMY IS has no interest expense line (inside other (income)/expense net)'. True on the IS face, but the Other (income)/expense, net note (R72) prints 'Interest expense' 1,891 (FY2025), 'Investment income' (586) as separate lines tagged InterestExpenseNonoperating / InvestmentIncomeInterest, so a filing-traceable value exists: status should be a note-level mapped value, not a structural blank. Agreements: gross_profit and operating_income not_presented (R3); revenue 'Total Revenues' (FY2025 tag Revenues; Ritwik row SalesRevenueNet 2013-2018).
+
+## Era checks (older 10-K opened: tag on the same printed line?)
+Older 10-K opened: 0000014272-21-000066 (period 2020-12-31); face pages ['R2.htm', 'R3.htm', 'R4.htm', 'R5.htm', 'R6.htm', 'R7.htm', 'R8.htm', 'R9.htm', 'R10.htm', 'R11.htm']. Result: 44 mapped rows checked.
+- interest_expense: tag us-gaap:InterestExpenseNonoperating ABSENT from the old filing 0000014272-21-000066 (2020-12-31) per MetaLinks and no candidate tag on its statements: line/tag new or differently tagged (needs a manual read)
+- income_before_tax: TAG CHANGED vs 0000014272-21-000066 (2020-12-31): old tag us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments on '(Loss)/Earnings Before Income Taxes' (new 'Earnings/(Loss) before income taxes' us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest)
+- basic_eps: same_tag@2020-12-31 but label differs: old 'Basic Earnings Per Common Share Attributable to BM' vs new 'Basic (in dollars per share)'
+- diluted_eps: same_tag@2020-12-31 but label differs: old 'Diluted Earnings per Common Share Attributable to ' vs new 'Diluted (in dollars per share)'
+- stockholders_equity: same_tag@2020-12-31 but label differs: old 'Total Bristol-Myers Squibb Company Shareholders' E' vs new 'Total BMS Shareholders’ Equity'
+- (39 rows: same tag and same label on the older 10-K, no change)
+
+## Mismatches / unresolved
+- none
+
+## Method and untested scope
+- FILING-CHECKED = value read from the 10-K R page (MetaLinks used to locate tags/pages) and compared with companyfacts for the same accession; not_presented/OUT rows are FILING-CHECKED for the statements opened (all face statements plus the note pages that carry the candidate tags per MetaLinks); a note not opened could still hold an unprinted detail.
+- Era check: one older 10-K per company (statement pages only, via MetaLinks); same-tag / label comparison on the same statement type. Note-page values of the older filing were not opened.
+- Not covered: 10-Q-era tag history, quarterly values, segment-level data points, FSN store comparison (document-first read only).

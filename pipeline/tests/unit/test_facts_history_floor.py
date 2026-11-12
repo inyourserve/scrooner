@@ -45,6 +45,7 @@ def _row(end, accn="a-1"):
 def test_pre_2014_facts_are_skipped_and_2015_kept(monkeypatch):
     conn = _Conn()
     monkeypatch.setattr(facts, "_get_company_id", lambda c, cik: 1)
+    monkeypatch.setattr(facts, "predecessor_routes", lambda c, cik: [])
     monkeypatch.setattr(facts, "_latest_companyfacts_object", lambda c, cik: (9, "p"))
     monkeypatch.setattr(facts, "_load_json", lambda s, p: {})
     monkeypatch.setattr(facts, "_load_filing_lookup", lambda c, i: {"a-1": 3})

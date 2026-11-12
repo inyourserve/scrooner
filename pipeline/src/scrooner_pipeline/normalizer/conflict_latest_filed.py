@@ -70,6 +70,10 @@ logger = structlog.get_logger()
 
 RULE = "latest_filed_fy_v1"
 RULE_QUARTER = "latest_filed_quarter_v1"
+RULE_TAGMAP = "latest_filed_tagmap_v1"
+# Same flag as the mapper (mapper/company_tag_map.py): off by default, so the old mapper never sees
+# is_authoritative flips for tag-map companies before the switch-over.
+RULE_COMPANY_TAG_MAP = "company_tag_map.select@1"
 
 # The tags the rule was validated against (taxonomy, tag).
 VALIDATED_TAGS: list[tuple[str, str]] = [
@@ -228,6 +232,100 @@ on conflict (fact_id) do update
 """
 
 
+# Tag-map companies (analytics.company_tag_map rows; Ritwik's ruling 2026-11-12, option b): EVERY tag, every
+# period type. When two copies of a fact differ for one period, the latest filing's copy becomes authoritative
+# and the older stays non-authoritative. The winner must be a periodic filing and never an amendment that prints
+# no IS/BS/CF/CI line (fsn.filing/fsn.line; an amendment with no loaded FSN lines counts as statement-less, so it
+# cannot win). Ineligible copies still count as copies, they just never win. Same sign-only quarantine as above.
+PROMOTE_TAGMAP_SQL = """
+with candidates as (
+    select f.id, f.company_id, f.value, f.is_authoritative,
+           fl.filing_date,
+           coalesce(ff.accepted, fl.filing_date::timestamptz) as accepted_at,
+           fl.is_amendment,
+           (   fl.form = any(%(forms)s)
+           and not (fl.is_amendment and not exists (
+                   select 1 from fsn.filing ff join fsn.line l on l.filing_id = ff.id
+                   where ff.accession = fl.accession_number and l.stmt in ('IS', 'BS', 'CF', 'CI')))
+           ) as eligible,
+           f.concept_id, f.unit_id, f.period_id
+    from core.fact f
+    join core.filing fl on fl.id = f.filing_id
+    left join fsn.filing ff on ff.accession = fl.accession_number
+    where f.company_id = any(%(company_ids)s)
+      and not f.is_derived
+),
+ranked as (
+    select c.*,
+           row_number() over w as rn,
+           count(*) over w as n,
+           bool_or(c.is_authoritative) over w as any_auth,
+           min(c.value) over w as vmin,
+           max(c.value) over w as vmax,
+           bool_or(c.value > 0) over w as has_pos,
+           bool_or(c.value < 0) over w as has_neg,
+           min(abs(c.value)) over w as amin,
+           max(abs(c.value)) over w as amax
+    from candidates c
+    window w as (partition by c.company_id, c.concept_id, c.unit_id, c.period_id
+                 order by c.eligible desc, c.accepted_at desc, c.filing_date desc, c.is_amendment asc, c.id desc
+                 rows between unbounded preceding and unbounded following)
+),
+winners as (
+    select id, n, vmin, vmax from ranked
+    where rn = 1 and eligible and n > 1 and not any_auth and vmin <> vmax
+      and not (has_pos and has_neg and amin = amax)
+),
+promoted as (
+    update core.fact f set is_authoritative = true
+    from winners w
+    where f.id = w.id and not f.is_authoritative
+    returning f.id, w.n, w.vmin, w.vmax
+)
+insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max)
+select id, %(rule)s, n, vmin, vmax from promoted
+on conflict (fact_id) do update
+    set rule = excluded.rule, group_size = excluded.group_size,
+        value_min = excluded.value_min, value_max = excluded.value_max,
+        resolved_at = now()
+"""
+
+
+def tag_map_company_ids(conn: psycopg.Connection, company_ids: list[int]) -> list[int]:
+    """The subset of company_ids with analytics.company_tag_map rows. [] unless rule company_tag_map.select@1
+    is ON (SCROONER_RULES_ENABLED), and [] when the table is absent."""
+    if not rule_enabled(RULE_COMPANY_TAG_MAP):
+        return []
+    if (
+        conn.execute("select to_regclass('analytics.company_tag_map')").fetchone()[0]
+        is None
+    ):
+        return []
+    rows = conn.execute(
+        "select distinct company_id from analytics.company_tag_map where company_id = any(%s)",
+        (company_ids,),
+    ).fetchall()
+    return sorted(r[0] for r in rows)
+
+
+def promote_tag_map_companies(conn: psycopg.Connection, company_ids: list[int]) -> int:
+    if not company_ids:
+        return 0
+    quarter_forms = eligible_forms()[1]
+    with conn.cursor() as cur:
+        cur.execute(
+            PROMOTE_TAGMAP_SQL,
+            {
+                "company_ids": company_ids,
+                "forms": list(quarter_forms),
+                "rule": RULE_TAGMAP,
+            },
+        )
+        promoted = cur.rowcount
+    conn.commit()
+    return promoted
+
+
 def _concept_ids(conn: psycopg.Connection, tags: list[tuple[str, str]]) -> list[int]:
     with conn.cursor() as cur:
         ids = []
@@ -248,6 +346,12 @@ def promote_for_companies(
     concept_ids: list[int],
     quarter_concept_ids: list[int],
 ) -> int:
+    # Tag-map companies get the every-tag rule; the rest keep the six-tag rule below.
+    tm_ids = tag_map_company_ids(conn, company_ids)
+    promoted_tm = promote_tag_map_companies(conn, tm_ids)
+    company_ids = [c for c in company_ids if c not in set(tm_ids)]
+    if not company_ids:
+        return promoted_tm
     with conn.cursor() as cur:
         cur.execute(
             PROMOTE_SQL,
@@ -267,7 +371,7 @@ def promote_for_companies(
         )
         promoted = cur.rowcount
     conn.commit()
-    return promoted
+    return promoted + promoted_tm
 
 
 def _promote_with_split(
@@ -325,13 +429,16 @@ def resolve_latest_filed(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_ids = _concept_ids(conn, VALIDATED_TAGS)
     quarter_concept_ids = _concept_ids(conn, VALIDATED_QUARTER_TAGS)
     totals = {"considered": 0, "batches": 0, "splits": 0, "errored": 0, "promoted": 0}
-    if not concept_ids:
-        return totals
     with conn.cursor() as cur:
         cur.execute(
             "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
         )
         company_id_by_cik = dict(cur.fetchall())
+    # The six-tag rule needs its concepts to exist; tag-map companies (every-tag rule) do not.
+    if not concept_ids and not tag_map_company_ids(
+        conn, sorted(company_id_by_cik.values())
+    ):
+        return totals
     ordered = sorted(company_id_by_cik)
     totals["considered"] = len(ordered)
     batch_size = 10

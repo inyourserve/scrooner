@@ -1,0 +1,21 @@
+# Standard tag library (cross-company), Tag Expert
+
+`standard-tag-library.csv`: one row per (statement, us-gaap tag), ranked by how often the tag sits on the face of the top-100 companies' statements (all filings in `fsn.*`, read 2026-11-11). It is the cross-company default that `analytics.company_tag_map` starts from (founder method 2026-11-11: FSN to learn which tag is what, SEC company API for values). Company residue (custom tags, a company whose use contradicts a row, combined lines, era changes) is the two Ritwik sessions' layer on top.
+
+Columns (agreed with Ritwik, Mac session): `stmt, tag, decision, concept, parent_concept, reason_class, caveat, evidence, lines_top100, companies_top100, source`.
+- `decision`: `map` (a catalog concept, `analytics.canonical_concept`), `component` (part of the named `parent_concept` total; never served as that total), `excluded` (no catalog concept; `reason_class` says why).
+- `reason_class`: subtotal_not_in_catalog, component_no_concept, movement_line, equity_component, identity_check_line, per_share_detail, supplemental, caption, nci_component, combined_perimeter.
+- `caveat`: the known misuse that must be checked per company before the default applies; `evidence`: the card section or accession that proves it.
+- `source`: `explicit` (decided tag by tag from the cards) or `pattern` (family rule: EQ roll-forward lines, OCI components, CF working-capital changes, other components without a concept). Pattern rows are first-cut defaults; tell me where one is wrong.
+
+Coverage of the first cut (2026-11-11): 445 (stmt, tag) rows; 443,032 of the 907,399 top-100 statement lines (49%; the rest are custom extensions, abstracts, axes/members and the long tail). Explicit rows: 217.
+
+Rules that apply to every row: map by face position and the filer's calc tree, not by tag name; a parenthetical (inpth) line is never a balance line; non-dimensional means `dim_id = 0` and `coreg = ''`; take the `iprx = 0` copy (rounded note copies exist); FSN `ddate` is month-end rounded (`datp` = days).
+
+## company-overrides.csv (2026-11-12)
+Company-scoped mappings that the library default does not allow (doc 02: a label may demote a line but never promote it). Only FILING-CHECKED rows are usable; PENDING-FILING-CHECK rows wait for an R-page read. Columns: company, cik, tag, stmt, concept, scope, status, evidence, note.
+
+## needs-detail-answers-r1r2.csv (2026-11-12)
+Answers to Engineering's data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv (168 rows, all closed). Added columns: final_decision, members (concept:sign, only from the filing's own calc children or same-filing facts; instants never by subtraction), sign (component contribution to its parent concept, on stored values), label_condition, rule, status. Concept keys use concepts_catalog.csv (_resolved keys where they exist).
+
+- company-overrides.csv column `value_source` (2026-11-12, founder decision relayed by Dhairya): `fsn_xbrl` = value from the filing's own XBRL via SEC FSN data, checked against the printed R page (custom tags); `sec_api` = SEC API (standard tags).
