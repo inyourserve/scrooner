@@ -86,6 +86,8 @@ A label rule can demote a correct line when the filer's label linkbase is wrong.
 | TRU | 0001552033-17-000027 | label shifted |
 | LH | 0000920148-24-000118 | label shifted (10,427.1M) |
 | MUR | 0000717423-20-000008 | label shifted (5,913,893K) |
+| T | ranks 68-84 read | "Inventories" tagged PrepaidExpenseCurrent (TAG error: company override) |
+| MCD | ranks 68-84 read | weighted shares stored unscaled (713.4): scale override |
 | MSI | 2018-12 filing | basic/diluted EPS labels swapped (Ritwik; DATA-INFERRED) |
 | FIVE | 0001177609-20-000030 R6 | withholding label on two rows (12,663)K vs (3,789)K |
 | ETSY | 0001370637-18-000020 R7 | two rows with one label (10,301)K / (6,417)K |
@@ -152,3 +154,19 @@ Guard: when a label would demote a line, check it against the calc position and 
 ## V. CostsAndExpenses → operating_expenses: structural rule (Dhairya 2026-11-12)
 - Allowed only when the IS face prints NO cost-of-revenue line and CostsAndExpenses is the last expense total above operating income (V 0001403161-26-000134 R5 17,793M: revenue 45,903 − 17,793 = OI 28,110). This is the statement's shape, not a label promotion.
 - Engineering test cases (a printed cost-of-revenue line must block it): V → map; AMZN 0001018724-26-000004 R4 (cost of sales 356,414M inside 636,949M) → blocked; CVX/AJG (total includes interest) → blocked.
+
+## W. Document-first reads, ranks 68-84 (Dhairya 2026-11-12; FILING-CHECKED)
+- Capex: T and ISRG carry their real capex line on `PaymentsToAcquireProductiveAssets`; MCD FY2025 restaurant purchases on `PaymentsToAcquireOtherProductiveAssets` (acquisitions). The capex rule DEMOTES by acquisition label or by a separate PP&E purchases line; it never promotes.
+- TMUS, T, BA: `CostOfGoodsAndServicesSold` only on ProductOrServiceAxis members, no undimensioned total: never sum members (BA face cost of revenue = `CostOfRevenue`).
+- ETN net interest moved `InterestIncomeExpenseNet` → `InterestExpenseNonoperating` on the same line. UBER CF D&A `DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense` = combined.
+- Era switches: `InterestExpense` → `InterestExpenseNonoperating` (UNP, DHR, STX, T, UBER); SCHW → `InterestExpenseOperating`; WELL `InterestExpenseDebt` → `InterestExpenseBorrowings`; UBER `NonoperatingIncomeExpense` → `OtherNonoperatingIncomeExpense`; NEE FPL capex custom tag renamed. company_tag_map keys per filing era.
+- Filer errors (overrides only after a filing check): T inventories on `PrepaidExpenseCurrent`; MCD weighted shares unscaled (713.4). STX Goodwill labelled "Other intangible assets" is a LABEL error (tag right: no override, §N).
+- BA `PaymentsOfDividends` FY2025 = mandatory convertible preferred only.
+
+## X. Document-first reads, ranks 85-100 (Dhairya 2026-11-12; FILING-CHECKED)
+- Cash: PGR on `Cash` (125M; the sole cash line). CB: the PERIMETER changed with the tag (plain cash → incl. restricted) from 2018: served as printed, labelled. **Bank cash rule refined: the BS total cash line when printed (COF 57,434M), else the CF printed ending cash** (never a sum of BS lines).
+- Receivables on other tags: MO `OtherReceivablesNetCurrent`, BKNG `AccountsAndOtherReceivablesNetCurrent` (company overrides; library default stays non-AR / combined).
+- Interest: FTNT interest income on `InvestmentIncomeNet`; PH note "Interest income" 14M on the net tag `InterestIncomeExpenseNonoperatingNet` (overrides). SPGI "Interest expense, net" on the gross `InterestExpenseNonoperating`: the caption demotes it to combined. NEM "interest expense, net of capitalized interest" is clean.
+- NEM SBC on `EmployeeBenefitsAndShareBasedCompensation` (override; library default combined).
+- LMT cost moved `CostOfGoodsAndServicesSold` → `CostOfRevenue` (the line above gross profit); LMT D&A → `DepreciationAmortizationAndAccretionNet`.
+- VLO capex = PP&E + capital improvements (turnarounds, founder perimeter); VLO has no undimensioned companyfacts after FY2018 (read the face/FSN).
