@@ -82,6 +82,15 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         return all(t in tags for t in w.get('all_of', [])) and bool(tags & set(w.get('any_of', [])))
     bank, insurer, classified = det('bank'), det('insurer'), det('classified_bs')
     cand = {d: [] for d in DPS}
+    single_class = {}
+    _PC = KB['P'].get('per_share.class_member_face_line')
+    if _PC:
+        for _r in {l['r'] for l in L if l['st'] == 'IS'}:
+            _rl = [l for l in L if l['st'] == 'IS' and l['r'] == _r]
+            if any(l['tag'] == 'StatementClassOfStockAxis' for l in _rl):
+                _m = [l for l in _rl if l['tag'].endswith('Member') and re.search(_PC['member_regex'], l['tag'])]
+                _other_axes = [l for l in _rl if l['tag'].endswith('Axis') and l['tag'] != 'StatementClassOfStockAxis']
+                single_class[_r] = len(_m) == 1 and not _other_axes
     for l in L:
         dp_allowed_inpth = False
         o = ov.get((cik, l['tag']))
@@ -103,7 +112,11 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             continue
         if not dp or dp not in cand: continue
         if l['pth'] and dp not in KB['PTH_OK']: continue
-        if l['val'] in (None, '') : continue
+        if l['val'] in (None, ''):
+            # Dhairya 2026-11-13 (STZ): a face line printed only under the single class-of-stock member is still the face line
+            PC = KB['P'].get('per_share.class_member_face_line')
+            if not (PC and dp in PC['data_points'] and l['st'] == 'IS' and not l['pth'] and single_class.get(l['r'])): continue
+            l['cm'] = 1; rids.append('per_share.class_member_face_line')
         if dec == 'map' and dp in DEMOTE and re.search(DEMOTE[dp][0], l['lab'] or ''):
             dec = 'combined'; rids.append(DEMOTE[dp][1])
         if dec == 'map' and r is not None and r.get('decision') == 'map' and dp == 'shares_outstanding' and l['st'] not in KB['SHR_STMTS'][0]: continue
@@ -301,7 +314,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status,
                             tags=';'.join(('us-gaap:' if not l['cu'] else 'custom:') + l['tag'] for l in chosen), stmt=l0['st'],
                             sign=sign(l0['val']), scale=l0.get('dc', ''), era_break='Y' if era else 'N', prior_tag=';'.join(l['prior'] for l in era),
-                            value_source='fsn_xbrl' if any(l['cu'] for l in chosen) else 'sec_api', acc=l0['acc'], r_page='R%s' % l0['r'],
+                            value_source='fsn_xbrl' if any(l['cu'] or l.get('cm') for l in chosen) else 'sec_api', acc=l0['acc'], r_page='R%s' % l0['r'],
                             label=l0['lab'], fy0_value=l0['val'], rule=rule), chosen)
         else:
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
