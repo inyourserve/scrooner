@@ -9,6 +9,7 @@ The numbers only, updated at each 10-company commit. Per-company files are `data
 | ranks 111-120 (shared tool + hand checks) | 10 | 380 | 0 | 14 tool errors corrected (incl. FCX net interest), 4 review rows decided by the filing | 0 | 0 new (same classes as the 6 proposed fixes) |
 | ranks 121-130 (shared tool + hand checks) | 10 | 380 | 0 | 11 corrections (8 checked rows + 3 sample disagreements), 0 rows left as review | 0 | 0 new |
 | ranks 131-140 (shared tool + hand checks) | 10 | 380 | 0 | 21 corrections (16 tool errors + 4 sample disagreements + FCX debt held), 0 rows left as review | 0 | 0 new |
+| ranks 141-150 (shared tool + hand checks) | 10 | 380 | 0 | 27 corrections (25 tool errors + 2 sample disagreements), 0 rows left as review | 0 | 1 new class (cost of revenue split across member rows) |
 
 Hand checks on ranks 101-110:
 - 67 rows hand-checked: every non-mapped row and every NOTE row.
@@ -51,4 +52,43 @@ Hand checks on ranks 131-140 (WM CSX JCI EMR HOOD MRSH APP HWM CDNS SNPS), carry
   - JCI interest mapped via a company-scope override (Dhairya condition 2'; R74: net of capitalized only, interest income on its own line);
   - EMR gross profit mapped NOTE (R77 undimensioned rows are Emerson's own; ties to R3).
 - FCX total_debt: HELD as not_presented (finance_lease_total_not_disclosed; R82, R19, R14), per Dhairya's ruling.
+- blind-grade.csv: 0 key_error rows for these tickers.
+
+Card rules confirmed by Dhairya on 2026-11-12, for the Tag Expert:
+- **Interest override, condition (2'):** the "net of capitalized interest" line and a separate interest-income line must be in the same printed table. That table can be the face or a note. Example: JCI R74, mapped NOTE at 223.
+- **Shares from a narrative fact:** allowed when all four hold:
+  - it is an XBRL-tagged fact;
+  - it is dated at the BS date;
+  - it counts consolidated common shares;
+  - it is precise to within 0.1% of the count.
+  - Passes: WM 402.9M (0.012%). Fails: USB "1.6 billion" (about 6%).
+
+Hand checks on ranks 141-150 (INTU PNC DDOG AMT MRNA WMB MMM CTAS MCO REGN), carrying sentence read for every NOTE fact:
+- 80 rows hand-checked; 59 mapped rows sampled (20%).
+- Disagreements: 2/59 = 3.4%:
+  - PNC net income: the ProfitLoss row includes NCI, and no attributable line is printed, so it is now combined.
+  - MCO accounts payable: a bundled line, now combined.
+- New tool error class, cost of revenue printed as several rows on one tag (member rows):
+  - the tool took only the first row;
+  - corrected to the sum at INTU (4,253), AMT (2,748.1), WMB (2,199) and REGN (2,100.7);
+  - same as CDNS in 131-140.
+- Opex component sums, each tying to revenue - COR - OI: INTU, AMT, MRNA, WMB, MMM, CTAS, MCO, REGN.
+- Bank (PNC):
+  - opex = NoninterestExpense;
+  - 6 template rows OUT.
+- total_debt:
+  - PNC = 'Total borrowed funds' 57,101 (the tool double-counted senior debt);
+  - DDOG on the BS face;
+  - finance leases added at MRNA (+45, R70) and REGN (+720.0 face line);
+  - AMT leases already inside long-term obligations (R94).
+- AMT dividends = the CF 'Distributions paid' 3,157.2, not distributions declared (3,180.8).
+- WMB goodwill combined: the R64 466 is acquisition goodwill, and the BS bundles goodwill into intangibles.
+- D&A:
+  - INTU = depreciation + amortization (846);
+  - CTAS combined (the amortization line bundles capitalized contract costs).
+- Gross profit:
+  - CTAS GP mapped NOTE (R85 total ties to R3);
+  - AMT GP and PNC SG&A are component_in_note (segment-only values).
+- WMB cash interest = 1,404 (R95 consolidated row).
+- MCO net interest: combined.
 - blind-grade.csv: 0 key_error rows for these tickers.
