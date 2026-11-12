@@ -1,0 +1,64 @@
+# ROKU document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.
+
+## Filings opened
+- 10-K 0001628280-26-008114 (CIK 0001428439, filed 2026-02-13): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
+- 10-K 0001564590-18-004134 (CIK 0001428439, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R7.htm
+- 10-K 0001564590-20-007916 (CIK 0001428439, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- companyfacts CIK0001428439.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R5.htm | Total net revenue | 4737251000 | 4737251000 | 4112898000 | 4112898000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Total cost of revenue | 2662827000 | 2662827000 | 2307253000 | 2307253000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| gross_profit | mapped | us-gaap:GrossProfit | R5.htm | Total gross profit | 2074424000 | 2074424000 | 1805645000 | 1805645000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| operating_expenses | mapped | us-gaap:OperatingExpenses | R5.htm | Total operating expenses | 2080048000 | 2080048000 | 2023812000 | 2023812000 | Y | FILING-CHECKED | printed total opex line excludes cost of revenue (= GP - OI) / accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R5.htm | General and administrative | 386216000 | 386216000 | 370955000 | 370955000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R5.htm | Research and development | 729477000 | 729477000 | 720145000 | 720145000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R5.htm | Loss from operations | -5624000 | -5624000 | -218167000 | -218167000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R5.htm | Interest expense | -1906000 | 1906000 | -411000 | 411000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R5.htm | Income (loss) before income taxes | 93898000 | 93898000 | -119958000 | -119958000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R5.htm | Income tax expense | 5537000 | 5537000 | 9428000 | 9428000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R5.htm | Net income (loss) | 88361000 | 88361000 | -129386000 | -129386000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R5.htm | Net income (loss) per share—basic (in dollars per share) | 0.6 | 0.6 | -0.89 | -0.89 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R5.htm | Net income (loss) per share—diluted (in dollars per share) | 0.59 | 0.59 | -0.89 | -0.89 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R5.htm | Weighted-average common shares outstanding —basic (in shares) | 147154000 | 147154000 | 144630000 | 144630000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R5.htm | Weighted-average common shares outstanding - diluted (in shares) | 150912000 | 150912000 | 144630000 | 144630000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R5.htm period ..2025-12-31 |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R3.htm | Cash and cash equivalents | 1587068000 | 1587068000 | 2160236000 | 2160236000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R3.htm | Accounts receivable, net of allowances of $80,448 and $72,657 as of December 31, 2025 and 2024, respectively | 879871000 | 879871000 | 812510000 | 812510000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| inventory | mapped | us-gaap:InventoryNet | R3.htm | Inventories | 114642000 | 114642000 | 158271000 | 158271000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R3.htm | Total current assets | 3401510000 | 3401510000 | 3234163000 | 3234163000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R3.htm | Property and equipment, net | 173577000 | 173577000 | 213690000 | 213690000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| goodwill | mapped | us-gaap:Goodwill | R3.htm | Goodwill | 309406000 | 309406000 | 161519000 | 161519000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| total_assets | mapped | us-gaap:Assets | R3.htm | Total Assets | 4433483000 | 4433483000 | 4303933000 | 4303933000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R3.htm | Accounts payable | 158640000 | 158640000 | 273985000 | 273985000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R3.htm | Total current liabilities | 1237535000 | 1237535000 | 1232502000 | 1232502000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| total_liabilities | mapped | us-gaap:Liabilities | R3.htm | Total Liabilities | 1775538000 | 1775538000 | 1811196000 | 1811196000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R3.htm | Total stockholders’ equity | 2657945000 | 2657945000 | 2492737000 | 2492737000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R3.htm period ..2025-12-31 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by operating activities | 483718000 | 483718000 | 218045000 | 218045000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash used in investing activities | -782370000 | -782370000 | -25061000 | -25061000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash used in financing activities | -280098000 | -280098000 | -89203000 | -89203000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R8.htm | Purchases of property and equipment | -5280000 | 5280000 | -5061000 | 5061000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationAndAmortization | R8.htm | Depreciation and amortization | 68904000 | 68904000 | 62714000 | 62714000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock-based compensation expense | 354169000 | 354169000 | 384662000 | 384662000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| dividends_paid | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends in MetaLinks.json (886 tags across all 108 R pages, face and notes) of 0001628280-26-008114; no face row matched |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Repurchases of common stock | -149982000 | 149982000 | 0 | 0 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Cash paid for interest | 1055000 | 1055000 | 460000 | 460000 | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Total | 13690000 | 13690000 |  |  | Y | FILING-CHECKED | accn 0001628280-26-008114 R8.htm period ..2025-12-31 |
+| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of LongTermDebt, DebtLongtermAndShorttermCombinedAmount, DebtInstrumentCarryingAmount, LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities, LongTermDebtNoncurrent, LongTermDebtCurrent, ShortTermBorrowings, CommercialPaper, SeniorNotes, NotesPayable, LinesOfCreditCurrent in MetaLinks.json (886 tags across all 108 R pages, face and notes) of 0001628280-26-008114; no face row matched |
+| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 295700000 |  |  |  |  | FILING-CHECKED | balance-sheet date 2025-12-31; classes summed (printed rows) |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
+- revenue: era 10-K 0001564590-18-004134 R4.htm prints 'Total net revenue' on us-gaap:SalesRevenueNet = 512763000 (FILING-CHECKED)
+- cash_and_equivalents: era 10-K 0001564590-18-004134 R2.htm prints 'Cash' on us-gaap:Cash = 177250000 (FILING-CHECKED)
+- cfo: era 10-K 0001564590-18-004134 R7.htm prints 'Net cash provided by (used in) operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations = 37292000 (FILING-CHECKED)
+- cash_flow_investing: era 10-K 0001564590-18-004134 R7.htm prints 'Net cash used in investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations = -12268000 (FILING-CHECKED)
+- cash_flow_financing: era 10-K 0001564590-18-004134 R7.htm prints 'Net cash provided by (used in) financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations = 117664000 (FILING-CHECKED)
+- cash_paid_for_interest: era 10-K 0001564590-18-004134 R7.htm prints 'Cash paid for interest' on us-gaap:InterestPaid = 1149000 (FILING-CHECKED)
+- interest_expense: era 10-K 0001564590-20-007916 R4.htm prints 'Interest expense' on us-gaap:InterestRevenueExpenseNet = -2366000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+none beyond sign differences

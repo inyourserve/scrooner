@@ -113,6 +113,7 @@ def parse_r(page: str) -> dict:
         for attrs, v in tds[1:]:
             if 'class="th"' in attrs:
                 continue  # footnote column next to the label
+            v = re.sub(r'<span style="display:\s*none[^"]*"[^>]*>.*?</span>', "", v, flags=re.S)  # hidden tag-name span (older R-page renderer)
             t = cell_text(v).replace("$", "").replace(",", "").strip()
             neg = t.startswith("(") and t.endswith(")")
             t = t.strip("()").strip()

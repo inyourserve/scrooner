@@ -204,8 +204,8 @@ def main():
 
 main()
 OV = {}
-if os.path.exists(os.path.join(H, "overrides.tsv")):  # verdicts written by hand after opening the page
-    for ln in open(os.path.join(H, "overrides.tsv")):
+if os.path.exists(os.environ.get("HANDCHECK_OVERRIDES", os.path.join(H, "overrides.tsv"))):  # verdicts written by hand after opening the page
+    for ln in open(os.environ.get("HANDCHECK_OVERRIDES", os.path.join(H, "overrides.tsv"))):
         if ln.strip() and not ln.startswith("#"):
             tk, dpk, key, vv, ev = ln.rstrip("\n").split("\t")
             OV[(tk, dpk, key)] = (vv, ev)
