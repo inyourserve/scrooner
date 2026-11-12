@@ -177,3 +177,32 @@ def test_proof_guard_reads_only_the_latest_proof_run_of_the_company(isolated_dat
             )
         got = ctm._load_proof_disagree(conn, cid)
         assert [(k[0], k[3].isoformat()) for k in got] == [("revenue", "2020-12-31")]
+
+
+@pytest.mark.integration
+def test_duplicate_authoritative_resolves_to_the_latest_periodic_copy_and_a_proxy_never_wins(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(conn, "0000000021", True, [("X1", "10-K", "2015-02-20", 100), ("X2", "10-K/A", "2016-02-20", 100),
+                                                ("X3", "DEF 14A", "2016-03-20", 100)])
+        conn.execute("update core.fact set is_authoritative = true where id = any(%s)", (list(ids.values()),))
+        cid = conn.execute("select company_id from core.fact where id = %s", (ids["X1"],)).fetchone()[0]
+        stats = clf.resolve_duplicate_authoritative(conn, [cid])
+        conn.commit()
+        assert _auth(conn, ids) == ["X2"]  # same value: the latest accepted periodic copy; the later proxy never wins
+        assert stats == {"non_periodic_demoted": 1, "groups_resolved": 1, "duplicates_demoted": 1}
+        rule = conn.execute("select rule from core.fact_conflict_resolution where fact_id = %s", (ids["X2"],)).fetchone()[0]
+        assert rule in (clf.RULE_TAGMAP, clf.RULE_TAGMAP_PRECISION)
+
+
+@pytest.mark.integration
+def test_a_new_derived_value_supersedes_the_other_vintage(isolated_database_url):
+    from scrooner_pipeline.normalizer.derived import _supersede_other_derived
+
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(conn, "0000000022", False, [("X1", "10-K", "2015-02-20", 100), ("X2", "10-K", "2016-02-20", 98)])
+        conn.execute("update core.fact set is_authoritative = true, is_derived = true where id = any(%s)", (list(ids.values()),))
+        row = conn.execute("select company_id, concept_id, unit_id, period_id, filing_id from core.fact where id = %s", (ids["X2"],)).fetchone()
+        with conn.cursor() as cur:
+            _supersede_other_derived(cur, [dict(zip(("company_id", "concept_id", "unit_id", "period_id", "filing_id"), row))])
+        conn.commit()
+        assert _auth(conn, ids) == ["X2"]  # the older vintage's derived copy is demoted, the new one stays
