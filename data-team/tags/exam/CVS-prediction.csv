@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+CVS,101,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Accounts payable,17641000000.0000,library map
+CVS,101,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,"Accounts receivable, net",39779000000.0000,library map
+CVS,101,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000064803-26-000010,,,,note-sourced default tag (no face line)
+CVS,101,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000064803-26-000010,R3,Basic (in dollars per share),1.4000,library map
+CVS,101,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Purchases of property and equipment,2832000000.0000,library map
+CVS,101,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Cash and cash equivalents,8453000000.0000,library map
+CVS,101,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000064803-26-000010,R7,Net cash provided by (used in) financing activities,-4940000000.0000,library map
+CVS,101,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000064803-26-000010,R7,Net cash used in investing activities,-5871000000.0000,library map
+CVS,101,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Income taxes paid,2166000000.0000,library map
+CVS,101,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Interest paid,2991000000.0000,library map
+CVS,101,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Accounts payable and pharmacy claims and discounts payable,3855000000.0000,combined line (library or label demote)
+CVS,101,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,"Accounts receivable, net",3498000000.0000,library map
+CVS,101,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Inventories,1267000000.0000,library map
+CVS,101,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Net cash provided by operating activities,10639000000.0000,library map
+CVS,101,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000064803-26-000010,R4,Comprehensive income attributable to CVS Health,2294000000.0000,library map
+CVS,101,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Cost of products sold,221167000000.0000,library map
+CVS,101,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Total current assets,74714000000.0000,library map
+CVS,101,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Total current liabilities,88692000000.0000,library map
+CVS,101,deposits,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Depreciation and amortization,4606000000.0000,library map
+CVS,101,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000064803-26-000010,R3,Diluted (in dollars per share),1.3900,library map
+CVS,101,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Dividends paid,3397000000.0000,library map
+CVS,101,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000064803-26-000010,R9,Dividends declared per share (in dollars per share),2.6600,library map
+CVS,101,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Goodwill,85478000000.0000,library map
+CVS,101,gross_profit,not_presented,,,,,,,,0000064803-26-000010,,,,no face line
+CVS,101,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Income before income tax provision,2136000000.0000,library map
+CVS,101,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Income tax provision,408000000.0000,library map
+CVS,101,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000064803-26-000010,R3,Interest expense,3119000000.0000,library map
+CVS,101,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000064803-26-000010,,,,note-sourced default tag (no face line)
+CVS,101,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Inventories,19246000000.0000,library map
+CVS,101,loans_net,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Net income attributable to CVS Health,1768000000.0000,library map
+CVS,101,net_interest_income,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,noninterest_expense,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,noninterest_income,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,operating_expenses,not_presented,,,,,,,,0000064803-26-000010,,,,no face line
+CVS,101,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Operating income,4660000000.0000,library map
+CVS,101,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Other income,112000000.0000,library map
+CVS,101,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000064803-26-000010,R5,"Property and equipment, net",13083000000.0000,library map
+CVS,101,provision_for_credit_losses,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,research_and_development,not_presented,,,,,,,,0000064803-26-000010,,,,no face line
+CVS,101,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Total revenues,402067000000.0000,library map
+CVS,101,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000064803-26-000010,R7,Stock-based compensation,535000000.0000,library map
+CVS,101,sga_expense,not_presented,,,,,,,,0000064803-26-000010,,,,no face line
+CVS,101,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0000064803-26-000010,R7,Repurchase of common stock,0.0000,library map
+CVS,101,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0000064803-26-000010,R6,"Common stock, shares outstanding (in shares)",1271000000.0000,library map
+CVS,101,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Total CVS Health shareholders equity,75214000000.0000,library map
+CVS,101,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Total assets,253538000000.0000,library map
+CVS,101,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,0,-6,N,,sec_api,0000064803-26-000010,R5,Short-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
+CVS,101,total_interest_income,OUT,,,,,,,,0000064803-26-000010,,,,not a bank
+CVS,101,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000064803-26-000010,R5,Total liabilities,178156000000.0000,library map
+CVS,101,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Basic (in shares),1267000000.0000,library map
+CVS,101,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000064803-26-000010,R3,Diluted (in shares),1271000000.0000,library map

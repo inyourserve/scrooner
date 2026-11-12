@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+CVI,915,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Accounts payable (including $48 and $37, respectively, of VIE)",415000000.0000,library map
+CVI,915,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Accounts receivable, net (including $59 and $65, respectively, of VIE)",235000000.0000,library map
+CVI,915,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001376139-26-000014,,,,note-sourced default tag (no face line)
+CVI,915,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001376139-26-000014,R5,Basic earnings per share (in dollars per share),0.2700,library map
+CVI,915,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001376139-26-000014,R8,Capital expenditures,185000000.0000,library map
+CVI,915,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Cash and cash equivalents (including $69 and $91, respectively, of consolidated variable interest entity (VIE))",511000000.0000,library map
+CVI,915,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001376139-26-000014,R8,Net cash used in financing activities,-258000000.0000,library map
+CVI,915,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001376139-26-000014,R8,Net cash used in investing activities,-362000000.0000,library map
+CVI,915,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001376139-26-000014,,,,note-sourced default tag (no face line)
+CVI,915,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001376139-26-000014,,,,note-sourced default tag (no face line)
+CVI,915,cf_ap_change,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001376139-26-000014,R8,Accounts receivable,-60000000.0000,library map
+CVI,915,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001376139-26-000014,R8,Inventories,-8000000.0000,library map
+CVI,915,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001376139-26-000014,R8,Net cash provided by operating activities,144000000.0000,library map
+CVI,915,comprehensive_income,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,Cost of sales,6816000000.0000,library map
+CVI,915,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,Total current assets,1267000000.0000,library map
+CVI,915,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,Total current liabilities,706000000.0000,library map
+CVI,915,deposits,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001376139-26-000014,R8,Depreciation and amortization,403000000.0000,library map
+CVI,915,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001376139-26-000014,R5,Diluted earnings per share (in dollars per share),0.2700,library map
+CVI,915,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,0,-6,N,,sec_api,0001376139-26-000014,R8,Dividends to CVR Energys stockholders,0.0000,library map
+CVI,915,dividends_per_share,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,goodwill,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,gross_profit,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,Income before income taxes,80000000.0000,library map
+CVI,915,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001376139-26-000014,R5,Income tax (benefit) expense,-10000000.0000,library map
+CVI,915,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001376139-26-000014,R5,"Interest expense, net",-108000000.0000,combined line (library or label demote)
+CVI,915,interest_income,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Inventories (including $83 and $76, respectively, of VIE)",472000000.0000,library map
+CVI,915,loans_net,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,Net income attributable to CVR Energy stockholders,27000000.0000,library map
+CVI,915,net_interest_income,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,noninterest_expense,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,noninterest_income,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,operating_expenses,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,Operating income,182000000.0000,library map
+CVI,915,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,"Other income, net",6000000.0000,library map
+CVI,915,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Property, plant, and equipment, net (including $712 and $736, respectively, of VIE)",2050000000.0000,library map
+CVI,915,provision_for_credit_losses,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,research_and_development,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,Net sales,7162000000.0000,library map
+CVI,915,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001376139-26-000014,R8,Share-based compensation,42000000.0000,library map
+CVI,915,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001376139-26-000014,R5,"Selling, general and administrative expenses (exclusive of depreciation and amortization)",148000000.0000,library map
+CVI,915,share_buybacks,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,shares_outstanding,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,Total CVR stockholders equity,730000000.0000,library map
+CVI,915,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,Total assets,3706000000.0000,library map
+CVI,915,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001376139-26-000014,R3,"Long-term debt and finance lease obligations, net of current portion (including $569 and $568, respectively, of VIE)",1751000000.0000,printed face components (duration sum; total_debt founder sum)
+CVI,915,total_interest_income,OUT,,,,,,,,0001376139-26-000014,,,,not a bank
+CVI,915,total_liabilities,not_presented,,,,,,,,0001376139-26-000014,,,,no face line
+CVI,915,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001376139-26-000014,R5,Basic (in shares),100500000.0000,library map
+CVI,915,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001376139-26-000014,R5,Diluted (in shares),100500000.0000,library map

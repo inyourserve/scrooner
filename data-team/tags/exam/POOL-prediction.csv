@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+POOL,905,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Accounts payable,652619000.0000,library map
+POOL,905,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,"Receivables, net",136063000.0000,combined line (library or label demote)
+POOL,905,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-074833,,,,note-sourced default tag (no face line)
+POOL,905,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001193125-26-074833,R2,Basic (in dollars per share),10.8900,library map
+POOL,905,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,"Purchases of property and equipment, net of sale proceeds",56334000.0000,library map
+POOL,905,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Cash and cash equivalents,104963000.0000,combined line (library or label demote)
+POOL,905,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-074833,R7,Net cash used in financing activities,-273379000.0000,library map
+POOL,905,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-074833,R7,Net cash used in investing activities,-67792000.0000,library map
+POOL,905,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-074833,,,,note-sourced default tag (no face line)
+POOL,905,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-074833,,,,note-sourced default tag (no face line)
+POOL,905,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Accounts payable,119358000.0000,library map
+POOL,905,cf_ar_change,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Product inventories,147405000.0000,library map
+POOL,905,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Net cash provided by operating activities,365850000.0000,library map
+POOL,905,comprehensive_income,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Cost of sales,3716938000.0000,library map
+POOL,905,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Total current assets,1969864000.0000,library map
+POOL,905,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Total current liabilities,880285000.0000,library map
+POOL,905,deposits,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Depreciation,42678000.0000,printed face components (duration sum; total_debt founder sum)
+POOL,905,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001193125-26-074833,R2,Diluted (in dollars per share),10.8500,library map
+POOL,905,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Payments of cash dividends,184916000.0000,library map
+POOL,905,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,2,N,,sec_api,0001193125-26-074833,R2,Cash dividends declared per common share,4.9500,library map
+POOL,905,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Goodwill,707345000.0000,library map
+POOL,905,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Gross profit,1572458000.0000,library map
+POOL,905,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Income before income taxes and equity in earnings,533434000.0000,library map
+POOL,905,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Provision for income taxes,127132000.0000,library map
+POOL,905,interest_expense,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,interest_income,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,"Product inventories, net",1454672000.0000,library map
+POOL,905,loans_net,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Net income,406404000.0000,library map
+POOL,905,net_interest_income,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,noninterest_expense,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,noninterest_income,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,operating_expenses,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Operating income,580204000.0000,library map
+POOL,905,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-074833,R2,"Interest and other non-operating expenses, net",-46770000.0000,combined line (library or label demote)
+POOL,905,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,"Property and equipment, net",267065000.0000,library map
+POOL,905,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,research_and_development,not_presented,,,,,,,,0001193125-26-074833,,,,no face line
+POOL,905,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Net sales,5289396000.0000,library map
+POOL,905,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Share-based compensation,22733000.0000,library map
+POOL,905,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Selling and administrative expenses,992254000.0000,library map
+POOL,905,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-074833,R7,Repurchases of common stock and payments of excise tax,346286000.0000,combined line (library or label demote)
+POOL,905,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001193125-26-074833,R6,"Common stock, outstanding (in shares)",36577686.0000,library map
+POOL,905,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Total stockholders' equity,1185229000.0000,library map
+POOL,905,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Total assets,3626126000.0000,library map
+POOL,905,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-3,Y,STBorrowingsCurrentPortionofLTDebtAndCurrentPortionOfOtherLTLiabilities,sec_api,0001193125-26-074833,R5,Short-term borrowings and current portion of long-term debt,13029000.0000,printed face components (duration sum; total_debt founder sum)
+POOL,905,total_interest_income,OUT,,,,,,,,0001193125-26-074833,,,,not a bank
+POOL,905,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-074833,R5,Total liabilities,2440897000.0000,library map
+POOL,905,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Basic (in shares),37149000.0000,library map
+POOL,905,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-074833,R2,Diluted (in shares),37288000.0000,library map

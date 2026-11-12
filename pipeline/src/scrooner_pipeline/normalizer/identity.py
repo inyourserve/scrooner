@@ -25,6 +25,7 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.normalizer.predecessors import predecessor_routes
 from scrooner_pipeline.common.rule_flags import (
     RULE_SHARED_ACCESSION_PRIMARY,
     rule_enabled,
@@ -329,6 +330,13 @@ def upsert_filings(
     return len(rows)
 
 
+def _own_company_exists(conn: psycopg.Connection, cik: str) -> bool:
+    return (
+        conn.execute("select 1 from core.company where cik = %s", (cik,)).fetchone()
+        is not None
+    )
+
+
 def normalize_identity_for_cik(
     storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
 ) -> dict:
@@ -336,28 +344,50 @@ def normalize_identity_for_cik(
     if identity is None:
         return {"cik": cik, "status": "no_data"}
 
-    company_id = upsert_company(
-        conn, identity["cik"], identity["company_name"], identity["fiscal_year_end"]
-    )
-    listing_count = upsert_listings(conn, company_id, identity["listings"])
-    filing_count = upsert_filings(
-        conn, company_id, identity["filings"], identity["raw_submission_id_by_filing"]
-    )
-
-    logger.info(
-        "identity.normalized",
-        cik=cik,
-        company_id=company_id,
-        listings=listing_count,
-        filings=filing_count,
-    )
-    return {
-        "cik": cik,
-        "status": "ok",
-        "company_id": company_id,
-        "listings": listing_count,
-        "filings": filing_count,
-    }
+    routes = predecessor_routes(conn, cik)
+    # A source CIK that is ONLY a predecessor (no core.company of its own, not requested as a
+    # company) creates no company/listing row: its in-window filings go to the successor.
+    only_predecessor = bool(routes) and not _own_company_exists(conn, cik)
+    out: dict = {"cik": cik, "status": "ok"}
+    if not only_predecessor:
+        company_id = upsert_company(
+            conn, identity["cik"], identity["company_name"], identity["fiscal_year_end"]
+        )
+        listing_count = upsert_listings(conn, company_id, identity["listings"])
+        filing_count = upsert_filings(
+            conn,
+            company_id,
+            identity["filings"],
+            identity["raw_submission_id_by_filing"],
+        )
+        logger.info(
+            "identity.normalized",
+            cik=cik,
+            company_id=company_id,
+            listings=listing_count,
+            filings=filing_count,
+        )
+        out.update(
+            {
+                "company_id": company_id,
+                "listings": listing_count,
+                "filings": filing_count,
+            }
+        )
+    routed = 0
+    for r in routes:
+        in_window = [
+            f
+            for f in identity["filings"]
+            if r.contains(
+                f["period_of_report"]
+            )  # strictly the period; no filing-date fallback
+        ]
+        routed += upsert_filings(
+            conn, r.company_id, in_window, identity["raw_submission_id_by_filing"]
+        )
+    out["predecessor_filings"] = routed
+    return out
 
 
 def normalize_identity(conn: psycopg.Connection, ciks: set[str]) -> dict:

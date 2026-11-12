@@ -83,3 +83,55 @@ Findings:
 - `CommonStockSharesOutstanding` (balance-sheet date) vs `dei:EntityCommonStockSharesOutstanding` (cover): different dates; for multi-class filers sum the class facts, and only after confirming every class is present.
 - `dei:EntityPublicFloat`: safe only as "public float" with unit/scale validated (dei can be mis-scaled; ledger 22, doc 37); never as market cap.
 - Evidence: FILING-CHECKED for the named filings and the companyconcept series; populations DATA-INFERRED. Verified by: Tag Expert (me), Verifier [28][32].
+
+## 7. FSN-era identification and inbox relays (Tag Expert, 2026-11-09)
+Playbooks: [`../playbooks/net_income.md`](../playbooks/net_income.md), [`../playbooks/shares_outstanding.md`](../playbooks/shares_outstanding.md), [`../playbooks/income_statement_and_cfo_others.md`](../playbooks/income_statement_and_cfo_others.md).
+
+**NEW, measured (fsn.*, latest 10-K, 632 companies, DATA-INFERRED):** `net_income_resolved` mapped at 569 (all `NetIncomeLoss`). **30 of the 63 gaps print the parent bottom line on `NetIncomeLossAvailableToCommonStockholdersBasic` with no preferred or participating line**, and `ProfitLoss − NCI = NIACSB` holds (CAT 0000018230-26-000008 R3 l24-26: 8,882 − (−2) = 8,884M; ES 0001628280-26-008461 R5 l17-19). 11 more print NIACSB after a preferred line (not NI to parent). 18 print `ProfitLoss` only. **Shares: the mapper excludes parentheticals and never reads EQ**, while `CommonStockSharesOutstanding` sits in the BS parenthetical at 407 companies and on EQ at 254 (mapped at 18). The release-prep session counts 781 filings at 104 companies mapped across all filings.
+
+Relayed lessons processed (FILING-CHECKED by the named role unless marked; not re-opened by me):
+- **Proxy (DEF 14A) NetIncomeLoss**: MA's 10-K face "Net Income" is `ProfitLoss`; its only `NetIncomeLoss` facts FY2021-25 are DEF 14A pay-versus-performance facts (0001141391-26-000021), which the old first_match took. 229 rounded and 23 unscaled proxy findings (CHE 268,550 vs 268,550,000; ANET 2,087 vs 2,087,321,000), 101 flagged authoritative (Data Triage, DATA-INFERRED). **The FSN write reads only 10-K/10-Q face lines, so proxy facts cannot enter it**; MA instead becomes a `ProfitLoss`-only gap (class C in the playbook).
+- Mixed bases in one series: when `NetIncomeLoss` copies conflicted, the old first_match fell through to NIACSB (JPM Q4 2025 12,691M, a derived to-common fact) (Period Engineer). In the FSN store a filing either maps NI or not, so a NIACSB rule must apply per filing with the identity check, never as a per-period fallback.
+- Midstream partnerships print EPS per LP unit under `NetIncomeLossPerOutstandingLimitedPartnershipUnit…`, not `EarningsPerShareBasic/Diluted` (5 of 14 midstream filers; EPD 0001061219-26-000006 R5) (Sector Analyst). The EPS rules need these, unit-labelled.
+- **EPS is never derived**: a Q4 (or Q2/Q3) EPS is valid only if filed. FY − 9M is wrong (MSFT Q4 FY26 4.80 vs 4.81; AAPL Q4 FY25 1.84 vs 1.85) and mixes split bases (KLAC post-split FY minus pre-split quarters = −22.61) (Period Engineer, 8-K Ex. 99.1 checked). HSIC's 10-K quarterly tables carry continuing-ops EPS (0.79) under `EarningsPerShareBasic/Diluted` while the 10-Q has the total 0.77 (0001000228-20-000018): a later 10-K copy must not override the 10-Q total. CP files EPS in CAD (`iso4217_CAD_per_shares`): a USD slot must never take it. FSDS num.txt holds per-share values to 4 decimals (par 0.00001 reads 0.0000): take per-share values from the instance or the API (Data Engineer).
+- **Share-count scale errors**: RPAY (all periods) and TBLA (Q2 2026) tag full-unit share counts with scale 3, so they are stored ×1000 (RPAY 83,285,379,000); proven by the printed EPS (Standardization Lead).
+- **Share-count sources**: the equity-statement common-stock column is the ISSUED count at PKOH (18,575,430 on `CommonStockSharesOutstanding` vs 14,490,010 at the cover date), CSW, DK and ALOT (Period Engineer). **So the EQ fallback in the shares playbook needs an issued-vs-outstanding check against treasury shares.** Issued − treasury at the BS date is within 0.91% of the cover count at 18 of 39 cover-only companies; RRC files treasury as a NEGATIVE `CommonStockSharesIssued` under an equity-component member.
+- `dei:EntityCommonStockSharesOutstanding`: on the filing's own split basis, so it witnesses splits (NVDA 2.46B pre-split vs 24.53B) (Period Engineer). It can be ONE class (SEV cover counts Class B only), dated after the filing (AVLN), redeemable public shares at SPACs (GUAC), and for ADS issuers it counts ORDINARY shares, not ADSs (AKTX, DBVT, GPCR, SLN). Never the period-end cell.
+- `TemporaryEquitySharesOutstanding` at SPACs holds the public shares (GUAC 31,510,000 vs founder shares 7,877,500 on `CommonStockSharesOutstanding`); filers also duplicate preferred counts there (STKS). Undimensioned `SharesIssued` is not a share balance (SEV 4,301,846; NSP). Class members can be non-economic (RPAY Class V 100) or not outstanding (HOVR "to be issued").
+- Multi-registrant filings: the undimensioned context belongs to the primary registrant; co-registrants are `LegalEntityAxis` members. Companyfacts may serve primary facts under a co-registrant's CIK (ETR) (Data Verifier). The FSN `coreg` column carries this; the store filters `coreg = ''`.
+
+## 8. Folded in from the FSN-expert handover (2026-11-10)
+- **10-Ks before about 2021 print Q4 three-month values, EPS included** (MSFT dossier, docs/fsn-expert data-team/fsn/companies/MSFT.md). A printed Q4 beats a derived one; for EPS the derived one is never allowed (§7).
+
+## 9. Engineering relay 2026-11-11 (FILING-CHECKED by Engineering)
+- MDT FY2017 prints "Net income" 4,024 (`ProfitLoss`, incl. NCI), then NCI 4, then "attributable to Medtronic" 4,028 (`NetIncomeLoss`); Q2 FY2024 911 / 909 (0001613103-19-000028 R2, 0001613103-24-000165 R2). The two tags are different lines in one statement, never copies of each other. The NCI share can be negative (NI to parent > ProfitLoss, as at CAT).
+- `NetIncomeLoss` is also the CF start line (a different role per statement); this is why `stmt` is part of the company_tag_map key.
+
+## 10. Relays 2026-11-11 (cash-flow lane I1-I4, P2-P3; FSN expert part 2 items 8-9)
+- **EPS under continuing-ops tags only — DECISION**: when a filing prints no `EarningsPerShareBasic/Diluted` and **no discontinued-operations per-share line**, `IncomeLossFromContinuingOperationsPerBasic/DilutedShare` IS total EPS (OSK 10-Q 0001193125-26-320490 R2 l20-21 and its 10-Ks from FY2019; COP FY2018 10-K 0001193125-19-043841 R2 l27 diluted 5.32 under the cont-ops tag beside `EarningsPerShareBasic` 5.36; ADI FY2017 10-K 0000006281-17-000144; also DHR, TMO, GE, AXP, DELL, SPGI, VRTX). With a discontinued per-share line, never. Never derive EPS (Charter Q4 2015 −1.09 and News Corp Q4 FY2015 −0.65 exist only where the 10-K quarterly note prints them).
+- **NI shapes**: MA 10-Q 0001141391-26-000083 R2: the only bottom line "Net Income" is `ProfitLoss` with the NCI fact off the face; ELS 0001628280-26-050244 R4 and PNC 0000713676-26-000038 R2: ProfitLoss → OP-unit NCI → the parent's preferred dividends → NIACSB, so parent NI is NOT printed (derive ProfitLoss − NCI only when both printed); Exelon combined 0001109357-23-000067 R2: NetIncomeLoss only on subsidiary member columns, the parent's NI is NIACSB 343M; PNC 10-Q 0000713676-22-000047 R2: bottom line `IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest` with NCI `IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity`. The continuing-incl-NCI tag is "NET INCOME" at ACN (46 filings), WFC, DELL, RTX, LIN (40 names). **Misuse**: Chubb FY2015 10-K 0000896159-16-000027 R4 L23 "Income before income tax" 3,296M is on this AFTER-tax tag (ACE 0000896159-15-000006 likewise): a ProfitLoss-family rule would show pretax as NI for Chubb 2014-2015.
+- Rhythm 10-Q 0001558370-19-003924: an EQ-statement 9M ProfitLoss column ending 2018-12-31 is an off-calendar YTD, not a face period.
+- FSN `ddate` rounds to the NEAREST month end (PepsiCo 2015-06-13 → 2015-05-31; up to 16 days); Kroger's 12-week Q2 ending 2015-08-15 → 2015-07-31; PEP, COST, DPZ, AZO, YUM, ACI, CAVA: 1,782 cohort gap keys. Match by ddate ± datp.
+
+## 11. Ranks 1-50 relay (Ritwik relay 2026-11-11, work/tag-library/ranks-1-50 aea0cf4 data-team/47-fsn-store/company_tag_map/ranks_1_50.csv (evidence_adsh + label per row); DATA-INFERRED, not yet filing-checked by the Verifier)
+- CAT prints its bottom line "Profit" on `NetIncomeLossAvailableToCommonStockholdersBasic`, and CAT has no preferred stock: available-to-common = net income only when no preferred-dividend line and no NetIncomeLoss is printed (exception to misuse row 5, fsn-line-to-concept.md §M).
+- AVGO: `ProfitLoss` = net income after its NCI ended in 2020 (fits the rule: no NetIncomeLoss, no NCI line).
+- `EarningsPerShareBasicAndDiluted` serves both basic and diluted EPS (loss years: PANW, TSLA, CRWD).
+- One line, different tags by form: CSCO, ABBV, LIN tag CFO as `NetCashProvidedByUsedInOperatingActivitiesContinuingOperations` in some 10-Qs/10-Ks: map per filing (company_tag_map is per filing era, not per company).
+
+> See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 12. Dhairya ruling (b) and Ritwik (cloud) notes 10, 22, 23 (2026-11-11)
+- NI = ProfitLoss − NCI only on the same IS face, NCI printed as the deduction, no `NetIncomeLoss` printed (ruling (b)); PNC 6,997 − 61 = 6,936M (0000713676-26-000020 IS l34-35). Never for equity.
+- "Attributable to common" (NIACSB) = net income only with no preferred stock: yes at CVS, BE, WELL, ETN, BKNG, PH, SCCO, CAT; NOT at OXY (preferred from 2019), BSX (2020-23 convertible preferred), PNC.
+- UNH 10-Q 0000731766-26-000197 prints NetIncomeLoss (l25): the UNH company note's ProfitLoss mapping is wrong.
+- MSI 2018-12: basic and diluted EPS tags swapped (map by label, flag). VRTX "Interest expense" on `InterestIncomeExpenseNet` −44.1M (0000875320-24-000062 l18): map with sign −1; company_tag_map needs a sign column.
+
+## 13. Ruling (b) confirmed and allowed sums (Dhairya / Ritwik 2026-11-11)
+- Dhairya confirmed: "no NI-attributable line" = no parent `NetIncomeLoss` line; an "attributable to common" line after preferred does not block NI = ProfitLoss − NCI (PNC 6,936M stands).
+- Allowed face computations seen: AVGO NI 2019-08..2020-10 = ProfitLoss − NCI (both on the face); TMO pre-2018 cost of revenue = product + service cost lines (ruling (a)).
+- `IncomeLossIncludingPortionAttributableToNoncontrollingInterest` as pretax: PG 2024+, DELL 2019-2021, MCK, PSX (calc +1 beside the tax line).
+
+- Shares outstanding printed only per class (GOOGL A/B/C on the cover; per-class BS parentheticals): not_presented, never summed (Dhairya 2026-11-12).
+
+- EPS printed per class only (Visa, SHOP): serve Class A EPS as printed (Dhairya ruling 2026-11-12); never average or derive across classes.

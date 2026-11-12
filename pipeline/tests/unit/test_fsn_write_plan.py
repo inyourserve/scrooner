@@ -73,7 +73,7 @@ def plan_stage_load_flags() -> list[str]:
 @pytest.mark.unit
 def test_the_select_plan_stage_never_passes_apply_to_the_cell_loader():
     text = WORKFLOW.read_text()
-    assert "options: [load_map, select_plan, select_write, restore]" in text
+    assert "options: [load_map, select_plan, select_write, proof_blank, restore]" in text
     plan = _steps_run("select_plan")
     names = [s.split("\n", 1)[0] for _j, s in plan]
     # the whole select_write path runs: shard, load, map/pilot, before-image (+ upload), done gate, the plan load

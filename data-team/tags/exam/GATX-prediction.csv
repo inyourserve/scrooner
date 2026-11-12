@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+GATX,949,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Accounts Payable and Accrued Expenses,318400000.0000,combined line (library or label demote)
+GATX,949,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,Y,LoansAndLeasesReceivableNetReportedAmount,sec_api,0000040211-26-000018,R3,"Receivables, net",207200000.0000,library map
+GATX,949,amortization_of_intangibles,not_presented,,,,,,,,0000040211-26-000018,,,,no face line and no note fact
+GATX,949,basic_eps,mapped,us-gaap:EarningsPerShareBasic,CI,+,2,N,,sec_api,0000040211-26-000018,R6,Basic earnings per share (in dollars per share),9.1400,library map
+GATX,949,capex,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Cash and Cash Equivalents,743000000.0000,library map
+GATX,949,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0000040211-26-000018,R7,Net cash (used in) provided by financing activities,4944800000.0000,library map
+GATX,949,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000040211-26-000018,R7,Net cash used in investing activities,-1016800000.0000,library map
+GATX,949,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000040211-26-000018,,,14500000.0000,note fact present in the filing (FSN value)
+GATX,949,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000040211-26-000018,R7,"Interest Paid, Excluding Capitalized Interest, Operating Activity",413200000.0000,library map
+GATX,949,cf_ap_change,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,cf_ar_change,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,cf_inventory_change,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000040211-26-000018,R7,Net cash provided by operating activities,648100000.0000,library map
+GATX,949,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0000040211-26-000018,R5,Comprehensive Income,438300000.0000,library map
+GATX,949,cost_of_revenue,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,current_assets,not_presented,,,,,,,,0000040211-26-000018,,,,unclassified balance sheet
+GATX,949,current_liabilities,not_presented,,,,,,,,0000040211-26-000018,,,,unclassified balance sheet
+GATX,949,deposits,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000040211-26-000018,R7,Depreciation and amortization,452300000.0000,library map
+GATX,949,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,CI,+,2,N,,sec_api,0000040211-26-000018,R6,Diluted earnings per share (in dollars per share),9.1200,library map
+GATX,949,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0000040211-26-000018,R7,Dividends,89800000.0000,library map
+GATX,949,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000040211-26-000018,R9,"Common Stock, Dividends, Per Share, Declared (in dollars per share)",2.4400,library map
+GATX,949,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Goodwill,126300000.0000,library map
+GATX,949,gross_profit,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,"Income (Loss) from Continuing Operations before Equity Method Investments, Income Taxes, Noncontrolling Interest",279100000.0000,library map
+GATX,949,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,Income Taxes,63100000.0000,library map
+GATX,949,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,CI,-,-5,N,,sec_api,0000040211-26-000018,R6,"Interest expense, net",-391500000.0000,combined line (library or label demote)
+GATX,949,interest_income,not_presented,,,,,,,,0000040211-26-000018,,,,no face line and no note fact
+GATX,949,inventory,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,loans_net,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,net_income,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,net_interest_income,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,noninterest_expense,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,noninterest_income,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,operating_expenses,not_presented,,,,,,,,0000040211-26-000018,,,,no opex total and no GP/COR anchor
+GATX,949,operating_income,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,CI,-,-5,N,,sec_api,0000040211-26-000018,R6,Other expense,-400000.0000,library map
+GATX,949,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Net operating assets and facilities,11410900000.0000,library map
+GATX,949,provision_for_credit_losses,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,research_and_development,not_presented,,,,,,,,0000040211-26-000018,,,,no face line
+GATX,949,revenue,mapped,us-gaap:Revenues,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,Total Revenues,1740400000.0000,library map
+GATX,949,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000040211-26-000018,,,25000000.0000,note fact present in the filing (FSN value)
+GATX,949,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,"Selling, general and administrative",252600000.0000,library map
+GATX,949,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000040211-26-000018,R7,Stock repurchases,65000000.0000,library map
+GATX,949,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000040211-26-000018,R4,Outstanding shares (in shares),35400021.0000,library map
+GATX,949,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Total Equity,2750500000.0000,library map
+GATX,949,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Total Assets,17999500000.0000,library map
+GATX,949,total_debt,combined,us-gaap:OtherShortTermBorrowings,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Borrowings under bank credit facilities,82200000.0000,combined line (library or label demote)
+GATX,949,total_interest_income,OUT,,,,,,,,0000040211-26-000018,,,,not a bank
+GATX,949,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000040211-26-000018,R3,Total Liabilities,14364400000.0000,library map
+GATX,949,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,Average number of common shares (in shares),35800000.0000,library map
+GATX,949,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,CI,+,-5,N,,sec_api,0000040211-26-000018,R6,Diluted shares (in shares),35900000.0000,library map

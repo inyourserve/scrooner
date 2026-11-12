@@ -1,0 +1,2 @@
+proposal_file,rule_id,status,backtest_delta,date,note
+2026-11-13-opex-ce-minus-cogs.csv,is.operating_expenses.procedure,waiting_backtest,,2026-11-13,no rule change before exam/tools/backtest.py is on main

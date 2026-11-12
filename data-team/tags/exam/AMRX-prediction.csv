@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+AMRX,902,accounts_payable,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,accounts_receivable,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001723128-26-000011,,,,note-sourced default tag (no face line)
+AMRX,902,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001723128-26-000011,R3,Basic (in dollars per share),0.2300,library map
+AMRX,902,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,"Purchases of property, plant and equipment",70063000.0000,library map
+AMRX,902,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Cash and cash equivalents,282029000.0000,library map
+AMRX,902,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001723128-26-000011,R10,Net cash used in financing activities,-31530000.0000,library map
+AMRX,902,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001723128-26-000011,R10,Net cash used in investing activities,-112263000.0000,library map
+AMRX,902,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,"Cash paid, net for income taxes",21327000.0000,library map
+AMRX,902,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,Cash paid for interest,197848000.0000,library map
+AMRX,902,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,"Accounts payable, accrued expenses and other liabilities",21321000.0000,combined line (library or label demote)
+AMRX,902,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,"Trade accounts receivable, net",120566000.0000,library map
+AMRX,902,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,Inventories,87026000.0000,library map
+AMRX,902,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,Net cash provided by operating activities,339992000.0000,library map
+AMRX,902,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001723128-26-000011,R4,"Comprehensive income (loss) attributable to Amneal Pharmaceuticals, Inc.",26838000.0000,library map
+AMRX,902,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Cost of goods sold,1905452000.0000,library map
+AMRX,902,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Total current assets,1911181000.0000,library map
+AMRX,902,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Total current liabilities,881633000.0000,library map
+AMRX,902,deposits,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,depreciation_and_amortization,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001723128-26-000011,R3,Diluted (in dollars per share),0.2200,library map
+AMRX,902,dividends_paid,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,dividends_per_share,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Goodwill,595470000.0000,library map
+AMRX,902,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Gross profit,1113308000.0000,library map
+AMRX,902,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Income (loss) before income taxes,139209000.0000,library map
+AMRX,902,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Provision for income taxes,11276000.0000,library map
+AMRX,902,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001723128-26-000011,R3,"Interest expense, net",-241091000.0000,combined line (library or label demote)
+AMRX,902,interest_income,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Inventories,606302000.0000,library map
+AMRX,902,loans_net,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001723128-26-000011,R3,"Net income (loss) attributable to Amneal Pharmaceuticals, Inc.",72057000.0000,library map
+AMRX,902,net_interest_income,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,noninterest_expense,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,noninterest_income,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,"Selling, general and administrative",526827000.0000,printed opex lines (duration sum)
+AMRX,902,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Operating income,394096000.0000,library map
+AMRX,902,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,"Other income, net",16522000.0000,library map
+AMRX,902,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,"Property, plant and equipment, net",442950000.0000,library map
+AMRX,902,provision_for_credit_losses,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Research and development,186175000.0000,library map
+AMRX,902,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Net revenue,3018760000.0000,library map
+AMRX,902,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001723128-26-000011,R10,Stock-based compensation,31953000.0000,library map
+AMRX,902,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,"Selling, general and administrative",526827000.0000,library map
+AMRX,902,share_buybacks,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,shares_outstanding,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0001723128-26-000011,R6,"Total Amneal Pharmaceuticals, Inc. stockholders deficiency",-70794000.0000,library map
+AMRX,902,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,Total assets,3678280000.0000,library map
+AMRX,902,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001723128-26-000011,R6,"Current portion of long-term debt, net",6761000.0000,printed face components (duration sum; total_debt founder sum)
+AMRX,902,total_interest_income,OUT,,,,,,,,0001723128-26-000011,,,,not a bank
+AMRX,902,total_liabilities,not_presented,,,,,,,,0001723128-26-000011,,,,no face line
+AMRX,902,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Basic (in shares),313367000.0000,library map
+AMRX,902,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001723128-26-000011,R3,Diluted (in shares),324805000.0000,library map

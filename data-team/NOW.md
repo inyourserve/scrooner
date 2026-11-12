@@ -22,6 +22,34 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - Owners: Engineering, end to end (migration, mapper change, writes). Mapping builder: the FSN-to-map extraction. Ritwik x2 plus the Tag Expert: the tags the extraction can't decide. Verifier: clears writes against filings.
 - Metrics: companies with a complete tag map, and companies written.
 
+## Founder direction 2026-11-13: the predictor is how the master scales
+
+The founder, typed in Dhairya's session: the blind exam is "important -> to make master world class". The Tag Expert's predictor (`data-team/tags/exam/tools/predict.py`) becomes the automatic mapper for new filings, and reading becomes random spot-checks.
+- **Graduation, per data-point class and template group (corporate, bank, insurer, REIT, utility, energy, ...):** at least 200 unseen companies in that group, blind accuracy at or above 99%, and a one-sided 95% Clopper-Pearson upper error at or below 1.5%. So 0 errors in 200, or 1 error in 315 or more. A two-sided bound can't pass at n = 200 (Dhairya, 2026-11-13). A group with fewer than 200 companies stays on reading plus samples. Graded only on hand-verified, FILING-CHECKED key rows; AUTO rows are key_unverified.
+- **A graduated class:** in the nightly path, a new or changed tag in a new 10-Q or 10-K is mapped by the predictor, then goes through tagmap-plan, cell_proof and the proof guard. Every other class goes to the reading queue.
+- **Demotion:** random filing-checked samples keep grading each graduated class, and a drop below the bar demotes it.
+- **Today:** blind 89.1% on hand-verified rows (85.9% on all rows); dev score by version 82.4 → 87.7 → 88.1 → 89.8 (v4).
+- **Note-only data points:** the fact in a note → mapped, stmt NOTE, with its R page. Absent from the whole filing → not_presented. component_in_note only for a component.
+
+## Reading lanes and the blind exam (Dhairya, 2026-11-12)
+
+- Nine readers do document-first reads of ranks 101-1000. Ranks come from `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Branches: `work/reads/<lo>-<hi>` (101-200, ..., 901-1000). Each docmap goes to `data-team/companies/reads/<TICKER>-docmap-2026-11-12.{md,csv}`. Readers commit every 10 companies in strict rank order.
+- **Readers never wait for predictions.** Read, commit and push as you go. Blindness is enforced by commit time: a prediction counts only if it reached origin before the first commit of that ticker's docmap. A company read before it was predicted is scored "no prediction".
+- The Tag Expert's blind predictions go to `data-team/tags/exam/<TICKER>-prediction.csv`, made by `data-team/tags/exam/predict.py`, on branch `docs/tag-expert-playbooks` and on main. Run the frozen predictor over all ranks 101-1000 up front. Re-predict only tickers not yet read.
+- Readers without DB access use companyfacts and R pages from sec.gov, at most 0.4 requests per second each, with a disk cache.
+
+## Tag map (Engineering, 2026-11-12)
+
+- Migration 0122 applied 2026-11-11 21:31:56 UTC (analytics.company_tag_map, analytics.company_combined_line, 5 new catalog concepts; 83 concepts in total).
+- analytics.company_tag_map seeded LIVE for 18 companies (ranks 1-50 read-PASS: AAPL ABBV AMAT AMGN ANET BAC CAT COST CRWD MA META MRK MSFT NFLX NVDA PANW PLTR TSLA) from ranks_1_50.csv at e58e4a8: 6,816 rows incl. 651 open periods. AVGO waits for the predecessor-companyfacts backfill. Nothing is served from it until the mapper rule company_tag_map.select@1 is switched on.
+- The live catalog analytics.canonical_concept (83 concepts) is the authority; validate concept keys against the DB. concepts_catalog.csv is left as the tag library maintains it (its coverage test treats every listed concept as required, so the bank-only net_interest_income needs a template condition there first).
+- data-team/47-fsn-store/company_tag_map/needs_detail_r1r2.csv: 168 decision rows the 1,000-company expander could not apply (columns source, tag, stmt, decision, concept, missing, companies_affected), for the Tag Expert to complete.
+
+## Founder decision 2026-11-12 (chosen in Dhairya's session): custom-tag value source
+
+- Lines printed only under a company's own (extension) tag take their VALUE from the filing's own XBRL via SEC's FSN data (fsn.value, undimensioned, same accession and period), checked against the printed R page. Standard us-gaap tags stay on the SEC company API (core.fact). Each cell records value_source = sec_api or fsn_xbrl. Reason: companyfacts carries only us-gaap/dei/ecd/ffd; FSN equals the filing XBRL (20/20 filings, 22,774/22,774 numbers).
+- Also standing: full latest-10-K read per company is a certification requirement (founder 2026-11-12, "read as much as possible, test as much as possible"). Reads: data-team/companies/reads/.
+
 ## Live numbers 2026-11-11 ~07:30 UTC
 
 - Certified 0 / 1,000. Companies written from the FSN store: 0 (MDT restored before this decision). FSN store: 1,000 companies. core.company_history_source: 66 rows. PR #5 merged (1722a8c6).
@@ -75,6 +103,17 @@ Nightly refresh (CI/CD session, 2026-11-10; fix in PR #5, not merged): run 42712
 - Sector-template seed (branch work/data-engineer/sector-templates-seed) APPROVED to apply once the Verifier passes it.
 
 - FOUNDER APPROVAL 2026-11-09 ~22:10 IST (manager session): "Yes approved", in reply to: "I approve writing FSN values per (company, data point) on Ritwik's conditions C1-C8, and the top-100 and 1,000-company writes tonight once Ritwik clears the dry run." Ruling: branch review/ruling-done-gate-c4-2026-11-09. Every Ritwik condition stays binding (C7 cohort dry run first; Ritwik clears the C2 valued-to-blank table and the data_points list before each dispatch). The recorded founder decision of 2026-11-01 (doc 02, item 5) goes to doc 02 next.
+
+## Founder decision 2026-11-11: move to the new system (typed in Dhairya's session, relayed to Ritwik)
+Founder's words: "Why we are working on new systems? Because old was not reliable. So why you are so focused to preserve old things? Move to new. Use just old learning not the system."
+Approver amendments (Ritwik, Mac session), binding for both Ritwik sessions:
+- **C2 amended.** Old canonical_fact values no longer gate a write. "valued→no-row vs the before-image" becomes a diff report (`valued_to_blank.json`), kept for learning. No pair is held because of old values. G2(c) (C2-held pairs keep old rows) is dropped.
+- **Kept, judged on the new system alone.** The gate is criterion 4 / N1: every template key gets a filing-traceable new value or an evidenced reason, with zero reasonless keys. Template keys come from the calendar (and v1.2 TP for printed year-to-date), not from the old table. Why this is kept: the MDT loss (252 keys) was a new-system coverage hole, not an old-value question.
+- **C4 / restore dropped.** No restore to old values. A served cell_proof DISAGREE is re-written as a defect blank (N2). Rollback of a write = re-run the new system. The before-image is still taken, as an audit record only.
+- **G2(a)/(b):** reason rows are keyed on the template calendar, not on before-image keys.
+- **Unchanged:** criteria 1, 2 (filings stored) and 5; N1; N2; the Verifier draw against the filings; EPS never derived; C6 (DPS) and C8 (debt, total liabilities) holds until proven; C5 (company_value_owner empty).
+- **Nightly:** the old normalize/map path stops writing for the 1,000 once the new nightly lands. No further per-cell protection work.
+- **Top-100 C7:** cleared on these criteria once the select_plan output shows them. Not yet received (2026-11-11).
 
 ## Waiting on the founder
 

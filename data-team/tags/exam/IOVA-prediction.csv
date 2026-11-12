@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+IOVA,920,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Accounts payable,22159000.0000,library map
+IOVA,920,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Trade accounts receivable,82448000.0000,library map
+IOVA,920,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-018899,,,,note-sourced default tag (no face line)
+IOVA,920,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001104659-26-018899,R4,"Net Loss Per Share of Common Stock, Basic (in dollars per share)",-1.0900,library map
+IOVA,920,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Purchase of property and equipment,33836000.0000,library map
+IOVA,920,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Cash and cash equivalents,163078000.0000,library map
+IOVA,920,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Net cash provided by financing activities,300773000.0000,library map
+IOVA,920,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Net cash provided by (used in) investing activities,47496000.0000,library map
+IOVA,920,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-018899,,,,note-sourced default tag (no face line)
+IOVA,920,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-018899,,,,note-sourced default tag (no face line)
+IOVA,920,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001104659-26-018899,R7,Accounts payable,-6661000.0000,library map
+IOVA,920,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Trade accounts receivable,13108000.0000,library map
+IOVA,920,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Inventory,14211000.0000,library map
+IOVA,920,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001104659-26-018899,R7,Net cash used in operating activities,-302408000.0000,library map
+IOVA,920,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001104659-26-018899,R5,Comprehensive Loss,-373492000.0000,library map
+IOVA,920,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,Cost of sales,173184000.0000,library map
+IOVA,920,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Total Current Assets,442689000.0000,library map
+IOVA,920,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Total Current Liabilities,138358000.0000,library map
+IOVA,920,deposits,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Depreciation and amortization of property and equipment,12862000.0000,library map
+IOVA,920,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001104659-26-018899,R4,"Net Loss Per Share of Common Stock, Diluted (in dollars per share)",-1.0900,library map
+IOVA,920,dividends_paid,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,dividends_per_share,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,goodwill,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,gross_profit,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001104659-26-018899,R4,Net Loss before income taxes,-393049000.0000,library map
+IOVA,920,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001104659-26-018899,R4,Income tax (expense) benefit,-2071000.0000,library map
+IOVA,920,interest_expense,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,"Interest and other income, net",10307000.0000,library map
+IOVA,920,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Inventory,51678000.0000,library map
+IOVA,920,loans_net,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-018899,R4,Net Loss,-390978000.0000,library map
+IOVA,920,net_interest_income,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,noninterest_expense,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,noninterest_income,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,Research and development,300270000.0000,printed opex lines (duration sum)
+IOVA,920,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-018899,R4,Loss from operations,-403356000.0000,library map
+IOVA,920,other_income_expense_net,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,"Property and equipment, net",131112000.0000,library map
+IOVA,920,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,Research and development,300270000.0000,library map
+IOVA,920,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,Total revenue,263502000.0000,library map
+IOVA,920,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001104659-26-018899,R7,Stock-based compensation expense,61575000.0000,library map
+IOVA,920,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-018899,R4,"Selling, general, and administrative",152322000.0000,lone G&A line
+IOVA,920,share_buybacks,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001104659-26-018899,R3,"Common Stock, Shares, Outstanding",411938061.0000,library map
+IOVA,920,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Total Stockholders' Equity,698583000.0000,library map
+IOVA,920,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Total Assets,913170000.0000,library map
+IOVA,920,total_debt,not_presented,,,,,,,,0001104659-26-018899,,,,no face line
+IOVA,920,total_interest_income,OUT,,,,,,,,0001104659-26-018899,,,,not a bank
+IOVA,920,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-018899,R2,Total Liabilities,214587000.0000,library map
+IOVA,920,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001104659-26-018899,R4,"Weighted Average Shares of Common Stock Outstanding, Basic (in shares)",357345.0000,library map
+IOVA,920,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001104659-26-018899,R4,"Weighted Average Shares of Common Stock Outstanding, Diluted (in shares)",357345.0000,library map

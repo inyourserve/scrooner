@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+VAL,936,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,Accounts payable - trade,348200000.0000,library map
+VAL,936,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,"Accounts receivable, net",474800000.0000,combined line (library or label demote)
+VAL,936,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000314808-26-000029,,,,note-sourced default tag (no face line)
+VAL,936,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0000314808-26-000029,R3,Basic,13.9200,library map
+VAL,936,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000314808-26-000029,R7,Additions to property and equipment,343500000.0000,library map
+VAL,936,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,Cash and cash equivalents,599400000.0000,library map
+VAL,936,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000314808-26-000029,R7,Net cash provided by (used in) financing activities,-103600000.0000,library map
+VAL,936,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000314808-26-000029,R7,"Net Cash Provided by (Used in) Investing Activities, Total",-205600000.0000,library map
+VAL,936,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000314808-26-000029,,,,note-sourced default tag (no face line)
+VAL,936,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000314808-26-000029,,,,note-sourced default tag (no face line)
+VAL,936,cf_ap_change,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,cf_ar_change,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,cf_inventory_change,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000314808-26-000029,R7,Net cash provided by operating activities,546200000.0000,library map
+VAL,936,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000314808-26-000029,R4,COMPREHENSIVE INCOME ATTRIBUTABLE TO VALARIS,1009500000.0000,library map
+VAL,936,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,Cost of Product and Service Sold,1629700000.0000,library map
+VAL,936,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,Total current assets,1225300000.0000,library map
+VAL,936,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,"Liabilities, Current",691600000.0000,library map
+VAL,936,deposits,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,depreciation_and_amortization,not_presented,,,,,,,,0000314808-26-000029,,,,single component only
+VAL,936,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0000314808-26-000029,R3,Diluted,13.8600,library map
+VAL,936,dividends_paid,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,dividends_per_share,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,goodwill,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,gross_profit,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,INCOME BEFORE INCOME TAXES,552300000.0000,library map
+VAL,936,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0000314808-26-000029,R3,Total provision for income taxes,-426800000.0000,library map
+VAL,936,interest_expense,combined,us-gaap:InterestExpenseOther,IS,+,-5,Y,InterestExpense,sec_api,0000314808-26-000029,R3,"Interest expense, net",98800000.0000,combined line (library or label demote)
+VAL,936,interest_income,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,inventory,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,loans_net,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,NET INCOME ATTRIBUTABLE TO VALARIS,982800000.0000,library map
+VAL,936,net_interest_income,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,noninterest_expense,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,noninterest_income,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,operating_expenses,component_sum,us-gaap:AssetImpairmentCharges;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-5,Y,CostOfGoodsAndServicesSoldDepreciation,sec_api,0000314808-26-000029,R3,Loss on impairment,27300000.0000,every face line between GP/COR and OI; ties to GP - OI
+VAL,936,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,OPERATING INCOME,477000000.0000,library map
+VAL,936,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,"Other, net",103300000.0000,library map
+VAL,936,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,"Property and equipment, net",2088800000.0000,library map
+VAL,936,provision_for_credit_losses,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,research_and_development,not_presented,,,,,,,,0000314808-26-000029,,,,no face line
+VAL,936,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,Total operating revenues,2369000000.0000,library map
+VAL,936,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000314808-26-000029,R7,Share-based compensation expense,25200000.0000,library map
+VAL,936,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,General and administrative,97100000.0000,lone G&A line
+VAL,936,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000314808-26-000029,R7,Payments for Repurchase of Common Stock,100000000.0000,library map
+VAL,936,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000314808-26-000029,R6,"Common Stock, Shares, Outstanding",69200000.0000,library map
+VAL,936,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,Total Valaris shareholders' equity,3169600000.0000,library map
+VAL,936,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,TOTAL ASSETS,5304800000.0000,library map
+VAL,936,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,LONG-TERM DEBT,1086000000.0000,printed face components (duration sum; total_debt founder sum)
+VAL,936,total_interest_income,OUT,,,,,,,,0000314808-26-000029,,,,not a bank
+VAL,936,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000314808-26-000029,R5,Liabilities,2133100000.0000,library map
+VAL,936,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0000314808-26-000029,R3,Basic,70600000.0000,library map
+VAL,936,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000314808-26-000029,R3,Diluted,70900000.0000,library map

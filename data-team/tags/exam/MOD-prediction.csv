@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MOD,801,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Accounts payable,464800000.0000,library map
+MOD,801,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Trade accounts receivable - net,731000000.0000,library map
+MOD,801,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-066795,,,,note-sourced default tag (no face line)
+MOD,801,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-066795,R2,Basic (in dollars per share),2.3000,library map
+MOD,801,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,"Expenditures for property, plant and equipment",143300000.0000,library map
+MOD,801,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Cash and cash equivalents,73500000.0000,library map
+MOD,801,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Net cash provided by (used for) financing activities,73100000.0000,library map
+MOD,801,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001104659-26-066795,R6,Net cash used for investing activities,-321300000.0000,library map
+MOD,801,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-066795,,,,note-sourced default tag (no face line)
+MOD,801,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-066795,,,,note-sourced default tag (no face line)
+MOD,801,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Accounts payable,151100000.0000,library map
+MOD,801,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Trade accounts receivable,222600000.0000,library map
+MOD,801,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Inventories,125100000.0000,library map
+MOD,801,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Net cash provided by operating activities,248700000.0000,library map
+MOD,801,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001104659-26-066795,R3,Comprehensive income attributable to Modine,265700000.0000,library map
+MOD,801,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Cost of sales,2450000000.0000,library map
+MOD,801,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Total current assets,1416100000.0000,library map
+MOD,801,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Total current liabilities,728900000.0000,library map
+MOD,801,deposits,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Depreciation and amortization,79700000.0000,library map
+MOD,801,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-066795,R2,Diluted (in dollars per share),2.2600,library map
+MOD,801,dividends_paid,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,dividends_per_share,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Goodwill,292100000.0000,library map
+MOD,801,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Gross profit,731100000.0000,library map
+MOD,801,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Earnings before income taxes,186500000.0000,library map
+MOD,801,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Provision for income taxes,63200000.0000,library map
+MOD,801,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001104659-26-066795,R2,Interest expense,31600000.0000,library map
+MOD,801,interest_income,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Inventories,506100000.0000,library map
+MOD,801,loans_net,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Net earnings attributable to Modine,121500000.0000,library map
+MOD,801,net_interest_income,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,noninterest_expense,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,noninterest_income,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,"Selling, general and administrative expenses",360100000.0000,printed opex lines (duration sum)
+MOD,801,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Operating income,342400000.0000,library map
+MOD,801,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001104659-26-066795,R2,Other expense - net,-8200000.0000,library map
+MOD,801,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,"Property, plant and equipment - net",520900000.0000,library map
+MOD,801,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,research_and_development,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Net sales,3181100000.0000,library map
+MOD,801,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Stock-based compensation expense,22100000.0000,library map
+MOD,801,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,"Selling, general and administrative expenses",360100000.0000,library map
+MOD,801,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Purchases of treasury stock,7000000.0000,library map
+MOD,801,shares_outstanding,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Total Modine shareholders' equity,1194500000.0000,library map
+MOD,801,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Total assets,2674600000.0000,library map
+MOD,801,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Short-term debt,7500000.0000,printed face components (duration sum; total_debt founder sum)
+MOD,801,total_interest_income,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
+MOD,801,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Total liabilities,1471800000.0000,library map
+MOD,801,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Basic (in shares),52800000.0000,library map
+MOD,801,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Diluted (in shares),53800000.0000,library map
