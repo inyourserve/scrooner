@@ -6,7 +6,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001860742-26-000007 (CIK 0001860742, filed 2026-02-18): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
 - 10-K 0001860742-24-000004 (CIK 0001860742, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
 - 10-K 0001860742-25-000004 (CIK 0001860742, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
-- companyfacts CIK0001860742.json (one call).
+- companyfacts CIK0001860742.json (one call); submissions CIK0001860742.json (SIC 3851).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |

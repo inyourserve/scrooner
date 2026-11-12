@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0000886163-16-000149 (CIK 0000886163, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0000886163-18-000030 (CIK 0000886163, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0000886163-24-000009 (CIK 0000886163, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R8.htm
-- companyfacts CIK0000886163.json (one call).
+- companyfacts CIK0000886163.json (one call); submissions CIK0000886163.json (SIC 2834).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Repurchase of common stock | -15000000 | 15000000 | 0 | 0 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0000886163-26-000006 R8.htm period ..2025-12-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Interest paid | 321000 | 321000 | 263000 | 263000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000886163-26-000006 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R8.htm | Taxes paid | 7802000 | 7802000 | 19206000 | 19206000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000886163-26-000006 R8.htm period ..2025-12-31 |
-| total_debt | mapped | us-gaap:LongTermDebt | R68.htm | Total long-term portion of notes payable | 446192000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R68.htm 'Debt - Convertible Debt Schedule (Details)' (MetaLinks.json presentation) |
+| total_debt | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of LongTermDebt, DebtLongtermAndShorttermCombinedAmount, DebtInstrumentCarryingAmount, LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities, LongTermDebtNoncurrent, LongTermDebtCurrent, ShortTermBorrowings, CommercialPaper, SeniorNotes, NotesPayable, LinesOfCreditCurrent in MetaLinks.json (1213 tags across all 85 R pages, face and notes) of 0000886163-26-000006; HAND REVIEW: 61 label candidate(s) incl. custom tags: lgnd:AccruedDebtIssuanceCostsIncurredButNotYetPaid 'Accrued debt issuance costs / Accrued Debt Issuance Costs In' R8; lgnd:AdjustmentsToAdditionalPaidInCapitalConvertibleDebt '2030 Notes hedge and warrant transactions, net of tax (Note ' R7; us-gaap:AdjustmentsToAdditionalPaidInCapitalWarrantIssued 'Warrant derivative / Adjustments to Additional Paid in Capit' R67; us-gaap:AmortizationOfDebtDiscountPremium 'Amortization of debt discount (premium) / Amortization of De' R45; us-gaap:AmortizationOfFinancingCosts 'Amortization issuance costs / Amortization of Debt Issuance ' R67; us-gaap:AmortizationOfFinancingCostsAndDiscounts 'Amortization of debt discount and issuance fees / Amortizati' R8; us-gaap:AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedGainBeforeTax 'Gross unrealized gains / Debt Securities, Available-for-Sale' R51; us-gaap:AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedLossBeforeTax 'Gross unrealized losses / Debt Securities, Available-for-Sal' R51 |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock outstanding (in shares) | 19774000 | 19774000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
@@ -90,4 +90,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - interest_expense: era 10-K 0000886163-24-000009 R5.htm prints 'Interest expense' on us-gaap:InterestExpense = -656000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- total_debt: API missing (us-gaap:LongTermDebt)
+none beyond sign differences

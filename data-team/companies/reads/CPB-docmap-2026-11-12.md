@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0000016732-15-000034 (CIK 0000016732, filed FY2015 era): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, CF R5.htm
 - 10-K 0000016732-18-000062 (CIK 0000016732, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, CF R5.htm
 - 10-K 0000016732-21-000103 (CIK 0000016732, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, CF R5.htm
-- companyfacts CIK0000016732.json (one call).
+- companyfacts CIK0000016732.json (one call); submissions CIK0000016732.json (SIC 2000).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,7 +16,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R4.htm | Cost of products sold | 7002000000 | 7002000000 | 7134000000 | 7134000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
 | gross_profit | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1241 tags across all 138 R pages, face and notes) of 0000016732-26-000026; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | combined | us-gaap:CostsAndExpenses | R4.htm | Total costs and expenses | 8892000000 | 8892000000 | 9129000000 | 9129000000 | Y | FILING-CHECKED | check: machine-full-filing / CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R4.htm | Administrative expenses | 646000000 | 646000000 | 674000000 | 674000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense | R4.htm | Administrative expenses + Marketing and selling expenses | 1553000000 | 1553000000 | 1598000000 | 1598000000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
 | research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R4.htm | Research and development expenses | 99000000 | 99000000 | 100000000 | 100000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R4.htm | Earnings before interest and taxes | 852000000 | 852000000 | 1124000000 | 1124000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
 | interest_expense | mapped | us-gaap:InterestExpense | R4.htm | Interest expense | 331000000 | 331000000 | 345000000 | 345000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R4.htm period ..2026-08-02 |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Treasury stock purchases | -26000000 | 26000000 | -62000000 | 62000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0000016732-26-000026 R7.htm period ..2026-08-02 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R137.htm | Interest Paid, Excluding Capitalized Interest, Operating Activity | 320000000 | 320000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R137.htm 'Supplemental Financial Statement Data (Schedule of Statements of Cash Flow) (Det' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R99.htm | Income Tax Paid, after Refund Received | 93000000 | 93000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R99.htm 'Taxes on Earnings Taxes on Earnings (Narrative) (Details)' (MetaLinks.json presentation) |
-| total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations+us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations | R6.htm | Short-term borrowings + Long-term debt + Short-term borrowings + Long-term debt | 7242000000 | 14274000000 |  |  | N | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
+| total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations | R6.htm | Short-term borrowings + Long-term debt | 7137000000 | 7137000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
 | shares_outstanding | not_presented |  | R6.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CommonStockSharesOutstanding in MetaLinks.json (1241 tags across all 138 R pages, face and notes) of 0000016732-26-000026; HAND REVIEW: 4 label candidate(s) incl. custom tags: us-gaap:CommonStockSharesIssued 'Common Stock, Shares, Issued / Common Stock, Shares, Issued ' R6; dei:EntityCommonStockSharesOutstanding 'Entity Common Stock, Shares Outstanding / Entity Common Stoc' R3; us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding 'Weighted average shares outstanding - assuming dilution / We' R4,R79; us-gaap:WeightedAverageNumberOfSharesOutstandingBasic 'Weighted average shares outstanding - basic / Weighted Avera' R4,R79 |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
@@ -91,4 +91,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - income_before_tax: era 10-K 0000016732-21-000103 R2.htm prints 'Earnings before taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments = 1336000000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-- total_debt: N (us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations+us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations)
+none beyond sign differences
