@@ -20,7 +20,10 @@ print('## Blind exam (predictions committed before each docmap; graded by tools/
 tick = sorted({r['ticker'] for r in G}, key=lambda x: T.get(x, {}).get('docmap_first_commit', ''))
 print(f"Companies graded: {len(tick)}; rows graded {len(G)}; key errors set aside {sum(r['result']=='key_error' for r in R)}; key rows not hand-verified by the reader (set aside) {sum(r['result']=='key_unverified' for r in R)}; no_prediction {sum(r['result']=='no_prediction' for r in R)}.\n")
 print('| Scope | Rows | Accuracy | Error upper bound (CP 95%) |\n|---|---|---|---|')
-print(line(G, 'All blind'))
+H = [r for r in G if r.get('key_evidence', 'hand') in ('hand', '')]; M = [r for r in G if r.get('key_evidence') == 'machine']
+print(line(H, 'HEADLINE: hand-verified key rows'))
+print(line(M, 'Machine full-filing key rows'))
+print(line(G, 'All graded rows (hand + machine)'))
 for i in range(0, len(tick), 100):
     ts = set(tick[i:i+100]); print(line([r for r in G if r['ticker'] in ts], f'Companies {i+1}-{i+len(ts)} (in grading order)'))
 for s in ('BS', 'IS', 'CF', 'NOTE-type'):
@@ -34,13 +37,17 @@ if os.path.exists(sp):
             rows_ = [r for r in G if SEC.get(r['ticker'], {}).get(key, '(none)') == v]
             print(line(rows_, f'{name}: {v} ({len({r["ticker"] for r in rows_})} cos)'))
 print('\n### Graduation per data-point class (founder direction 2026-11-12: blind accuracy >= 99% over the last 200 unseen companies AND CP upper error <= 1.5%, hand-verified rows only)\n')
-print('| Class (data point) | Companies (last 200) | Rows | Accuracy | CP upper error | Graduated |\n|---|---|---|---|---|---|')
+print('| Class (data point) | Companies (last 200) | Hand rows | Hand accuracy | CP upper error (hand) | Graduated | Machine accuracy (rows) | Hand vs machine > 2 pts |\n|---|---|---|---|---|---|---|---|')
 last = set(tick[-200:])
 for dp in sorted({r['data_point'] for r in G}):
-    rows_ = [r for r in G if r['data_point'] == dp and r['ticker'] in last]
+    rows_ = [r for r in H if r['data_point'] == dp and r['ticker'] in last]
+    mrows = [r for r in M if r['data_point'] == dp and r['ticker'] in last]
     n = len(rows_); k = sum(r['result'] == 'wrong' for r in rows_); ub = cp_upper(k, n)
     grad = 'yes' if n and (n - k) / n >= 0.99 and ub <= 0.015 and len(last) >= 200 else 'no'
-    print(f'| {dp} | {len({r["ticker"] for r in rows_})} | {n} | {100*(n-k)/max(n,1):.1f}% | {100*ub:.1f}% | {grad} |')
+    ma = (100 * sum(r['result'] == 'correct' for r in mrows) / len(mrows)) if mrows else None
+    ha = 100 * (n - k) / max(n, 1)
+    flag = 'FLAG' if (ma is not None and n and abs(ma - ha) > 2) else ''
+    print(f'| {dp} | {len({r["ticker"] for r in rows_})} | {n} | {ha:.1f}% | {100*ub:.1f}% | {grad} | {"" if ma is None else f"{ma:.1f}% ({len(mrows)})"} | {flag} |')
 if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
     D = [r for r in csv.DictReader(open(sys.argv[3])) if r['result'] in ('correct', 'wrong')]
     print(line(D, 'Dev set (ranks 51-100, current predictor; not blind)'))
