@@ -15,6 +15,7 @@ ZZT,gross_profit,not_presented,,IS,R3.htm,,,FILING-CHECKED,no gross profit line
 ZZT,total_debt,component sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,BS,R4.htm+R4.htm,Debt,,FILING-CHECKED,
 ZZT,cash_paid_for_interest,component_in_note,us-gaap:InterestPaidNet,Debt - Narrative ,R60,Interest paid,,FILING-CHECKED,
 ZZT,dividends_per_share,not_located,,,,,,ASSUMED,no fact
+ZZT,operating_expenses,mapped,us-gaap:Opex:Bad,IS,R3.htm,Opex,,FILING-CHECKED,
 """
 MD = "Latest 10-K opened: 0000000099-26-000001 (period 2025-12-31)"
 
@@ -43,7 +44,9 @@ def test_load_is_idempotent_and_the_cited_docmap_cuts_the_library(isolated_datab
         first = dl.load(conn, paths, apply=True)
         once = _snapshot(conn, cid)
         assert first["companies"]["0000000099"]["added"] == 5  # revenue, gross profit, 2 debt parts, interest paid
-        assert [r["data_point"] for r in first["rejects"]] == ["dividends_per_share"]
+        assert [(r["data_point"], r["why"][:12]) for r in first["rejects"]] == [
+            ("dividends_per_share", "unknown stat"), ("operating_expenses_resolved", "invalid row:")]
+        assert first["blocked"] == {}  # an invalid row is rejected alone, never the company
         assert [(c["data_point"], c["winner"]) for c in first["conflicts"]] == [("revenue_sanity_resolved", "docmap")]
         assert conn.execute("select era_to::text from analytics.company_tag_map where id = %s", (lib,)).fetchone()[0] == "2019-12-31"
         assert {r[13] for r in once if r[12] == "docmap"} == {dl.RULE_ID}

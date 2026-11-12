@@ -163,3 +163,14 @@ def test_a_combined_line_replaces_the_library_period_reasons_inside_its_era():
                             "Revenue and other", date(2024, 1, 1), "0000000001-26-000001", "", "T-docmap.csv")
     plan = dl.plan_company([reason], [combined], {"revenue_sanity_resolved": 1})
     assert plan.delete == [3] and len(plan.insert) == 1  # no overlapping reason rows left behind
+
+
+def test_member_qualified_tags_are_rejected_row_by_row():
+    rows, rejects = _parse(
+        "T,cost_of_revenue,component sum,us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Product]+us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Service],IS,R4+R4,x,,FILING-CHECKED,",
+        "T,amortization_of_intangibles,component sum,us-gaap:AmortizationOfIntangibleAssets[StatementOfIncomeLocationBalance=us-gaap:OperatingExpenses],IS,R4,x,,FILING-CHECKED,",
+        "T,revenue,mapped,us-gaap:Revenues,IS,R4.htm,Revenues,,FILING-CHECKED,",
+    )
+    assert [r.data_point for r in rows] == ["revenue"]
+    assert [(r["data_point"], r["why"]) for r in rejects] == [
+        ("cost_of_revenue", "member_not_supported"), ("amortization_of_intangibles", "member_not_supported")]

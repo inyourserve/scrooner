@@ -118,12 +118,19 @@ def _fy_start(end: date, years: int = 1) -> date:
     return _years_back(end, years) + timedelta(days=1)
 
 
+MEMBER_RE = re.compile(r"\[[^\]]*=[^\]]*\]")
+
+
 def parse_parts(tags: str) -> tuple[tuple[int, str, str], ...]:
     out = []
     for t in re.split(r"[+;]", tags):
         t = t.strip()
         if not t:
             continue
+        if MEMBER_RE.search(t):
+            # tag[Axis=Member]: a dimensional line; company_tag_map has no axis/member key yet (Dhairya 2026-11-13).
+            # Stored as a literal tag it would never match a value.
+            raise ValueError("member_not_supported")
         sign = -1 if t.startswith("-") else 1
         prefix, _, local = t.lstrip("-").partition(":")
         if not local:
@@ -599,6 +606,22 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
                     }
                 )
             else:
+                # validate before planning: a row the table would refuse is rejected alone, and no library row is
+                # cut or deleted for it (a bad row never blocks its company)
+                try:
+                    for t in table_rows(d, cid, cik, concept_statement):
+                        normalize(t, {}, concept_ids, RULE_ID, [])
+                except (ValueError, TypeError) as exc:
+                    stats["rejects"].append(
+                        {
+                            "source": d.source,
+                            "ticker": d.ticker,
+                            "data_point": d.data_point,
+                            "status": d.status,
+                            "why": f"invalid row: {exc}",
+                        }
+                    )
+                    continue
                 ok.append(d)
         stats["rows"] += len(ok)
         docs[cid] = (cik, ok)
