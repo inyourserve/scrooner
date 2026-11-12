@@ -136,3 +136,17 @@ def test_extension_tags_are_served_from_the_filings_own_xbrl_and_standard_tags_f
     got = [mod.source({"decision": d, "taxonomy": t}) for d, t in
            (("concept", "us-gaap"), ("component", "custom"), ("concept", "avgo"), ("combined", "ge"), ("excluded", "custom"), ("not_presented", ""))]
     assert got == ["sec_api", "fsn_xbrl", "fsn_xbrl", "fsn_xbrl", "", ""]
+
+
+def test_a_component_sum_with_an_extension_part_reads_every_part_from_fsn_xbrl_over_that_parts_era_only():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("value_source", D / "value_source.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {"company_id": "1", "decision": "component", "parent_concept": "operating_expenses_resolved"}
+    rows = [{**base, "taxonomy": "us-gaap", "tag": "ResearchAndDevelopmentExpense", "era_from": "2015-03-31", "era_to": "2026-09-30"},
+            {**base, "taxonomy": "custom", "tag": "ImpairmentAndRestructuringExpenses", "era_from": "2018-06-30", "era_to": "2018-06-30"}]
+    out = mod.single_source_sums(rows)
+    rd = [(r["era_from"], r["era_to"], r["value_source"]) for r in out if r["tag"] == "ResearchAndDevelopmentExpense"]
+    assert rd == [("2015-03-31", "2018-06-29", "sec_api"), ("2018-06-30", "2018-06-30", "fsn_xbrl"), ("2018-07-01", "2026-09-30", "sec_api")]
+    assert mod.single_source_sums(out) == out
