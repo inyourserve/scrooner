@@ -51,3 +51,6 @@ Not FSN-write data points today; balance-sheet families are held. FSN `stockhold
 - **Equity parts**: `AdditionalPaidInCapitalCommonStock` (60) vs `AdditionalPaidInCapital` (44) vs combined `CommonStocksIncludingAdditionalPaidInCapital` (26; MSFT, IBM).
 
 > See also (FILING-CHECKED, Dhairya 2026-11-11): cards/fsn-cash-flow.md, fsn-balance-sheet-assets.md, fsn-balance-sheet-liabilities-equity.md, fsn-income-statement.md; conflicts settled in decisions/TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md.
+
+## 9. Instants are never summed (Dhairya 2026-11-12, doc 02)
+- Inventory printed only as components (SO, XOM) and shares printed only per class: not_presented. Total liabilities with no printed line: not_presented. The only summed instant is total_debt (founder definition).

@@ -81,3 +81,5 @@ Findings:
 
 ## Reconcile 2026-11-11 (final)
 - BS `CashCashEquivalentsRestrictedCash…` = cash when it is the sole cash line with no restricted wording (GILD 7,564M, DHR 4,615M, FITB 4,374M); a label naming restricted cash is served as printed, labelled "includes restricted cash" (CB 0000896159-26-000005 BS l9; Dhairya). Bank cash = the BS line(s) equal to CF ending cash; `CashAndDueFromBanks` beside interest-bearing deposits is a component (PNC). LITE: cash tagged `CashAndCashEquivalentsFairValueDisclosure` (filer error; map by label, flag).
+
+- Bank cash split across BS lines (JPM 343,338M): serve the CF statement's printed ending-cash line, labelled; never sum the BS lines (Dhairya 2026-11-12).
