@@ -269,6 +269,7 @@ HEADLINE = [
     ("revenue", "revenue_sanity_resolved", "IS", True),
     ("cost_of_revenue", "cost_of_revenue_resolved", "IS", True),
     ("gross_profit", "gross_profit_resolved", "IS", True),
+    ("operating_expenses", "operating_expenses", "IS", True),
     ("operating_income", "operating_income_resolved", "IS", True),
     ("interest_expense", "interest_expense_resolved", "IS", True),
     ("income_before_tax", "income_before_tax_resolved", "IS", True),
@@ -278,6 +279,7 @@ HEADLINE = [
     ("diluted_eps", "diluted_eps_resolved", "IS", True),
     ("dividends_per_share", "dividends_per_share_resolved", "IS|EQ|EQP|ISP", True),
     ("cash_and_equivalents", "cash_and_equivalents_resolved", "BS", False),
+    ("accounts_receivable", "accounts_receivable", "BS", False),
     ("current_assets", "current_assets_resolved", "BS", False),
     ("total_assets", "total_assets_resolved", "BS", False),
     ("current_liabilities", "current_liabilities_resolved", "BS", False),
@@ -313,11 +315,91 @@ def fy_cols(f: Filing, duration: bool) -> tuple[tuple[date, int] | None, tuple[d
     return fy0, fy1
 
 
+AR_TAG = "us-gaap:AccountsReceivableNetCurrent"
+AR_WIDER = re.compile(r"^us-gaap:(ReceivablesNetCurrent|AccountsNotesAndLoansReceivableNetCurrent|AccountsAndOtherReceivablesNetCurrent|AccountsReceivableNet)$")
+RECEIVABLE_LINE = re.compile(r"receivable", re.I)
+OPEX_TOTAL = {"us-gaap:OperatingExpenses", "us-gaap:OperatingCostsAndExpenses"}
+GP_TAGS = {"us-gaap:GrossProfit"}
+OI_TAGS = {"us-gaap:OperatingIncomeLoss"}
+COR_TAGS = {"us-gaap:CostOfRevenue", "us-gaap:CostOfGoodsAndServicesSold", "us-gaap:CostOfGoodsSold", "us-gaap:CostOfServices"}
+
+
+def _vals(f, facts, ln, fy0, fy1):
+    p0, p1 = (ln.values.get(fy0) if fy0 else None), (ln.values.get(fy1) if fy1 else None)
+    a0 = api_value(facts, ln.tag, f.accession, fy0[0], fy0[1]) if fy0 else None
+    a1 = api_value(facts, ln.tag, f.accession, fy1[0], fy1[1]) if fy1 else None
+    return p0, a0, p1, a1
+
+
+def accounts_receivable(f, facts, lines, fy0, fy1):
+    """AccountsReceivableNetCurrent; a wider receivables tag only when the BS face prints it as the single
+    receivables line (Dhairya 2026-11-12), R page cited"""
+    bs = [ln for ln in lines if ln.stmt == "BS"]
+    ar = [ln for ln in bs if ln.tag == AR_TAG]
+    if ar:
+        return _row("accounts_receivable", "mapped", ar[:1], "BS", *_vals(f, facts, ar[0], fy0, fy1), f, fy0, fy1, "")
+    recv = [ln for ln in bs if RECEIVABLE_LINE.search(ln.label) or "Receivable" in ln.tag]
+    wider = [ln for ln in recv if AR_WIDER.search(ln.tag)]
+    if len(recv) == 1 and wider:
+        return _row("accounts_receivable", "mapped", wider, "BS", *_vals(f, facts, wider[0], fy0, fy1), f, fy0, fy1,
+                    f"wider receivables tag: the single receivables line on the balance sheet ({wider[0].r_page})")
+    if wider:
+        return _row("accounts_receivable", "combined", wider, "BS", None, None, None, None, f, fy0, fy1,
+                    "wider receivables line beside other receivables lines: combined, never AR")
+    return _row("accounts_receivable", "not_presented", [], "BS", None, None, None, None, f, fy0, fy1, "no printed line")
+
+
+def operating_expenses(f, facts, lines, fy0, fy1):
+    """Dhairya 2026-11-12: opex never includes cost of revenue. The printed total opex line when it excludes COGS;
+    else a component sum of EVERY face line between gross profit and operating income, tied exactly to GP - OI;
+    CostsAndExpenses including COGS is combined, never opex."""
+    is_ = [ln for ln in lines if ln.stmt == "IS"]
+    tot = [ln for ln in is_ if ln.tag in OPEX_TOTAL]
+    gp = next((i for i, ln in enumerate(is_) if ln.tag in GP_TAGS), None)
+    oi = next((i for i, ln in enumerate(is_) if ln.tag in OI_TAGS), None)
+    cor_i = next((i for i, ln in enumerate(is_) if ln.tag in COR_TAGS), None)
+    if tot:
+        t = tot[0]
+        ti = is_.index(t)
+        if cor_i is None or cor_i > ti or (gp is not None and gp < ti):
+            return _row("operating_expenses", "mapped", [t], "IS", *_vals(f, facts, t, fy0, fy1), f, fy0, fy1,
+                        "printed total operating expenses, cost of revenue outside it")
+    if gp is not None and oi is not None and oi > gp + 1 and fy0:
+        between = [ln for ln in is_[gp + 1: oi] if ln.values]
+        g0, o0 = is_[gp].values.get(fy0), is_[oi].values.get(fy0)
+        s0 = sum((ln.values.get(fy0) or Decimal(0) for ln in between), Decimal(0))
+        if g0 is not None and o0 is not None and between:
+            target = g0 - o0
+            tie = "ties" if abs(abs(s0) - abs(target)) <= Decimal("0.5") * 10**6 or abs(s0 - target) < 1 else "DOES NOT tie"
+            if tie == "ties":
+                def side(k, api=False):
+                    if not k:
+                        return None
+                    vs = [api_value(facts, ln.tag, f.accession, k[0], k[1]) if api else ln.values.get(k) for ln in between]
+                    return sum((abs(v) for v in vs if v is not None), Decimal(0)) if any(v is not None for v in vs) else None
+                return _row("operating_expenses", "component sum", between, "IS", side(fy0), side(fy0, True), side(fy1),
+                            side(fy1, True), f, fy0, fy1, f"every face line between gross profit and operating income; ties GP - OI = {format(target, 'f')}")
+            return _row("operating_expenses", "not_presented", [], "IS", None, None, None, None, f, fy0, fy1,
+                        f"lines between GP and OI sum to {format(s0, 'f')}, GP - OI = {format(target, 'f')}: no exact tie")
+    if any(ln.tag == "us-gaap:CostsAndExpenses" for ln in is_):
+        ce = [ln for ln in is_ if ln.tag == "us-gaap:CostsAndExpenses"]
+        return _row("operating_expenses", "combined", ce, "IS", None, None, None, None, f, fy0, fy1,
+                    "CostsAndExpenses includes cost of revenue: combined, never opex")
+    return _row("operating_expenses", "not_presented", [], "IS", None, None, None, None, f, fy0, fy1,
+                "no printed opex total and no gross profit / operating income pair to tie")
+
+
 def data_points(f: Filing, facts: dict, lib: dict) -> list[dict[str, Any]]:
     out = []
     lines = [ln for p in f.pages for ln in p.lines if not ln.abstract]
     for dp, concept, stmts, duration in HEADLINE:
         fy0, fy1 = fy_cols(f, duration)
+        if dp == "operating_expenses":
+            out.append(operating_expenses(f, facts, lines, fy0, fy1))
+            continue
+        if dp == "accounts_receivable":
+            out.append(accounts_receivable(f, facts, lines, fy0, fy1))
+            continue
         cand = [ln for ln in lines if ln.stmt in stmts.split("|")]
         maps, comps = [], []
         for ln in cand:
@@ -338,13 +420,8 @@ def data_points(f: Filing, facts: dict, lib: dict) -> list[dict[str, Any]]:
                 if ln.tag.endswith(":IncomeTaxExpenseBenefit") and BEFORE_TAX.search(seq[i - 1].label):
                     maps, how = [seq[i - 1]], "by position above the tax line"
                     break
-        if not maps and dp == "shares_outstanding" and f.cover:
-            cov = [ln for ln in f.cover.lines if ln.tag == "dei:EntityCommonStockSharesOutstanding" and ln.values]
-            if len(cov) == 1:
-                k, v = next(iter(cov[0].values.items()))
-                out.append(_row(dp, "mapped", [cov[0]], "COVER", v, api_value(facts, cov[0].tag, f.accession, k[0], 0),
-                                None, None, f, k, None, "cover share count (balance sheet prints none)"))
-                continue
+        # shares_outstanding: CommonStockSharesOutstanding at the balance-sheet date only; the dei cover count is never
+        # used (Dhairya 2026-11-12); none printed = not_presented
         distinct = {ln.tag for ln in maps}
         if concept == "stockholders_equity_resolved" and len(distinct) > 1:
             # Tag Expert 2026-11-11: equity including NCI is equity only when no parent line is printed
@@ -365,8 +442,9 @@ def data_points(f: Filing, facts: dict, lib: dict) -> list[dict[str, Any]]:
             a1 = api_value(facts, ln.tag, f.accession, fy1[0], fy1[1]) if fy1 else None
             out.append(_row(dp, "mapped", [ln], ln.stmt, p0, a0, p1, a1, f, fy0, fy1, how or note))
         elif len(distinct) > 1:
-            out.append(_row(dp, "conflict", maps, "/".join(sorted({x.stmt for x in maps})), None, None, None, None, f,
-                            fy0, fy1, "several library map lines: " + "; ".join(f"{x.label} ({x.tag})" for x in maps)))
+            out.append(_row(dp, "combined", maps, "/".join(sorted({x.stmt for x in maps})), None, None, None, None, f,
+                            fy0, fy1, "CONFLICT: several printed lines the library maps to this data point (library correction): "
+                            + "; ".join(f"{x.label} ({x.tag})" for x in maps)))
         elif comps and (duration or concept == "total_debt_resolved"):
             def tot(k, api=False):
                 vals = [api_value(facts, x.tag, f.accession, k[0], k[1]) if api else x.values.get(k) for x in comps] if k else []
@@ -411,6 +489,21 @@ def face_lines(f: Filing, facts: dict) -> list[dict[str, Any]]:
 
 
 # ----------------------------------------------------------------- eras
+def older_tenks(sec: Sec, sub: dict) -> list[tuple[str, date, str]]:
+    """10-Ks in the submissions' older pages (the recent block holds about the last 1,000 filings)"""
+    out = []
+    for fobj in sub.get("filings", {}).get("files", []):
+        try:
+            d = json.loads(sec.get(f"{DATA}/submissions/{fobj['name']}"))
+        except FileNotFoundError:
+            continue
+        out += [(d["accessionNumber"][i], date.fromisoformat(d["reportDate"][i]), d["form"][i])
+                for i, fm in enumerate(d["form"]) if fm in ("10-K", "10-KT") and d["reportDate"][i]]
+        if any(t[1].year <= 2015 for t in out):
+            break
+    return out
+
+
 def tag_eras(facts: dict, dps: list[dict], fy0_end: date) -> list[tuple[str, str, int]]:
     """(data point, tag, first annual fiscal year in the API) for mapped tags that start inside the last 5 FY"""
     out = []
@@ -423,7 +516,7 @@ def tag_eras(facts: dict, dps: list[dict], fy0_end: date) -> list[tuple[str, str
         if not ends:
             continue
         first = date.fromisoformat(ends[0])
-        if first.year > fy0_end.year - 4:
+        if first.year > 2015:
             out.append((r["data_point"], r["tags"], first.year))
     return out
 
@@ -444,10 +537,16 @@ def read_company(sec: Sec, cik: str, ticker: str, lib: dict, out_dir: Path, day:
     faces = face_lines(latest, facts)
     eras = tag_eras(facts, dps, latest.report_date)
     era_reads = []
-    for year in sorted({y - 1 for _, _, y in eras}, reverse=True)[:2]:
-        older = next((t for t in tenks if t[1].year == year), None)
+    # every read reaches the FY2015 10-K (Dhairya 2026-11-12), plus the 10-K before each tag change since FY2015
+    years = {y - 1 for _, _, y in eras if y - 1 >= 2015} | {2015}
+    older_all = tenks + older_tenks(sec, sub)
+    for year in sorted(years, reverse=True)[:4]:
+        older = next((t for t in older_all if t[1].year == year and t[0] != latest.accession), None)
         if older:
-            f2 = read_filing(sec, cik, *older)
+            try:
+                f2 = read_filing(sec, cik, *older)
+            except FileNotFoundError:
+                continue
             era_reads.append((year, f2, data_points(f2, facts, lib)))
     write_outputs(out_dir, day, ticker, cik, sub.get("name", ""), latest, dps, faces, eras, era_reads)
     quirks = []
@@ -458,7 +557,7 @@ def read_company(sec: Sec, cik: str, ticker: str, lib: dict, out_dir: Path, day:
         if r["status"] == "mapped" and any(not t.startswith(("us-gaap:", "dei:")) for t in r["tags"].split("+")):
             quirks.append((ticker, r["tags"], f"{r['data_point']} printed under an extension tag ('{r['label']}')",
                            latest.accession, r["r_page"]))
-        if r["status"] == "conflict":
+        if r["note"].startswith("CONFLICT"):
             quirks.append((ticker, r["tags"], f"{r['data_point']}: several lines the library maps to one concept: {r['note'].split(' | ')[0]}",
                            latest.accession, r["stmt"]))
     for r in dps:
@@ -475,7 +574,7 @@ def read_company(sec: Sec, cik: str, ticker: str, lib: dict, out_dir: Path, day:
             "mismatches": sum(1 for r in dps + [x for _, _, d in era_reads for x in d] if r["match"].startswith("N") and not r["match"].startswith("N (not printed")),
             "face_mismatches": sum(1 for r in faces if r["match"] == "N"),
             "eras": len(era_reads), "quirks": quirks,
-            "library_corrections": sum(1 for r in dps if r["status"] == "conflict")}
+            "library_corrections": sum(1 for r in dps if r["note"].startswith("CONFLICT"))}
 
 
 def _fmt(v):
@@ -522,7 +621,13 @@ def write_outputs(out_dir, day, ticker, cik, name, f, dps, faces, eras, era_read
     for r in dps:
         md.append("| " + " | ".join(_fmt(r.get(k)).replace("|", "/") for k in
                   ("data_point", "status", "tags", "r_page", "label", "fy0_printed", "fy0_api", "fy1_printed", "fy1_api", "match", "note")) + " |")
-    md += ["", "## Era checks (tag changes in the last 5 fiscal years)"]
+    fy15 = next((d2 for y, _, d2 in era_reads if y == 2015), None)
+    md += ["", "## FY2015 coverage (a docmap loads only when every data point's eras reach FY2015)"]
+    if fy15 is None:
+        md.append("- NO FY2015 10-K read (none filed or not found): eras do not reach FY2015")
+    else:
+        md.append("- FY2015 10-K read; per data point: " + "; ".join(f"{r['data_point']} {r['status']}" for r in fy15))
+    md += ["", "## Era checks (tag changes since FY2015)"]
     md += [f"- {dp}: {tag} starts FY{y} in companyfacts; FY{y - 1} 10-K read" for dp, tag, y in eras] or ["- none"]
     for year, f2, d2 in era_reads:
         md.append(f"- FY{year} ({f2.accession}): " + "; ".join(f"{r['data_point']} {r['status']} {r['tags']} {r['match']}" for r in d2 if r["status"] != "not_presented"))
