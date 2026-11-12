@@ -46,7 +46,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Payments for Repurchase of Common Stock | -6733000 |  | -6234000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0000007789-26-000071 R7.htm period ..2025-12-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Interest Paid, Excluding Capitalized Interest, Operating Activity | 988322000 | 988322000 | 1075196000 | 1075196000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000007789-26-000071 R7.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R7.htm | Income Taxes Paid, Net | 1521000 | 1521000 | 17749000 | 17749000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0000007789-26-000071 R7.htm period ..2025-12-31 |
-| total_debt | component sum | us-gaap:ShortTermBorrowings | R2.htm | Short-term Debt | 307864000 | 307864000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
+| total_debt | component sum | us-gaap:ShortTermBorrowings | R2.htm | Short-term Debt | 307864000 | 307864000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; no finance lease liability fact in the filing; operating leases never included |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R2.htm | Common Stock, Shares, Outstanding | 165979940 | 165979940 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
