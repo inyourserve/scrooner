@@ -43,12 +43,12 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | capex | mapped | lyft:PaymentsToAcquirePropertyAndEquipmentAndScooterFleet | R8.htm | Purchases of property and equipment and scooter fleet | -52822000 |  | -83470000 |  | API missing | FILING-CHECKED | check: machine-full-filing / company extension tag, matched by printed label / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
 | depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R8.htm | Depreciation and amortization | 135227000 | 135227000 | 148892000 | 148892000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
 | sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock-based compensation | 322268000 | 322268000 | 330921000 | 330921000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
-| dividends_paid | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends in MetaLinks.json (1008 tags across all 100 R pages, face and notes) of 0001628280-26-006960; label search over every tag in the filing (custom included) found no candidate |
+| dividends_paid | not_presented |  | R8.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of PaymentsOfDividendsCommonStock, PaymentsOfDividends, PaymentsOfOrdinaryDividends, PaymentsOfCapitalDistribution in MetaLinks.json (1008 tags across all 100 R pages, face and notes) of 0001628280-26-006960; label search over every tag in the filing (custom included) found no candidate |
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Repurchase of Class A common stock | -499992000 | 499992000 | -50000000 | 50000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Cash paid for interest | 19821000 | 19821000 | 28304000 | 28304000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Cash paid for income taxes | 7261000 | 7261000 | 11207000 | 11207000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-006960 R8.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability(note) | R3.htm | Long-term debt, net of current portion + finance lease liabilities (note) | 1077726000 | 1077726000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; finance lease liabilities 75322000 from the lease note (no face line carries them); operating leases never included |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 400856000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
+| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 400856000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -58,4 +58,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Mismatches (printed vs API)
 - capex: API missing (lyft:PaymentsToAcquirePropertyAndEquipmentAndScooterFleet)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

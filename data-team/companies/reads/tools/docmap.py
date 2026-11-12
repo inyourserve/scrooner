@@ -182,7 +182,9 @@ DP = [  # (data point, statement, tags in preference order, label regex)
     ("depreciation_and_amortization", "CF", ["DepreciationDepletionAndAmortization", "DepreciationAmortizationAndAccretionNet",
                                              "DepreciationAndAmortization"], r"^depreciation(,| and)"),
     ("sbc", "CF", ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"], r"(stock|share)-based compensation"),
-    ("dividends_paid", "CF", ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends"], r"dividends paid|cash dividends"),
+    ("dividends_paid", "CF", ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends", "PaymentsOfOrdinaryDividends",
+                              "PaymentsOfCapitalDistribution"],
+     r"dividends paid|cash dividends|distributions paid|distributions to (common )?(stockholders|shareholders)"),
     ("share_buybacks", "CF", ["PaymentsForRepurchaseOfCommonStock"], r"repurchase|purchases? of (common|treasury)"),
     # InterestPaidNet = net of capitalized interest (DQC_0065)
     ("cash_paid_for_interest", "CF", ["InterestPaidNet", "InterestPaid"], r"^interest paid|cash paid for interest"),
@@ -307,7 +309,8 @@ def pick_cols(page: dict, stmt: str) -> list[int]:
 
 EXCLUDE = {  # rule-based keying errors to avoid (Dhairya 2026-11-12)
     "share_buybacks": (r"TaxWithholding|SharesPaidForTaxWithholding", r"withh?old|tax(es)? (paid )?(related to|for|on) (net share|share-based|stock-based|vesting)|net share settlement"),
-    "dividends_paid": (r"MinorityInterest|NoncontrollingInterest|PreferredStock|PreferenceStock", r"noncontrolling|non-controlling|minority|preferred|preference"),
+    "dividends_paid": (r"MinorityInterest|NoncontrollingInterest|PreferredStock|PreferenceStock|Declared",
+                       r"noncontrolling|non-controlling|minority|preferred|preference|declared"),
     "accounts_receivable": (r"InterestReceivable|NotesReceivable|FinancingReceivable|LoansAndLeasesReceivable|LoansReceivable", r"interest receivable|notes? receivable|financing receivable|loans? receivable|loans and leases"),
 }
 
@@ -315,13 +318,37 @@ EXCLUDE = {  # rule-based keying errors to avoid (Dhairya 2026-11-12)
 def dedupe_coreg(rows: list[dict]) -> list[dict]:
     """Co-registrant blocks print the same tag again on one page (e.g. Prologis, Inc. and Prologis, L.P.):
     only the first (parent, consolidated) occurrence counts (Dhairya / Ritwik 2026-11-12, PLD 70,074 vs 35,037)."""
-    seen, out = set(), []
+    seen: dict[str, list] = {}
+    out = []
     for r in rows:
-        if r["tag"] and r["tag"] in seen:
-            continue
-        seen.add(r["tag"])
+        key = r["tag"]
+        if key and key in seen and any(v == r["vals"] for v in seen[key]):
+            continue  # same tag, same values: a co-registrant repeat
+        seen.setdefault(key, []).append(r["vals"])
         out.append(r)
     return out
+
+
+def member_sum(page: dict, r: dict) -> dict:
+    """A line printed as several member rows on one tag (e.g. cost of revenue by product / service): a component sum
+    of ALL printed member rows, as tag[member: label] (Dhairya 2026-11-12, INTU 4,253, AMT, WMB, REGN, CDNS).
+    A row equal to the sum of the others is the printed total and is used alone."""
+    same = [x for x in page["rows"] if x["tag"] == r["tag"] and _has(x)]
+    if len(same) < 2:
+        return r
+    v0 = [x["vals"][0] if x["vals"] else None for x in same]
+    if None in v0:
+        return r
+    for i, x in enumerate(same):
+        rest = sum(v for j, v in enumerate(v0) if j != i)
+        if abs(v0[i] - rest) <= max(1.0, abs(rest) * 1e-6):
+            return x  # the printed total ties to its members
+    n = max(len(x["vals"]) for x in same)
+    return {"tag": "+".join(f"{x['tag']}[member: {x['label'][:40]}]" for x in same),
+            "label": " + ".join(x["label"] for x in same),
+            "vals": [sum((x["vals"][k] or 0) for x in same if k < len(x["vals"])) for k in range(n)],
+            "parts": same, "opex_status": "component sum",
+            "opex_note": "all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face"}
 
 
 def _excluded(dp: str, r: dict) -> bool:
@@ -615,6 +642,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                                   for i in range(max(len(p["vals"]) for p in parts))], "parts": parts}
         elif dp not in ("sga_expense", "capex"):
             r = match_row(page, dp, tags, rx)
+            if r is not None and "parts" not in r:
+                r = member_sum(page, r)
             if dp == "accounts_receivable" and r is not None and r.get("by_label"):
                 n_recv = sum(1 for x in page["rows"] if re.search(r"receivable", x["label"], re.I)
                              and any(v is not None for v in x["vals"]))
@@ -633,7 +662,12 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
             end = page["cols"][ci][1]
             if "parts" in r:
                 av = None
-                parts_api = [api_value(cf, p["tag"], accn, end, months) for p in r["parts"]]
+                if len({p["tag"] for p in r["parts"]}) == 1:
+                    # member rows of one tag: the undimensioned fact of that tag is the consolidated total
+                    av = api_value(cf, r["parts"][0]["tag"], accn, end, months)
+                    parts_api = [None]
+                else:
+                    parts_api = [api_value(cf, p["tag"], accn, end, months) for p in r["parts"]]
                 if all(a is not None for a in parts_api):
                     # a part printed with the opposite sign of its fact (e.g. a gain shown negative inside expenses)
                     signed = []
@@ -697,6 +731,12 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         cols = pick_cols(bs, "BS")
         rec = {"ticker": tic, "data_point": "total_debt", "stmt": "BS", "r_page": reps["BS"][1],
                "evidence_class": "FILING-CHECKED", "era_from_note": ""}
+        if len(parts) > 2 and cols:
+            vv = [(p["vals"][cols[0]] or 0) if cols[0] < len(p["vals"]) else 0 for p in parts]
+            for i, p in enumerate(parts):
+                if abs(vv[i] - (sum(vv) - vv[i])) <= max(1.0, abs(vv[i]) * 1e-6):
+                    parts = [p]  # a printed total that ties to the other debt lines: never add both (PNC)
+                    break
         lease_in_debt = any(re.search(r"Lease", p["tag"]) or re.search(r"finance lease|capital lease|lease obligations", p["label"], re.I)
                             for p in parts)
         fl_face = [x for x in bs["rows"] if _has(x) and x["tag"].split(":")[-1] in FIN_LEASE_TAGS

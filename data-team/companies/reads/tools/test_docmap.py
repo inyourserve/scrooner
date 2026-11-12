@@ -37,6 +37,8 @@ def _page(title, rows, months=True):
 
 IS = _page("CONSOLIDATED STATEMENTS OF INCOME", [
     _row("us-gaap:Revenues", "Total revenues", "1,000", "900"),
+    _row("us-gaap:CostOfRevenue", "Product", "400", "380"),       # member rows of one tag, no printed total (INTU 4,253)
+    _row("us-gaap:CostOfRevenue", "Service", "3,853", "3,500"),
     _row("us-gaap:GeneralAndAdministrativeExpense", "General and administrative", "100", "90"),
     _row("us-gaap:SellingAndMarketingExpense", "Sales and marketing", "50", "40"),
     _row("us-gaap:OperatingIncomeLoss", "Operating income", "300", "250"),
@@ -48,6 +50,8 @@ BS = _page("CONSOLIDATED BALANCE SHEETS", [
     _row("us-gaap:LongTermDebt", "Debt", "1,500", "1,400"),
     _row("us-gaap:Assets", "Total assets", "5,000", "4,800"),          # co-registrant block repeats the parent
     _row("us-gaap:LongTermDebt", "Debt", "1,500", "1,400"),
+    _row("us-gaap:LongTermDebtCurrent", "Current portion of debt", "100", "90"),          # components of the printed
+    _row("us-gaap:LongTermDebtNoncurrent", "Long-term debt, less current portion", "1,400", "1,310"),  # total (PNC)
     _row("us-gaap:FinanceLeaseLiabilityNoncurrent", "Finance lease liabilities", "50", "45"),
     _row("us-gaap:OperatingLeaseLiabilityNoncurrent", "Operating lease liabilities", "70", "65"),
 ], months=False)
@@ -78,7 +82,9 @@ def _cf():
     dur = lambda a, b: [_fact(a, END, START), _fact(b, END1, "2024-01-01")]
     inst = lambda a, b: [_fact(a, END), _fact(b, END1)]
     g = {
-        "Revenues": dur(1000e6, 900e6), "GeneralAndAdministrativeExpense": dur(100e6, 90e6),
+        "Revenues": dur(1000e6, 900e6), "CostOfRevenue": dur(4253e6, 3880e6),
+        "LongTermDebtCurrent": [_fact(100e6, END), _fact(90e6, END1)],
+        "LongTermDebtNoncurrent": [_fact(1400e6, END), _fact(1310e6, END1)], "GeneralAndAdministrativeExpense": dur(100e6, 90e6),
         "SellingAndMarketingExpense": dur(50e6, 40e6), "OperatingIncomeLoss": dur(300e6, 250e6),
         "InterestAndDebtExpense": dur(20e6, 18e6), "NetIncomeLoss": dur(200e6, 180e6),
         "Assets": inst(5000e6, 4800e6), "LongTermDebt": inst(1500e6, 1400e6),
@@ -187,3 +193,25 @@ def test_9_capex_includes_turnarounds_in_investing(tmp_path):
         CF = saved
     assert rows["capex"]["status"] == "component sum"
     assert rows["capex"]["fy0_printed"] == "-280000000"
+
+
+def test_10_member_rows_of_one_tag_are_summed(tmp_path):
+    rows = _read(tmp_path)
+    r = rows["cost_of_revenue"]
+    assert r["status"] == "component sum" and r["fy0_printed"] == "4253000000" and r["match"] == "Y"
+    assert "[member: Product]" in r["tags"] and "[member: Service]" in r["tags"]
+
+
+def test_11_reit_dividends_are_distributions_paid_not_declared(tmp_path):
+    global CF
+    saved = CF
+    CF = _page("CONSOLIDATED STATEMENTS OF CASH FLOWS", [
+        _row("us-gaap:DividendsCommonStockCash", "Dividends declared on common stock", "(130)", "(120)"),
+        _row("us-gaap:PaymentsOfDividendsCommonStock", "Distributions paid to common stockholders", "(125)", "(118)"),
+    ])
+    try:
+        rows = _read(tmp_path)
+    finally:
+        CF = saved
+    assert rows["dividends_paid"]["tags"] == "us-gaap:PaymentsOfDividendsCommonStock"
+    assert rows["dividends_paid"]["fy0_printed"] == "-125000000"
