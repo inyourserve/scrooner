@@ -130,7 +130,9 @@ def parse_r(page: str) -> dict:
     """Header column labels, scale, and rows [(label, tag, [values per column], is_abstract)] of one R page."""
     title = re.search(r"<th[^>]*class=\"tl\"[^>]*>(.*?)</th>", page, re.S)
     ttl = html.unescape(re.sub(r"<[^>]+>", " ", title.group(1))) if title else ""
-    sm = SCALE_RX.search(ttl)
+    # "$ in Millions" wins; else an "in X" that is not "shares in X" (BALL R2: "shares in Thousands, $ in Millions")
+    sm = re.search(r"\$ in (thousands|millions|billions)", ttl, re.I) or next(
+        (m for m in SCALE_RX.finditer(ttl) if not re.search(r"shares\s*$", ttl[: m.start()], re.I)), None)
     scale = {"thousands": 10**3, "millions": 10**6, "billions": 10**9}[sm.group(1).lower()] if sm else 1
     per_share_full = re.search(r"except (per share|share)", ttl, re.I) is not None
     shares_scaled = re.search(r"shares in (thousands|millions)", ttl, re.I)
@@ -183,7 +185,7 @@ DP = [
     ("dividends_per_share", ("IS", "PAR_EQ", "EQ", "PAR_IS"), "USD/shares", ["CommonStockDividendsPerShareDeclared", "CommonStockDividendsPerShareCashPaid"], r"dividends?.*per (common )?share"),
     ("comprehensive_income", ("CI", "IS"), "USD", ["ComprehensiveIncomeNetOfTax", "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest"], r"comprehensive (income|loss)"),
     ("cash_and_equivalents", ("BS",), "USD", ["CashAndCashEquivalentsAtCarryingValue", "Cash", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"], r"^cash"),
-    ("accounts_receivable", ("BS",), "USD", ["AccountsReceivableNetCurrent", "ReceivablesNetCurrent", "AccountsReceivableNet"], r"receivable"),
+    ("accounts_receivable", ("BS",), "USD", ["AccountsReceivableNetCurrent"], r"receivable"),
     ("inventory", ("BS",), "USD", ["InventoryNet", "InventoryFinishedGoodsNetOfReserves"], r"^(total )?inventor"),
     ("current_assets", ("BS",), "USD", ["AssetsCurrent"], r"^total current assets"),
     ("ppe_net", ("BS",), "USD", ["PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"], r"property.*(net|equipment)"),
@@ -250,7 +252,7 @@ def pick(stmts: dict, dp: tuple) -> tuple[str, str, tuple] | None:
                 if name in ("basic_eps", "diluted_eps") and unit == "USD/shares" and "share" not in (row[0] + row[1]).lower():
                     continue
                 std = row[1].startswith("us-gaap:")
-                return ("other_tag" if std else "custom_tag"), k, row
+                return ("mapped_other" if std else "mapped_custom"), k, row
     return None
 
 
@@ -384,6 +386,21 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
     bank = bool(is_tags & {"InterestIncomeExpenseNet", "NoninterestExpense", "NoninterestIncome", "InterestIncomeExpenseAfterProvisionForLoanLoss"})
     for dp in DP:
         name, kinds, unit, cands, _ = dp
+        if name == "accounts_receivable" and stmts.get("BS") and (pick(stmts, dp) or ("",))[0] != "mapped":
+            bsp = stmts["BS"]
+            recv = [x for x in bsp["rows"] if re.search(r"receivable", x[0], re.I) and x[1] and any(v is not None for v in x[2])
+                    and not re.search(r"noncurrent|long-term|non-current", x[0], re.I)]
+            if len(recv) == 1 and recv[0][1].split(":")[-1] in ("ReceivablesNetCurrent", "AccountsReceivableNet", "AccountsNotesAndLoansReceivableNetCurrent", "AccountsAndOtherReceivablesNetCurrent"):
+                x = recv[0]
+                v = [scaled(y, bsp, unit) for y in x[2] if y is not None]
+                row(name, "mapped", "BS", x, v[0] if v else None, api_value(facts, x[1], acc, fy0, False, unit),
+                    v[1] if len(v) > 1 else None, api_value(facts, x[1], acc, fy1, False, unit) if fy1 else None,
+                    f"wider receivables tag {x[1]}: the single receivables line on the BS face ({bsp['rfile']}), Dhairya ruling 2026-11-12")
+                continue
+            if recv and not any(x[1].endswith(":AccountsReceivableNetCurrent") for x in recv):
+                row(name, "not_presented", None, None, None, None, None, None,
+                    f"no AccountsReceivableNetCurrent line; {len(recv)} receivables line(s) on {bsp['rfile']} ({'; '.join(x[1] + ' ' + repr(x[0][:40]) for x in recv[:3])}): a wider tag maps only when it is the single receivables line")
+                continue
         if name in BANK_DP and not bank:
             row(name, "OUT", None, None, None, None, None, None, "not a bank (no net interest / noninterest lines on the income statement)")
             continue
@@ -405,13 +422,13 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
         a0 = api_value(facts, r[1], acc, fy0, dur, unit)
         a1 = api_value(facts, r[1], acc, fy1, dur, unit) if fy1 else None
         note = ""
-        if status == "custom_tag":
+        if status == "mapped_custom":
             note = f"custom tag {r[1]}: no companyfacts series"
             quirks.append((name, r[1], f"the face line '{r[0][:70]}' uses a custom tag", kind))
-        elif status == "other_tag":
+        elif status == "mapped_other":
             note = f"standard tag outside the candidate list: {r[1]}"
             quirks.append((name, r[1], f"the face line '{r[0][:70]}' carries a tag outside the data point's candidates", kind))
-        if a0 is None and status != "custom_tag":
+        if a0 is None and status != "mapped_custom":
             note += ("; " if note else "") + "no companyfacts fact for this accession/period"
         era = ""
         if status == "mapped":
@@ -463,7 +480,7 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
                         return sum(vs, Decimal(0)) if all(v is not None for v in vs) else None
                     aps = [api_value(facts, x[1], acc, fy0, dur, unit) for x in comp]
                     a_sum = sum(aps, Decimal(0)) if all(a is not None for a in aps) else None
-                    row(name, "component_sum", kind, (" + ".join(x[0][:30] for x in comp), ";".join(x[1] for x in comp), []), tot(0, fy0), a_sum, tot(1, fy1), None,
+                    row(name, "component sum", kind, (" + ".join(x[0][:30] for x in comp), ";".join(x[1] for x in comp), []), tot(0, fy0), a_sum, tot(1, fy1), None,
                         f"'{r[0][:50]}' {p0} ({r[1]}) includes cost of revenue; opex = the lines between cost of revenue and the total", era, tags=";".join(x[1] for x in comp))
                     continue
         if name == "depreciation_and_amortization" and r[1].split(":")[-1] == "Depreciation":
@@ -474,11 +491,11 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
                 aa0 = api_value(facts, am[1], acc, fy0, dur, unit)
                 aa1 = api_value(facts, am[1], acc, fy1, dur, unit) if fy1 else None
                 add = lambda x, y: (x + y) if x is not None and y is not None else None  # noqa: E731
-                row(name, "component_sum", kind, (f"{r[0][:40]} + {am[0][:40]}", f"{r[1]};{am[1]}", []),
+                row(name, "component sum", kind, (f"{r[0][:40]} + {am[0][:40]}", f"{r[1]};{am[1]}", []),
                     add(p0, av[0] if av else None), add(a0, aa0), add(p1, av[1] if len(av) > 1 else None), add(a1, aa1),
                     f"two printed CF lines: {r[0][:40]} {p0} + {am[0][:40]} {av[0] if av else ''}", era, tags=f"{r[1]};{am[1]}")
                 continue
-        row(name, status, kind, r, p0, a0, p1, a1, note, era)
+        row(name, "mapped" if status.startswith("mapped") else status, kind, r, p0, a0, p1, a1, note, era)
 
     # total debt: the printed debt lines of the balance sheet, summed (instants never derived beyond the printed lines)
     bs = stmts.get("BS")
@@ -488,29 +505,41 @@ def main(out_dir: str, rank: str, ticker: str, cik_s: str) -> None:
             p0 = sum((scaled(next(v for v in r[2] if v is not None), bs, "USD") for r in lines), Decimal(0))
             a0s = [api_value(facts, r[1], acc, fy0, False, "USD") for r in lines]
             a0 = sum(a0s, Decimal(0)) if all(a is not None for a in a0s) else None
-            row("total_debt", "component_sum" if len(lines) > 1 else "mapped", "BS", (" + ".join(r[0][:40] for r in lines), ";".join(r[1] for r in lines), []),
+            row("total_debt", "component sum" if len(lines) > 1 else "mapped", "BS", (" + ".join(r[0][:40] for r in lines), ";".join(r[1] for r in lines), []),
                 p0, a0, None, None, f"{len(lines)} printed debt line(s)", tags=";".join(r[1] for r in lines))
         else:
             row("total_debt", "not_presented", "BS", None, None, None, None, None, "no debt line under a standard debt tag on the balance sheet (custom or lease-only lines are not summed)")
-    # shares outstanding: the cover
-    cov = stmts.get("COVER")
-    so = None
-    if cov:
-        for r in cov["rows"]:
-            if r[1] == "dei:EntityCommonStockSharesOutstanding" and any(v is not None for v in r[2]):
-                so = r
+    # shares outstanding (Dhairya ruling 2026-11-12): us-gaap:CommonStockSharesOutstanding at the balance-sheet
+    # date (BS face or its parenthetical; a class sum when the page prints one line per class); never the dei cover count
+    so = []
+    for k in ("BS", "PAR_BS"):
+        pg = stmts.get(k)
+        if pg:
+            so = [(k, x) for x in pg["rows"] if x[1] == "us-gaap:CommonStockSharesOutstanding" and any(v is not None for v in x[2])]
+            if so:
                 break
     if so:
-        v = next(v for v in so[2] if v is not None)
-        rows.append({"ticker": ticker, "data_point": "shares_outstanding", "status": "mapped", "tags": so[1], "stmt": "COVER",
-                     "r_page": cov["rfile"], "label": so[0], "fy0_printed": v, "fy0_api": "", "fy1_printed": "", "fy1_api": "",
-                     "match": "", "era_from_note": "", "evidence_class": "FILING-CHECKED", "note": f"cover page (first class) | accn {acc}"})
+        k, x = so[0]
+        pg = stmts[k]
+        vals = [scaled(v, pg, "shares") for v in x[2] if v is not None]
+        a0 = api_value(facts, x[1], acc, fy0, False, "shares")
+        if len(so) > 1:  # one line per class: the class sum at the first (latest) column
+            tot = sum((scaled(next(v for v in xx[2] if v is not None), pg, "shares") for _, xx in so), Decimal(0))
+            row("shares_outstanding", "component sum", k, (" + ".join(xx[0][:30] for _, xx in so), x[1], []), tot, a0, None, None,
+                f"{len(so)} class lines on {pg['rfile']}", tags=x[1])
+        else:
+            note = "" if a0 is not None else "no undimensioned companyfacts fact (class-dimensioned only?): printed first column"
+            row("shares_outstanding", "mapped", k, x, vals[0] if vals else None, a0, vals[1] if len(vals) > 1 else None,
+                api_value(facts, x[1], acc, fy1, False, "shares") if fy1 else None, note)
+    else:
+        row("shares_outstanding", "not_presented", None, None, None, None, None, None,
+            "no CommonStockSharesOutstanding at the balance-sheet date on the BS or its parenthetical (the dei cover count is never used)")
     write(out, ticker, rank, cik, acc, filed, fy0, fy1, stmts, rows)
     n = len(rows)
     summ = {"rank": rank, "ticker": ticker, "cik": f"{cik:010d}", "accession": acc, "rows": n,
             "mapped": sum(r["status"] == "mapped" for r in rows), "not_presented": sum(r["status"] == "not_presented" for r in rows),
-            "custom_tag": sum(r["status"] == "custom_tag" for r in rows), "other_tag": sum(r["status"] == "other_tag" for r in rows),
-            "component_sum": sum(r["status"] == "component_sum" for r in rows),
+            "combined": sum(r["status"] == "combined" for r in rows), "out": sum(r["status"] == "OUT" for r in rows),
+            "component sum": sum(r["status"] == "component sum" for r in rows),
             "match_y": sum(r["match"].startswith("Y") for r in rows), "match_n": sum(r["match"] == "N" for r in rows),
             "era_checks": sum(1 for r in rows if "ERA-CHECK" in r["era_from_note"]),
             "quirks": [{"data_point": q[0], "tag": q[1], "quirk": q[2], "stmt": q[3]} for q in quirks]}
