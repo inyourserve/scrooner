@@ -1,0 +1,47 @@
+ticker,data_point,status,tags,stmt,r_page,label,fy0_printed,fy0_api,fy1_printed,fy1_api,match,era_from_note,evidence_class,note
+PSX,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,R3.htm,Sales and other operating revenues,132376000000,132376000000,143153000000,143153000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,R3.htm,Purchased crude oil and products,116093000000,116093000000,129962000000,129962000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,gross_profit,not_presented,,IS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,operating_expenses,not_presented,,IS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,R3.htm,"Selling, general and administrative expenses",2437000000,2437000000,2814000000,2814000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,research_and_development,not_presented,,IS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,operating_income,not_presented,,IS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,R3.htm,Interest and debt expense,1039000000,1039000000,907000000,907000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,interest_income,not_presented,,IS,R3.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,R3.htm,Other income,438000000,438000000,243000000,243000000,Y,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,income_before_tax,mapped,us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest,IS,R3.htm,Income before income taxes,5420000000,5420000000,2675000000,2675000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,R3.htm,Income tax expense,892000000,892000000,500000000,500000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,net_income,mapped,us-gaap:NetIncomeLoss,IS,R3.htm,Net Income Attributable to Phillips 66,4403000000,4403000000,2117000000,2117000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,R3.htm,Basic (in dollars per share),10.82,10.82,5.01,5.01,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,R3.htm,Diluted (in dollars per share),10.79,10.79,4.99,4.99,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,R3.htm,Basic (in shares),406008000,406008000,420174000,420174000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,R3.htm,Diluted (in shares),408053000,408053000,421888000,421888000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,R8.htm,Dividends Paid Per Share of Common Stock (in dollars per share),4.75,4.75,,,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,R4.htm,Comprehensive Income Attributable to Phillips 66,4643000000,4643000000,1992000000,1992000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,R5.htm,Cash and cash equivalents,1116000000,1116000000,1738000000,1738000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,accounts_receivable,mapped,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,R5.htm,Accounts and notes receivable (net of allowances of $68 million in 2025 and $70 million in 2024),9158,,,,no API fact (dimensioned or not in companyfacts for this accession),"chosen tag FY[2021, 2022]",FILING-CHECKED (printed only),accn 0001534701-26-000006
+PSX,inventory,mapped,us-gaap:InventoryNet,BS,R5.htm,Inventories,5097000000,5097000000,3995000000,3995000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,current_assets,mapped,us-gaap:AssetsCurrent,BS,R5.htm,Total Current Assets,17271000000,17271000000,17910000000,17910000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,ppe_net,combined,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,R5.htm,"Net properties, plants and equipment",39097000000,39097000000,35264000000,35264000000,Y,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,goodwill,mapped,us-gaap:Goodwill,BS,R5.htm,Goodwill,1433000000,1433000000,1575000000,1575000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,total_assets,mapped,us-gaap:Assets,BS,R5.htm,Total Assets,73680000000,73680000000,72582000000,72582000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,R5.htm,Accounts payable,8581,,,,no API fact (dimensioned or not in companyfacts for this accession),"chosen tag FY[2021, 2022]",FILING-CHECKED (printed only),accn 0001534701-26-000006
+PSX,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,R5.htm,Total Current Liabilities,13326000000,13326000000,15087000000,15087000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,total_liabilities,mapped,us-gaap:Liabilities,BS,R5.htm,Total Liabilities,43439000000,43439000000,44119000000,44119000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,total_debt,component sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,R5.htm,Short-term debt + Long-term debt,19716000000,19716000000,20062000000,20062000000,Y,,FILING-CHECKED (debt lines); perimeter DATA-INFERRED,BS debt lines (the one instant sum allowed); check for double counts | accn 0001534701-26-000006
+PSX,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,R5.htm,Total Stockholders’ Equity,29093000000,29093000000,27408000000,27408000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,shares_outstanding,mapped,dei:EntityCommonStockSharesOutstanding,COVER,R1.htm,"Entity Common Stock, Shares Outstanding",400744022,400744022,,,Y,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,R7.htm,Net Cash Provided by Operating Activities,4962000000,4962000000,4191000000,4191000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,R7.htm,Net Cash Used in Investing Activities,-2097000000,-2097000000,-2463000000,-2463000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,R7.htm,Net Cash Used in Financing Activities,-3537000000,-3537000000,-3305000000,-3305000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,capex,combined,psx:CapitalExpendituresAndInvestments,CF,R7.htm,Capital expenditures and investments,-2233,,,,no API fact (dimensioned or not in companyfacts for this accession),,FILING-CHECKED,"'Capital expenditures and investments' (2,233) mixes capex with investments (R7) | accn 0001534701-26-000006"
+PSX,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,R7.htm,Depreciation and amortization,3251000000,3251000000,2363000000,2363000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,amortization_of_intangibles,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,sbc,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,accn 0001534701-26-000006
+PSX,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,R7.htm,Dividends paid on common stock,-1922000000,1922000000,-1882000000,1882000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,R7.htm,Repurchase of common stock,-1207000000,1207000000,-3451000000,3451000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,R7.htm,Accounts and notes receivable,-508000000,508000000,574000000,-574000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,R7.htm,Inventories,160000000,-160000000,-278000000,278000000,Y (sign differs: printed in parentheses/negated label),tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,R7.htm,Accounts payable,-804000000,-804000000,-491000000,-491000000,Y,tag covers last 5 FY,FILING-CHECKED,accn 0001534701-26-000006
+PSX,cash_paid_for_interest,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001534701-26-000006
+PSX,cash_paid_for_income_taxes,not_presented,,CF,R7.htm,,,,,,,,FILING-CHECKED,not on the statement pages read | accn 0001534701-26-000006
