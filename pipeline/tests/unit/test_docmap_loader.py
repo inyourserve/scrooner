@@ -103,3 +103,16 @@ def test_repeated_part_tag_is_rejected_and_fy_ended_header_dates_the_read():
     )
     assert [r["why"][:22] for r in rejects] == ["a part tag repeats (di"]
     assert rows[0].era_from == date(2024, 7, 1)  # fy1 of the FY ended 2026-06-30
+
+
+def test_era_shortfall_needs_a_window_period_before_the_era():
+    from scrooner_pipeline.mapper import company_tag_map_plan as plan
+
+    rows = [(1, date(2019, 1, 1)), (1, date(2015, 1, 1)), (2, date(2019, 1, 1)), (None, date(2024, 1, 1))]
+    assert plan.era_shortfall(rows, [date(2018, 12, 31), date(2025, 12, 31)]) == {2: date(2019, 1, 1)}
+    assert plan.era_shortfall(rows, [date(2014, 12, 31), date(2019, 12, 31)]) == {}  # 2014 is outside the window
+    ok = {"era_short": {}, "fy01_before": 4, "fy01_after": 4, "values_lost": 0}
+    assert plan.coverage_gate_ok(ok)
+    assert not plan.coverage_gate_ok({**ok, "fy01_after": 3})
+    assert not plan.coverage_gate_ok({**ok, "values_lost": 1})
+    assert not plan.coverage_gate_ok({**ok, "era_short": {"x": "2019-01-01"}})

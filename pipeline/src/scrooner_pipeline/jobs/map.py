@@ -275,6 +275,16 @@ def tagmap_plan_cmd(
         "--fy-check",
         help="CSV company_id,ticker,data_point,fy,period,status: the tag library's expected cells (FY0/FY-1).",
     ),
+    docmap_reads: Path = typer.Option(
+        None,
+        "--docmap-reads",
+        help="Directory of docmap reads: the expected FY0/FY-1 cells come from each company's docmap instead of --fy-check.",
+    ),
+    coverage_gate: bool = typer.Option(
+        False,
+        "--coverage-gate",
+        help="With --apply: commit a company only when its eras cover the data window, it loses no FY0/FY-1 value and no value disappears without a reason.",
+    ),
     statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
 ) -> None:
     """Rule company_tag_map.select@1 for these companies: tag-map resolve, protection of every written key,
@@ -287,12 +297,30 @@ def tagmap_plan_cmd(
         raise typer.Exit(2)
     with get_connection() as conn:
         conn.execute(f"set statement_timeout = '{statement_timeout}'")
-        tpl = plan.expected_cells_from_fy_check(fy_check, ids)
+        if docmap_reads is not None:
+            from scrooner_pipeline.mapper import docmap_loader
+
+            names = {
+                n
+                for (n,) in conn.execute(
+                    "select name from analytics.canonical_concept"
+                ).fetchall()
+            }
+            by_ticker = docmap_loader.companies_by_ticker(conn)
+            tpl = {}
+            for ticker, cells in docmap_loader.expected_cells(
+                sorted(docmap_reads.glob("*-docmap-*.csv")), names
+            ).items():
+                for cid, _ in by_ticker.get(ticker, set()):
+                    if cid in ids and len(by_ticker[ticker]) == 1:
+                        tpl[cid] = cells
+        else:
+            tpl = plan.expected_cells_from_fy_check(fy_check, ids)
         if apply:
             typer.echo(
                 f"before-image: {plan.write_before_image(conn, ids, before_image_dir)} -> {before_image_dir}"
             )
-        rep = plan.run(conn, ids, tpl, apply=apply)
+        rep = plan.run(conn, ids, tpl, apply=apply, gate=coverage_gate)
     typer.echo(f"tagmap-plan [{'apply' if apply else 'plan'}]")
     for cid, r in rep.items():
         if "error" in r:
@@ -304,6 +332,15 @@ def tagmap_plan_cmd(
             f"holds {r['holds']} conflicts {r['conflict_cells']} protected {r['protected_keys']} "
             f"neither_top {dict(list(r['neither_by_data_point'].items())[:6])}"
         )
+        cov = r["coverage"]
+        typer.echo(
+            f"    coverage: era_from_min {cov['era_from_min']} era_short {len(cov['era_short'])} "
+            f"values_lost {cov['values_lost']} held_with_reason {cov['values_held_with_reason']} "
+            f"fy01 {cov['fy01_before']}->{cov['fy01_after']}/{cov['fy01_expected']}"
+            f"{' GATED (rolled back)' if r.get('gated') else ''}"
+        )
+        if cov["era_short"]:
+            typer.echo(f"      era_short {dict(list(cov['era_short'].items())[:8])}")
         for dp, period in r["neither_cells"][:40]:
             typer.echo(f"      NEITHER {dp} {period}")
     bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
