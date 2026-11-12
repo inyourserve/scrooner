@@ -115,3 +115,87 @@ def test_a_company_read_against_companyfacts(tmp_path):
     assert rows["net_income"]["match"].startswith("FY0 N")
     assert "the filing value stands" in rows["net_income"]["note"]
     assert rows["gross_profit"]["status"] == "not_presented"
+
+
+def _filing(tmp_path, pages):
+    acc = "0000000002-26-000001"
+    d = tmp_path / "0000000002" / acc
+    d.mkdir(parents=True)
+    reps = "".join(
+        f"<Report><HtmlFileName>{fn}</HtmlFileName><LongName>000000{i} - {cat} - {name}</LongName><ShortName>x</ShortName>"
+        f"<MenuCategory>{cat}</MenuCategory></Report>"
+        for i, (fn, cat, name, _) in enumerate(pages)
+    )
+    (d / "FilingSummary.xml").write_text(
+        f"<FilingSummary><MyReports>{reps}</MyReports></FilingSummary>"
+    )
+    for fn, _, _, body in pages:
+        (d / fn).write_text(body)
+    return acc
+
+
+BS_HEAD = "<table class='report'><tr><th class='tl'>{t} - USD ($) {s}</th><th>Dec. 31, 2025</th><th>Dec. 31, 2024</th></tr>"
+
+
+def test_shares_are_the_balance_sheet_class_sum_never_the_cover(tmp_path):
+    """Dhairya 2026-11-12: shares_outstanding = CommonStockSharesOutstanding (class sum) at the BS date; dei never"""
+    m = _mod()
+    cover = (
+        "<table class='report'><tr><th class='tl'>Cover</th><th>Feb. 1, 2026</th></tr>"
+        + _row("dei_EntityCommonStockSharesOutstanding", "Shares", "999", "").replace(
+            "<td class='nump'></td>", ""
+        )
+        + "</table>"
+    )
+    bs = (
+        BS_HEAD.format(t="BALANCE SHEETS", s="$ in Millions")
+        + _row("us-gaap_Assets", "Total assets", "5,000", "4,000")
+        + _row("us-gaap_ReceivablesNetCurrent", "Receivables, net", "70", "60")
+        + _row("abc_OtherReceivables", "Other receivables", "5", "4")
+        + "</table>"
+    )
+    par = (
+        BS_HEAD.format(t="BALANCE SHEETS (Parenthetical)", s="shares in Millions")
+        + "<tr><td class='pl'>Class A [Member]</td><td></td><td></td></tr>"
+        + _row(
+            "us-gaap_CommonStockSharesOutstanding",
+            "Common stock, shares outstanding",
+            "100",
+            "90",
+        )
+        + "<tr><td class='pl'>Class B [Member]</td><td></td><td></td></tr>"
+        + _row(
+            "us-gaap_CommonStockSharesOutstanding",
+            "Common stock, shares outstanding",
+            "20",
+            "20",
+        )
+        + "</table>"
+    )
+    acc = _filing(
+        tmp_path,
+        [
+            ("R1.htm", "Cover", "Cover", cover),
+            ("R2.htm", "Statements", "BALANCE SHEETS", bs),
+            ("R3.htm", "Statements", "BALANCE SHEETS (Parenthetical)", par),
+        ],
+    )
+    res = m.read_company(tmp_path, "0000000002", "TS2", acc, "2026-02-01")
+    rows = {r["data_point"]: r for r in res["rows"]}
+    so = rows["shares_outstanding"]
+    assert (so["tags"], so["fy0_printed"], so["fy1_printed"]) == (
+        "us-gaap:CommonStockSharesOutstanding",
+        "120000000",
+        "110000000",
+    )
+    assert "class sum of 2" in so["note"]
+    ar = rows["accounts_receivable"]
+    assert ar["status"] == "not_presented" and "2 receivables lines" in ar["note"]
+    assert {r["status"] for r in res["rows"]} <= {
+        "mapped",
+        "combined",
+        "component sum",
+        "component_in_note",
+        "not_presented",
+        "OUT",
+    }

@@ -70,6 +70,9 @@ STMT_RULES = (  # (kind, regex on the report's LongName/ShortName); first match 
 
 
 def stmt_kind(name: str) -> str | None:
+    if re.search(r"parenthetical", name, re.IGNORECASE):
+        base = stmt_kind(re.sub(r"parenthetical", "", name, flags=re.IGNORECASE))
+        return f"PAR_{base}" if base and base != "COVER" else "PAR"
     for kind, rx in STMT_RULES:
         if re.search(rx, name, re.IGNORECASE):
             return kind
@@ -245,7 +248,7 @@ DPS: tuple[DP, ...] = (
     ),
     DP(
         "dividends_per_share",
-        ("IS", "EQ", "PAR", "CF"),
+        ("IS", "EQ", "PAR_EQ", "PAR_IS", "PAR_CF", "PAR_BS", "PAR", "CF"),
         (
             "CommonStockDividendsPerShareDeclared",
             "CommonStockDividendsPerShareCashPaid",
@@ -333,8 +336,8 @@ DPS: tuple[DP, ...] = (
     ),
     DP(
         "shares_outstanding",
-        ("COVER",),
-        ("dei:EntityCommonStockSharesOutstanding",),
+        ("BS", "PAR_BS"),
+        ("CommonStockSharesOutstanding",),
         "",
         "shares",
     ),
@@ -513,6 +516,34 @@ BANK_PERIMETER = {
 }
 # DebtInstrumentCarryingAmount / LongTermDebtFairValue are note tags; on a face they are a quirk, never summed blindly
 DEBT_NOTE_ONLY = {"DebtInstrumentCarryingAmount", "LongTermDebtFairValue"}
+# face elements that mark a bank / lender / insurer template (their presence makes trade-company lines OUT)
+FINANCIAL_MARKERS = {
+    "InterestAndDividendIncomeOperating",
+    "InterestExpenseDeposits",
+    "NoninterestIncome",
+    "NoninterestExpense",
+    "ProvisionForLoanLeaseAndOtherLosses",
+    "ProvisionForLoanAndLeaseLosses",
+    "ProvisionForCreditLossesNet",
+    "Deposits",
+    "PremiumsEarnedNet",
+    "PolicyholderBenefitsAndClaimsIncurredNet",
+    "InterestIncomeExpenseNet",
+    "LoansAndLeasesReceivableNetReportedAmount",
+    "FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss",
+}
+OUT_FINANCIAL = {
+    "cost_of_revenue",
+    "gross_profit",
+    "research_and_development",
+    "operating_income",
+    "inventory",
+    "accounts_receivable",
+    "cf_inventory_change",
+    "current_assets",
+    "current_liabilities",
+}
+OUT_UNCLASSIFIED = {"current_assets", "current_liabilities"}
 DA_PARTS = (
     "Depreciation",
     "DepreciationNonproduction",
@@ -648,7 +679,9 @@ def year_cols(p: Page) -> list[int]:
     for i, (g, d) in enumerate(p.cols):
         if d is None or d in seen:
             continue
-        if p.kind in ("BS", "COVER") or (p.kind == "PAR" and not g):
+        if p.kind in ("BS", "COVER", "PAR_BS") or (
+            p.kind and p.kind.startswith("PAR") and not g
+        ):
             ok = not g or not re.search(r"Months|Weeks", g) or bool(YEARLY.search(g))
         else:
             ok = bool(YEARLY.search(g)) or (not g and p.kind == "EQ")
@@ -775,6 +808,17 @@ class Reader:
                 self.by_kind.setdefault(p.kind, []).append(p)
         bs = self.by_kind.get("BS", [])
         self.fy0 = self.fy1 = None
+        elems = {
+            r.elem.split(":", 1)[-1]
+            for p in self.pages
+            for r in p.rows
+            if r.elem.startswith("us-gaap:")
+        }
+        self.unclassified = bool(self.by_kind.get("BS")) and not elems & {
+            "AssetsCurrent",
+            "LiabilitiesCurrent",
+        }
+        self.financial = sorted(elems & FINANCIAL_MARKERS)
         for p in self.by_kind.get("IS", []) + self.by_kind.get("CF", []) + bs:
             yc = year_cols(p)
             if yc:
@@ -925,28 +969,41 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
             p0, p1, d0, d1 = R.values(h, dp.kind)
             a0, a1 = R.api(h.elem, d0, dur), R.api(h.elem, d1, dur)
             note = ""
+            period_s = period(dur, d0)
             if dp.name == "shares_outstanding":
-                n = sum(1 for r in h.page.rows if r.elem == h.elem and not r.is_header)
-                p0 = scaled(h.page, h.row, 0, "shares")
-                for i, v in enumerate(h.row.values):
-                    if v is not None:
-                        p0 = v
-                        break
-                p1 = None
-                a1 = None
-                if n > 1:
-                    note = f"cover prints {n} share-class rows; first class shown, classes never summed here"
-                    quirks.append(
-                        {
-                            "tag": "dei:EntityCommonStockSharesOutstanding",
-                            "what": f"{n} share classes on the cover",
-                            "where": h.page.file,
-                        }
+                cls = [r for r in h.page.rows if r.elem == h.elem and not r.is_header]
+                if (
+                    len({tuple(r.values) for r in cls}) > 1
+                ):  # one row per share class: the cell is the class sum
+                    yc = year_cols(h.page)
+                    p0 = (
+                        sum(
+                            (scaled(h.page, r, yc[0], "shares") or 0 for r in cls),
+                            Decimal(0),
+                        )
+                        if yc
+                        else None
                     )
-                d0c = [d for _, d in h.page.cols if d]
-                period_s = f"{d0c[-1]}" if d0c else ""
-            else:
-                period_s = period(dur, d0)
+                    p1 = (
+                        sum(
+                            (scaled(h.page, r, yc[1], "shares") or 0 for r in cls),
+                            Decimal(0),
+                        )
+                        if len(yc) > 1
+                        else None
+                    )
+                    note = f"class sum of {len(cls)} printed rows: " + "; ".join(
+                        r.label for r in cls
+                    )
+                    h = Hit(
+                        h.page,
+                        Row(h.elem, " + ".join(r.label for r in cls), [], []),
+                        h.elem,
+                    )
+                note = (
+                    (note + " | " if note else "")
+                    + "balance-sheet-date count (Dhairya 2026-11-12); dei cover never used"
+                )
             if h.elem.endswith(
                 (
                     "ProfitLoss",
@@ -958,6 +1015,33 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                     "only the total including noncontrolling interest is printed with a standard tag; the parent line is "
                     + ("custom or absent" if True else "")
                 )
+            if dp.name == "accounts_receivable" and not h.elem.endswith(
+                ("AccountsReceivableNetCurrent", "AccountsReceivableNet")
+            ):
+                rec = [
+                    r
+                    for r in h.page.rows
+                    if not r.is_header
+                    and re.search(r"receivable", r.label, re.IGNORECASE)
+                ]
+                if len(rec) > 1:
+                    found.pop(dp.name, None)
+                    add(
+                        dp,
+                        "not_presented",
+                        [],
+                        [],
+                        None,
+                        None,
+                        None,
+                        None,
+                        f"the face prints {len(rec)} receivables lines ("
+                        + "; ".join(f"'{r.label}' {r.elem}" for r in rec)
+                        + f") on {h.page.file}: the wider tag {short(h.elem)} is not the single receivables line "
+                        "(Dhairya 2026-11-12)",
+                    )
+                    continue
+                note = f"wider tag {short(h.elem)} is the single receivables line on {h.page.file} (Dhairya 2026-11-12)"
             if (
                 dp.name == "revenue"
                 and "Revenue" not in h.elem
@@ -1091,11 +1175,19 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
                     f"{x.row.label} ({short(x.elem)})" for x in parts
                 )
                 if len(parts) == 1 and parts[0].elem.endswith("Depreciation"):
-                    st, note = (
-                        "partial",
+                    add(
+                        dp,
+                        "not_presented",
+                        [],
+                        [],
+                        None,
+                        None,
+                        None,
+                        None,
                         note
-                        + ": depreciation only; no amortization line on the CF face",
+                        + ": depreciation only; no D&A or amortization line on the CF face (notes not read)",
                     )
+                    continue
                 add(
                     dp,
                     st,
@@ -1114,14 +1206,14 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
             p0, p1, d0, d1 = R.values(h, dp.kind)
             add(
                 dp,
-                "custom tag",
+                "mapped",
                 [h.elem],
                 [h],
                 p0,
                 None,
                 p1,
                 None,
-                f"printed line '{h.row.label}' carries custom element {h.elem}: not in companyfacts; Tag Expert to rule before any mapping",
+                f"CUSTOM ELEMENT: printed line '{h.row.label}' carries {h.elem} (not in companyfacts); Tag Expert to rule before any mapping",
                 period=period(dur, d0),
             )
             quirks.append(
@@ -1134,6 +1226,34 @@ def read_company(base: Path, cik: str, ticker: str, accn: str, filed: str) -> di
             continue
         kinds = "/".join(dp.stmts)
         have = [k for k in dp.stmts if R.by_kind.get(k)]
+        where = "+".join(p.file for k in have for p in R.by_kind[k])
+        if have and R.financial and dp.name in OUT_FINANCIAL:
+            add(
+                dp,
+                "OUT",
+                [],
+                [],
+                None,
+                None,
+                None,
+                None,
+                f"bank/lender/insurer template (face elements {', '.join(R.financial[:3])}): no "
+                f"{dp.name.replace('_', ' ')} line on {where}",
+            )
+            continue
+        if have and R.unclassified and dp.name in OUT_UNCLASSIFIED:
+            add(
+                dp,
+                "OUT",
+                [],
+                [],
+                None,
+                None,
+                None,
+                None,
+                f"unclassified balance sheet ({where}): no current subtotal",
+            )
+            continue
         if not have:
             add(
                 dp,
@@ -1254,7 +1374,9 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
         "LongTermDebtNoncurrent",
     } <= names and "LongTermDebt" in names:
         drop.add("LongTermDebt")
-    use = [h for h in hits if h.elem.split(":")[1] not in drop | DEBT_NOTE_ONLY]
+    use = [
+        h for h in hits if h.elem.split(":")[1] not in drop | DEBT_NOTE_ONLY
+    ] + customs
     vs = [R.values(h, "money") for h in use]
     p0 = sum((v[0] or 0 for v in vs), Decimal(0)) if use else None
     p1 = sum((v[1] or 0 for v in vs), Decimal(0)) if use else None
@@ -1273,7 +1395,7 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
         )
     if customs:
         notes.append(
-            "custom debt-like lines NOT summed: "
+            "custom debt-like lines summed (no companyfacts value, so no API total): "
             + "; ".join(
                 f"'{h.row.label}' {h.elem} {fmt(R.values(h, 'money')[0])}"
                 for h in customs
@@ -1289,14 +1411,12 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
             )
     if any(h.elem.split(":")[1] in DEBT_NOTE_ONLY for h in hits):
         notes.append("note-only debt tag printed on the face, not summed")
-    status = "component sum" if len(use) > 1 else ("mapped" if use else "custom tag")
-    if customs and use:
-        status = "partial"
+    status = "component sum" if len(use) > 1 else "mapped"
     add(
         dp,
         status,
-        [h.elem for h in use] or [h.elem for h in customs],
-        use or customs,
+        [h.elem for h in use],
+        use,
         p0,
         a0,
         p1,
@@ -1418,7 +1538,7 @@ def write(
     noapi = [
         r["data_point"]
         for r in rows
-        if r["match"] == "no API value" and r["status"] != "custom tag"
+        if r["match"] == "no API value" and "CUSTOM ELEMENT" not in r["note"]
     ]
     sign = [r["data_point"] for r in rows if "sign differs" in r["match"]]
     if mm:
