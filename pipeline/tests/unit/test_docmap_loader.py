@@ -116,3 +116,19 @@ def test_era_shortfall_needs_a_window_period_before_the_era():
     assert not plan.coverage_gate_ok({**ok, "fy01_after": 3})
     assert not plan.coverage_gate_ok({**ok, "values_lost": 1})
     assert not plan.coverage_gate_ok({**ok, "era_short": {"x": "2019-01-01"}})
+
+
+def test_machine_picks_and_unchecked_rows_are_rejected_as_unverified():
+    rows, rejects = _parse(
+        "T,revenue,mapped,us-gaap:Revenues,IS,R3.htm,Revenues,,FILING-CHECKED,auto: first candidate tag on face",
+        "T,goodwill,mapped,us-gaap:Goodwill,BS,R2.htm,Goodwill,,FILING-CHECKED,AUTO: R3.htm read; no face row matched",
+        "T,inventory,mapped,us-gaap:InventoryNet,BS,R2.htm,Inventory,,FILING-CHECKED,tag picked; not hand-verified",
+        "T,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,R6.htm,Capex,,ASSUMED,",
+        "T,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R6.htm,SBC,,FILING-CHECKED,auto-reader: manual override",
+        "T,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,R60.htm,Interest paid,,FILING-CHECKED,",
+    )
+    assert [r.data_point for r in rows] == ["sbc", "cash_paid_for_interest"]
+    assert [(r["data_point"], r["why"]) for r in rejects] == [
+        (dp, "unverified") for dp in ("revenue", "goodwill", "inventory", "capex")
+    ]
+    assert dl.stmt_code("NOTE", "cash_paid_for_interest", "cash_flow", value_row=True) == "UN"
