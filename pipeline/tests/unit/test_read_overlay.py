@@ -82,3 +82,25 @@ def test_operating_lease_rou_in_the_ppe_line_is_combined_never_ppe_net(tmp_path)
     ge = [r for r in got if r["tag"] == "PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAsset"]
     assert [(r["decision"], r["canonical_concept"], r["components"], r["era_from"], r["era_to"]) for r in ge] == [
         ("combined", "", "ppe_net;operating_lease_rou_asset", "2024-12-31", "2025-12-31")]
+
+
+def test_every_unserved_fy_cell_gets_one_tagless_status_row_and_open_and_served_cells_none(tmp_path):
+    p = {k: tmp_path / f"{k}.csv" for k in ("tm", "fy", "open", "cat", "out")}
+    _write(p["tm"], TM, [{"company_id": "1", "ticker": "X", "tag": "Assets", "stmt": "BS", "decision": "concept", "canonical_concept": "total_assets_resolved",
+                          "era_from": "2015-03-31", "era_to": "2025-12-31", "decided_by": "library", "taxonomy": "us-gaap"},
+                         {"company_id": "1", "ticker": "X", "tag": "total_debt_resolved", "stmt": "BS", "decision": "excluded", "taxonomy": "scrooner",
+                          "reason_class": "held_debt_lane", "era_from": "2024-12-31", "era_to": "2025-12-31", "decided_by": "read_status"}])
+    cells = [("total_assets", "FY0", "2025-12-31", "served"), ("total_debt", "FY0", "2025-12-31", "held C8 (debt lane)"),
+             ("dividends_paid", "FY0", "2025-12-31", "read-verified pass of: template-OUT candidate (Verifier draw)"),
+             ("goodwill", "FY0", "2025-12-31", "GAP"), ("share_buybacks", "FY-1", "2024-12-31", "open: not printed in that filing")]
+    _write(p["fy"], ["company_id", "ticker", "data_point", "fy", "period", "status"],
+           [{"company_id": "1", "ticker": "X", "data_point": d, "fy": f, "period": q, "status": s} for d, f, q, s in cells])
+    _write(p["open"], ["company_id", "stmt", "concept", "period", "why"], [{"company_id": "1", "stmt": "CF", "concept": "share_buybacks_resolved", "period": "2024-12-31", "why": "x"}])
+    p["cat"].write_text("name,statement,combination_mode\ntotal_assets_resolved,balance_sheet,x\ntotal_debt_resolved,balance_sheet,x\n"
+                        "dividends_paid_resolved,cash_flow,x\ngoodwill,balance_sheet,x\nshare_buybacks_resolved,cash_flow,x\n")
+    subprocess.run([sys.executable, "-I", str(D / "fy_status_rows.py"), *(str(p[k]) for k in ("tm", "fy", "open", "cat", "out"))], check=True, capture_output=True)
+    got = {r["canonical_concept"]: (r["decision"], r["reason_class"], r["tag"], r["taxonomy"], r["era_from"]) for r in csv.DictReader(open(p["out"]))
+           if r["decided_by"] == "fy_status"}
+    assert got == {"total_debt_resolved": ("not_presented", "held_c8", "", "", "2025-12-31"),
+                   "dividends_paid_resolved": ("not_in_template", "not_in_template_read_verified", "", "", "2025-12-31")}
+    assert not [r for r in csv.DictReader(open(p["out"])) if r["decided_by"] == "read_status"]

@@ -15,6 +15,8 @@ for r in rows:
     con = r["canonical_concept"] if r["decision"] == "concept" else r["parent_concept"] if r["decision"] == "component" else ""
     if con:
         serve[(r["company_id"], base(con))].append((r["era_from"], r["era_to"]))
+    if r["decision"] in ("not_presented", "not_in_template"):  # a tagless status row (fy_status_rows.py)
+        stat[(r["company_id"], base(r["canonical_concept"]))].insert(0, (r["era_from"], r["era_to"], r["reason_class"]))  # the cell's own status row first
     if r["decided_by"] == "read_status":  # an FY status from the full 10-K read (not printed, held, combined, perimeter)
         stat[(r["company_id"], base(r["components"]))].append((r["era_from"], r["era_to"], r["reason_class"]))
     if r["decision"] == "combined":
@@ -38,7 +40,8 @@ for r in csv.DictReader(open(cov)):
             why = next((w for a, b, w in stat.get((c, dp), []) if a <= p <= b), "")
             s = "served" if ok else ("read: " + why if why else "open: not printed in that filing" if (c, dp, p) in opens else "GAP")
         else:
-            s = st
+            why = next((w for a, b, w in stat.get((c, dp), []) if a <= p <= b), "")
+            s = "row: " + why if why else st
         if s == "GAP":
             gaps += 1
         res.append({"company_id": c, "ticker": r["ticker"], "data_point": dp, "fy": label, "period": p, "status": s})
