@@ -44,6 +44,7 @@ def load_kb(d):
     sr = [r for r in by('stmt_restrict') if r['data_point'] == 'shares_outstanding'][0]; K['SHR_STMTS'] = (tuple(sr['W']['stmts']), sr['rule_id'])
     K['PTH_OK'] = set(by('parenthetical_allowed')[0]['T']['data_points'])
     K['P'] = {r['rule_id']: r['W'] for r in by('procedure')}
+    K['PT'] = {r['rule_id']: json.loads(r.get('then') or '{}') for r in by('procedure')}
     return K
 def home(dp): return KB['HOME'].get(dp, 'IS')
 KB = None
@@ -56,7 +57,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
     KB = load_kb(os.environ.get('TAG_RULES_DIR') or rulesdir)  # backtest.py passes the rules dir by env, library dir as argv
     lib, ov, nd = KB['lib'], KB['ov'], KB['nd']
     DPS, BANK, NOTE, NOTE_RULES, DURATION_SUM, DEMOTE = KB['DPS'], KB['BANK'], KB['NOTE'], KB['NOTE_RULES'], KB['DURATION_SUM'], KB['DEMOTE']
-    P = KB['P']; RID = {}
+    P = KB['P']; RID = {}; memcos = []
     L = [json.loads(l) for l in open(lines_path) if l.strip()]
     L = [l for l in L if not l.get('missing')]
     for l in L:
@@ -165,6 +166,18 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                     status, rule = 'not_presented', 'opex lines do not tie to GP - OI'
             elif incl and cor is not None:
                 status, chosen, rule = 'combined', [incl[0]], 'total includes cost of revenue'
+            elif incl and PO.get('dim_cos_component_sum') and (lambda t0: [l for l in IS_ if l['r'] == t0['r'] and l['ln'] < t0['ln'] and l['val'] is None and l['tag'] in PO['dim_cos_tags']])(incl[0]):
+                # Dhairya 2026-11-13 (WYNN): cost of revenue printed only by product/service member inside a one-step total ->
+                # opex = component_sum of the valued face lines after the cost line, up to the total
+                t0 = incl[0]
+                cl = max(l['ln'] for l in IS_ if l['r'] == t0['r'] and l['ln'] < t0['ln'] and l['val'] is None and l['tag'] in PO['dim_cos_tags'])
+                band = [l for l in IS_ if l['r'] == t0['r'] and cl < l['ln'] < t0['ln'] and l['val'] is not None and l['tag'] not in PO['band_exclude'] and not l['tag'].endswith('Abstract')]
+                cosb = [l for l in band if re.search(PO['cos_label_regex'], l['lab'] or '') or l['tag'].startswith(tuple(PO['cos_tag_prefixes'])) or re.search(r'(?i)interest', l['tag'])]
+                if band and not cosb:
+                    memcos.append(next(l for l in IS_ if l['r'] == t0['r'] and l['ln'] == cl))
+                    status, chosen, rule = 'component_sum', band, 'cost of revenue printed by member only inside the total: opex = face lines after it (WYNN ruling 2026-11-13)'
+                else:
+                    status, chosen, rule = 'combined', [t0], 'total contains a member-only cost-of-revenue line and other cost lines'
             elif incl:
                 # ruling 5 (refined 2026-11-12): no cost-of-revenue line anywhere; total maps unless a cost-of-sales-type line sits inside it
                 t0 = incl[0]
@@ -227,7 +240,16 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             if len(cs) >= 2 or dp == 'total_debt':
                 status, chosen, rule = 'component_sum', cs, 'printed face components (duration sum; total_debt founder sum)'
             elif dp == 'sga_expense' and cs[0]['tag'] in P['is.sga_expense.lone_ga']['tags']:
-                status, chosen, rule = 'mapped', cs, 'lone G&A line'; fired.append('is.sga_expense.lone_ga')
+                PG = P['is.sga_expense.lone_ga']; fired.append('is.sga_expense.lone_ga')
+                sell = [l for l in L if l['st'] == 'IS' and not l['pth'] and l is not cs[0] and not l['tag'].endswith('Abstract')
+                        and (re.search(PG['selling_label_regex'], l['lab'] or '') or re.search(PG['selling_tag_regex'], l['tag']))
+                        and not re.search(PG['not_selling_regex'], (l['lab'] or '') + ' ' + l['tag'])]
+                if not sell:
+                    status, chosen, rule = 'mapped', cs, 'lone G&A line; no selling/marketing line on the face (TLN ruling 2026-11-13)'
+                elif all(l['val'] is not None for l in sell) and all(l['r'] == cs[0]['r'] for l in sell):
+                    status, chosen, rule = 'component_sum', cs + sell, 'G&A + printed selling/marketing lines (Dhairya 2026-11-13; never G&A alone when S&M exists)'
+                else:
+                    status, rule = 'not_presented', 'G&A alone is not SG&A when a selling/marketing line exists (Dhairya 2026-11-13)'
             elif dp == 'interest_expense' and cs[0]['tag'] == P['is.interest_expense.sole_debt']['tag'] and not any('Interest' in l['tag'] and l['tag'] != P['is.interest_expense.sole_debt']['tag'] and l['st'] == 'IS' for l in L):
                 status, chosen, rule = 'mapped', cs, 'sole-debt interest rule'; fired.append('is.interest_expense.sole_debt')
             else:
@@ -273,6 +295,15 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         else:
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
+    if memcos and 'is.cost_of_revenue.member_only' in KB['PT']:
+        # Dhairya 2026-11-13 (WYNN): cost of revenue printed only by ProductOrServiceAxis member -> component_sum of the
+        # printed member facts (duration sum of printed face lines); companyfacts has no dimensioned facts -> fsn_xbrl
+        T = KB['PT']['is.cost_of_revenue.member_only']; l0 = memcos[0]
+        for o in out:
+            if o['data_point'] == 'cost_of_revenue' and o['status'] == 'not_presented':
+                o.update(status=T['status'], tags=('custom:' if l0['cu'] else 'us-gaap:') + l0['tag'], stmt='IS', sign='+', value_source=T['value_source'],
+                         r_page='R%s' % l0['r'], label=l0['lab'], fy0_value='', rule='printed member facts of a member-only cost line (WYNN ruling 2026-11-13)',
+                         rule_ids='is.cost_of_revenue.member_only')
     for o in out:
         o['fy0_api'] = o.get('fy0_value', '')
         o['evidence_class'] = 'PREDICTED (predict.py %s)' % KB['version']

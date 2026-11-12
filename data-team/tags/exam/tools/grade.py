@@ -52,7 +52,8 @@ def main(pdir, ddir, *only):
             p = pred.get(dp)
             if p is None: rows.append(dict(ticker=tk, data_point=dp, result='wrong', error_class='missed', key_status=k['status'], pred_status='', key_tags=k['tags'], pred_tags='')); continue
             ev_txt = ((k.get('note') or '') + ' ' + (k.get('evidence_class') or '')).lower()
-            kev = 'machine' if 'machine-full-filing' in ev_txt else 'hand'
+            # Dhairya 2026-11-13 (key-adjudication-2026-11-13.csv): hand only when the note carries 'check: hand'; unmarked tool rows -> 'tool'
+            kev = 'hand' if 'check: hand' in (k.get('note') or '').lower() else ('machine' if 'machine-full-filing' in ev_txt else 'tool')
             if 'not hand-verified' in (k.get('note') or '').lower():
                 rows.append(dict(ticker=tk, data_point=dp, result='key_unverified', error_class='key row marked not hand-verified by the reader', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             ks, ps = norm_status(k['status']), norm_status(p['status'])
@@ -73,6 +74,9 @@ def main(pdir, ddir, *only):
             if ks_raw(k) == 'not_presented' and norm_status(p['status']) == 'out':
                 rk = 'data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)'
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'sga_expense' and norm_status(k['status']) == 'mapped' and tagset(k['tags']) == {'generalandadministrativeexpense'} and \
+                    any(_re.search(r'selling|marketing', t) for t in tagset(p['tags'])):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
