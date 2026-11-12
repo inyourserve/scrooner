@@ -692,7 +692,9 @@ class Db:
             for line in (REPO / "pipeline/.env").read_text().splitlines():
                 if line.startswith("DATABASE_URL="):
                     url = line.split("=", 1)[1].strip().strip("\"'")
-        self.conn = psycopg.connect(url, autocommit=True)
+        self.conn = psycopg.connect(  # keepalives + user timeout: a dead pooler socket must error, not hang the run
+            url, autocommit=True, keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=3,
+            tcp_user_timeout=150000)
         self.conn.execute("set statement_timeout='120s'")
 
     def execute(self, sql, params=None):
