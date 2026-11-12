@@ -200,3 +200,9 @@ Guard: when a label would demote a line, check it against the calc position and 
 - Tooling: FSDS num.txt carries per-share values to 4 decimals (par 0.00001 reads 0.0000: AAPL 0001193125-15-023697): per-share and tiny values come from the API or the instance, never FSDS. Tag-name ABSENCE in analytics.company_sec_tag is evidence only for undimensioned primary-statement lines (collaboration revenue sits on members/custom tags at LLY, REGN, VRTX, ALNY, BMY).
 - The filer's own calc linkbase lists `OtherShortTermBorrowings`, `ShortTermBorrowings`, `CapitalLeaseObligationsNoncurrent`, `DebtCurrent` directly under LiabilitiesCurrent/Liabilities (AAPL 0000320193-20-000062, ABBV 0001551152-22-000017, CVX 0000093410-15-000020, MU 0000723125-21-000065): debt slots come from tags, not from calc position.
 - `Deposits` + `InterestIncomeExpenseNet` co-occur at FCX, ZBRA, CPAY, WEX, CBC: not a bank test (sector-faces.md).
+
+## AB. Status convention for data points found only in notes (Dhairya ruling 2026-11-12)
+- The data point's fact is in the filing's note → **mapped**, stmt NOTE, with the R page (e.g. `IncomeTaxesPaidNet` in the tax or supplemental-cash note under ASU 2023-09).
+- The fact is nowhere in the filing (face or notes, checked in the filing's XBRL and its R pages) → **not_presented**, with the evidence of absence.
+- **component_in_note** only when the note value is a COMPONENT of the data point, not the data point itself.
+- A face miss alone is never not_presented. Rows a reader marks "AUTO / not hand-verified" are not answer key (graded key_unverified; Engineering's loader rejects them).
