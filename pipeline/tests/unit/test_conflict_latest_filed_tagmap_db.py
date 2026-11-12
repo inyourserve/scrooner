@@ -108,3 +108,32 @@ def test_same_day_original_beats_amendment_when_both_carry_statements(isolated_d
         conn.commit()
         clf.resolve_latest_filed(conn, {"0000000016"})
         assert _auth(conn, ids) == ["X1"]  # equal day, no accepted: original periodic form, then (not reached) higher fact id
+
+
+def _fsn_print(conn, cik, accession, value, dcml):
+    fid = conn.execute(
+        "insert into fsn.filing (accession, cik, form, fsn_set) values (%s, %s, '10-K', 't') returning id", (accession, cik)
+    ).fetchone()[0]
+    conn.execute("insert into fsn.tag (tag, version) values ('Assets', 'us-gaap/2015') on conflict do nothing")
+    tid = conn.execute("select id from fsn.tag where tag = 'Assets' order by id limit 1").fetchone()[0]
+    conn.execute(
+        "insert into fsn.value (filing_id, tag_id, ddate, qtrs, uom, dim_id, value, dcml) "
+        "values (%s, %s, '2014-12-31', 0, 'USD', 0, %s, %s)",
+        (fid, tid, value, dcml),
+    )
+
+
+@pytest.mark.integration
+def test_rounding_class_the_more_precise_older_copy_wins_over_a_later_rounded_print(isolated_database_url):
+    # PANW-style: 27,023,000 printed at -3 (2015) vs 27,000,000 at -6 (2016): one value at two precisions
+    with psycopg.connect(isolated_database_url) as conn:
+        ids = _build(conn, "0000000015", True, [("X1", "10-K", "2015-02-20", 27023000), ("X2", "10-K", "2016-02-20", 27000000)])
+        _fsn_print(conn, "0000000015", "X1", 27023000, -3)
+        _fsn_print(conn, "0000000015", "X2", 27000000, -6)
+        conn.commit()
+        clf.resolve_latest_filed(conn, {"0000000015"})
+        assert _auth(conn, ids) == ["X1"]
+        rule = conn.execute(
+            "select rule from core.fact_conflict_resolution where fact_id = %s", (ids["X1"],)
+        ).fetchone()[0]
+        assert rule == clf.RULE_TAGMAP_PRECISION
