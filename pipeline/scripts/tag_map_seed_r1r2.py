@@ -78,7 +78,7 @@ PLUS_REASON = re.compile(r"\bsum\b|component sum|capex =|INCLUDE in capex", re.I
 COLUMNS = [
     "company_id", "cik", "taxonomy", "tag", "stmt", "decision", "canonical_concept", "parent_concept",
     "combine_sign", "components", "reason_class", "reason", "era_from", "era_to", "evidence_adsh",
-    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id",
+    "evidence_report", "evidence_line", "evidence_plabel", "evidence_cal_parent", "decided_by", "rule_id", "scale",
 ]
 
 
@@ -128,7 +128,7 @@ def _tag(raw: str) -> tuple[str | None, str]:
 def _entry(**kw) -> dict:
     base = {"taxonomy": None, "company": None, "decision": "", "concept": "", "sign": "", "components": [],
             "applies_to": "", "era": (None, None), "reason": "", "exceptions": [], "source": "", "rule_id": RULE_LIBRARY,
-            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
+            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scale": 1, "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
     base.update(kw)
     return base
 
@@ -227,9 +227,17 @@ def parse_ranks_rows(rows: list[dict], source: str) -> list[dict]:
     return out
 
 
+def parse_scale(text: str) -> int:
+    """'scale fix x1,000,000 (printed in millions, stored unscaled)' -> 1000000; no stated scale -> 1.
+    Only company-override rows may carry a scale (the seeder rejects it elsewhere)."""
+    m = re.search(r"(?:scale\D{0,20}|[x\u00d7]\s*)(1(?:,000)+|10+)\b", text, re.I)
+    return int(m.group(1).replace(",", "")) if m else 1
+
+
 def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]) -> list[dict]:
-    """library/company-overrides.csv: company-scoped, only FILING-CHECKED rows are loaded (PENDING etc. skipped).
-    scope 'latest 10-K read era' limits the row to the key's latest era."""
+    """library/company-overrides.csv: company-scoped, filing-checked; only FILING-CHECKED rows are loaded (anything
+    else is skipped). Every scope in the file names the read filing or era ('read era', 'FY2025 10-K', 'latest 10-K',
+    'filings with the unscaled value'), so a row applies to the key's LATEST era unless the scope says 'all'."""
     out = []
     for raw in rows:
         r = {_hk(k): (v or "").strip() for k, v in raw.items() if k}
@@ -239,8 +247,9 @@ def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]
         out.append(_entry(
             taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision="concept", concept=r.get("concept", ""),
             home_stmts=[r["stmt"].upper()], reason=f"{r.get('evidence', '')}; {r.get('note', '')}".strip("; "),
-            source="company-overrides", rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
-            scope_latest="latest" in r.get("scope", "").lower()))
+            source="company-override:" + source, rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
+            scale=parse_scale(r.get("note", "") + " " + r.get("scope", "")),
+            scope_latest="all" not in r.get("scope", "").lower().split()))
     return out
 
 
@@ -542,6 +551,7 @@ def library_row(e: dict) -> dict:
     sign = e["sign"].strip()
     row = {"decision": dec, "canonical_concept": "", "parent_concept": "", "combine_sign": "",
            "components": "", "reason_class": "", "reason": e["reason"]}
+    row["scale"] = e["scale"]
     if dec in ("concept", "combined"):
         row["canonical_concept"] = e["concept"]
         if dec == "combined":
@@ -852,6 +862,7 @@ def cmd_seed(args) -> None:
                     and e["decision"] in ("concept", "excluded") and (e["concept"] or e["decision"] == "excluded")):
                 row = dict(e["raw"])
                 row["decided_by"], row["rule_id"] = e["source"], RULE_COMPANY
+                row["scale"] = 1
                 w.writerow(row)
                 passthrough += 1
                 by_decision[e["decision"]] += 1

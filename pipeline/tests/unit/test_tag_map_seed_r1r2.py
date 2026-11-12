@@ -401,9 +401,22 @@ def test_company_overrides_only_filing_checked_and_latest_scope():
             {"company": "X", "cik": "0000000001", "tag": "Foo", "stmt": "BS", "concept": "goodwill", "scope": "",
              "status": "PENDING", "evidence": "", "note": ""}]
     ents = m.parse_source("company-overrides.csv", rows, {"0000101829": 7, "0000000001": 8})
-    assert len(ents) == 1 and ents[0]["company"] == 7 and ents[0]["scope_latest"] and ents[0]["prio"] == 0.3
+    assert ents[0]["scale"] == 1
+    assert len(ents) == 1 and ents[0]["source"] == "company-override:company-overrides.csv" and ents[0]["company"] == 7 and ents[0]["scope_latest"] and ents[0]["prio"] == 0.3
     key = ("us-gaap", "ReceivablesNetCurrent", "BS")
     p = [date(2018, 12, 31), date(2019, 12, 31), date(2020, 12, 31), date(2021, 12, 31)]
     groups = {key: {d: ap(i, "BS", "ReceivablesNetCurrent", d) for i, d in enumerate(p) if i != 1}}  # gap: two eras
     res = m.expand_company(7, set(), groups, p, m.build_index(ents))[key]
     assert [(a, b) for _, a, b, _ in res["rows"]] == [(p[2], None)]  # latest era only
+
+
+def test_scale_parsed_only_when_the_override_states_one():
+    assert m.parse_scale("scale fix \u00d71,000,000 (printed in millions, stored unscaled)") == 1000000
+    assert m.parse_scale("scale fix x1,000,000") == 1000000
+    assert m.parse_scale("sole cash line; no restricted cash") == 1
+    row = {"company": "MCD", "cik": "0000063908", "tag": "WeightedAverageNumberOfSharesOutstandingBasic", "stmt": "IS",
+           "concept": "weighted_basic_shares", "scope": "filings with the unscaled value", "status": "FILING-CHECKED",
+           "evidence": "e", "note": "scale fix \u00d71,000,000"}
+    (e,) = m.parse_source("company-overrides.csv", [row], {"0000063908": 9})
+    assert m.library_row(e)["scale"] == 1000000 and "scale" in m.COLUMNS
+    assert m.parse_source("fsn-x.csv", CARD)[0]["scale"] == 1  # tag-level rows never carry a scale
