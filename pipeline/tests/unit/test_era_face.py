@@ -39,3 +39,13 @@ def test_the_periods_own_latest_filing_decides_even_when_an_older_filing_printed
     runs, open_p = era_face.face_runs(filings, face, ORDER)
     assert open_p == ["2019-03-31"]
     assert runs == [("Revenues", "2019-06-30", "2019-06-30")]
+
+
+def test_the_face_pass_never_re_decides_a_concept_the_full_10k_read_or_a_ruling_decided():
+    rows = [{"company_id": "1", "canonical_concept": "dividends_per_share_resolved", "parent_concept": "", "decided_by": "read_verified"},
+            {"company_id": "1", "canonical_concept": "dividends_per_share_resolved", "parent_concept": "", "decided_by": "library+era_by_face"},
+            {"company_id": "1", "canonical_concept": "", "parent_concept": "depreciation_and_amortization_resolved", "decided_by": "ruling"},
+            {"company_id": "1", "canonical_concept": "revenue_sanity_resolved", "parent_concept": "", "decided_by": "library"}]
+    groups = {("1", "IS", "dividends_per_share_resolved"): [0, 1], ("1", "CF", "depreciation_and_amortization_resolved"): [2],
+              ("1", "IS", "revenue_sanity_resolved"): [3]}
+    assert set(era_face.face_checked(groups, rows)) == {("1", "IS", "revenue_sanity_resolved")}

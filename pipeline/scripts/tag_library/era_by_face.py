@@ -37,9 +37,9 @@ for i, r in enumerate(rows):
                 alt[(c, st, con)].append(i)
 # Dhairya's guard applies to EVERY concept row, not only contested ones: a period inside a row's era whose own latest filing
 # does not print the tag is open (CRWD buybacks FY2026, PG accrued liabilities FY2026; 10-K reads 2026-11-12)
-contested = dict(groups)
+from era_face import face_checked, face_runs  # noqa: E402
 
-from era_face import face_runs  # noqa: E402
+contested = face_checked(groups, rows)
 
 new_rows, drop, opens = [], set(), []
 CACHE = {}

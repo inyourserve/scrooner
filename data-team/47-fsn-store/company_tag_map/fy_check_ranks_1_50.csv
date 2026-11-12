@@ -2259,8 +2259,8 @@ company_id,ticker,data_point,fy,period,status
 1321,MU,cash_flow_investing,FY-1,2025-08-31,served
 1321,MU,cf_ap_change,FY0,2026-08-31,combined (reasoned blank)
 1321,MU,cf_ap_change,FY-1,2025-08-31,combined (reasoned blank)
-1321,MU,cf_ar_change,FY0,2026-08-31,read: combined
-1321,MU,cf_ar_change,FY-1,2025-08-31,read: combined
+1321,MU,cf_ar_change,FY0,2026-08-31,served
+1321,MU,cf_ar_change,FY-1,2025-08-31,served
 1321,MU,cf_inventory_change,FY0,2026-08-31,served
 1321,MU,cf_inventory_change,FY-1,2025-08-31,served
 1321,MU,cfo,FY0,2026-08-31,served
@@ -2633,10 +2633,10 @@ company_id,ticker,data_point,fy,period,status
 1807,MS,cash_flow_financing,FY-1,2024-12-31,served
 1807,MS,cash_flow_investing,FY0,2025-12-31,served
 1807,MS,cash_flow_investing,FY-1,2024-12-31,served
-1807,MS,cf_ap_change,FY0,2025-12-31,read: combined
-1807,MS,cf_ap_change,FY-1,2024-12-31,read: combined
-1807,MS,cf_ar_change,FY0,2025-12-31,read: combined
-1807,MS,cf_ar_change,FY-1,2024-12-31,read: combined
+1807,MS,cf_ap_change,FY0,2025-12-31,served
+1807,MS,cf_ap_change,FY-1,2024-12-31,served
+1807,MS,cf_ar_change,FY0,2025-12-31,served
+1807,MS,cf_ar_change,FY-1,2024-12-31,served
 1807,MS,cfo,FY0,2025-12-31,served
 1807,MS,cfo,FY-1,2024-12-31,served
 1807,MS,collaborative_arrangement_revenue,FY0,2025-12-31,template seed: should be COND
