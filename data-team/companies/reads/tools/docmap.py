@@ -504,42 +504,78 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         rec.update(status="not_presented", stmt="BS", r_page=reps.get("BS", ("", ""))[1],
                    note="no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical (auto); dei cover count not used")
     out.append(rec)
-    # era check: a different tag carried the data point in an earlier fiscal year
+    # era coverage FY2015 -> latest (Dhairya 2026-11-12: a docmap is loadable only when every data point's eras
+    # cover FY2015 to the latest year). Runs come from companyfacts 10-K annual facts (DATA-INFERRED); the FY2015
+    # 10-K is always opened and its printed line recorded (FILING-CHECKED), plus up to 2 more era-change 10-Ks.
     era_lines = []
     era_accns: dict[str, list[str]] = {}
+    fy15 = sorted({(f.get("filed", ""), f["accn"]) for n in cf.get("facts", {}).values() for c in n.values()
+                   for fs in c.get("units", {}).values() for f in fs
+                   if f.get("form") == "10-K" and f.get("fp") == "FY" and f.get("fy") == 2015})
+    fy15_accn = fy15[0][1] if fy15 else None
+    latest_end = None
+    for rec in out:
+        if rec.get("note", "").find("period ..") >= 0:
+            latest_end = rec["note"].split("period ..")[-1][:10]
+            break
     for rec in out:
         dp = rec["data_point"]
         spec = next((d for d in DP if d[0] == dp), None)
-        if not spec or rec.get("status") != "mapped" or not rec["tags"].startswith("us-gaap"):
+        if not spec or rec.get("status") in ("not_presented",) or not rec.get("tags"):
             continue
-        cur = rec["tags"].split(":", 1)[1]
-        hist = annual_tag_history(cf, spec[2])
-        ends = sorted(hist)[-5:]
-        older = [(e, t, a) for e in ends for t, a in hist[e].items() if t != cur and cur not in hist[e]]
-        if older:
-            e, t, a = older[-1]
-            rec["era_from_note"] = f"ERA-CHECK: {t} carried FY ending {e} (accn {a}); {cur} after"
-            era_accns.setdefault(a, []).append(dp)
-            quirks.append(f"| new | {tic} | {dp} | us-gaap:{t} -> us-gaap:{cur} | tag change across eras: {t} for FY ending {e}, {cur} later | {a} | DATA-INFERRED (companyfacts); era 10-K opened below |")
-        else:
-            rec["era_from_note"] = "tag covers last 5 FY in companyfacts"
-    for a in list(era_accns)[:2]:
+        fam = list(dict.fromkeys(([rec["tags"].split(":", 1)[1]] if rec["tags"].startswith("us-gaap:") and "+" not in rec["tags"] else []) + spec[2]))
+        hist = annual_tag_history(cf, fam)
+        ends = [e for e in sorted(hist) if e >= "2015-01-01" and (latest_end is None or e <= latest_end)]
+        runs: list[list] = []  # [tag, first_end, last_end]
+        for e in ends:
+            t = sorted(hist[e])[0] if len(hist[e]) > 1 and fam[0] not in hist[e] else (fam[0] if fam[0] in hist[e] else sorted(hist[e])[0])
+            if runs and runs[-1][0] == t:
+                runs[-1][2] = e
+            else:
+                runs.append([t, e, e])
+        first_ok = bool(ends) and ends[0] < "2016-06-01"
+        covered = first_ok and latest_end is not None and ends and ends[-1] >= latest_end[:4]
+        txt = "; ".join(f"{t} FY {a[:7]}..{z[:7]}" for t, a, z in runs) or "no annual 10-K facts for the tag family"
+        rec["era_from_note"] = ("ERA COVERED FY2015-latest: " if covered else "ERA GAP (FY2015-latest not covered): ") + txt
+        if len(runs) > 1:
+            quirks.append(f"| new | {tic} | {dp} | {' -> '.join('us-gaap:' + r[0] for r in runs)} | tag eras from FY2015: {txt} | companyfacts | DATA-INFERRED |")
+            for t, a0, z0 in runs[:-1]:
+                acc = hist[z0].get(t)
+                if acc:
+                    era_accns.setdefault(acc, []).append(dp)
+        if not covered:
+            quirks.append(f"| new | {tic} | {dp} | {rec['tags'][:80]} | era coverage gap: annual facts reach only {ends[0][:7] if ends else 'none'}..{ends[-1][:7] if ends else 'none'} | companyfacts | DATA-INFERRED |")
+        if fy15_accn:
+            era_accns.setdefault(fy15_accn, [])
+            if dp not in era_accns[fy15_accn]:
+                era_accns[fy15_accn].append(dp)
+    order = ([fy15_accn] if fy15_accn else []) + [a for a in era_accns if a != fy15_accn][:2]
+    if not fy15_accn:
+        era_lines.append("- FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read")
+    for a in order:
         b = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{a.replace('-', '')}/"
         er = find_reports(get(b + "FilingSummary.xml", cache))
-        meta["filings"].append((a, "", {k: v[1] for k, v in er.items()}))
+        meta["filings"].append((a, "FY2015 era" if a == fy15_accn else "", {k: v[1] for k, v in er.items()}))
+        if not er:
+            era_lines.append(f"- 10-K {a}: no FilingSummary R pages (pre-XBRL viewer or unavailable) (auto)")
+            continue
+        pgs: dict[str, dict] = {}
         for dp in era_accns[a]:
             spec = next(d for d in DP if d[0] == dp)
             if spec[1] not in er:
-                era_lines.append(f"- {dp}: era 10-K {a} statement not identified (auto)")
+                era_lines.append(f"- {dp}: 10-K {a} statement not identified (auto)")
                 continue
-            pg = parse_r(get(b + er[spec[1]][1], cache))
-            r = match_row(pg, dp, spec[2], spec[3])
+            if spec[1] not in pgs:
+                pgs[spec[1]] = parse_r(get(b + er[spec[1]][1], cache))
+            pg = pgs[spec[1]]
+            r = opex_row(pg)[0] if dp == "operating_expenses" else match_row(pg, dp, spec[2], spec[3])
+            tagname = "FY2015" if a == fy15_accn else "era"
             if r:
                 c = pick_cols(pg, spec[1])
                 v = scaled(r["vals"][c[0]], dp, pg) if c and c[0] < len(r["vals"]) else None
-                era_lines.append(f"- {dp}: era 10-K {a} {er[spec[1]][1]} prints '{r['label'][:80]}' on {r['tag']} = {fmt(v)} (FILING-CHECKED)")
+                era_lines.append(f"- {dp}: {tagname} 10-K {a} {er[spec[1]][1]} prints '{r['label'][:80]}' on {r['tag'][:120]} = {fmt(v)} (FILING-CHECKED)")
             else:
-                era_lines.append(f"- {dp}: era 10-K {a} {er[spec[1]][1]} read; no row matched (auto)")
+                era_lines.append(f"- {dp}: {tagname} 10-K {a} {er[spec[1]][1]} read; no row matched (auto)")
     meta["era_lines"] = era_lines
     meta["quirks"] = quirks
     return out, quirks, meta
@@ -574,7 +610,7 @@ def write_company(out: list[dict], meta: dict, out_dir: str) -> None:
         L.append("| " + " | ".join(str(r.get(k, "")).replace("|", "/") for k in
                                     ["data_point", "status", "tags", "r_page", "label", "fy0_printed", "fy0_api",
                                      "fy1_printed", "fy1_api", "match", "evidence_class", "note"]) + " |")
-    L += ["", "## Era checks (tag changes in the last ~5 years)"] + (meta.get("era_lines") or ["none found in companyfacts"])
+    L += ["", "## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)"] + (meta.get("era_lines") or ["none found in companyfacts"])
     mism = [r for r in out if str(r.get("match", "")).startswith("N") or r.get("match") == "API missing"]
     L += ["", "## Mismatches (printed vs API)"] + ([f"- {r['data_point']}: {r['match']} ({r.get('tags', '')})" for r in mism]
                                                    or ["none beyond sign differences"])

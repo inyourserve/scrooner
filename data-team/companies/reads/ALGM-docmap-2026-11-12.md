@@ -1,0 +1,58 @@
+# ALGM document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is the tool finding no matching face line, not a by-hand verdict.
+
+## Filings opened
+- 10-K 0001193125-26-233537 (CIK 0000866291, filed 2026-05-21): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- 10-K 0001193125-26-233537 (CIK 0000866291, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
+- 10-K 0000866291-23-000017 (CIK 0000866291, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CI R6.htm, CF R9.htm
+- companyfacts CIK0000866291.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R4.htm | Net sales | 890096000 | 890096000 | 725006000 | 725006000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R4.htm | Cost of goods sold | 478126000 | 478126000 | 403479000 | 403479000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| gross_profit | mapped | us-gaap:GrossProfit | R4.htm | Gross profit | 411970000 | 411970000 | 321527000 | 321527000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| operating_expenses | mapped | us-gaap:OperatingExpenses | R4.htm | Total operating expenses | 393483000 | 393483000 | 341329000 | 341329000 | Y | FILING-CHECKED | printed total opex line excludes cost of revenue (= GP - OI) / accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R4.htm | Selling, general and administrative | 181089000 | 181089000 | 161680000 | 161680000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R4.htm | Research and development | 205804000 | 205804000 | 179649000 | 179649000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R4.htm | Operating income (loss) | 18487000 | 18487000 | -19802000 | -19802000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| interest_expense | mapped | us-gaap:InterestExpense | R4.htm | Interest expense | -22135000 | 22135000 | -30366000 | 30366000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R4.htm | (Loss) income before income taxes | -14901000 | -14901000 | -85696000 | -85696000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R4.htm | Income tax (benefit) provision | -248000 | -248000 | -12933000 | -12933000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R4.htm | Net (loss) income attributable to Allegro MicroSystems, Inc. | -14897000 | -14897000 | -73010000 | -73010000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R4.htm | Basic (in dollars per share) | -0.08 | -0.08 | -0.39 | -0.39 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R4.htm | Diluted (in dollars per share) | -0.08 | -0.08 | -0.39 | -0.39 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R4.htm | Basic (in shares) | 185035670 | 185035670 | 187707391 | 187707391 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R4.htm | Diluted (in shares) | 185035670 | 185035670 | 187707391 | 187707391 | Y | FILING-CHECKED | accn 0001193125-26-233537 R4.htm period ..2026-03-27 |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R2.htm | Cash and cash equivalents | 168753000 | 168753000 | 121334000 | 121334000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R2.htm | Trade accounts receivable, net | 93248000 | 93248000 | 84598000 | 84598000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| inventory | mapped | us-gaap:InventoryNet | R2.htm | Inventories | 181752000 | 181752000 | 183914000 | 183914000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R2.htm | Total current assets | 503606000 | 503606000 | 483036000 | 483036000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R2.htm | Property, plant and equipment, net | 308258000 | 308258000 | 302919000 | 302919000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| goodwill | mapped | us-gaap:Goodwill | R2.htm | Goodwill | 203291000 | 203291000 | 202475000 | 202475000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| total_assets | mapped | us-gaap:Assets | R2.htm | Total assets | 1416175000 | 1416175000 | 1420961000 | 1420961000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R2.htm | Amounts due to related party | 4794000 |  | 6535000 |  | API missing | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R2.htm | Total current liabilities | 145925000 | 145925000 | 112261000 | 112261000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| total_liabilities | mapped | us-gaap:Liabilities | R2.htm | Total liabilities | 459730000 | 459730000 | 489861000 | 489861000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R2.htm | Equity attributable to Allegro MicroSystems, Inc. | 954747000 | 954747000 | 929555000 | 929555000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R2.htm period ..2026-03-27 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by operating activities | 163069000 | 163069000 | 61913000 | 61913000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash used in investing activities | -41717000 | -41717000 | -40816000 | -40816000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash (used in) provided by financing activities | -77379000 | -77379000 | -112062000 | -112062000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R8.htm | Purchases of property, plant and equipment | -38176000 | 38176000 | -39955000 | 39955000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R8.htm | Depreciation and amortization | 67593000 | 67593000 | 64502000 | 64502000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock-based compensation | 47910000 | 47910000 | 41868000 | 41868000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| dividends_paid | mapped | us-gaap:PaymentsOfDividendsMinorityInterest | R8.htm | Dividends paid to non-controlling interest | -23000 | 23000 | -19000 | 19000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | matched by printed label (tag outside the usual set) / accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Repurchases of common stock | 0 | 0 | -853921000 | 853921000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R8.htm | Cash paid for interest | 19375000 | 19375000 | 21959000 | 21959000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R8.htm | Cash paid for income taxes, net of refunds | -27081000 | -27081000 | 11639000 | 11639000 | Y | FILING-CHECKED | accn 0001193125-26-233537 R8.htm period ..2026-03-27 |
+| total_debt | component sum | us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent | R2.htm | Current portion of long-term debt + Long-term debt | 287276000 | 287276000 |  |  | Y | FILING-CHECKED | sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding (in shares) | 185357343 | 185357343 |  |  | Y | FILING-CHECKED | balance-sheet date 2026-03-27; single row |
+
+## Era checks (tag changes in the last ~5 years)
+- accounts_payable: era 10-K 0001193125-26-233537 R2.htm prints 'Amounts due to related party' on us-gaap:AccountsPayableCurrent = 4794000 (FILING-CHECKED)
+- dividends_paid: era 10-K 0000866291-23-000017 R9.htm prints 'Dividends paid' on us-gaap:PaymentsOfDividendsCommonStock = 0 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+- accounts_payable: API missing (us-gaap:AccountsPayableCurrent)
