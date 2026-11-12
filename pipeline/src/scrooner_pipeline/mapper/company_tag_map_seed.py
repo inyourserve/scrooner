@@ -81,6 +81,18 @@ def read_rows(path: Path) -> list[dict]:
     return out
 
 
+# Instants are never derived (doc 02): a component sum is allowed for DURATION concepts only; the one instant
+# exception is total debt (founder definition, doc 02 2026-11-04 item 5).
+INSTANT_SUM_ALLOWED = {"total_debt", "total_debt_resolved"}
+
+
+def instant_sum_refused(parent_name: str | None, statement: str | None) -> bool:
+    return (
+        statement == "balance_sheet"
+        and (parent_name or "").removesuffix("_resolved") != "total_debt"
+    )
+
+
 OPEN_PERIOD_RULE_ID = "tagmap.open_period@1"
 OPEN_PERIOD_REASON = "not printed in this filing"
 
@@ -301,10 +313,13 @@ def seed(
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company")
         company_by_cik = dict(cur.fetchall())
-        cur.execute("select name, id from analytics.canonical_concept")
-        concept_by_name = dict(cur.fetchall())
+        cur.execute("select name, id, statement from analytics.canonical_concept")
+        _cc = cur.fetchall()
+        concept_by_name = {n: i for n, i, _ in _cc}
+        concept_stmt = {i: (n, st) for n, i, st in _cc}
     by_company: dict[int, list[dict]] = defaultdict(list)
     undecided: list[dict] = []
+    refused_instant: list[dict] = []
     held_verifier = 0
     errors: list[str] = []
     warnings: list[str] = []
@@ -339,6 +354,22 @@ def seed(
         except (ValueError, TypeError) as exc:
             errors.append(f"row {i}: {exc}")
             continue
+        if n["decision"] == "component":
+            pname, pstmt = concept_stmt[n["parent_concept_id"]]
+            if instant_sum_refused(pname, pstmt):
+                refused_instant.append(
+                    {
+                        "company_id": n["company_id"],
+                        "cik": n["cik"],
+                        "parent_concept": pname,
+                        "tag": n["tag"],
+                        "era_from": n["era_from"],
+                    }
+                )
+                errors.append(
+                    f"row {i}: instant component sum refused: {pname} <- {n['tag']} (instants are never derived; only total_debt)"
+                )
+                continue
         by_company[n["company_id"]].append(n)
     for rows in by_company.values():
         errors.extend(check_overlaps(rows))
@@ -347,6 +378,7 @@ def seed(
         "rows": sum(map(len, by_company.values())),
         "undecided_skipped": len(undecided) - held_verifier,
         "held_verifier_sample_failed": held_verifier,
+        "refused_instant_components": refused_instant,
         "completeness": completeness(
             [r for rs in by_company.values() for r in rs], undecided
         ),
