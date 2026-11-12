@@ -1,0 +1,4 @@
+company_id,ticker,concept,period_start,period_end,parts,parts_sum_musd,gross_profit_minus_operating_income_musd,source,checked
+4,MSFT,operating_expenses_resolved,2023-07-01,2024-06-30,ResearchAndDevelopmentExpense+SellingAndMarketingExpense+GeneralAndAdministrativeExpense,61575,61575,"SEC companyconcept us-gaap GrossProfit 171,008 - OperatingIncomeLoss 109,433 (10-K 0000950170-24-087843)",2026-11-12
+4,MSFT,operating_expenses_resolved,2024-04-01,2024-06-30,ResearchAndDevelopmentExpense+SellingAndMarketingExpense+GeneralAndAdministrativeExpense,17118,17118,"SEC companyconcept: FY2024 minus 9M (GrossProfit and OperatingIncomeLoss)",2026-11-12
+4,MSFT,operating_expenses_resolved,2024-07-01,2024-09-30,ResearchAndDevelopmentExpense+SellingAndMarketingExpense+GeneralAndAdministrativeExpense,14934,14934,"SEC companyconcept us-gaap GrossProfit 45,486 - OperatingIncomeLoss 30,552 (10-Q 0000950170-24-118967)",2026-11-12
