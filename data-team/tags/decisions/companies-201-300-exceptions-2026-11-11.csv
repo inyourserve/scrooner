@@ -2,12 +2,12 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4791,DLR,CF,c:AdjustmentDepreciationAndAmortization,map,d_and_a,1312,2012,29,"CF 'depreciation and amortization of buildings and improvements, tenant improvements and acquired ...' (custom; DLR's D&A line)"
 4791,DLR,CF,us-gaap:PaymentsToDevelopRealEstateAssets,map,capex,,,52,"FILING-CHECKED 0001104659-26-015365 R8: 'Improvements to investments in real estate' (3,181,179) on PaymentsToDevelopRealEstateAssets (rule 24). Acquisitions and unconsolidated investments excluded; parent (coreg) column only"
 4791,DLR,IS,,not_presented,income_before_tax,,,52,REIT IS has no pretax line
-4791,DLR,IS,,not_in_template,cost_of_revenue;gross_profit,,,52,REIT
-4791,DLR,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified REIT balance sheet
+4791,DLR,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,52,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4791,DLR,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 4791,DLR,CF,,not_presented,share_buybacks,,,52,no repurchase line
 5577,TEL,IS,us-gaap:ProfitLoss,map,net_income,2006,2606,25,map where no NCI line is printed
-109,AFL,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,life insurer
-109,AFL,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified insurer balance sheet
+109,AFL,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,life insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+109,AFL,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 109,AFL,CF,,not_presented,capex;d_and_a,,,51,insurer CF prints no PP&E or D&A line
 101,LNG,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1909,2606,22,'cost of sales (excluding D&A)' as printed
 101,LNG,CF,us-gaap:PaymentsToMinorityShareholders,exclude,dividends_paid,1406,2109,30,distributions to NCI (Cheniere Partners unitholders)
@@ -45,8 +45,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1082,TFC,CF,us-gaap:DepreciationNonproduction,map,d_and_a,1312,2606,51,bank CF 'depreciation'
 1082,TFC,CF,us-gaap:PaymentsToAcquireLongtermInvestments,map,capex,2003,2009,3,FILING-CHECKED 0000092230-20-000114 R7 (10-Q): 'Net cash paid for premises and equipment' (716)
 1082,TFC,IS,,component,revenue,,,51,bank rule 11: net interest income + noninterest income (no total line)
-1082,TFC,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,bank
-1082,TFC,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
+1082,TFC,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1082,TFC,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 2765,FANG,IS,us-gaap:OilAndGasRevenue,map,revenue,1312,1803,18,face 'total revenues' (oil and gas)
 2765,FANG,CF,us-gaap:PaymentsToAcquireOilAndGasProperty,exclude,capex,2109,2606,20,'property acquisitions' (Dhairya E&P ruling: acquisitions printed separately are excluded)
 2765,FANG,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,component,capex,1312,2003,26,'purchase of other property and equipment' (with the drilling/development line)
@@ -96,8 +96,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1335,O,BS,us-gaap:CashEquivalentsAtCarryingValue,map,cash,1312,1709,16,"FILING-CHECKED 0001104659-17-011170 R2: face 'Cash and cash equivalents' 9,420 on the equivalents-only tag"
 1335,O,IS,us-gaap:RealEstateRevenueNet,map,revenue,1312,1712,17,face 'total revenue' (REIT)
 1335,O,CF,,review,capex,,,51,net-lease REIT: no PP&E line found; real-estate acquisitions are excluded; find any 'improvements' line or not_presented
-1335,O,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,REIT
-1335,O,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified REIT balance sheet
+1335,O,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1335,O,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 4115,TEAM,CF,,not_presented,dividends_paid,,,16,no dividends
 3677,NDAQ,IS,,not_presented,cost_of_revenue,,,20,no cost-of-revenue line in 20 filings (transaction-based expenses are netted in 'revenues less transaction-based expenses')
 5634,PSA,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,1312,1812,21,'capital expenditures to maintain real estate facilities' (doc 02 line 114)
@@ -105,9 +105,9 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 5634,PSA,CF,c:CapitalExpendituresToMaintainRealEstateFacilities + c:CapitalExpendituresForEnergyEfficiencies + c:CapitalExpendituresForPropertyEnhancements,component,capex,2006,2606,25,from 2023 PSA splits capex into maintain + energy efficiencies + property enhancements: sum (the 'remaining unpaid at period end' lines are non-cash and excluded)
 5634,PSA,CF,us-gaap:PaymentsOfCapitalDistribution,combined,dividends_paid,1312,2606,51,"'distributions paid to preferred shareholders, common shareholders and restricted share unitholders'"
 5634,PSA,CF,c:DepreciationAndAmortizationIncludingAmountsInDiscontinuedOperations,map,d_and_a,1312,1512,4,CF D&A (custom incl. discontinued)
-5634,PSA,IS,,not_in_template,cost_of_revenue;gross_profit,,,51,REIT (self-storage cost of operations is REIT property opex)
+5634,PSA,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,REIT (self-storage cost of operations is REIT property opex) (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 5634,PSA,IS,,not_presented,income_before_tax;income_tax_expense,,,40,REIT IS without pretax/tax lines in 40 filings
-5634,PSA,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified REIT balance sheet
+5634,PSA,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 195,BDX,IS,us-gaap:ProfitLoss,map,net_income,1312,1403,2,map where no NCI line is printed
 195,BDX,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 1677,AZO,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1504,2604,45,'interest expense net'
@@ -130,7 +130,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3470,EW,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1403,2509,12,'interest expense (income) net'
 3470,EW,CF,,not_presented,dividends_paid,,,51,no dividends
 3470,EW,BS,,not_presented,total_liabilities,,,31,no total liabilities line in 31 filings
-633,HUM,IS,,not_in_template,cost_of_revenue;gross_profit,,,51,health insurer
+633,HUM,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,health insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 3895,PYPL,IS,,not_presented,cost_of_revenue;gross_profit;interest_expense,,,46,"expenses by function with no cost-of-revenue or interest-expense face line ('transaction expense', 'other income (expense)')"
 3895,PYPL,CF,,not_presented,dividends_paid,,,42,no dividends before 2025
 329,DAL,CF,us-gaap:PaymentsForFlightEquipment + us-gaap:PaymentsToAcquireOtherProductiveAssets,component,capex,1312,2606,51,"capex = 'flight equipment, including advance payments' + 'ground property and equipment, including technology' (doc 02 line 114: fleets and capitalized software are capex); leased-equipment acquisitions are non-cash and excluded"
@@ -159,7 +159,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2820,MSTR,CF,us-gaap:PaymentsOfDividendsPreferredStockAndPreferenceStock,exclude,dividends_paid,2503,2606,6,preferred
 2820,MSTR,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1403,2606,50,'interest (expense) income net'
 2820,MSTR,CF,,not_presented,dividends_paid,,,51,no common dividends
-1009,XEL,IS,,not_in_template,cost_of_revenue;gross_profit,,,51,"utility (fuel and purchased power, cost of natural gas sold and transported): sector-template call"
+1009,XEL,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,"utility (fuel and purchased power, cost of natural gas sold and transported): sector-template call (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)"
 1009,XEL,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2112,2512,5,Tag Expert: combined
 1009,XEL,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 2432,ROK,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1909,2006,4,Tag Expert: combined
@@ -184,8 +184,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1974,CIEN,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1904,1904,1,Tag Expert: combined
 1974,CIEN,CF,,not_presented,dividends_paid,,,51,no dividends
 1088,STT,CF,c:NoncashAdjustmentsForDepreciationAmortizationAccretion,combined,d_and_a,1312,2606,51,"'other non-cash adjustments for depreciation, amortization and accretion, net' (includes securities accretion)"
-1088,STT,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,custody bank
-1088,STT,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
+1088,STT,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,custody bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1088,STT,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 8,XYZ,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1603,2403,31,'interest (income) and expense net'
 8,XYZ,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2406,2606,9,'interest expense (income) net'
 8,XYZ,CF,,not_presented,dividends_paid,,,42,no dividends
@@ -198,8 +198,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 395,FITB,IS,,component,revenue,,,26,bank rule 11: net interest income + noninterest income
 395,FITB,CF,c:TreasuryStockValueAcquired,combined,share_buybacks,1409,1506,4,'repurchase of treasury shares and related forward contract'
 395,FITB,CF,us-gaap:TreasuryStockValueAcquiredCostMethod,combined,share_buybacks,1312,1406,3,as above
-395,FITB,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,bank
-395,FITB,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
+395,FITB,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+395,FITB,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 5606,CARR,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2003,2609,27,'interest (expense) income net'
 5606,CARR,CF,us-gaap:PaymentsOfDividendsMinorityInterest,exclude,dividends_paid,2003,2006,2,NCI
 4489,COIN,CF,us-gaap:PaymentsForRepurchaseOfEquity,exclude,share_buybacks,2106,2212,3,'cash paid to repurchase equity awards' (employee-plan item; founder ruling)
@@ -225,21 +225,21 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2025,IQV,CF,,not_presented,dividends_paid,,,49,no common dividends
 3587,EXC,ALL,,store_scope,all,2106,2606,21,"CO-REGISTRANT FILING: Exelon files one 10-K/10-Q with ComEd, PECO, BGE, PHI, Pepco, DPL, ACE (and Generation to 2022); FSN shows their lines ('net income attributable to membership interest', 'interest expense to affiliates'). Take only Exelon Corporation's statements for every data point (fsn.value.coreg)"
 3587,EXC,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1412,2512,13,"FILING-CHECKED 0001109357-26-000018 R3: only continuing-ops per-share rows are printed (2.74); map where no discontinued per-share line is printed. Where one is printed (2022 Constellation separation), sum the two printed lines (component)"
-3587,EXC,IS,,not_in_template,cost_of_revenue;gross_profit,,,51,utility IS by nature (purchased power and fuel): sector template
+3587,EXC,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,utility IS by nature (purchased power and fuel): sector template (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 3587,EXC,CF,,not_presented,share_buybacks,,,51,no repurchase line
 1553,AMP,IS,us-gaap:InterestExpenseBorrowings,map,interest_expense,1312,2606,51,'interest and debt expense' is AMP's corporate interest line; 'interest credited to fixed accounts' and 'banking and deposit interest expense' are insurer/bank segment costs (excluded)
 1553,AMP,IS,us-gaap:InterestCreditedToPolicyholdersAccountBalances,exclude,interest_expense,1312,2606,51,insurer benefit cost
 1553,AMP,IS,us-gaap:InterestExpenseDeposits,exclude,interest_expense,1312,2606,51,bank segment cost
 1553,AMP,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,map,income_before_tax,1312,1712,11,custom pretax line
-1553,AMP,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,asset manager / insurer
-1553,AMP,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified
+1553,AMP,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,asset manager / insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1553,AMP,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1695,IDXX,CF,,not_presented,dividends_paid,,,51,no dividends
 1369,VTR,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,2109,2606,15,face 'capital expenditures' (REIT; doc 02 line 114)
 1369,VTR,CF,c:UsGaap_PaymentsToAcquireAndDevelopRealEstate,map,capex,2012,2512,6,face 'capital expenditures' (custom)
 1369,VTR,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,1909,1912,2,face 'capital expenditures'
 1369,VTR,CF,us-gaap:PaymentsToAcquireCommercialRealEstate,exclude,capex,2003,2606,20,'net investment in real estate property' (acquisitions)
-1369,VTR,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,REIT
-1369,VTR,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified REIT balance sheet
+1369,VTR,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1369,VTR,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1369,VTR,CF,,not_presented,share_buybacks,,,51,no repurchase line
 4619,CVNA,CF,c:DepreciationAndAmortizationExcludingDebtIssuanceCosts,map,d_and_a,1809,2606,27,CF 'depreciation and amortization expense' (custom)
 4619,CVNA,CF,c:DepreciationandAmortizationExcludingDebtIssuanceCosts,map,d_and_a,1703,2212,11,case-variant twin
@@ -251,8 +251,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2087,WAT,IS,us-gaap:IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,map,net_income,1312,1403,2,"FILING-CHECKED 0001193125-14-072515 R4: face 'Net income' 450,003; no discontinued-operations or NCI line printed"
 2087,WAT,CF,,not_presented,dividends_paid,,,51,no dividends
 4929,WCN,CF,,not_presented,share_buybacks,,,10,no repurchase line in 10 filings
-114,AIG,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,50,insurer
-114,AIG,BS,,not_in_template,current_assets;current_liabilities,,,50,unclassified insurer balance sheet
+114,AIG,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,50,insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+114,AIG,BS,,template_out_pending_read,current_assets;current_liabilities,,,50,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 114,AIG,CF,,not_presented,capex,,,50,"no PP&E line (flight equipment sits in 'other invested assets' purchases, an investment line)"
 5735,MSCI,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,2112,2609,20,'cost of revenues (exclusive of D&A)' as printed
 2776,ED,ALL,,store_scope,all,1312,2606,51,"CO-REGISTRANT FILING: Consolidated Edison, Inc. files with CECONY (Consolidated Edison Company of New York); FSN shows CECONY's lines ('total liabilities and shareholder's equity', singular). Take only Con Edison, Inc.'s statements (fsn.value.coreg)"
@@ -260,7 +260,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2776,ED,CF,us-gaap:CapitalExpendituresIncurredButNotYetPaid,exclude,capex,1912,2606,27,non-cash
 2776,ED,IS,us-gaap:ProfitLoss,map,net_income,2603,2606,2,map where no NCI line is printed (after the co-registrant filter)
 2776,ED,CF,c:ProceedsfromPaymentsforRepurchaseofCommonStock,combined,share_buybacks,1606,1609,2,'issuance of common shares for stock plans net of repurchases'
-2776,ED,IS,,not_in_template,cost_of_revenue;gross_profit,,,51,utility IS by nature: sector template
+2776,ED,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,utility IS by nature: sector template (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 5969,P,CF,,not_presented,dividends_paid,,,44,no dividends
 5969,P,IS,,not_presented,interest_expense,,,44,no interest expense line
 2641,YUM,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2606,51,'interest expense net'
@@ -274,8 +274,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1577,MCHP,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 3882,PRU,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxesAndOperatingJointVentures,map,income_before_tax,1312,1609,12,custom pretax line (before equity in joint ventures)
 3882,PRU,IS,us-gaap:InterestCreditedToPolicyholdersAccountBalances,exclude,interest_expense,1506,2606,45,insurer benefit cost
-3882,PRU,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,life insurer
-3882,PRU,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified insurer balance sheet
+3882,PRU,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,life insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3882,PRU,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 3882,PRU,CF,,not_presented,capex,,,51,no PP&E line
 140,ADM,IS,,not_presented,operating_income,,,51,no operating income line
 140,ADM,BS,,not_presented,total_liabilities,,,51,no total liabilities line
@@ -302,7 +302,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1733,DHI,IS,us-gaap:OtherOperatingIncome,exclude,interest_expense,1412,1709,11,'interest and other (income)' is income
 1733,DHI,IS,us-gaap:ProfitLoss,map,net_income,1312,1709,16,no NCI before the Forestar acquisition (Oct 2017)
 1733,DHI,IS,,not_presented,operating_income,,,51,no operating income line
-1733,DHI,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified homebuilder balance sheet
+1733,DHI,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified homebuilder balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1733,DHI,CF,us-gaap:PaymentsForRepurchaseOfEquity,map,share_buybacks,2012,2606,23,"FILING-CHECKED 0000882184-25-000081 R7: 'Repurchases of common stock' (4,281.6); tax withholding is its own line"
 1733,DHI,CF,c:RepurchaseOfCommonStockNotSettled,exclude,share_buybacks,2012,2606,13,non-cash disclosure
 1733,DHI,CF,us-gaap:ProceedsFromRepaymentsOfLinesOfCredit,exclude,share_buybacks,2012,2606,23,mortgage repurchase facility (debt)
@@ -336,7 +336,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3831,RVMD,IS,us-gaap:InvestmentIncomeInterest,exclude,interest_expense,2003,2506,13,interest income
 3831,RVMD,IS,us-gaap:OtherNonoperatingExpense,combined,interest_expense,2003,2312,4,'interest and other expense'
 3831,RVMD,IS,c:InterestAndOtherIncomeExpenseNet,combined,interest_expense,2506,2506,1,'interest and other income (expense), net'
-3831,RVMD,IS,,not_in_template,cost_of_revenue;gross_profit,,,26,clinical-stage biotech
+3831,RVMD,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,26,clinical-stage biotech (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 3831,RVMD,CF,c:PaymentsForProceedsFromRepurchasesOfEarlyExercisedStock,exclude,share_buybacks,2009,2112,4,repurchase of unvested early-exercised shares
 3831,RVMD,CF,,not_presented,dividends_paid;share_buybacks,,,26,none
 659,KR,IS,,not_presented,gross_profit,,,51,no gross profit line
@@ -358,13 +358,13 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 5543,IBKR,CF,c:RepurchasesOfCommonStockForEmployeeTaxWithholdingUnderStockIncentivePlans,exclude,share_buybacks,1506,2606,34,tax withholding
 5543,IBKR,CF,us-gaap:ProceedsFromSaleOfTreasuryStock|us-gaap:IncreaseDecreaseInPayablesUnderRepurchaseAgreements,exclude,share_buybacks,1509,2606,32,inflow / repo financing
 5543,IBKR,CF,,not_presented,share_buybacks,,,51,no buyback line
-5543,IBKR,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,broker-dealer
-5543,IBKR,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified broker balance sheet
+5543,IBKR,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,broker-dealer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+5543,IBKR,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified broker balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1697,HIG,IS,us-gaap:ProfitLoss,map,net_income,1503,1706,10,"FILING-CHECKED 0000874766-17-000010 R2: 'Net income including portion attributable to NCI' 798, no NCI line printed"
 1697,HIG,CF,c:DepositsAndOtherAdditionsToInvestmentAndUniversalLifeTypeContracts|us-gaap:DeferredPolicyAcquisitionCostsAdditions,exclude,capex,1312,1312,1,insurance flows
 1697,HIG,CF,us-gaap:ProceedsFromPaymentsForInSecuritiesSoldUnderAgreementsToRepurchase|us-gaap:PaymentsForRepurchaseOfWarrants|us-gaap:ProceedsFromSaleOfTreasuryStock,exclude,share_buybacks,1312,1903,3,repo / warrants / mislabelled treasury line
-1697,HIG,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,P&C insurer
-1697,HIG,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified insurer balance sheet
+1697,HIG,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,P&C insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1697,HIG,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 4213,ARES,IS,us-gaap:NetIncomeLossPerOutstandingLimitedPartnershipUnitBasicNetOfTax,map,basic_eps,1406,2606,49,"face 'basic (in dollars per share)', a per-unit tag kept after the 2018 conversion"
 4213,ARES,IS,us-gaap:NetIncomeLossNetOfTaxPerOutstandingLimitedPartnershipUnitDiluted,map,diluted_eps,1406,2606,49,"face 'diluted (in dollars per share)', a per-unit tag"
 4213,ARES,CF,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,map,capex,1903,2606,30,'purchase of furniture, equipment and leasehold improvements' = the PP&E purchases line
@@ -375,7 +375,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4213,ARES,BS,us-gaap:PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest,not_presented,stockholders_equity,1606,1609,2,total equity including NCI with no parent line (rule 8)
 4213,ARES,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1703,1703,1,one filing 'repurchase of treasury stock'
 4213,ARES,IS,,not_presented,cost_of_revenue;gross_profit;operating_income,,,50,asset manager
-4213,ARES,BS,,not_in_template,current_assets;current_liabilities,,,50,unclassified
+4213,ARES,BS,,template_out_pending_read,current_assets;current_liabilities,,,50,unclassified (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 4213,ARES,CF,,review,d_and_a,,,29,D&A line absent in 29 filings: check the consolidated-funds CF
 2385,UI,IS,us-gaap:OtherNonoperatingIncomeExpense|us-gaap:InterestIncomeExpenseNet|us-gaap:InvestmentIncomeInterest,combined,interest_expense,1312,2606,51,'interest expense and other, net'
 2385,UI,CF,c:RepurchaseOfCommonStock,map,share_buybacks,1312,1803,17,custom CF 'repurchases of common stock'
@@ -426,7 +426,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3587,EXC,IS,us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest,store_scope,income_before_tax,1412,1612,3,"conflict: 'net income attributable to membership interest' is a utility-subsidiary co-registrant line, not pretax; parent (coreg) column only"
 3587,EXC,BS,us-gaap:MembersEquity,store_scope,stockholders_equity,1312,2512,41,conflict: LLC co-registrant equity; parent (coreg) column only
 1733,DHI,CF,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,map,capex,1809,2003,7,conflict: 'expenditures for property and equipment' is the capex line
-1733,DHI,CF,us-gaap:PaymentsToAcquireProductiveAssets,definition_call,capex,1809,2003,7,"conflict: 'expenditures related to multi-family rental properties'. Recommend exclude: DHI later treats rental properties as inventory (operating CF), so including them before 2020 would break the series"
+1733,DHI,CF,us-gaap:PaymentsToAcquireProductiveAssets,exclude,capex,1809,2003,7,Dhairya ruling 2026-11-12: exclude 'expenditures related to multi-family rental properties' from capex (consistent with DHI's later inventory treatment)
 2776,ED,IS,us-gaap:InterestAndDebtExpense|us-gaap:InterestExpense,map,interest_expense,1312,2606,51,"conflict: 'net interest expense' total (after AFUDC, rule 17) wins over 'interest on long-term debt'; parent (coreg) column only"
 2776,ED,IS,us-gaap:InterestExpenseDebt,exclude,interest_expense,1312,2606,51,a component of net interest expense
 2776,ED,CF,us-gaap:PaymentsOfOrdinaryDividends,store_scope,dividends_paid,1312,2112,33,conflict: 'dividend to parent' is CECONY's (co-registrant); parent column only

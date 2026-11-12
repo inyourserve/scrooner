@@ -7,8 +7,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 644,IBM,IS,,not_presented,operating_income,,,52,IBM IS has no operating income subtotal
 644,IBM,CF,us-gaap:PaymentsRelatedToTaxWithholdingForShareBasedCompensation,exclude,share_buybacks,,,22,'common stock repurchases for tax withholdings' is excluded by founder ruling 2026-11-04 item 4; buybacks not presented in those 22 filings
 1586,C,BS,us-gaap:CashAndDueFromBanks,map,cash,,,51,bank: 'cash and due from banks' is the cash line; bank template
-1586,C,IS,,not_in_template,gross_profit;cost_of_revenue;operating_income,,,51,bank income statement (net interest revenue / noninterest revenue); bank template
-1586,C,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
+1586,C,IS,,template_out_pending_read,gross_profit;cost_of_revenue;operating_income,,,51,bank income statement (net interest revenue / noninterest revenue); bank template (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1586,C,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1586,C,IS,c:ImpairmentOfInvestmentsAndEquityMethodInvestmentOtherThanTemporaryImpairment,exclude,gross_profit,,,25,'gross impairment losses' is not gross profit (label-regex false hit)
 108,AXP,IS,us-gaap:RevenuesNetOfInterestExpense,map,revenue,,,35,'total revenues net of interest expense' is AXP's top line; bank-style revenue definition; Tag Expert to confirm template
 108,AXP,IS,c:TotalRevenuesNetOfInterestExpense,map,revenue,,,17,custom twin of RevenuesNetOfInterestExpense in earlier filings
@@ -17,8 +17,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 108,AXP,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,,,7,EPS line tagged continuing-operations per share; no discontinued ops — Tag Expert to confirm
 108,AXP,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,,,7,as basic
 108,AXP,BS,us-gaap:CashAndDueFromBanks,map,cash,,,52,cash and due from banks
-108,AXP,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified balance sheet
-108,AXP,IS,,not_in_template,gross_profit;cost_of_revenue;operating_income,,,52,card issuer / bank income statement
+108,AXP,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+108,AXP,IS,,template_out_pending_read,gross_profit;cost_of_revenue;operating_income,,,52,card issuer / bank income statement (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 108,AXP,CF,c:PaymentsForRepurchasesOfCommonSharesAndOther,combined,share_buybacks,,,13,"FSN-checked 0000004962-22-000008 CF lines 27-31: preferred issuance (27) and redemption (28) are separate lines, so 'and other' is not preferred; the label states other items with common repurchases, and the face gives no split: combined, blank line_presented_combined_with_others unless the equity note splits it (2019+ eras; 2016 era uses PaymentsForRepurchaseOfCommonStock 'Repurchase of American Express common shares', 0001193125-17-047588 line 32, which maps)"
 2683,MRVL,CF,us-gaap:OtherDepreciationAndAmortization,map,d_and_a,,,23,CF 'depreciation and amortization' tagged OtherDepreciationAndAmortization
 2683,MRVL,IS,us-gaap:IncomeLossAttributableToParent,map,income_before_tax,,,25,"us-gaap standard label 'Income (Loss) Attributable to Parent, before Tax' (checked fsn.tag.tlabel): a pretax line; FSN plabel 'income (loss) before income taxes'. Library candidate (lower priority than the two std pretax tags)"
@@ -58,9 +58,9 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4123,BLK,IS,us-gaap:InvestmentAdvisoryFees,exclude,revenue,1403,1803,17,component of total revenue
 4123,BLK,CF,c:DividendsOrSubcoDistributionsPaid,combined,dividends_paid,2509,2606,4,"Dhairya 2026-11-11: dividends/buybacks that include Subco units = combined, a blank with reason, unless the equity note gives the common-only amounts (then map those, with evidence). 0001193125-26-071966 CF lines 35/37"
 4123,BLK,CF,c:SharesOrSubcoUnitRepurchased,combined,share_buybacks,2509,2606,4,"Dhairya 2026-11-11: dividends/buybacks that include Subco units = combined, a blank with reason, unless the equity note gives the common-only amounts (then map those, with evidence). 0001193125-26-071966 CF lines 35/37"
-4123,BLK,IS,,not_in_template,cost_of_revenue;gross_profit,,,50,asset manager income statement
-4123,BLK,BS,,not_in_template,current_assets;current_liabilities,,,50,unclassified balance sheet
-1196,DE,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified balance sheet (equipment operations + financial services)
+4123,BLK,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,50,asset manager income statement (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4123,BLK,BS,,template_out_pending_read,current_assets;current_liabilities,,,50,unclassified balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1196,DE,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified balance sheet (equipment operations + financial services) (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1196,DE,IS,,not_presented,operating_income;gross_profit,,,52,no operating income or gross profit line
 1117,UNP,IS,,not_presented,cost_of_revenue;gross_profit,,,52,railroad: operating expenses by nature; no cost of revenue
 683,MCD,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,map,income_before_tax,1312,2606,51,custom pretax line 'income before provision for income taxes'
@@ -94,8 +94,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1421,WELL,IS,us-gaap:InterestExpenseDebt,map,interest_expense,1312,2409,44,face 'interest expense'
 1421,WELL,IS,us-gaap:InterestExpenseBorrowings,map,interest_expense,2412,2609,8,"FSN-checked 0000766704-26-000010 IS line 10 'Interest expense' 651,955K: the only face interest-expense line"
 1421,WELL,CF,us-gaap:OtherDepreciationAndAmortization,map,d_and_a,2003,2609,27,CF 'depreciation and amortization'
-1421,WELL,IS,,not_in_template,operating_income;gross_profit;cost_of_revenue,,,52,REIT
-1421,WELL,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified REIT balance sheet
+1421,WELL,IS,,template_out_pending_read,operating_income;gross_profit;cost_of_revenue,,,52,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1421,WELL,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1158,TJX,IS,c:CostOfSalesIncludingBuyingAndOccupancyCosts,map,cost_of_revenue,1401,1804,18,"TJX's cost of sales line (includes buying and occupancy costs, as TJX defines it)"
 1158,TJX,IS,us-gaap:InterestRevenueExpenseNet,combined,interest_expense,1401,2607,51,'interest (income) expense net'
 1158,TJX,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity,1401,1410,4,'total shareholders equity'; no NCI
@@ -113,8 +113,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1204,SCHW,CF,c:DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets,component,d_and_a,2009,2606,24,FSN-checked 0000316709-26-000009 CF lines 5-6: 'Depreciation and amortization' (excl. intangibles) + 'Amortization of acquired intangible assets'; D&A = sum; premium amortization on securities (line 8) excluded
 1204,SCHW,CF,c:PaymentsForRepurchaseOfCommonStockAndNonvotingCommonStock,map,share_buybacks,2506,2509,2,repurchases of common and nonvoting common stock (both are own common shares)
 1204,SCHW,CF,c:NoncashTransactionCommonStockRepurchased,exclude,share_buybacks,2506,2509,2,non-cash: settled after period end
-1204,SCHW,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,broker/bank income statement
-1204,SCHW,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified
+1204,SCHW,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,broker/bank income statement (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1204,SCHW,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 2852,ETN,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,1912,10,'net income attributable to Eaton ordinary shareholders'; no preferred — equals NI attributable to parent
 2852,ETN,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2406,43,'interest expense - net'
 2852,ETN,IS,,not_presented,operating_income;gross_profit,,,51,no operating income line
@@ -142,8 +142,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1813,CB,IS,us-gaap:IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,exclude,income_before_tax,1312,1512,3,label-regex false hit (after-tax line)
 1813,CB,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,map,stockholders_equity,1312,1603,10,'total shareholders equity'; no NCI then
 1813,CB,IS,,store_scope,revenue;net_income;income_tax_expense;eps,,,14,FSN-checked: 14 CB 10-Qs 2014-2017 (e.g. 0000896159-14-000007) present 'Statements of Operations and Comprehensive Income' as one report that FSN tags stmt=CI (47 lines; IS has 4-12). EPS/NI/revenue lines are only under CI. Mapper/extraction must read IS lines from a combined IS+CI report (Engineering)
-1813,CB,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,52,insurer
-1813,CB,BS,,not_in_template,current_assets;current_liabilities,,,52,unclassified insurer balance sheet
+1813,CB,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,52,insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1813,CB,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1813,CB,CF,,not_presented,capex;d_and_a,,,52,"CB's CF prints no PP&E purchase or D&A line in any of 52 filings: blank with reason not_presented. Whether insurer templates take capex/D&A at all is the sector analyst's call (SECTOR-TEMPLATES-2026-11-01 line 67: not yet evidenced, do not mark OUT)"
 2376,MPC,IS,us-gaap:RefiningAndMarketingRevenue,map,revenue,1312,1803,18,'sales and other operating revenues' (refiner); total revenues and other income (custom) includes other income
 2376,MPC,IS,c:RevenuesAndOtherIncome,exclude,revenue,1312,1803,18,includes other income
@@ -163,8 +163,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1043,PGR,CF,c:PaymentsforRepurchaseofCommonStockintheOpenMarket,map,share_buybacks,1703,2606,22,case variant of the same custom tag
 1043,PGR,CF,c:PaymentsforRepurchaseofCommonStockforRestrictedStockTaxLiabilities,exclude,share_buybacks,1703,2606,38,tax-withholding share purchases: excluded by founder ruling 2026-11-04 item 4
 1043,PGR,IS,c:PeriodOverPriorYearPeriodPercentIncreaseDecreaseInterestExpense,exclude,interest_expense,1403,1809,15,percent-change column on the face (not a value)
-1043,PGR,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,insurer
-1043,PGR,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified insurer balance sheet
+1043,PGR,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1043,PGR,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 684,SPGI,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1806,2209,14,'interest expense net'
 684,SPGI,IS,,not_presented,gross_profit,,,52,no gross profit line
 1413,MO,IS,us-gaap:EarningsPerShareBasicAndDiluted,map,basic_eps,1312,2006,25,basic and diluted on one line
@@ -183,8 +183,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 215,BMY,IS,,not_presented,interest_expense;operating_income;gross_profit,,,52,BMY IS has no interest expense line (inside other (income)/expense net) and no operating income
 1948,COF,BS,us-gaap:CashAndDueFromBanks,map,cash,1312,2606,51,bank: cash and due from banks
 1948,COF,IS,us-gaap:InterestIncomeExpenseNet + us-gaap:NoninterestIncome,component,revenue,1312,2606,50,"FSN-checked 0000927628-26-000024: COF IS prints total interest income (5), total interest expense (11), total non-interest income (20); no 'total net revenue' line. Bank revenue = net interest income + non-interest income (component sum; bank template)"
-1948,COF,IS,,not_in_template,cost_of_revenue;gross_profit;operating_income,,,51,bank
-1948,COF,BS,,not_in_template,current_assets;current_liabilities,,,51,unclassified bank balance sheet
+1948,COF,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1948,COF,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 3155,BKNG,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,map,net_income,1312,2606,46,face 'net income' tagged AvailableToCommonStockholdersBasic; BKNG has no preferred stock
 3155,BKNG,IS,us-gaap:ProfitLoss,exclude,net_income,1312,1512,9,"FSN-checked 0001075531-15-000007 IS lines 24-26: Net income (ProfitLoss), NCI 0, 'Net income applicable to common stockholders' (NetIncomeLossAvailableToCommonStockholdersBasic, no preferred): the latter maps, already in the file for 1312-2606"
 3155,BKNG,CF,us-gaap:DepreciationNonproduction,component,d_and_a,1312,1812,21,FSN-checked 0001075531-19-000009 CF lines 4-5: 'Depreciation' + 'Amortization' (AmortizationOfIntangibleAssets); D&A = sum of the two; debt-cost amortization lines 10-11 excluded
