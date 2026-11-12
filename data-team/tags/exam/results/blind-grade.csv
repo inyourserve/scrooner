@@ -285,7 +285,7 @@ tool,AKAM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,AKAM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,AKAM,gross_profit,correct,,not_presented,not_presented,,
 tool,AKAM,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringAndRelatedCostIncurredCost
-tool,AKAM,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,AKAM,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,AKAM,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,AKAM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,AKAM,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -1189,7 +1189,7 @@ machine,CACC,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 ,CACC,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 ,CACC,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,CACC,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,CACC,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
+,CACC,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
 ,CACC,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 tool,CACC,operating_income,correct,,not_presented,not_presented,,
 machine,CACC,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
@@ -1265,7 +1265,7 @@ tool,CART,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,CART,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,CART,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 tool,CART,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-tool,CART,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,CART,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,CART,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,CART,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,CART,interest_expense,correct,,combined,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
@@ -1508,7 +1508,7 @@ machine,CPB,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,CPB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,CPB,gross_profit,correct,,not_presented,not_presented,,
 machine,CPB,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:OtherNonoperatingIncomeExpense;us-gaap:RestructuringCharges
-machine,CPB,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,CPB,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,CPB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost
 machine,CPB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,CPB,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
@@ -1584,7 +1584,7 @@ machine,CRCL,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,CRCL,cost_of_revenue,wrong,status,not_presented,combined,,us-gaap:OtherCostOfOperatingRevenue
 hand,CRCL,gross_profit,correct,,not_presented,not_presented,,
 machine,CRCL,operating_expenses,wrong,status,mapped,combined,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-hand,CRCL,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:MarketingExpense
+,CRCL,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:MarketingExpense
 hand,CRCL,research_and_development,correct,,not_presented,not_presented,,
 machine,CRCL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 hand,CRCL,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseNonoperating,
@@ -1698,7 +1698,7 @@ machine,CVLT,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,CVLT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 machine,CVLT,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,CVLT,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,CVLT,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,CVLT,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,CVLT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,CVLT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,CVLT,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -2025,7 +2025,7 @@ machine,DLB,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustom
 machine,DLB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,DLB,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,DLB,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,DLB,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,DLB,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,DLB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,DLB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,DLB,interest_expense,correct,,not_presented,not_presented,,
@@ -2101,7 +2101,7 @@ tool,DOCN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,DOCN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,DOCN,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 tool,DOCN,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-tool,DOCN,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,DOCN,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,DOCN,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,DOCN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,DOCN,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -2139,7 +2139,7 @@ machine,DOCS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,DOCS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,DOCS,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,DOCS,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,DOCS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,DOCS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,DOCS,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,DOCS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 ,DOCS,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,not_presented,us-gaap:InterestIncomeExpenseNonoperatingNet,
@@ -2405,7 +2405,7 @@ tool,ELS,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,ELS,cost_of_revenue,wrong,status,mapped,not_presented,us-gaap:CostOfGoodsAndServicesSold,
 tool,ELS,gross_profit,correct,,not_presented,not_presented,,
 tool,ELS,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
-tool,ELS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,ELS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,ELS,research_and_development,correct,,not_presented,not_presented,,
 tool,ELS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,ELS,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseDebt,us-gaap:InterestExpenseDebt
@@ -2633,7 +2633,7 @@ tool,ESTC,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,ESTC,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,ESTC,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 tool,ESTC,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-tool,ESTC,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,ESTC,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,ESTC,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,ESTC,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,ESTC,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
@@ -2770,7 +2770,7 @@ machine,EXLS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,EXLS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 machine,EXLS,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,EXLS,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,EXLS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
+,EXLS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
 tool,EXLS,research_and_development,correct,,not_presented,not_presented,,
 machine,EXLS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,EXLS,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -3158,7 +3158,7 @@ machine,GH,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,GH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,GH,gross_profit,correct,,not_presented,not_presented,,
 hand,GH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating
-machine,GH,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,GH,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,GH,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,GH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 hand,GH,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -3561,7 +3561,7 @@ tool,HUBS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,HUBS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,HUBS,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 tool,HUBS,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-tool,HUBS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,HUBS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,HUBS,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,HUBS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,HUBS,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -3865,7 +3865,7 @@ tool,IONQ,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomer
 tool,IONQ,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 tool,IONQ,gross_profit,correct,,not_presented,not_presented,,
 tool,IONQ,operating_expenses,wrong,status,combined,component_sum,us-gaap:OperatingCostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
-tool,IONQ,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,IONQ,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,IONQ,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,IONQ,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,IONQ,interest_expense,correct,,not_presented,not_presented,,
@@ -3903,7 +3903,7 @@ machine,IOT,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustom
 hand,IOT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,IOT,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,IOT,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,IOT,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,IOT,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,IOT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,IOT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 hand,IOT,interest_expense,correct,,not_presented,not_presented,,
@@ -4032,7 +4032,7 @@ tool,IVZ,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerE
 tool,IVZ,cost_of_revenue,correct,,not_presented,not_presented,,
 tool,IVZ,gross_profit,correct,,not_presented,not_presented,,
 tool,IVZ,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-tool,IVZ,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,IVZ,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,IVZ,research_and_development,correct,,not_presented,not_presented,,
 tool,IVZ,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,IVZ,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -4625,7 +4625,7 @@ machine,LYFT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,LYFT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,LYFT,gross_profit,correct,,not_presented,not_presented,,
 machine,LYFT,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
-machine,LYFT,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,LYFT,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,LYFT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,LYFT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,LYFT,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -4899,7 +4899,7 @@ machine,MKTX,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 tool,MKTX,cost_of_revenue,correct,,not_presented,not_presented,,
 tool,MKTX,gross_profit,correct,,not_presented,not_presented,,
 machine,MKTX,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,MKTX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingAndAdvertisingExpense;us-gaap:GeneralAndAdministrativeExpense
+,MKTX,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:MarketingAndAdvertisingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,MKTX,research_and_development,correct,,not_presented,not_presented,,
 machine,MKTX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,MKTX,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -5173,7 +5173,7 @@ machine,NAVN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,NAVN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,NAVN,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,NAVN,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,NAVN,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,NAVN,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,NAVN,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,NAVN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,NAVN,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -5629,7 +5629,7 @@ machine,OTEX,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,OTEX,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 machine,OTEX,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,OTEX,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,OTEX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,OTEX,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,OTEX,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost
 machine,OTEX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,OTEX,interest_expense,correct,,combined,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
@@ -5743,7 +5743,7 @@ machine,PEGA,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,PEGA,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 machine,PEGA,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,PEGA,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,PEGA,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,PEGA,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,PEGA,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,PEGA,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,PEGA,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -6215,7 +6215,7 @@ machine,QLYS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,QLYS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,QLYS,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,QLYS,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,QLYS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,QLYS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,QLYS,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,QLYS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 tool,QLYS,interest_expense,correct,,not_presented,not_presented,,
@@ -6253,7 +6253,7 @@ machine,RBRK,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,RBRK,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,RBRK,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,RBRK,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,RBRK,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,RBRK,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,RBRK,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,RBRK,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,RBRK,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseDebt,us-gaap:InterestExpenseDebt
@@ -6527,7 +6527,7 @@ machine,ROKU,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,ROKU,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,ROKU,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,ROKU,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,ROKU,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,ROKU,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,ROKU,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,ROKU,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,ROKU,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -7683,7 +7683,7 @@ machine,TTAN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,TTAN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 machine,TTAN,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,TTAN,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,TTAN,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,TTAN,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,TTAN,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,TTAN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,TTAN,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
@@ -7759,7 +7759,7 @@ machine,TTD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustom
 machine,TTD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,TTD,gross_profit,correct,,not_presented,not_presented,,
 machine,TTD,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense
-machine,TTD,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,TTD,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,TTD,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,TTD,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,TTD,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseNonoperating,
@@ -8025,7 +8025,7 @@ machine,VRNS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCusto
 machine,VRNS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 machine,VRNS,gross_profit,correct,,mapped,mapped,us-gaap:GrossProfit,us-gaap:GrossProfit
 machine,VRNS,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap:OperatingExpenses
-machine,VRNS,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,VRNS,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,VRNS,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,VRNS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,VRNS,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseDebt,
@@ -8223,7 +8223,7 @@ machine,WEX,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,WEX,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,WEX,gross_profit,correct,,not_presented,not_presented,,
 tool,WEX,operating_expenses,wrong,status,not_presented,component_sum,,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
-machine,WEX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
+,WEX,sga_expense,key_error,key: G&A alone keyed as SG&A while the face prints S&M (Dhairya 2026-11-13; MSFT incident),mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense
 tool,WEX,research_and_development,correct,,not_presented,not_presented,,
 machine,WEX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,WEX,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseDebt,

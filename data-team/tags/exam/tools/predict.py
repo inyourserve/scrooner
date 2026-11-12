@@ -240,7 +240,16 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             if len(cs) >= 2 or dp == 'total_debt':
                 status, chosen, rule = 'component_sum', cs, 'printed face components (duration sum; total_debt founder sum)'
             elif dp == 'sga_expense' and cs[0]['tag'] in P['is.sga_expense.lone_ga']['tags']:
-                status, chosen, rule = 'mapped', cs, 'lone G&A line'; fired.append('is.sga_expense.lone_ga')
+                PG = P['is.sga_expense.lone_ga']; fired.append('is.sga_expense.lone_ga')
+                sell = [l for l in L if l['st'] == 'IS' and not l['pth'] and l is not cs[0] and not l['tag'].endswith('Abstract')
+                        and (re.search(PG['selling_label_regex'], l['lab'] or '') or re.search(PG['selling_tag_regex'], l['tag']))
+                        and not re.search(PG['not_selling_regex'], (l['lab'] or '') + ' ' + l['tag'])]
+                if not sell:
+                    status, chosen, rule = 'mapped', cs, 'lone G&A line; no selling/marketing line on the face (TLN ruling 2026-11-13)'
+                elif all(l['val'] is not None for l in sell) and all(l['r'] == cs[0]['r'] for l in sell):
+                    status, chosen, rule = 'component_sum', cs + sell, 'G&A + printed selling/marketing lines (Dhairya 2026-11-13; never G&A alone when S&M exists)'
+                else:
+                    status, rule = 'not_presented', 'G&A alone is not SG&A when a selling/marketing line exists (Dhairya 2026-11-13)'
             elif dp == 'interest_expense' and cs[0]['tag'] == P['is.interest_expense.sole_debt']['tag'] and not any('Interest' in l['tag'] and l['tag'] != P['is.interest_expense.sole_debt']['tag'] and l['st'] == 'IS' for l in L):
                 status, chosen, rule = 'mapped', cs, 'sole-debt interest rule'; fired.append('is.interest_expense.sole_debt')
             else:
