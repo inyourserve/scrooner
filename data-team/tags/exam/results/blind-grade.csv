@@ -994,7 +994,7 @@ tool,BTSG,dividends_paid,correct,,not_presented,not_presented,,
 tool,BTSG,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 tool,BTSG,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 tool,BTSG,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-tool,BTSG,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+,BTSG,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 tool,BTSG,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,BURL,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,BURL,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
@@ -1890,7 +1890,7 @@ tool,CZR,dividends_paid,correct,,not_presented,not_presented,,
 machine,CZR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,CZR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 machine,CZR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-machine,CZR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+,CZR,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 machine,CZR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 tool,DAR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,DAR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
@@ -2133,7 +2133,7 @@ tool,DOCN,dividends_paid,correct,,not_presented,not_presented,,
 tool,DOCN,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 tool,DOCN,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 tool,DOCN,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-tool,DOCN,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+,DOCN,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 tool,DOCN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,DOCS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,DOCS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
@@ -2475,7 +2475,7 @@ machine,ENS,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us
 machine,ENS,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,ENS,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 machine,ENS,cash_paid_for_income_taxes,wrong,tag,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaidNet
-machine,ENS,total_debt,correct,,component sum,component_sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtNoncurrent,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent
+,ENS,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtNoncurrent,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent
 machine,ENS,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,ENTG,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,ENTG,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
@@ -3266,7 +3266,7 @@ tool,GLPI,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,us-g
 tool,GLPI,share_buybacks,correct,,not_presented,not_presented,,
 tool,GLPI,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 tool,GLPI,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-tool,GLPI,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebt,us-gaap:LongTermDebt
+,GLPI,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebt,us-gaap:LongTermDebt
 tool,GLPI,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 tool,GLW,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,GLW,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
@@ -3426,7 +3426,7 @@ machine,HR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsComm
 machine,HR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,HR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 machine,HR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-machine,HR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebt,us-gaap:LongTermDebt
+,HR,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebt,us-gaap:LongTermDebt
 machine,HR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,HRB,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,HRB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
@@ -4535,7 +4535,7 @@ tool,LOAR,dividends_paid,correct,,not_presented,not_presented,,
 tool,LOAR,share_buybacks,correct,,not_presented,not_presented,,
 machine,LOAR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 machine,LOAR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-machine,LOAR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+,LOAR,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 machine,LOAR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 tool,LOW,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,LOW,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
@@ -4619,7 +4619,7 @@ machine,LSTR,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividends,u
 machine,LSTR,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,LSTR,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaid,us-gaap:InterestPaid
 machine,LSTR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
-machine,LSTR,total_debt,wrong,status,mapped,combined,us-gaap:LongTermDebt,us-gaap:FinanceLeaseLiabilityCurrent
+,LSTR,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),mapped,combined,us-gaap:LongTermDebt,us-gaap:FinanceLeaseLiabilityCurrent
 tool,LSTR,shares_outstanding,correct,,not_presented,not_presented,,
 machine,LYFT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,LYFT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
@@ -5692,7 +5692,7 @@ machine,PBF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquit
 machine,PBF,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
 machine,PBF,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
 machine,PBF,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
-hand,PBF,capex,wrong,status,mapped,component_sum,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment;us-gaap:PaymentsToAcquireOtherProductiveAssets
+,PBF,capex,key_error,key: doc 02 founder 2026-11-04 item 3 (capex includes turnarounds); Dhairya 2026-11-13: PBF key (PP&E only) and the old prediction both wrong; R10 Expenditures for PP&E 705.2M + deferred turnaround costs 379.5M + other assets 77.1M,mapped,component_sum,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment;us-gaap:PaymentsToAcquireOtherProductiveAssets
 hand,PBF,depreciation_and_amortization,wrong,status,combined,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
 machine,PBF,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
 hand,PBF,dividends_paid,wrong,status,not_presented,mapped,,us-gaap:PaymentsOfOrdinaryDividends
@@ -8536,7 +8536,7 @@ tool,WULF,dividends_paid,correct,,not_presented,not_presented,,
 machine,WULF,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,WULF,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 machine,WULF,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaid,us-gaap:IncomeTaxesPaid
-machine,WULF,total_debt,wrong,status,component sum,combined,us-gaap:OtherLongTermDebtNoncurrent,us-gaap:ConvertibleDebtNoncurrent
+,WULF,total_debt,key_error,key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13),component sum,combined,us-gaap:OtherLongTermDebtNoncurrent,us-gaap:ConvertibleDebtNoncurrent
 machine,WULF,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 tool,WYNN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax
 tool,WYNN,cost_of_revenue,wrong,status,mapped,not_presented,us-gaap:CostOfGoodsAndServicesSold,

@@ -23,6 +23,24 @@ def cp_upper_one(k, n, a=0.05):
     """One-sided 95% Clopper-Pearson upper bound on the error rate (graduation bar, Dhairya/NOW.md 2026-11-12)."""
     return cp_upper(k, n, 2 * a)
 def ks_raw(k): return norm_status(k.get('status'))
+_FL = {}
+def face_fin_lease(tk):
+    """True when the BS face prints a finance-lease liability line and no debt line already includes leases (needs GRADE_LINES_DIR)."""
+    import json, re
+    d = os.environ.get('GRADE_LINES_DIR')
+    if not d: return False
+    if tk not in _FL:
+        p = os.path.join(d, f'{tk}.jsonl'); fl = incl = False
+        if os.path.exists(p):
+            for ln in open(p):
+                l = json.loads(ln)
+                if l.get('st') != 'BS' or str(l.get('pth')) not in ('0', '', 'None') or l.get('val') in (None, ''): continue
+                lab = l.get('lab') or ''
+                if l['tag'] in ('FinanceLeaseLiabilityNoncurrent', 'FinanceLeaseLiabilityCurrent', 'FinanceLeaseLiability') and not re.search(r'(?i)operating', lab): fl = True
+                if re.search(r'CapitalLeaseObligations|FinanceLeaseLiabilityAndLongTermDebt|DebtCurrentAndFinanceLeaseLiability|LongTermDebtAndFinanceLease', l['tag']) or \
+                   re.search(r'(?i)(debt|borrowings).{0,40}(and|including)\s+(finance|capital)\s+lease', lab): incl = True
+        _FL[tk] = fl and not incl
+    return _FL[tk]
 def main(pdir, ddir, *only):
     rows = []; keyed = {}
     adj = {}
@@ -81,6 +99,8 @@ def main(pdir, ddir, *only):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'depreciation_and_amortization' and ks == 'mapped' and tagset(k['tags']) == {'depreciationamortizationandaccretionnet'} and norm_status(p['status']) == 'combined':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: DepreciationAmortizationAndAccretionNet includes accretion -> combined; a label never promotes (DUK ruling; doc 02)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'total_debt' and ks in ('mapped', 'component_sum', 'component sum') and 'lease' not in (k['tags'] or '').lower() and face_fin_lease(tk):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
