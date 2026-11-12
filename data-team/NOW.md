@@ -22,6 +22,15 @@ Updated: 2026-11-11 ~07:30 UTC (Dhairya, the only manager; the cloud manager ses
 - Owners: Engineering, end to end (migration, mapper change, writes). Mapping builder: the FSN-to-map extraction. Ritwik x2 plus the Tag Expert: the tags the extraction can't decide. Verifier: clears writes against filings.
 - Metrics: companies with a complete tag map, and companies written.
 
+## Founder direction 2026-11-13: the predictor is how the master scales
+
+The founder, typed in Dhairya's session: the blind exam is "important -> to make master world class". The Tag Expert's predictor (`data-team/tags/exam/tools/predict.py`) becomes the automatic mapper for new filings, and reading becomes random spot-checks.
+- **Graduation, per data-point class:** blind accuracy at or above 99% over the last 200 unseen companies, with a Clopper-Pearson upper error at or below 1.5%. Graded only on hand-verified, FILING-CHECKED key rows; AUTO rows are key_unverified.
+- **A graduated class:** in the nightly path, a new or changed tag in a new 10-Q or 10-K is mapped by the predictor, then goes through tagmap-plan, cell_proof and the proof guard. Every other class goes to the reading queue.
+- **Demotion:** random filing-checked samples keep grading each graduated class, and a drop below the bar demotes it.
+- **Today:** blind 89.1% on hand-verified rows (85.9% on all rows); dev score by version 82.4 → 87.7 → 88.1 → 89.8 (v4).
+- **Note-only data points:** the fact in a note → mapped, stmt NOTE, with its R page. Absent from the whole filing → not_presented. component_in_note only for a component.
+
 ## Reading lanes and the blind exam (Dhairya, 2026-11-12)
 
 - Nine readers do document-first reads of ranks 101-1000. Ranks come from `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Branches: `work/reads/<lo>-<hi>` (101-200, ..., 901-1000). Each docmap goes to `data-team/companies/reads/<TICKER>-docmap-2026-11-12.{md,csv}`. Readers commit every 10 companies in strict rank order.
