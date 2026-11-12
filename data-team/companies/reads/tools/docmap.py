@@ -353,6 +353,77 @@ def opex_row(page: dict) -> tuple[dict | None, str, str]:
     return None, "", "no total opex line and no gross profit / operating income pair to tie components"
 
 
+# ---------------------------------------------------------------- whole-filing resolution of face misses
+
+NOTE_FAMILY = {  # data point -> (tags that ARE the data point, tags that are only a component of it)
+    "total_debt": (["LongTermDebt", "DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount",
+                    "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities"],
+                   ["LongTermDebtNoncurrent", "LongTermDebtCurrent", "ShortTermBorrowings", "CommercialPaper",
+                    "SeniorNotes", "NotesPayable", "LinesOfCreditCurrent"]),
+    "depreciation_and_amortization": (["DepreciationDepletionAndAmortization", "DepreciationAndAmortization",
+                                       "DepreciationAmortizationAndAccretionNet"],
+                                      ["Depreciation", "AmortizationOfIntangibleAssets", "DepreciationNonproduction"]),
+    "shares_outstanding": (["CommonStockSharesOutstanding"], []),
+    "operating_expenses": (["OperatingExpenses"], []),
+}
+
+
+def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str, quirks: list[str], tic: str) -> None:
+    """Dhairya ruling 2026-11-12: no AUTO rows. Every face miss is checked against the WHOLE filing (MetaLinks.json:
+    every tag in the filing's presentation, face statements and notes, with the R pages that show it):
+    a data-point tag in a note -> mapped, stmt NOTE, R page; only a component tag in a note -> component_in_note;
+    nothing anywhere -> not_presented, citing the whole-filing check."""
+    todo = [r for r in out if r.get("status") == "not_presented" and str(r.get("note", "")).startswith("AUTO")]
+    if not todo:
+        return
+    b = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accn.replace('-', '')}/"
+    txt = get(b + "MetaLinks.json", cache)
+    try:
+        inst = next(iter(json.loads(txt)["instance"].values()))
+    except Exception:
+        for r in todo:
+            r["note"] = "MetaLinks.json not available for this filing: whole-filing check could not run; " + r["note"]
+        return
+    role2r = {v.get("role"): (k, v.get("groupType", ""), v.get("shortName", "")) for k, v in inst.get("report", {}).items()}
+    tags = inst.get("tag", {})
+    ntags = len(tags)
+    end = None
+    for r in out:
+        if "period .." in str(r.get("note", "")):
+            end = dt.date.fromisoformat(r["note"].split("period ..")[-1][:10])
+            break
+
+    def where(local: str) -> list[tuple[str, str, str]]:
+        t = tags.get(f"us-gaap_{local}")
+        if not t:
+            return []
+        rs = [role2r[x] for x in t.get("presentation", []) if x in role2r]
+        return sorted(rs, key=lambda x: (x[1] == "statement", int(re.sub(r"\D", "", x[0]) or 0)))
+
+    for r in todo:
+        dp = r["data_point"]
+        spec = next((d for d in DP if d[0] == dp), None)
+        full, comp = NOTE_FAMILY.get(dp, ((spec[2] if spec else []), []))
+        hit = next(((t, where(t)) for t in full if where(t)), None)
+        if hit:
+            t, rs = hit
+            months = 12 if r.get("stmt") in ("IS", "CF") else None
+            av = api_value(cf, f"us-gaap:{t}", accn, end, months) if end else None
+            r.update(status="mapped", stmt="NOTE" if rs[0][1] != "statement" else rs[0][1], r_page=f"{rs[0][0]}.htm",
+                     tags=f"us-gaap:{t}", label=rs[0][2][:120], fy0_printed="", fy0_api=fmt(av),
+                     match="", note=f"not on the face statement; shown in {rs[0][0]}.htm '{rs[0][2][:80]}' (MetaLinks.json presentation); value from companyfacts same accession" + ("" if av is not None else " (no undimensioned companyfacts fact: read the R page)"))
+            quirks.append(f"| new | {tic} | {dp} | us-gaap:{t} | not on the face; reported in a note/other page {rs[0][0]}.htm '{rs[0][2][:60]}' | {accn} | FILING-CHECKED (MetaLinks) |")
+            continue
+        chit = [(t, where(t)) for t in comp if where(t)]
+        if chit:
+            t, rs = chit[0]
+            r.update(status="component_in_note", stmt="NOTE", r_page=f"{rs[0][0]}.htm", tags="+".join(f"us-gaap:{c[0]}" for c in chit),
+                     label=rs[0][2][:120], note=f"only component tag(s) {', '.join(c[0] for c in chit)} in the filing ({rs[0][0]}.htm '{rs[0][2][:60]}'); the data point itself is not reported")
+            continue
+        r.update(status="not_presented", evidence_class="FILING-CHECKED",
+                 note=f"whole-filing check: none of {', '.join(full + comp)} in MetaLinks.json ({ntags} tags across all {len(role2r)} R pages, face and notes) of {accn}; no face row matched")
+
+
 def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     cik = row["cik"].zfill(10)
     tic = row["ticker"]
@@ -502,8 +573,9 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                    note=f"balance-sheet date {end}; " + ("classes summed (printed rows)" if len(sh) > 1 else "single row"))
     else:
         rec.update(status="not_presented", stmt="BS", r_page=reps.get("BS", ("", ""))[1],
-                   note="no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical (auto); dei cover count not used")
+                   note="AUTO: no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical; dei cover count not used")
     out.append(rec)
+    resolve_by_filing(out, cf, accn, cik, cache, quirks, tic)
     # era coverage FY2015 -> latest (Dhairya 2026-11-12: a docmap is loadable only when every data point's eras
     # cover FY2015 to the latest year). Runs come from companyfacts 10-K annual facts (DATA-INFERRED); the FY2015
     # 10-K is always opened and its printed line recorded (FILING-CHECKED), plus up to 2 more era-change 10-Ks.
@@ -595,8 +667,9 @@ def write_company(out: list[dict], meta: dict, out_dir: str) -> None:
     L = [f"# {tic} document-first map {DATE} (read-only, bottom-up)", "",
          "Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element "
          "references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: "
-         "status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12); a not_presented row whose note starts AUTO is "
-         "the tool finding no matching face line, not a by-hand verdict.", "",
+         "status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss "
+         "is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): "
+         "stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.", "",
          "## Filings opened"]
     if meta.get("error"):
         L.append(f"- none: {meta['error']} (CIK {meta['cik']}, {meta['name']})")
