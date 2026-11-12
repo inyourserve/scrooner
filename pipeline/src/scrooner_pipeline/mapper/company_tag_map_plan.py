@@ -390,12 +390,103 @@ def _report(
     }
 
 
+def _fy_valued(expected, valued: set, periods, names: dict[str, int]) -> int:
+    """How many 'served' FY0/FY-1 template cells hold a value in `valued` ((concept_id, period_id) keys)."""
+    n = 0
+    for dp, period, status in expected:
+        if status != "served":
+            continue
+        ids = [names[c] for c in _candidates(dp) if c in names]
+        pids = [pid for end, _, _, pid in periods if fsn_end_matches(period, end)]
+        n += any((i, p) in valued for i in ids for p in pids)
+    return n
+
+
+def era_shortfall(map_rows, period_ends: list[date]) -> dict[int, date]:
+    """Concept id -> its earliest era start, for every concept of the map whose eras do not reach back over the data
+    window (I11: a company period ends in [2015-01-01, earliest era start) and no row covers it). Pure."""
+    first: dict[int, date] = {}
+    for concept_id, era_from in map_rows:
+        if concept_id is not None:
+            first[concept_id] = min(era_from, first.get(concept_id, era_from))
+    return {
+        c: start
+        for c, start in first.items()
+        if any(DATA_WINDOW_START <= e < start for e in period_ends)
+    }
+
+
+def coverage_gate_ok(cov: dict) -> bool:
+    """Apply a company only when its map covers the data window for every data point, it loses no FY0/FY-1 template
+    value, and no value disappears without a reason (Dhairya 2026-11-12, invariant I11)."""
+    return (
+        not cov["era_short"]
+        and cov["fy01_after"] >= cov["fy01_before"]
+        and cov["values_lost"] == 0
+    )
+
+
+def coverage(
+    conn, cid: int, run_id: str, before: set, expected, concept_info, scope: set[int]
+) -> dict[str, Any]:
+    """Before -> after for one company inside its plan transaction: eras covered, values in the data window that
+    disappear (lost: no reason row; held: a reasoned blank of this run), FY0/FY-1 template cells valued."""
+    names = {n: i for i, (n, _) in concept_info.items()}
+    with conn.cursor() as cur:
+        cur.execute(
+            "select end_date, period_type, start_date, id from core.period where company_id = %s",
+            (cid,),
+        )
+        periods = cur.fetchall()
+        cur.execute(
+            "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
+            (cid,),
+        )
+        after = set(cur.fetchall())
+        cur.execute(
+            "select data_point_name, period_end from analytics.cell_blank_reason where company_id = %s and run_id = %s::uuid",
+            (cid, run_id),
+        )
+        reasoned = set(cur.fetchall())
+        cur.execute(
+            "select coalesce(canonical_concept_id, parent_concept_id), era_from from analytics.company_tag_map where company_id = %s",
+            (cid,),
+        )
+        map_rows = cur.fetchall()
+    end_of = {pid: end for end, _, _, pid in periods}
+    gone = [
+        (c, p)
+        for c, p in before - after
+        if c in scope and end_of.get(p, date.min) >= DATA_WINDOW_START
+    ]
+    held = sum(
+        (concept_info[c][0], end_of[p]) in reasoned
+        for c, p in gone
+        if c in concept_info
+    )
+    short = era_shortfall(map_rows, [e for e, _, _, _ in periods])
+    return {
+        "era_from_min": min((e for _, e in map_rows), default=None),
+        "era_short": {
+            concept_info[c][0]: s.isoformat()
+            for c, s in short.items()
+            if c in concept_info
+        },
+        "values_lost": len(gone) - held,
+        "values_held_with_reason": held,
+        "fy01_before": _fy_valued(expected, before, periods, names),
+        "fy01_after": _fy_valued(expected, after, periods, names),
+        "fy01_expected": sum(1 for *_, st in expected if st == "served"),
+    }
+
+
 def run(
     conn: psycopg.Connection,
     company_ids: list[int],
     expected: dict[int, list[tuple[str, date, str]]],
     *,
     apply: bool,
+    gate: bool = False,
 ) -> dict[int, dict]:
     managed = resolve_mod._load_managed_concept_ids(conn)
     concept_info = ctm.load_concept_info(conn)
@@ -409,6 +500,12 @@ def run(
                 cik = conn.execute(
                     "select cik from core.company where id = %s", (cid,)
                 ).fetchone()[0]
+                before = set(
+                    conn.execute(
+                        "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
+                        (cid,),
+                    ).fetchall()
+                )
                 conn.execute("set local scrooner.writer = 'company_tag_map'")
                 conn.execute("set local scrooner.slot_writer = 'on'")
                 run_id = cs.start_rule_run(
@@ -444,7 +541,19 @@ def run(
                     conn, cid, run_id, stats, expected.get(cid, []), concept_info
                 )
                 rep["protected_keys"] = protected
+                rep["coverage"] = coverage(
+                    conn,
+                    cid,
+                    run_id,
+                    before,
+                    expected.get(cid, []),
+                    concept_info,
+                    set(managed),
+                )
                 out[cid] = rep
+                if apply and gate and not coverage_gate_ok(rep["coverage"]):
+                    rep["gated"] = True  # rolled back: stays on its current serving
+                    raise _PlanRollback
                 if apply:
                     cs.finish_rule_run(
                         conn,

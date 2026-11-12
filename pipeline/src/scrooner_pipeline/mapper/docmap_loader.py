@@ -79,6 +79,9 @@ class DocmapRow:
     accession: str
     reason: str
     source: str
+    fy0_end: date | None = (
+        None  # the read 10-K's fiscal year end (FY0); FY-1 ends a year earlier
+    )
 
     @property
     def cites_page(self) -> bool:
@@ -231,6 +234,7 @@ def parse_docmap(
                 accn,
                 _reason(r["note"]),
                 source,
+                fy0,
             )
         )
     return rows, rejects
@@ -432,6 +436,31 @@ def plan_company(
     return plan
 
 
+VALUE_STATUSES = {"mapped", "component sum", "component_in_note"}
+
+
+def expected_cells(
+    paths: list[Path], names: set[str]
+) -> dict[str, list[tuple[str, date, str]]]:
+    """Ticker -> the docmap template's FY0/FY-1 cells (served data point, period end, status): 'served' for a
+    value-bearing status, else the status (a reasoned blank is expected). The tagmap-plan coverage check reads it."""
+    out: dict[str, list[tuple[str, date, str]]] = {}
+    for p in latest_docmaps(paths):
+        md = p.with_suffix(".md")
+        rows, _ = parse_docmap(
+            p.read_text(), md.read_text() if md.exists() else "", p.name
+        )
+        ticker = p.name.split("-docmap-")[0].upper()
+        cells = out.setdefault(ticker, [])
+        for d in rows:
+            if d.fy0_end is None:
+                continue
+            status = "served" if d.status in VALUE_STATUSES else d.status
+            for end in (d.fy0_end, _years_back(d.fy0_end, 1)):
+                cells.append((served_concept(d.data_point, names), end, status))
+    return out
+
+
 def latest_docmaps(paths: list[Path]) -> list[Path]:
     """The newest docmap per ticker (file names <TICKER>-docmap-<YYYY-MM-DD>.csv)."""
     best: dict[str, Path] = {}
@@ -449,6 +478,20 @@ from analytics.company_tag_map where company_id = any(%s)
 """
 
 
+def companies_by_ticker(conn: psycopg.Connection) -> dict[str, set[tuple[int, str]]]:
+    """Upper-case ticker -> {(company id, cik)} from the primary ticker and every listing."""
+    by_ticker: dict[str, set[tuple[int, str]]] = defaultdict(set)
+    with conn.cursor() as cur:
+        cur.execute(
+            """select upper(t), c.id, c.cik from core.company c
+               join lateral (select c.primary_ticker union select l.ticker from core.listing l where l.company_id = c.id) x(t)
+                 on x.t is not null"""
+        )
+        for t, cid, cik in cur.fetchall():
+            by_ticker[t].add((cid, cik))
+    return by_ticker
+
+
 def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) -> dict:
     """Plan (and with apply, write) every docmap in `paths`. One transaction per company; a company whose rows fail
     validation or era overlap is skipped whole and listed."""
@@ -456,14 +499,7 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
     with conn.cursor() as cur:
         cur.execute("select name, id, statement from analytics.canonical_concept")
         cc = cur.fetchall()
-        cur.execute(
-            """select upper(t), c.id, c.cik from core.company c
-               join lateral (select c.primary_ticker union select l.ticker from core.listing l where l.company_id = c.id) x(t)
-                 on x.t is not null"""
-        )
-        by_ticker: dict[str, set[tuple[int, str]]] = defaultdict(set)
-        for t, cid, cik in cur.fetchall():
-            by_ticker[t].add((cid, cik))
+    by_ticker = companies_by_ticker(conn)
     concept_ids = {n: i for n, i, _ in cc}
     concept_statement = {n: s for n, _, s in cc}
     stats: dict[str, Any] = {
