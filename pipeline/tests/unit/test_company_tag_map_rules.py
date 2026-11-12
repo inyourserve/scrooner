@@ -745,5 +745,5 @@ def test_a_sum_is_held_when_a_part_has_only_non_authoritative_facts_never_a_part
     arcs = {"A-10": {("OperatingExpenses", "SM"), ("OperatingExpenses", "GA")}}
     cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {("us-gaap", "SM"): {7: 3}})
     assert cells == [] and stats["held"][0]["reason"] == "component_without_authoritative_fact"
-    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {})  # part simply not printed: one-line sum
-    assert [c["value"] for c in cells] == [Decimal("4563")]
+    cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {})  # no fact at all for the part: still held
+    assert cells == [] and stats["held"][0]["reason"] == "component_missing_for_period"

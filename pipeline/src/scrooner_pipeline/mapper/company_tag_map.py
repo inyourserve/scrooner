@@ -868,19 +868,29 @@ def build_cells(
             # D3 / doc 02: instants are never derived; the only instant component sum is total debt
             hold(key, "instant_component_sum_not_allowed")
             continue
-        # a part whose tag has facts for the period but NONE authoritative is unknown, not zero: summing the rest
-        # would serve a partial total (MSFT sga FY2016 = G&A alone while S&M's copies were all non-authoritative)
+        # every part the map lists for the period must be present: a missing part is unknown, not zero, and
+        # summing the rest serves a partial total (MSFT sga FY2016 = G&A alone: S&M's copies were all
+        # non-authoritative, and its Q4 could not be derived). Eras are cut to where a line is printed.
         present = {(r.taxonomy, r.tag) for r, _ in c}
         end = c[0][1].end
-        if any(
-            r.decision == "component"
+        missing = [
+            r
+            for r in rows
+            if r.decision == "component"
             and r.parent_concept_id == key[0]
             and (r.taxonomy, r.tag) not in present
             and _in_era(r, end)
-            and (no_auth or {}).get((r.taxonomy, r.tag), {}).get(key[1])
-            for r in rows
-        ):
-            hold(key, "component_without_authoritative_fact")
+        ]
+        if missing:
+            hold(
+                key,
+                "component_without_authoritative_fact"
+                if any(
+                    (no_auth or {}).get((r.taxonomy, r.tag), {}).get(key[1])
+                    for r in missing
+                )
+                else "component_missing_for_period",
+            )
             continue
         if len({f.source for _, f in c}) > 1:
             c = _single_source_parts(c, fsn_vintages, key[1]) or c
