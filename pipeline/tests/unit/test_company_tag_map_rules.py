@@ -747,3 +747,33 @@ def test_a_sum_is_held_when_a_part_has_only_non_authoritative_facts_never_a_part
     assert cells == [] and stats["held"][0]["reason"] == "component_without_authoritative_fact"
     cells, stats = build_cells(rows, facts, INFO, arcs, {}, None, None, {})  # no fact at all for the part: still held
     assert cells == [] and stats["held"][0]["reason"] == "component_missing_for_period"
+
+
+def test_a_latest_proof_disagree_hides_the_cell_with_a_reason_and_a_later_proven_serves_it_again():
+    rows = [concept_row("OperatingExpenses")]
+    facts = {("us-gaap", "OperatingExpenses"): {7: fact("50", 1)}}
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    key = ("opex", "FY", date(2020, 1, 1), END)
+
+    def go(proof):
+        return build_cells(rows, facts, INFO, {}, {}, periods, None, None, None, None, proof)
+
+    cells, stats = go({key: Decimal("50")})  # DISAGREE on the value about to be served: held, reason written
+    assert cells == [] and [h["reason"] for h in stats["held"]] == ["proof_disagree"]
+    assert [(b["reason_code"], b["state"], b["defect_class"], b["owner"]) for b in stats["blanks"]] == [
+        ("proof_disagree", "defect", "guard_hidden", "verifier")
+    ]
+    cells, stats = go({key: Decimal("49")})  # stale: the verdict judged another value -> served, proved again
+    assert [c["value"] for c in cells] == [Decimal("50")] and stats["held"] == []
+    cells, stats = go({})  # the latest proof flipped to PROVEN (no DISAGREE row): served, no manual clearing
+    assert [c["value"] for c in cells] == [Decimal("50")] and stats["blanks"] == []
+
+
+def test_every_held_cell_gets_a_written_reason():
+    rows = [comp_row("SM"), comp_row("GA")]
+    facts = {("us-gaap", "GA"): {7: fact("4563", 1)}}
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    cells, stats = build_cells(rows, facts, INFO, {}, {}, periods, None, {("us-gaap", "SM"): {7: 2}})
+    assert cells == [] and [(b["reason_code"], b["owner"]) for b in stats["blanks"]] == [
+        ("component_without_authoritative_fact", "data_engineer_l1")
+    ]

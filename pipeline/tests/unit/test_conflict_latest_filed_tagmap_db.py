@@ -156,3 +156,24 @@ def test_mapper_vintages_carry_same_value_copies_never_a_different_value(isolate
         assert sorted(f.accession for fs in got[TAG].values() for f in fs) == ["X1", "X2"]
         latest = ctm._load_fact_vintages(conn, cid, {TAG}, latest_only=True)
         assert [f.accession for fs in latest[TAG].values() for f in fs] == ["X1"]
+
+
+@pytest.mark.integration
+def test_proof_guard_reads_only_the_latest_proof_run_of_the_company(isolated_database_url):
+    from scrooner_pipeline.mapper import company_tag_map as ctm
+
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = conn.execute("insert into core.company (cik, company_name) values ('0000000017', 'T') returning id").fetchone()[0]
+        for name, end, at, verdict in [
+            ("revenue", "2020-12-31", "2026-11-12 12:00+00", "DISAGREE"),  # latest run
+            ("revenue", "2019-12-31", "2026-11-02 12:00+00", "DISAGREE"),  # an older run's leftover row
+            ("cfo", "2020-12-31", "2026-11-12 12:05+00", "PROVEN"),
+        ]:
+            conn.execute(
+                """insert into analytics.cell_proof (company_id, data_point_name, period_grain, period_start, period_end,
+                   shown_value, position_value, position_is_expected_line, verdict, reason_code, detector_version, proved_at)
+                   values (%s, %s, 'FY', (%s::date - 364), %s, 5, 5, true, %s, %s, 'v', %s)""",
+                (cid, name, end, end, verdict, "x" if verdict == "DISAGREE" else None, at),
+            )
+        got = ctm._load_proof_disagree(conn, cid)
+        assert [(k[0], k[3].isoformat()) for k in got] == [("revenue", "2020-12-31")]

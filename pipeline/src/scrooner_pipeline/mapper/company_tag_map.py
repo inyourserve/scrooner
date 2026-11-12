@@ -444,6 +444,30 @@ def _load_fsn_vintages(
     return out
 
 
+def _load_proof_disagree(
+    conn: psycopg.Connection, company_id: int
+) -> dict[tuple[str, str, date, date], Decimal]:
+    """(data point, grain, start, end) -> the value the latest run's DISAGREE verdict judged (analytics.cell_proof
+    keeps one row per cell key, upserted). Empty when the table is absent."""
+    if conn.execute("select to_regclass('analytics.cell_proof')").fetchone()[0] is None:
+        return {}
+    return {
+        (n, g, s, e): Decimal(v)
+        for n, g, s, e, v in conn.execute(
+            """
+            select data_point_name, period_grain, period_start, period_end, shown_value
+            from analytics.cell_proof
+            where company_id = %s and basis = 'latest' and verdict = 'DISAGREE' and shown_value is not null
+              -- the company's LATEST proof run only (a run takes minutes): a row an older run left for a key the
+              -- latest run did not prove never hides a cell
+              and proved_at >= (select max(proved_at) - interval '6 hours'
+                                from analytics.cell_proof where company_id = %s)
+            """,
+            (company_id, company_id),
+        ).fetchall()
+    }
+
+
 def _load_no_authoritative(
     conn, company_id: int, tags: set[tuple[str | None, str | None]]
 ):
@@ -725,6 +749,92 @@ def _single_source_parts(
     return out
 
 
+def _proof_grain(start: date, end: date, ptype: str) -> str:
+    return (
+        _grain(start, end, ptype) or "TP"
+    )  # a year-to-date column is 'TP' in analytics.cell_proof
+
+
+def _proof_guard(
+    cells: list[dict],
+    concept_info,
+    periods: dict[int, tuple[date, date, str]],
+    stats: dict,
+    proof_disagree: dict[tuple[str, str, date, date], Decimal],
+) -> list[dict]:
+    """A cell whose LATEST cell_proof verdict is DISAGREE is never served (Dhairya 2026-11-12): held with
+    proof_disagree. The verdict applies only while it judged the value about to be served (its shown_value equals
+    it): a value that changed since the proof is served and proved again, and a later PROVEN verdict (one row per
+    cell key, upserted) serves the cell on the next plan. No manual clearing."""
+    if not proof_disagree:
+        return cells
+    kept = []
+    for c in cells:
+        start, end, ptype = periods.get(c["period_id"], (None, None, None))
+        shown = (
+            proof_disagree.get(
+                (
+                    concept_info[c["canonical_concept_id"]][0],
+                    _proof_grain(start, end, ptype),
+                    start,
+                    end,
+                )
+            )
+            if start is not None
+            else None
+        )
+        if shown is not None and shown == c["value"]:
+            stats["held"].append(
+                {
+                    "canonical_concept_id": c["canonical_concept_id"],
+                    "period_id": c["period_id"],
+                    "reason": "proof_disagree",
+                }
+            )
+            continue
+        kept.append(c)
+    return kept
+
+
+HOLD_OWNERS = {
+    "proof_disagree": "verifier",
+    "component_without_authoritative_fact": "data_engineer_l1",
+    "component_missing_for_period": "data_engineer_l1",
+}
+
+
+def _held_reasons(stats: dict, concept_info, periods) -> None:
+    """Every held cell gets its reason written (defect, guard_hidden), so a held cell is never a blank without
+    one. A cell that already has a reasoned blank keeps it; year-to-date columns (no FY/Q/I grain) are skipped,
+    as for every blank."""
+    have = {(b["canonical_concept_id"], b["period_id"]) for b in stats["blanks"]}
+    for h in stats["held"]:
+        key = (h["canonical_concept_id"], h["period_id"])
+        if key in have or h["period_id"] not in periods:
+            continue
+        start, end, ptype = periods[h["period_id"]]
+        grain = _grain(start, end, ptype)
+        if grain is None:
+            continue
+        have.add(key)
+        stats["blanks"].append(
+            {
+                "canonical_concept_id": key[0],
+                "concept_name": concept_info[key[0]][0],
+                "period_id": key[1],
+                "state": "defect",
+                "defect_class": "guard_hidden",
+                "owner": HOLD_OWNERS.get(h["reason"], "standardization_lead"),
+                "reason_code": h["reason"],
+                "reason": f"held by the tag-map mapper: {h['reason']}",
+                "rule_id": RULE_ID,
+                "period_start": start,
+                "period_end": end,
+                "grain": grain,
+            }
+        )
+
+
 def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[dict]:
     """An sga sum without calc arcs stands only when the same period's opex was built from components of the same
     filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line."""
@@ -772,6 +882,7 @@ def build_cells(
     vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]] | None = None,
     fsn_vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]]
     | None = None,
+    proof_disagree: dict[tuple[str, str, date, date], Decimal] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
     vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
@@ -953,6 +1064,7 @@ def build_cells(
     cells = _opex_tie(cells, concept_info, dcml, stats, tie_prints)
     cells = _sga_inside_tied_opex(cells, concept_info, stats)
     cells = _scale_sanity(cells, concept_info, periods, stats)
+    cells = _proof_guard(cells, concept_info, periods, stats, proof_disagree or {})
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
     held_keys = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
     name_to_id = {n: i for i, (n, _) in concept_info.items()}
@@ -1170,6 +1282,7 @@ def build_cells(
                 "grain": grain,
             }
         )
+    _held_reasons(stats, concept_info, periods)
     return cells, stats
 
 
@@ -1431,6 +1544,7 @@ def resolve_for_company(
         no_auth,
         vintages,
         fsn_vintages,
+        _load_proof_disagree(conn, company_id),
     )
     targets = set(managed_concept_ids)
     for r in rows:
