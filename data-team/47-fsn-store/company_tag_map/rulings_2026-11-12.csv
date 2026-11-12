@@ -1,0 +1,8 @@
+tag,home_stmt,decision,concept,condition,reason_class,reason
+us-gaap:CommonStockSharesAuthorized,BS/IS/CF,excluded,,,share_terms,"Dhairya ruling 2026-11-12 (relayed by the coordinator): share terms, not a template point"
+us-gaap:CommonStockSharesIssued,BS/IS/CF,excluded,,,share_terms,"Dhairya ruling 2026-11-12 (relayed by the coordinator): share terms, not a template point"
+us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,CF,map,cash_and_equivalents_resolved,"ambiguous_if@BS:CashAndCashEquivalentsAtCarryingValue,Cash",,Dhairya ruling 2026-11-12: CF ending-cash line is the cash concept only where the card plain-cash rule allows (no plain cash line on the same BS face); otherwise the bank/CF-ending rule decides (needs_detail)
+us-gaap:InterestExpense,IS,map,interest_expense_resolved,"amb_label~, net\b|net of interest income|and other",,Dhairya ruling 2026-11-12: per the income-statement card; a label net of interest income is combined (needs_detail)
+us-gaap:PaymentsOfDividends,CF,map,dividends_paid_resolved,amb_label~preferred|noncontrolling|non-controlling|minority,,"Dhairya ruling 2026-11-12: dividends paid, or combined when the label includes preferred or noncontrolling wording (needs_detail)"
+us-gaap:Depreciation,CF,map,depreciation_and_amortization_resolved,amb_label~impairment|accretion|nuclear|and other|financing|deferred,,Dhairya ruling 2026-11-12: CF wins; card label check on the perimeter (needs_detail)
+us-gaap:DepreciationAndAmortization,CF,map,depreciation_and_amortization_resolved,amb_label~impairment|accretion|nuclear|and other|financing|deferred,,Dhairya ruling 2026-11-12: CF wins; card label check on the perimeter (needs_detail)

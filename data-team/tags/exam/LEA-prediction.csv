@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+LEA,938,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Accounts payable and drafts,3416500000.0000,library map
+LEA,938,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Accounts receivable,3902800000.0000,library map
+LEA,938,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Amortization of intangible assets,19500000.0000,library map
+LEA,938,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000842162-26-000011,R5,Basic net income per share attributable to Lear (in dollars per share),8.2200,library map
+LEA,938,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,"Additions to property, plant and equipment",561600000.0000,library map
+LEA,938,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Cash and cash equivalents,1033000000.0000,library map
+LEA,938,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000842162-26-000011,R9,Net cash used in financing activities,-618500000.0000,library map
+LEA,938,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000842162-26-000011,R9,Net cash used in investing activities,-516800000.0000,library map
+LEA,938,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,"Cash paid for income taxes, net of refunds received of $29.5 million in 2025, $24.1 million in 2024 and $15.7 million in 2023",276800000.0000,library map
+LEA,938,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Cash paid for interest,114100000.0000,library map
+LEA,938,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000842162-26-000011,R9,Accounts payable (including $15.4 million of cash paid in 2023 in conjunction with the acquisition of IGB to settle pre-existing accounts payable),-28700000.0000,library map
+LEA,938,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Accounts receivable,89300000.0000,library map
+LEA,938,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000842162-26-000011,R9,Inventories,-900000.0000,library map
+LEA,938,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Net cash provided by operating activities,1088800000.0000,library map
+LEA,938,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000842162-26-000011,R6,Comprehensive income attributable to Lear,1026200000.0000,library map
+LEA,938,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Cost of sales,21754700000.0000,library map
+LEA,938,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Total current assets,7663000000.0000,library map
+LEA,938,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Total current liabilities,5667100000.0000,library map
+LEA,938,deposits,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Depreciation and amortization,604100000.0000,library map
+LEA,938,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000842162-26-000011,R5,Diluted net income per share attributable to Lear (in dollars per share),8.1500,library map
+LEA,938,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Dividends paid to Lear Corporation shareholders,164800000.0000,library map
+LEA,938,dividends_per_share,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Goodwill,1777800000.0000,library map
+LEA,938,gross_profit,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Consolidated income before provision for income taxes and equity in net income of affiliates,625100000.0000,library map
+LEA,938,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Provision for income taxes,150000000.0000,library map
+LEA,938,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,"Interest expense, net",100800000.0000,combined line (library or label demote)
+LEA,938,interest_income,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Inventories,1693200000.0000,library map
+LEA,938,loans_net,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Net income attributable to Lear,436800000.0000,library map
+LEA,938,net_interest_income,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,noninterest_expense,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,noninterest_income,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,"Selling, general and administrative expenses",707600000.0000,printed opex lines (duration sum)
+LEA,938,operating_income,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,other_income_expense_net,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,"Property, plant and equipment, net",2913100000.0000,library map
+LEA,938,provision_for_credit_losses,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,research_and_development,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,Net sales,23259100000.0000,library map
+LEA,938,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Stock-based compensation,66200000.0000,library map
+LEA,938,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000842162-26-000011,R5,"Selling, general and administrative expenses",707600000.0000,library map
+LEA,938,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000842162-26-000011,R9,Repurchases of common stock,325200000.0000,library map
+LEA,938,shares_outstanding,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Lear Corporation shareholders' equity,5035100000.0000,library map
+LEA,938,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Total assets,14843100000.0000,library map
+LEA,938,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0000842162-26-000011,R3,Short-term borrowings,27900000.0000,printed face components (duration sum; total_debt founder sum)
+LEA,938,total_interest_income,OUT,,,,,,,,0000842162-26-000011,,,,not a bank
+LEA,938,total_liabilities,not_presented,,,,,,,,0000842162-26-000011,,,,no face line
+LEA,938,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0000842162-26-000011,R5,Average common shares outstanding (in shares),53168252.0000,library map
+LEA,938,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0000842162-26-000011,R5,Average diluted shares outstanding (in shares),53590776.0000,library map

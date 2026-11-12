@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+QLYS,910,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Accounts payable,1202000.0000,library map
+QLYS,910,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,"Accounts receivable, net of allowance of $1,581 and $1,064 as of December 31, 2025 and 2024, respectively",170991000.0000,library map
+QLYS,910,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001107843-26-000008,,,,note-sourced default tag (no face line)
+QLYS,910,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001107843-26-000008,R5,Basic (in USD per share),5.4900,library map
+QLYS,910,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Purchases of property and equipment,4990000.0000,library map
+QLYS,910,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Cash and cash equivalents,250258000.0000,library map
+QLYS,910,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001107843-26-000008,R7,Net cash used in financing activities,-185400000.0000,library map
+QLYS,910,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001107843-26-000008,R7,Net cash used in investing activities,-105924000.0000,library map
+QLYS,910,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,"Cash paid for income taxes, net of refunds",40886000.0000,library map
+QLYS,910,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001107843-26-000008,,,,note-sourced default tag (no face line)
+QLYS,910,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Accounts payable,27000.0000,library map
+QLYS,910,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Accounts receivable,7666000.0000,library map
+QLYS,910,cf_inventory_change,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Net cash provided by operating activities,309400000.0000,library map
+QLYS,910,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001107843-26-000008,R6,Comprehensive income,192891000.0000,library map
+QLYS,910,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Cost of revenues,114768000.0000,library map
+QLYS,910,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Total current assets,657616000.0000,library map
+QLYS,910,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Total current liabilities,467338000.0000,library map
+QLYS,910,deposits,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Depreciation and amortization expense,14491000.0000,library map
+QLYS,910,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001107843-26-000008,R5,Diluted (in USD per share),5.4400,library map
+QLYS,910,dividends_paid,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,dividends_per_share,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Goodwill,7447000.0000,library map
+QLYS,910,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Gross profit,554357000.0000,library map
+QLYS,910,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Income before income taxes,246828000.0000,library map
+QLYS,910,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Income tax provision,48508000.0000,library map
+QLYS,910,interest_expense,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Interest income,25251000.0000,library map
+QLYS,910,inventory,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,loans_net,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Net income,198320000.0000,library map
+QLYS,910,net_interest_income,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,noninterest_expense,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,noninterest_income,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Total operating expenses,332405000.0000,printed opex total tag
+QLYS,910,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Income from operations,221952000.0000,library map
+QLYS,910,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001107843-26-000008,R5,"Other expense, net",-375000.0000,library map
+QLYS,910,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,"Property and equipment, net",23166000.0000,library map
+QLYS,910,provision_for_credit_losses,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Research and development,117284000.0000,library map
+QLYS,910,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Revenues,669125000.0000,library map
+QLYS,910,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,"Stock-based compensation, net of amounts capitalized",76966000.0000,library map
+QLYS,910,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Sales and marketing,143505000.0000,printed face components (duration sum; total_debt founder sum)
+QLYS,910,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001107843-26-000008,R7,Repurchase of common stock,183425000.0000,library map
+QLYS,910,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001107843-26-000008,R4,"Common stock, outstanding (in shares)",35730000.0000,library map
+QLYS,910,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Total stockholders equity,561153000.0000,library map
+QLYS,910,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Total assets,1095081000.0000,library map
+QLYS,910,total_debt,not_presented,,,,,,,,0001107843-26-000008,,,,no face line
+QLYS,910,total_interest_income,OUT,,,,,,,,0001107843-26-000008,,,,not a bank
+QLYS,910,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001107843-26-000008,R3,Total liabilities,533928000.0000,library map
+QLYS,910,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Basic (in shares),36142000.0000,library map
+QLYS,910,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001107843-26-000008,R5,Diluted (in shares),36453000.0000,library map

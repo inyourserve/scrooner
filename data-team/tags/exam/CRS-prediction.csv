@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+CRS,465,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Accounts payable,313400000.0000,library map
+CRS,465,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,"Accounts receivable, net of allowance for doubtful accounts of $9.4 million and $$7.9 million at June 30, 2026 and 2025, respectively",701900000.0000,library map
+CRS,465,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
+CRS,465,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000017843-26-000034,R3,Basic (in dollars per share),10.5900,library map
+CRS,465,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,"Purchases of property, plant, equipment and software",242700000.0000,library map
+CRS,465,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Cash and cash equivalents,393300000.0000,library map
+CRS,465,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000017843-26-000034,R6,Net cash used for financing activities,-286800000.0000,library map
+CRS,465,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000017843-26-000034,R6,Net cash used for investing activities,-242700000.0000,library map
+CRS,465,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
+CRS,465,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000017843-26-000034,,,,note-sourced default tag (no face line)
+CRS,465,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Accounts payable,17200000.0000,library map
+CRS,465,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Accounts receivable,128300000.0000,library map
+CRS,465,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Inventories,28400000.0000,library map
+CRS,465,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Net cash provided from operating activities,605000000.0000,library map
+CRS,465,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000017843-26-000034,R4,"Comprehensive income, net of tax",577300000.0000,library map
+CRS,465,cost_of_revenue,combined,us-gaap:OtherCostOfOperatingRevenue,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Cost of sales,2168700000.0000,combined line (library or label demote)
+CRS,465,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Total current assets,1981200000.0000,library map
+CRS,465,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Total current liabilities,520000000.0000,library map
+CRS,465,deposits,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Depreciation and amortization,147100000.0000,library map
+CRS,465,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000017843-26-000034,R3,Diluted (in dollars per share),10.5200,library map
+CRS,465,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Dividends paid,40300000.0000,library map
+CRS,465,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000017843-26-000034,R10,Cash dividends per common share (in dollars per share),0.8000,library map
+CRS,465,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Goodwill,227300000.0000,library map
+CRS,465,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Gross profit,955500000.0000,library map
+CRS,465,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Income before income taxes,656200000.0000,library map
+CRS,465,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Income tax expense,126400000.0000,library map
+CRS,465,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000017843-26-000034,R3,"Interest expense, net",37800000.0000,combined line (library or label demote)
+CRS,465,interest_income,not_presented,,,,,,,,0000017843-26-000034,,,,no face line
+CRS,465,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Inventories,822900000.0000,library map
+CRS,465,loans_net,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Net income,529800000.0000,library map
+CRS,465,net_interest_income,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,noninterest_expense,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,noninterest_income,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,operating_expenses,not_presented,,,,,,,,0000017843-26-000034,,,,no face line
+CRS,465,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Operating income,702000000.0000,library map
+CRS,465,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,"Other (income) expense, net",7600000.0000,library map
+CRS,465,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,"Property, plant, equipment and software, net",1487900000.0000,library map
+CRS,465,provision_for_credit_losses,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,research_and_development,not_presented,,,,,,,,0000017843-26-000034,,,,no face line
+CRS,465,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Net sales,3124200000.0000,library map
+CRS,465,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Share-based compensation expense,26400000.0000,library map
+CRS,465,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,"Selling, general and administrative expenses",253500000.0000,library map
+CRS,465,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000017843-26-000034,R6,Purchases of treasury stock,179100000.0000,library map
+CRS,465,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000017843-26-000034,R8,"Common stock, outstanding shares (in shares)",49606583.0000,library map
+CRS,465,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Total stockholders' equity,2227600000.0000,library map
+CRS,465,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Total assets,3838300000.0000,library map
+CRS,465,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Long-term debt,690700000.0000,printed face components (duration sum; total_debt founder sum)
+CRS,465,total_interest_income,OUT,,,,,,,,0000017843-26-000034,,,,not a bank
+CRS,465,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000017843-26-000034,R7,Total liabilities,1610700000.0000,library map
+CRS,465,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Basic (in shares),50000000.0000,library map
+CRS,465,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0000017843-26-000034,R3,Diluted (in shares),50400000.0000,library map

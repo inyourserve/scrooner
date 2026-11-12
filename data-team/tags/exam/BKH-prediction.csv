@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+BKH,950,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Accounts payable,311700000.0000,library map
+BKH,950,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,"Accounts receivable, net",389000000.0000,library map
+BKH,950,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-046028,,,,note-sourced default tag (no face line)
+BKH,950,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-046028,R3,"Earnings per share, Basic (usd per share)",3.9900,library map
+BKH,950,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,"Property, plant and equipment additions",819800000.0000,library map
+BKH,950,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Cash and cash equivalents,182800000.0000,library map
+BKH,950,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Net cash provided by (used in) financing activities,321800000.0000,library map
+BKH,950,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-046028,R8,Net cash (used in) investing activities,-828200000.0000,library map
+BKH,950,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,-,-5,N,,sec_api,0001193125-26-046028,R8,Income taxes net of transferred tax credits (Note 15),-8800000.0000,library map
+BKH,950,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Interest (net of amounts capitalized),196400000.0000,library map
+BKH,950,cf_ap_change,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Accounts receivable and other current assets,45000000.0000,combined line (library or label demote)
+BKH,950,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,"Materials, supplies and fuel",17800000.0000,combined line (library or label demote)
+BKH,950,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Net cash provided by operating activities,673400000.0000,library map
+BKH,950,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-046028,R4,Comprehensive income available for common stock,291300000.0000,library map
+BKH,950,cost_of_revenue,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Total current assets,995900000.0000,library map
+BKH,950,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Total current liabilities,740000000.0000,library map
+BKH,950,deposits,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Depreciation and amortization,283800000.0000,library map
+BKH,950,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-046028,R3,"Earnings per share, Diluted (usd per share)",3.9800,library map
+BKH,950,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Dividends paid on common stock,197900000.0000,library map
+BKH,950,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,3,N,,sec_api,0001193125-26-046028,R10,Dividends on common stock (usd per share),2.7040,library map
+BKH,950,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Goodwill,1299500000.0000,library map
+BKH,950,gross_profit,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Income before income taxes,343500000.0000,library map
+BKH,950,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Income tax (expense),43700000.0000,library map
+BKH,950,interest_expense,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Interest income,6800000.0000,library map
+BKH,950,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,"Materials, supplies and fuel",172400000.0000,library map
+BKH,950,loans_net,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Net income available for common stock,291600000.0000,library map
+BKH,950,net_interest_income,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,noninterest_expense,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,noninterest_income,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Total operating expenses,1772500000.0000,printed opex total tag
+BKH,950,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Operating income,537500000.0000,library map
+BKH,950,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,"Other income (expense), net",6100000.0000,library map
+BKH,950,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,"Total property, plant and equipment, net",8234200000.0000,library map
+BKH,950,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,research_and_development,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Revenue,2310000000.0000,library map
+BKH,950,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,Stock compensation,11800000.0000,library map
+BKH,950,sga_expense,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,share_buybacks,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-5,N,,sec_api,0001193125-26-046028,R9,Beginning balance (in shares),75500000.0000,library map
+BKH,950,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Total stockholders equity,3823600000.0000,library map
+BKH,950,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,TOTAL ASSETS,10869800000.0000,library map
+BKH,950,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001193125-26-046028,R6,Notes payable,0.0000,printed face components (duration sum; total_debt founder sum)
+BKH,950,total_interest_income,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
+BKH,950,total_liabilities,not_presented,,,,,,,,0001193125-26-046028,,,,no face line
+BKH,950,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Basic (in shares),73000000.0000,library map
+BKH,950,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Diluted (in shares),73200000.0000,library map

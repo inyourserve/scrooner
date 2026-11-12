@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+RIG,907,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Accounts payable,242000000.0000,library map
+RIG,907,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,"Accounts receivable, net",540000000.0000,combined line (library or label demote)
+RIG,907,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001451505-26-000018,,,,note-sourced default tag (no face line)
+RIG,907,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001451505-26-000018,R2,"Loss per share, basic (in dollars per share)",-3.0400,library map
+RIG,907,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001451505-26-000018,R7,Capital expenditures,123000000.0000,library map
+RIG,907,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Cash and cash equivalents,620000000.0000,library map
+RIG,907,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001451505-26-000018,R7,Net cash provided by (used in) financing activities,-660000000.0000,library map
+RIG,907,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001451505-26-000018,R7,Net cash used in investing activities,-33000000.0000,library map
+RIG,907,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001451505-26-000018,,,,note-sourced default tag (no face line)
+RIG,907,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001451505-26-000018,,,,note-sourced default tag (no face line)
+RIG,907,cf_ap_change,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,cf_ar_change,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,cf_inventory_change,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001451505-26-000018,R7,Net cash provided by operating activities,749000000.0000,library map
+RIG,907,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0001451505-26-000018,R3,Total comprehensive loss attributable to controlling interest,-2923000000.0000,library map
+RIG,907,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,Operating and maintenance,2406000000.0000,library map
+RIG,907,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Total current assets,2081000000.0000,library map
+RIG,907,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Total current liabilities,1336000000.0000,library map
+RIG,907,deposits,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001451505-26-000018,R7,Depreciation and amortization,659000000.0000,library map
+RIG,907,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001451505-26-000018,R2,"Loss per share, diluted (in dollars per share)",-3.0400,library map
+RIG,907,dividends_paid,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,dividends_per_share,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,goodwill,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,gross_profit,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001451505-26-000018,R2,Loss before income taxes,-2948000000.0000,library map
+RIG,907,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001451505-26-000018,R2,Income tax expense (benefit),-33000000.0000,library map
+RIG,907,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001451505-26-000018,R2,"Interest expense, net of amounts capitalized",555000000.0000,library map
+RIG,907,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,Interest income,40000000.0000,library map
+RIG,907,inventory,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,loans_net,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001451505-26-000018,R2,Net loss attributable to controlling interest,-2915000000.0000,library map
+RIG,907,net_interest_income,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,noninterest_expense,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,noninterest_income,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,operating_expenses,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001451505-26-000018,R2,Operating loss,-2337000000.0000,library map
+RIG,907,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001451505-26-000018,R2,"Other, net",-99000000.0000,library map
+RIG,907,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,"Property and equipment, net",12577000000.0000,library map
+RIG,907,provision_for_credit_losses,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,research_and_development,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,Contract drilling revenues,3965000000.0000,library map
+RIG,907,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001451505-26-000018,R7,Share-based compensation expense,35000000.0000,library map
+RIG,907,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,General and administrative,195000000.0000,lone G&A line
+RIG,907,share_buybacks,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001451505-26-000018,R5,"Shares, outstanding",1101528481.0000,library map
+RIG,907,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Total controlling interest shareholders' equity,8108000000.0000,library map
+RIG,907,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Total assets,15642000000.0000,library map
+RIG,907,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001451505-26-000018,R4,Debt due within one year,445000000.0000,printed face components (duration sum; total_debt founder sum)
+RIG,907,total_interest_income,OUT,,,,,,,,0001451505-26-000018,,,,not a bank
+RIG,907,total_liabilities,not_presented,,,,,,,,0001451505-26-000018,,,,no face line
+RIG,907,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,"Weighted-average shares outstanding, basic (in shares)",960000000.0000,library map
+RIG,907,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0001451505-26-000018,R2,"Weighted-average shares outstanding, diluted (in shares)",960000000.0000,library map

@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+WMS,712,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Accounts payable,237706000.0000,library map
+WMS,712,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,"Receivables (less allowance for credit losses of $4,654 and $7,684, respectively)",390536000.0000,combined line (library or label demote)
+WMS,712,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Intangible amortization,59424000.0000,library map
+WMS,712,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001604028-26-000019,R5,Basic (in dollars per share),5.4800,library map
+WMS,712,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Capital expenditures,249766000.0000,library map
+WMS,712,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Cash,223012000.0000,library map
+WMS,712,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Net cash provided by (used in) financing activities,156317000.0000,library map
+WMS,712,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001604028-26-000019,R7,Net cash used in investing activities,-1211820000.0000,library map
+WMS,712,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001604028-26-000019,,,,note-sourced default tag (no face line)
+WMS,712,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001604028-26-000019,,,,note-sourced default tag (no face line)
+WMS,712,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,"Accounts payable, accrued expenses and other liabilities",53960000.0000,combined line (library or label demote)
+WMS,712,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Receivables,2288000.0000,library map
+WMS,712,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001604028-26-000019,R7,Inventories,-30609000.0000,library map
+WMS,712,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Net cash provided by operating activities,819054000.0000,library map
+WMS,712,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001604028-26-000019,R6,Total comprehensive income attributable to ADS,431353000.0000,library map
+WMS,712,cost_of_revenue,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Total current assets,1230829000.0000,library map
+WMS,712,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Total current liabilities,509469000.0000,library map
+WMS,712,deposits,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Depreciation and amortization,216261000.0000,library map
+WMS,712,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001604028-26-000019,R5,Diluted (in dollars per share),5.4400,library map
+WMS,712,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Cash dividends paid,56124000.0000,library map
+WMS,712,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001604028-26-000019,R9,Common stock dividend per share,0.7200,library map
+WMS,712,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Goodwill,1042716000.0000,library map
+WMS,712,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Gross profit,1167386000.0000,library map
+WMS,712,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Income before income taxes,559788000.0000,library map
+WMS,712,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Income tax expense,134988000.0000,library map
+WMS,712,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001604028-26-000019,R5,Interest expense,-93869000.0000,combined line (library or label demote)
+WMS,712,interest_income,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Inventories,543381000.0000,library map
+WMS,712,loans_net,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Net income attributable to ADS,426465000.0000,library map
+WMS,712,net_interest_income,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,noninterest_expense,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,noninterest_income,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,operating_expenses,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Income from operations,619202000.0000,library map
+WMS,712,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,"Interest income and other, net",34455000.0000,combined line (library or label demote)
+WMS,712,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,"Property, plant and equipment, net",1217165000.0000,library map
+WMS,712,provision_for_credit_losses,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,research_and_development,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Net sales,3050376000.0000,library map
+WMS,712,sbc,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,sga_expense,not_presented,,,,,,,,0001604028-26-000019,,,,no face line
+WMS,712,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001604028-26-000019,R7,Repurchase of common stock,91958000.0000,library map
+WMS,712,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001604028-26-000019,R4,Common stock outstanding (in shares),72654000.0000,library map
+WMS,712,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Total ADS stockholders equity,1858734000.0000,library map
+WMS,712,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Total assets,4505623000.0000,library map
+WMS,712,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Current maturities of debt obligations,5865000.0000,printed face components (duration sum; total_debt founder sum)
+WMS,712,total_interest_income,OUT,,,,,,,,0001604028-26-000019,,,,not a bank
+WMS,712,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001604028-26-000019,R3,Total liabilities,2549659000.0000,library map
+WMS,712,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Basic (in shares),77756000.0000,library map
+WMS,712,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001604028-26-000019,R5,Diluted (in shares),78383000.0000,library map

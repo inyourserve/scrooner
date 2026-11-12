@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+PSX,105,accounts_payable,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,accounts_receivable,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001534701-26-000006,,,,note-sourced default tag (no face line)
+PSX,105,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001534701-26-000006,R3,Basic (in dollars per share),10.8200,library map
+PSX,105,capex,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Cash and cash equivalents,1116000000.0000,library map
+PSX,105,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001534701-26-000006,R7,Net Cash Used in Financing Activities,-3537000000.0000,library map
+PSX,105,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001534701-26-000006,R7,Net Cash Used in Investing Activities,-2097000000.0000,library map
+PSX,105,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001534701-26-000006,,,,note-sourced default tag (no face line)
+PSX,105,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001534701-26-000006,,,,note-sourced default tag (no face line)
+PSX,105,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001534701-26-000006,R7,Accounts payable,-804000000.0000,library map
+PSX,105,cf_ar_change,combined,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0001534701-26-000006,R7,Accounts and notes receivable,508000000.0000,combined line (library or label demote)
+PSX,105,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001534701-26-000006,R7,Inventories,-160000000.0000,library map
+PSX,105,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001534701-26-000006,R7,Net Cash Provided by Operating Activities,4962000000.0000,library map
+PSX,105,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001534701-26-000006,R4,Comprehensive Income Attributable to Phillips 66,4643000000.0000,library map
+PSX,105,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,Purchased crude oil and products,116093000000.0000,library map
+PSX,105,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Total Current Assets,17271000000.0000,library map
+PSX,105,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Total Current Liabilities,13326000000.0000,library map
+PSX,105,deposits,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,Y,DepreciationAndAmortization,sec_api,0001534701-26-000006,R7,Depreciation and amortization,3251000000.0000,library map
+PSX,105,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001534701-26-000006,R3,Diluted (in dollars per share),10.7900,library map
+PSX,105,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001534701-26-000006,R7,Dividends paid on common stock,1922000000.0000,library map
+PSX,105,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,32767,N,,sec_api,0001534701-26-000006,R8,Dividends Paid Per Share of Common Stock (in dollars per share),4.7500,library map
+PSX,105,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Goodwill,1433000000.0000,library map
+PSX,105,gross_profit,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,income_before_tax,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,Income tax expense,892000000.0000,library map
+PSX,105,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,Interest and debt expense,1039000000.0000,library map
+PSX,105,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001534701-26-000006,,,,note-sourced default tag (no face line)
+PSX,105,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Inventories,5097000000.0000,library map
+PSX,105,loans_net,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,Net Income Attributable to Phillips 66,4403000000.0000,library map
+PSX,105,net_interest_income,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,noninterest_expense,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,noninterest_income,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,operating_expenses,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,operating_income,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,other_income_expense_net,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,"Net properties, plants and equipment",39097000000.0000,library map
+PSX,105,provision_for_credit_losses,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,research_and_development,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,Sales and other operating revenues,132376000000.0000,library map
+PSX,105,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001534701-26-000006,,,,note-sourced default tag (no face line)
+PSX,105,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001534701-26-000006,R3,"Selling, general and administrative expenses",2437000000.0000,library map
+PSX,105,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001534701-26-000006,R7,Repurchase of common stock,1207000000.0000,library map
+PSX,105,shares_outstanding,not_presented,,,,,,,,0001534701-26-000006,,,,no face line
+PSX,105,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Total Stockholders Equity,29093000000.0000,library map
+PSX,105,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Total Assets,73680000000.0000,library map
+PSX,105,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Short-term debt,1038000000.0000,printed face components (duration sum; total_debt founder sum)
+PSX,105,total_interest_income,OUT,,,,,,,,0001534701-26-000006,,,,not a bank
+PSX,105,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001534701-26-000006,R5,Total Liabilities,43439000000.0000,library map
+PSX,105,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001534701-26-000006,R3,Basic (in shares),406008000.0000,library map
+PSX,105,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001534701-26-000006,R3,Diluted (in shares),408053000.0000,library map

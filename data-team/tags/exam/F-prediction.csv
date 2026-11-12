@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+F,232,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Payables,25809000000.0000,combined line (library or label demote)
+F,232,accounts_receivable,combined,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,"Trade and other receivables, less allowances of $84 and $108",15398000000.0000,combined line (library or label demote)
+F,232,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000037996-26-000015,,,,note-sourced default tag (no face line)
+F,232,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000037996-26-000015,R3,Basic income/(loss) (in dollars per share),-2.0600,library map
+F,232,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000037996-26-000015,R7,Capital spending,8815000000.0000,library map
+F,232,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Cash and cash equivalents (Note 9),23356000000.0000,library map
+F,232,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000037996-26-000015,R7,Net cash provided by/(used in) financing activities,-3205000000.0000,library map
+F,232,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000037996-26-000015,R7,Net cash provided by/(used in) investing activities,-18049000000.0000,library map
+F,232,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000037996-26-000015,,,,note-sourced default tag (no face line)
+F,232,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000037996-26-000015,,,,note-sourced default tag (no face line)
+F,232,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-6,Y,IncreaseDecreaseInOperatingLiabilities,sec_api,0000037996-26-000015,R7,Increase/(Decrease) in accounts payable and accrued and other liabilities,10103000000.0000,combined line (library or label demote)
+F,232,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-6,Y,IncreaseDecreaseInAccountsAndOtherReceivables,sec_api,0000037996-26-000015,R7,Decrease/(Increase) in accounts receivable and other assets,2791000000.0000,combined line (library or label demote)
+F,232,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000037996-26-000015,R7,Decrease/(Increase) in inventory,-539000000.0000,library map
+F,232,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000037996-26-000015,R7,Net cash provided by/(used in) operating activities,21282000000.0000,library map
+F,232,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0000037996-26-000015,R4,Comprehensive income/(loss) attributable to Ford Motor Company,-6253000000.0000,library map
+F,232,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,Cost of sales (Note 13),174466000000.0000,library map
+F,232,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Total current assets,123487000000.0000,library map
+F,232,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Total current liabilities,114890000000.0000,library map
+F,232,deposits,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,depreciation_and_amortization,not_presented,,,,,,,,0000037996-26-000015,,,,single component only
+F,232,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000037996-26-000015,R3,Diluted income/(loss) (in dollars per share),-2.0600,library map
+F,232,dividends_paid,combined,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000037996-26-000015,R7,Cash payments for dividends and dividend equivalents,2989000000.0000,combined line (library or label demote)
+F,232,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000037996-26-000015,R10,Dividends and dividend equivalents declared (in dollars per share),0.7500,library map
+F,232,goodwill,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,gross_profit,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0000037996-26-000015,R3,Income/(Loss) before income taxes,-11830000000.0000,library map
+F,232,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000037996-26-000015,R3,Provision for/(Benefit from) income taxes (Note 7),-3668000000.0000,library map
+F,232,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,Interest expense on Company debt excluding Ford Credit,1254000000.0000,library map
+F,232,interest_income,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Inventories (Note 11),15285000000.0000,library map
+F,232,loans_net,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,net_income,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,net_interest_income,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,noninterest_expense,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,noninterest_income,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,operating_expenses,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000037996-26-000015,R3,Operating income/(loss),-9169000000.0000,library map
+F,232,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,"Other income/(loss), net (Note 5)",1746000000.0000,combined line (library or label demote)
+F,232,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0000037996-26-000015,R5,Net property (Note 13),37288000000.0000,library map
+F,232,provision_for_credit_losses,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,research_and_development,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,Total revenues (Note 4),187267000000.0000,library map
+F,232,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000037996-26-000015,R7,Stock compensation (Note 6),510000000.0000,library map
+F,232,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,"Selling, administrative, and other expenses",10849000000.0000,library map
+F,232,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0000037996-26-000015,R7,Purchases of common stock,0.0000,library map
+F,232,shares_outstanding,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Total equity attributable to Ford Motor Company,35952000000.0000,library map
+F,232,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Total assets,289160000000.0000,library map
+F,232,total_debt,not_presented,,,,,,,,0000037996-26-000015,,,,no face line
+F,232,total_interest_income,OUT,,,,,,,,0000037996-26-000015,,,,not a bank
+F,232,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000037996-26-000015,R5,Total liabilities,253180000000.0000,library map
+F,232,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,Basic shares (in shares),3979000000.0000,library map
+F,232,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000037996-26-000015,R3,Diluted shares (in shares),3979000000.0000,library map

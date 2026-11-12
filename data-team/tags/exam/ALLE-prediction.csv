@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ALLE,577,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Accounts payable,244800000.0000,library map
+ALLE,577,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,"Accounts and notes receivable, net",437700000.0000,combined line (library or label demote)
+ALLE,577,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001579241-26-000007,,,,note-sourced default tag (no face line)
+ALLE,577,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001579241-26-000007,R3,Net earnings (in dollars per share),7.4800,library map
+ALLE,577,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Capital expenditures,98100000.0000,library map
+ALLE,577,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Cash and cash equivalents,356200000.0000,library map
+ALLE,577,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001579241-26-000007,R7,Net cash used in financing activities,-266700000.0000,library map
+ALLE,577,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001579241-26-000007,R7,Net cash used in investing activities,-685500000.0000,library map
+ALLE,577,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001579241-26-000007,,,,note-sourced default tag (no face line)
+ALLE,577,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001579241-26-000007,,,,note-sourced default tag (no face line)
+ALLE,577,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001579241-26-000007,R7,Accounts payable,-34400000.0000,library map
+ALLE,577,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,-,-5,N,,sec_api,0001579241-26-000007,R7,Accounts and notes receivable,-23700000.0000,combined line (library or label demote)
+ALLE,577,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Inventories,38900000.0000,library map
+ALLE,577,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Net cash provided by operating activities,783800000.0000,library map
+ALLE,577,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Total comprehensive income attributable to Allegion plc,769800000.0000,library map
+ALLE,577,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Cost of goods sold,2229000000.0000,library map
+ALLE,577,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Total current assets,1391800000.0000,library map
+ALLE,577,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Total current liabilities,755400000.0000,library map
+ALLE,577,deposits,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Depreciation and amortization,133200000.0000,library map
+ALLE,577,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001579241-26-000007,R3,Net earnings (in dollars per share),7.4400,library map
+ALLE,577,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Dividends paid to ordinary shareholders,175300000.0000,library map
+ALLE,577,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,32767,N,,sec_api,0001579241-26-000007,R6,"Common Stock, Dividends, Per Share, Cash Paid",2.0400,library map
+ALLE,577,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Goodwill,1912400000.0000,library map
+ALLE,577,gross_profit,not_presented,,,,,,,,0001579241-26-000007,,,,no face line
+ALLE,577,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Earnings before income taxes,768400000.0000,library map
+ALLE,577,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Provision for income taxes,124600000.0000,library map
+ALLE,577,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Interest expense,101000000.0000,library map
+ALLE,577,interest_income,not_presented,,,,,,,,0001579241-26-000007,,,,no face line
+ALLE,577,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Inventories,519000000.0000,library map
+ALLE,577,loans_net,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Net earnings attributable to Allegion plc,643800000.0000,library map
+ALLE,577,net_interest_income,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,noninterest_expense,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,noninterest_income,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,operating_expenses,not_presented,,,,,,,,0001579241-26-000007,,,,no face line
+ALLE,577,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Operating income,859500000.0000,library map
+ALLE,577,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,"Other income, net",9900000.0000,library map
+ALLE,577,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,"Property, plant and equipment, net",444600000.0000,library map
+ALLE,577,provision_for_credit_losses,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,research_and_development,not_presented,,,,,,,,0001579241-26-000007,,,,no face line
+ALLE,577,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Net revenues,4067300000.0000,library map
+ALLE,577,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Share-based compensation,29800000.0000,library map
+ALLE,577,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001579241-26-000007,R3,Selling and administrative expenses,978800000.0000,library map
+ALLE,577,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001579241-26-000007,R7,Repurchase of ordinary shares,80000000.0000,library map
+ALLE,577,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001579241-26-000007,R5,"Ordinary shares, outstanding (in shares)",86066997.0000,library map
+ALLE,577,stockholders_equity,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Total equity,2067600000.0000,library map
+ALLE,577,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Total assets,5223700000.0000,library map
+ALLE,577,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Short-term borrowings and current maturities of long-term debt,200000.0000,printed face components (duration sum; total_debt founder sum)
+ALLE,577,total_interest_income,OUT,,,,,,,,0001579241-26-000007,,,,not a bank
+ALLE,577,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001579241-26-000007,R4,Total liabilities,3156100000.0000,library map
+ALLE,577,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001579241-26-000007,,,,note-sourced default tag (no face line)
+ALLE,577,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001579241-26-000007,,,,note-sourced default tag (no face line)

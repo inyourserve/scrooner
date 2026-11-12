@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+POWL,940,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Accounts payable,67080000.0000,library map
+POWL,940,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,"Accounts receivable, less allowance for credit losses of $368 and $414, respectively",217065000.0000,library map
+POWL,940,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Amortization of intangible assets,112000.0000,library map
+POWL,940,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000080420-25-000152,R5,Basic (in dollars per share),14.9800,library map
+POWL,940,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,"Purchases of property, plant and equipment",13149000.0000,library map
+POWL,940,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Cash and cash equivalents,450739000.0000,library map
+POWL,940,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000080420-25-000152,R9,Net cash used in financing activities,-25117000.0000,library map
+POWL,940,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000080420-25-000152,R9,Net cash used in investing activities,-8342000.0000,library map
+POWL,940,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000080420-25-000152,,,,note-sourced default tag (no face line)
+POWL,940,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000080420-25-000152,,,,note-sourced default tag (no face line)
+POWL,940,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0000080420-25-000152,R9,Accounts payable,-7491000.0000,library map
+POWL,940,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,"Accounts receivable, net",2435000.0000,library map
+POWL,940,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000080420-25-000152,R9,Inventories,-2976000.0000,library map
+POWL,940,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,Net cash provided by operating activities,167937000.0000,library map
+POWL,940,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000080420-25-000152,R6,Comprehensive income,178066000.0000,library map
+POWL,940,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Cost of goods sold,779937000.0000,library map
+POWL,940,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Total Current Assets,931716000.0000,library map
+POWL,940,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Total Current Liabilities,446387000.0000,library map
+POWL,940,deposits,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,Depreciation and amortization,7265000.0000,library map
+POWL,940,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000080420-25-000152,R5,Diluted (in dollars per share),14.8600,library map
+POWL,940,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,Dividends paid,12869000.0000,library map
+POWL,940,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,IS,+,32767,N,,sec_api,0000080420-25-000152,R5,Dividends per share (in dollars per share),1.0675,library map
+POWL,940,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Goodwill,6125000.0000,library map
+POWL,940,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Gross profit,324381000.0000,library map
+POWL,940,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Income before income taxes,233550000.0000,library map
+POWL,940,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Income tax provision,52803000.0000,library map
+POWL,940,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,"Interest income, net",15690000.0000,combined line (library or label demote)
+POWL,940,interest_income,not_presented,,,,,,,,0000080420-25-000152,,,,no face line
+POWL,940,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Inventories,84719000.0000,library map
+POWL,940,loans_net,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Net income,180747000.0000,library map
+POWL,940,net_interest_income,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,noninterest_expense,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,noninterest_income,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,"Selling, general and administrative expenses",95401000.0000,printed opex lines (duration sum)
+POWL,940,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Operating income,217860000.0000,library map
+POWL,940,other_income_expense_net,not_presented,,,,,,,,0000080420-25-000152,,,,no face line
+POWL,940,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,"Property, plant and equipment, net",111049000.0000,library map
+POWL,940,provision_for_credit_losses,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Research and development expenses,11008000.0000,library map
+POWL,940,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Revenues,1104318000.0000,library map
+POWL,940,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000080420-25-000152,R9,Stock-based compensation,4635000.0000,library map
+POWL,940,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,"Selling, general and administrative expenses",95401000.0000,library map
+POWL,940,share_buybacks,not_presented,,,,,,,,0000080420-25-000152,,,,no face line
+POWL,940,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000080420-25-000152,R4,"Common stock, shares outstanding (in shares)",12070178.0000,library map
+POWL,940,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Total Stockholders Equity,640770000.0000,library map
+POWL,940,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Total Assets,1108984000.0000,library map
+POWL,940,total_debt,not_presented,,,,,,,,0000080420-25-000152,,,,no face line
+POWL,940,total_interest_income,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
+POWL,940,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,Total Liabilities,468214000.0000,library map
+POWL,940,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Basic (in shares),12062000.0000,library map
+POWL,940,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Diluted (in shares),12167000.0000,library map

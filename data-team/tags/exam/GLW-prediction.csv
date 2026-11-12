@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+GLW,108,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Accounts payable,1979000000.0000,library map
+GLW,108,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,"Trade accounts receivable, net of doubtful accounts - $27 and $33",2779000000.0000,library map
+GLW,108,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Amortization of purchased intangibles,110000000.0000,library map
+GLW,108,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0000024741-26-000124,R3,Basic (Note 17) (in dollars per share),1.8700,library map
+GLW,108,capex,not_presented,,,,,,,,0000024741-26-000124,,,,no face line
+GLW,108,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,Y,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,sec_api,0000024741-26-000124,R5,Cash and cash equivalents,1526000000.0000,library map
+GLW,108,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000024741-26-000124,R7,Net cash used in financing activities,-1672000000.0000,library map
+GLW,108,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000024741-26-000124,R7,Net cash used in investing activities,-1243000000.0000,library map
+GLW,108,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000024741-26-000124,,,,note-sourced default tag (no face line)
+GLW,108,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000024741-26-000124,,,,note-sourced default tag (no face line)
+GLW,108,cf_ap_change,not_presented,,,,,,,,0000024741-26-000124,,,,no face line
+GLW,108,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Trade accounts receivable,749000000.0000,library map
+GLW,108,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Inventories,243000000.0000,library map
+GLW,108,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Net cash provided by operating activities,2695000000.0000,library map
+GLW,108,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000024741-26-000124,R4,Comprehensive income attributable to Corning Incorporated,2034000000.0000,library map
+GLW,108,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Cost of sales,10008000000.0000,library map
+GLW,108,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Total current assets,8936000000.0000,library map
+GLW,108,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Total current liabilities,5628000000.0000,library map
+GLW,108,deposits,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Depreciation,1237000000.0000,printed face components (duration sum; total_debt founder sum)
+GLW,108,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0000024741-26-000124,R3,Diluted (Note 17) (in dollars per share),1.8300,library map
+GLW,108,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Dividends paid,999000000.0000,library map
+GLW,108,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000024741-26-000124,R9,Common dividends (in dollars per share),1.1200,library map
+GLW,108,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Goodwill (Note 7),2489000000.0000,library map
+GLW,108,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Gross margin,5621000000.0000,library map
+GLW,108,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Income before income taxes,2052000000.0000,library map
+GLW,108,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Provision for income taxes (Note 15),310000000.0000,library map
+GLW,108,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestAndDebtExpense,sec_api,0000024741-26-000124,R3,Interest expense,336000000.0000,library map
+GLW,108,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Interest income,38000000.0000,library map
+GLW,108,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Inventories (Note 5),3077000000.0000,library map
+GLW,108,loans_net,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Net income attributable to Corning Incorporated,1596000000.0000,library map
+GLW,108,net_interest_income,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,noninterest_expense,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,noninterest_income,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,operating_expenses,not_presented,,,,,,,,0000024741-26-000124,,,,no face line
+GLW,108,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Operating income,2279000000.0000,library map
+GLW,108,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000024741-26-000124,R3,"Other (expense) income, net",-79000000.0000,library map
+GLW,108,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,"Property, plant and equipment, net of accumulated depreciation - $15,229 and $14,492 (Note 6)",14825000000.0000,library map
+GLW,108,provision_for_credit_losses,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,research_and_development,not_presented,,,,,,,,0000024741-26-000124,,,,no face line
+GLW,108,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,Net sales,15629000000.0000,library map
+GLW,108,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Share-based compensation expense,286000000.0000,library map
+GLW,108,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000024741-26-000124,R3,"Selling, general and administrative expenses",2122000000.0000,library map
+GLW,108,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000024741-26-000124,R7,Purchases of common stock for treasury,163000000.0000,library map
+GLW,108,shares_outstanding,not_presented,,,,,,,,0000024741-26-000124,,,,no face line
+GLW,108,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Total Corning Incorporated shareholders equity,11807000000.0000,library map
+GLW,108,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Total Assets,30976000000.0000,library map
+GLW,108,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Current portion of long-term debt and short-term borrowings (Note 10),804000000.0000,printed face components (duration sum; total_debt founder sum)
+GLW,108,total_interest_income,OUT,,,,,,,,0000024741-26-000124,,,,not a bank
+GLW,108,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000024741-26-000124,R5,Total liabilities,18669000000.0000,library map
+GLW,108,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000024741-26-000124,,,,note-sourced default tag (no face line)
+GLW,108,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000024741-26-000124,,,,note-sourced default tag (no face line)

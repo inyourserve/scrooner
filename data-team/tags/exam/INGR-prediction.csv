@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+INGR,917,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Accounts payable,693000000.0000,library map
+INGR,917,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,Y,ReceivablesNetCurrent,sec_api,0001628280-26-008603,R6,"Accounts receivable, net",1185000000.0000,library map
+INGR,917,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008603,,,,note-sourced default tag (no face line)
+INGR,917,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008603,R3,Basic (in dollars per share),11.3600,library map
+INGR,917,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-008603,R9,"Capital expenditures and mechanical stores purchases, net",433000000.0000,library map
+INGR,917,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Cash and cash equivalents,1030000000.0000,library map
+INGR,917,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-008603,R9,Cash used for financing activities,-491000000.0000,library map
+INGR,917,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-008603,R9,Cash used for investing activities,-444000000.0000,library map
+INGR,917,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008603,,,,note-sourced default tag (no face line)
+INGR,917,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008603,,,,note-sourced default tag (no face line)
+INGR,917,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-008603,R9,Accounts payable and accrued liabilities,-27000000.0000,combined line (library or label demote)
+INGR,917,cf_ar_change,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001628280-26-008603,R9,Inventories,-3000000.0000,library map
+INGR,917,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-008603,R9,Cash provided by operating activities,944000000.0000,library map
+INGR,917,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-008603,R4,Comprehensive income attributable to Ingredion,878000000.0000,library map
+INGR,917,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Cost of sales,5391000000.0000,library map
+INGR,917,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Total current assets,3505000000.0000,library map
+INGR,917,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Total current liabilities,1316000000.0000,library map
+INGR,917,deposits,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-008603,R9,Depreciation and amortization,222000000.0000,library map
+INGR,917,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008603,R3,Diluted (in dollars per share),11.1800,library map
+INGR,917,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-008603,R9,"Dividends paid, including to non-controlling interests",211000000.0000,library map
+INGR,917,dividends_per_share,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,"Intangible assets, net",1269000000.0000,combined line (library or label demote)
+INGR,917,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Gross profit,1828000000.0000,library map
+INGR,917,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Income before income taxes,974000000.0000,library map
+INGR,917,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-008603,R3,Provision for income taxes,238000000.0000,library map
+INGR,917,interest_expense,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,interest_income,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Inventories,1227000000.0000,library map
+INGR,917,loans_net,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Net income attributable to Ingredion,729000000.0000,library map
+INGR,917,net_interest_income,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,noninterest_expense,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,noninterest_income,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,operating_expenses,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Operating income,1016000000.0000,library map
+INGR,917,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-008603,R3,Other non-operating expense,-5000000.0000,library map
+INGR,917,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,"Property, plant and equipment, net",2526000000.0000,library map
+INGR,917,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,research_and_development,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001628280-26-008603,R3,Net sales,7219000000.0000,library map
+INGR,917,sbc,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,sga_expense,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,share_buybacks,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,shares_outstanding,not_presented,,,,,,,,0001628280-26-008603,,,,no face line
+INGR,917,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Total Ingredion stockholders equity,4274000000.0000,library map
+INGR,917,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Total assets,7897000000.0000,library map
+INGR,917,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Short-term borrowings,48000000.0000,printed face components (duration sum; total_debt founder sum)
+INGR,917,total_interest_income,OUT,,,,,,,,0001628280-26-008603,,,,not a bank
+INGR,917,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-008603,R6,Total liabilities,3531000000.0000,library map
+INGR,917,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001628280-26-008603,R3,Basic (in shares),64200000.0000,library map
+INGR,917,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001628280-26-008603,R3,Diluted (in shares),65200000.0000,library map

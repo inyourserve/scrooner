@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MKC,607,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Trade accounts payable,1259400000.0000,library map
+MKC,607,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,"Trade accounts receivable, net of allowances",628900000.0000,library map
+MKC,607,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000063754-26-000037,R3,Earnings per sharebasic (usd per share),2.9400,library map
+MKC,607,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Capital expenditures (including software),221800000.0000,library map
+MKC,607,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Cash and cash equivalents,95900000.0000,library map
+MKC,607,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Net cash flow used in financing activities,-840900000.0000,library map
+MKC,607,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Net cash flow used in investing activities,-255200000.0000,library map
+MKC,607,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Trade accounts payable,1200000.0000,library map
+MKC,607,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Trade accounts receivable,14700000.0000,library map
+MKC,607,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0000063754-26-000037,R7,Inventories,-23900000.0000,library map
+MKC,607,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Net cash flow provided by operating activities,962200000.0000,library map
+MKC,607,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000063754-26-000037,R4,Comprehensive income,923300000.0000,library map
+MKC,607,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Cost of goods sold,4248100000.0000,library map
+MKC,607,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Total current assets,2138100000.0000,library map
+MKC,607,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Total current liabilities,3062200000.0000,library map
+MKC,607,deposits,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Depreciation and amortization,231300000.0000,library map
+MKC,607,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000063754-26-000037,R3,Earnings per sharediluted (usd per share),2.9300,library map
+MKC,607,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Dividends paid,483000000.0000,library map
+MKC,607,dividends_per_share,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Goodwill,5301300000.0000,library map
+MKC,607,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Gross profit,2592200000.0000,library map
+MKC,607,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income from consolidated operations before income taxes,913000000.0000,library map
+MKC,607,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income tax expense,195800000.0000,library map
+MKC,607,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Interest expense,196200000.0000,library map
+MKC,607,interest_income,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Inventories,1272000000.0000,library map
+MKC,607,loans_net,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Net income,789400000.0000,library map
+MKC,607,net_interest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,noninterest_expense,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,noninterest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,operating_expenses,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Operating income,1070800000.0000,library map
+MKC,607,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,"Other income, net",38400000.0000,library map
+MKC,607,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,"Property, plant and equipment, net",1448800000.0000,library map
+MKC,607,provision_for_credit_losses,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,research_and_development,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Net sales,6840300000.0000,library map
+MKC,607,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Stock-based compensation,46200000.0000,library map
+MKC,607,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,"Selling, general and administrative expense",1500300000.0000,library map
+MKC,607,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Common stock acquired by purchase,34800000.0000,library map
+MKC,607,shares_outstanding,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
+MKC,607,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Stockholders' Equity Attributable to Parent,5736500000.0000,library map
+MKC,607,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Total assets,13200400000.0000,library map
+MKC,607,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Short-term borrowings,381400000.0000,printed face components (duration sum; total_debt founder sum)
+MKC,607,total_interest_income,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
+MKC,607,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Total liabilities,7432300000.0000,library map
+MKC,607,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)

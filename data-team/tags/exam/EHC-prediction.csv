@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+EHC,601,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Accounts payable,178200000.0000,library map
+EHC,601,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Accounts receivable,619200000.0000,combined line (library or label demote)
+EHC,601,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000785161-26-000081,,,,note-sourced default tag (no face line)
+EHC,601,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000785161-26-000081,R3,Net income (in dollars per share),5.6200,library map
+EHC,601,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,"Purchases of property, equipment, and intangible assets",736400000.0000,library map
+EHC,601,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Cash and cash equivalents,72200000.0000,library map
+EHC,601,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000785161-26-000081,R9,Net cash used in financing activities,-431200000.0000,library map
+EHC,601,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000785161-26-000081,R9,Net cash used in investing activities,-764600000.0000,library map
+EHC,601,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000785161-26-000081,,,,note-sourced default tag (no face line)
+EHC,601,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,Interest,133100000.0000,library map
+EHC,601,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0000785161-26-000081,R9,Accounts payable,-22600000.0000,library map
+EHC,601,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,Accounts receivable,15200000.0000,library map
+EHC,601,cf_inventory_change,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-5,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0000785161-26-000081,R9,Net cash provided by operating activities,1175600000.0000,library map
+EHC,601,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000785161-26-000081,R4,Comprehensive income attributable to Encompass Health,566700000.0000,library map
+EHC,601,cost_of_revenue,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Total current assets,905900000.0000,library map
+EHC,601,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Total current liabilities,836400000.0000,library map
+EHC,601,deposits,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,Depreciation and amortization,327900000.0000,library map
+EHC,601,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0000785161-26-000081,R3,Net income (in dollars per share),5.5400,library map
+EHC,601,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,Dividends paid on common stock,71100000.0000,library map
+EHC,601,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000785161-26-000081,R8,Dividends declared on common stock (in dollars per share),0.7200,library map
+EHC,601,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Goodwill,1317600000.0000,library map
+EHC,601,gross_profit,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Income from continuing operations before income tax expense,953000000.0000,library map
+EHC,601,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Provision for income tax expense,192900000.0000,library map
+EHC,601,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000785161-26-000081,R3,Interest expense and amortization of debt discounts and fees,123200000.0000,library map
+EHC,601,interest_income,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,inventory,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,loans_net,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Net income attributable to Encompass Health,566200000.0000,library map
+EHC,601,net_interest_income,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,noninterest_expense,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,noninterest_income,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Other operating expenses,888700000.0000,printed opex lines (duration sum)
+EHC,601,operating_income,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Other income,18800000.0000,library map
+EHC,601,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,"Property and equipment, net",4101600000.0000,library map
+EHC,601,provision_for_credit_losses,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,research_and_development,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Net operating revenues,5935200000.0000,library map
+EHC,601,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,Stock-based compensation,56500000.0000,library map
+EHC,601,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,General and administrative expenses,236200000.0000,lone G&A line
+EHC,601,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000785161-26-000081,R9,"Repurchases of common stock, including fees and expenses",158000000.0000,library map
+EHC,601,shares_outstanding,not_presented,,,,,,,,0000785161-26-000081,,,,no face line
+EHC,601,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Total Encompass Health shareholders equity,2438200000.0000,library map
+EHC,601,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Total assets,7089700000.0000,library map
+EHC,601,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Current portion of long-term debt,43600000.0000,printed face components (duration sum; total_debt founder sum)
+EHC,601,total_interest_income,OUT,,,,,,,,0000785161-26-000081,,,,not a bank
+EHC,601,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000785161-26-000081,R5,Total liabilities,3813900000.0000,library map
+EHC,601,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Basic (in shares),100500000.0000,library map
+EHC,601,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0000785161-26-000081,R3,Diluted (in shares),102200000.0000,library map

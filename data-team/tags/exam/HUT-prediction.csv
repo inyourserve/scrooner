@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+HUT,776,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Accounts payable and accrued expenses,44519000.0000,combined line (library or label demote)
+HUT,776,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,"Accounts receivable, net",31122000.0000,library map
+HUT,776,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-019392,,,,note-sourced default tag (no face line)
+HUT,776,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001104659-26-019392,R4,Basic from continuing operations attributable to Hut 8 Corp. (in dollars per share),-2.1400,library map
+HUT,776,capex,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Cash,44914000.0000,library map
+HUT,776,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,Net cash provided by financing activities,856127000.0000,library map
+HUT,776,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-019392,R8,Net cash (used in) provided by investing activities,-754207000.0000,library map
+HUT,776,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,Cash paid for income taxes,1188000.0000,library map
+HUT,776,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,Cash paid for interest,13556000.0000,library map
+HUT,776,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001104659-26-019392,R8,Accounts payable and accrued expenses,-5589000.0000,combined line (library or label demote)
+HUT,776,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,"Accounts receivable, net",26374000.0000,library map
+HUT,776,cf_inventory_change,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001104659-26-019392,R8,Net cash used in operating activities,-139226000.0000,library map
+HUT,776,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,Comprehensive (loss) income attributable to Hut 8 Corp.,-191028000.0000,library map
+HUT,776,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,Total cost of revenue,107774000.0000,library map
+HUT,776,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Total current assets,408183000.0000,library map
+HUT,776,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Total current liabilities,375583000.0000,library map
+HUT,776,deposits,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,Depreciation and amortization,101901000.0000,library map
+HUT,776,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001104659-26-019392,R4,Diluted from continuing operations attributable to Hut 8 Corp. (in dollars per share),-2.1400,library map
+HUT,776,dividends_paid,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,dividends_per_share,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Goodwill,210087000.0000,library map
+HUT,776,gross_profit,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,(Loss) income from continuing operations before taxes,-299834000.0000,library map
+HUT,776,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,Income tax benefit (provision),-51836000.0000,library map
+HUT,776,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,Interest expense,30073000.0000,library map
+HUT,776,interest_income,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,inventory,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,loans_net,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,Net (loss) income attributable to Hut 8 Corp.,-226149000.0000,library map
+HUT,776,net_interest_income,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,noninterest_expense,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,noninterest_income,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,operating_expenses,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001104659-26-019392,R4,Operating (loss) income,-321994000.0000,library map
+HUT,776,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,Total other income (expense),22160000.0000,combined line (library or label demote)
+HUT,776,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,"Property and equipment, net",643244000.0000,library map
+HUT,776,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,research_and_development,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,Total revenue,235118000.0000,library map
+HUT,776,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001104659-26-019392,R8,Stock-based compensation,57802000.0000,library map
+HUT,776,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-019392,R4,General and administrative expenses,122807000.0000,lone G&A line
+HUT,776,share_buybacks,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001104659-26-019392,R3,"Common stock, shares outstanding (in shares)",110091358.0000,library map
+HUT,776,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Total Hut 8 Corp. stockholders' equity,1421925000.0000,library map
+HUT,776,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Total assets,2753720000.0000,library map
+HUT,776,total_debt,not_presented,,,,,,,,0001104659-26-019392,,,,no face line
+HUT,776,total_interest_income,OUT,,,,,,,,0001104659-26-019392,,,,not a bank
+HUT,776,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-019392,R2,Total liabilities,1064250000.0000,library map
+HUT,776,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001104659-26-019392,R4,Basic (in shares),105328890.0000,library map
+HUT,776,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,32767,N,,sec_api,0001104659-26-019392,R4,Diluted (in shares),105328890.0000,library map

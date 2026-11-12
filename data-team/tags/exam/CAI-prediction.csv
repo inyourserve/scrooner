@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+CAI,759,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Accounts payable,39206000.0000,library map
+CAI,759,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Accounts receivable,112140000.0000,library map
+CAI,759,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002019410-26-000016,,,,note-sourced default tag (no face line)
+CAI,759,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0002019410-26-000016,R5,"Net loss per share attributable to common shareholders, basic (in dollars per share)",-3.2200,library map
+CAI,759,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Purchases of property and equipment,16260000.0000,library map
+CAI,759,cash_and_equivalents,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Net cash provided by financing activities,664989000.0000,library map
+CAI,759,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0002019410-26-000016,R8,Net cash provided by (used in) investing activities,-16260000.0000,library map
+CAI,759,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002019410-26-000016,,,,note-sourced default tag (no face line)
+CAI,759,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Interest paid,43520000.0000,library map
+CAI,759,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Accounts payable,11035000.0000,library map
+CAI,759,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Accounts receivable,29789000.0000,library map
+CAI,759,cf_inventory_change,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Net cash provided by (used in) operating activities,83155000.0000,library map
+CAI,759,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,-,-3,N,,sec_api,0002019410-26-000016,R5,Comprehensive loss,-67362000.0000,library map
+CAI,759,cost_of_revenue,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Total current assets,997800000.0000,library map
+CAI,759,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Total current liabilities,127145000.0000,library map
+CAI,759,deposits,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Depreciation and amortization,22615000.0000,library map
+CAI,759,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0002019410-26-000016,R5,"Net loss per share attributable to common shareholders, diluted (in dollars per share)",-3.2200,library map
+CAI,759,dividends_paid,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,dividends_per_share,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Goodwill,19344000.0000,library map
+CAI,759,gross_profit,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0002019410-26-000016,R5,Loss before income taxes and provision for income taxes,-68088000.0000,library map
+CAI,759,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,0,-3,N,,sec_api,0002019410-26-000016,R5,Provision for income taxes,0.0000,library map
+CAI,759,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Interest expense,56853000.0000,library map
+CAI,759,interest_income,combined,us-gaap:InterestIncomeOther,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Interest income,16497000.0000,combined line (library or label demote)
+CAI,759,inventory,not_presented,,,,,,,,0002019410-26-000016,,,,no face line
+CAI,759,loans_net,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0002019410-26-000016,R5,Net loss,-68088000.0000,library map
+CAI,759,net_interest_income,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,noninterest_expense,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,noninterest_income,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Total costs and operating expenses,766920000.0000,CostsAndExpenses value check (structural)
+CAI,759,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Income (Loss) from operations,45113000.0000,library map
+CAI,759,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0002019410-26-000016,R5,"Other expense, net",-20560000.0000,library map
+CAI,759,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,"Property and equipment, net",63170000.0000,library map
+CAI,759,provision_for_credit_losses,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Research and development expense,101584000.0000,library map
+CAI,759,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Total revenue,812033000.0000,library map
+CAI,759,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Stock-based compensation expense,70006000.0000,library map
+CAI,759,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0002019410-26-000016,R5,Selling and marketing expense,167506000.0000,printed face components (duration sum; total_debt founder sum)
+CAI,759,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0002019410-26-000016,R8,Repurchase of common stock,113000.0000,library map
+CAI,759,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0002019410-26-000016,R4,"Common stock, shares outstanding (in shares)",282526097.0000,library map
+CAI,759,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Total shareholders' equity (deficit),577307000.0000,library map
+CAI,759,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Total assets,1125663000.0000,library map
+CAI,759,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Current portion of indebtedness,169000.0000,printed face components (duration sum; total_debt founder sum)
+CAI,759,total_interest_income,OUT,,,,,,,,0002019410-26-000016,,,,not a bank
+CAI,759,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0002019410-26-000016,R3,Total liabilities,548356000.0000,library map
+CAI,759,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0002019410-26-000016,R5,"Weighted-average shares used in computing net loss per share attributable to common shareholders, basic (in shares)",167205616.0000,library map
+CAI,759,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0002019410-26-000016,R5,"Weighted-average shares used in computing net loss per share attributable to common shareholders, diluted (in shares)",167205616.0000,library map

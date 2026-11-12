@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+EMN,851,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Payables and other current liabilities,2066000000.0000,combined line (library or label demote)
+EMN,851,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,"Trade receivables, net of allowance for credit losses",737000000.0000,library map
+EMN,851,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000915389-26-000013,,,,note-sourced default tag (no face line)
+EMN,851,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000915389-26-000013,R2,Basic earnings per share attributable to Eastman,4.1400,library map
+EMN,851,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000915389-26-000013,R5,Additions to properties and equipment,546000000.0000,library map
+EMN,851,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Cash and cash equivalents,566000000.0000,library map
+EMN,851,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000915389-26-000013,R5,Net cash used in financing activities,-797000000.0000,library map
+EMN,851,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000915389-26-000013,R5,Net cash used in investing activities,-462000000.0000,library map
+EMN,851,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000915389-26-000013,,,,note-sourced default tag (no face line)
+EMN,851,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000915389-26-000013,,,,note-sourced default tag (no face line)
+EMN,851,cf_ap_change,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000915389-26-000013,R5,(Increase) decrease in trade receivables,-61000000.0000,library map
+EMN,851,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000915389-26-000013,R5,(Increase) decrease in inventories,-24000000.0000,library map
+EMN,851,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000915389-26-000013,R5,Net cash provided by operating activities,970000000.0000,library map
+EMN,851,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Comprehensive income attributable to Eastman,628000000.0000,library map
+EMN,851,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Cost of sales,6908000000.0000,library map
+EMN,851,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Total current assets,3645000000.0000,library map
+EMN,851,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Total current liabilities,2652000000.0000,library map
+EMN,851,deposits,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000915389-26-000013,R5,Depreciation and amortization,513000000.0000,library map
+EMN,851,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000915389-26-000013,R2,Diluted earnings per share attributable to Eastman,4.1000,library map
+EMN,851,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0000915389-26-000013,R5,Dividends paid to stockholders,381000000.0000,library map
+EMN,851,dividends_per_share,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Goodwill,3665000000.0000,library map
+EMN,851,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Gross profit,1844000000.0000,library map
+EMN,851,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Earnings before income taxes,568000000.0000,library map
+EMN,851,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Provision for income taxes,93000000.0000,library map
+EMN,851,interest_expense,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,interest_income,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Inventories,1980000000.0000,library map
+EMN,851,loans_net,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Net earnings attributable to Eastman,474000000.0000,library map
+EMN,851,net_interest_income,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,noninterest_expense,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,noninterest_income,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,"Selling, general and administrative expenses",658000000.0000,printed opex lines (duration sum)
+EMN,851,operating_income,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000915389-26-000013,R2,"Other (income) charges, net",-84000000.0000,combined line (library or label demote)
+EMN,851,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Net properties,5731000000.0000,library map
+EMN,851,provision_for_credit_losses,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Research and development expenses,255000000.0000,library map
+EMN,851,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,Sales,8752000000.0000,library map
+EMN,851,sbc,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000915389-26-000013,R2,"Selling, general and administrative expenses",658000000.0000,library map
+EMN,851,share_buybacks,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,shares_outstanding,not_presented,,,,,,,,0000915389-26-000013,,,,no face line
+EMN,851,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Total Eastman stockholders' equity,5961000000.0000,library map
+EMN,851,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Total assets,14859000000.0000,library map
+EMN,851,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Borrowings due within one year,586000000.0000,printed face components (duration sum; total_debt founder sum)
+EMN,851,total_interest_income,OUT,,,,,,,,0000915389-26-000013,,,,not a bank
+EMN,851,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000915389-26-000013,R3,Total liabilities,8822000000.0000,library map
+EMN,851,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000915389-26-000013,,,,note-sourced default tag (no face line)
+EMN,851,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000915389-26-000013,,,,note-sourced default tag (no face line)

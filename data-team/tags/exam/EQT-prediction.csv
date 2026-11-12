@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+EQT,313,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Accounts payable,1367431000.0000,library map
+EQT,313,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,"Accounts receivable (less allowance for credit losses: $3,088 and $12,529)",1457959000.0000,library map
+EQT,313,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
+EQT,313,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000033213-26-000018,R3,Net income attributable to EQT Corporation - Basic (in dollars per share),3.3300,library map
+EQT,313,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Capital expenditures,2288425000.0000,library map
+EQT,313,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Cash and cash equivalents,110795000.0000,library map
+EQT,313,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000033213-26-000018,R8,Net cash used in financing activities,-2372343000.0000,library map
+EQT,313,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000033213-26-000018,R8,Net cash used in investing activities,-2844907000.0000,library map
+EQT,313,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
+EQT,313,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000033213-26-000018,,,,note-sourced default tag (no face line)
+EQT,313,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Accounts payable,207074000.0000,library map
+EQT,313,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Accounts receivable,353472000.0000,library map
+EQT,313,cf_inventory_change,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Net cash provided by operating activities,5125952000.0000,library map
+EQT,313,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000033213-26-000018,R4,Comprehensive income attributable to EQT Corporation,2039395000.0000,library map
+EQT,313,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Transportation and processing,1532090000.0000,library map
+EQT,313,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Total current assets,1895151000.0000,library map
+EQT,313,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Total current liabilities,2484841000.0000,library map
+EQT,313,deposits,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,"Depreciation, depletion and amortization",2600390000.0000,library map
+EQT,313,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000033213-26-000018,R3,Net income attributable to EQT Corporation - Diluted (in dollars per share),3.3100,library map
+EQT,313,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Dividends paid,389633000.0000,library map
+EQT,313,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,Y,CommonStockDividendsPerShareCashPaid,sec_api,0000033213-26-000018,R10,Dividends (in dollars per share),0.6375,library map
+EQT,313,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Goodwill,2062462000.0000,library map
+EQT,313,gross_profit,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Income before income taxes,2977542000.0000,library map
+EQT,313,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Income tax expense,651884000.0000,library map
+EQT,313,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,"Interest expense, net",438695000.0000,combined line (library or label demote)
+EQT,313,interest_income,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,inventory,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,loans_net,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Net income attributable to EQT Corporation,2039247000.0000,library map
+EQT,313,net_interest_income,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,noninterest_expense,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,noninterest_income,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,operating_expenses,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Operating income,3249619000.0000,library map
+EQT,313,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Other income,4826000.0000,library map
+EQT,313,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,"Net property, plant and equipment",33557808000.0000,library map
+EQT,313,provision_for_credit_losses,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,research_and_development,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Total operating revenues,8644211000.0000,library map
+EQT,313,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000033213-26-000018,R8,Share-based compensation expense,60781000.0000,library map
+EQT,313,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,"Selling, general and administrative",380066000.0000,library map
+EQT,313,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-3,N,,sec_api,0000033213-26-000018,R8,Repurchase and retirement of common stock,0.0000,library map
+EQT,313,shares_outstanding,not_presented,,,,,,,,0000033213-26-000018,,,,no face line
+EQT,313,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Total common shareholders' equity,23752677000.0000,library map
+EQT,313,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Total assets,41792874000.0000,library map
+EQT,313,total_debt,component_sum,us-gaap:LongTermDebtCurrent,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Current portion of debt,507119000.0000,printed face components (duration sum; total_debt founder sum)
+EQT,313,total_interest_income,OUT,,,,,,,,0000033213-26-000018,,,,not a bank
+EQT,313,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000033213-26-000018,R6,Total liabilities,14432726000.0000,library map
+EQT,313,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Weighted average common stock outstanding - Basic (in shares),611571000.0000,library map
+EQT,313,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000033213-26-000018,R3,Weighted average common stock outstanding - Diluted (in shares),615717000.0000,library map

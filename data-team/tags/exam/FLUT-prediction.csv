@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+FLUT,596,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Accounts payable,386000000.0000,library map
+FLUT,596,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,"Accounts receivable, net",190000000.0000,library map
+FLUT,596,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)
+FLUT,596,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001635327-26-000005,R5,Basic (in USD per share),-1.7500,library map
+FLUT,596,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Purchases of property and equipment,105000000.0000,library map
+FLUT,596,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Cash and cash equivalents,1828000000.0000,library map
+FLUT,596,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Net cash provided by (used in) financing activities,2428000000.0000,library map
+FLUT,596,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001635327-26-000005,R7,Net cash used in investing activities,-3481000000.0000,library map
+FLUT,596,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Income tax paid (net of refunds),445000000.0000,library map
+FLUT,596,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Interest paid,531000000.0000,library map
+FLUT,596,cf_ap_change,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,0,-6,N,,sec_api,0001635327-26-000005,R7,Accounts receivable,0.0000,library map
+FLUT,596,cf_inventory_change,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Net cash provided by operating activities,1184000000.0000,library map
+FLUT,596,comprehensive_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Cost of Sales,8979000000.0000,library map
+FLUT,596,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,TOTAL CURRENT ASSETS,4796000000.0000,library map
+FLUT,596,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,TOTAL CURRENT LIABILITIES,5043000000.0000,library map
+FLUT,596,deposits,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Depreciation and amortization,1517000000.0000,library map
+FLUT,596,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001635327-26-000005,R5,Diluted (in USD per share),-1.7500,library map
+FLUT,596,dividends_paid,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,dividends_per_share,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Goodwill,15825000000.0000,library map
+FLUT,596,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Gross profit,7404000000.0000,library map
+FLUT,596,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001635327-26-000005,R5,(Loss) income before income taxes,-121000000.0000,library map
+FLUT,596,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Income tax (expense) benefit,286000000.0000,library map
+FLUT,596,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001635327-26-000005,R5,"Interest expense, net",-515000000.0000,combined line (library or label demote)
+FLUT,596,interest_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,inventory,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,loans_net,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,net_income,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,net_interest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,noninterest_expense,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,noninterest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Technology, research and development expenses",991000000.0000,printed opex lines (duration sum)
+FLUT,596,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Operating profit (loss),36000000.0000,library map
+FLUT,596,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Other income (expense), net",358000000.0000,library map
+FLUT,596,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,"Property and equipment, net",630000000.0000,library map
+FLUT,596,provision_for_credit_losses,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,"Technology, research and development expenses",991000000.0000,library map
+FLUT,596,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Revenue,16383000000.0000,library map
+FLUT,596,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Share-based compensation  equity classified,246000000.0000,library map
+FLUT,596,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001635327-26-000005,R5,Sales and marketing expenses,3678000000.0000,printed face components (duration sum; total_debt founder sum)
+FLUT,596,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001635327-26-000005,R7,Repurchase of ordinary shares and taxes withheld and paid on employee share awards,1123000000.0000,combined line (library or label demote)
+FLUT,596,shares_outstanding,not_presented,,,,,,,,0001635327-26-000005,,,,no face line
+FLUT,596,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Total Flutter Shareholders Equity,9038000000.0000,library map
+FLUT,596,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,TOTAL ASSETS,29280000000.0000,library map
+FLUT,596,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,Long-term debt due within one year,109000000.0000,printed face components (duration sum; total_debt founder sum)
+FLUT,596,total_interest_income,OUT,,,,,,,,0001635327-26-000005,,,,not a bank
+FLUT,596,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001635327-26-000005,R3,TOTAL LIABILITIES,19582000000.0000,library map
+FLUT,596,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)
+FLUT,596,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001635327-26-000005,,,,note-sourced default tag (no face line)

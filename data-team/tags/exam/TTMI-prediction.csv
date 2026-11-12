@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+TTMI,702,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Accounts payable,543538000.0000,library map
+TTMI,702,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Accounts receivable, net",563741000.0000,library map
+TTMI,702,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-051976,R4,Basic earnings (loss) per share,1.7300,library map
+TTMI,702,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,"Purchases of property, plant, and equipment and other assets",292565000.0000,library map
+TTMI,702,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Cash and cash equivalents,501234000.0000,library map
+TTMI,702,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-051976,R7,Net cash used in financing activities,-20921000.0000,library map
+TTMI,702,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-051976,R7,Net cash used in investing activities,-273940000.0000,library map
+TTMI,702,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,"Cash paid, net for income taxes",37437000.0000,library map
+TTMI,702,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,"Cash paid, net for interest",46197000.0000,library map
+TTMI,702,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,Accounts payable,138971000.0000,library map
+TTMI,702,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,"Accounts receivable, net",115130000.0000,library map
+TTMI,702,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,Inventories,25072000.0000,library map
+TTMI,702,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,Net cash provided by operating activities,291882000.0000,library map
+TTMI,702,comprehensive_income,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Cost of goods sold,2304659000.0000,library map
+TTMI,702,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Total current assets,1855406000.0000,library map
+TTMI,702,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Total current liabilities,962197000.0000,library map
+TTMI,702,deposits,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,Y,AmortizationOfIntangibleAssetsIncludingCostOfGoodAndServicesAmortization,sec_api,0001193125-26-051976,R7,"Depreciation of property, plant, and equipment",110274000.0000,printed face components (duration sum; total_debt founder sum)
+TTMI,702,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-051976,R4,Diluted earnings (loss) per share,1.6800,library map
+TTMI,702,dividends_paid,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,dividends_per_share,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Goodwill,670135000.0000,library map
+TTMI,702,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Gross profit,601686000.0000,library map
+TTMI,702,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income before income taxes,210337000.0000,library map
+TTMI,702,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income tax provision,32889000.0000,library map
+TTMI,702,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-051976,R4,Interest expense,45334000.0000,library map
+TTMI,702,interest_income,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Inventories,250057000.0000,library map
+TTMI,702,loans_net,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Net income (loss),177448000.0000,library map
+TTMI,702,net_interest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,noninterest_expense,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,noninterest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Total operating expenses,337002000.0000,printed opex total tag
+TTMI,702,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Operating income,264684000.0000,library map
+TTMI,702,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-051976,R4,"Other, net",-9013000.0000,library map
+TTMI,702,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Property, plant, and equipment, net",1010710000.0000,library map
+TTMI,702,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Research and development,28992000.0000,library map
+TTMI,702,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Net sales,2906345000.0000,library map
+TTMI,702,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,Stock-based compensation,41668000.0000,library map
+TTMI,702,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Selling and marketing,85460000.0000,printed face components (duration sum; total_debt founder sum)
+TTMI,702,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-051976,R7,Repurchases of common stock,17875000.0000,library map
+TTMI,702,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001193125-26-051976,R3,"Common stock, shares outstanding",103379000.0000,library map
+TTMI,702,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Total stockholders equity,1762253000.0000,library map
+TTMI,702,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Total assets,3840331000.0000,library map
+TTMI,702,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Short-term debt, including current portion of long-term debt",3815000.0000,printed face components (duration sum; total_debt founder sum)
+TTMI,702,total_interest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
+TTMI,702,total_liabilities,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
+TTMI,702,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)

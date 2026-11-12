@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+VRNS,977,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Trade payables,5735000.0000,library map
+VRNS,977,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,"Trade receivables (net of allowance of $1,260 and $2,518 at December 31, 2025 and December 31, 2024, respectively)",242822000.0000,library map
+VRNS,977,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-005450,,,,note-sourced default tag (no face line)
+VRNS,977,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-005450,R5,"Net loss per share of common stock, basic (in USD per share)",-1.1300,library map
+VRNS,977,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Purchases of property and equipment,12628000.0000,library map
+VRNS,977,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Cash and cash equivalents,202482000.0000,library map
+VRNS,977,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-005450,R8,Net cash provided by (used in) financing activities,-129697000.0000,library map
+VRNS,977,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-005450,R8,Net cash used in investing activities,-837000.0000,library map
+VRNS,977,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Cash paid for income taxes,3585000.0000,library map
+VRNS,977,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Cash paid for interest,7724000.0000,library map
+VRNS,977,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Trade payables,1229000.0000,library map
+VRNS,977,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Trade receivables,52554000.0000,library map
+VRNS,977,cf_inventory_change,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Net cash provided by operating activities,147431000.0000,library map
+VRNS,977,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001628280-26-005450,R6,Comprehensive loss,-108868000.0000,library map
+VRNS,977,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Cost of revenues,131974000.0000,library map
+VRNS,977,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Total current assets,1298555000.0000,library map
+VRNS,977,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Total current liabilities,658957000.0000,library map
+VRNS,977,deposits,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Depreciation and amortization,12309000.0000,library map
+VRNS,977,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-005450,R5,"Net loss per share of common stock, diluted (in USD per share)",-1.1300,library map
+VRNS,977,dividends_paid,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,dividends_per_share,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Goodwill,135276000.0000,library map
+VRNS,977,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Gross profit,491558000.0000,library map
+VRNS,977,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Loss before income taxes,-116320000.0000,library map
+VRNS,977,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Income taxes,13004000.0000,library map
+VRNS,977,interest_expense,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,interest_income,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,inventory,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,loans_net,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Net loss,-129324000.0000,library map
+VRNS,977,net_interest_income,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,noninterest_expense,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,noninterest_income,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Total operating expenses,638072000.0000,printed opex total tag
+VRNS,977,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-005450,R5,Operating loss,-146514000.0000,library map
+VRNS,977,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,"Financial income, net",30194000.0000,combined line (library or label demote)
+VRNS,977,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,"Property and equipment, net",36032000.0000,library map
+VRNS,977,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Research and development,237814000.0000,library map
+VRNS,977,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Revenues,623532000.0000,library map
+VRNS,977,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Stock-based compensation,130242000.0000,library map
+VRNS,977,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-005450,R5,Sales and marketing,301342000.0000,printed face components (duration sum; total_debt founder sum)
+VRNS,977,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001628280-26-005450,R8,Repurchase of common stock,115000000.0000,library map
+VRNS,977,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001628280-26-005450,R4,"Common stock, shares, outstanding (in shares)",117546852.0000,library map
+VRNS,977,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Total stockholders equity,598656000.0000,library map
+VRNS,977,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,Total assets,1791612000.0000,library map
+VRNS,977,total_debt,combined,us-gaap:ConvertibleDebtNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-005450,R3,"Convertible senior notes, net",452259000.0000,combined line (library or label demote)
+VRNS,977,total_interest_income,OUT,,,,,,,,0001628280-26-005450,,,,not a bank
+VRNS,977,total_liabilities,not_presented,,,,,,,,0001628280-26-005450,,,,no face line
+VRNS,977,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001628280-26-005450,R5,"Weighted average number of shares used in computing net loss per share of common stock, basic (in shares)",114413076.0000,library map
+VRNS,977,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001628280-26-005450,R5,"Weighted average number of shares used in computing net loss per share of common stock, diluted (in shares)",114413076.0000,library map

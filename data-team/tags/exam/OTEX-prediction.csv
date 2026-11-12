@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+OTEX,919,accounts_payable,not_presented,,,,,,,,0001002638-26-000068,,,,no face line
+OTEX,919,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,"Accounts receivable trade, net of allowance for credit losses of $13,136 as of June 30, 2026 and $14,258 as of June 30, 2025 (Note 4)",751046000.0000,library map
+OTEX,919,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Amortization of acquired customer-based intangible assets,288603000.0000,library map
+OTEX,919,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001002638-26-000068,R5,Earnings per sharebasic attributable to OpenText (in dollars per share),2.5800,library map
+OTEX,919,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Additions of property and equipment,199300000.0000,library map
+OTEX,919,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Cash and cash equivalents,956024000.0000,library map
+OTEX,919,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001002638-26-000068,R10,Net cash used in financing activities,-1319140000.0000,library map
+OTEX,919,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Net cash provided by (used in) investing activities,117177000.0000,library map
+OTEX,919,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001002638-26-000068,,,,note-sourced default tag (no face line)
+OTEX,919,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001002638-26-000068,,,,note-sourced default tag (no face line)
+OTEX,919,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0001002638-26-000068,R10,Accounts payable and accrued liabilities,-39696000.0000,combined line (library or label demote)
+OTEX,919,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-3,N,,sec_api,0001002638-26-000068,R10,Accounts receivable,-14449000.0000,library map
+OTEX,919,cf_inventory_change,not_presented,,,,,,,,0001002638-26-000068,,,,no face line
+OTEX,919,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Net cash provided by operating activities,1006817000.0000,library map
+OTEX,919,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001002638-26-000068,R6,Total comprehensive income attributable to OpenText,671522000.0000,library map
+OTEX,919,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Total cost of revenues,1377940000.0000,library map
+OTEX,919,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Total current assets,2117873000.0000,library map
+OTEX,919,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Total current liabilities,2623325000.0000,library map
+OTEX,919,deposits,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,depreciation_and_amortization,combined,us-gaap:DepreciationNonproduction,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Depreciation,143938000.0000,combined line (library or label demote)
+OTEX,919,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001002638-26-000068,R5,Earnings per sharediluted attributable to OpenText (in dollars per share),2.5800,library map
+OTEX,919,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Payments of dividends to shareholders,268357000.0000,library map
+OTEX,919,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,4,N,,sec_api,0001002638-26-000068,R9,Dividends declared per common share (in dollars per share),1.1000,library map
+OTEX,919,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Goodwill (Note 7),7327376000.0000,library map
+OTEX,919,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Gross profit,3868461000.0000,library map
+OTEX,919,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Income before income taxes,858877000.0000,library map
+OTEX,919,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Provision for income taxes (Note 15),215614000.0000,library map
+OTEX,919,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestIncomeExpenseNet,sec_api,0001002638-26-000068,R5,"Interest and other related expense, net",-309595000.0000,combined line (library or label demote)
+OTEX,919,interest_income,not_presented,,,,,,,,0001002638-26-000068,,,,no face line
+OTEX,919,inventory,not_presented,,,,,,,,0001002638-26-000068,,,,no face line
+OTEX,919,loans_net,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Net income attributable to OpenText,643022000.0000,library map
+OTEX,919,net_interest_income,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,noninterest_expense,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,noninterest_income,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Total operating expenses,2785864000.0000,printed opex total tag
+OTEX,919,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Income from operations,1082597000.0000,library map
+OTEX,919,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,"Other income (expense), net (Note 23)",85875000.0000,combined line (library or label demote)
+OTEX,919,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Property and equipment (Note 5),522197000.0000,library map
+OTEX,919,provision_for_credit_losses,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Research and development,647707000.0000,library map
+OTEX,919,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Total revenues,5246401000.0000,library map
+OTEX,919,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Share-based compensation expense,80636000.0000,library map
+OTEX,919,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Sales and marketing,1136030000.0000,printed face components (duration sum; total_debt founder sum)
+OTEX,919,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001002638-26-000068,R10,Repurchase of Common Shares,416411000.0000,library map
+OTEX,919,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001002638-26-000068,R4,"Common stock, shares outstanding (in shares)",242126460.0000,library map
+OTEX,919,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Total OpenText shareholders equity,4014104000.0000,library map
+OTEX,919,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Total assets,13106504000.0000,library map
+OTEX,919,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001002638-26-000068,R3,Current portion of long-term debt (Note 11),35850000.0000,printed face components (duration sum; total_debt founder sum)
+OTEX,919,total_interest_income,OUT,,,,,,,,0001002638-26-000068,,,,not a bank
+OTEX,919,total_liabilities,not_presented,,,,,,,,0001002638-26-000068,,,,no face line
+OTEX,919,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Weighted average number of Common Shares outstandingbasic (in shares),249026000.0000,library map
+OTEX,919,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001002638-26-000068,R5,Weighted average number of Common Shares outstandingdiluted (in shares),249373000.0000,library map

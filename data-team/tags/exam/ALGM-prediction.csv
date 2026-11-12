@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ALGM,939,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Trade accounts payable,44438000.0000,library map
+ALGM,939,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,"Trade accounts receivable, net",93248000.0000,library map
+ALGM,939,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-233537,,,,note-sourced default tag (no face line)
+ALGM,939,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-233537,R4,Basic (in dollars per share),-0.0800,library map
+ALGM,939,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,"Purchases of property, plant and equipment",38176000.0000,library map
+ALGM,939,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Cash and cash equivalents,168753000.0000,library map
+ALGM,939,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-233537,R8,Net cash (used in) provided by financing activities,-77379000.0000,library map
+ALGM,939,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-233537,R8,Net cash used in investing activities,-41717000.0000,library map
+ALGM,939,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,-,-3,N,,sec_api,0001193125-26-233537,R8,"Cash paid for income taxes, net of refunds",-27081000.0000,library map
+ALGM,939,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Cash paid for interest,19375000.0000,library map
+ALGM,939,cf_ap_change,not_presented,,,,,,,,0001193125-26-233537,,,,no face line
+ALGM,939,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Trade accounts receivable,9201000.0000,library map
+ALGM,939,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Inventories,6267000.0000,library map
+ALGM,939,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Net cash provided by operating activities,163069000.0000,library map
+ALGM,939,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001193125-26-233537,R5,"Comprehensive (loss) income attributable to Allegro MicroSystems, Inc.",-13346000.0000,library map
+ALGM,939,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Cost of goods sold,478126000.0000,library map
+ALGM,939,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Total current assets,503606000.0000,library map
+ALGM,939,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Total current liabilities,145925000.0000,library map
+ALGM,939,deposits,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Depreciation and amortization,67593000.0000,library map
+ALGM,939,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-233537,R4,Diluted (in dollars per share),-0.0800,library map
+ALGM,939,dividends_paid,not_presented,,,,,,,,0001193125-26-233537,,,,no face line
+ALGM,939,dividends_per_share,not_presented,,,,,,,,0001193125-26-233537,,,,no face line
+ALGM,939,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Goodwill,203291000.0000,library map
+ALGM,939,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Gross profit,411970000.0000,library map
+ALGM,939,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001193125-26-233537,R4,(Loss) income before income taxes,-14901000.0000,library map
+ALGM,939,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001193125-26-233537,R4,Income tax (benefit) provision,-248000.0000,library map
+ALGM,939,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Interest expense,22135000.0000,library map
+ALGM,939,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Interest income,776000.0000,library map
+ALGM,939,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Inventories,181752000.0000,library map
+ALGM,939,loans_net,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-233537,R4,"Net (loss) income attributable to Allegro MicroSystems, Inc.",-14897000.0000,library map
+ALGM,939,net_interest_income,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,noninterest_expense,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,noninterest_income,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Total operating expenses,393483000.0000,printed opex total tag
+ALGM,939,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Operating income (loss),18487000.0000,library map
+ALGM,939,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,"Other income (expense), net",579000.0000,library map
+ALGM,939,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,"Property, plant and equipment, net",308258000.0000,library map
+ALGM,939,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Research and development,205804000.0000,library map
+ALGM,939,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,Net sales,890096000.0000,library map
+ALGM,939,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-233537,R8,Stock-based compensation,47910000.0000,library map
+ALGM,939,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-233537,R4,"Selling, general and administrative",181089000.0000,library map
+ALGM,939,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-3,N,,sec_api,0001193125-26-233537,R8,Repurchases of common stock,0.0000,library map
+ALGM,939,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-233537,R3,"Common stock, shares outstanding (in shares)",185357343.0000,library map
+ALGM,939,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,"Equity attributable to Allegro MicroSystems, Inc.",954747000.0000,library map
+ALGM,939,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Total assets,1416175000.0000,library map
+ALGM,939,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Current portion of long-term debt,1530000.0000,printed face components (duration sum; total_debt founder sum)
+ALGM,939,total_interest_income,OUT,,,,,,,,0001193125-26-233537,,,,not a bank
+ALGM,939,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-233537,R2,Total liabilities,459730000.0000,library map
+ALGM,939,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001193125-26-233537,R4,Basic (in shares),185035670.0000,library map
+ALGM,939,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001193125-26-233537,R4,Diluted (in shares),185035670.0000,library map

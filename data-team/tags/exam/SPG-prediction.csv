@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SPG,186,accounts_payable,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,accounts_receivable,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-019419,,,,note-sourced default tag (no face line)
+SPG,186,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-019419,R4,Net income attributable to common stockholders - basic (in dollars per share),14.1700,library map
+SPG,186,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001104659-26-019419,R5,"Capital expenditures, net",934346000.0000,library map
+SPG,186,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-019419,R2,Cash and cash equivalents,823147000.0000,library map
+SPG,186,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-019419,R5,Net cash used in financing activities,-3113045000.0000,library map
+SPG,186,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-019419,R5,Net cash (used in) provided by investing activities,-1600704000.0000,library map
+SPG,186,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001104659-26-019419,,,,note-sourced default tag (no face line)
+SPG,186,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001104659-26-019419,,,,note-sourced default tag (no face line)
+SPG,186,cf_ap_change,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-3,N,,sec_api,0001104659-26-019419,R5,"Tenant receivables and accrued revenue, net",59769000.0000,combined line (library or label demote)
+SPG,186,cf_inventory_change,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001104659-26-019419,R5,Net cash provided by operating activities,4136551000.0000,library map
+SPG,186,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Comprehensive income attributable to common stockholders,4569278000.0000,library map
+SPG,186,cost_of_revenue,combined,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Property operating,580975000.0000,combined line (library or label demote)
+SPG,186,current_assets,not_presented,,,,,,,,0001104659-26-019419,,,,unclassified balance sheet
+SPG,186,current_liabilities,not_presented,,,,,,,,0001104659-26-019419,,,,unclassified balance sheet
+SPG,186,deposits,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Depreciation and amortization,1426423000.0000,library map
+SPG,186,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-019419,R4,Net income attributable to common stockholders - diluted (in dollars per share),14.1700,library map
+SPG,186,dividends_paid,combined,custom:PaymentsOfOrdinaryDividendsCommonStockAndPreferredStock,CF,+,-3,N,,fsn_xbrl,0001104659-26-019419,R5,Preferred dividends and distributions to stockholders,2792872000.0000,combined line (library or label demote)
+SPG,186,dividends_per_share,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,goodwill,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,gross_profit,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,income_before_tax,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,income_tax_expense,combined,custom:IncomeTaxExpenseBenefitAndOther,IS,+,-3,N,,fsn_xbrl,0001104659-26-019419,R4,Income and other tax expense,35788000.0000,combined line (library or label demote)
+SPG,186,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-019419,R4,Interest expense,974835000.0000,library map
+SPG,186,interest_income,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,inventory,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,loans_net,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,net_income,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,net_interest_income,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,noninterest_expense,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,noninterest_income,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Total operating expenses,3189109000.0000,CostsAndExpenses value check (structural)
+SPG,186,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,OPERATING INCOME BEFORE OTHER ITEMS,3175396000.0000,library map
+SPG,186,other_income_expense_net,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,ppe_net,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,research_and_development,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Total revenue,6364505000.0000,library map
+SPG,186,sbc,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,sga_expense,component_sum,us-gaap:MarketingAndAdvertisingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-019419,R4,Advertising and promotion,155826000.0000,printed face components (duration sum; total_debt founder sum)
+SPG,186,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001104659-26-019419,R5,Purchase of treasury stock,226826000.0000,library map
+SPG,186,shares_outstanding,not_presented,,,,,,,,0001104659-26-019419,,,,no face line
+SPG,186,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-019419,R2,Total stockholders' equity,5208268000.0000,library map
+SPG,186,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-019419,R2,Total assets,40606466000.0000,library map
+SPG,186,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001104659-26-019419,R2,Mortgages and unsecured indebtedness,28430175000.0000,printed face components (duration sum; total_debt founder sum)
+SPG,186,total_interest_income,OUT,,,,,,,,0001104659-26-019419,,,,not a bank
+SPG,186,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-019419,R2,Total liabilities,33901073000.0000,library map
+SPG,186,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001104659-26-019419,,,,note-sourced default tag (no face line)
+SPG,186,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001104659-26-019419,,,,note-sourced default tag (no face line)

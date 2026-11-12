@@ -1,0 +1,386 @@
+rank,tag,statements,decision,concept,reason
+360,us-gaap:DividendsPayableCurrentAndNoncurrent,BS/CF,exclude,,"dividends payable (BS), not dividends paid"
+361,us-gaap:ProceedsFromRepaymentsOfLinesOfCredit,CF,exclude,,cash-flow line that is not a template data point
+362,us-gaap:IncreaseDecreaseInOtherAccruedLiabilities,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+363,us-gaap:OtherReceivablesNetCurrent,BS,exclude,,"balance-sheet component line, not a template data point"
+364,us-gaap:NoninterestIncome,IS,component,revenue,bank revenue component (bank template: revenue = NII + noninterest income)
+365,us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,exclude,,bank balance or flow (bank template components)
+366,us-gaap:IncreaseDecreaseInDeposits,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+367,us-gaap:EquitySecuritiesFvNi,BS,exclude,,investment holdings line
+368,us-gaap:PaymentsOfStockIssuanceCosts,CF,exclude,,cash-flow line that is not a template data point
+369,us-gaap:EquityMethodInvestmentRealizedGainLossOnDisposal,CF/IS,exclude,,gain/loss or special item: not a template data point
+370,us-gaap:Land,BS/CF,exclude,,"balance-sheet component line, not a template data point"
+371,us-gaap:OperatingCostsAndExpenses,IS,review,operating_expenses,total costs and expenses: includes cost of revenue at some filers; per company
+372,us-gaap:ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest,IS,exclude,,comprehensive income statement line
+373,us-gaap:AssetsNoncurrent,BS,exclude,,subtotal not in template
+374,us-gaap:NetIncomeLossAvailableToCommonStockholdersDiluted,IS,exclude,,diluted EPS numerator
+375,us-gaap:LiabilitiesOfDisposalGroupIncludingDiscontinuedOperation,BS,exclude,,held-for-sale block
+376,us-gaap:RestructuringCostsAndAssetImpairmentCharges,CF/IS,exclude,,gain/loss or special item: not a template data point
+377,us-gaap:PolicyholderBenefitsAndClaimsIncurredNet,IS,exclude,,non-cash supplemental disclosure
+378,us-gaap:NonrelatedPartyMember,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+379,us-gaap:OtherAssetImpairmentCharges,CF/IS,exclude,,gain/loss or special item: not a template data point
+380,us-gaap:FiniteLivedIntangibleAssetsAccumulatedAmortization,BS/CF,exclude,,"balance-sheet component line, not a template data point"
+381,us-gaap:PaymentsToAcquireOtherProductiveAssets,CF,map,capex,VZ 'capital expenditures (including capitalized software)'; per company
+382,us-gaap:OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,CF/IS,exclude,,comprehensive income statement line
+383,us-gaap:OperatingLeaseLiability,BS,exclude,,operating leases are excluded from total debt
+384,us-gaap:DebtSecuritiesAvailableForSaleExcludingAccruedInterest,BS,exclude,,investment holdings line
+385,us-gaap:GainLossOnSaleOfInvestments,CF,exclude,,gain/loss or special item: not a template data point
+386,us-gaap:ProceedsFromDebtNetOfIssuanceCosts,CF,exclude,,cash-flow line that is not a template data point
+387,us-gaap:PaymentsForRepurchaseOfPreferredStockAndPreferenceStock,CF,exclude,,not common stock (founder buyback ruling)
+388,us-gaap:GainLossOnSaleOfOtherAssets,CF/IS,exclude,,gain/loss or special item: not a template data point
+389,us-gaap:FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest,BS,exclude,,bank balance or flow (bank template components)
+390,us-gaap:CommonStockDividendsPerShareCashPaid,CF/IS,map,dividends_per_share,DPS paid; already a library tag (C6: DPS held until the share-basis guard)
+391,us-gaap:PaymentsToAcquireInterestInSubsidiariesAndAffiliates,CF,exclude,,cash-flow line that is not a template data point
+392,us-gaap:DebtInstrumentNameDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+393,us-gaap:SupplementalCashFlowElementsAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+394,us-gaap:ProfessionalFees,IS,component,operating_expenses,opex line
+395,us-gaap:RestructuringSettlementAndImpairmentProvisions,CF/IS,exclude,,gain/loss or special item: not a template data point
+396,us-gaap:CashAcquiredFromAcquisition,CF,exclude,,cash-flow reconciliation / restricted-cash line
+397,us-gaap:RestrictedCashAndCashEquivalentsNoncurrent,BS/CF,exclude,,restricted cash is not cash and equivalents
+398,us-gaap:DebtInstrumentAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+399,us-gaap:NoninterestIncomeAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+400,us-gaap:ProceedsFromConvertibleDebt,CF,exclude,,cash-flow line that is not a template data point
+401,us-gaap:OtherInvestments,BS,exclude,,investment holdings line
+402,us-gaap:AssetsOfDisposalGroupIncludingDiscontinuedOperation,BS,exclude,,held-for-sale block
+403,us-gaap:InterestExpenseAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+404,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,combined,goodwill,goodwill and intangibles on one line
+405,us-gaap:PremiumsEarnedNet,IS,component,revenue,insurer revenue component
+406,us-gaap:InterestBearingDepositsInBanks,BS/CF,exclude,,bank balance or flow (bank template components)
+407,us-gaap:CommonStocksIncludingAdditionalPaidInCapital,BS,exclude,,equity component
+408,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,map,cash_flow_financing,only where no total financing line is printed
+409,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsDisposalGroupIncludingDiscontinuedOperations,CF,exclude,,discontinued operations / disposal group line
+410,us-gaap:ProceedsFromIssuanceOfCommercialPaper,CF,exclude,,cash-flow line that is not a template data point
+411,us-gaap:PaymentsOfOrdinaryDividends,CF,map,dividends_paid,common dividends; already a library tag
+412,us-gaap:IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity,CF/IS,exclude,,noncontrolling-interest line
+413,us-gaap:GoodwillAndIntangibleAssetImpairment,CF/IS,exclude,,gain/loss or special item: not a template data point
+414,us-gaap:CashAndDueFromBanks,BS/CF,map,cash_and_equivalents,"bank template cash line (seen C, AXP, COF)"
+415,us-gaap:PaymentsForProceedsFromShortTermInvestments,CF,exclude,,cash-flow line that is not a template data point
+416,us-gaap:OtherComprehensiveIncomeLossNetOfTax,CF/IS,exclude,,comprehensive income statement line
+417,us-gaap:IncreaseDecreaseInIncomeTaxes,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+418,us-gaap:IncreaseDecreaseInIncomeTaxesPayableNetOfIncomeTaxesReceivable,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+419,us-gaap:IncreaseDecreaseInIncomeTaxesReceivable,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+420,us-gaap:FinanceLeaseLiabilityCurrent,BS,component,total_debt,finance leases are debt (founder 2026-11-04 item 5)
+421,us-gaap:ProceedsFromIssuanceOfOtherLongTermDebt,CF,exclude,,cash-flow line that is not a template data point
+422,us-gaap:ProceedsFromSaleOfShortTermInvestments,CF,exclude,,cash-flow line that is not a template data point
+423,us-gaap:ProceedsFromIssuanceOfSecuredDebt,CF,exclude,,cash-flow line that is not a template data point
+424,us-gaap:CashProvidedByUsedInFinancingActivitiesDiscontinuedOperations,CF,exclude,,discontinued operations / disposal group line
+425,us-gaap:OperatingLeasePayments,CF,exclude,,lease line (operating leases are not debt)
+426,us-gaap:ImpairmentOfLongLivedAssetsHeldForUse,CF/IS,exclude,,gain/loss or special item: not a template data point
+427,us-gaap:HeldToMaturitySecuritiesFairValue,BS,exclude,,investment holdings line
+428,us-gaap:DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerDilutedShare,IS,exclude,,discontinued operations / disposal group line
+429,us-gaap:AllocatedShareBasedCompensationExpense,CF/IS,map,sbc,share-based compensation (CF add-back or IS line)
+430,us-gaap:PaymentsForProceedsFromInvestments,CF,exclude,,cash-flow line that is not a template data point
+431,us-gaap:ProceedsFromCollectionOfNotesReceivable,CF,exclude,,cash-flow line that is not a template data point
+432,us-gaap:ProvisionForLoanLeaseAndOtherLosses,CF/IS,exclude,,bank balance or flow (bank template components)
+433,us-gaap:RepaymentsOfNotesPayable,CF,exclude,,cash-flow line that is not a template data point
+434,us-gaap:NotesReceivableNet,BS,exclude,,"balance-sheet component line, not a template data point"
+435,us-gaap:AllowanceForDoubtfulAccountsReceivable,BS/CF,exclude,,"balance-sheet component line, not a template data point"
+436,us-gaap:ForeignCurrencyTransactionGainLossUnrealized,CF/IS,exclude,,gain/loss or special item: not a template data point
+437,us-gaap:ProductAndServiceOtherMember,IS,exclude,,"structural element (abstract/axis/member), never a value"
+438,us-gaap:OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,CF/IS,exclude,,comprehensive income statement line
+439,us-gaap:WeightedAverageNumberOfSharesOutstandingBasicAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+440,us-gaap:InvestmentIncomeNet,CF/IS,combined,interest_income,investment income incl. gains (label often says interest income: FTNT)
+441,us-gaap:ProceedsFromPaymentsToMinorityShareholders,CF,exclude,,noncontrolling-interest line
+442,us-gaap:IncreaseDecreaseInOperatingAssetsAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+443,us-gaap:ConstructionInProgressGross,BS,exclude,,"balance-sheet component line, not a template data point"
+444,us-gaap:IncreaseDecreaseInOtherAccountsPayableAndAccruedLiabilities,CF,exclude,,other payables change; not cf_ap_change
+445,us-gaap:InterestExpenseDebt,CF/IS,map,interest_expense,"when it is the only face interest line (WELL, PGR); with an affiliates line beside it (TMUS) it is a component"
+446,us-gaap:AmortizationOfDebtDiscountPremium,CF/IS,exclude,,insurer balance or flow (insurer template components)
+447,us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill,CF/IS,exclude,,gain/loss or special item: not a template data point
+448,us-gaap:RestructuringCosts,CF/IS,exclude,,gain/loss or special item: not a template data point
+449,us-gaap:BenefitsLossesAndExpenses,IS,exclude,,insurer total benefits and expenses
+450,us-gaap:IncreaseDecreaseInInterestPayableNet,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+451,us-gaap:RepaymentsOfUnsecuredDebt,CF,exclude,,cash-flow line that is not a template data point
+452,us-gaap:ProceedsFromIssuanceOfUnsecuredDebt,CF,exclude,,cash-flow line that is not a template data point
+453,us-gaap:ProceedsFromIssuanceOrSaleOfEquity,CF,exclude,,cash-flow line that is not a template data point
+454,us-gaap:LiabilityForClaimsAndClaimsAdjustmentExpense,BS,exclude,,insurer balance or flow (insurer template components)
+455,us-gaap:PreferredStockValueOutstanding,BS,exclude,,preferred / temporary equity
+456,us-gaap:DeferredRevenueNoncurrent,BS,exclude,,not a template data point
+457,us-gaap:NetCashProvidedByUsedInDiscontinuedOperations,CF,exclude,,discontinued operations / disposal group line
+458,us-gaap:OtherNonoperatingIncomeExpenseAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+459,us-gaap:DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerBasicShare,IS,exclude,,discontinued operations / disposal group line
+460,us-gaap:InterestExpenseDeposits,IS,component,interest_expense,bank deposit interest (bank template)
+461,us-gaap:RealizedInvestmentGainsLosses,CF/IS,exclude,,gain/loss or special item: not a template data point
+462,us-gaap:InterestIncomeExpenseAfterProvisionForLoanLoss,IS,exclude,,bank subtotal after provisions
+463,us-gaap:ProceedsFromLifeInsurancePolicies,CF,exclude,,cash-flow line that is not a template data point
+464,us-gaap:AdditionalCashFlowElementsAndSupplementalCashFlowInformationAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+465,us-gaap:PaymentsToAcquireInterestInJointVenture,CF,exclude,,cash-flow line that is not a template data point
+466,us-gaap:NetInvestmentIncome,IS,component,revenue,insurer revenue component
+467,us-gaap:ProceedsFromIssuanceInitialPublicOffering,CF,exclude,,cash-flow line that is not a template data point
+468,us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf,CF/IS,exclude,,gain/loss or special item: not a template data point
+469,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,combined,accounts_receivable,trade plus other receivables
+470,us-gaap:GainLossRelatedToLitigationSettlement,CF/IS,exclude,,gain/loss or special item: not a template data point
+471,us-gaap:DerivativeLiabilitiesCurrent,BS,exclude,,derivative line
+472,us-gaap:IncreaseDecreaseInOtherNoncurrentAssetsAndLiabilitiesNet,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+473,us-gaap:AccountsPayableTradeCurrent,BS,map,accounts_payable,trade payables when no AccountsPayableCurrent line
+474,us-gaap:AssetRetirementObligationsNoncurrent,BS,exclude,,"liability component line, not a template data point"
+475,us-gaap:InterestAndOtherIncome,IS,combined,interest_income,interest and other income
+476,us-gaap:IncreaseDecreaseInAccruedTaxesPayable,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+477,us-gaap:ProceedsFromSalesOfAssetsInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+478,us-gaap:OperatingLeaseLeaseIncome,IS,component,revenue,REIT rental revenue (often the top revenue line)
+479,us-gaap:ProceedsFromSaleMaturityAndCollectionOfShorttermInvestments,CF,exclude,,cash-flow line that is not a template data point
+480,us-gaap:MarketingAndAdvertisingExpense,IS,component,sga_expense,opex line
+481,us-gaap:OtherReceivables,BS,exclude,,"balance-sheet component line, not a template data point"
+482,us-gaap:RealEstateInvestmentPropertyNet,BS,review,ppe_net,REIT property net: PP&E for REITs?
+483,us-gaap:OtherNonoperatingIncome,IS,component,other_income_expense_net,component
+484,us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges,CF/IS,exclude,,gain/loss or special item: not a template data point
+485,us-gaap:ProceedsFromNotesPayable,CF,exclude,,cash-flow line that is not a template data point
+486,us-gaap:UnearnedPremiums,BS,exclude,,insurer balance or flow (insurer template components)
+487,us-gaap:NoninterestBearingDepositLiabilities,BS,exclude,,bank balance or flow (bank template components)
+488,us-gaap:AccruedInvestmentIncomeReceivable,BS,exclude,,investment holdings line
+489,us-gaap:NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent,IS,exclude,,pension line
+490,us-gaap:ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,CF,exclude,,cash-flow line that is not a template data point
+491,us-gaap:InterestAndDividendIncomeOperatingAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+492,us-gaap:TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests,BS,exclude,,noncontrolling-interest line
+493,us-gaap:DefinedBenefitPlanAssetsForPlanBenefitsNoncurrent,BS,exclude,,pension line
+494,us-gaap:DefinedBenefitPensionPlanLiabilitiesNoncurrent,BS,exclude,,pension line
+495,us-gaap:PensionAndOtherPostretirementBenefitExpense,CF/IS,exclude,,pension line
+496,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,CF/IS,map,research_and_development,R&D face line excluding acquired IPR&D
+497,us-gaap:InventoryNetAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+498,us-gaap:ProceedsFromMaturitiesPrepaymentsAndCallsOfShorttermInvestments,CF,exclude,,cash-flow line that is not a template data point
+499,us-gaap:SecuredDebt,BS,component,total_debt,face debt line
+500,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffectDisposalGroupIncludingDiscontinuedOperations,CF,exclude,,discontinued operations / disposal group line
+501,us-gaap:EquitySecuritiesFvNiGainLoss,CF/IS,exclude,,gain/loss or special item: not a template data point
+502,us-gaap:MarketableSecuritiesNoncurrent,BS,exclude,,investment holdings line
+503,us-gaap:PensionAndOtherPostretirementBenefitContributions,CF,exclude,,pension line
+504,us-gaap:DisposalGroupIncludingDiscontinuedOperationCashAndCashEquivalents,BS/CF,exclude,,discontinued operations / disposal group line
+505,us-gaap:IncreaseDecreaseInPensionAndPostretirementObligations,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+506,us-gaap:PensionAndOtherPostretirementBenefitsExpenseReversalOfExpenseNoncash,CF/IS,exclude,,non-cash supplemental disclosure
+507,us-gaap:IncreaseDecreaseInDeferredPolicyAcquisitionCosts,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+508,us-gaap:LoansReceivableHeldForSaleNetNotPartOfDisposalGroup,BS,exclude,,discontinued operations / disposal group line
+509,us-gaap:SegmentDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+510,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetBeforeAccumulatedDepreciationAndAmortization,BS,exclude,,gross PP&E incl. ROU
+511,us-gaap:FinancingReceivableExcludingAccruedInterestBeforeAllowanceForCreditLoss,BS,exclude,,bank balance or flow (bank template components)
+512,us-gaap:RepaymentsOfOtherDebt,CF,exclude,,cash-flow line that is not a template data point
+513,us-gaap:PaymentsForProceedsFromDerivativeInstrumentInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+514,us-gaap:OtherAssetsNoncurrentAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+515,us-gaap:InterestAndFeeIncomeLoansAndLeases,IS,component,revenue,bank interest income component
+516,us-gaap:OtherShortTermInvestments,BS,exclude,,investment holdings line
+517,us-gaap:InterestBearingDepositLiabilities,BS,exclude,,bank balance or flow (bank template components)
+518,us-gaap:TaxesExcludingIncomeAndExciseTaxes,IS,exclude,,"operating expense line, not a template data point"
+519,us-gaap:OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationAdjustmentNetOfTaxPortionAttributableToParent,IS,exclude,,comprehensive income statement line
+520,us-gaap:ProceedsFromSaleOfOtherInvestments,CF,exclude,,cash-flow line that is not a template data point
+521,us-gaap:PensionContributions,CF,exclude,,pension line
+522,us-gaap:OperatingCostsAndExpensesAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+523,us-gaap:StatementBusinessSegmentsAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+524,us-gaap:MachineryAndEquipmentGross,BS,exclude,,"balance-sheet component line, not a template data point"
+525,us-gaap:DerivativeAssetsCurrent,BS,exclude,,derivative line
+526,us-gaap:ProceedsFromIssuanceOfSharesUnderIncentiveAndShareBasedCompensationPlans,CF,exclude,,cash-flow line that is not a template data point
+527,us-gaap:NoninterestIncomeOtherOperatingIncome,IS,exclude,,"income line, not a template data point"
+528,us-gaap:LongtermDebtTypeAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+529,us-gaap:LongtermDebtTypeDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+530,us-gaap:BuildingsAndImprovementsGross,BS,exclude,,"balance-sheet component line, not a template data point"
+531,us-gaap:AccruedLiabilitiesAndOtherLiabilities,BS,exclude,,"liability component line, not a template data point"
+532,us-gaap:BenefitsLossesAndExpensesAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+533,us-gaap:PaymentsToAcquireNotesReceivable,CF,exclude,,cash-flow line that is not a template data point
+534,us-gaap:AvailableForSaleSecuritiesDebtSecuritiesNoncurrent,BS,exclude,,investment holdings line
+535,us-gaap:AvailableForSaleDebtSecuritiesAmortizedCostBasis,BS/CF,exclude,,investment holdings line
+536,us-gaap:AssetsHeldForSaleNotPartOfDisposalGroupCurrent,BS,exclude,,discontinued operations / disposal group line
+537,us-gaap:OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParentAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+538,us-gaap:ProceedsFromSalesOfBusinessAffiliateAndProductiveAssets,CF,exclude,,cash-flow line that is not a template data point
+539,us-gaap:RepaymentsOfCommercialPaper,CF,exclude,,cash-flow line that is not a template data point
+540,us-gaap:PaymentsForCapitalImprovements,CF,review,capex,REIT capital improvements: REIT capex definition (founder TI ruling)
+541,us-gaap:OperatingLeaseImpairmentLoss,CF/IS,exclude,,gain/loss or special item: not a template data point
+542,us-gaap:DebtAndEquitySecuritiesGainLoss,CF/IS,exclude,,gain/loss or special item: not a template data point
+543,us-gaap:AccountsReceivableNet,BS,map,accounts_receivable,receivables net (no current/noncurrent split)
+544,us-gaap:DerivativeLiabilitiesNoncurrent,BS,exclude,,derivative line
+545,us-gaap:OtherIntangibleAssetsNet,BS,exclude,,"intangibles, not goodwill"
+546,us-gaap:SeriesAPreferredStockMember,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+547,us-gaap:PaymentsForProceedsFromHedgeInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+548,us-gaap:PrepaidTaxes,BS,exclude,,"balance-sheet component line, not a template data point"
+549,us-gaap:ComprehensiveIncomeNetOfTaxAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+550,us-gaap:EquitySecuritiesFvNiUnrealizedGainLoss,CF/IS,exclude,,gain/loss or special item: not a template data point
+551,us-gaap:CashDivestedFromDeconsolidation,CF,exclude,,cash-flow reconciliation / restricted-cash line
+552,us-gaap:PreferredStockDividendsAndOtherAdjustments,IS,exclude,,preferred dividends
+553,us-gaap:IncreaseDecreaseInPrepaidExpense,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+554,us-gaap:RealEstateInvestmentPropertyAccumulatedDepreciation,BS/CF,exclude,,investment holdings line
+555,us-gaap:PaymentsForRepurchaseOfRedeemablePreferredStock,CF,exclude,,not common stock
+556,us-gaap:PaymentsToDevelopSoftware,CF,component,capex,capitalized software is capex (founder 2026-11-04 item 3)
+557,us-gaap:PaymentsForDerivativeInstrumentFinancingActivities,CF,exclude,,cash-flow line that is not a template data point
+558,us-gaap:ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill,CF/IS,exclude,,gain/loss or special item: not a template data point
+559,us-gaap:OtherLongTermInvestments,BS,exclude,,investment holdings line
+560,us-gaap:InterestIncomeOperating,IS,map,interest_income,interest income line
+561,us-gaap:LitigationSettlementExpense,CF/IS,exclude,,gain/loss or special item: not a template data point
+562,us-gaap:SecuritiesSoldUnderAgreementsToRepurchase,BS,exclude,,bank funding; not corporate debt (bank template)
+563,us-gaap:LineOfCredit,BS,component,total_debt,face debt line
+564,us-gaap:TemporaryEquityCarryingAmountAttributableToParent,BS,exclude,,preferred / temporary equity
+565,us-gaap:RepaymentsOfDebtAndCapitalLeaseObligations,CF,exclude,,cash-flow line that is not a template data point
+566,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffectAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+567,us-gaap:DeferredPolicyAcquisitionCosts,BS,exclude,,insurer balance or flow (insurer template components)
+568,us-gaap:IncreaseDecreaseInTradingSecurities,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+569,us-gaap:OtherPostretirementDefinedBenefitPlanLiabilitiesNoncurrent,BS,exclude,,pension line
+570,us-gaap:DebtSecuritiesHeldToMaturityExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,exclude,,investment holdings line
+571,us-gaap:OtherNoncashInvestingAndFinancingItemsAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+572,us-gaap:DerivativeGainLossOnDerivativeNet,CF/IS,exclude,,gain/loss or special item: not a template data point
+573,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,combined,accounts_payable,payables plus accrued liabilities
+574,us-gaap:ProceedsFromOtherShortTermDebt,CF,exclude,,cash-flow line that is not a template data point
+575,us-gaap:FinancingReceivableAllowanceForCreditLosses,BS/CF,exclude,,bank balance or flow (bank template components)
+576,us-gaap:PaymentsForOriginationAndPurchasesOfLoansHeldForSale,CF,exclude,,cash-flow line that is not a template data point
+577,us-gaap:CommonStockNoParValue,BS,exclude,,share capital line / share counts on BS
+578,us-gaap:IncreaseDecreaseInDeferredCharges,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+579,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,combined,cf_ar_change,AR change combined with notes
+580,us-gaap:PreferredStockLiquidationPreferenceValue,BS/CF,exclude,,preferred / temporary equity
+581,us-gaap:ProceedsFromSaleOfRealEstateHeldforinvestment,CF,exclude,,cash-flow line that is not a template data point
+582,us-gaap:FinanceLeaseRightOfUseAsset,BS,exclude,,lease line (operating leases are not debt)
+583,us-gaap:OperatingLeaseExpense,CF/IS,exclude,,lease line (operating leases are not debt)
+584,us-gaap:NotesAndLoansReceivableNetNoncurrent,BS,exclude,,bank balance or flow (bank template components)
+585,us-gaap:PaymentsForProceedsFromLoansAndLeases,CF,exclude,,cash-flow line that is not a template data point
+586,us-gaap:ConversionOfStockAmountConverted1,CF,exclude,,non-cash supplemental disclosure
+587,us-gaap:OtherDepreciationAndAmortization,CF/IS,map,depreciation_and_amortization,"when it is the CF's only D&A line (MRVL, QCOM, WELL)"
+588,us-gaap:DepositsAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+589,us-gaap:NetIncomeLossAttributableToRedeemableNoncontrollingInterest,IS,exclude,,noncontrolling-interest line
+590,us-gaap:PreferredStockMember,BS/CF,exclude,,"structural element (abstract/axis/member), never a value"
+591,us-gaap:InvestmentsAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+592,us-gaap:InvestmentIncomeInterestAndDividend,IS,combined,interest_income,interest and dividend income
+593,us-gaap:IncomeStatementBalanceSheetAndAdditionalDisclosuresByDisposalGroupsIncludingDiscontinuedOperationsAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+594,us-gaap:DisposalGroupsIncludingDiscontinuedOperationsNameDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+595,us-gaap:NotesAndLoansReceivableNetCurrent,BS,exclude,,bank balance or flow (bank template components)
+596,us-gaap:PaymentsForSoftware,CF,component,capex,capitalized software is capex (founder 2026-11-04 item 3)
+597,us-gaap:CostOfGoodsAndServicesSoldAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+598,us-gaap:ConvertibleDebtNoncurrent,BS,component,total_debt,face debt line
+599,us-gaap:RepaymentsOfOtherShortTermDebt,CF,exclude,,cash-flow line that is not a template data point
+600,us-gaap:ProceedsFromDerivativeInstrumentFinancingActivities,CF,exclude,,cash-flow line that is not a template data point
+601,us-gaap:LoansAndLeasesReceivableNetReportedAmount,BS,exclude,,bank balance or flow (bank template components)
+602,us-gaap:ProceedsFromDerivativeInstrumentInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+603,us-gaap:CommunicationsAndInformationTechnology,IS,component,operating_expenses,bank opex line
+604,us-gaap:PaymentsForDerivativeInstrumentInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+605,us-gaap:TemporaryEquitySharesIssued,BS,exclude,,preferred / temporary equity
+606,us-gaap:LiabilityForFuturePolicyBenefits,BS,exclude,,insurer balance or flow (insurer template components)
+607,us-gaap:LiabilitiesAssumed1,CF,exclude,,non-cash supplemental disclosure
+608,us-gaap:InterestAndDebtExpense,IS,map,interest_expense,already a library tag
+609,us-gaap:NetCashProvidedByUsedInDiscontinuedOperationsAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+610,us-gaap:IncomeStatementLocationDomain,CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+611,us-gaap:RegulatoryLiabilityNoncurrent,BS,exclude,,regulatory asset/liability (utility)
+612,us-gaap:Cash,BS/CF,map,cash_and_equivalents,already a library tag
+613,us-gaap:RegulatoryAssetsNoncurrent,BS,exclude,,regulatory asset/liability (utility)
+614,us-gaap:ProceedsFromHedgeInvestingActivities,CF,exclude,,cash-flow line that is not a template data point
+615,us-gaap:CapitalLeaseObligationsIncurred,CF,exclude,,non-cash finance lease additions
+616,us-gaap:PaymentsOfDistributionsToAffiliates,CF,exclude,,cash-flow line that is not a template data point
+617,us-gaap:UnsecuredDebt,BS,component,total_debt,face debt line
+618,us-gaap:IncomeLossAttributableToParent,IS,map,income_before_tax,"std label 'Income (Loss) Attributable to Parent, before Tax'; FSN plabel 'income before income taxes' at MRVL, COP, TMUS; lower priority than the two std pretax tags"
+619,us-gaap:CapitalizedContractCostAmortization,CF/IS,exclude,,"operating expense line, not a template data point"
+620,us-gaap:DebtIssuanceCostsIncurredDuringNoncashOrPartialNoncashTransaction,CF,exclude,,non-cash supplemental disclosure
+621,us-gaap:ProceedsFromRepaymentsOfOtherDebt,CF,exclude,,cash-flow line that is not a template data point
+622,us-gaap:CurrentIncomeTaxExpenseBenefit,CF/IS,component,income_tax_expense,current part; total = current + deferred
+623,us-gaap:IncomeStatementLocationAxis,CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+624,us-gaap:DerivativeAssetsNoncurrent,BS,exclude,,derivative line
+625,us-gaap:SeriesBPreferredStockMember,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+626,us-gaap:InterestPaidCapitalized,CF/IS,exclude,,capitalized interest (supplemental)
+627,us-gaap:IncreaseDecreaseInLiabilityForClaimsAndClaimsAdjustmentExpenseReserve,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+628,us-gaap:ProceedsFromOtherDebt,CF,exclude,,cash-flow line that is not a template data point
+629,us-gaap:AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivities,CF,exclude,,subtotal of CF adjustments
+630,us-gaap:InterestExpenseOther,CF/IS,component,interest_expense,one interest line of several
+631,us-gaap:NoncashOrPartNoncashAcquisitionValueOfAssetsAcquired1,CF,exclude,,non-cash supplemental disclosure
+632,us-gaap:TemporaryEquitySharesOutstanding,BS,exclude,,preferred / temporary equity
+633,us-gaap:OtherComprehensiveIncomeLossCashFlowHedgeGainLossAfterReclassificationAndTax,CF/IS,exclude,,comprehensive income statement line
+634,us-gaap:EquipmentExpense,IS,exclude,,"operating expense line, not a template data point"
+635,us-gaap:DeferredPolicyAcquisitionCostAmortizationExpense,CF/IS,exclude,,insurer balance or flow (insurer template components)
+636,us-gaap:InformationTechnologyAndDataProcessing,IS,component,operating_expenses,bank opex line
+637,us-gaap:PreferredStockLiquidationPreference,BS/CF,exclude,,preferred / temporary equity
+638,us-gaap:TemporaryEquityParOrStatedValuePerShare,BS,exclude,,preferred / temporary equity
+639,us-gaap:OtherShortTermBorrowings,BS,component,total_debt,face debt line
+640,us-gaap:PensionExpenseReversalOfExpenseNoncash,CF/IS,exclude,,non-cash supplemental disclosure
+641,us-gaap:DividendsPreferredStock,IS,exclude,,preferred dividends
+642,us-gaap:DisposalGroupClassificationDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+643,us-gaap:DisposalGroupClassificationAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+644,us-gaap:RealEstateInvestmentPropertyAtCost,BS,exclude,,investment holdings line
+645,us-gaap:ImpairmentOfIntangibleAssetsFinitelived,CF/IS,exclude,,gain/loss or special item: not a template data point
+646,us-gaap:PaymentsForRepurchaseOfEquity,CF,review,share_buybacks,may include preferred or other equity: per company
+647,us-gaap:GainLossOnSaleOfProperties,CF/IS,exclude,,gain/loss or special item: not a template data point
+648,us-gaap:LinesOfCreditCurrent,BS,component,total_debt,face debt line
+649,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,combined,accounts_receivable,accounts plus notes receivable
+650,us-gaap:FairValueOfAssetsAcquired,CF,exclude,,non-cash supplemental disclosure
+651,us-gaap:ProceedsFromShortTermDebtMaturingInMoreThanThreeMonths,CF,exclude,,cash-flow line that is not a template data point
+652,us-gaap:ProceedsFromSaleOfTreasuryStock,CF,exclude,,"issuance, not repurchase"
+653,us-gaap:PreferredStockRedemptionPremium,CF/IS,exclude,,preferred / temporary equity
+654,us-gaap:ProceedsFromSaleOfLoansHeldForSale,CF,exclude,,cash-flow line that is not a template data point
+655,us-gaap:IncreaseDecreaseInReinsuranceRecoverable,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+656,us-gaap:CapitalizedContractCostNetNoncurrent,BS,exclude,,BS component
+657,us-gaap:ProceedsFromIncomeTaxRefunds,CF,exclude,,cash-flow line that is not a template data point
+658,us-gaap:OtherNonoperatingExpense,IS,component,other_income_expense_net,component
+659,us-gaap:TemporaryEquitySharesAuthorized,BS,exclude,,preferred / temporary equity
+660,us-gaap:InventoryFinishedGoodsNetOfReserves,BS,exclude,,"balance-sheet component line, not a template data point"
+661,us-gaap:ProceedsFromSaleOfIntangibleAssets,CF,exclude,,cash-flow line that is not a template data point
+662,us-gaap:AccruedLiabilitiesCurrentAndNoncurrent,BS,exclude,,"liability component line, not a template data point"
+663,us-gaap:RepaymentsOfShortTermDebtMaturingInMoreThanThreeMonths,CF,exclude,,cash-flow line that is not a template data point
+664,us-gaap:ConvertibleLongTermNotesPayable,BS,component,total_debt,face debt line
+665,us-gaap:ConvertibleDebtCurrent,BS,component,total_debt,face debt line
+666,us-gaap:InterestIncomeOther,IS,component,interest_income,other interest income
+667,us-gaap:InterestExpenseLongTermDebt,IS,component,interest_expense,one interest line of several
+668,us-gaap:PaymentsToDevelopRealEstateAssets,CF,review,capex,REIT development spend: capex for REITs?
+669,us-gaap:CommonStockNumberOfSharesParValueAndOtherDisclosuresAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+670,us-gaap:CommercialPaper,BS,component,total_debt,face debt line (CommercialPaper must be included: MSFT P-4)
+671,us-gaap:FederalDepositInsuranceCorporationPremiumExpense,IS,exclude,,insurer balance or flow (insurer template components)
+672,us-gaap:NetIncomeLossAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+673,us-gaap:OtherBorrowings,BS,component,total_debt,face debt line
+674,us-gaap:ProceedsFromIssuanceOfConvertiblePreferredStock,CF,exclude,,cash-flow line that is not a template data point
+675,us-gaap:PreferredStockNoParValue,BS/CF,exclude,,preferred / temporary equity
+676,us-gaap:EquityMethodInvesteeNameDomain,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+677,us-gaap:IncomeTaxPaidFederalAfterRefundReceived,CF,exclude,,supplemental cash paid
+678,us-gaap:ProceedsFromSaleOfOtherProductiveAssets,CF,exclude,,cash-flow line that is not a template data point
+679,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffectContinuingOperations,CF,exclude,,cash-flow reconciliation / restricted-cash line
+680,us-gaap:EarningsPerShareReconciliationAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+681,us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest,IS,exclude,,net income including NCI (net_income is attributable to parent)
+682,us-gaap:IncomeAmountsAttributableToReportingEntityDisclosuresAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+683,us-gaap:IncreaseDecreaseInUnearnedPremiums,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+684,us-gaap:DebtSecuritiesAvailableForSaleAllowanceForCreditLoss,BS/CF,exclude,,investment holdings line
+685,us-gaap:ProceedsFromDivestitureOfBusinessesAndInterestsInAffiliates,CF,exclude,,cash-flow line that is not a template data point
+686,us-gaap:DiscontinuedOperationGainLossOnDisposalOfDiscontinuedOperationNetOfTax,CF/IS,exclude,,discontinued operations / disposal group line
+687,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment,IS,component,cost_of_revenue,lessor direct costs
+688,us-gaap:PreferredStockDividendRatePercentage,BS/CF,exclude,,preferred / temporary equity
+689,us-gaap:ScheduleOfEquityMethodInvestmentEquityMethodInvesteeNameAxis,BS/CF/IS,exclude,,"structural element (abstract/axis/member), never a value"
+690,us-gaap:UnbilledReceivablesCurrent,BS,exclude,,"balance-sheet component line, not a template data point"
+691,us-gaap:PaymentsToAcquireRealEstate,CF,exclude,,"property acquisitions are acquisitions, not capex"
+692,us-gaap:PaymentsForProceedsFromLoansReceivable,CF,exclude,,cash-flow line that is not a template data point
+693,us-gaap:InterestPayableCurrentAndNoncurrent,BS,exclude,,"liability component line, not a template data point"
+694,us-gaap:IncreaseDecreaseInOperatingLiabilitiesAbstract,CF,exclude,,"structural element (abstract/axis/member), never a value"
+695,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,CF,component,capex,a capex line beside the main PP&E line
+696,us-gaap:LoansReceivableHeldForSaleAmount,BS,exclude,,bank balance or flow (bank template components)
+697,us-gaap:BalanceSheetLocationDomain,BS/CF,exclude,,"structural element (abstract/axis/member), never a value"
+698,us-gaap:OtherInterestAndDividendIncome,IS,component,interest_income,component
+699,us-gaap:BalanceSheetLocationAxis,BS/CF,exclude,,"structural element (abstract/axis/member), never a value"
+700,us-gaap:OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentNetOfTax,IS,exclude,,comprehensive income statement line
+701,us-gaap:PremiumsReceivableAtCarryingValue,BS,exclude,,insurer balance or flow (insurer template components)
+702,us-gaap:TransfersAndServicingOfFinancialInstrumentsTypesOfFinancialInstrumentsDomain,BS/CF,exclude,,"structural element (abstract/axis/member), never a value"
+703,us-gaap:ProvisionForLoanLossesExpensed,CF/IS,exclude,,bank balance or flow (bank template components)
+704,us-gaap:NoncashOrPartNoncashAcquisitionValueOfLiabilitiesAssumed1,CF,exclude,,non-cash supplemental disclosure
+705,us-gaap:CommonClassCMember,BS/IS,exclude,,"structural element (abstract/axis/member), never a value"
+706,us-gaap:FinancialInstrumentAxis,BS/CF,exclude,,"structural element (abstract/axis/member), never a value"
+707,us-gaap:NetIncomeLossAttributableToNonredeemableNoncontrollingInterest,IS,exclude,,noncontrolling-interest line
+708,us-gaap:EquityMethodInvestmentOtherThanTemporaryImpairment,CF/IS,exclude,,gain/loss or special item: not a template data point
+709,us-gaap:EquitySecuritiesFvNiCurrentAndNoncurrent,BS,exclude,,investment holdings line
+710,us-gaap:RegulatoryAssetsCurrent,BS,exclude,,regulatory asset/liability (utility)
+711,us-gaap:DebtSecuritiesAvailableForSaleRealizedGainLoss,CF/IS,exclude,,gain/loss or special item: not a template data point
+712,us-gaap:IncreaseDecreaseInPremiumsReceivable,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+713,us-gaap:PensionAndOtherPostretirementAndPostemploymentBenefitPlansLiabilitiesNoncurrent,BS,exclude,,pension line
+714,us-gaap:DiscontinuedOperationTaxEffectOfDiscontinuedOperation,IS,exclude,,discontinued operations / disposal group line
+715,us-gaap:IncreaseDecreaseInOtherCurrentAssetsAndLiabilitiesNet,CF,exclude,,working-capital change line other than AR/AP/inventory (not a template data point)
+716,us-gaap:BusinessCombinationContingentConsiderationLiabilityCurrent,BS/CF,exclude,,"liability component line, not a template data point"
+717,us-gaap:BusinessCombinationConsiderationTransferredEquityInterestsIssuedAndIssuable,CF,exclude,,non-cash acquisition consideration
+718,us-gaap:ProceedsFromContributionsFromAffiliates,CF,exclude,,cash-flow line that is not a template data point
+719,us-gaap:InterestIncomeSecuritiesTaxable,IS,component,interest_income,bank component
+720,us-gaap:PaymentsForProceedsFromHedgeFinancingActivities,CF,exclude,,cash-flow line that is not a template data point
+721,us-gaap:OtherIncomeAndExpensesAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+722,us-gaap:LongTermLineOfCredit,BS,component,total_debt,face debt line
+723,us-gaap:OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax,IS,exclude,,comprehensive income statement line
+724,us-gaap:InterestExpenseShortTermBorrowings,IS,component,interest_expense,one interest line of several
+725,us-gaap:LoansHeldForSaleFairValueDisclosure,BS,exclude,,bank balance or flow (bank template components)
+726,us-gaap:NoncashOrPartNoncashAcquisitionFixedAssetsAcquired1,CF,exclude,,non-cash supplemental disclosure
+727,us-gaap:TradingSecuritiesDebt,BS,exclude,,investment holdings line
+728,us-gaap:ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,CF/IS,exclude,,acquired IPR&D write-off (not R&D expense)
+729,us-gaap:OtherExpenses,IS,exclude,,"operating expense line, not a template data point"
+730,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,combined,capex,capex net of disposal proceeds
+731,us-gaap:NoncashOrPartNoncashAcquisitionDebtAssumed1,CF,exclude,,non-cash supplemental disclosure
+732,us-gaap:DepreciationNonproduction,CF/IS,component,depreciation_and_amortization,depreciation only; D&A = depreciation + amortization lines (BKNG)
+733,us-gaap:PaymentOfFinancingAndStockIssuanceCosts,CF,exclude,,financing costs
+734,us-gaap:DefinedBenefitPlanRecognizedNetGainLossDueToSettlements1,CF/IS,exclude,,gain/loss or special item: not a template data point
+735,us-gaap:TemporaryEquityAbstract,BS,exclude,,"structural element (abstract/axis/member), never a value"
+736,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,combined,cf_ap_change,AP change combined with other liabilities
+737,us-gaap:PaidInKindInterest,CF/IS,exclude,,non-cash PIK interest (CF add-back)
+738,us-gaap:DeferredIncomeTaxesAndOtherTaxLiabilitiesNoncurrent,BS,exclude,,"liability component line, not a template data point"
+739,us-gaap:PaymentsToAcquireLifeInsurancePolicies,CF,exclude,,cash-flow line that is not a template data point
+740,us-gaap:PaymentsToAcquireBusinessesAndInterestInAffiliates,CF,exclude,,cash-flow line that is not a template data point
+741,us-gaap:IncomeTaxExpenseBenefitContinuingOperationsAbstract,IS,exclude,,"structural element (abstract/axis/member), never a value"
+742,us-gaap:RegulatoryLiabilityCurrent,BS,exclude,,regulatory asset/liability (utility)
+743,us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToNoncontrollingInterest,IS,exclude,,noncontrolling-interest line
+744,us-gaap:AccumulatedDistributionsInExcessOfNetIncome,BS,exclude,,REIT equity component

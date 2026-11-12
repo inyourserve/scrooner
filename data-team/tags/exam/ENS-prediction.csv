@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ENS,925,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Accounts payable,354190000.0000,library map
+ENS,925,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,"Accounts receivable, net of allowance for doubtful accounts (2026$8,583; 2025$8,675)",506072000.0000,library map
+ENS,925,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-036900,,,,note-sourced default tag (no face line)
+ENS,925,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-036900,R5,Basic (usd per share),7.8400,library map
+ENS,925,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Capital expenditures,80074000.0000,library map
+ENS,925,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Cash and cash equivalents,438675000.0000,library map
+ENS,925,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-036900,R9,Net cash (used in) provided by financing activities,-380703000.0000,library map
+ENS,925,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-036900,R9,Net cash used in investing activities,-87882000.0000,library map
+ENS,925,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-036900,,,,note-sourced default tag (no face line)
+ENS,925,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-036900,,,,note-sourced default tag (no face line)
+ENS,925,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001628280-26-036900,R9,Accounts payable,-52627000.0000,library map
+ENS,925,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001628280-26-036900,R9,Accounts receivable,-104705000.0000,library map
+ENS,925,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001628280-26-036900,R9,Inventories,-25888000.0000,library map
+ENS,925,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Net cash provided by (used in) operating activities,547596000.0000,library map
+ENS,925,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001628280-26-036900,R6,Comprehensive income attributable to EnerSys stockholders,328772000.0000,library map
+ENS,925,cost_of_revenue,not_presented,,,,,,,,0001628280-26-036900,,,,no face line
+ENS,925,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Total current assets,2141810000.0000,library map
+ENS,925,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Total current liabilities,804038000.0000,library map
+ENS,925,deposits,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Depreciation and amortization,113558000.0000,library map
+ENS,925,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-036900,R5,Diluted (usd per share),7.7000,library map
+ENS,925,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Dividends paid to stockholders,38142000.0000,library map
+ENS,925,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,32767,N,,sec_api,0001628280-26-036900,R5,Dividends per common share (usd per share),1.0300,library map
+ENS,925,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Goodwill,752424000.0000,library map
+ENS,925,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Gross profit,1097562000.0000,library map
+ENS,925,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Earnings before income taxes,347406000.0000,library map
+ENS,925,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Income tax expense,53849000.0000,library map
+ENS,925,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-036900,R5,Interest expense,50501000.0000,library map
+ENS,925,interest_income,not_presented,,,,,,,,0001628280-26-036900,,,,no face line
+ENS,925,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,"Inventories, net",724690000.0000,library map
+ENS,925,loans_net,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Net earnings attributable to EnerSys stockholders,293557000.0000,library map
+ENS,925,net_interest_income,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,noninterest_expense,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,noninterest_income,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,operating_expenses,not_presented,,,,,,,,0001628280-26-036900,,,,no face line
+ENS,925,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Operating earnings,426460000.0000,library map
+ENS,925,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001628280-26-036900,R5,"Other expense (income), net",-28553000.0000,library map
+ENS,925,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,"Property, plant, and equipment, net",593002000.0000,library map
+ENS,925,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,research_and_development,not_presented,,,,,,,,0001628280-26-036900,,,,no face line
+ENS,925,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001628280-26-036900,R5,Net sales,3751376000.0000,library map
+ENS,925,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Stock-based compensation,37594000.0000,library map
+ENS,925,sga_expense,not_presented,,,,,,,,0001628280-26-036900,,,,no face line
+ENS,925,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001628280-26-036900,R9,Purchase of treasury stock,370685000.0000,library map
+ENS,925,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001628280-26-036900,R4,"Common stock, shares outstanding (in shares)",36462211.0000,library map
+ENS,925,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Total EnerSys stockholders equity,1905284000.0000,library map
+ENS,925,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Total assets,4003324000.0000,library map
+ENS,925,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Short-term debt,29201000.0000,printed face components (duration sum; total_debt founder sum)
+ENS,925,total_interest_income,OUT,,,,,,,,0001628280-26-036900,,,,not a bank
+ENS,925,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-036900,R3,Total liabilities,2094452000.0000,library map
+ENS,925,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001628280-26-036900,R5,Basic (in shares),37439727.0000,library map
+ENS,925,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001628280-26-036900,R5,Diluted (in shares),38144210.0000,library map

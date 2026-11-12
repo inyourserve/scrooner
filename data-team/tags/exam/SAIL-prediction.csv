@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SAIL,668,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Accounts payable,5824000.0000,library map
+SAIL,668,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,"Accounts receivable, net of allowance",335001000.0000,library map
+SAIL,668,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002030781-26-000003,,,,note-sourced default tag (no face line)
+SAIL,668,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0002030781-26-000003,R5,"Net Loss per share attributable to common stockholders and Class B unitholders, basic (in dollars per share)",-0.5400,library map
+SAIL,668,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Purchase of property and equipment,5980000.0000,library map
+SAIL,668,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Cash and cash equivalents,358144000.0000,library map
+SAIL,668,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Net cash provided by financing activities,201972000.0000,library map
+SAIL,668,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0002030781-26-000003,R7,Net cash used in investing activities,-35556000.0000,library map
+SAIL,668,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Total cash paid during the period for income taxes,6892000.0000,library map
+SAIL,668,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Cash paid for interest,37069000.0000,library map
+SAIL,668,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Accounts payable,2295000.0000,library map
+SAIL,668,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Accounts receivable,86091000.0000,library map
+SAIL,668,cf_inventory_change,not_presented,,,,,,,,0002030781-26-000003,,,,no face line
+SAIL,668,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Net cash provided by (used in) operating activities,70580000.0000,library map
+SAIL,668,comprehensive_income,not_presented,,,,,,,,0002030781-26-000003,,,,no face line
+SAIL,668,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Total cost of revenue,380625000.0000,library map
+SAIL,668,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Total current assets,850695000.0000,library map
+SAIL,668,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Total current liabilities,643295000.0000,library map
+SAIL,668,deposits,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,Depreciation and amortization expense,210774000.0000,library map
+SAIL,668,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0002030781-26-000003,R5,"Net Loss per share attributable to common stockholders and Class B unitholders, diluted (in dollars per share)",-0.5400,library map
+SAIL,668,dividends_paid,not_presented,,,,,,,,0002030781-26-000003,,,,no face line
+SAIL,668,dividends_per_share,not_presented,,,,,,,,0002030781-26-000003,,,,no face line
+SAIL,668,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Goodwill,5151668000.0000,library map
+SAIL,668,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Gross profit,690791000.0000,library map
+SAIL,668,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0002030781-26-000003,R5,Loss before income taxes,-325999000.0000,library map
+SAIL,668,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0002030781-26-000003,R5,Income tax benefit,-55945000.0000,library map
+SAIL,668,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Interest expense,24635000.0000,library map
+SAIL,668,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Interest income,10790000.0000,library map
+SAIL,668,inventory,not_presented,,,,,,,,0002030781-26-000003,,,,no face line
+SAIL,668,loans_net,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0002030781-26-000003,R5,Net loss,-270054000.0000,library map
+SAIL,668,net_interest_income,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,noninterest_expense,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,noninterest_income,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Total operating expenses,998277000.0000,printed opex total tag
+SAIL,668,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0002030781-26-000003,R5,Loss from operations,-307486000.0000,library map
+SAIL,668,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0002030781-26-000003,R5,"Other income (expense), net",-4668000.0000,library map
+SAIL,668,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,"Property and equipment, net",35178000.0000,library map
+SAIL,668,provision_for_credit_losses,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Research and development,222961000.0000,library map
+SAIL,668,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Total revenue,1071416000.0000,library map
+SAIL,668,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0002030781-26-000003,R7,"Equity-based compensation expense, net of amounts capitalized",254872000.0000,library map
+SAIL,668,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,Sales and marketing,574846000.0000,printed face components (duration sum; total_debt founder sum)
+SAIL,668,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,0,-3,N,,sec_api,0002030781-26-000003,R7,Repurchase of units,0.0000,combined line (library or label demote)
+SAIL,668,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0002030781-26-000003,R4,Common stock outstanding (in shares),563781636.0000,library map
+SAIL,668,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Total stockholders' equity / partners' deficit,6846231000.0000,library map
+SAIL,668,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Total assets,7597561000.0000,library map
+SAIL,668,total_debt,component_sum,us-gaap:LongTermDebt,BS,0,-3,N,,sec_api,0002030781-26-000003,R3,"Long-term debt, net",0.0000,printed face components (duration sum; total_debt founder sum)
+SAIL,668,total_interest_income,OUT,,,,,,,,0002030781-26-000003,,,,not a bank
+SAIL,668,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0002030781-26-000003,R3,Total liabilities,751330000.0000,library map
+SAIL,668,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,"Weighted average shares and Class B Units outstanding, basic (in shares)",544159000.0000,library map
+SAIL,668,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0002030781-26-000003,R5,"Weighted average shares and Class B Units outstanding, diluted (in shares)",544159000.0000,library map

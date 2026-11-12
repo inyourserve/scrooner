@@ -264,6 +264,11 @@ def resolve_fallback_for_company(
 
 
 def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    from scrooner_pipeline.mapper.company_tag_map import without_tag_map_ciks
+
+    ciks = without_tag_map_ciks(
+        conn, ciks
+    )  # rule company_tag_map.select@1 ON: tag-map companies are skipped
     stats: dict[str, Any] = {"considered": 0, "ok": 0, "errored": 0, "rows_written": 0}
     with conn.cursor() as cur:
         cur.execute(
@@ -786,6 +791,11 @@ def _find_or_create_instant_period(
 def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) -> dict:
     primary_id = _concept_id(conn, "employee_count")
     resolved_id = _concept_id(conn, "employee_count_resolved")
+    from scrooner_pipeline.mapper.company_tag_map import without_tag_map_ciks
+
+    ciks = without_tag_map_ciks(
+        conn, ciks
+    )  # rule company_tag_map.select@1 ON: tag-map companies are skipped
 
     with conn.cursor() as cur:
         cur.execute(

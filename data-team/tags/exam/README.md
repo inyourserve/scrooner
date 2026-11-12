@@ -1,0 +1,14 @@
+# Blind exam (Tag Expert)
+
+Protocol agreed with Dhairya 2026-11-12 (founder correction: the blind exam replaces the 20-card re-check).
+- Ranks: data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv. Dev set ranks 51-100 (already read): scored separately, never blind.
+- `<TICKER>-prediction.csv`: one row per docmap data point, predicted from FSN face lines (latest 10-K) + the tag library and company overrides only, by `tools/predict.py` (deterministic). A prediction counts only if its commit is earlier than the first commit of that ticker's docmap on any work/reads/* branch.
+- Grading: `tools/grade.py` against data-team/companies/reads/<TICKER>-docmap-*.csv. Correct = status matches and, for mapped/combined/component_sum/component_in_note, the tag set matches. Error classes: status, tag, missed; no_prediction is never correct.
+- Every miss: a card fix (accession, R page) and a predict.py fix, the same day.
+
+## Predictor versions (dev = ranks 51-100, never blind)
+| Version | Commit time | Dev accuracy | Notes |
+|---|---|---|---|
+| v1 | 2026-11-12 18:10Z (7fca0d0b) | 82.4% (407 wrong / 2,314) | first frozen predictor |
+| v2 | this commit | 87.7% (280 wrong / 2,275; 39 shares rows are key errors under Dhairya's 2026-11-12 ruling) | opex rules, combined-perimeter concepts, capex demote fix, sole-debt interest, lone G&A, note-default majority, field normalisation |
+Re-prediction: only tickers with no docmap on any work/reads/* branch or main at commit time; an earlier prediction of a read ticker is never replaced.

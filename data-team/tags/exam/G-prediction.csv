@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+G,911,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Accounts payable,27533000.0000,library map
+G,911,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,"Accounts receivable, net of allowance for credit losses of $12,094 and $22,097 as of December 31, 2024 and 2025, respectively",1240550000.0000,library map
+G,911,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Amortization of acquired intangible assets,24292000.0000,library map
+G,911,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001398659-26-000004,R5,"Earnings per common share, basic (in usd per share)",3.1800,library map
+G,911,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,"Purchase of property, plant and equipment",78203000.0000,library map
+G,911,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Cash and cash equivalents,853836000.0000,library map
+G,911,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001398659-26-000004,R9,Net cash used for financing activities,-106815000.0000,library map
+G,911,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001398659-26-000004,R9,Net cash used for investing activities,-495495000.0000,library map
+G,911,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,"Cash paid during the period for income taxes, net of refund",143645000.0000,library map
+G,911,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Cash paid during the period for interest (including interest rate swaps),59691000.0000,library map
+G,911,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001398659-26-000004,R9,Increase (decrease) in accounts payable,-6415000.0000,library map
+G,911,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Increase in accounts receivable,44221000.0000,library map
+G,911,cf_inventory_change,not_presented,,,,,,,,0001398659-26-000004,,,,no face line
+G,911,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Net cash provided by operating activities,812856000.0000,library map
+G,911,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001398659-26-000004,R6,Comprehensive income,485136000.0000,library map
+G,911,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Cost of revenue,3248867000.0000,library map
+G,911,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Total current assets,2656367000.0000,library map
+G,911,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Total current liabilities,1602480000.0000,library map
+G,911,deposits,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Depreciation and amortization,70667000.0000,printed face components (duration sum; total_debt founder sum)
+G,911,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001398659-26-000004,R5,"Earnings per common share, diluted (in usd per share)",3.1300,library map
+G,911,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Dividend paid,117747000.0000,library map
+G,911,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001398659-26-000004,R8,Dividends per common share (in usd per share),0.6800,library map
+G,911,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Goodwill,1781116000.0000,library map
+G,911,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Gross profit,1831012000.0000,library map
+G,911,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Income before income tax expense,730147000.0000,library map
+G,911,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Income tax expense (benefit),177653000.0000,library map
+G,911,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001398659-26-000004,R5,"Interest income (expense), net",-49597000.0000,combined line (library or label demote)
+G,911,interest_income,not_presented,,,,,,,,0001398659-26-000004,,,,no face line
+G,911,inventory,not_presented,,,,,,,,0001398659-26-000004,,,,no face line
+G,911,loans_net,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,0001398659-26-000004,R5,Net income,552494000.0000,library map
+G,911,net_interest_income,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,noninterest_expense,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,noninterest_income,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,"Selling, general and administrative expenses",1046713000.0000,printed opex lines (duration sum)
+G,911,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Income from operations,750207000.0000,library map
+G,911,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,"Other income (expense), net",22147000.0000,library map
+G,911,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,"Property, plant and equipment, net",190448000.0000,library map
+G,911,provision_for_credit_losses,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,research_and_development,not_presented,,,,,,,,0001398659-26-000004,,,,no face line
+G,911,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,Net revenues,5079879000.0000,library map
+G,911,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001398659-26-000004,R9,Stock-based compensation expense,89616000.0000,library map
+G,911,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001398659-26-000004,R5,"Selling, general and administrative expenses",1046713000.0000,library map
+G,911,share_buybacks,not_presented,,,,,,,,0001398659-26-000004,,,,no face line
+G,911,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001398659-26-000004,R4,"Common shares, outstanding (in shares)",170341479.0000,library map
+G,911,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Total equity,2549401000.0000,library map
+G,911,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Total assets,5843267000.0000,library map
+G,911,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0001398659-26-000004,R3,Short term borrowing,0.0000,printed face components (duration sum; total_debt founder sum)
+G,911,total_interest_income,OUT,,,,,,,,0001398659-26-000004,,,,not a bank
+G,911,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001398659-26-000004,R3,Total liabilities,3293866000.0000,library map
+G,911,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001398659-26-000004,R5,Weighted average number of common shares used in computing basic earnings per common share (in shares),173892795.0000,library map
+G,911,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001398659-26-000004,R5,Weighted average number of common shares used in computing dilutive earnings per common share (in shares),176646644.0000,library map

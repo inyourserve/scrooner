@@ -37,7 +37,7 @@ rows = list(csv.DictReader(open(cohort)))[lo - 1:hi]
 Q_LINES = """select l.filing_id, l.stmt, t.tag, t.custom, l.plabel, f.accepted, f.accession, f.period
              from fsn.line l join fsn.filing f on f.id = l.filing_id join fsn.tag t on t.id = l.tag_id
              where f.company_id = %s and f.period >= '2015-01-01'"""
-Q_ARCS = """select a.filing_id, p.tag, c.tag from fsn.calc_arc a join fsn.filing f on f.id = a.filing_id
+Q_ARCS = """select a.filing_id, p.tag, c.tag, a.weight from fsn.calc_arc a join fsn.filing f on f.id = a.filing_id
             join fsn.tag p on p.id = a.parent_tag_id join fsn.tag c on c.id = a.child_tag_id
             where f.company_id = %s and f.period >= '2015-01-01'"""
 
@@ -120,8 +120,18 @@ with psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=20) as conn:
         cid = int(c["company_id"])
         lines = conn.execute(Q_LINES, (cid,)).fetchall()
         parents = collections.defaultdict(set)  # (filing, child) -> parents
-        for fid, p, ch in conn.execute(Q_ARCS, (cid,)).fetchall():
+        kids = collections.defaultdict(list)  # (filing, parent) -> [(child, weight)]
+        for fid, p, ch, wt in conn.execute(Q_ARCS, (cid,)).fetchall():
             parents[(fid, ch)].add(p)
+            kids[(fid, p)].append((ch, wt))
+        # calc position: under one parent, X (+1) beside the income-tax line (-1) is income before tax
+        TAX = {"IncomeTaxExpenseBenefit", "IncomeTaxExpenseBenefitContinuingOperations"}
+        ibt_by_calc = collections.Counter()
+        for (fid, p), ch in kids.items():
+            if any(t in TAX and w == -1 for t, w in ch):
+                plus = [t for t, w in ch if w == 1]
+                if len(plus) == 1:
+                    ibt_by_calc[plus[0]] += 1
         agg = {}
         for fid, stmt, tag, custom, plabel, accepted, acc, period in lines:
             k = (stmt, tag)
@@ -177,6 +187,7 @@ with psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=20) as conn:
                 "stmt": stmt, "tag": tag, "lines": a["n"], "filings": len(a["filings"]),
                 "evidence_plabel": a["label"], "evidence_adsh": a["acc"], "evidence_cal_parent": ";".join(p for p, _ in a["par"].most_common(3)),
                 "era_from": a["p0"] or "", "era_to": a["p1"] or "", "decision": decision, "canonical_concept": conc, "reason_class": rc, "reason": why, "decided_by": how,
+                "filing_ids": ";".join(map(str, sorted(a["filings"]))), "ibt_by_calc": ibt_by_calc.get(tag, 0) if stmt == "IS" else 0,
             })
         print(f"rank {rank} {c['ticker']}: {len(agg)} (stmt,tag) pairs, residue {sum(1 for r in out_rows if r['company_id']==cid and r['decided_by']=='residue')}", flush=True)
 

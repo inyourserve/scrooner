@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+CLH,501,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Accounts payable,506592000.0000,library map
+CLH,501,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,"Accounts receivable, net of allowances aggregating $35,991 and $47,242, respectively",1044137000.0000,library map
+CLH,501,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000822818-26-000009,,,,note-sourced default tag (no face line)
+CLH,501,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000822818-26-000009,R5,Basic (in dollars per share),7.3100,library map
+CLH,501,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,"Additions to property, plant and equipment",424918000.0000,library map
+CLH,501,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Cash and cash equivalents,826315000.0000,combined line (library or label demote)
+CLH,501,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000822818-26-000009,R8,Net cash (used in) from financing activities,-309342000.0000,library map
+CLH,501,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000822818-26-000009,R8,Net cash used in investing activities,-425786000.0000,library map
+CLH,501,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,"Income taxes paid, net of refunds",117904000.0000,library map
+CLH,501,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Interest paid,157263000.0000,library map
+CLH,501,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Accounts payable,23382000.0000,library map
+CLH,501,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Accounts receivable and unbilled accounts receivable,31849000.0000,combined line (library or label demote)
+CLH,501,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000822818-26-000009,R8,Inventories and supplies,-12461000.0000,combined line (library or label demote)
+CLH,501,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Net cash from operating activities,866725000.0000,library map
+CLH,501,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000822818-26-000009,R7,Comprehensive income,399993000.0000,library map
+CLH,501,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Total cost of revenues,4144599000.0000,library map
+CLH,501,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Total current assets,2647243000.0000,library map
+CLH,501,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Total current liabilities,1136847000.0000,library map
+CLH,501,deposits,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Depreciation and amortization,446006000.0000,library map
+CLH,501,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000822818-26-000009,R5,Diluted (in dollars per share),7.2800,library map
+CLH,501,dividends_paid,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,dividends_per_share,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Goodwill,1479050000.0000,library map
+CLH,501,gross_profit,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Income before provision for income taxes,527967000.0000,library map
+CLH,501,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Provision for income taxes,136993000.0000,library map
+CLH,501,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0000822818-26-000009,R5,"Interest expense, net of interest income of $25,749, $19,437 and $11,930, respectively",-143104000.0000,combined line (library or label demote)
+CLH,501,interest_income,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Inventories and supplies,372088000.0000,library map
+CLH,501,loans_net,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Net income,390974000.0000,library map
+CLH,501,net_interest_income,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,noninterest_expense,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,noninterest_income,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,operating_expenses,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Income from operations,673372000.0000,library map
+CLH,501,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,"Other income (expense), net",5200000.0000,library map
+CLH,501,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,"Property, plant and equipment, net",2541067000.0000,library map
+CLH,501,provision_for_credit_losses,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,research_and_development,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Total revenues,6030837000.0000,library map
+CLH,501,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Stock-based compensation,32702000.0000,library map
+CLH,501,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,"Selling, general and administrative expenses",752534000.0000,library map
+CLH,501,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000822818-26-000009,R8,Repurchases of common stock,250002000.0000,library map
+CLH,501,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000822818-26-000009,R4,"Common stock, outstanding shares (in shares)",52870599.0000,library map
+CLH,501,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Total stockholders' equity,2745660000.0000,library map
+CLH,501,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Total assets,7624056000.0000,library map
+CLH,501,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000822818-26-000009,R3,Current portion of long-term debt,12600000.0000,printed face components (duration sum; total_debt founder sum)
+CLH,501,total_interest_income,OUT,,,,,,,,0000822818-26-000009,,,,not a bank
+CLH,501,total_liabilities,not_presented,,,,,,,,0000822818-26-000009,,,,no face line
+CLH,501,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Shares used to compute earnings per share  Basic (in shares),53509000.0000,library map
+CLH,501,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000822818-26-000009,R5,Shares used to compute earnings per share  Diluted (in shares),53716000.0000,library map
