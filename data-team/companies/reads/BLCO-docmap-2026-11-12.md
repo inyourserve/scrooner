@@ -12,7 +12,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R5.htm | Total revenues | 5101000000 | 5101000000 | 4791000000 | 4791000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
-| cost_of_revenue | component sum | us-gaap:CostOfGoodsAndServicesSold[member: Cost of goods sold (excluding amortizati]+us-gaap:CostOfGoodsAndServicesSold[member: Cost of goods sold (excluding amortizati] | R5.htm | Cost of goods sold (excluding amortization and impairments of intangible assets) and Cost of other revenues + Cost of go | 2050000000 |  | 1872000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Cost of goods sold (excluding amortization and impairments of intangible assets) and Cost of other revenues | 2045000000 |  | 1868000000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
 | gross_profit | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1207 tags across all 131 R pages, face and notes) of 0001860742-26-000007; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | combined | us-gaap:CostsAndExpenses | R5.htm | Total expenses | 4988000000 | 4988000000 | 4629000000 | 4629000000 | Y | FILING-CHECKED | check: machine-full-filing / CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
 | sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R5.htm | Selling, general and administrative (Note 3) | 2234000000 | 2234000000 | 2082000000 | 2082000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001860742-26-000007 R5.htm period ..2025-12-31 |
@@ -56,4 +56,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cash_paid_for_income_taxes: era 10-K 0001860742-25-000004 R8.htm read; no row matched (auto)
 
 ## Mismatches (printed vs API)
-- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold[member: Cost of goods sold (excluding amortizati]+us-gaap:CostOfGoodsAndServicesSold[member: Cost of goods sold (excluding amortizati])
+- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)
