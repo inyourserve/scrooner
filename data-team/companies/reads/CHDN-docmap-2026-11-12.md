@@ -7,19 +7,19 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0000020212-16-000065 (CIK 0000020212, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, CI R4.htm, CF R7.htm
 - 10-K 0000020212-23-000059 (CIK 0000020212, era filing): COVER R1.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R8.htm
 - 10-K 0000020212-24-000055 (CIK 0000020212, era filing): COVER R1.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R8.htm
-- companyfacts CIK0000020212.json (one call).
+- companyfacts CIK0000020212.json (one call); submissions CIK0000020212.json (SIC 7948).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| revenue | mapped | us-gaap:Revenues | R101.htm | Net revenue | 1442400000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R101.htm 'Segment Information - Schedule of Adjusted EBITDA by Segment (Details)' (MetaLinks.json presentation) |
-| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R3.htm | Operating expense | 861400000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R3.htm | Net revenue | 2925900000 | 2925900000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
+| cost_of_revenue | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CostOfRevenue, CostOfGoodsAndServicesSold, CostOfGoodsSold, CostOfServices in MetaLinks.json (945 tags across all 105 R pages, face and notes) of 0000020212-26-000025; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:OperatingExpenses 'Total operating expense / Operating Expenses / Generally rec' R3 |
 | gross_profit | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (945 tags across all 105 R pages, face and notes) of 0000020212-26-000025; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R3.htm | Total operating expense | 2242100000 | 2242100000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
-| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R92.htm | Operating and SG&A expense | 246200000 | 246200000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R92.htm 'Investment In and Advances to Unconsolidated Affiliates - Affiliate Income State' (MetaLinks.json presentation) |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R3.htm | Selling, general and administrative expense | 246200000 | 246200000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
 | research_and_development | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (945 tags across all 105 R pages, face and notes) of 0000020212-26-000025; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:EffectiveIncomeTaxRateReconciliationTaxCredits 'Tax credits / Effective Income Tax Rate Reconciliation, Tax ' R67; us-gaap:IncomeTaxReconciliationTaxCredits 'Tax credits / Effective Income Tax Rate Reconciliation, Tax ' R67 |
-| operating_income | mapped | us-gaap:OperatingIncomeLoss | R92.htm | Operating income | 683800000 | 683800000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R92.htm 'Investment In and Advances to Unconsolidated Affiliates - Affiliate Income State' (MetaLinks.json presentation) |
-| interest_expense | mapped | us-gaap:InterestExpense | R92.htm | Interest and other expense, net | -41400000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R92.htm 'Investment In and Advances to Unconsolidated Affiliates - Affiliate Income State' (MetaLinks.json presentation) |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R3.htm | Operating income | 683800000 | 683800000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
+| interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R3.htm | Interest expense, net | -297700000 | 297700000 |  |  | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R3.htm 'Consolidated Statements of Comprehensive Income' (MetaLinks.json presentation) |
 | income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R67.htm | Income from operations before provision for income taxes | 532400000 | 532400000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R67.htm 'Income Taxes - Schedule of Reconciliation of Amount Computed by Applying the Fed' (MetaLinks.json presentation) |
 | income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R66.htm | Income tax provision | 146900000 | 146900000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R66.htm 'Income Taxes - Schedule of Components of Provision for Income Taxes (Details)' (MetaLinks.json presentation) |
 | net_income | mapped | us-gaap:NetIncomeLoss | R98.htm | Net income attributable to Churchill Downs Incorporated | 383000000 | 383000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R98.htm 'Net Income Per Common Share Computations (Details)' (MetaLinks.json presentation) |
@@ -53,7 +53,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: 10-K 0000020212-16-000065 statement not identified (auto)
-- cost_of_revenue: 10-K 0000020212-16-000065 statement not identified (auto)
 - operating_expenses: 10-K 0000020212-16-000065 statement not identified (auto)
 - sga_expense: 10-K 0000020212-16-000065 statement not identified (auto)
 - operating_income: 10-K 0000020212-16-000065 statement not identified (auto)
@@ -89,7 +88,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - interest_expense: 10-K 0000020212-24-000055 statement not identified (auto)
 
 ## Mismatches (printed vs API)
-- revenue: API missing (us-gaap:Revenues)
-- cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)
-- interest_expense: API missing (us-gaap:InterestExpense)
 - ppe_net: API missing (chdn:PropertyPlantAndEquipmentNetAndOperatingLeaseRightOfUseAsset)

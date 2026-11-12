@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001065696-16-000076 (CIK 0001065696, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R6.htm
 - 10-K 0001065696-19-000010 (CIK 0001065696, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R6.htm
 - 10-K 0001065696-20-000008 (CIK 0001065696, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R6.htm
-- companyfacts CIK0001065696.json (one call).
+- companyfacts CIK0001065696.json (one call); submissions CIK0001065696.json (SIC 5010).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -48,7 +48,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Purchase of treasury stock | -159000000 | 159000000 | -360000000 | 360000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001065696-26-000012 R7.htm period ..2025-12-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Interest | 230000000 | 230000000 | 230000000 | 230000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001065696-26-000012 R7.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R7.htm | Income taxes, net of refunds | 300000000 | 300000000 | 322000000 | 322000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001065696-26-000012 R7.htm period ..2025-12-31 |
-| total_debt | mapped | us-gaap:LongTermDebt | R83.htm | Long-term Debt | 800000000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R83.htm 'Schedule of Long-Term Obligations (Details)' (MetaLinks.json presentation) |
+| total_debt | component_in_note | us-gaap:NotesPayable | R83.htm | Schedule of Long-Term Obligations (Details) |  |  |  |  |  | FILING-CHECKED | check: machine-full-filing / only component tag(s) NotesPayable in the filing (R83.htm 'Schedule of Long-Term Obligations (Details)'); the data point itself is not reported |
 | shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R5.htm | Common Stock, Shares, Outstanding | 255000000 | 255000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
@@ -93,4 +93,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Mismatches (printed vs API)
 - operating_expenses: API missing (us-gaap:SellingGeneralAndAdministrativeExpense+lkq:RestructuringChargesAndBusinessCombinationAcquisitionRelatedCosts+us-gaap:GoodwillImpairmentLoss+us-gaap:DepreciationAndAmortization)
-- total_debt: API missing (us-gaap:LongTermDebt)
