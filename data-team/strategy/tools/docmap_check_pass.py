@@ -161,6 +161,24 @@ def apply_rules(r, base, end_d, cf=None, accn=""):
                      label=name[:120] if grp != "statement" else r["label"], fy0_printed=D.fmt(v), fy0_api="", fy1_printed="",
                      fy1_api="", match="")
             r["note"] = f"RULE: {why}; {old}; replaced by us-gaap:{t} read off {pg} ('{name[:60]}')"
+        elif dp == "dividends_paid" and r["r_page"]:
+            # the face may print common dividends on an extension tag next to the preferred/NCI line
+            pg = r["r_page"].split("+")[0]
+            p = D.parse_r(D.get(base + pg, cache))
+            com = next((x for x in p["rows"] if x["tag"] and x["tag"] != r["tags"] and any(v is not None for v in x["vals"])
+                        and re.search(r"dividend", x["label"], re.I) and re.search(r"common", x["label"], re.I)
+                        and not re.search(r"preferred|noncontrolling|minority", x["label"], re.I)), None)
+            v = page_value(base, pg, [com["tag"]], end_d, "CF", dp)[0] if com else None
+            if com and v is not None:
+                wider = bool(re.search(r"equity.award|award holders|participating|and other", com["label"], re.I))
+                r.update(status="combined" if wider else "mapped", tags=com["tag"], label=com["label"][:120],
+                         fy0_printed=D.fmt(v), fy0_api="", fy1_printed="", fy1_api="", match="")
+                r["note"] = (f"RULE: {why}; {old}; common dividends are the face line '{com['label'][:70]}' ({com['tag']}) on {pg}"
+                             + ("; it also pays equity-award holders: combined" if wider else ""))
+            else:
+                r.update(status="not_presented", tags="", stmt="", r_page="", label="", fy0_printed="", fy0_api="",
+                         fy1_printed="", fy1_api="", match="")
+                r["note"] = f"RULE: {why}; {old}; no common-dividend line on {pg} and none of {', '.join(fix)} in MetaLinks.json: not_presented"
         elif dp == "cash_paid_for_interest":
             r["status"] = "combined"
             r["note"] = f"RULE: {why}; InterestPaidNet not in the filing (MetaLinks.json): InterestPaid is gross of capitalized interest; {old}"
@@ -214,7 +232,11 @@ def check_company(rank):
             r["status"] = "OUT"
             r["note"] = f"OUT of the {tpl} template (Dhairya OUT ruling, main @020ebb29); " + r["note"]
             st["out_rekeyed"] = st.get("out_rekeyed", 0) + 1
+        tag_before = r["tags"]
         ruled = apply_rules(r, base, end_d, cf, accn)
+        if ruled and r["tags"] != tag_before and r["era_from_note"]:
+            r["era_from_note"] = ("ERA GAP (FY2015-latest not covered): re-keyed by rule from " + (tag_before or "none")
+                                  + " to " + (r["tags"] or "none") + "; era runs not re-derived for the new key")
         if ruled:
             st["rule_fixes"] = st.get("rule_fixes", 0) + 1
             st["by_class"]["rule"] = st["by_class"].get("rule", 0) + 1
@@ -265,7 +287,23 @@ def check_company(rank):
             v, why = page_value(base, r["r_page"], tags, end_d, r["stmt"], r["data_point"],
                               sum_rows=r["status"] == "component sum" and len(tags) == 1)
             ref = r["fy0_printed"] or r["fy0_api"]
-            if v is None:
+            if v is None and r["stmt"] == "NOTE":
+                # the cited note page has no period-end value (e.g. a subsequent-events date): look on every page
+                # that presents the element; none -> not_presented (shares: balance-sheet-date count only)
+                hit = relocate(base, [t.split(":")[-1] for t in tags], end_d, r["data_point"])
+                if hit:
+                    t, pg, v, grp, name = hit
+                    r.update(r_page=pg, label=name[:120], fy0_printed=D.fmt(v))
+                    ok, why = True, f"moved: the cited page had no {end} value; {t} read off {pg} ({D.fmt(v)})"
+                else:
+                    oldp = r["r_page"]
+                    r.update(status="not_presented", tags="", stmt="", r_page="", label="", fy0_printed="", fy0_api="",
+                             fy1_printed="", fy1_api="", match="")
+                    r["note"] = (f"re-check: {', '.join(tags)} is presented only on {oldp} and at no {end} value anywhere in the "
+                                 f"filing (MetaLinks.json, every presenting R page read): not_presented")
+                    ok, why = True, "fixed to not_presented: no period-end value on any presenting page"
+                    st["notpres_fixed"] = st.get("notpres_fixed", 0) + 1
+            elif v is None:
                 ok = False
             elif not ref:
                 ok, why = True, f"value {D.fmt(v)} read off its own R page (no companyfacts fact to compare)"
