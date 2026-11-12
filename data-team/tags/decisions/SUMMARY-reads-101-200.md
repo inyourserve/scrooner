@@ -8,6 +8,7 @@ The numbers only, updated at each 10-company commit. Per-company files are `data
 | ranks 101-110, re-read with the shared tool (558f2f15) + hand checks | 10 | 380 | 0 | 6 machine errors corrected in checked rows | see the decisions file | 6 tool fixes proposed (NOTES-TAG-EXPERT-reads-101-110-2026-11-12.md) |
 | ranks 111-120 (shared tool + hand checks) | 10 | 380 | 0 | 14 tool errors corrected (incl. FCX net interest), 4 review rows decided by the filing | 0 | 0 new (same classes as the 6 proposed fixes) |
 | ranks 121-130 (shared tool + hand checks) | 10 | 380 | 0 | 11 corrections (8 checked rows + 3 sample disagreements), 0 rows left as review | 0 | 0 new |
+| ranks 131-140 (shared tool + hand checks) | 10 | 380 | 0 | 21 corrections (16 tool errors + 4 sample disagreements + FCX debt held), 0 rows left as review | 0 | 0 new |
 
 Hand checks on ranks 101-110:
 - 67 rows hand-checked: every non-mapped row and every NOTE row.
@@ -35,3 +36,19 @@ Finance-lease sweep of ranks 101-130 (founder 2026-11-04 item 5): every total_de
 - Leases already inside the debt lines, no change: DUK (R138/R139), HCA (R65), MELI (R105), EQIX (explicit lines), and every row whose debt tag is LongTermDebtAndCapitalLeaseObligations*.
 - No finance-lease facts in the filing: ABNB, ADBE, ADP, BNY, ELV, ICE, NET, PLD, SBUX, SNOW, SYK, TT, WDC.
 - Open: FCX, where only per-asset rounded lease amounts are tagged (R82).
+
+Hand checks on ranks 131-140 (WM CSX JCI EMR HOOD MRSH APP HWM CDNS SNPS), carrying sentence read for every NOTE fact:
+- 77 rows hand-checked, 61 mapped rows sampled (20%).
+- Disagreements: 4/61 = 6.6%. WM net interest is now combined; HOOD and CDNS accounts payable are bundled lines, now combined; SNPS SG&A was G&A alone while S&M is printed.
+- 16 corrections in checked rows:
+  - opex component sums at WM, APP, HWM, CDNS; CSX 'Total Expense' mapped (no cost of revenue);
+  - CDNS cost of revenue = both printed cost-of-sales rows (722,249k);
+  - net interest combined at APP, EMR, HWM;
+  - HOOD interest not_presented (R51 securities-lending interest sits inside revenue);
+  - WM shares not_presented (R93 count is a rounded narrative);
+  - APP total_debt adds finance leases (R59);
+  - CDNS total_debt on the BS face;
+  - JCI interest on the NEM-style override (R74: net of capitalized only, interest income separate);
+  - EMR gross profit mapped NOTE (R77 undimensioned rows are Emerson's own; ties to R3).
+- FCX total_debt: HELD as not_presented (finance_lease_total_not_disclosed; R82, R19, R14), per Dhairya's ruling.
+- blind-grade.csv: 0 key_error rows for these tickers.
