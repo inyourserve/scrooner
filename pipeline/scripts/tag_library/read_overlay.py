@@ -97,7 +97,7 @@ for rd in csv.DictReader(open(rs_path)):
                     keep.update(era_from=day(b, 1))
                     new_rows.append(keep)
                 r["_drop"] = True
-        base = dict(by_co[rd["company_id"]][0]) if by_co[rd["company_id"]] else {k: "" for k in cols}
+        base = {k: v for k, v in by_co[rd["company_id"]][0].items() if k != "_drop"} if by_co[rd["company_id"]] else {k: "" for k in cols}
         base.update({k: "" for k in ("parent_concept", "combine_sign", "components", "reason_class", "evidence_report", "evidence_line", "evidence_cal_parent", "rule_id")})
         lab = rd["printed_label"] + " " + rd["reason"]
         combined = bool(re.search(r"(?i)\band (accrued|other|notes)\b|combined|, net\b", lab)) and con in (
@@ -106,7 +106,9 @@ for rd in csv.DictReader(open(rs_path)):
                     decision="combined" if combined else "concept", components=(con + ";other") if combined else "",
                     reason_class="line_presented_combined_with_others" if combined else "",
                     canonical_concept="" if combined else con, era_from=a, era_to=b, evidence_adsh=rd["evidence_adsh"], evidence_plabel=rd["printed_label"][:120],
-                    reason=f"read-verified ({v}): printed {rd['r_page']} in {rd['evidence_adsh']}", decided_by="read_verified", lines="1", filings="1")
+                    reason=f"read-verified ({v}): printed {rd['r_page']} in {rd['evidence_adsh']}" + (
+                        "; serve note: PP&E includes finance-lease ROU assets (Dhairya ruling 2026-11-12)" if "FinanceLeaseRightOfUse" in tag else ""),
+                    decided_by="read_verified", lines="1", filings="1")
         new_rows.append(base)
         applied += 1
     elif con and rd["not_printed"] == "True" and v in ("NEW-FOUND", "FAIL", "FAIL-STATUS", "OPEN"):
@@ -115,6 +117,62 @@ for rd in csv.DictReader(open(rs_path)):
     else:
         review.append({"ticker": rd["ticker"], "data_point": rd["data_point"], "verdict": v, "printed_tag": rd["printed_tag"],
                        "printed_value": rd["printed_value"], "our_status": rd["our_status"], "reason": rd["reason"]})
+# Dhairya's rulings on the read gaps, 2026-11-12. Durations may be summed from printed lines; operating-lease ROU is not PP&E.
+#   (ticker, data point) -> rows over the read's FY-1..FY0 dates unless an era is given
+RULINGS = {
+    ("AMD", "depreciation_and_amortization"): [("CF", "us-gaap", "OtherDepreciationAndAmortization", "component", "depreciation_and_amortization_resolved", None),
+                                               ("CF", "us-gaap", "AdjustmentForAmortization", "component", "depreciation_and_amortization_resolved", None)],
+    ("AVGO", "amortization_of_intangibles"): [("IS", "avgo", "Amortizationofacquisitionrelatedintangibleassetscostofproductssold", "component", "amortization_of_intangibles", ("2018-07-31", "2026-07-31")),
+                                              ("IS", "avgo", "Amortizationofacquisitionrelatedintangibleassetsoperatingexpenses", "component", "amortization_of_intangibles", ("2018-07-31", "2026-07-31"))],
+    ("AMD", "interest_income"): [("IS", "us-gaap", "InterestIncomeExpenseNet", "concept", "interest_income", None)],  # gross interest income under the NET tag (filer misuse; the read confirmed the line)
+    ("AMD", "operating_expenses"): [("IS", "us-gaap", "OperatingExpenses", "concept", "operating_expenses_resolved", None)],  # read tag = mapped tag
+    ("CAT", "sbc"): [("EQ", "us-gaap", "AllocatedShareBasedCompensationExpense", "concept", "sbc", None)],  # read tag = mapped tag, value in the SBC note
+    ("GE", "ppe_net"): [("BS", "ge", "PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAsset", "combined", "ppe_net;operating_lease_rou_asset", None)],
+}
+ROU_NOT_PPE = {("JPM", "ppe_net")}  # custom premises line incl. operating-lease ROU: shown as the company line, feeds no PP&E
+co_by_tick = {r["ticker"]: r["company_id"] for r in rows}
+ruled = 0
+for (tk, dp), specs in RULINGS.items():
+    c = co_by_tick.get(tk)
+    if not c:
+        continue
+    ps = sorted(fyp.get(c, []), reverse=True)[:2]
+    for st, tax, tag, dec, con, era in specs:
+        a, b = era or (min(ps), max(ps))
+        for r in by_co[c] + new_rows:  # the ruled tag/concept owns these dates
+            cc = r["canonical_concept"] if r["decision"] == "concept" else r["parent_concept"] if r["decision"] == "component" else ""
+            hit = (dec != "combined" and cc == con and r["decision"] == dec == "concept") or (r["tag"] == tag and r["stmt"] == st)
+            if hit and r.get("company_id") == c and not r.get("_drop") and not (r["era_to"] < a or b < r["era_from"]):
+                if r["era_from"] < a:
+                    new_rows.append({**r, "era_to": day(a, -1), "_drop": False})
+                if r["era_to"] > b:
+                    new_rows.append({**r, "era_from": day(b, 1), "_drop": False})
+                r["_drop"] = True
+        e = {k: v for k, v in by_co[c][0].items() if k != "_drop"}
+        e.update({k: "" for k in ("canonical_concept", "parent_concept", "combine_sign", "components", "reason_class", "evidence_report", "evidence_line", "evidence_cal_parent", "rule_id", "evidence_plabel")})
+        e.update(taxonomy=tax, tag=tag, stmt=st, decision=dec, era_from=a, era_to=b, decided_by="ruling", lines="1", filings="1",
+                 reason=f"Dhairya ruling 2026-11-12 on the full 10-K read ({tk} {dp})")
+        if dec == "concept":
+            e["canonical_concept"] = con
+        elif dec == "component":
+            e.update(parent_concept=con, combine_sign="1")
+        else:
+            e.update(components=con, reason_class="line_presented_combined_with_others")
+        new_rows.append(e)
+        ruled += 1
+new_rows = [r for r in new_rows if not r.pop("_drop", False) and not (r["decided_by"] == "read_verified" and (r["ticker"], next(
+    (d for (t, d) in RULINGS if t == r["ticker"] and r["canonical_concept"] and r["canonical_concept"].startswith(d)), "")) in RULINGS)]
+for tk, dp in ROU_NOT_PPE:
+    c = co_by_tick.get(tk)
+    ps = sorted(fyp.get(c, []), reverse=True)[:2]
+    if c and ps:
+        e = {k: "" for k in cols}
+        e.update(company_id=c, cik=by_co[c][0]["cik"], rank=by_co[c][0]["rank"], ticker=tk, taxonomy="scrooner", tag="ppe_net_resolved", stmt="BS",
+                 decision="excluded", reason_class="ppe_incl_operating_lease_rou", components="ppe_net_resolved", era_from=min(ps), era_to=max(ps), decided_by="read_status",
+                 reason="Dhairya ruling 2026-11-12: the printed premises line includes operating-lease ROU, a separate GAAP asset: not PP&E")
+        new_rows.append(e)
+        ruled += 1
+print("ruled rows", ruled)
 kept = [r for r in rows if not r.pop("_drop", False)]
 # same tag, same concept: two non-excluded rows never overlap (0122); the earlier row ends the day before the later one starts
 by_tag = collections.defaultdict(list)
