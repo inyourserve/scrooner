@@ -65,6 +65,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | revenue | mapped-sample | agree | page value 130016000 vs printed 130016000 |
 | gross_profit | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | operating_expenses | combined | agree | page value 763731000 vs printed 763731000 |
+| sga_expense | component sum | agree | page value 298534000 vs printed 298534000 |
 | interest_expense | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | income_tax_expense | mapped-sample | agree | page value 44572000 vs printed 44572000 |
 | inventory | NOTE | agree | page value 10310000 vs API 10310000 |

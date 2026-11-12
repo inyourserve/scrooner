@@ -92,13 +92,13 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - ppe_net: API missing (akam:PropertyPlantAndEquipmentAndCapitalizedSoftwareNet)
 
 ## Check pass
-Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked by a second script that re-opens the cited R page (or MetaLinks.json for not_presented): every not_presented, combined, component and NOTE row, plus a seeded random 10% of mapped rows (4). This is a scripted re-check, not a human hand check.
+Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked by a second script that re-opens the cited R page (or MetaLinks.json for not_presented): every not_presented, combined, component and NOTE row, plus a seeded random 10% of mapped rows (3). This is a scripted re-check, not a human hand check.
 
 | data point | class | verdict | detail |
 |---|---|---|---|
 | gross_profit | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | operating_expenses | combined | agree | page value 3641231000 vs printed 3641231000 |
-| sga_expense | mapped-sample | agree | page value 656739000 vs printed 656739000 |
+| sga_expense | component sum | agree | page value 1231041000 vs printed 1231041000 |
 | weighted_basic_shares | mapped-sample | agree | page value 145402000 vs printed 145402000 |
 | inventory | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | cash_flow_investing | mapped-sample | agree | page value -540743000 vs printed -540743000 |

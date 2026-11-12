@@ -59,11 +59,11 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 none beyond sign differences
 
 ## Check pass
-Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked by a second script that re-opens the cited R page (or MetaLinks.json for not_presented): every not_presented, combined, component and NOTE row, plus a seeded random 10% of mapped rows (4). This is a scripted re-check, not a human hand check.
+Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked by a second script that re-opens the cited R page (or MetaLinks.json for not_presented): every not_presented, combined, component and NOTE row, plus a seeded random 10% of mapped rows (3). This is a scripted re-check, not a human hand check.
 
 | data point | class | verdict | detail |
 |---|---|---|---|
-| sga_expense | mapped-sample | agree | page value 138549000 vs printed 138549000 |
+| sga_expense | component sum | agree | page value 220982000 vs printed 220982000 |
 | income_tax_expense | mapped-sample | agree | page value 52600000 vs printed 52600000 |
 | cash_and_equivalents | mapped-sample | agree | page value 254475000 vs printed 254475000 |
 | inventory | not_presented | agree | none of the candidate elements in MetaLinks.json |

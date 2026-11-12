@@ -102,6 +102,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 
 | data point | class | verdict | detail |
 |---|---|---|---|
+| sga_expense | component sum | agree | page value 1705421000 vs printed 1705421000 |
 | income_before_tax | mapped-sample | agree | page value 69463000 vs printed 69463000 |
 | income_tax_expense | mapped-sample | agree | page value -23552000 vs printed -23552000 |
 | basic_eps | mapped-sample | agree | page value 0.88 vs printed 0.88 |

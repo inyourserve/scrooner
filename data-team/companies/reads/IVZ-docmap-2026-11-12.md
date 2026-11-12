@@ -95,6 +95,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 |---|---|---|---|
 | cost_of_revenue | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | gross_profit | not_presented | agree | none of the candidate elements in MetaLinks.json |
+| sga_expense | component sum | agree | page value 660500000 vs printed 660500000 |
 | research_and_development | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | operating_income | mapped-sample | agree | page value -695700000 vs printed -695700000 |
 | diluted_eps | mapped-sample | agree | page value -1.6 vs printed -1.6 |

@@ -108,10 +108,44 @@ RULES = [  # (data point, predicate on (tags, label), ruling, replacement candid
 ]
 
 
-def apply_rules(r, base, end_d):
+SM_TAGS = ("us-gaap:SellingAndMarketingExpense", "us-gaap:MarketingExpense", "us-gaap:SellingExpense",
+           "us-gaap:MarketingAndAdvertisingExpense", "us-gaap:AdvertisingExpense")
+
+
+def sga_rule(r, base, end_d, cf, accn):
+    """Dhairya 2026-11-13 (MSFT incident): SG&A is never G&A alone when the face prints an S&M or marketing line;
+    then it is the component sum G&A + S&M (every such line on the same face page)."""
+    if r["data_point"] != "sga_expense" or r["status"] != "mapped" or r["tags"] != "us-gaap:GeneralAndAdministrativeExpense":
+        return None
+    pg = r["r_page"].split("+")[0]
+    p = D.parse_r(D.get(base + pg, cache))
+    sm = [x for x in p["rows"] if x["tag"] != r["tags"] and any(v is not None for v in x["vals"])
+          and (x["tag"] in SM_TAGS or (re.search(r"marketing|selling", x["label"], re.I)
+                                       and not re.search(r"general|cost of|total|ancillary|operating|home", x["label"], re.I)))]
+    if not sm:
+        return None
+    tags = [r["tags"]] + list(dict.fromkeys(x["tag"] for x in sm))
+    v, why = page_value(base, pg, tags, end_d, "IS", "sga_expense")
+    old = f"was mapped {r['tags']} '{r['label'][:40]}' on {pg}"
+    if v is None:
+        r["status"] = "combined"
+        r["note"] = f"RULE: SG&A is never G&A alone when the face prints S&M ({', '.join(x['label'][:40] for x in sm)}); {why}; {old}"
+        return "sga"
+    api = [D.api_value(cf, t, accn, end_d, 12) for t in tags]
+    r.update(status="component sum", tags="+".join(tags), label=" + ".join([r["label"][:50]] + [x["label"][:50] for x in sm]),
+             fy0_printed=D.fmt(v), fy0_api=D.fmt(sum(api)) if None not in api else "", fy1_printed="", fy1_api="")
+    r["match"] = ("Y" if close(v, sum(api)) else "N") if None not in api else ""
+    r["note"] = (f"RULE: SG&A is never G&A alone when the face prints an S&M or marketing line (Dhairya 2026-11-13); "
+                 f"component sum of {', '.join(tags)} on {pg}; {old}")
+    return "sga"
+
+
+def apply_rules(r, base, end_d, cf=None, accn=""):
     """Returns a note when a rule changed the row (the row is then re-checked as class 'rule')."""
     if r["status"] not in ("mapped", "component sum"):
         return None
+    if cf is not None and sga_rule(r, base, end_d, cf, accn):
+        return "sga"
     for dp, pred, why, fix in RULES:
         if r["data_point"] != dp or not pred(r["tags"], r["label"]):
             continue
@@ -180,7 +214,7 @@ def check_company(rank):
             r["status"] = "OUT"
             r["note"] = f"OUT of the {tpl} template (Dhairya OUT ruling, main @020ebb29); " + r["note"]
             st["out_rekeyed"] = st.get("out_rekeyed", 0) + 1
-        ruled = apply_rules(r, base, end_d)
+        ruled = apply_rules(r, base, end_d, cf, accn)
         if ruled:
             st["rule_fixes"] = st.get("rule_fixes", 0) + 1
             st["by_class"]["rule"] = st["by_class"].get("rule", 0) + 1

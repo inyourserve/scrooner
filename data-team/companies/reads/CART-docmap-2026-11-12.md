@@ -64,6 +64,7 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | data point | class | verdict | detail |
 |---|---|---|---|
 | operating_expenses | NOTE | agree | page value 2259000000 vs API 2259000000 |
+| sga_expense | component sum | agree | page value 1336000000 vs printed 1336000000 |
 | operating_income | mapped-sample | agree | page value 498000000 vs printed 498000000 |
 | interest_expense | combined | agree | page value 57000000 vs printed 57000000 |
 | diluted_eps | mapped-sample | agree | page value 1.6 vs printed 1.6 |
