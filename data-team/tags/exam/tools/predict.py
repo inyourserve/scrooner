@@ -67,6 +67,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         if l.get('val') == '': l['val'] = None
     cik = L[0]['cik'] if L else ''
     NF = None  # note facts of this filing: tag -> {qtrs: value}
+    FLLOC = ['']  # finance-lease balance-sheet location from FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList: in/out/none
     LOC = {}  # IncomeStatementLocationAxis member facts (exam/tools/LOCATION.sql): tag -> {undim, msum, mtot, nm, dc}
     if notes_path:
         NF = {}
@@ -78,6 +79,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 t_, rest = kv.split('=', 1); q_, v_ = rest.split(':', 1)
                 NF.setdefault(t_, {})[int(q_)] = v_
             LOC.update(o_.get('loc') or {})
+            FLLOC[0] = o_.get('fl_loc') or FLLOC[0]
     tags = {l['tag'] for l in L}
     def det(g):
         w = KB['DETECT'][g][0]
@@ -311,6 +313,26 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='us-gaap:' + NOTE[dp][0], stmt='NOTE', sign='', scale='',
                             era_break='', prior_tag='', value_source='sec_api', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
             continue
+        PFL = P.get('bs.total_debt.finance_leases')
+        if PFL and dp == 'total_debt' and chosen and status in ('component_sum', 'mapped'):
+            # founder 2026-11-04 item 5 (total debt includes finance leases); Dhairya 2026-11-13 guards: (1) a debt line whose tag or
+            # label already includes leases -> no separate lease line; (2) never both the note total and a face split; (3) the note total
+            # only when no face line carries finance leases and the XBRL location list puts the leases outside debt; (4) operating never
+            BSf = [l for l in L if l['st'] == 'BS' and not l['pth'] and l.get('val') not in (None, '')]
+            incl = lambda l: l['tag'] in PFL['lease_inclusive_tags'] or re.search(PFL['lease_inclusive_label'], l['lab'] or '')
+            debt = [l for l in chosen if l['tag'] not in PFL['face_lease_tags']]
+            face_fl = [l for l in BSf if l['tag'] in PFL['face_lease_tags'] and not re.search(PFL['operating_label'], l['lab'] or '')]
+            if any(incl(l) for l in debt) or any(incl(l) for l in BSf if l['tag'] in PFL['lease_inclusive_tags']):
+                if len(debt) != len(chosen): chosen = debt; rule += '; debt line already includes leases (no separate lease line)'
+            elif face_fl:
+                add = [l for l in face_fl if l not in chosen]
+                if add: chosen = chosen + add; status = 'component_sum'; rule += '; + printed finance lease liabilities (founder item 5)'
+            elif NF and FLLOC[0] == 'out':
+                fl = NF.get('FinanceLeaseLiability', {}).get(0)
+                if fl not in (None, '') and float(fl) > 0:
+                    chosen = chosen + [dict(st='NOTE', tag='FinanceLeaseLiability', cu=0, val=fl, r='', lab='finance lease liability (note)', acc=chosen[0]['acc'], pth=0, ln=0, dc='')]
+                    status = 'component_sum'; rule += '; + note finance lease liability, XBRL location outside debt (founder item 5)'
+            fired.append('bs.total_debt.finance_leases')
         if chosen:
             l0 = chosen[0]
             era = [l for l in chosen if l.get('prior') and l['prior'] != l['tag']]

@@ -23,6 +23,28 @@ def cp_upper_one(k, n, a=0.05):
     """One-sided 95% Clopper-Pearson upper bound on the error rate (graduation bar, Dhairya/NOW.md 2026-11-12)."""
     return cp_upper(k, n, 2 * a)
 def ks_raw(k): return norm_status(k.get('status'))
+_NFL = None
+def note_fin_lease_outside_debt(tk):
+    """True when no BS line carries leases, the note FinanceLeaseLiability > 0 and the filing's
+    FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList puts it outside debt (notes.jsonl fl_loc == 'out').
+    Needs GRADE_LINES_DIR and GRADE_NOTES_PATH."""
+    import json, re
+    global _NFL
+    d, npth = os.environ.get('GRADE_LINES_DIR'), os.environ.get('GRADE_NOTES_PATH')
+    if not d or not npth: return False
+    if _NFL is None:
+        _NFL = {}
+        for ln in open(npth):
+            o = json.loads(ln)
+            m = re.search(r'(?:^|\|)FinanceLeaseLiability=0:([-0-9.]+)', o.get('facts') or '')
+            _NFL[o['cik']] = (o.get('fl_loc') == 'out' and m is not None and float(m.group(1)) > 0)
+    p = os.path.join(d, f'{tk}.jsonl')
+    if not os.path.exists(p): return False
+    first = None; lease_line = False
+    for ln in open(p):
+        l = json.loads(ln); first = first or l
+        if l.get('st') == 'BS' and re.search(r'(?i)finance lease|capital lease', (l.get('lab') or '') + ' ' + l['tag']) and not re.search(r'(?i)operating|right.of.use|RightOfUse', (l.get('lab') or '') + l['tag']): lease_line = True
+    return bool(first) and not lease_line and _NFL.get(first['cik'], False)
 _FL = {}
 def face_fin_lease(tk):
     """True when the BS face prints a finance-lease liability line and no debt line already includes leases (needs GRADE_LINES_DIR)."""
@@ -99,8 +121,8 @@ def main(pdir, ddir, *only):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: undimensioned consolidated full-year note fact present -> mapped stmt NOTE (fsn-line-to-concept.md AB; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'depreciation_and_amortization' and ks == 'mapped' and tagset(k['tags']) == {'depreciationamortizationandaccretionnet'} and norm_status(p['status']) == 'combined':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: DepreciationAmortizationAndAccretionNet includes accretion -> combined; a label never promotes (DUK ruling; doc 02)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
-            if dp == 'total_debt' and ks in ('mapped', 'component_sum', 'component sum') and 'lease' not in (k['tags'] or '').lower() and face_fin_lease(tk):
-                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: total_debt omits printed finance lease liabilities (founder 2026-11-04 item 5; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'total_debt' and ks in ('mapped', 'component_sum', 'component sum') and 'lease' not in (k['tags'] or '').lower() and (face_fin_lease(tk) or note_fin_lease_outside_debt(tk)):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: total_debt omits finance lease liabilities (printed, or in the notes with the XBRL location outside debt; founder 2026-11-04 item 5; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
