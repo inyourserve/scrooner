@@ -5,7 +5,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Filings opened
 - 10-K 0000097216-26-000035 (CIK 0000097216, filed 2026-02-13): COVER R1.htm, IS R3.htm, CI R4.htm, BS R6.htm, BSP R7.htm, CF R9.htm
 - 10-K 0000097216-16-000245 (CIK 0000097216, filed FY2015 era): COVER R1.htm, IS R2.htm, CI R3.htm, BS R5.htm, BSP R6.htm, CF R8.htm
-- companyfacts CIK0000097216.json (one call).
+- companyfacts CIK0000097216.json (one call); submissions CIK0000097216.json (SIC 3537).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -47,7 +47,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaid | R72.htm | Interest paid | 156000000 | 156000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R72.htm 'LONG-TERM OBLIGATIONS - Additional Information (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R52.htm | Income taxes paid | 43000000 | 43000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R52.htm 'INCOME TAXES - Additional Information (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations | R6.htm | Current portion of long-term debt + Long-term debt, less current portion | 2584000000 | 2584000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R81.htm | Common stock, shares outstanding (in shares) | 64900000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R81.htm 'STOCKHOLDERS' EQUITY - Capital Stock Information (Details)' (MetaLinks.json presentation) |
+| shares_outstanding | not_presented |  | R6.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CommonStockSharesOutstanding in MetaLinks.json (930 tags across all 90 R pages, face and notes) of 0000097216-26-000035; HAND REVIEW: 7 label candidate(s) incl. custom tags: us-gaap:CommonStockSharesIssued 'Common stock, shares issued (in shares) / Common Stock, Shar' R7,R81; us-gaap:CommonStockSharesOutstanding 'Shares oustanding, Beginning of Period (in shares) / Shares ' R8,R81; dei:EntityCommonStockSharesOutstanding 'Entity Common Stock, Shares Outstanding / Entity Common Stoc' R1; us-gaap:PreferredStockSharesOutstanding 'Preferred stock, shares outstanding (in shares) / Preferred ' R81; us-gaap:WeightedAverageNumberDilutedSharesOutstandingAdjustment 'Stock options, restricted stock awards and convertible notes' R64; us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding 'Diluted (in shares) / Diluted weighted average shares outsta' R3,R64; us-gaap:WeightedAverageNumberOfSharesOutstandingBasic 'Basic (in shares) / Weighted average shares outstanding (in ' R3,R64 |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0000097216-16-000245 R2.htm prints 'Net sales' on us-gaap:Revenues = 6543100000 (FILING-CHECKED)
@@ -90,4 +90,3 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Mismatches (printed vs API)
 - capex: API missing (tex:PaymentstoAcquireProductiveAssetsincludingdiscontinuedoperations)
 - depreciation_and_amortization: API missing (tex:DepreciationDepletionandAmortizationincludingdiscontinuedoperations)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)

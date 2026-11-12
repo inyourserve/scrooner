@@ -6,8 +6,8 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001193125-26-064756 (CIK 0000853816, filed 2026-02-24): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001193125-16-469941 (CIK 0000853816, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
 - 10-K 0001193125-19-048217 (CIK 0000853816, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- 10-K 0001193125-18-055528 (CIK 0000853816, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0000853816.json (one call).
+- 10-K 0001193125-23-048874 (CIK 0000853816, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
+- companyfacts CIK0000853816.json (one call); submissions CIK0000853816.json (SIC 4213).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -19,7 +19,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R4.htm | Selling, general and administrative | 230548000 | 230548000 |  | 217708000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
 | research_and_development | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (782 tags across all 82 R pages, face and notes) of 0001193125-26-064756; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:EffectiveIncomeTaxRateReconciliationTaxCredits 'Effective Income Tax Rate Reconciliation, Tax Credit, Percen' R53; us-gaap:IncomeTaxReconciliationTaxCredits 'Effective Income Tax Rate Reconciliation, Tax Credit, Amount' R53 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R4.htm | Operating income | 151577000 | 151577000 |  | 248907000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
-| interest_expense | mapped | us-gaap:InterestExpense | R77.htm | Total interest expense | 5586000 | 5586000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R77.htm 'Information Regarding Reportable Business Segments (Parenthetical) (Detail)' (MetaLinks.json presentation) |
+| interest_expense | mapped | lstr:InterestAndDebtIncomeExpense | R4.htm | Interest and debt expense (income) | 996000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / company extension tag, matched by printed label / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
 | income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R4.htm | Income before income taxes | 150581000 | 150581000 |  | 254326000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
 | income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R4.htm | Income taxes | 35574000 | 35574000 |  | 58380000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
 | net_income | mapped | us-gaap:ProfitLoss | R4.htm | Net income | 115007000 | 115007000 |  | 195946000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-064756 R4.htm period ..2025-12-27 |
@@ -56,7 +56,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - operating_expenses: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Total costs and expenses' on us-gaap:CostsAndExpenses = 3080781000 (FILING-CHECKED)
 - sga_expense: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Selling, general and administrative' on us-gaap:SellingGeneralAndAdministrativeExpense = 149704000 (FILING-CHECKED)
 - operating_income: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Operating income' on us-gaap:OperatingIncomeLoss = 241706000 (FILING-CHECKED)
-- interest_expense: FY2015 10-K 0001193125-16-469941 R4.htm read; no row matched (auto)
+- interest_expense: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Interest and debt expense' on us-gaap:InterestAndDebtExpense = 2949000 (FILING-CHECKED)
 - income_before_tax: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Income from continuing operations before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = 238757000 (FILING-CHECKED)
 - income_tax_expense: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Income taxes' on us-gaap:IncomeTaxExpenseBenefit = 91068000 (FILING-CHECKED)
 - net_income: FY2015 10-K 0001193125-16-469941 R4.htm prints 'Net income' on us-gaap:NetIncomeLoss = 147689000 (FILING-CHECKED)
@@ -84,9 +84,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cash_paid_for_interest: FY2015 10-K 0001193125-16-469941 R7.htm read; no row matched (auto)
 - cash_paid_for_income_taxes: FY2015 10-K 0001193125-16-469941 R7.htm read; no row matched (auto)
 - revenue: era 10-K 0001193125-19-048217 R4.htm prints 'Revenue' on us-gaap:Revenues = 4615144000 (FILING-CHECKED)
-- cfo: era 10-K 0001193125-18-055528 R7.htm prints 'NET CASH PROVIDED BY OPERATING ACTIVITIES' on us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations = 138963000 (FILING-CHECKED)
-- cash_flow_investing: era 10-K 0001193125-18-055528 R7.htm prints 'NET CASH USED BY INVESTING ACTIVITIES' on us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations = -22076000 (FILING-CHECKED)
-- cash_flow_financing: era 10-K 0001193125-18-055528 R7.htm prints 'NET CASH USED BY FINANCING ACTIVITIES' on us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations = -54396000 (FILING-CHECKED)
+- interest_expense: era 10-K 0001193125-23-048874 R4.htm prints 'Interest and debt expense' on us-gaap:InterestAndDebtExpense = 3620000 (FILING-CHECKED)
 
 ## Mismatches (printed vs API)
-none beyond sign differences
+- interest_expense: API missing (lstr:InterestAndDebtIncomeExpense)

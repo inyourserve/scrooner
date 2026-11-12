@@ -7,14 +7,14 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001558370-16-003779 (CIK 0001083301, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
 - 10-K 0001437749-21-004835 (CIK 0001083301, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CF R6.htm
 - 10-K 0001083301-25-000018 (CIK 0001083301, era filing): COVER R1.htm, BS R3.htm, BSP R4.htm, IS R5.htm, CF R8.htm
-- companyfacts CIK0001083301.json (one call).
+- companyfacts CIK0001083301.json (one call); submissions CIK0001083301.json (SIC 6199).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | revenue | mapped | us-gaap:Revenues | R5.htm | Total revenue | 168455000 | 168455000 | 140051000 | 140051000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001083301-26-000031 R5.htm period ..2025-12-31 |
 | cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R5.htm | Cost of revenue (exclusive of depreciation shown below) | 82663000 | 82663000 | 62608000 | 62608000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001083301-26-000031 R5.htm period ..2025-12-31 |
-| gross_profit | mapped | us-gaap:GrossProfit | R89.htm | Segment profit (loss) | 66045000 | 66045000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R89.htm 'SEGMENTS - Schedule of Segment Profit (Loss) (Details)' (MetaLinks.json presentation) |
+| gross_profit | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1148 tags across all 90 R pages, face and notes) of 0001083301-26-000031; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:GrossProfit 'Segment profit (loss) / Gross Profit / Aggregate revenue les' R89 |
 | operating_expenses | combined | us-gaap:CostsAndExpenses | R5.htm | Total costs and expenses | 354668000 | 354668000 | 216267000 | 216267000 | Y | FILING-CHECKED | check: machine-full-filing / CostsAndExpenses (total costs and expenses) includes cost of revenue: combined, never opex / accn 0001083301-26-000031 R5.htm period ..2025-12-31 |
 | sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R5.htm | Selling, general and administrative expenses | 139465000 |  | 57883000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001083301-26-000031 R5.htm period ..2025-12-31 |
 | research_and_development | not_presented |  | R5.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (1148 tags across all 90 R pages, face and notes) of 0001083301-26-000031; HAND REVIEW: 4 label candidate(s) incl. custom tags: wulf:DeferredTaxAssetsFederalTaxCreditCarryforwardsResearch 'Federal research development tax credit carryforwards / Defe' R73; wulf:DeferredTaxAssetsStateTaxCreditCarryforwardsResearch 'State research development tax credit carryforwards / Deferr' R73; us-gaap:EffectiveIncomeTaxRateReconciliationTaxCredits 'Tax credits / Effective Income Tax Rate Reconciliation, Tax ' R71; us-gaap:IncomeTaxReconciliationTaxCredits 'Tax credits / Effective Income Tax Rate Reconciliation, Tax ' R71 |
@@ -54,7 +54,6 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001558370-16-003779 R4.htm prints 'NET SALES' on us-gaap:SalesRevenueGoodsNet = 17562066 (FILING-CHECKED)
 - cost_of_revenue: FY2015 10-K 0001558370-16-003779 R4.htm prints 'COST OF GOODS SOLD' on us-gaap:CostOfGoodsSold = 11417474 (FILING-CHECKED)
-- gross_profit: FY2015 10-K 0001558370-16-003779 R4.htm prints 'GROSS PROFIT' on us-gaap:GrossProfit = 6144592 (FILING-CHECKED)
 - operating_expenses: FY2015 10-K 0001558370-16-003779 R4.htm prints 'SELLING, GENERAL AND ADMINISTRATIVE EXPENSES + RESEARCH AND DEVELOPMENT EXPENSES' on us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:ResearchAndDevelopmentExpense = 5923774 (FILING-CHECKED)
 - sga_expense: FY2015 10-K 0001558370-16-003779 R4.htm prints 'SELLING, GENERAL AND ADMINISTRATIVE EXPENSES' on us-gaap:SellingGeneralAndAdministrativeExpense = 5263372 (FILING-CHECKED)
 - operating_income: FY2015 10-K 0001558370-16-003779 R4.htm prints 'INCOME FROM OPERATIONS' on us-gaap:OperatingIncomeLoss = 220818 (FILING-CHECKED)

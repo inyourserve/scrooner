@@ -4,7 +4,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 
 ## Filings opened
 - 10-K 0002000178-26-000003 (CIK 0002000178, filed 2026-03-02): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R7.htm
-- companyfacts CIK0002000178.json (one call).
+- companyfacts CIK0002000178.json (one call); submissions CIK0002000178.json (SIC 3728).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |

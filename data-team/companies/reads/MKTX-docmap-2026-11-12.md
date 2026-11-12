@@ -7,7 +7,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - 10-K 0001564590-16-013407 (CIK 0001278021, filed FY2015 era): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0001564590-18-002713 (CIK 0001278021, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R8.htm
 - 10-K 0000950170-24-018935 (CIK 0001278021, era filing): COVER R1.htm, BS R2.htm, BSP R3.htm, IS R4.htm, CI R5.htm, CF R9.htm
-- companyfacts CIK0001278021.json (one call).
+- companyfacts CIK0001278021.json (one call); submissions CIK0001278021.json (SIC 6211).
 
 ## Data points
 | data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
@@ -16,7 +16,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cost_of_revenue | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of CostOfRevenue, CostOfGoodsAndServicesSold, CostOfGoodsSold, CostOfServices in MetaLinks.json (1025 tags across all 105 R pages, face and notes) of 0001193125-26-067009; HAND REVIEW: 1 label candidate(s) incl. custom tags: us-gaap:OperatingExpenses 'Operating Expenses / Total expenses / Generally recurring co' R103,R4 |
 | gross_profit | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1025 tags across all 105 R pages, face and notes) of 0001193125-26-067009; label search over every tag in the filing (custom included) found no candidate |
 | operating_expenses | mapped | us-gaap:OperatingExpenses | R4.htm | Total expenses | 504430000 | 504430000 | 476227000 | 476227000 | Y | FILING-CHECKED | check: machine-full-filing / printed total opex line; no cost-of-revenue line above it / accn 0001193125-26-067009 R4.htm period ..2025-12-31 |
-| sga_expense | mapped | us-gaap:GeneralAndAdministrativeExpense | R4.htm | General and administrative | 26588000 | 26588000 | 22709000 | 22709000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-067009 R4.htm period ..2025-12-31 |
+| sga_expense | component sum | us-gaap:GeneralAndAdministrativeExpense+us-gaap:MarketingAndAdvertisingExpense | R4.htm | General and administrative + Marketing and advertising | 37792000 | 37792000 | 34422000 | 34422000 | Y | FILING-CHECKED | check: machine-full-filing / SG&A = G&A + printed selling/marketing line(s); never G&A alone (Dhairya 2026-11-12) / accn 0001193125-26-067009 R4.htm period ..2025-12-31 |
 | research_and_development | not_presented |  | R4.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of ResearchAndDevelopmentExpense, ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost in MetaLinks.json (1025 tags across all 105 R pages, face and notes) of 0001193125-26-067009; HAND REVIEW: 2 label candidate(s) incl. custom tags: us-gaap:EffectiveIncomeTaxRateReconciliationTaxCredits 'Tax Credits, Percent / Tax Credits, Percent / Effective Inco' R78; us-gaap:IncomeTaxReconciliationTaxCredits 'Effective Income Tax Rate Reconciliation, Tax Credit, Amount' R78 |
 | operating_income | mapped | us-gaap:OperatingIncomeLoss | R4.htm | Operating income | 341838000 | 341838000 | 340870000 | 340870000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-067009 R4.htm period ..2025-12-31 |
 | interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R4.htm | Interest expense | -1487000 | 1487000 | -1601000 | 1601000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-067009 R4.htm period ..2025-12-31 |
@@ -49,7 +49,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R9.htm | Cash paid for interest | 721000 | 721000 | 1717000 | 1717000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-067009 R9.htm period ..2025-12-31 |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R9.htm | Cash paid for income taxes | 62834000 | 62834000 | 96932000 | 96932000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001193125-26-067009 R9.htm period ..2025-12-31 |
 | total_debt | component sum | us-gaap:ShortTermBorrowings | R2.htm | Borrowings | 220000000 | 220000000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
-| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 35776886 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R3.htm | Common stock, shares outstanding | 35776886 | 35776886 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - revenue: FY2015 10-K 0001564590-16-013407 R4.htm prints 'Total revenues' on us-gaap:Revenues = 303098000 (FILING-CHECKED)
