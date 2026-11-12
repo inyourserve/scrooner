@@ -244,12 +244,22 @@ def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]
         if r.get("status", "").upper() != "FILING-CHECKED" or r.get("cik", "") not in cik_to_id:
             continue
         tx, tag = _tag(r["tag"])
+        concept, dec, note = r.get("concept", ""), "concept", ""
+        if concept.startswith("("):  # a parenthesised note instead of a concept key
+            if concept.strip("() ").lower() == "excluded":
+                dec, concept = "excluded", ""
+            else:
+                dec, note = "needs_detail", f"override concept column holds a note, not a concept key: {concept}"
+        scope = r.get("scope", "")
+        yr = re.fullmatch(r"(\d{4})\+", scope.strip())
         out.append(_entry(
-            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision="concept", concept=r.get("concept", ""),
+            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision=dec, concept=concept, detail_note=note,
             home_stmts=[r["stmt"].upper()], reason=f"{r.get('evidence', '')}; {r.get('note', '')}".strip("; "),
             source="company-override:" + source, rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
+            reason_class="company_override_excluded" if dec == "excluded" else "",
+            era=(date(int(yr.group(1)), 1, 1), None) if yr else (None, None),
             scale=parse_scale(r.get("note", "") + " " + r.get("scope", "")),
-            scope_latest="all" not in r.get("scope", "").lower().split()))
+            scope_latest=not yr and "all" not in scope.lower().split()))
     return out
 
 

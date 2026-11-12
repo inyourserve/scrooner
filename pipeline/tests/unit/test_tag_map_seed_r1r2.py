@@ -420,3 +420,14 @@ def test_scale_parsed_only_when_the_override_states_one():
     (e,) = m.parse_source("company-overrides.csv", [row], {"0000063908": 9})
     assert m.library_row(e)["scale"] == 1000000 and "scale" in m.COLUMNS
     assert m.parse_source("fsn-x.csv", CARD)[0]["scale"] == 1  # tag-level rows never carry a scale
+
+
+def test_override_concept_column_notes():
+    base = {"company": "X", "cik": "0000000009", "tag": "T", "stmt": "CF", "scope": "FY2025", "status": "FILING-CHECKED",
+            "evidence": "e", "note": "n"}
+    rows = [dict(base, concept="(excluded)"), dict(base, concept='(served as printed, "includes restricted cash")',
+                                                   scope="2018+"), dict(base, concept="goodwill")]
+    a, b, c = m.parse_source("company-overrides.csv", rows, {"0000000009": 9})
+    assert (a["decision"], m.library_row(a)["reason_class"]) == ("excluded", "company_override_excluded")
+    assert b["decision"] == "needs_detail" and b["era"][0] == date(2018, 1, 1) and not b["scope_latest"]
+    assert c["decision"] == "concept"
