@@ -13,3 +13,4 @@ BLCO,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COG
 CZR,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001590895-26-000011: 9,628,000k = 3,885,000k + COGS members 5,743,000k"
 HST,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001070750-26-000054: 5,259,000k = 895,000k + COGS members 4,364,000k"
 DE,operating_expenses,"Dhairya 2026-11-13: Financial Services interest sits inside the total -> combined; component-sum key is a key error"
+RTX,cost_of_revenue,"Dhairya 2026-11-13 WYNN ruling: cost of sales printed by ProductOrServiceAxis member -> component_sum; 0000101829-26-000006: Products 53,780,000k + Services 17,034,000k; CostsAndExpenses 79,716,000k = 70,814,000k + R&D/SG&A 8,902,000k exactly"

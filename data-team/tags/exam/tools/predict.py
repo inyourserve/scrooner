@@ -44,6 +44,7 @@ def load_kb(d):
     sr = [r for r in by('stmt_restrict') if r['data_point'] == 'shares_outstanding'][0]; K['SHR_STMTS'] = (tuple(sr['W']['stmts']), sr['rule_id'])
     K['PTH_OK'] = set(by('parenthetical_allowed')[0]['T']['data_points'])
     K['P'] = {r['rule_id']: r['W'] for r in by('procedure')}
+    K['PT'] = {r['rule_id']: json.loads(r.get('then') or '{}') for r in by('procedure')}
     return K
 def home(dp): return KB['HOME'].get(dp, 'IS')
 KB = None
@@ -56,7 +57,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
     KB = load_kb(os.environ.get('TAG_RULES_DIR') or rulesdir)  # backtest.py passes the rules dir by env, library dir as argv
     lib, ov, nd = KB['lib'], KB['ov'], KB['nd']
     DPS, BANK, NOTE, NOTE_RULES, DURATION_SUM, DEMOTE = KB['DPS'], KB['BANK'], KB['NOTE'], KB['NOTE_RULES'], KB['DURATION_SUM'], KB['DEMOTE']
-    P = KB['P']; RID = {}
+    P = KB['P']; RID = {}; memcos = []
     L = [json.loads(l) for l in open(lines_path) if l.strip()]
     L = [l for l in L if not l.get('missing')]
     for l in L:
@@ -173,6 +174,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 band = [l for l in IS_ if l['r'] == t0['r'] and cl < l['ln'] < t0['ln'] and l['val'] is not None and l['tag'] not in PO['band_exclude'] and not l['tag'].endswith('Abstract')]
                 cosb = [l for l in band if re.search(PO['cos_label_regex'], l['lab'] or '') or l['tag'].startswith(tuple(PO['cos_tag_prefixes'])) or re.search(r'(?i)interest', l['tag'])]
                 if band and not cosb:
+                    memcos.append(next(l for l in IS_ if l['r'] == t0['r'] and l['ln'] == cl))
                     status, chosen, rule = 'component_sum', band, 'cost of revenue printed by member only inside the total: opex = face lines after it (WYNN ruling 2026-11-13)'
                 else:
                     status, chosen, rule = 'combined', [t0], 'total contains a member-only cost-of-revenue line and other cost lines'
@@ -284,6 +286,15 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         else:
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
+    if memcos and 'is.cost_of_revenue.member_only' in KB['PT']:
+        # Dhairya 2026-11-13 (WYNN): cost of revenue printed only by ProductOrServiceAxis member -> component_sum of the
+        # printed member facts (duration sum of printed face lines); companyfacts has no dimensioned facts -> fsn_xbrl
+        T = KB['PT']['is.cost_of_revenue.member_only']; l0 = memcos[0]
+        for o in out:
+            if o['data_point'] == 'cost_of_revenue' and o['status'] == 'not_presented':
+                o.update(status=T['status'], tags=('custom:' if l0['cu'] else 'us-gaap:') + l0['tag'], stmt='IS', sign='+', value_source=T['value_source'],
+                         r_page='R%s' % l0['r'], label=l0['lab'], fy0_value='', rule='printed member facts of a member-only cost line (WYNN ruling 2026-11-13)',
+                         rule_ids='is.cost_of_revenue.member_only')
     for o in out:
         o['fy0_api'] = o.get('fy0_value', '')
         o['evidence_class'] = 'PREDICTED (predict.py %s)' % KB['version']
