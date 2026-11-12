@@ -46,6 +46,8 @@ DEFAULT_GLOBS = [
     str(REPO / "data-team/tags/decisions/companies-*-exceptions-*.csv"),
     str(REPO / "data-team/tags/decisions/std-tags-rank-*.csv"),
     str(REPO / "data-team/tags/library/fsn-*.csv"),
+    str(REPO / "data-team/tags/library/needs-detail-answers-*.csv"),
+    str(REPO / "data-team/tags/library/company-overrides.csv"),
 ]
 
 RULE_LIBRARY = "tagmap.library@1"
@@ -126,7 +128,7 @@ def _tag(raw: str) -> tuple[str | None, str]:
 def _entry(**kw) -> dict:
     base = {"taxonomy": None, "company": None, "decision": "", "concept": "", "sign": "", "components": [],
             "applies_to": "", "era": (None, None), "reason": "", "exceptions": [], "source": "", "rule_id": RULE_LIBRARY,
-            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "detail_note": "", "amb_note": "", "exceptions_text": ""}
+            "home_stmts": [], "kind": "tag", "cond": [], "else_reason": "", "reason_class": "", "raw": None, "prio": 2, "scope_latest": False, "detail_note": "", "amb_note": "", "exceptions_text": ""}
     base.update(kw)
     return base
 
@@ -225,8 +227,51 @@ def parse_ranks_rows(rows: list[dict], source: str) -> list[dict]:
     return out
 
 
-def parse_source(name: str, rows: list[dict]) -> list[dict]:
+def parse_override_rows(rows: list[dict], source: str, cik_to_id: dict[str, int]) -> list[dict]:
+    """library/company-overrides.csv: company-scoped, only FILING-CHECKED rows are loaded (PENDING etc. skipped).
+    scope 'latest 10-K read era' limits the row to the key's latest era."""
+    out = []
+    for raw in rows:
+        r = {_hk(k): (v or "").strip() for k, v in raw.items() if k}
+        if r.get("status", "").upper() != "FILING-CHECKED" or r.get("cik", "") not in cik_to_id:
+            continue
+        tx, tag = _tag(r["tag"])
+        out.append(_entry(
+            taxonomy=tx, tag=tag, company=cik_to_id[r["cik"]], decision="concept", concept=r.get("concept", ""),
+            home_stmts=[r["stmt"].upper()], reason=f"{r.get('evidence', '')}; {r.get('note', '')}".strip("; "),
+            source="company-overrides", rule_id=RULE_COMPANY, prio=0.3, kind="company_tag",
+            scope_latest="latest" in r.get("scope", "").lower()))
+    return out
+
+
+def apply_answers(entries: list[dict], answers: list[dict]) -> int:
+    """Tag Expert answers to the needs_detail list (needs-detail-answers-*.csv): the answer replaces every entry that
+    produced the row (same source, tag, stmt, decision, concept). Combined members are DISPLAY ONLY (composition,
+    stored in components); they are never summed into a concept. The label condition / rule text travels in the
+    reason for the mapper to read. Returns the number of entries changed."""
+    idx = {(a["source"], a["tag"], a["stmt"].upper(), a["decision"], a["concept"]): a for a in answers if a["status"] == "closed"}
+    n = 0
+    for e in entries:
+        for stmt in e["home_stmts"]:
+            a = idx.get((e["source"], e["tag"], stmt, e["decision"], e["concept"]))
+            if not a:
+                continue
+            fd = DECISION_MAP.get(a["final_decision"], a["final_decision"])
+            e["decision"] = fd
+            e["sign"] = a["sign"] or e["sign"]
+            if fd == "combined":
+                e["components"] = _split(a["members"])
+            extra = " | ".join(x for x in (a["label_condition"], a["rule"]) if x)
+            e["reason"] = f"{e['reason']} | {extra}" if extra else e["reason"]
+            e["detail_note"] = ""
+            n += 1
+    return n
+
+
+def parse_source(name: str, rows: list[dict], cik_to_id: dict | None = None) -> list[dict]:
     head = {_hk(k) for k in (rows[0] if rows else {})}
+    if {"company", "scope", "status"} <= head and "cik" in head:
+        return parse_override_rows(rows, name, cik_to_id or {})
     if "company_id" in head and "evidence_adsh" in head:
         ents = parse_ranks_rows(rows, name)
     else:
@@ -437,6 +482,8 @@ def _expand_key(company_id, templates, taxonomy, tag, stmt, appear, annual, inde
         datatype = datatype[20] if len(datatype) > 20 else None
         pats = [e for e in index.get("__pattern__", []) if presentation_match(tag, datatype, any(r[4] for r in appear.values()))]
         for e in sorted(index.get((tag, stmt), []) + pats, key=lambda x: x["prio"]):
+            if e["scope_latest"] and e_idx != len(all_eras) - 1:
+                continue
             if (e["decision"] == "component") != (phase == 2) and e["decision"] != "review":
                 continue
             if e["decision"] == "review" and phase == 2:
@@ -678,11 +725,16 @@ def resolve_concepts(entries: list[dict], valid: set[str]) -> dict[str, set[str]
     return unknown
 
 
-def load_sources(patterns: list[str]) -> tuple[list[dict], list[str]]:
-    entries, files = [], sorted({p for g in patterns for p in glob.glob(g)})
+def load_sources(patterns: list[str], cik_to_id: dict | None = None) -> tuple[list[dict], list[str]]:
+    entries, answers, files = [], [], sorted({p for g in patterns for p in glob.glob(g)})
     for path in files:
         with open(path, newline="") as f:
-            entries += parse_source(Path(path).name, list(csv.DictReader(f)))
+            rows = list(csv.DictReader(f))
+        if rows and "final_decision" in rows[0]:
+            answers += [{_hk(k): (v or "").strip() for k, v in r.items()} for r in rows]
+            continue
+        entries += parse_source(Path(path).name, rows, cik_to_id)
+    apply_answers(entries, answers)
     return entries, [Path(p).name for p in files]
 
 
@@ -740,12 +792,12 @@ def seed_company_rows(cid, cik, rows, templates, index, valid_concepts, conn, st
 
 
 def cmd_seed(args) -> None:
-    entries, files = load_sources(args.decisions or DEFAULT_GLOBS)
+    with open(COHORT_CSV, newline="") as f:
+        cohort = {int(r["company_id"]): r["cik"] for r in csv.DictReader(f)}
+    entries, files = load_sources(args.decisions or DEFAULT_GLOBS, {v: k for k, v in cohort.items()})
     attach_conditions(entries, load_conditions())
     index = build_index(entries)
     free_exc = sorted({(e["source"], e["tag"]) for e in entries if e["exceptions_text"]})
-    with open(COHORT_CSV, newline="") as f:
-        cohort = {int(r["company_id"]): r["cik"] for r in csv.DictReader(f)}
     ids = sorted(cohort)
     conn = connect()
     valid = {r[0] for r in conn.execute("select name from analytics.canonical_concept").fetchall()}

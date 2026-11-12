@@ -371,3 +371,39 @@ def test_company_row_with_several_concepts_or_tags():
     ents = m.parse_source("companies-x.csv", rows)
     assert [(e["tag"], e["decision"]) for e in ents] == [("A", "needs_detail"), ("B", "needs_detail"), ("X", "concept"), ("Y", "concept")]
     assert "several concepts" in ents[0]["detail_note"]
+
+
+def test_needs_detail_answers_replace_the_entry_and_combined_members_are_display_only():
+    card = [{"tag": "us-gaap:NonoperatingIncomeExpense", "home_stmt": "IS", "decision": "combined",
+             "canonical_concept_key": "other_income_expense_net", "applies_to": "all", "evidence": "e"},
+            {"tag": "us-gaap:OtherNonoperatingExpense", "home_stmt": "IS", "decision": "component",
+             "canonical_concept_key": "other_income_expense_net", "applies_to": "all", "evidence": "e"}]
+    ents = m.parse_source("fsn-income-statement.csv", card)
+    ents[0]["source"] = ents[1]["source"] = "tag-card"
+    ans = [{"source": "tag-card", "tag": "NonoperatingIncomeExpense", "stmt": "IS", "decision": "combined",
+            "concept": "other_income_expense_net", "final_decision": "combined", "members": "interest_income:+1 ; x:-1",
+            "sign": "", "label_condition": "members only from this filing's own calc", "rule": "", "status": "closed"},
+           {"source": "tag-card", "tag": "OtherNonoperatingExpense", "stmt": "IS", "decision": "component",
+            "concept": "other_income_expense_net", "final_decision": "component", "members": "", "sign": "-1",
+            "label_condition": "", "rule": "debit: subtract", "status": "closed"}]
+    assert m.missing_detail(ents[0]) and m.missing_detail(ents[1])
+    assert m.apply_answers(ents, ans) == 2
+    assert m.missing_detail(ents[0]) is None and m.missing_detail(ents[1]) is None
+    row = m.library_row(ents[0])
+    assert row["canonical_concept"] == "other_income_expense_net" and row["components"] == "{interest_income:+1,x:-1}"
+    assert "own calc" in row["reason"] and m.library_row(ents[1])["combine_sign"] == "-1"
+
+
+def test_company_overrides_only_filing_checked_and_latest_scope():
+    rows = [{"company": "RTX", "cik": "0000101829", "tag": "ReceivablesNetCurrent", "stmt": "BS",
+             "concept": "accounts_receivable", "scope": "latest 10-K read era", "status": "FILING-CHECKED",
+             "evidence": "read", "note": "n"},
+            {"company": "X", "cik": "0000000001", "tag": "Foo", "stmt": "BS", "concept": "goodwill", "scope": "",
+             "status": "PENDING", "evidence": "", "note": ""}]
+    ents = m.parse_source("company-overrides.csv", rows, {"0000101829": 7, "0000000001": 8})
+    assert len(ents) == 1 and ents[0]["company"] == 7 and ents[0]["scope_latest"] and ents[0]["prio"] == 0.3
+    key = ("us-gaap", "ReceivablesNetCurrent", "BS")
+    p = [date(2018, 12, 31), date(2019, 12, 31), date(2020, 12, 31), date(2021, 12, 31)]
+    groups = {key: {d: ap(i, "BS", "ReceivablesNetCurrent", d) for i, d in enumerate(p) if i != 1}}  # gap: two eras
+    res = m.expand_company(7, set(), groups, p, m.build_index(ents))[key]
+    assert [(a, b) for _, a, b, _ in res["rows"]] == [(p[2], None)]  # latest era only
