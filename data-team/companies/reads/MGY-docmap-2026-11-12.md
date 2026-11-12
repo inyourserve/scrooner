@@ -44,11 +44,11 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 | depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R8.htm | Depreciation, depletion and amortization | 437757000 | 437757000 | 414487000 | 414487000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | sbc | mapped | us-gaap:ShareBasedCompensation | R8.htm | Stock based compensation | 27256000 | 27256000 | 18663000 | 18663000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | dividends_paid | mapped | us-gaap:PaymentsOfDividendsCommonStock | R8.htm | Dividends paid | -113096000 | 113096000 | -97620000 | 97620000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
-| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R8.htm | Common stock repurchase and cancellations | -205471000 |  | -183375000 |  | API missing | FILING-CHECKED | check: machine-full-filing / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
+| share_buybacks | component sum | us-gaap:PaymentsForRepurchaseOfCommonStock[member: Common stock repurchase and cancellation]+us-gaap:PaymentsForRepurchaseOfCommonStock[member: Common stock repurchase and cancellation] | R8.htm | Common stock repurchase and cancellations + Common stock repurchase and cancellations | -205471000 |  | -273045000 |  | API missing | FILING-CHECKED | check: machine-full-filing / all printed member rows of one tag summed (value_source fsn_xbrl); no printed total on the face / accn 0001698990-26-000005 R8.htm period ..2025-12-31 |
 | cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R76.htm | Cash paid for interest | 29669000 | 29669000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R76.htm 'Supplemental Cash Flow Information (Details)' (MetaLinks.json presentation) |
 | cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R60.htm | Total cash paid for taxes (net of refunds) | 7782000 | 7782000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / not on the face statement; shown in R60.htm 'Income Taxes - Schedule of Income Taxes Paid (Details)' (MetaLinks.json presentation) |
 | total_debt | component sum | us-gaap:LongTermDebt | R3.htm | Long-term debt, net | 393251000 | 393251000 |  |  | Y | FILING-CHECKED | check: machine-full-filing / printed BS debt lines; no finance lease liability fact in the filing; operating leases never included |
-| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 181230000 |  |  |  | API missing | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
+| shares_outstanding | component sum | us-gaap:CommonStockSharesOutstanding | R4.htm | Common stock, shares outstanding (in shares) | 186753000 |  |  |  |  | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; classes summed (printed rows) |
 
 ## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
 - FY2015 10-K: none in companyfacts (fy=2015, form 10-K): the FY2015 era cannot be read
@@ -60,5 +60,4 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 ## Mismatches (printed vs API)
 - basic_eps: API missing (us-gaap:EarningsPerShareBasic)
 - diluted_eps: API missing (us-gaap:EarningsPerShareDiluted)
-- share_buybacks: API missing (us-gaap:PaymentsForRepurchaseOfCommonStock)
-- shares_outstanding: API missing (us-gaap:CommonStockSharesOutstanding)
+- share_buybacks: API missing (us-gaap:PaymentsForRepurchaseOfCommonStock[member: Common stock repurchase and cancellation]+us-gaap:PaymentsForRepurchaseOfCommonStock[member: Common stock repurchase and cancellation])
