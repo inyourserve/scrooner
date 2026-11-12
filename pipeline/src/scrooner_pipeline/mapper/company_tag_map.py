@@ -514,6 +514,7 @@ def build_cells(
             }
         )
     cells = _opex_tie(cells, concept_info, dcml, stats)
+    cells = _scale_sanity(cells, concept_info, periods, stats)
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
     held_keys = {(h["canonical_concept_id"], h["period_id"]) for h in stats["held"]}
     name_to_id = {n: i for i, (n, _) in concept_info.items()}
@@ -687,6 +688,95 @@ def build_cells(
 
 def _base(name: str) -> str:
     return name.removesuffix("_resolved")
+
+
+SHARE_CONCEPTS = {
+    "weighted_basic_shares",
+    "weighted_diluted_shares",
+    "shares_outstanding",
+}
+SCALE_RATIO = Decimal(
+    100
+)  # a gross mismatch (a unit-scale error), never rounding / NCI / preferred
+
+
+def _scale_sanity(cells: list[dict], concept_info, periods, stats: dict) -> list[dict]:
+    """Scale sanity, never a silent rescale (filer_scale_error). A share-count cell is BLOCKED when it is 100x or
+    more off (a) the company's other share facts of the same period end, or (b) the per-share identity:
+    |EPS x weighted shares| against net income. EPS and net income stay as served."""
+    by_name: dict[tuple[str, int], dict] = {}
+    for c in cells:
+        by_name[(_base(concept_info[c["canonical_concept_id"]][0]), c["period_id"])] = c
+    blocked: dict[int, str] = {}  # id(cell) -> reason
+
+    def block(cell: dict, why: str) -> None:
+        blocked.setdefault(id(cell), why)
+
+    eps_of = {
+        "weighted_basic_shares": "basic_eps",
+        "weighted_diluted_shares": "diluted_eps",
+    }
+    for (name, pid), cell in list(by_name.items()):
+        eps_name = eps_of.get(name)
+        if eps_name is None:
+            continue
+        eps, ni = by_name.get((eps_name, pid)), by_name.get(("net_income", pid))
+        if eps and ni and ni["value"] != 0 and eps["value"] != 0:
+            ratio = abs(eps["value"] * cell["value"] / ni["value"])
+            if ratio >= SCALE_RATIO or ratio <= 1 / SCALE_RATIO:
+                block(
+                    cell,
+                    f"{name} {cell['value']} x {eps_name} {eps['value']} is {ratio:.6g}x net income {ni['value']}: implausible unit scale",
+                )
+    ends: dict = defaultdict(list)  # period end -> share cells of that date
+    for (name, pid), cell in by_name.items():
+        if name in SHARE_CONCEPTS and pid in (periods or {}) and cell["value"] > 0:
+            ends[periods[pid][1]].append((name, cell))
+    for group in ends.values():
+        if len(group) < 2:
+            continue
+        hi = max(group, key=lambda g: g[1]["value"])
+        for name, cell in group:
+            if hi[1]["value"] / cell["value"] >= SCALE_RATIO:
+                block(
+                    cell,
+                    f"{name} {cell['value']} is {hi[1]['value'] / cell['value']:.6g}x smaller than {hi[0]} {hi[1]['value']} of the same date: implausible unit scale",
+                )
+    kept = []
+    for c in cells:
+        why = blocked.get(id(c))
+        if why is None:
+            kept.append(c)
+            continue
+        pid = c["period_id"]
+        stats["held"].append(
+            {
+                "canonical_concept_id": c["canonical_concept_id"],
+                "period_id": pid,
+                "reason": "filer_scale_error",
+            }
+        )
+        if pid in (periods or {}):
+            start, end, ptype = periods[pid]
+            grain = _grain(start, end, ptype)
+            if grain:
+                stats["blanks"].append(
+                    {
+                        "canonical_concept_id": c["canonical_concept_id"],
+                        "concept_name": concept_info[c["canonical_concept_id"]][0],
+                        "period_id": pid,
+                        "state": "defect",
+                        "defect_class": "finding_open",
+                        "owner": "tag_mapper",
+                        "reason_code": "filer_scale_error",
+                        "reason": why,
+                        "rule_id": RULE_ID,
+                        "period_start": start,
+                        "period_end": end,
+                        "grain": grain,
+                    }
+                )
+    return kept
 
 
 def _opex_tie(cells: list[dict], concept_info, dcml, stats: dict) -> list[dict]:

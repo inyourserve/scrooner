@@ -235,7 +235,7 @@ def test_selection_path_never_takes_an_absolute_value():
     from pathlib import Path
 
     src = (Path(__file__).resolve().parents[2] / "src/scrooner_pipeline/mapper/company_tag_map.py").read_text()
-    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l and 'abs(gp["value"]' not in l)
+    code = "\n".join(l for l in src.splitlines() if "abs(total - ref_value)" not in l and "never takes abs()" not in l and 'abs(gp["value"]' not in l and 'abs(eps["value"]' not in l)
     assert "abs(" not in code  # the only abs() is the tie-tolerance difference of two totals
     row = MapRow("us-gaap", "T", "IS", "concept", OPEX, None, 1, ERA, None)
     cells, _ = run([row], {("us-gaap", "T"): {7: fact("-5", 1)}})
@@ -418,3 +418,45 @@ def test_bank_cash_is_the_cash_flow_ending_line_as_a_concept_row_not_a_balance_s
     rows, facts, arcs = _bs_comps(CASH, "CashA", "ShortTermInv")  # a BS cash sum is refused
     cells, stats = build_cells(rows, facts, INST_INFO, arcs, {})
     assert cells == [] and stats["held"][0]["reason"] == "instant_component_sum_not_allowed"
+
+
+SH, EPS, NIID, SO = 31, 32, 33, 34
+SCALE_INFO = {
+    SH: ("weighted_basic_shares", "income_statement"), EPS: ("basic_eps_resolved", "income_statement"),
+    NIID: ("net_income", "income_statement"), SO: ("shares_outstanding_resolved", "balance_sheet"),
+}
+
+
+def _scale_rows():
+    return [MapRow("us-gaap", t, "IS", "concept", c, None, 1, ERA, None) for t, c in
+            (("WASO", SH), ("Eps", EPS), ("NetIncomeLoss", NIID))]
+
+
+def _scale(shares, so=None):
+    facts = {("us-gaap", "WASO"): {7: fact(shares, 1)}, ("us-gaap", "Eps"): {7: fact("11.5", 2)},
+             ("us-gaap", "NetIncomeLoss"): {7: fact("8200000000", 3)}}
+    rows = _scale_rows()
+    info = dict(SCALE_INFO)
+    periods = {7: (date(2020, 1, 1), END, "duration")}
+    if so:
+        rows.append(MapRow("us-gaap", "SO", "BS", "concept", SO, None, 1, ERA, None))
+        facts[("us-gaap", "SO")] = {8: Fact(Decimal(so), 4, END, False, 10, "A-10")}
+        periods[8] = (END, END, "instant")
+    return build_cells(rows, facts, info, {}, {}, periods)
+
+
+def test_scale_sanity_blocks_unscaled_weighted_shares_mcd_shape_and_passes_the_scaled_value():
+    cells, stats = _scale("713.4")  # MCD: millions tagged unscaled; companyfacts carries the raw value
+    assert {c["canonical_concept_id"] for c in cells} == {EPS, NIID}  # EPS and NI stay as served
+    (b,) = [b for b in stats["blanks"] if b["reason_code"] == "filer_scale_error"]
+    assert b["state"] == "defect" and b["concept_name"] == "weighted_basic_shares" and "713.4" in b["reason"]
+    cells, stats = _scale("713400000")  # 11.5 x 713.4M = 8.2B: ties to net income
+    assert {c["canonical_concept_id"] for c in cells} == {SH, EPS, NIID} and stats["held"] == []
+    cells, stats = _scale("700000000")  # a 2% gap (NCI / preferred / rounding) is not a scale error
+    assert SH in {c["canonical_concept_id"] for c in cells}
+
+
+def test_scale_sanity_blocks_a_share_count_far_below_the_companys_other_share_facts():
+    cells, stats = _scale("713400000", so="7134")  # shares outstanding 100000x too small vs the weighted count
+    assert SO not in {c["canonical_concept_id"] for c in cells} and SH in {c["canonical_concept_id"] for c in cells}
+    assert [b["reason_code"] for b in stats["blanks"]] == ["filer_scale_error"]

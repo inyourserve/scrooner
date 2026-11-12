@@ -180,23 +180,29 @@ def _report(
     neither: list[tuple[str, str]] = []
     for dp, period, status in expected:
         cands = [n for n in _candidates(dp) if n in names]
-        pids = [
-            (pid, "I" if ptype == "instant" else _grain(start, end, ptype))
-            for end, ptype, start, pid in periods
-            if end == period
-        ]
         stmt = concept_info[names[cands[0]]][1] if cands else None
-        if cands and any((names[n], pid) in valued for n in cands for pid, _ in pids):
+        want = (
+            "I" if stmt == "balance_sheet" else "FY"
+        )  # an instant at the period end, a full-year duration
+        # the library snaps 52/53-week fiscal year ends to month ends: match within 10 days
+        pids = [
+            (pid, g, end)
+            for end, ptype, start, pid in periods
+            if abs((end - period).days) <= 10
+            and (g := "I" if ptype == "instant" else _grain(start, end, ptype)) == want
+        ]
+        if cands and any(
+            (names[n], pid) in valued for n in cands for pid, _, _ in pids
+        ):
             valued_n += 1
         elif cands and any(
-            (n, g, period) in blank_keys for n in cands for _, g in pids if g
+            (n, g, e) in blank_keys for n in cands for _, g, e in pids if g
         ):
             blank_n += 1
         elif status != "served":
             library_status[status.split(" (")[0]] += 1
         else:
             neither.append((dp, period.isoformat()))
-        del stmt
     return {
         "template_cells": len(expected),
         "valued": valued_n,
