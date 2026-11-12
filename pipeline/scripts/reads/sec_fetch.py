@@ -105,7 +105,7 @@ def main(argv: list[str]) -> None:
         rows = list(csv.DictReader(fh))
     out = Path(argv[2])
     out.mkdir(parents=True, exist_ok=True)
-    logf = (out / "fetch_log.jsonl").open("a")  # noqa: SIM115  (closed at the end of main)
+    logf = (out / "fetch_log.jsonl").open("a")  # closed at the end of main
 
     def log(rec):
         logf.write(json.dumps({"t": round(time.time(), 1), **rec}) + "\n")
