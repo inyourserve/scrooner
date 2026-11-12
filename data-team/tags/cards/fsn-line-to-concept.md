@@ -90,6 +90,8 @@ A label rule can demote a correct line when the filer's label linkbase is wrong.
 | FIVE | 0001177609-20-000030 R6 | withholding label on two rows (12,663)K vs (3,789)K |
 | ETSY | 0001370637-18-000020 R7 | two rows with one label (10,301)K / (6,417)K |
 | FICO | (fsn-balance-sheet-assets) | "…Current" label on a noncurrent position (DATA-INFERRED) |
+| XOM | latest 10-K R3 / R54 | basic and diluted EPS labels swapped (same value 6.70) |
+| PLTR | latest 10-K CF | net-change-in-cash row labelled as financing |
 Guard: when a label would demote a line, check it against the calc position and the value (e.g. a "Goodwill" tag whose value equals the goodwill note) before demoting; a demotion that breaks the statement's calc tie is a label error, not a component.
 
 ## O. Full 10-K reads of 24 top-50 companies (Dhairya 2026-11-11; FILING-CHECKED, latest 10-K; 2.1% FAIL on 1,031 data points)
@@ -115,3 +117,22 @@ Guard: when a label would demote a line, check it against the calc position and 
 
 ## Q. Sums rule (Dhairya 2026-11-12, D3 narrowed to doc 02)
 - Durations: printed face-line sums allowed (opex, cost of revenue, interest, capex, D&A, NI = ProfitLoss − NCI). Instants: never summed, except total_debt (founder definition, doc 02 2026-11-04 item 5). Total liabilities, inventory or shares with no printed total = not_presented.
+
+## R. Full 10-K reads of 13 more companies (Dhairya 2026-11-12; FILING-CHECKED)
+- XOM `InterestPaidNet` = the operating portion only; `InterestPaid` = total cash interest (R109). The gross/net reading of the two paid tags is filer-specific (JNJ is the reverse case: net of capitalised): read the label.
+- XOM basic/diluted EPS labels swapped (R3/R54, both 6.70); PLTR's net-change-in-cash row labelled as financing: added to §N.
+- SHOP FY2024: pretax on `IncomeLossAttributableToParent` (standard label "…before Tax"); CF SBC on `StockOptionPlanExpense`.
+- TXN software amortization: `AmortizationOfIntangibleAssets` in 10-Qs, `CapitalizedComputerSoftwareAmortization1` in the 10-K (a form-specific tag switch: map per filing).
+- WMT inventory change = `IncreaseDecreaseInRetailRelatedInventories`. WFC total revenue = `RevenuesNetOfInterestExpense`.
+- RTX "Interest expense, net" on `InterestIncomeExpenseNonoperatingNet`: a net line, never gross interest expense.
+- Comprehensive income incl. NCI was served at 7 companies where the parent line is printed: the library row was wrong (component with parent comprehensive_income); corrected to excluded, mapping only with no parent and no NCI line (TOP-TAGS #170/#349 were right).
+- EPS printed per class only (Visa, SHOP): RULING (Dhairya) serve Class A as printed.
+
+## S. Era and company switches from the 50 full 10-K reads, group 3 (Dhairya 2026-11-12; data-team/companies/reads/ on main 92291fd9; FILING-CHECKED)
+- LLY capex moved to `PaymentsToAcquireOtherPropertyPlantAndEquipment` from Q4 2022 (map per filing era).
+- PANW `OtherNonoperatingIncomeExpense` is a component after 2018; a custom total carries the face line (find the total by calc position).
+- META switched AP tags several times (AccountsPayableCurrent / AccountsPayableTradeCurrent / AccountsPayableAndOtherAccruedLiabilitiesCurrent; balance-sheet §8): map per filing by label + calc.
+- MA and MS DPS moved off the face into equity notes after 2019: read the note fact (fsn.value), never treat it as absent.
+- LRCX goodwill sits inside a combined face line from 2024: combined, never goodwill.
+- MU and MS CF "Receivables" change lines are changes of COMBINED BS lines: not cf_ar_change.
+- LIN "Cost of sales, exclusive of D&A" = `CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization` (§O).
