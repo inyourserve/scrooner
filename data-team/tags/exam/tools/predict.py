@@ -53,7 +53,7 @@ def sign(v):
     return '+' if x > 0 else '-' if x < 0 else '0'
 def main(lines_path, ticker, rank, rulesdir, notes_path=None):
     global KB
-    KB = load_kb(rulesdir)
+    KB = load_kb(os.environ.get('TAG_RULES_DIR') or rulesdir)  # backtest.py passes the rules dir by env, library dir as argv
     lib, ov, nd = KB['lib'], KB['ov'], KB['nd']
     DPS, BANK, NOTE, NOTE_RULES, DURATION_SUM, DEMOTE = KB['DPS'], KB['BANK'], KB['NOTE'], KB['NOTE_RULES'], KB['DURATION_SUM'], KB['DEMOTE']
     P = KB['P']; RID = {}

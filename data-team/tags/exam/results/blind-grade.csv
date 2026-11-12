@@ -130,11 +130,11 @@ hand,ADP,cf_ap_change,wrong,status,mapped,not_presented,us-gaap:IncreaseDecrease
 hand,ADP,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 hand,ADP,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
 hand,AFG,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,AFG,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,AFG,gross_profit,wrong,status,not_presented,OUT,,
+,AFG,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,AFG,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,AFG,operating_expenses,correct,,mapped,mapped,us-gaap:BenefitsLossesAndExpenses,us-gaap:BenefitsLossesAndExpenses
 hand,AFG,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
-hand,AFG,research_and_development,wrong,status,not_presented,OUT,,
+,AFG,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,AFG,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 hand,AFG,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
 hand,AFG,income_before_tax,wrong,status,mapped,not_presented,us-gaap:OperatingIncomeLoss,
@@ -146,13 +146,13 @@ hand,AFG,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNum
 hand,AFG,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 hand,AFG,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,AFG,accounts_receivable,correct,,not_presented,not_presented,,
-hand,AFG,inventory,wrong,status,not_presented,OUT,,
-,AFG,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,AFG,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,AFG,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,AFG,ppe_net,correct,,not_presented,not_presented,,
 hand,AFG,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 hand,AFG,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,AFG,accounts_payable,correct,,not_presented,not_presented,,
-,AFG,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,AFG,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,AFG,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 hand,AFG,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 hand,AFG,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -1408,11 +1408,11 @@ machine,EPAM,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTax
 machine,EPAM,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtNoncurrent
 machine,EPAM,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,ESNT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,ESNT,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,ESNT,gross_profit,wrong,status,not_presented,OUT,,
+,ESNT,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,ESNT,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,ESNT,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:BenefitsLossesAndExpenses
 hand,ESNT,sga_expense,correct,,not_presented,not_presented,,
-hand,ESNT,research_and_development,wrong,status,not_presented,OUT,,
+,ESNT,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,ESNT,operating_income,correct,,not_presented,not_presented,,
 machine,ESNT,interest_expense,wrong,tag,mapped,mapped,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseOperating
 machine,ESNT,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -1424,13 +1424,13 @@ machine,ESNT,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverag
 machine,ESNT,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,ESNT,cash_and_equivalents,correct,,mapped,mapped,us-gaap:Cash,us-gaap:Cash
 hand,ESNT,accounts_receivable,correct,,not_presented,not_presented,,
-hand,ESNT,inventory,wrong,status,not_presented,OUT,,
-,ESNT,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,ESNT,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,ESNT,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,ESNT,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
 machine,ESNT,goodwill,wrong,status,mapped,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,us-gaap:IntangibleAssetsNetIncludingGoodwill
 machine,ESNT,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,ESNT,accounts_payable,correct,,not_presented,not_presented,,
-,ESNT,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,ESNT,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,ESNT,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,ESNT,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,ESNT,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -1644,11 +1644,11 @@ machine,FLR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxe
 machine,FLR,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtNoncurrent
 machine,FLR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,FNB,revenue,correct,,not_presented,not_presented,,
-hand,FNB,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,FNB,gross_profit,wrong,status,not_presented,OUT,,
+,FNB,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,FNB,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,FNB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
 hand,FNB,sga_expense,correct,,not_presented,not_presented,,
-hand,FNB,research_and_development,wrong,status,not_presented,OUT,,
+,FNB,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,FNB,operating_income,correct,,not_presented,not_presented,,
 machine,FNB,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
 machine,FNB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -1660,13 +1660,13 @@ machine,FNB,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverage
 machine,FNB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,FNB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,FNB,accounts_receivable,correct,,not_presented,not_presented,,
-hand,FNB,inventory,wrong,status,not_presented,OUT,,
-,FNB,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,FNB,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,FNB,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,FNB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
 machine,FNB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,FNB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,FNB,accounts_payable,correct,,not_presented,not_presented,,
-,FNB,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,FNB,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,FNB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,FNB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,FNB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -1888,11 +1888,11 @@ hand,GLW,cf_ap_change,wrong,status,combined,not_presented,us-gaap:IncreaseDecrea
 hand,GLW,cash_paid_for_interest,wrong,status,not_presented,mapped,,us-gaap:InterestPaidNet
 hand,GLW,cash_paid_for_income_taxes,wrong,status,not_presented,mapped,,us-gaap:IncomeTaxesPaidNet
 machine,HOMB,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
-hand,HOMB,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,HOMB,gross_profit,wrong,status,not_presented,OUT,,
+,HOMB,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,HOMB,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,HOMB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
 hand,HOMB,sga_expense,correct,,not_presented,not_presented,,
-hand,HOMB,research_and_development,wrong,status,not_presented,OUT,,
+,HOMB,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,HOMB,operating_income,correct,,not_presented,not_presented,,
 machine,HOMB,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
 machine,HOMB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -1904,13 +1904,13 @@ machine,HOMB,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverag
 machine,HOMB,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,HOMB,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,HOMB,accounts_receivable,correct,,not_presented,not_presented,,
-hand,HOMB,inventory,wrong,status,not_presented,OUT,,
-,HOMB,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,HOMB,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,HOMB,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,HOMB,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,HOMB,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,HOMB,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,HOMB,accounts_payable,correct,,not_presented,not_presented,,
-,HOMB,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,HOMB,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,HOMB,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,HOMB,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,HOMB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -2040,11 +2040,11 @@ machine,HST,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxe
 machine,HST,total_debt,wrong,status,mapped,combined,us-gaap:DebtAndCapitalLeaseObligations,us-gaap:LineOfCredit
 machine,HST,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,HWC,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
-hand,HWC,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,HWC,gross_profit,wrong,status,not_presented,OUT,,
+,HWC,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,HWC,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,HWC,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
 hand,HWC,sga_expense,correct,,not_presented,not_presented,,
-hand,HWC,research_and_development,wrong,status,not_presented,OUT,,
+,HWC,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,HWC,operating_income,wrong,status,mapped,not_presented,us-gaap:OperatingIncomeLoss,
 machine,HWC,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
 machine,HWC,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -2056,13 +2056,13 @@ machine,HWC,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverage
 machine,HWC,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,HWC,cash_and_equivalents,wrong,status,mapped,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents
 hand,HWC,accounts_receivable,correct,,not_presented,not_presented,,
-hand,HWC,inventory,wrong,status,not_presented,OUT,,
-,HWC,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,HWC,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,HWC,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,HWC,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,HWC,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,HWC,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,HWC,accounts_payable,correct,,not_presented,not_presented,,
-,HWC,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,HWC,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,HWC,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,HWC,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,HWC,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -2458,11 +2458,11 @@ machine,J,cash_paid_for_income_taxes,correct,,not_presented,not_presented,,
 machine,J,total_debt,wrong,tag,component sum,component_sum,jec:LongTermDebtIncludingOverdraftsCurrentMaturities+us-gaap:LongTermDebtNoncurrent,us-gaap:LongTermDebtNoncurrent
 machine,J,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 machine,L,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,L,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,L,gross_profit,wrong,status,not_presented,OUT,,
+,L,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,L,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,L,operating_expenses,wrong,status,combined,mapped,us-gaap:BenefitsLossesAndExpenses,us-gaap:BenefitsLossesAndExpenses
 hand,L,sga_expense,correct,,not_presented,not_presented,,
-hand,L,research_and_development,wrong,status,not_presented,OUT,,
+,L,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,L,operating_income,correct,,not_presented,not_presented,,
 machine,L,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
 machine,L,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -2474,13 +2474,13 @@ machine,L,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNu
 machine,L,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,L,cash_and_equivalents,correct,,mapped,mapped,us-gaap:Cash,us-gaap:Cash
 machine,L,accounts_receivable,correct,,mapped,mapped,us-gaap:AccountsReceivableNet,us-gaap:AccountsReceivableNet
-hand,L,inventory,wrong,status,not_presented,OUT,,
-,L,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,L,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,L,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,L,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,L,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,L,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,L,accounts_payable,correct,,not_presented,not_presented,,
-,L,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,L,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,L,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,L,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,L,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -2968,11 +2968,11 @@ hand,MKC,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPa
 hand,MKC,total_debt,correct,,component sum,component_sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
 hand,MKC,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
 machine,MKL,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,MKL,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,MKL,gross_profit,wrong,status,not_presented,OUT,,
+,MKL,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,MKL,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,MKL,operating_expenses,wrong,status,combined,mapped,us-gaap:CostsAndExpenses,us-gaap:CostsAndExpenses
 hand,MKL,sga_expense,correct,,not_presented,not_presented,,
-hand,MKL,research_and_development,wrong,status,not_presented,OUT,,
+,MKL,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,MKL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
 machine,MKL,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpense,us-gaap:InterestExpense
 machine,MKL,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -2985,12 +2985,12 @@ hand,MKL,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 machine,MKL,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 machine,MKL,accounts_receivable,wrong,status,mapped,not_presented,us-gaap:PremiumsAndOtherReceivablesNet,
 hand,MKL,inventory,wrong,status,mapped,OUT,us-gaap:InventoryNet,
-,MKL,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,MKL,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,MKL,ppe_net,wrong,status,mapped,not_presented,us-gaap:PropertyPlantAndEquipmentNet,
 machine,MKL,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,MKL,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,MKL,accounts_payable,correct,,not_presented,not_presented,,
-,MKL,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,MKL,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,MKL,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,MKL,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,MKL,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -3516,11 +3516,11 @@ machine,PBF,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxe
 hand,PBF,total_debt,wrong,tag,component sum,component_sum,us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiabilityNoncurrent,us-gaap:LongTermDebtNoncurrent
 hand,PBF,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
 machine,PFG,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
-hand,PFG,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,PFG,gross_profit,wrong,status,not_presented,OUT,,
+,PFG,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,PFG,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,PFG,operating_expenses,correct,,mapped,mapped,us-gaap:BenefitsLossesAndExpenses,us-gaap:BenefitsLossesAndExpenses
 hand,PFG,sga_expense,correct,,not_presented,not_presented,,
-hand,PFG,research_and_development,wrong,status,not_presented,OUT,,
+,PFG,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,PFG,operating_income,correct,,not_presented,not_presented,,
 hand,PFG,interest_expense,correct,,not_presented,not_presented,,
 hand,PFG,income_before_tax,wrong,status,mapped,not_presented,pfg:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,
@@ -3532,13 +3532,13 @@ hand,PFG,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNum
 hand,PFG,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,PFG,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,PFG,accounts_receivable,correct,,not_presented,not_presented,,
-hand,PFG,inventory,wrong,status,not_presented,OUT,,
-,PFG,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,PFG,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,PFG,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,PFG,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
 machine,PFG,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,PFG,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,PFG,accounts_payable,correct,,not_presented,not_presented,,
-,PFG,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,PFG,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,PFG,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,PFG,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,PFG,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -3950,11 +3950,11 @@ hand,RBRK,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesP
 hand,RBRK,total_debt,wrong,status,component sum,combined,us-gaap:OtherLongTermDebtNoncurrent,us-gaap:ConvertibleLongTermNotesPayable
 hand,RBRK,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:CommonStockSharesOutstanding,
 hand,RF,revenue,correct,,not_presented,not_presented,,
-hand,RF,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,RF,gross_profit,wrong,status,not_presented,OUT,,
+,RF,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,RF,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,RF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
 hand,RF,sga_expense,correct,,not_presented,not_presented,,
-hand,RF,research_and_development,wrong,status,not_presented,OUT,,
+,RF,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,RF,operating_income,correct,,not_presented,not_presented,,
 machine,RF,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
 machine,RF,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossAttributableToParent,us-gaap:IncomeLossAttributableToParent
@@ -3966,13 +3966,13 @@ machine,RF,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageN
 machine,RF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 hand,RF,cash_and_equivalents,wrong,status,mapped,not_presented,us-gaap:CashAndDueFromBanks,
 hand,RF,accounts_receivable,correct,,not_presented,not_presented,,
-hand,RF,inventory,wrong,status,not_presented,OUT,,
-,RF,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,RF,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,RF,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,RF,ppe_net,correct,,mapped,mapped,us-gaap:PropertyPlantAndEquipmentNet,us-gaap:PropertyPlantAndEquipmentNet
 machine,RF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,RF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,RF,accounts_payable,correct,,not_presented,not_presented,,
-,RF,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,RF,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 machine,RF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,RF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,RF,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities
@@ -4574,11 +4574,11 @@ machine,SWX,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxe
 machine,SWX,total_debt,correct,,component sum,component_sum,us-gaap:LongTermDebtNoncurrent+us-gaap:LongTermDebtCurrent+us-gaap:ShortTermBorrowings,us-gaap:LongTermDebtNoncurrent;us-gaap:LongTermDebtCurrent;us-gaap:ShortTermBorrowings
 machine,SWX,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOutstanding,us-gaap:CommonStockSharesOutstanding
 hand,SYF,revenue,correct,,not_presented,not_presented,,
-hand,SYF,cost_of_revenue,wrong,status,not_presented,OUT,,
-hand,SYF,gross_profit,wrong,status,not_presented,OUT,,
+,SYF,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,SYF,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,SYF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
 hand,SYF,sga_expense,correct,,not_presented,not_presented,,
-hand,SYF,research_and_development,wrong,status,not_presented,OUT,,
+,SYF,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,SYF,operating_income,correct,,not_presented,not_presented,,
 machine,SYF,interest_expense,correct,,mapped,mapped,us-gaap:InterestExpenseOperating,us-gaap:InterestExpenseOperating
 machine,SYF,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -4590,13 +4590,13 @@ hand,SYF,weighted_basic_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNum
 hand,SYF,weighted_diluted_shares,correct,,mapped,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
 machine,SYF,cash_and_equivalents,correct,,mapped,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,us-gaap:CashAndCashEquivalentsAtCarryingValue
 hand,SYF,accounts_receivable,correct,,not_presented,not_presented,,
-hand,SYF,inventory,wrong,status,not_presented,OUT,,
-,SYF,current_assets,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,SYF,inventory,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
+,SYF,current_assets,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,SYF,ppe_net,correct,,not_presented,not_presented,,
 machine,SYF,goodwill,correct,,mapped,mapped,us-gaap:Goodwill,us-gaap:Goodwill
 machine,SYF,total_assets,correct,,mapped,mapped,us-gaap:Assets,us-gaap:Assets
 hand,SYF,accounts_payable,correct,,not_presented,not_presented,,
-,SYF,current_liabilities,key_error,"key: bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)",not_presented,OUT,,
+,SYF,current_liabilities,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 hand,SYF,total_liabilities,correct,,mapped,mapped,us-gaap:Liabilities,us-gaap:Liabilities
 machine,SYF,stockholders_equity,correct,,mapped,mapped,us-gaap:StockholdersEquity,us-gaap:StockholdersEquity
 machine,SYF,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,us-gaap:NetCashProvidedByUsedInOperatingActivities

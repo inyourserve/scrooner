@@ -70,8 +70,8 @@ def main(pdir, ddir, *only):
                 rk = 'NCI or preferred dividends keyed as common dividends (shareholder-returns card)'
             if dp == 'accounts_receivable' and norm_status(k['status']) == 'mapped' and ({'interestreceivable', 'notesreceivablenet', 'financingreceivableexcludingaccruedinterestafterallowanceforcreditloss'} & kt):
                 rk = 'interest/notes/financing receivables keyed as accounts receivable (sector-faces card)'
-            if dp in ('current_assets', 'current_liabilities') and ks_raw(k) == 'not_presented' and norm_status(p['status']) == 'out':
-                rk = 'bank/insurer has no classified balance sheet: current assets/liabilities are OUT, not not_presented (Dhairya ruling 2026-11-13, SYF)'
+            if ks_raw(k) == 'not_presented' and norm_status(p['status']) == 'out':
+                rk = 'data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)'
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
