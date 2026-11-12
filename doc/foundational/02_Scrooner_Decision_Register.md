@@ -79,6 +79,11 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 | Stripe for billing                      | Selected direction    | Implement when paid plan enters the build.                                                  |
 | GitHub Actions + lightweight monitoring | Selected direction    | Automated checks/deployments; Sentry and simple analytics when needed.                      |
 
+- **Founder decision of 2026-11-12: connection rules replaced** (typed by the founder in Dhairya's session: "We have 60+ connections please note that. So change all old rules please").
+  1. The root `CLAUDE.md` line "at most 4 shards, never beside the nightly refresh" is retired. This is the founder's OK that item 7 of the 2026-11-01 entry asked for.
+  2. Data loads use up to 40 connections in company-disjoint shards, with no fixed shard count. The 60-backend preflight and in-run pause (items 4 and 5 of 2026-11-01) stay.
+  3. The 18:00–21:30 UTC nightly window is no longer a fixed no-go. A job checks before each step whether `pipeline-refresh` is running. A full-population job pauses while it runs. A job scoped to a set of companies may run alongside it.
+  4. The `pipeline/CLAUDE.md` "~15 connections" line was stale. `max_connections` is 90 (measured 2026-11-12, 14 in use).
 - **Founder decision of 2026-11-01: database connection budget for data loads** (typed by the founder in Dhairya's session, scrooner-df, and relayed to the release approver; the approver did not hear it directly). In the founder's words: "Great we have 90 connections limits. Use maximum connections" and "Faster the process. Use shard."
   1. Measured: `max_connections` = 90 on the dev Supabase (checked by the approver 2026-11-03, 16 in use).
   2. Budget within that (Dhairya's, under delegation): data loads use at most **40 connections**. The rest stays free for the app, backend, nightly refresh and superuser slots.

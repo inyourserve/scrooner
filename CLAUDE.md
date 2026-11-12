@@ -30,8 +30,8 @@ The easiest way to screen US companies with complex fundamental logic in plain E
 
 ## Several sessions share this repo and one dev Supabase
 
-- `ListAgents` before any heavy job (full-population run, bulk write, wide `--ciks`). Heavy jobs: at most 4 shards, never beside the nightly refresh. Light, single-connection, indexed reads are fine.
-- The shared pooler has limited connections. Check `select count(*) from pg_stat_activity` before raising any pool size. A trivial query hanging is a signal to stop and check, not to retry.
+- Connections (founder, 2026-11-12): the dev database has `max_connections` = 90. Data loads may use up to **40 connections**, in company-disjoint shards (no fixed shard cap). Every job runs a preflight, and each shard re-checks during the run, pausing while `pg_stat_activity` exceeds 60. Doc 02 has the full rule (decisions of 2026-11-01 and 2026-11-12). Run `ListAgents` before a full-population run so two such jobs don't collide.
+- The nightly refresh is no longer a fixed no-go window. Before each step, a job checks whether `pipeline-refresh` is running. A full-population job pauses while it runs. A job scoped to a set of companies may run alongside it. A trivial query hanging is a signal to stop and check, not to retry.
 - Every long job sets its own `statement_timeout` and wall-clock cap; the pooler default (2 min) kills full-population scans and rolls back whole scripts.
 - A schema change applied to the live database without a committed migration silently diverges from `main`.
 - This Mac's disk can fill and hang a process silently (`df -h /private/tmp`); `/tmp` can be wiped by a restart. Re-derive state from a live query, not an old file.
