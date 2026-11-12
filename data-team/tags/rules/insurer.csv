@@ -1,0 +1,2 @@
+rule_id,version,namespace,data_point,scope,era,kind,when,then,precedence,evidence,author,date,note
+insurer.detect,1,insurer,,insurer,,sector_detect,"{""any_of"":[""PremiumsEarnedNet"",""LiabilityForFuturePolicyBenefits"",""LiabilityForUnpaidClaimsAndClaimsAdjustmentExpense""]}","{""group"":""insurer""}",template,sector-faces.md,Tag Expert,2026-11-13,
