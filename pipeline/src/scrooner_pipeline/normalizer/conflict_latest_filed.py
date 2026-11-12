@@ -296,7 +296,10 @@ def tag_map_company_ids(conn: psycopg.Connection, company_ids: list[int]) -> lis
     is ON (SCROONER_RULES_ENABLED), and [] when the table is absent."""
     if not rule_enabled(RULE_COMPANY_TAG_MAP):
         return []
-    if conn.execute("select to_regclass('analytics.company_tag_map')").fetchone()[0] is None:
+    if (
+        conn.execute("select to_regclass('analytics.company_tag_map')").fetchone()[0]
+        is None
+    ):
         return []
     rows = conn.execute(
         "select distinct company_id from analytics.company_tag_map where company_id = any(%s)",
@@ -312,7 +315,11 @@ def promote_tag_map_companies(conn: psycopg.Connection, company_ids: list[int]) 
     with conn.cursor() as cur:
         cur.execute(
             PROMOTE_TAGMAP_SQL,
-            {"company_ids": company_ids, "forms": list(quarter_forms), "rule": RULE_TAGMAP},
+            {
+                "company_ids": company_ids,
+                "forms": list(quarter_forms),
+                "rule": RULE_TAGMAP,
+            },
         )
         promoted = cur.rowcount
     conn.commit()
@@ -428,7 +435,9 @@ def resolve_latest_filed(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
         company_id_by_cik = dict(cur.fetchall())
     # The six-tag rule needs its concepts to exist; tag-map companies (every-tag rule) do not.
-    if not concept_ids and not tag_map_company_ids(conn, sorted(company_id_by_cik.values())):
+    if not concept_ids and not tag_map_company_ids(
+        conn, sorted(company_id_by_cik.values())
+    ):
         return totals
     ordered = sorted(company_id_by_cik)
     totals["considered"] = len(ordered)

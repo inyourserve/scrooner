@@ -438,9 +438,7 @@ def normalize_periods_for_cik(
     routed = 0
     for r in routes:
         rows = [
-            row
-            for row in _periods_rows(payload, None)
-            if r.contains(row["end_date"])
+            row for row in _periods_rows(payload, None) if r.contains(row["end_date"])
         ]
         routed += upsert_periods(conn, r.company_id, rows, keep_existing=True)
     result["predecessor_periods"] = routed

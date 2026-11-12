@@ -331,7 +331,10 @@ def upsert_filings(
 
 
 def _own_company_exists(conn: psycopg.Connection, cik: str) -> bool:
-    return conn.execute("select 1 from core.company where cik = %s", (cik,)).fetchone() is not None
+    return (
+        conn.execute("select 1 from core.company where cik = %s", (cik,)).fetchone()
+        is not None
+    )
 
 
 def normalize_identity_for_cik(
@@ -352,7 +355,10 @@ def normalize_identity_for_cik(
         )
         listing_count = upsert_listings(conn, company_id, identity["listings"])
         filing_count = upsert_filings(
-            conn, company_id, identity["filings"], identity["raw_submission_id_by_filing"]
+            conn,
+            company_id,
+            identity["filings"],
+            identity["raw_submission_id_by_filing"],
         )
         logger.info(
             "identity.normalized",
@@ -361,13 +367,21 @@ def normalize_identity_for_cik(
             listings=listing_count,
             filings=filing_count,
         )
-        out.update({"company_id": company_id, "listings": listing_count, "filings": filing_count})
+        out.update(
+            {
+                "company_id": company_id,
+                "listings": listing_count,
+                "filings": filing_count,
+            }
+        )
     routed = 0
     for r in routes:
         in_window = [
             f
             for f in identity["filings"]
-            if r.contains(f["period_of_report"])  # strictly the period; no filing-date fallback
+            if r.contains(
+                f["period_of_report"]
+            )  # strictly the period; no filing-date fallback
         ]
         routed += upsert_filings(
             conn, r.company_id, in_window, identity["raw_submission_id_by_filing"]

@@ -109,7 +109,8 @@ def companyfacts(
         "(with --ciks: those CIKs plus the predecessors; alone-with --predecessors-only: just them).",
     ),
     predecessors_only: bool = typer.Option(
-        False, help="Fetch ONLY the predecessor source CIKs (implies --include-predecessors)."
+        False,
+        help="Fetch ONLY the predecessor source CIKs (implies --include-predecessors).",
     ),
 ) -> None:
     """Bootstrap raw.sec_companyfacts from the bulk companyfacts.zip archive.

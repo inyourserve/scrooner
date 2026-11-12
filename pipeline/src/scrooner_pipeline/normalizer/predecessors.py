@@ -31,7 +31,10 @@ class Route(NamedTuple):
 
 
 def _table_exists(conn: psycopg.Connection) -> bool:
-    return conn.execute("select to_regclass('core.company_history_source')").fetchone()[0] is not None
+    return (
+        conn.execute("select to_regclass('core.company_history_source')").fetchone()[0]
+        is not None
+    )
 
 
 def predecessor_source_ciks(conn: psycopg.Connection) -> set[str]:
