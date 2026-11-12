@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-NUE,212,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Accounts payable,1890000000.0000,library map
-NUE,212,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Accounts receivable, net",3105000000.0000,library map
-NUE,212,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-071575,,,254000000.0000,note fact present in the filing (FSN value)
-NUE,212,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-071575,R4,Basic,7.5300,library map
-NUE,212,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Capital expenditures,3422000000.0000,library map
-NUE,212,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Cash and cash equivalents,2260000000.0000,library map
-NUE,212,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in financing activities,-1315000000.0000,library map
-NUE,212,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in investing activities,-3226000000.0000,library map
-NUE,212,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-071575,,,,no face line and no note fact
-NUE,212,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-071575,,,281000000.0000,note fact present in the filing (FSN value)
-NUE,212,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts payable,80000000.0000,library map
-NUE,212,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts receivable,428000000.0000,library map
-NUE,212,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Inventories,366000000.0000,library map
-NUE,212,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Cash provided by operating activities,3234000000.0000,library map
-NUE,212,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001193125-26-071575,R5,Comprehensive income attributable to Nucor stockholders,1758000000.0000,library map
-NUE,212,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Cost of products sold,28616000000.0000,library map
-NUE,212,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total current assets,11765000000.0000,library map
-NUE,212,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total current liabilities,4004000000.0000,library map
-NUE,212,deposits,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Depreciation,1226000000.0000,printed face components (duration sum; total_debt founder sum)
-NUE,212,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-071575,R4,Diluted,7.5200,library map
-NUE,212,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Cash dividends,512000000.0000,library map
-NUE,212,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001193125-26-071575,R8,Cash dividends declared per share,2.2100,library map
-NUE,212,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Goodwill,4297000000.0000,library map
-NUE,212,gross_profit,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
-NUE,212,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Earnings before income taxes and noncontrolling interests,2568000000.0000,library map
-NUE,212,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Provision for income taxes,530000000.0000,library map
-NUE,212,interest_expense,combined,us-gaap:InterestRevenueExpenseNet,IS,-,-6,N,,sec_api,0001193125-26-071575,R4,"Interest expense (income), net",-59000000.0000,combined line (library or label demote)
-NUE,212,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001193125-26-071575,,,111000000.0000,note fact present in the filing (FSN value)
-NUE,212,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Inventories, net",5462000000.0000,library map
-NUE,212,loans_net,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Net earnings attributable to Nucor stockholders,1744000000.0000,library map
-NUE,212,net_interest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,noninterest_expense,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,noninterest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,operating_expenses,not_presented,,,,,,,,0001193125-26-071575,,,,no opex total and no GP/COR anchor
-NUE,212,operating_income,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
-NUE,212,other_income_expense_net,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
-NUE,212,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Property, plant and equipment, net",15306000000.0000,library map
-NUE,212,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,research_and_development,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
-NUE,212,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Net sales,32494000000.0000,library map
-NUE,212,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Stock-based compensation,133000000.0000,library map
-NUE,212,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,"Marketing, administrative and other expenses",1219000000.0000,library map
-NUE,212,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Acquisition of treasury stock,700000000.0000,library map
-NUE,212,shares_outstanding,not_presented,,,,,,,,0001193125-26-071575,,,,no face line
-NUE,212,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total Nucor stockholders equity,20936000000.0000,library map
-NUE,212,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total assets,35104000000.0000,library map
-NUE,212,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Short-term debt,122000000.0000,printed face components (duration sum; total_debt founder sum)
-NUE,212,total_interest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank
-NUE,212,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total liabilities,12980000000.0000,library map
-NUE,212,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-071575,,,230700000.0000,note fact present in the filing (FSN value)
-NUE,212,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-071575,,,231000000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+NUE,212,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Accounts payable,1890000000.0000,library map,1890000000.0000,PREDICTED (predict.py v5)
+NUE,212,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Accounts receivable, net",3105000000.0000,library map,3105000000.0000,PREDICTED (predict.py v5)
+NUE,212,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-071575,,,254000000.0000,note fact present in the filing (FSN value),254000000.0000,PREDICTED (predict.py v5)
+NUE,212,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-071575,R4,Basic,7.5300,library map,7.5300,PREDICTED (predict.py v5)
+NUE,212,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Capital expenditures,3422000000.0000,library map,3422000000.0000,PREDICTED (predict.py v5)
+NUE,212,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Cash and cash equivalents,2260000000.0000,library map,2260000000.0000,PREDICTED (predict.py v5)
+NUE,212,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in financing activities,-1315000000.0000,library map,-1315000000.0000,PREDICTED (predict.py v5)
+NUE,212,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-071575,R9,Cash used in investing activities,-3226000000.0000,library map,-3226000000.0000,PREDICTED (predict.py v5)
+NUE,212,cash_paid_for_income_taxes,not_presented,,,,,,,,0001193125-26-071575,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+NUE,212,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-071575,,,281000000.0000,note fact present in the filing (FSN value),281000000.0000,PREDICTED (predict.py v5)
+NUE,212,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts payable,80000000.0000,library map,80000000.0000,PREDICTED (predict.py v5)
+NUE,212,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Accounts receivable,428000000.0000,library map,428000000.0000,PREDICTED (predict.py v5)
+NUE,212,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Inventories,366000000.0000,library map,366000000.0000,PREDICTED (predict.py v5)
+NUE,212,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Cash provided by operating activities,3234000000.0000,library map,3234000000.0000,PREDICTED (predict.py v5)
+NUE,212,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001193125-26-071575,R5,Comprehensive income attributable to Nucor stockholders,1758000000.0000,library map,1758000000.0000,PREDICTED (predict.py v5)
+NUE,212,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Cost of products sold,28616000000.0000,library map,28616000000.0000,PREDICTED (predict.py v5)
+NUE,212,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total current assets,11765000000.0000,library map,11765000000.0000,PREDICTED (predict.py v5)
+NUE,212,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total current liabilities,4004000000.0000,library map,4004000000.0000,PREDICTED (predict.py v5)
+NUE,212,deposits,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Depreciation,1226000000.0000,printed face components (duration sum; total_debt founder sum),1226000000.0000,PREDICTED (predict.py v5)
+NUE,212,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-071575,R4,Diluted,7.5200,library map,7.5200,PREDICTED (predict.py v5)
+NUE,212,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Cash dividends,512000000.0000,library map,512000000.0000,PREDICTED (predict.py v5)
+NUE,212,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001193125-26-071575,R8,Cash dividends declared per share,2.2100,library map,2.2100,PREDICTED (predict.py v5)
+NUE,212,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Goodwill,4297000000.0000,library map,4297000000.0000,PREDICTED (predict.py v5)
+NUE,212,gross_profit,not_presented,,,,,,,,0001193125-26-071575,,,,no face line,,PREDICTED (predict.py v5)
+NUE,212,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Earnings before income taxes and noncontrolling interests,2568000000.0000,library map,2568000000.0000,PREDICTED (predict.py v5)
+NUE,212,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Provision for income taxes,530000000.0000,library map,530000000.0000,PREDICTED (predict.py v5)
+NUE,212,interest_expense,combined,us-gaap:InterestRevenueExpenseNet,IS,-,-6,N,,sec_api,0001193125-26-071575,R4,"Interest expense (income), net",-59000000.0000,net or partial interest line,-59000000.0000,PREDICTED (predict.py v5)
+NUE,212,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,+,,,,sec_api,0001193125-26-071575,,,111000000.0000,note fact present in the filing (FSN value),111000000.0000,PREDICTED (predict.py v5)
+NUE,212,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Inventories, net",5462000000.0000,library map,5462000000.0000,PREDICTED (predict.py v5)
+NUE,212,loans_net,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Net earnings attributable to Nucor stockholders,1744000000.0000,library map,1744000000.0000,PREDICTED (predict.py v5)
+NUE,212,net_interest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,noninterest_expense,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,noninterest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,operating_expenses,not_presented,,,,,,,,0001193125-26-071575,,,,no opex total and no GP/COR anchor,,PREDICTED (predict.py v5)
+NUE,212,operating_income,not_presented,,,,,,,,0001193125-26-071575,,,,no face line,,PREDICTED (predict.py v5)
+NUE,212,other_income_expense_net,not_presented,,,,,,,,0001193125-26-071575,,,,no face line,,PREDICTED (predict.py v5)
+NUE,212,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,"Property, plant and equipment, net",15306000000.0000,library map,15306000000.0000,PREDICTED (predict.py v5)
+NUE,212,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,research_and_development,not_presented,,,,,,,,0001193125-26-071575,,,,no face line,,PREDICTED (predict.py v5)
+NUE,212,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,Net sales,32494000000.0000,library map,32494000000.0000,PREDICTED (predict.py v5)
+NUE,212,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Stock-based compensation,133000000.0000,library map,133000000.0000,PREDICTED (predict.py v5)
+NUE,212,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001193125-26-071575,R4,"Marketing, administrative and other expenses",1219000000.0000,library map,1219000000.0000,PREDICTED (predict.py v5)
+NUE,212,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001193125-26-071575,R9,Acquisition of treasury stock,700000000.0000,library map,700000000.0000,PREDICTED (predict.py v5)
+NUE,212,shares_outstanding,not_presented,,,,,,,,0001193125-26-071575,,,,no face line,,PREDICTED (predict.py v5)
+NUE,212,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total Nucor stockholders equity,20936000000.0000,library map,20936000000.0000,PREDICTED (predict.py v5)
+NUE,212,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total assets,35104000000.0000,library map,35104000000.0000,PREDICTED (predict.py v5)
+NUE,212,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Short-term debt,122000000.0000,printed face components (duration sum; total_debt founder sum),122000000.0000,PREDICTED (predict.py v5)
+NUE,212,total_interest_income,OUT,,,,,,,,0001193125-26-071575,,,,not a bank,,PREDICTED (predict.py v5)
+NUE,212,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-071575,R2,Total liabilities,12980000000.0000,library map,12980000000.0000,PREDICTED (predict.py v5)
+NUE,212,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001193125-26-071575,,,230700000.0000,note fact present in the filing (FSN value),230700000.0000,PREDICTED (predict.py v5)
+NUE,212,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001193125-26-071575,,,231000000.0000,note fact present in the filing (FSN value),231000000.0000,PREDICTED (predict.py v5)

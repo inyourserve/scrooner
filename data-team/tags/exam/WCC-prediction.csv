@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-WCC,504,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Accounts payable,3030500000.0000,library map
-WCC,504,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Trade accounts receivable,4069600000.0000,library map
-WCC,504,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000929008-26-000008,,,89100000.0000,note fact present in the filing (FSN value)
-WCC,504,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Basic,13.2600,library map
-WCC,504,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Capital expenditures,99800000.0000,library map
-WCC,504,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000929008-26-000008,R3,Cash and cash equivalents,604800000.0000,combined line (library or label demote)
-WCC,504,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash provided (used) by financing activities,-92700000.0000,library map
-WCC,504,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash used in investing activities,-140700000.0000,library map
-WCC,504,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Cash paid for taxes,237800000.0000,library map
-WCC,504,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Cash paid for interest,357400000.0000,library map
-WCC,504,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Accounts payable,323700000.0000,library map
-WCC,504,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Increase (Decrease) in Accounts Receivable,558000000.0000,library map
-WCC,504,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Inventories,446100000.0000,library map
-WCC,504,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Net cash provided by operating activities,125000000.0000,library map
-WCC,504,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Comprehensive income attributable to WESCO International, Inc.",793500000.0000,library map
-WCC,504,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Cost of goods sold (excluding depreciation and amortization below),18538900000.0000,library map
-WCC,504,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total current assets,9456200000.0000,library map
-WCC,504,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total current liabilities,4296800000.0000,library map
-WCC,504,deposits,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Depreciation and amortization,197600000.0000,library map
-WCC,504,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Diluted,13.0500,library map
-WCC,504,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Payment of common stock dividends,88400000.0000,library map
-WCC,504,dividends_per_share,not_presented,,,,,,,,0000929008-26-000008,,,,no face line and no note fact
-WCC,504,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Goodwill,3343400000.0000,library map
-WCC,504,gross_profit,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
-WCC,504,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income before income taxes,855900000.0000,library map
-WCC,504,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Provision for income taxes,213400000.0000,library map
-WCC,504,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000929008-26-000008,R4,"Interest expense, net",-386700000.0000,combined line (library or label demote)
-WCC,504,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000929008-26-000008,R4,"Interest expense, net",-386700000.0000,interest income only inside a net/other face line between OI and pretax
-WCC,504,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Inventories,4008800000.0000,library map
-WCC,504,loans_net,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Net Income attributable to WESCO International, Inc.",640200000.0000,library map
-WCC,504,net_interest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,noninterest_expense,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,noninterest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Selling, general and administrative expense",3541400000.0000,every face line between GP/COR and OI; ties to GP - OI
-WCC,504,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income from operations,1233000000.0000,library map
-WCC,504,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Other, net",9600000.0000,library map
-WCC,504,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,"Property, buildings and equipment, net",466800000.0000,library map
-WCC,504,provision_for_credit_losses,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,research_and_development,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
-WCC,504,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Net sales,23510900000.0000,library map
-WCC,504,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Stock-based compensation expense,40500000.0000,library map
-WCC,504,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Selling, general and administrative expense",3541400000.0000,library map
-WCC,504,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Repurchases of common stock,75000000.0000,library map
-WCC,504,shares_outstanding,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
-WCC,504,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total stockholders' equity,5031600000.0000,library map
-WCC,504,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total assets,16494900000.0000,library map
-WCC,504,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Short-term debt and current portion of long-term debt,25000000.0000,printed face components (duration sum; total_debt founder sum)
-WCC,504,total_interest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
-WCC,504,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total liabilities,11468500000.0000,library map
-WCC,504,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000929008-26-000008,,,48700000.0000,note fact present in the filing (FSN value)
-WCC,504,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000929008-26-000008,,,49500000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+WCC,504,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Accounts payable,3030500000.0000,library map,3030500000.0000,PREDICTED (predict.py v5)
+WCC,504,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Trade accounts receivable,4069600000.0000,library map,4069600000.0000,PREDICTED (predict.py v5)
+WCC,504,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000929008-26-000008,,,89100000.0000,note fact present in the filing (FSN value),89100000.0000,PREDICTED (predict.py v5)
+WCC,504,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Basic,13.2600,library map,13.2600,PREDICTED (predict.py v5)
+WCC,504,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Capital expenditures,99800000.0000,library map,99800000.0000,PREDICTED (predict.py v5)
+WCC,504,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000929008-26-000008,R3,Cash and cash equivalents,604800000.0000,combined line (library or label demote),604800000.0000,PREDICTED (predict.py v5)
+WCC,504,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash provided (used) by financing activities,-92700000.0000,library map,-92700000.0000,PREDICTED (predict.py v5)
+WCC,504,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash used in investing activities,-140700000.0000,library map,-140700000.0000,PREDICTED (predict.py v5)
+WCC,504,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Cash paid for taxes,237800000.0000,library map,237800000.0000,PREDICTED (predict.py v5)
+WCC,504,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Cash paid for interest,357400000.0000,library map,357400000.0000,PREDICTED (predict.py v5)
+WCC,504,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Accounts payable,323700000.0000,library map,323700000.0000,PREDICTED (predict.py v5)
+WCC,504,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Increase (Decrease) in Accounts Receivable,558000000.0000,library map,558000000.0000,PREDICTED (predict.py v5)
+WCC,504,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Inventories,446100000.0000,library map,446100000.0000,PREDICTED (predict.py v5)
+WCC,504,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Net cash provided by operating activities,125000000.0000,library map,125000000.0000,PREDICTED (predict.py v5)
+WCC,504,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Comprehensive income attributable to WESCO International, Inc.",793500000.0000,library map,793500000.0000,PREDICTED (predict.py v5)
+WCC,504,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Cost of goods sold (excluding depreciation and amortization below),18538900000.0000,library map,18538900000.0000,PREDICTED (predict.py v5)
+WCC,504,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total current assets,9456200000.0000,library map,9456200000.0000,PREDICTED (predict.py v5)
+WCC,504,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total current liabilities,4296800000.0000,library map,4296800000.0000,PREDICTED (predict.py v5)
+WCC,504,deposits,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Depreciation and amortization,197600000.0000,library map,197600000.0000,PREDICTED (predict.py v5)
+WCC,504,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Diluted,13.0500,library map,13.0500,PREDICTED (predict.py v5)
+WCC,504,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Payment of common stock dividends,88400000.0000,library map,88400000.0000,PREDICTED (predict.py v5)
+WCC,504,dividends_per_share,not_presented,,,,,,,,0000929008-26-000008,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+WCC,504,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Goodwill,3343400000.0000,library map,3343400000.0000,PREDICTED (predict.py v5)
+WCC,504,gross_profit,not_presented,,,,,,,,0000929008-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+WCC,504,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income before income taxes,855900000.0000,library map,855900000.0000,PREDICTED (predict.py v5)
+WCC,504,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Provision for income taxes,213400000.0000,library map,213400000.0000,PREDICTED (predict.py v5)
+WCC,504,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000929008-26-000008,R4,"Interest expense, net",-386700000.0000,net or partial interest line,-386700000.0000,PREDICTED (predict.py v5)
+WCC,504,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000929008-26-000008,R4,"Interest expense, net",-386700000.0000,interest income only inside a net/other face line between OI and pretax,-386700000.0000,PREDICTED (predict.py v5)
+WCC,504,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Inventories,4008800000.0000,library map,4008800000.0000,PREDICTED (predict.py v5)
+WCC,504,loans_net,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Net Income attributable to WESCO International, Inc.",640200000.0000,library map,640200000.0000,PREDICTED (predict.py v5)
+WCC,504,net_interest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,noninterest_expense,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,noninterest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Selling, general and administrative expense",3541400000.0000,every face line between GP/COR and OI; ties to GP - OI,3541400000.0000,PREDICTED (predict.py v5)
+WCC,504,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income from operations,1233000000.0000,library map,1233000000.0000,PREDICTED (predict.py v5)
+WCC,504,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Other, net",9600000.0000,library map,9600000.0000,PREDICTED (predict.py v5)
+WCC,504,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,"Property, buildings and equipment, net",466800000.0000,library map,466800000.0000,PREDICTED (predict.py v5)
+WCC,504,provision_for_credit_losses,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,research_and_development,not_presented,,,,,,,,0000929008-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+WCC,504,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Net sales,23510900000.0000,library map,23510900000.0000,PREDICTED (predict.py v5)
+WCC,504,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Stock-based compensation expense,40500000.0000,library map,40500000.0000,PREDICTED (predict.py v5)
+WCC,504,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Selling, general and administrative expense",3541400000.0000,library map,3541400000.0000,PREDICTED (predict.py v5)
+WCC,504,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Repurchases of common stock,75000000.0000,library map,75000000.0000,PREDICTED (predict.py v5)
+WCC,504,shares_outstanding,not_presented,,,,,,,,0000929008-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+WCC,504,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total stockholders' equity,5031600000.0000,library map,5031600000.0000,PREDICTED (predict.py v5)
+WCC,504,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total assets,16494900000.0000,library map,16494900000.0000,PREDICTED (predict.py v5)
+WCC,504,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Short-term debt and current portion of long-term debt,25000000.0000,printed face components (duration sum; total_debt founder sum),25000000.0000,PREDICTED (predict.py v5)
+WCC,504,total_interest_income,OUT,,,,,,,,0000929008-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+WCC,504,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Total liabilities,11468500000.0000,library map,11468500000.0000,PREDICTED (predict.py v5)
+WCC,504,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000929008-26-000008,,,48700000.0000,note fact present in the filing (FSN value),48700000.0000,PREDICTED (predict.py v5)
+WCC,504,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000929008-26-000008,,,49500000.0000,note fact present in the filing (FSN value),49500000.0000,PREDICTED (predict.py v5)

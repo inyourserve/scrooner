@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-ACT,895,accounts_payable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,accounts_receivable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,amortization_of_intangibles,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact
-ACT,895,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Basic (in usd per share),4.5400,library map
-ACT,895,capex,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Cash and cash equivalents,582493000.0000,library map
-ACT,895,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001823529-26-000060,R8,Net cash used in financing activities,-515077000.0000,library map
-ACT,895,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001823529-26-000060,R8,Net cash used in investing activities,-226381000.0000,library map
-ACT,895,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Income taxes paid,190915000.0000,library map
-ACT,895,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Interest paid,47383000.0000,library map
-ACT,895,cf_ap_change,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,cf_ar_change,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,cf_inventory_change,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Net cash provided by operating activities,724519000.0000,library map
-ACT,895,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001823529-26-000060,R6,Total comprehensive income (loss),851556000.0000,library map
-ACT,895,cost_of_revenue,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,current_assets,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,current_liabilities,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,deposits,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,depreciation_and_amortization,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Diluted (in usd per share),4.5200,library map
-ACT,895,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Dividends paid,120833000.0000,library map
-ACT,895,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0001823529-26-000060,,,0.8150,note fact present in the filing (FSN value)
-ACT,895,goodwill,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,gross_profit,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Income before income taxes,858837000.0000,library map
-ACT,895,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Provision for income taxes,184593000.0000,library map
-ACT,895,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Interest expense,49949000.0000,library map
-ACT,895,interest_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact
-ACT,895,inventory,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,loans_net,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,net_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,net_interest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,noninterest_expense,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,noninterest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Total losses and expenses,376990000.0000,sector template total
-ACT,895,operating_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,other_income_expense_net,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,ppe_net,not_presented,,,,,,,,0001823529-26-000060,,,,no face line
-ACT,895,provision_for_credit_losses,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,research_and_development,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer)
-ACT,895,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Total revenues,1235827000.0000,library map
-ACT,895,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Stock-based compensation expense,19024000.0000,library map
-ACT,895,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,Y,PolicyAcquisitionCostsAndOperatingExpenses,sec_api,0001823529-26-000060,R5,"Acquisition and operating expenses, net of deferrals",208326000.0000,library map
-ACT,895,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Repurchase of common stock,382399000.0000,library map
-ACT,895,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001823529-26-000060,R4,"Common stock, outstanding (in shares)",142209000.0000,library map
-ACT,895,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total equity,5355181000.0000,library map
-ACT,895,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total assets,6893466000.0000,library map
-ACT,895,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Long-term borrowings,744481000.0000,printed face components (duration sum; total_debt founder sum)
-ACT,895,total_interest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank
-ACT,895,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total liabilities,1538285000.0000,library map
-ACT,895,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Basic (in shares),148373000.0000,library map
-ACT,895,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Diluted (in shares),149318000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+ACT,895,accounts_payable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,accounts_receivable,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,amortization_of_intangibles,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+ACT,895,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Basic (in usd per share),4.5400,library map,4.5400,PREDICTED (predict.py v5)
+ACT,895,capex,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Cash and cash equivalents,582493000.0000,library map,582493000.0000,PREDICTED (predict.py v5)
+ACT,895,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001823529-26-000060,R8,Net cash used in financing activities,-515077000.0000,library map,-515077000.0000,PREDICTED (predict.py v5)
+ACT,895,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001823529-26-000060,R8,Net cash used in investing activities,-226381000.0000,library map,-226381000.0000,PREDICTED (predict.py v5)
+ACT,895,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Income taxes paid,190915000.0000,library map,190915000.0000,PREDICTED (predict.py v5)
+ACT,895,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Interest paid,47383000.0000,library map,47383000.0000,PREDICTED (predict.py v5)
+ACT,895,cf_ap_change,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,cf_ar_change,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,cf_inventory_change,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Net cash provided by operating activities,724519000.0000,library map,724519000.0000,PREDICTED (predict.py v5)
+ACT,895,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001823529-26-000060,R6,Total comprehensive income (loss),851556000.0000,library map,851556000.0000,PREDICTED (predict.py v5)
+ACT,895,cost_of_revenue,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,current_assets,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,current_liabilities,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,deposits,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,depreciation_and_amortization,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001823529-26-000060,R5,Diluted (in usd per share),4.5200,library map,4.5200,PREDICTED (predict.py v5)
+ACT,895,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Dividends paid,120833000.0000,library map,120833000.0000,PREDICTED (predict.py v5)
+ACT,895,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,NOTE,+,,,,sec_api,0001823529-26-000060,,,0.8150,note fact present in the filing (FSN value),0.8150,PREDICTED (predict.py v5)
+ACT,895,goodwill,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,gross_profit,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Income before income taxes,858837000.0000,library map,858837000.0000,PREDICTED (predict.py v5)
+ACT,895,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Provision for income taxes,184593000.0000,library map,184593000.0000,PREDICTED (predict.py v5)
+ACT,895,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Interest expense,49949000.0000,library map,49949000.0000,PREDICTED (predict.py v5)
+ACT,895,interest_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+ACT,895,inventory,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,loans_net,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,net_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,net_interest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,noninterest_expense,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,noninterest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Total losses and expenses,376990000.0000,sector template total,376990000.0000,PREDICTED (predict.py v5)
+ACT,895,operating_income,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,other_income_expense_net,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,ppe_net,not_presented,,,,,,,,0001823529-26-000060,,,,no face line,,PREDICTED (predict.py v5)
+ACT,895,provision_for_credit_losses,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,research_and_development,OUT,,,,,,,,0001823529-26-000060,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+ACT,895,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Total revenues,1235827000.0000,library map,1235827000.0000,PREDICTED (predict.py v5)
+ACT,895,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Stock-based compensation expense,19024000.0000,library map,19024000.0000,PREDICTED (predict.py v5)
+ACT,895,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,Y,PolicyAcquisitionCostsAndOperatingExpenses,sec_api,0001823529-26-000060,R5,"Acquisition and operating expenses, net of deferrals",208326000.0000,library map,208326000.0000,PREDICTED (predict.py v5)
+ACT,895,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001823529-26-000060,R8,Repurchase of common stock,382399000.0000,library map,382399000.0000,PREDICTED (predict.py v5)
+ACT,895,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001823529-26-000060,R4,"Common stock, outstanding (in shares)",142209000.0000,library map,142209000.0000,PREDICTED (predict.py v5)
+ACT,895,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total equity,5355181000.0000,library map,5355181000.0000,PREDICTED (predict.py v5)
+ACT,895,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total assets,6893466000.0000,library map,6893466000.0000,PREDICTED (predict.py v5)
+ACT,895,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Long-term borrowings,744481000.0000,printed face components (duration sum; total_debt founder sum),744481000.0000,PREDICTED (predict.py v5)
+ACT,895,total_interest_income,OUT,,,,,,,,0001823529-26-000060,,,,not a bank,,PREDICTED (predict.py v5)
+ACT,895,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001823529-26-000060,R3,Total liabilities,1538285000.0000,library map,1538285000.0000,PREDICTED (predict.py v5)
+ACT,895,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Basic (in shares),148373000.0000,library map,148373000.0000,PREDICTED (predict.py v5)
+ACT,895,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001823529-26-000060,R5,Diluted (in shares),149318000.0000,library map,149318000.0000,PREDICTED (predict.py v5)

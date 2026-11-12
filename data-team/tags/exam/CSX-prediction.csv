@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CSX,132,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Accounts Payable,1149000000.0000,library map
-CSX,132,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Accounts Receivable - Net (Note 11),1298000000.0000,library map
-CSX,132,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000277948-26-000006,,,12000000.0000,note fact present in the filing (FSN value)
-CSX,132,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000277948-26-000006,R3,Basic (in dollars per share),1.5400,library map
-CSX,132,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Property Additions,2902000000.0000,library map
-CSX,132,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000277948-26-000006,R5,Cash and Cash Equivalents,670000000.0000,combined line (library or label demote)
-CSX,132,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Used in Financing Activities,-2025000000.0000,library map
-CSX,132,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Used in Investing Activities,-2851000000.0000,library map
-CSX,132,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Income Taxes Paid (Note 12),1102000000.0000,library map
-CSX,132,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Interest Paid - Net of Amounts Capitalized,870000000.0000,library map
-CSX,132,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Accounts Payable,40000000.0000,library map
-CSX,132,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Accounts Receivable,-88000000.0000,library map
-CSX,132,cf_inventory_change,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Provided by Operating Activities,4613000000.0000,library map
-CSX,132,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000277948-26-000006,R4,Total Comprehensive Earnings,2908000000.0000,library map
-CSX,132,cost_of_revenue,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Current Assets,2550000000.0000,library map
-CSX,132,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Current Liabilities,3133000000.0000,library map
-CSX,132,deposits,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Depreciation and Amortization,1680000000.0000,library map
-CSX,132,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000277948-26-000006,R3,Assuming Dilution (in dollars per share),1.5400,library map
-CSX,132,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Dividends Paid,972000000.0000,library map
-CSX,132,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,Y,CommonStockDividendsPerShareCashPaid,sec_api,0000277948-26-000006,R9,"Common stock dividends, per share (in dollars per share)",0.5200,library map
-CSX,132,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Goodwill and Other Intangible Assets - Net (Note 18),267000000.0000,combined line (library or label demote)
-CSX,132,gross_profit,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Earnings Before Income Taxes,3769000000.0000,library map
-CSX,132,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000277948-26-000006,R3,Income Tax Expense (Note 12),880000000.0000,library map
-CSX,132,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNet,sec_api,0000277948-26-000006,R3,Interest Expense,844000000.0000,library map
-CSX,132,interest_income,not_presented,,,,,,,,0000277948-26-000006,,,,no face line and no note fact
-CSX,132,inventory,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,loans_net,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Net Earnings,2889000000.0000,library map
-CSX,132,net_interest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,noninterest_expense,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,noninterest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Total Expense,9571000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
-CSX,132,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Operating Income,4521000000.0000,library map
-CSX,132,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Other Income - Net (Note 14),92000000.0000,combined line (library or label demote)
-CSX,132,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Properties - Net (Note 6),36811000000.0000,library map
-CSX,132,provision_for_credit_losses,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,research_and_development,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Revenue,14092000000.0000,library map
-CSX,132,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000277948-26-000006,,,54000000.0000,note fact present in the filing (FSN value)
-CSX,132,sga_expense,not_presented,,,,,,,,0000277948-26-000006,,,,no face line
-CSX,132,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Shares Repurchased,1396000000.0000,library map
-CSX,132,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-6,N,,sec_api,0000277948-26-000006,R8,"Stockholders' Equity, beginning balance (in shares)",1860000000.0000,library map
-CSX,132,stockholders_equity,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Shareholders' Equity,13160000000.0000,library map
-CSX,132,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Assets,43682000000.0000,library map
-CSX,132,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Current Maturities of Long-term Debt (Note 10),708000000.0000,printed face components (duration sum; total_debt founder sum)
-CSX,132,total_interest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank
-CSX,132,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Liabilities,30522000000.0000,library map
-CSX,132,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Basic (in shares),1870000000.0000,library map
-CSX,132,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Assuming Dilution (in shares),1873000000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+CSX,132,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Accounts Payable,1149000000.0000,library map,1149000000.0000,PREDICTED (predict.py v5)
+CSX,132,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Accounts Receivable - Net (Note 11),1298000000.0000,library map,1298000000.0000,PREDICTED (predict.py v5)
+CSX,132,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000277948-26-000006,,,12000000.0000,note fact present in the filing (FSN value),12000000.0000,PREDICTED (predict.py v5)
+CSX,132,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000277948-26-000006,R3,Basic (in dollars per share),1.5400,library map,1.5400,PREDICTED (predict.py v5)
+CSX,132,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Property Additions,2902000000.0000,library map,2902000000.0000,PREDICTED (predict.py v5)
+CSX,132,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000277948-26-000006,R5,Cash and Cash Equivalents,670000000.0000,combined line (library or label demote),670000000.0000,PREDICTED (predict.py v5)
+CSX,132,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Used in Financing Activities,-2025000000.0000,library map,-2025000000.0000,PREDICTED (predict.py v5)
+CSX,132,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Used in Investing Activities,-2851000000.0000,library map,-2851000000.0000,PREDICTED (predict.py v5)
+CSX,132,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Income Taxes Paid (Note 12),1102000000.0000,library map,1102000000.0000,PREDICTED (predict.py v5)
+CSX,132,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Interest Paid - Net of Amounts Capitalized,870000000.0000,library map,870000000.0000,PREDICTED (predict.py v5)
+CSX,132,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Accounts Payable,40000000.0000,library map,40000000.0000,PREDICTED (predict.py v5)
+CSX,132,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000277948-26-000006,R7,Accounts Receivable,-88000000.0000,library map,-88000000.0000,PREDICTED (predict.py v5)
+CSX,132,cf_inventory_change,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Net Cash Provided by Operating Activities,4613000000.0000,library map,4613000000.0000,PREDICTED (predict.py v5)
+CSX,132,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000277948-26-000006,R4,Total Comprehensive Earnings,2908000000.0000,library map,2908000000.0000,PREDICTED (predict.py v5)
+CSX,132,cost_of_revenue,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Current Assets,2550000000.0000,library map,2550000000.0000,PREDICTED (predict.py v5)
+CSX,132,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Current Liabilities,3133000000.0000,library map,3133000000.0000,PREDICTED (predict.py v5)
+CSX,132,deposits,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Depreciation and Amortization,1680000000.0000,library map,1680000000.0000,PREDICTED (predict.py v5)
+CSX,132,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000277948-26-000006,R3,Assuming Dilution (in dollars per share),1.5400,library map,1.5400,PREDICTED (predict.py v5)
+CSX,132,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Dividends Paid,972000000.0000,library map,972000000.0000,PREDICTED (predict.py v5)
+CSX,132,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,Y,CommonStockDividendsPerShareCashPaid,sec_api,0000277948-26-000006,R9,"Common stock dividends, per share (in dollars per share)",0.5200,library map,0.5200,PREDICTED (predict.py v5)
+CSX,132,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Goodwill and Other Intangible Assets - Net (Note 18),267000000.0000,combined line (library or label demote),267000000.0000,PREDICTED (predict.py v5)
+CSX,132,gross_profit,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Earnings Before Income Taxes,3769000000.0000,library map,3769000000.0000,PREDICTED (predict.py v5)
+CSX,132,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000277948-26-000006,R3,Income Tax Expense (Note 12),880000000.0000,library map,880000000.0000,PREDICTED (predict.py v5)
+CSX,132,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestIncomeExpenseNet,sec_api,0000277948-26-000006,R3,Interest Expense,844000000.0000,library map,844000000.0000,PREDICTED (predict.py v5)
+CSX,132,interest_income,not_presented,,,,,,,,0000277948-26-000006,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+CSX,132,inventory,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,loans_net,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Net Earnings,2889000000.0000,library map,2889000000.0000,PREDICTED (predict.py v5)
+CSX,132,net_interest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,noninterest_expense,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,noninterest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Total Expense,9571000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined),9571000000.0000,PREDICTED (predict.py v5)
+CSX,132,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Operating Income,4521000000.0000,library map,4521000000.0000,PREDICTED (predict.py v5)
+CSX,132,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Other Income - Net (Note 14),92000000.0000,combined line (library or label demote),92000000.0000,PREDICTED (predict.py v5)
+CSX,132,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Properties - Net (Note 6),36811000000.0000,library map,36811000000.0000,PREDICTED (predict.py v5)
+CSX,132,provision_for_credit_losses,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,research_and_development,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Revenue,14092000000.0000,library map,14092000000.0000,PREDICTED (predict.py v5)
+CSX,132,sbc,mapped,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000277948-26-000006,,,54000000.0000,note fact present in the filing (FSN value),54000000.0000,PREDICTED (predict.py v5)
+CSX,132,sga_expense,not_presented,,,,,,,,0000277948-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CSX,132,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000277948-26-000006,R7,Shares Repurchased,1396000000.0000,library map,1396000000.0000,PREDICTED (predict.py v5)
+CSX,132,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-6,N,,sec_api,0000277948-26-000006,R8,"Stockholders' Equity, beginning balance (in shares)",1860000000.0000,library map,1860000000.0000,PREDICTED (predict.py v5)
+CSX,132,stockholders_equity,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Shareholders' Equity,13160000000.0000,library map,13160000000.0000,PREDICTED (predict.py v5)
+CSX,132,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Assets,43682000000.0000,library map,43682000000.0000,PREDICTED (predict.py v5)
+CSX,132,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Current Maturities of Long-term Debt (Note 10),708000000.0000,printed face components (duration sum; total_debt founder sum),708000000.0000,PREDICTED (predict.py v5)
+CSX,132,total_interest_income,OUT,,,,,,,,0000277948-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CSX,132,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000277948-26-000006,R5,Total Liabilities,30522000000.0000,library map,30522000000.0000,PREDICTED (predict.py v5)
+CSX,132,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Basic (in shares),1870000000.0000,library map,1870000000.0000,PREDICTED (predict.py v5)
+CSX,132,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0000277948-26-000006,R3,Assuming Dilution (in shares),1873000000.0000,library map,1873000000.0000,PREDICTED (predict.py v5)

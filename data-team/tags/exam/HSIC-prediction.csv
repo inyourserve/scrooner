@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-HSIC,720,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Accounts payable,1154000000.0000,library map
-HSIC,720,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Accounts receivable, net of allowance for credit losses of $90 and $78",1651000000.0000,library map
-HSIC,720,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001000228-26-000013,,,180000000.0000,note fact present in the filing (FSN value)
-HSIC,720,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Basic (in dollars per share),3.2900,library map
-HSIC,720,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Purchases of property and equipment,139000000.0000,library map
-HSIC,720,cash_and_equivalents,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
-HSIC,720,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash provided by (used in) financing activities,-188000000.0000,library map
-HSIC,720,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash used in investing activities,-400000000.0000,library map
-HSIC,720,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,128000000.0000,note fact present in the filing (FSN value)
-HSIC,720,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,151000000.0000,note fact present in the filing (FSN value)
-HSIC,720,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts payable and accrued expenses,216000000.0000,combined line (library or label demote)
-HSIC,720,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts receivable,124000000.0000,library map
-HSIC,720,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Inventories,95000000.0000,library map
-HSIC,720,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Net cash provided by operating activities,712000000.0000,library map
-HSIC,720,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001000228-26-000013,R5,"Comprehensive income attributable to Henry Schein, Inc.",551000000.0000,library map
-HSIC,720,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Cost of sales,9079000000.0000,library map
-HSIC,720,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total current assets,4464000000.0000,library map
-HSIC,720,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total current liabilities,3228000000.0000,library map
-HSIC,720,deposits,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Depreciation and amortization,311000000.0000,library map
-HSIC,720,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Diluted (in dollars per share),3.2700,library map
-HSIC,720,dividends_paid,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
-HSIC,720,dividends_per_share,not_presented,,,,,,,,0001000228-26-000013,,,,no face line and no note fact
-HSIC,720,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Goodwill,4213000000.0000,library map
-HSIC,720,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Gross profit,4105000000.0000,library map
-HSIC,720,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Income before taxes, equity in earnings of affiliates and noncontrolling interests",533000000.0000,library map
-HSIC,720,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Income taxes,126000000.0000,library map
-HSIC,720,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Interest expense,150000000.0000,library map
-HSIC,720,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Interest income,33000000.0000,library map
-HSIC,720,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Inventories, net",2002000000.0000,library map
-HSIC,720,loans_net,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Net income attributable to Henry Schein, Inc.",398000000.0000,library map
-HSIC,720,net_interest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,noninterest_expense,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,noninterest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,every face line between GP/COR and OI; ties to GP - OI
-HSIC,720,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Operating income,653000000.0000,library map
-HSIC,720,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001000228-26-000013,R4,"Other, net",-3000000.0000,library map
-HSIC,720,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001000228-26-000013,R2,"Property and equipment, net",621000000.0000,library map
-HSIC,720,provision_for_credit_losses,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,research_and_development,not_presented,,,,,,,,0001000228-26-000013,,,,no face line
-HSIC,720,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Net sales,13184000000.0000,library map
-HSIC,720,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Stock-based compensation expense,39000000.0000,library map
-HSIC,720,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,library map
-HSIC,720,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Payments for repurchases and retirement of common stock,850000000.0000,library map
-HSIC,720,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001000228-26-000013,R3,"Common stock, shares outstanding (in shares)",115771149.0000,library map
-HSIC,720,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Total Henry Schein, Inc. stockholders' equity",3245000000.0000,library map
-HSIC,720,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total assets,11215000000.0000,library map
-HSIC,720,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Bank credit lines,764000000.0000,printed face components (duration sum; total_debt founder sum)
-HSIC,720,total_interest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank
-HSIC,720,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total liabilities,6421000000.0000,library map
-HSIC,720,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001000228-26-000013,R4,Basic (in shares),120813977.0000,library map
-HSIC,720,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001000228-26-000013,R4,Diluted (in shares),121717876.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+HSIC,720,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Accounts payable,1154000000.0000,library map,1154000000.0000,PREDICTED (predict.py v5)
+HSIC,720,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Accounts receivable, net of allowance for credit losses of $90 and $78",1651000000.0000,library map,1651000000.0000,PREDICTED (predict.py v5)
+HSIC,720,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001000228-26-000013,,,180000000.0000,note fact present in the filing (FSN value),180000000.0000,PREDICTED (predict.py v5)
+HSIC,720,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Basic (in dollars per share),3.2900,library map,3.2900,PREDICTED (predict.py v5)
+HSIC,720,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Purchases of property and equipment,139000000.0000,library map,139000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cash_and_equivalents,not_presented,,,,,,,,0001000228-26-000013,,,,no face line,,PREDICTED (predict.py v5)
+HSIC,720,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash provided by (used in) financing activities,-188000000.0000,library map,-188000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001000228-26-000013,R8,Net cash used in investing activities,-400000000.0000,library map,-400000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,128000000.0000,note fact present in the filing (FSN value),128000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001000228-26-000013,,,151000000.0000,note fact present in the filing (FSN value),151000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts payable and accrued expenses,216000000.0000,combined line (library or label demote),216000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Accounts receivable,124000000.0000,library map,124000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Inventories,95000000.0000,library map,95000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Net cash provided by operating activities,712000000.0000,library map,712000000.0000,PREDICTED (predict.py v5)
+HSIC,720,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001000228-26-000013,R5,"Comprehensive income attributable to Henry Schein, Inc.",551000000.0000,library map,551000000.0000,PREDICTED (predict.py v5)
+HSIC,720,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Cost of sales,9079000000.0000,library map,9079000000.0000,PREDICTED (predict.py v5)
+HSIC,720,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total current assets,4464000000.0000,library map,4464000000.0000,PREDICTED (predict.py v5)
+HSIC,720,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total current liabilities,3228000000.0000,library map,3228000000.0000,PREDICTED (predict.py v5)
+HSIC,720,deposits,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Depreciation and amortization,311000000.0000,library map,311000000.0000,PREDICTED (predict.py v5)
+HSIC,720,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001000228-26-000013,R4,Diluted (in dollars per share),3.2700,library map,3.2700,PREDICTED (predict.py v5)
+HSIC,720,dividends_paid,not_presented,,,,,,,,0001000228-26-000013,,,,no face line,,PREDICTED (predict.py v5)
+HSIC,720,dividends_per_share,not_presented,,,,,,,,0001000228-26-000013,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+HSIC,720,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Goodwill,4213000000.0000,library map,4213000000.0000,PREDICTED (predict.py v5)
+HSIC,720,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Gross profit,4105000000.0000,library map,4105000000.0000,PREDICTED (predict.py v5)
+HSIC,720,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Income before taxes, equity in earnings of affiliates and noncontrolling interests",533000000.0000,library map,533000000.0000,PREDICTED (predict.py v5)
+HSIC,720,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Income taxes,126000000.0000,library map,126000000.0000,PREDICTED (predict.py v5)
+HSIC,720,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Interest expense,150000000.0000,library map,150000000.0000,PREDICTED (predict.py v5)
+HSIC,720,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Interest income,33000000.0000,library map,33000000.0000,PREDICTED (predict.py v5)
+HSIC,720,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Inventories, net",2002000000.0000,library map,2002000000.0000,PREDICTED (predict.py v5)
+HSIC,720,loans_net,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Net income attributable to Henry Schein, Inc.",398000000.0000,library map,398000000.0000,PREDICTED (predict.py v5)
+HSIC,720,net_interest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,noninterest_expense,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,noninterest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,every face line between GP/COR and OI; ties to GP - OI,3084000000.0000,PREDICTED (predict.py v5)
+HSIC,720,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Operating income,653000000.0000,library map,653000000.0000,PREDICTED (predict.py v5)
+HSIC,720,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001000228-26-000013,R4,"Other, net",-3000000.0000,library map,-3000000.0000,PREDICTED (predict.py v5)
+HSIC,720,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001000228-26-000013,R2,"Property and equipment, net",621000000.0000,library map,621000000.0000,PREDICTED (predict.py v5)
+HSIC,720,provision_for_credit_losses,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,research_and_development,not_presented,,,,,,,,0001000228-26-000013,,,,no face line,,PREDICTED (predict.py v5)
+HSIC,720,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,Net sales,13184000000.0000,library map,13184000000.0000,PREDICTED (predict.py v5)
+HSIC,720,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Stock-based compensation expense,39000000.0000,library map,39000000.0000,PREDICTED (predict.py v5)
+HSIC,720,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001000228-26-000013,R4,"Selling, general and administrative",3084000000.0000,library map,3084000000.0000,PREDICTED (predict.py v5)
+HSIC,720,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001000228-26-000013,R8,Payments for repurchases and retirement of common stock,850000000.0000,library map,850000000.0000,PREDICTED (predict.py v5)
+HSIC,720,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001000228-26-000013,R3,"Common stock, shares outstanding (in shares)",115771149.0000,library map,115771149.0000,PREDICTED (predict.py v5)
+HSIC,720,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,"Total Henry Schein, Inc. stockholders' equity",3245000000.0000,library map,3245000000.0000,PREDICTED (predict.py v5)
+HSIC,720,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total assets,11215000000.0000,library map,11215000000.0000,PREDICTED (predict.py v5)
+HSIC,720,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Bank credit lines,764000000.0000,printed face components (duration sum; total_debt founder sum),764000000.0000,PREDICTED (predict.py v5)
+HSIC,720,total_interest_income,OUT,,,,,,,,0001000228-26-000013,,,,not a bank,,PREDICTED (predict.py v5)
+HSIC,720,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001000228-26-000013,R2,Total liabilities,6421000000.0000,library map,6421000000.0000,PREDICTED (predict.py v5)
+HSIC,720,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001000228-26-000013,R4,Basic (in shares),120813977.0000,library map,120813977.0000,PREDICTED (predict.py v5)
+HSIC,720,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001000228-26-000013,R4,Diluted (in shares),121717876.0000,library map,121717876.0000,PREDICTED (predict.py v5)

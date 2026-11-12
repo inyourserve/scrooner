@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-SNOW,111,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Accounts payable,145559000.0000,library map
-SNOW,111,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Accounts receivable, net",1303740000.0000,library map
-SNOW,111,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001640147-26-000008,,,110100000.0000,note fact present in the filing (FSN value)
-SNOW,111,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001640147-26-000008,R5,Net loss per share attributable to Snowflake Inc. common stockholdersbasic (in dollars per share),-3.9500,library map
-SNOW,111,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Purchases of property and equipment,101628000.0000,library map
-SNOW,111,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Cash and cash equivalents,2828163000.0000,library map
-SNOW,111,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001640147-26-000008,R9,Net cash used in financing activities,-1385390000.0000,library map
-SNOW,111,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Net cash provided by investing activities,312241000.0000,library map
-SNOW,111,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001640147-26-000008,,,13319000.0000,note fact present in the filing (FSN value)
-SNOW,111,cash_paid_for_interest,not_presented,,,,,,,,0001640147-26-000008,,,,no face line and no note fact
-SNOW,111,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001640147-26-000008,R9,Accounts payable,-8299000.0000,library map
-SNOW,111,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Accounts receivable,379969000.0000,library map
-SNOW,111,cf_inventory_change,not_presented,,,,,,,,0001640147-26-000008,,,,no face line
-SNOW,111,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Net cash provided by operating activities,1221942000.0000,library map
-SNOW,111,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001640147-26-000008,R6,Comprehensive loss attributable to Snowflake Inc.,-1326043000.0000,library map
-SNOW,111,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Cost of revenue,1537805000.0000,library map
-SNOW,111,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total current assets,5742612000.0000,library map
-SNOW,111,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total current liabilities,4421691000.0000,library map
-SNOW,111,deposits,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Depreciation and amortization,220443000.0000,library map
-SNOW,111,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001640147-26-000008,R5,Net loss per share attributable to Snowflake Inc. common stockholdersdiluted (in dollars per share),-3.9500,library map
-SNOW,111,dividends_paid,not_presented,,,,,,,,0001640147-26-000008,,,,no face line
-SNOW,111,dividends_per_share,not_presented,,,,,,,,0001640147-26-000008,,,,no face line and no note fact
-SNOW,111,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Goodwill,1194367000.0000,library map
-SNOW,111,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Gross profit,3146141000.0000,library map
-SNOW,111,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Loss before income taxes,-1311910000.0000,library map
-SNOW,111,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Provision for (benefit from) income taxes,17125000.0000,library map
-SNOW,111,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Interest expense,8298000.0000,library map
-SNOW,111,interest_income,combined,us-gaap:InvestmentIncomeNonoperating,IS,+,-3,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0001640147-26-000008,R5,Interest income,190556000.0000,interest income only inside a net/other face line between OI and pretax
-SNOW,111,inventory,not_presented,,,,,,,,0001640147-26-000008,,,,no face line
-SNOW,111,loans_net,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Net loss attributable to Snowflake Inc.,-1331616000.0000,library map
-SNOW,111,net_interest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,noninterest_expense,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,noninterest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Total operating expenses,4581306000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
-SNOW,111,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Operating loss,-1435165000.0000,library map
-SNOW,111,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,"Other income (expense), net",-59003000.0000,library map
-SNOW,111,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Property and equipment, net",248611000.0000,library map
-SNOW,111,provision_for_credit_losses,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Research and development,1969472000.0000,library map
-SNOW,111,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Revenue,4683946000.0000,library map
-SNOW,111,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,"Stock-based compensation, net of amounts capitalized",1599547000.0000,library map
-SNOW,111,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Sales and marketing,2062137000.0000,printed face components (duration sum; total_debt founder sum)
-SNOW,111,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Repurchases of common stock,873537000.0000,library map
-SNOW,111,shares_outstanding,not_presented,,,,,,,,0001640147-26-000008,,,,no face line
-SNOW,111,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total Snowflake Inc. stockholders equity,1924102000.0000,library map
-SNOW,111,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total assets,9132495000.0000,library map
-SNOW,111,total_debt,combined,us-gaap:ConvertibleDebtNoncurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Convertible senior notes, net",2279827000.0000,combined line (library or label demote)
-SNOW,111,total_interest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank
-SNOW,111,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total liabilities,7208393000.0000,library map
-SNOW,111,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Weighted-average shares used in computing net loss per share attributable to Snowflake Inc. common stockholdersbasic (in shares),337493000.0000,library map
-SNOW,111,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Weighted-average shares used in computing net loss per share attributable to Snowflake Inc. common stockholdersdiluted (in shares),337493000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+SNOW,111,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Accounts payable,145559000.0000,library map,145559000.0000,PREDICTED (predict.py v5)
+SNOW,111,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Accounts receivable, net",1303740000.0000,library map,1303740000.0000,PREDICTED (predict.py v5)
+SNOW,111,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001640147-26-000008,,,110100000.0000,note fact present in the filing (FSN value),110100000.0000,PREDICTED (predict.py v5)
+SNOW,111,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001640147-26-000008,R5,Net loss per share attributable to Snowflake Inc. common stockholdersbasic (in dollars per share),-3.9500,library map,-3.9500,PREDICTED (predict.py v5)
+SNOW,111,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Purchases of property and equipment,101628000.0000,library map,101628000.0000,PREDICTED (predict.py v5)
+SNOW,111,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Cash and cash equivalents,2828163000.0000,library map,2828163000.0000,PREDICTED (predict.py v5)
+SNOW,111,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001640147-26-000008,R9,Net cash used in financing activities,-1385390000.0000,library map,-1385390000.0000,PREDICTED (predict.py v5)
+SNOW,111,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Net cash provided by investing activities,312241000.0000,library map,312241000.0000,PREDICTED (predict.py v5)
+SNOW,111,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001640147-26-000008,,,13319000.0000,note fact present in the filing (FSN value),13319000.0000,PREDICTED (predict.py v5)
+SNOW,111,cash_paid_for_interest,not_presented,,,,,,,,0001640147-26-000008,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SNOW,111,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001640147-26-000008,R9,Accounts payable,-8299000.0000,library map,-8299000.0000,PREDICTED (predict.py v5)
+SNOW,111,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Accounts receivable,379969000.0000,library map,379969000.0000,PREDICTED (predict.py v5)
+SNOW,111,cf_inventory_change,not_presented,,,,,,,,0001640147-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+SNOW,111,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Net cash provided by operating activities,1221942000.0000,library map,1221942000.0000,PREDICTED (predict.py v5)
+SNOW,111,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001640147-26-000008,R6,Comprehensive loss attributable to Snowflake Inc.,-1326043000.0000,library map,-1326043000.0000,PREDICTED (predict.py v5)
+SNOW,111,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Cost of revenue,1537805000.0000,library map,1537805000.0000,PREDICTED (predict.py v5)
+SNOW,111,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total current assets,5742612000.0000,library map,5742612000.0000,PREDICTED (predict.py v5)
+SNOW,111,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total current liabilities,4421691000.0000,library map,4421691000.0000,PREDICTED (predict.py v5)
+SNOW,111,deposits,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Depreciation and amortization,220443000.0000,library map,220443000.0000,PREDICTED (predict.py v5)
+SNOW,111,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001640147-26-000008,R5,Net loss per share attributable to Snowflake Inc. common stockholdersdiluted (in dollars per share),-3.9500,library map,-3.9500,PREDICTED (predict.py v5)
+SNOW,111,dividends_paid,not_presented,,,,,,,,0001640147-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+SNOW,111,dividends_per_share,not_presented,,,,,,,,0001640147-26-000008,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SNOW,111,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Goodwill,1194367000.0000,library map,1194367000.0000,PREDICTED (predict.py v5)
+SNOW,111,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Gross profit,3146141000.0000,library map,3146141000.0000,PREDICTED (predict.py v5)
+SNOW,111,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Loss before income taxes,-1311910000.0000,library map,-1311910000.0000,PREDICTED (predict.py v5)
+SNOW,111,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Provision for (benefit from) income taxes,17125000.0000,library map,17125000.0000,PREDICTED (predict.py v5)
+SNOW,111,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Interest expense,8298000.0000,library map,8298000.0000,PREDICTED (predict.py v5)
+SNOW,111,interest_income,combined,us-gaap:InvestmentIncomeNonoperating,IS,+,-3,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0001640147-26-000008,R5,Interest income,190556000.0000,interest income only inside a net/other face line between OI and pretax,190556000.0000,PREDICTED (predict.py v5)
+SNOW,111,inventory,not_presented,,,,,,,,0001640147-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+SNOW,111,loans_net,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Net loss attributable to Snowflake Inc.,-1331616000.0000,library map,-1331616000.0000,PREDICTED (predict.py v5)
+SNOW,111,net_interest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,noninterest_expense,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,noninterest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Total operating expenses,4581306000.0000,printed opex total excluding cost of revenue (ties to GP - OI),4581306000.0000,PREDICTED (predict.py v5)
+SNOW,111,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,Operating loss,-1435165000.0000,library map,-1435165000.0000,PREDICTED (predict.py v5)
+SNOW,111,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001640147-26-000008,R5,"Other income (expense), net",-59003000.0000,library map,-59003000.0000,PREDICTED (predict.py v5)
+SNOW,111,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Property and equipment, net",248611000.0000,library map,248611000.0000,PREDICTED (predict.py v5)
+SNOW,111,provision_for_credit_losses,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Research and development,1969472000.0000,library map,1969472000.0000,PREDICTED (predict.py v5)
+SNOW,111,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Revenue,4683946000.0000,library map,4683946000.0000,PREDICTED (predict.py v5)
+SNOW,111,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,"Stock-based compensation, net of amounts capitalized",1599547000.0000,library map,1599547000.0000,PREDICTED (predict.py v5)
+SNOW,111,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Sales and marketing,2062137000.0000,printed face components (duration sum; total_debt founder sum),2062137000.0000,PREDICTED (predict.py v5)
+SNOW,111,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001640147-26-000008,R9,Repurchases of common stock,873537000.0000,library map,873537000.0000,PREDICTED (predict.py v5)
+SNOW,111,shares_outstanding,not_presented,,,,,,,,0001640147-26-000008,,,,no face line,,PREDICTED (predict.py v5)
+SNOW,111,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total Snowflake Inc. stockholders equity,1924102000.0000,library map,1924102000.0000,PREDICTED (predict.py v5)
+SNOW,111,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total assets,9132495000.0000,library map,9132495000.0000,PREDICTED (predict.py v5)
+SNOW,111,total_debt,combined,us-gaap:ConvertibleDebtNoncurrent,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,"Convertible senior notes, net",2279827000.0000,combined line (library or label demote),2279827000.0000,PREDICTED (predict.py v5)
+SNOW,111,total_interest_income,OUT,,,,,,,,0001640147-26-000008,,,,not a bank,,PREDICTED (predict.py v5)
+SNOW,111,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001640147-26-000008,R3,Total liabilities,7208393000.0000,library map,7208393000.0000,PREDICTED (predict.py v5)
+SNOW,111,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Weighted-average shares used in computing net loss per share attributable to Snowflake Inc. common stockholdersbasic (in shares),337493000.0000,library map,337493000.0000,PREDICTED (predict.py v5)
+SNOW,111,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001640147-26-000008,R5,Weighted-average shares used in computing net loss per share attributable to Snowflake Inc. common stockholdersdiluted (in shares),337493000.0000,library map,337493000.0000,PREDICTED (predict.py v5)

@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-OSCR,674,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Accounts payable and other liabilities,649720000.0000,combined line (library or label demote)
-OSCR,674,accounts_receivable,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,amortization_of_intangibles,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
-OSCR,674,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Basic (in dollars per share),-1.6900,library map
-OSCR,674,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,"Purchase of property, equipment and capitalized software",36372000.0000,library map
-OSCR,674,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Cash and cash equivalents,2774151000.0000,library map
-OSCR,674,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Net cash provided by financing activities,399211000.0000,library map
-OSCR,674,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001568651-26-000011,R8,Net cash (used in) provided by investing activities,-241060000.0000,library map
-OSCR,674,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Income tax payments,17516000.0000,library map
-OSCR,674,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Interest payments,12783000.0000,library map
-OSCR,674,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Accounts payable and other liabilities,205488000.0000,combined line (library or label demote)
-OSCR,674,cf_ar_change,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,cf_inventory_change,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Net cash (used in) provided by operating activities,1094854000.0000,library map
-OSCR,674,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001568651-26-000011,R4,"Comprehensive income (loss) attributable to Oscar Health, Inc.",-423294000.0000,library map
-OSCR,674,cost_of_revenue,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total current assets,4613404000.0000,library map
-OSCR,674,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total current liabilities,4862587000.0000,library map
-OSCR,674,deposits,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Depreciation and amortization expense,28892000.0000,library map
-OSCR,674,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Diluted (in dollars per share),-1.6900,library map
-OSCR,674,dividends_paid,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,dividends_per_share,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
-OSCR,674,goodwill,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,gross_profit,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Earnings (loss) before income taxes,-437297000.0000,library map
-OSCR,674,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Income tax expense,5606000.0000,library map
-OSCR,674,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001568651-26-000011,R3,Interest expense,17601000.0000,library map
-OSCR,674,interest_income,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact
-OSCR,674,inventory,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,loans_net,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,"Net income (loss) attributable to Oscar Health, Inc.",-443151000.0000,library map
-OSCR,674,net_interest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,noninterest_expense,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,noninterest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Total operating expenses,12097784000.0000,sector template total
-OSCR,674,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Earnings (loss) from operations,-396357000.0000,library map
-OSCR,674,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Other expenses,-23339000.0000,combined line (library or label demote)
-OSCR,674,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,"Property, equipment, and capitalized software, net",88350000.0000,library map
-OSCR,674,provision_for_credit_losses,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,research_and_development,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Total revenue,11701427000.0000,library map
-OSCR,674,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Stock-based compensation expense,87654000.0000,library map
-OSCR,674,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,"Selling, general, and administrative",2049867000.0000,library map
-OSCR,674,share_buybacks,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,shares_outstanding,not_presented,,,,,,,,0001568651-26-000011,,,,no face line
-OSCR,674,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,"Total Oscar Health, Inc. stockholders equity",977648000.0000,library map
-OSCR,674,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total assets,6325411000.0000,library map
-OSCR,674,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Long-term debt,430095000.0000,printed face components (duration sum; total_debt founder sum)
-OSCR,674,total_interest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank
-OSCR,674,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total liabilities,5344676000.0000,library map
-OSCR,674,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001568651-26-000011,R3,Basic (in shares),262388000.0000,library map
-OSCR,674,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001568651-26-000011,R3,Diluted (in shares),262388000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+OSCR,674,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Accounts payable and other liabilities,649720000.0000,combined line (library or label demote),649720000.0000,PREDICTED (predict.py v5)
+OSCR,674,accounts_receivable,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,amortization_of_intangibles,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+OSCR,674,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Basic (in dollars per share),-1.6900,library map,-1.6900,PREDICTED (predict.py v5)
+OSCR,674,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,"Purchase of property, equipment and capitalized software",36372000.0000,library map,36372000.0000,PREDICTED (predict.py v5)
+OSCR,674,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Cash and cash equivalents,2774151000.0000,library map,2774151000.0000,PREDICTED (predict.py v5)
+OSCR,674,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Net cash provided by financing activities,399211000.0000,library map,399211000.0000,PREDICTED (predict.py v5)
+OSCR,674,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001568651-26-000011,R8,Net cash (used in) provided by investing activities,-241060000.0000,library map,-241060000.0000,PREDICTED (predict.py v5)
+OSCR,674,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Income tax payments,17516000.0000,library map,17516000.0000,PREDICTED (predict.py v5)
+OSCR,674,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Interest payments,12783000.0000,library map,12783000.0000,PREDICTED (predict.py v5)
+OSCR,674,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Accounts payable and other liabilities,205488000.0000,combined line (library or label demote),205488000.0000,PREDICTED (predict.py v5)
+OSCR,674,cf_ar_change,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,cf_inventory_change,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Net cash (used in) provided by operating activities,1094854000.0000,library map,1094854000.0000,PREDICTED (predict.py v5)
+OSCR,674,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001568651-26-000011,R4,"Comprehensive income (loss) attributable to Oscar Health, Inc.",-423294000.0000,library map,-423294000.0000,PREDICTED (predict.py v5)
+OSCR,674,cost_of_revenue,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total current assets,4613404000.0000,library map,4613404000.0000,PREDICTED (predict.py v5)
+OSCR,674,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total current liabilities,4862587000.0000,library map,4862587000.0000,PREDICTED (predict.py v5)
+OSCR,674,deposits,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Depreciation and amortization expense,28892000.0000,library map,28892000.0000,PREDICTED (predict.py v5)
+OSCR,674,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001568651-26-000011,R3,Diluted (in dollars per share),-1.6900,library map,-1.6900,PREDICTED (predict.py v5)
+OSCR,674,dividends_paid,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,dividends_per_share,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+OSCR,674,goodwill,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,gross_profit,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Earnings (loss) before income taxes,-437297000.0000,library map,-437297000.0000,PREDICTED (predict.py v5)
+OSCR,674,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Income tax expense,5606000.0000,library map,5606000.0000,PREDICTED (predict.py v5)
+OSCR,674,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001568651-26-000011,R3,Interest expense,17601000.0000,library map,17601000.0000,PREDICTED (predict.py v5)
+OSCR,674,interest_income,not_presented,,,,,,,,0001568651-26-000011,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+OSCR,674,inventory,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,loans_net,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,"Net income (loss) attributable to Oscar Health, Inc.",-443151000.0000,library map,-443151000.0000,PREDICTED (predict.py v5)
+OSCR,674,net_interest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,noninterest_expense,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,noninterest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Total operating expenses,12097784000.0000,sector template total,12097784000.0000,PREDICTED (predict.py v5)
+OSCR,674,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Earnings (loss) from operations,-396357000.0000,library map,-396357000.0000,PREDICTED (predict.py v5)
+OSCR,674,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001568651-26-000011,R3,Other expenses,-23339000.0000,combined line (library or label demote),-23339000.0000,PREDICTED (predict.py v5)
+OSCR,674,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,"Property, equipment, and capitalized software, net",88350000.0000,library map,88350000.0000,PREDICTED (predict.py v5)
+OSCR,674,provision_for_credit_losses,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,research_and_development,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,Total revenue,11701427000.0000,library map,11701427000.0000,PREDICTED (predict.py v5)
+OSCR,674,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001568651-26-000011,R8,Stock-based compensation expense,87654000.0000,library map,87654000.0000,PREDICTED (predict.py v5)
+OSCR,674,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001568651-26-000011,R3,"Selling, general, and administrative",2049867000.0000,library map,2049867000.0000,PREDICTED (predict.py v5)
+OSCR,674,share_buybacks,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,shares_outstanding,not_presented,,,,,,,,0001568651-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+OSCR,674,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,"Total Oscar Health, Inc. stockholders equity",977648000.0000,library map,977648000.0000,PREDICTED (predict.py v5)
+OSCR,674,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total assets,6325411000.0000,library map,6325411000.0000,PREDICTED (predict.py v5)
+OSCR,674,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Long-term debt,430095000.0000,printed face components (duration sum; total_debt founder sum),430095000.0000,PREDICTED (predict.py v5)
+OSCR,674,total_interest_income,OUT,,,,,,,,0001568651-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+OSCR,674,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001568651-26-000011,R5,Total liabilities,5344676000.0000,library map,5344676000.0000,PREDICTED (predict.py v5)
+OSCR,674,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001568651-26-000011,R3,Basic (in shares),262388000.0000,library map,262388000.0000,PREDICTED (predict.py v5)
+OSCR,674,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001568651-26-000011,R3,Diluted (in shares),262388000.0000,library map,262388000.0000,PREDICTED (predict.py v5)

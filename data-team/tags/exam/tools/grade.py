@@ -51,6 +51,14 @@ def main(pdir, ddir, *only):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_unverified', error_class='key row marked not hand-verified by the reader', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             ks, ps = norm_status(k['status']), norm_status(p['status'])
             err = ''
+            import re as _re
+            rk = None
+            if dp == 'interest_expense' and norm_status(k['status']) == 'mapped' and _re.search(r'(?i),\s*net\b|income|net interest|deductions', k.get('label') or ''):
+                rk = 'net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12)'
+            if dp == 'depreciation_and_amortization' and norm_status(k['status']) == 'mapped' and _re.search(r'(?i)accretion|impair|nuclear', k.get('label') or ''):
+                rk = 'D&A line incl. accretion/impairment keyed as D&A (capex-and-da card; Dhairya DUK ruling 2026-11-12)'
+            if rk and norm_status(p['status']) != 'mapped':
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + adj[(tk, dp)], key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'operating_expenses' and norm_status(k['status']) == 'mapped' and keyed.get(tk, {}).get('cor'):

@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-SUN,986,accounts_payable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,accounts_receivable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001552275-26-000021,,,45000000.0000,note fact present in the filing (FSN value)
-SUN,986,basic_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Capital expenditures,577000000.0000,combined line (library or label demote)
-SUN,986,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Cash and cash equivalents,891000000.0000,library map
-SUN,986,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) financing activities,2412000000.0000,library map
-SUN,986,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) investing activities,-2807000000.0000,library map
-SUN,986,cash_paid_for_income_taxes,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
-SUN,986,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001552275-26-000021,,,434000000.0000,note fact present in the filing (FSN value)
-SUN,986,cf_ap_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,cf_ar_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,cf_inventory_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by operating activities,1192000000.0000,library map
-SUN,986,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001552275-26-000021,R6,"Comprehensive Income (Loss), Net of Tax, Attributable to Parent",500000000.0000,library map
-SUN,986,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Cost of sales (excluding items shown separately below),22409000000.0000,library map
-SUN,986,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total current assets,5516000000.0000,library map
-SUN,986,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total current liabilities,3997000000.0000,library map
-SUN,986,deposits,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,"Depreciation, amortization and accretion",688000000.0000,combined line (library or label demote)
-SUN,986,diluted_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,dividends_paid,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,dividends_per_share,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
-SUN,986,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Goodwill,3026000000.0000,library map
-SUN,986,gross_profit,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,income_before_tax,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Income tax expense,62000000.0000,library map
-SUN,986,interest_expense,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,"Interest expense, net",541000000.0000,combined line (library or label demote)
-SUN,986,interest_income,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
-SUN,986,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Inventories, net",2383000000.0000,library map
-SUN,986,loans_net,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,NET INCOME ATTRIBUTABLE TO COMMON UNITS,527000000.0000,library map
-SUN,986,net_interest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,noninterest_expense,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,noninterest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating;us-gaap:OperatingLeaseExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:DepreciationAmortizationAndAccretionNet,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,General and administrative,296000000.0000,every face line between GP/COR and OI; ties to GP - OI
-SUN,986,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,OPERATING INCOME,935000000.0000,library map
-SUN,986,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Other Nonoperating Income (Expense),83000000.0000,library map
-SUN,986,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Property, plant and equipment, net",13408000000.0000,library map
-SUN,986,provision_for_credit_losses,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,research_and_development,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Revenues,25201000000.0000,library map
-SUN,986,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Non-cash unit-based compensation expense,19000000.0000,library map
-SUN,986,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,General and administrative,296000000.0000,lone G&A line
-SUN,986,share_buybacks,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,shares_outstanding,not_presented,,,,,,,,0001552275-26-000021,,,,no face line
-SUN,986,stockholders_equity,combined,us-gaap:PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Equity, Including Portion Attributable to Noncontrolling Interest",8009000000.0000,combined line (library or label demote)
-SUN,986,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total assets,28362000000.0000,library map
-SUN,986,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Current maturities of long-term debt,17000000.0000,printed face components (duration sum; total_debt founder sum)
-SUN,986,total_interest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank
-SUN,986,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total liabilities,20353000000.0000,library map
-SUN,986,weighted_basic_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
-SUN,986,weighted_diluted_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+SUN,986,accounts_payable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,accounts_receivable,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001552275-26-000021,,,45000000.0000,note fact present in the filing (FSN value),45000000.0000,PREDICTED (predict.py v5)
+SUN,986,basic_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Capital expenditures,577000000.0000,combined line (library or label demote),577000000.0000,PREDICTED (predict.py v5)
+SUN,986,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Cash and cash equivalents,891000000.0000,library map,891000000.0000,PREDICTED (predict.py v5)
+SUN,986,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) financing activities,2412000000.0000,library map,2412000000.0000,PREDICTED (predict.py v5)
+SUN,986,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by (used in) investing activities,-2807000000.0000,library map,-2807000000.0000,PREDICTED (predict.py v5)
+SUN,986,cash_paid_for_income_taxes,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SUN,986,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001552275-26-000021,,,434000000.0000,note fact present in the filing (FSN value),434000000.0000,PREDICTED (predict.py v5)
+SUN,986,cf_ap_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,cf_ar_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,cf_inventory_change,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Net cash provided by operating activities,1192000000.0000,library map,1192000000.0000,PREDICTED (predict.py v5)
+SUN,986,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001552275-26-000021,R6,"Comprehensive Income (Loss), Net of Tax, Attributable to Parent",500000000.0000,library map,500000000.0000,PREDICTED (predict.py v5)
+SUN,986,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Cost of sales (excluding items shown separately below),22409000000.0000,library map,22409000000.0000,PREDICTED (predict.py v5)
+SUN,986,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total current assets,5516000000.0000,library map,5516000000.0000,PREDICTED (predict.py v5)
+SUN,986,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total current liabilities,3997000000.0000,library map,3997000000.0000,PREDICTED (predict.py v5)
+SUN,986,deposits,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,"Depreciation, amortization and accretion",688000000.0000,combined line (library or label demote),688000000.0000,PREDICTED (predict.py v5)
+SUN,986,diluted_eps,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,dividends_paid,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,dividends_per_share,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SUN,986,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Goodwill,3026000000.0000,library map,3026000000.0000,PREDICTED (predict.py v5)
+SUN,986,gross_profit,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,income_before_tax,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Income tax expense,62000000.0000,library map,62000000.0000,PREDICTED (predict.py v5)
+SUN,986,interest_expense,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,"Interest expense, net",541000000.0000,net or partial interest line,541000000.0000,PREDICTED (predict.py v5)
+SUN,986,interest_income,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SUN,986,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Inventories, net",2383000000.0000,library map,2383000000.0000,PREDICTED (predict.py v5)
+SUN,986,loans_net,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,NET INCOME ATTRIBUTABLE TO COMMON UNITS,527000000.0000,library map,527000000.0000,PREDICTED (predict.py v5)
+SUN,986,net_interest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,noninterest_expense,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,noninterest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating;us-gaap:OperatingLeaseExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:DepreciationAmortizationAndAccretionNet,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,General and administrative,296000000.0000,every face line between GP/COR and OI; ties to GP - OI,296000000.0000,PREDICTED (predict.py v5)
+SUN,986,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,OPERATING INCOME,935000000.0000,library map,935000000.0000,PREDICTED (predict.py v5)
+SUN,986,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Other Nonoperating Income (Expense),83000000.0000,library map,83000000.0000,PREDICTED (predict.py v5)
+SUN,986,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Property, plant and equipment, net",13408000000.0000,library map,13408000000.0000,PREDICTED (predict.py v5)
+SUN,986,provision_for_credit_losses,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,research_and_development,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,Revenues,25201000000.0000,library map,25201000000.0000,PREDICTED (predict.py v5)
+SUN,986,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001552275-26-000021,R8,Non-cash unit-based compensation expense,19000000.0000,library map,19000000.0000,PREDICTED (predict.py v5)
+SUN,986,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001552275-26-000021,R5,General and administrative,296000000.0000,lone G&A line,296000000.0000,PREDICTED (predict.py v5)
+SUN,986,share_buybacks,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,shares_outstanding,not_presented,,,,,,,,0001552275-26-000021,,,,no face line,,PREDICTED (predict.py v5)
+SUN,986,stockholders_equity,combined,us-gaap:PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,"Equity, Including Portion Attributable to Noncontrolling Interest",8009000000.0000,combined line (library or label demote),8009000000.0000,PREDICTED (predict.py v5)
+SUN,986,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total assets,28362000000.0000,library map,28362000000.0000,PREDICTED (predict.py v5)
+SUN,986,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Current maturities of long-term debt,17000000.0000,printed face components (duration sum; total_debt founder sum),17000000.0000,PREDICTED (predict.py v5)
+SUN,986,total_interest_income,OUT,,,,,,,,0001552275-26-000021,,,,not a bank,,PREDICTED (predict.py v5)
+SUN,986,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001552275-26-000021,R3,Total liabilities,20353000000.0000,library map,20353000000.0000,PREDICTED (predict.py v5)
+SUN,986,weighted_basic_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SUN,986,weighted_diluted_shares,not_presented,,,,,,,,0001552275-26-000021,,,,no face line and no note fact,,PREDICTED (predict.py v5)

@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-FWONA,984,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Accounts payable and accrued liabilities,575000000.0000,combined line (library or label demote)
-FWONA,984,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,"Trade and other receivables, net",115000000.0000,combined line (library or label demote)
-FWONA,984,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-020653,,,322000000.0000,note fact present in the filing (FSN value)
-FWONA,984,basic_eps,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,"Capital expended for property and equipment, including internal-use software and website development",119000000.0000,library map
-FWONA,984,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Cash and cash equivalents,1055000000.0000,library map
-FWONA,984,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,+,-6,Y,NetCashProvidedByUsedInFinancingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by financing activities,694000000.0000,library map
-FWONA,984,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,Y,NetCashProvidedByUsedInInvestingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by investing activities,-3202000000.0000,library map
-FWONA,984,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-020653,,,123000000.0000,note fact present in the filing (FSN value)
-FWONA,984,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001104659-26-020653,,,232000000.0000,note fact present in the filing (FSN value)
-FWONA,984,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Payables and other liabilities,63000000.0000,combined line (library or label demote)
-FWONA,984,cf_ar_change,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,cf_inventory_change,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-6,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by operating activities,908000000.0000,library map
-FWONA,984,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001104659-26-020653,R5,Comprehensive earnings (loss) attributable to Liberty stockholders,659000000.0000,library map
-FWONA,984,cost_of_revenue,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total current assets,1373000000.0000,library map
-FWONA,984,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total current liabilities,939000000.0000,library map
-FWONA,984,deposits,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Depreciation and amortization,393000000.0000,library map
-FWONA,984,diluted_eps,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,dividends_paid,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,dividends_per_share,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact
-FWONA,984,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Goodwill,7025000000.0000,library map
-FWONA,984,gross_profit,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Earnings (loss) from continuing operations before income taxes,733000000.0000,library map
-FWONA,984,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Income tax (expense) benefit,137000000.0000,library map
-FWONA,984,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001104659-26-020653,R4,Interest expense,249000000.0000,library map
-FWONA,984,interest_income,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact
-FWONA,984,inventory,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,loans_net,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Net earnings (loss) attributable to Liberty stockholders,555000000.0000,library map
-FWONA,984,net_interest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,noninterest_expense,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,noninterest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Total operating costs and expenses,3905000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)
-FWONA,984,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Operating income (loss),577000000.0000,library map
-FWONA,984,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,"Other, net",117000000.0000,library map
-FWONA,984,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,"Property and equipment, net",868000000.0000,library map
-FWONA,984,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,research_and_development,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Total revenue,4482000000.0000,library map
-FWONA,984,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Stock-based compensation,21000000.0000,library map
-FWONA,984,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,"Selling, general and administrative, including stock-based compensation",514000000.0000,library map
-FWONA,984,share_buybacks,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,shares_outstanding,not_presented,,,,,,,,0001104659-26-020653,,,,no face line
-FWONA,984,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total stockholders' equity,7757000000.0000,library map
-FWONA,984,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total assets,15398000000.0000,library map
-FWONA,984,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Current portion of debt,52000000.0000,printed face components (duration sum; total_debt founder sum)
-FWONA,984,total_interest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank
-FWONA,984,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total liabilities,6948000000.0000,library map
-FWONA,984,weighted_basic_shares,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact
-FWONA,984,weighted_diluted_shares,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+FWONA,984,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Accounts payable and accrued liabilities,575000000.0000,combined line (library or label demote),575000000.0000,PREDICTED (predict.py v5)
+FWONA,984,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,"Trade and other receivables, net",115000000.0000,wider receivables tag beside other receivables lines or a wider label,115000000.0000,PREDICTED (predict.py v5)
+FWONA,984,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001104659-26-020653,,,322000000.0000,note fact present in the filing (FSN value),322000000.0000,PREDICTED (predict.py v5)
+FWONA,984,basic_eps,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,"Capital expended for property and equipment, including internal-use software and website development",119000000.0000,library map,119000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Cash and cash equivalents,1055000000.0000,library map,1055000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,+,-6,Y,NetCashProvidedByUsedInFinancingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by financing activities,694000000.0000,library map,694000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,Y,NetCashProvidedByUsedInInvestingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by investing activities,-3202000000.0000,library map,-3202000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001104659-26-020653,,,123000000.0000,note fact present in the filing (FSN value),123000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001104659-26-020653,,,232000000.0000,note fact present in the filing (FSN value),232000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Payables and other liabilities,63000000.0000,combined line (library or label demote),63000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cf_ar_change,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,cf_inventory_change,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-6,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0001104659-26-020653,R6,Net cash provided (used) by operating activities,908000000.0000,library map,908000000.0000,PREDICTED (predict.py v5)
+FWONA,984,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001104659-26-020653,R5,Comprehensive earnings (loss) attributable to Liberty stockholders,659000000.0000,library map,659000000.0000,PREDICTED (predict.py v5)
+FWONA,984,cost_of_revenue,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total current assets,1373000000.0000,library map,1373000000.0000,PREDICTED (predict.py v5)
+FWONA,984,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total current liabilities,939000000.0000,library map,939000000.0000,PREDICTED (predict.py v5)
+FWONA,984,deposits,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Depreciation and amortization,393000000.0000,library map,393000000.0000,PREDICTED (predict.py v5)
+FWONA,984,diluted_eps,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,dividends_paid,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,dividends_per_share,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+FWONA,984,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Goodwill,7025000000.0000,library map,7025000000.0000,PREDICTED (predict.py v5)
+FWONA,984,gross_profit,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Earnings (loss) from continuing operations before income taxes,733000000.0000,library map,733000000.0000,PREDICTED (predict.py v5)
+FWONA,984,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Income tax (expense) benefit,137000000.0000,library map,137000000.0000,PREDICTED (predict.py v5)
+FWONA,984,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001104659-26-020653,R4,Interest expense,249000000.0000,library map,249000000.0000,PREDICTED (predict.py v5)
+FWONA,984,interest_income,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+FWONA,984,inventory,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,loans_net,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Net earnings (loss) attributable to Liberty stockholders,555000000.0000,library map,555000000.0000,PREDICTED (predict.py v5)
+FWONA,984,net_interest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,noninterest_expense,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,noninterest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Total operating costs and expenses,3905000000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue),3905000000.0000,PREDICTED (predict.py v5)
+FWONA,984,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Operating income (loss),577000000.0000,library map,577000000.0000,PREDICTED (predict.py v5)
+FWONA,984,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,"Other, net",117000000.0000,library map,117000000.0000,PREDICTED (predict.py v5)
+FWONA,984,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,"Property and equipment, net",868000000.0000,library map,868000000.0000,PREDICTED (predict.py v5)
+FWONA,984,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,research_and_development,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,Total revenue,4482000000.0000,library map,4482000000.0000,PREDICTED (predict.py v5)
+FWONA,984,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001104659-26-020653,R6,Stock-based compensation,21000000.0000,library map,21000000.0000,PREDICTED (predict.py v5)
+FWONA,984,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001104659-26-020653,R4,"Selling, general and administrative, including stock-based compensation",514000000.0000,library map,514000000.0000,PREDICTED (predict.py v5)
+FWONA,984,share_buybacks,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,shares_outstanding,not_presented,,,,,,,,0001104659-26-020653,,,,no face line,,PREDICTED (predict.py v5)
+FWONA,984,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total stockholders' equity,7757000000.0000,library map,7757000000.0000,PREDICTED (predict.py v5)
+FWONA,984,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total assets,15398000000.0000,library map,15398000000.0000,PREDICTED (predict.py v5)
+FWONA,984,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Current portion of debt,52000000.0000,printed face components (duration sum; total_debt founder sum),52000000.0000,PREDICTED (predict.py v5)
+FWONA,984,total_interest_income,OUT,,,,,,,,0001104659-26-020653,,,,not a bank,,PREDICTED (predict.py v5)
+FWONA,984,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001104659-26-020653,R2,Total liabilities,6948000000.0000,library map,6948000000.0000,PREDICTED (predict.py v5)
+FWONA,984,weighted_basic_shares,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+FWONA,984,weighted_diluted_shares,not_presented,,,,,,,,0001104659-26-020653,,,,no face line and no note fact,,PREDICTED (predict.py v5)

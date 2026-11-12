@@ -6,7 +6,7 @@ AAL,operating_expenses,wrong,status,combined,mapped,us-gaap:CostsAndExpenses,us-
 AAL,sga_expense,wrong,status,component sum,not_presented,us-gaap:SellingAndMarketingExpense,
 AAL,research_and_development,correct,,not_presented,not_presented,,
 AAL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-AAL,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+AAL,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
 AAL,interest_income,correct,,mapped,mapped,us-gaap:InvestmentIncomeInterest,us-gaap:InvestmentIncomeInterest
 AAL,other_income_expense_net,correct,,mapped,mapped,us-gaap:OtherNonoperatingIncomeExpense,us-gaap:OtherNonoperatingIncomeExpense
 AAL,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
@@ -128,7 +128,7 @@ AMRX,operating_expenses,key_unverified,key row marked not hand-verified by the r
 AMRX,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 AMRX,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 AMRX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-AMRX,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+AMRX,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 AMRX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 AMRX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 AMRX,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -258,7 +258,7 @@ AVAV,operating_expenses,key_unverified,key row marked not hand-verified by the r
 AVAV,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 AVAV,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 AVAV,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-AVAV,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+AVAV,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 AVAV,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
 AVAV,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 AVAV,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
@@ -296,7 +296,7 @@ CVI,operating_expenses,key_unverified,key row marked not hand-verified by the re
 CVI,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 CVI,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 CVI,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-CVI,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+CVI,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 CVI,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 CVI,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 CVI,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -395,7 +395,7 @@ CWEN,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActiviti
 CWEN,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
 CWEN,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 CWEN,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-CWEN,depreciation_and_amortization,wrong,status,mapped,combined,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
+CWEN,depreciation_and_amortization,key_error,key: D&A line incl. accretion/impairment keyed as D&A (capex-and-da card; Dhairya DUK ruling 2026-11-12),mapped,combined,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
 CWEN,sbc,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 CWEN,dividends_paid,key_unverified,key row marked not hand-verified by the reader,not_presented,mapped,,us-gaap:PaymentsOfOrdinaryDividends
 CWEN,share_buybacks,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
@@ -631,7 +631,7 @@ FNB,cfo,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitie
 FNB,cash_flow_investing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,us-gaap:NetCashProvidedByUsedInInvestingActivities
 FNB,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,us-gaap:NetCashProvidedByUsedInFinancingActivities
 FNB,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
-FNB,depreciation_and_amortization,wrong,status,mapped,combined,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
+FNB,depreciation_and_amortization,key_error,key: D&A line incl. accretion/impairment keyed as D&A (capex-and-da card; Dhairya DUK ruling 2026-11-12),mapped,combined,us-gaap:DepreciationAmortizationAndAccretionNet,us-gaap:DepreciationAmortizationAndAccretionNet
 FNB,sbc,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 FNB,dividends_paid,correct,,mapped,mapped,us-gaap:PaymentsOfDividendsCommonStock,us-gaap:PaymentsOfDividendsCommonStock
 FNB,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
@@ -692,7 +692,7 @@ G,operating_expenses,key_unverified,key row marked not hand-verified by the read
 G,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 G,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 G,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-G,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+G,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 G,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 G,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 G,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -920,7 +920,7 @@ LB,operating_expenses,key_unverified,key row marked not hand-verified by the rea
 LB,sga_expense,wrong,status,mapped,not_presented,lb:GeneralAndAdministrativeExpensesIncome,
 LB,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 LB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-LB,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestIncomeExpenseNet,
+LB,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,not_presented,us-gaap:InterestIncomeExpenseNet,
 LB,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 LB,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 LB,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -958,7 +958,7 @@ LEA,operating_expenses,key_unverified,key row marked not hand-verified by the re
 LEA,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 LEA,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 LEA,operating_income,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
-LEA,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+LEA,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
 LEA,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
 LEA,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 LEA,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1034,7 +1034,7 @@ M,operating_expenses,key_unverified,key row marked not hand-verified by the read
 M,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 M,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 M,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-M,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+M,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 M,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 M,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 M,net_income,wrong,status,mapped,not_presented,us-gaap:ProfitLoss,
@@ -1072,7 +1072,7 @@ MGY,operating_expenses,wrong,status,mapped,not_presented,us-gaap:OperatingCostsA
 MGY,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 MGY,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 MGY,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-MGY,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+MGY,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 MGY,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 MGY,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 MGY,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1156,7 +1156,7 @@ MOS,operating_expenses,correct,,component sum,component_sum,us-gaap:SellingGener
 MOS,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 MOS,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 MOS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-MOS,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestIncomeExpenseNet,
+MOS,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,not_presented,us-gaap:InterestIncomeExpenseNet,
 MOS,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
 MOS,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 MOS,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1194,7 +1194,7 @@ MUR,operating_expenses,correct,,combined,combined,us-gaap:CostsAndExpenses,us-ga
 MUR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 MUR,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 MUR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-MUR,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+MUR,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
 MUR,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 MUR,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 MUR,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1354,7 +1354,7 @@ OTEX,operating_expenses,correct,,mapped,mapped,us-gaap:OperatingExpenses,us-gaap
 OTEX,sga_expense,wrong,status,mapped,component_sum,us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 OTEX,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost
 OTEX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-OTEX,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+OTEX,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 OTEX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 OTEX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 OTEX,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1468,7 +1468,7 @@ POWL,operating_expenses,key_unverified,key row marked not hand-verified by the r
 POWL,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 POWL,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 POWL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-POWL,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+POWL,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 POWL,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 POWL,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 POWL,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1628,7 +1628,7 @@ SFM,operating_expenses,key_unverified,key row marked not hand-verified by the re
 SFM,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 SFM,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 SFM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-SFM,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+SFM,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 SFM,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 SFM,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 SFM,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1704,7 +1704,7 @@ SWX,operating_expenses,key_error,key: opex total includes cost of revenue (Dhair
 SWX,sga_expense,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 SWX,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 SWX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-SWX,interest_expense,wrong,status,mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
+SWX,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,us-gaap:InterestIncomeExpenseNonoperatingNet
 SWX,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 SWX,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 SWX,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1780,7 +1780,7 @@ VAL,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpen
 VAL,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 VAL,research_and_development,key_unverified,key row marked not hand-verified by the reader,not_presented,not_presented,,
 VAL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-VAL,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseOther,us-gaap:InterestExpenseOther
+VAL,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseOther,us-gaap:InterestExpenseOther
 VAL,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
 VAL,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 VAL,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -1940,7 +1940,7 @@ ZWS,operating_expenses,wrong,status,not_presented,component_sum,,us-gaap:Selling
 ZWS,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 ZWS,research_and_development,correct,,not_presented,not_presented,,
 ZWS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-ZWS,interest_expense,wrong,status,mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
+ZWS,interest_expense,key_error,key: net interest line keyed as gross interest expense (interest card; Dhairya SPGI caption ruling 2026-11-12),mapped,combined,us-gaap:InterestExpenseNonoperating,us-gaap:InterestExpenseNonoperating
 ZWS,interest_income,correct,,not_presented,not_presented,,
 ZWS,other_income_expense_net,correct,,mapped,mapped,us-gaap:OtherNonoperatingIncomeExpense,us-gaap:OtherNonoperatingIncomeExpense
 ZWS,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest

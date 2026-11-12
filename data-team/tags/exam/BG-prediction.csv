@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-BG,447,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Trade accounts payable (includes $559 and $388 carried at fair value),4881000000.0000,library map
-BG,447,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Trade accounts receivable (less allowances of $156 and $89) (Note 4),3870000000.0000,library map
-BG,447,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-009842,,,47000000.0000,note fact present in the filing (FSN value)
-BG,447,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholdersbasic (in dollars per share),4.9500,library map
-BG,447,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Payments made for capital expenditures,1723000000.0000,library map
-BG,447,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Cash and cash equivalents,1135000000.0000,library map
-BG,447,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Cash provided by (used for) used for financing activities,2229000000.0000,library map
-BG,447,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-009842,R8,Cash used for investing activities,-5227000000.0000,library map
-BG,447,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-009842,,,186000000.0000,note fact present in the filing (FSN value)
-BG,447,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-009842,,,562000000.0000,note fact present in the filing (FSN value)
-BG,447,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Trade accounts payable and accrued liabilities,153000000.0000,combined line (library or label demote)
-BG,447,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Trade accounts receivable,469000000.0000,library map
-BG,447,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Inventories,700000000.0000,library map
-BG,447,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Cash provided by operating activities,844000000.0000,library map
-BG,447,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-009842,R4,Total comprehensive income attributable to Bunge,1383000000.0000,library map
-BG,447,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Cost of goods sold,66920000000.0000,library map
-BG,447,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total current assets,24391000000.0000,library map
-BG,447,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total current liabilities,15127000000.0000,library map
-BG,447,deposits,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,"Depreciation, depletion and amortization",703000000.0000,library map
-BG,447,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholders diluted (in dollars per share),4.9100,library map
-BG,447,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,"Dividends paid to registered, common or preference shareholders",459000000.0000,library map
-BG,447,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001628280-26-009842,R10,Dividends on shares (in dollars per share),2.8000,library map
-BG,447,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Goodwill,3141000000.0000,library map
-BG,447,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Gross profit,3409000000.0000,library map
-BG,447,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Income from continuing operations before income tax,1134000000.0000,library map
-BG,447,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Income tax expense,288000000.0000,library map
-BG,447,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Interest expense,628000000.0000,library map
-BG,447,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Interest income,202000000.0000,interest income only inside a net/other face line between OI and pretax
-BG,447,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Inventories (Note 5),13198000000.0000,library map
-BG,447,loans_net,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholders (Note 23),816000000.0000,library map
-BG,447,net_interest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,noninterest_expense,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,noninterest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,operating_expenses,not_presented,,,,,,,,0001628280-26-009842,,,,no opex total and no GP/COR anchor
-BG,447,operating_income,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
-BG,447,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Other income  net,289000000.0000,library map
-BG,447,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,"Property, plant and equipment, net (Note 7)",11678000000.0000,library map
-BG,447,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,research_and_development,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
-BG,447,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Net sales,70329000000.0000,library map
-BG,447,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001628280-26-009842,,,73000000.0000,note fact present in the filing (FSN value)
-BG,447,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,"Selling, general and administrative expenses",2113000000.0000,library map
-BG,447,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Repurchases of registered or common shares,551000000.0000,library map
-BG,447,shares_outstanding,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
-BG,447,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total Bunge shareholders' equity,15904000000.0000,library map
-BG,447,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total assets,44528000000.0000,library map
-BG,447,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Short-term debt (Note 17),3883000000.0000,printed face components (duration sum; total_debt founder sum)
-BG,447,total_interest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank
-BG,447,total_liabilities,not_presented,,,,,,,,0001628280-26-009842,,,,no face line
-BG,447,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-009842,,,165042767.0000,note fact present in the filing (FSN value)
-BG,447,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-009842,,,166466940.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+BG,447,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Trade accounts payable (includes $559 and $388 carried at fair value),4881000000.0000,library map,4881000000.0000,PREDICTED (predict.py v5)
+BG,447,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Trade accounts receivable (less allowances of $156 and $89) (Note 4),3870000000.0000,library map,3870000000.0000,PREDICTED (predict.py v5)
+BG,447,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001628280-26-009842,,,47000000.0000,note fact present in the filing (FSN value),47000000.0000,PREDICTED (predict.py v5)
+BG,447,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholdersbasic (in dollars per share),4.9500,library map,4.9500,PREDICTED (predict.py v5)
+BG,447,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Payments made for capital expenditures,1723000000.0000,library map,1723000000.0000,PREDICTED (predict.py v5)
+BG,447,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Cash and cash equivalents,1135000000.0000,library map,1135000000.0000,PREDICTED (predict.py v5)
+BG,447,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Cash provided by (used for) used for financing activities,2229000000.0000,library map,2229000000.0000,PREDICTED (predict.py v5)
+BG,447,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-009842,R8,Cash used for investing activities,-5227000000.0000,library map,-5227000000.0000,PREDICTED (predict.py v5)
+BG,447,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-009842,,,186000000.0000,note fact present in the filing (FSN value),186000000.0000,PREDICTED (predict.py v5)
+BG,447,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-009842,,,562000000.0000,note fact present in the filing (FSN value),562000000.0000,PREDICTED (predict.py v5)
+BG,447,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Trade accounts payable and accrued liabilities,153000000.0000,combined line (library or label demote),153000000.0000,PREDICTED (predict.py v5)
+BG,447,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Trade accounts receivable,469000000.0000,library map,469000000.0000,PREDICTED (predict.py v5)
+BG,447,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Inventories,700000000.0000,library map,700000000.0000,PREDICTED (predict.py v5)
+BG,447,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Cash provided by operating activities,844000000.0000,library map,844000000.0000,PREDICTED (predict.py v5)
+BG,447,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-009842,R4,Total comprehensive income attributable to Bunge,1383000000.0000,library map,1383000000.0000,PREDICTED (predict.py v5)
+BG,447,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Cost of goods sold,66920000000.0000,library map,66920000000.0000,PREDICTED (predict.py v5)
+BG,447,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total current assets,24391000000.0000,library map,24391000000.0000,PREDICTED (predict.py v5)
+BG,447,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total current liabilities,15127000000.0000,library map,15127000000.0000,PREDICTED (predict.py v5)
+BG,447,deposits,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,"Depreciation, depletion and amortization",703000000.0000,library map,703000000.0000,PREDICTED (predict.py v5)
+BG,447,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholders diluted (in dollars per share),4.9100,library map,4.9100,PREDICTED (predict.py v5)
+BG,447,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,"Dividends paid to registered, common or preference shareholders",459000000.0000,library map,459000000.0000,PREDICTED (predict.py v5)
+BG,447,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001628280-26-009842,R10,Dividends on shares (in dollars per share),2.8000,library map,2.8000,PREDICTED (predict.py v5)
+BG,447,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Goodwill,3141000000.0000,library map,3141000000.0000,PREDICTED (predict.py v5)
+BG,447,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Gross profit,3409000000.0000,library map,3409000000.0000,PREDICTED (predict.py v5)
+BG,447,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Income from continuing operations before income tax,1134000000.0000,library map,1134000000.0000,PREDICTED (predict.py v5)
+BG,447,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Income tax expense,288000000.0000,library map,288000000.0000,PREDICTED (predict.py v5)
+BG,447,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Interest expense,628000000.0000,library map,628000000.0000,PREDICTED (predict.py v5)
+BG,447,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Interest income,202000000.0000,interest income only inside a net/other face line between OI and pretax,202000000.0000,PREDICTED (predict.py v5)
+BG,447,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Inventories (Note 5),13198000000.0000,library map,13198000000.0000,PREDICTED (predict.py v5)
+BG,447,loans_net,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Net income attributable to Bunge shareholders (Note 23),816000000.0000,library map,816000000.0000,PREDICTED (predict.py v5)
+BG,447,net_interest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,noninterest_expense,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,noninterest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,operating_expenses,not_presented,,,,,,,,0001628280-26-009842,,,,no opex total and no GP/COR anchor,,PREDICTED (predict.py v5)
+BG,447,operating_income,not_presented,,,,,,,,0001628280-26-009842,,,,no face line,,PREDICTED (predict.py v5)
+BG,447,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Other income  net,289000000.0000,library map,289000000.0000,PREDICTED (predict.py v5)
+BG,447,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,"Property, plant and equipment, net (Note 7)",11678000000.0000,library map,11678000000.0000,PREDICTED (predict.py v5)
+BG,447,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,research_and_development,not_presented,,,,,,,,0001628280-26-009842,,,,no face line,,PREDICTED (predict.py v5)
+BG,447,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,Net sales,70329000000.0000,library map,70329000000.0000,PREDICTED (predict.py v5)
+BG,447,sbc,mapped,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001628280-26-009842,,,73000000.0000,note fact present in the filing (FSN value),73000000.0000,PREDICTED (predict.py v5)
+BG,447,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-009842,R3,"Selling, general and administrative expenses",2113000000.0000,library map,2113000000.0000,PREDICTED (predict.py v5)
+BG,447,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-009842,R8,Repurchases of registered or common shares,551000000.0000,library map,551000000.0000,PREDICTED (predict.py v5)
+BG,447,shares_outstanding,not_presented,,,,,,,,0001628280-26-009842,,,,no face line,,PREDICTED (predict.py v5)
+BG,447,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total Bunge shareholders' equity,15904000000.0000,library map,15904000000.0000,PREDICTED (predict.py v5)
+BG,447,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Total assets,44528000000.0000,library map,44528000000.0000,PREDICTED (predict.py v5)
+BG,447,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-009842,R6,Short-term debt (Note 17),3883000000.0000,printed face components (duration sum; total_debt founder sum),3883000000.0000,PREDICTED (predict.py v5)
+BG,447,total_interest_income,OUT,,,,,,,,0001628280-26-009842,,,,not a bank,,PREDICTED (predict.py v5)
+BG,447,total_liabilities,not_presented,,,,,,,,0001628280-26-009842,,,,no face line,,PREDICTED (predict.py v5)
+BG,447,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-009842,,,165042767.0000,note fact present in the filing (FSN value),165042767.0000,PREDICTED (predict.py v5)
+BG,447,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-009842,,,166466940.0000,note fact present in the filing (FSN value),166466940.0000,PREDICTED (predict.py v5)

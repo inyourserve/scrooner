@@ -5,6 +5,7 @@ Output: one prediction per data point, in the docmap's vocabulary.
 Usage: predict.py LINES.jsonl TICKER RANK LIBRARY_DIR > TICKER-prediction.csv
 """
 import csv, json, re, sys
+VERSION = "v5"
 DPS = ['accounts_payable','accounts_receivable','amortization_of_intangibles','basic_eps','capex','cash_and_equivalents','cash_flow_financing',
  'cash_flow_investing','cash_paid_for_income_taxes','cash_paid_for_interest','cf_ap_change','cf_ar_change','cf_inventory_change','cfo',
  'comprehensive_income','cost_of_revenue','current_assets','current_liabilities','deposits','depreciation_and_amortization','diluted_eps',
@@ -31,7 +32,7 @@ NOTE_RULES = {  # (tag, status) in priority order; cards: interest.md, net-incom
  'amortization_of_intangibles': [('AmortizationOfIntangibleAssets', 'mapped'), ('AdjustmentForAmortization', 'mapped')],
  'cash_paid_for_income_taxes': [('IncomeTaxesPaidNet', 'mapped'), ('IncomeTaxesPaid', 'mapped')],
  'cash_paid_for_interest': [('InterestPaidNet', 'mapped'), ('InterestPaid', 'mapped')],
- 'sbc': [('ShareBasedCompensation', 'mapped'), ('AllocatedShareBasedCompensationExpense', 'component_in_note')],
+ 'sbc': [('ShareBasedCompensation', 'mapped'), ('AllocatedShareBasedCompensationExpense', 'mapped')],
  'dividends_per_share': [('CommonStockDividendsPerShareDeclared', 'mapped'), ('CommonStockDividendsPerShareCashPaid', 'mapped')],
  'weighted_basic_shares': [('WeightedAverageNumberOfSharesOutstandingBasic', 'mapped'), ('WeightedAverageNumberOfShareOutstandingBasicAndDiluted', 'mapped')],
  'weighted_diluted_shares': [('WeightedAverageNumberOfDilutedSharesOutstanding', 'mapped'), ('WeightedAverageNumberOfShareOutstandingBasicAndDiluted', 'mapped')],
@@ -193,6 +194,21 @@ def main(lines_path, ticker, rank, libdir, notes_path=None):
                     status, chosen, rule = 'mapped', [t0], 'one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue)'
             else:
                 status, rule = 'not_presented', 'no opex total and no GP/COR anchor'
+        elif dp == 'accounts_receivable' and not maps and combs:
+            bsr = [l for l in L if l['st'] == 'BS' and not l['pth'] and l['val'] is not None and re.search(r'(?i)receivable', l['lab'] or '') and not re.search(r'(?i)allowance|noncurrent|non-current|long-term', l['lab'] or '')]
+            if len(bsr) == 1 and not re.search(r'(?i)\band\b|other|notes|contract', bsr[0]['lab'] or ''):
+                status, chosen, rule = 'mapped', bsr, 'single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)'
+            else:
+                status, chosen, rule = 'combined', [pick(combs)], 'wider receivables tag beside other receivables lines or a wider label'
+        elif dp == 'interest_expense' and not maps:
+            nt = [l for l in L if l['st'] == 'IS' and not l['pth'] and l['val'] is not None and l['tag'] in ('InterestIncomeExpenseNet', 'InterestIncomeExpenseNonoperatingNet') and re.fullmatch(r'(?i)\s*interest expense\s*', l['lab'] or '')]
+            if nt:
+                status, chosen, rule = 'mapped', nt[:1], 'plain "Interest expense" caption on a net tag (interest card VRTX/AAON rule)'
+            elif comps or combs:
+                cs = [l for d, l in cand['interest_expense'] if d in ('component', 'combined')]
+                status, chosen, rule = 'combined', [pick(cs)], 'net or partial interest line'
+        elif maps and dp == 'capex' and comps and any(l['st'] == 'CF' for l in comps):
+            status, chosen, rule = 'component_sum', [pick(maps)] + [l for l in comps if l['st'] == 'CF'], 'capex = sum of printed CF capex lines (founder 2026-11-04 item 3)'
         elif maps:
             status, chosen, rule = 'mapped', [pick(maps)], 'library map'
         elif comps and (dp in DURATION_SUM) and len({l['st'] for l in comps}) >= 1:
@@ -245,6 +261,9 @@ def main(lines_path, ticker, rank, libdir, notes_path=None):
         else:
             out.append(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
+    for o in out:
+        o['fy0_api'] = o.get('fy0_value', '')
+        o['evidence_class'] = 'PREDICTED (predict.py %s)' % VERSION
     w = csv.DictWriter(sys.stdout, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
 if __name__ == '__main__':
     main(*sys.argv[1:6])

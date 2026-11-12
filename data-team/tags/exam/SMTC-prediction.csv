@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-SMTC,602,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Accounts payable,84134000.0000,library map
-SMTC,602,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,"Accounts receivable, less allowances of $7,976 and $5,248, respectively",160552000.0000,library map
-SMTC,602,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Intangible amortization,631000.0000,library map
-SMTC,602,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000088941-26-000005,R3,Basic (in dollars per share),-0.4600,library map
-SMTC,602,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,"Purchase of property, plant and equipment",9783000.0000,library map
-SMTC,602,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Cash and cash equivalents,195179000.0000,library map
-SMTC,602,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000088941-26-000005,R8,Net cash (used in) provided by financing activities,-101068000.0000,library map
-SMTC,602,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000088941-26-000005,R8,Net cash used in investing activities,-38761000.0000,library map
-SMTC,602,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Income taxes paid,4076000.0000,library map
-SMTC,602,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Interest paid,16306000.0000,library map
-SMTC,602,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Accounts payable,22530000.0000,library map
-SMTC,602,cf_ar_change,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Inventories,30652000.0000,library map
-SMTC,602,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Net cash provided by (used in) operating activities,181168000.0000,library map
-SMTC,602,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0000088941-26-000005,R4,Comprehensive loss attributable to common stockholders,-35973000.0000,library map
-SMTC,602,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Total cost of sales,507831000.0000,library map
-SMTC,602,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total current assets,655120000.0000,library map
-SMTC,602,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total current liabilities,275936000.0000,library map
-SMTC,602,deposits,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,depreciation_and_amortization,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000088941-26-000005,R3,Diluted (in dollars per share),-0.4600,library map
-SMTC,602,dividends_paid,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,dividends_per_share,not_presented,,,,,,,,0000088941-26-000005,,,,no face line and no note fact
-SMTC,602,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Goodwill,457925000.0000,library map
-SMTC,602,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Gross profit,542144000.0000,library map
-SMTC,602,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,Loss before taxes and equity method income (loss),-21180000.0000,library map
-SMTC,602,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Provision (benefit) for income taxes,19832000.0000,library map
-SMTC,602,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0000088941-26-000005,R3,Interest expense,40618000.0000,library map
-SMTC,602,interest_income,mapped,us-gaap:InterestIncomeOperating,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Interest income,2522000.0000,library map
-SMTC,602,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Inventories,195737000.0000,library map
-SMTC,602,loans_net,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,Net loss attributable to common stockholders,-40376000.0000,library map
-SMTC,602,net_interest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,noninterest_expense,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,noninterest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,"Total operating expenses, net",509579000.0000,printed opex total excluding cost of revenue (ties to GP - OI)
-SMTC,602,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Operating income (loss),32565000.0000,library map
-SMTC,602,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,"Non-operating (expense) income, net",-5262000.0000,library map
-SMTC,602,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,"Property, plant and equipment, net of accumulated depreciation of $340,331 and $313,978, respectively",109345000.0000,library map
-SMTC,602,provision_for_credit_losses,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Product development and engineering,196348000.0000,library map
-SMTC,602,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Total net sales,1049975000.0000,library map
-SMTC,602,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Share-based compensation,57723000.0000,library map
-SMTC,602,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,"Selling, general and administrative",221852000.0000,library map
-SMTC,602,share_buybacks,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000088941-26-000005,R6,"Common stock, shares outstanding",92668555.0000,library map
-SMTC,602,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total stockholders equity,549718000.0000,library map
-SMTC,602,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,TOTAL ASSETS,1410337000.0000,library map
-SMTC,602,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0000088941-26-000005,R5,Current portion of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
-SMTC,602,total_interest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank
-SMTC,602,total_liabilities,not_presented,,,,,,,,0000088941-26-000005,,,,no face line
-SMTC,602,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Basic (in shares),88374000.0000,library map
-SMTC,602,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Diluted (in shares),88374000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+SMTC,602,accounts_payable,mapped,us-gaap:AccountsPayableTradeCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Accounts payable,84134000.0000,library map,84134000.0000,PREDICTED (predict.py v5)
+SMTC,602,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,"Accounts receivable, less allowances of $7,976 and $5,248, respectively",160552000.0000,library map,160552000.0000,PREDICTED (predict.py v5)
+SMTC,602,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Intangible amortization,631000.0000,library map,631000.0000,PREDICTED (predict.py v5)
+SMTC,602,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000088941-26-000005,R3,Basic (in dollars per share),-0.4600,library map,-0.4600,PREDICTED (predict.py v5)
+SMTC,602,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,"Purchase of property, plant and equipment",9783000.0000,library map,9783000.0000,PREDICTED (predict.py v5)
+SMTC,602,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Cash and cash equivalents,195179000.0000,library map,195179000.0000,PREDICTED (predict.py v5)
+SMTC,602,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000088941-26-000005,R8,Net cash (used in) provided by financing activities,-101068000.0000,library map,-101068000.0000,PREDICTED (predict.py v5)
+SMTC,602,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000088941-26-000005,R8,Net cash used in investing activities,-38761000.0000,library map,-38761000.0000,PREDICTED (predict.py v5)
+SMTC,602,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Income taxes paid,4076000.0000,library map,4076000.0000,PREDICTED (predict.py v5)
+SMTC,602,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Interest paid,16306000.0000,library map,16306000.0000,PREDICTED (predict.py v5)
+SMTC,602,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Accounts payable,22530000.0000,library map,22530000.0000,PREDICTED (predict.py v5)
+SMTC,602,cf_ar_change,not_presented,,,,,,,,0000088941-26-000005,,,,no face line,,PREDICTED (predict.py v5)
+SMTC,602,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Inventories,30652000.0000,library map,30652000.0000,PREDICTED (predict.py v5)
+SMTC,602,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Net cash provided by (used in) operating activities,181168000.0000,library map,181168000.0000,PREDICTED (predict.py v5)
+SMTC,602,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0000088941-26-000005,R4,Comprehensive loss attributable to common stockholders,-35973000.0000,library map,-35973000.0000,PREDICTED (predict.py v5)
+SMTC,602,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Total cost of sales,507831000.0000,library map,507831000.0000,PREDICTED (predict.py v5)
+SMTC,602,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total current assets,655120000.0000,library map,655120000.0000,PREDICTED (predict.py v5)
+SMTC,602,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total current liabilities,275936000.0000,library map,275936000.0000,PREDICTED (predict.py v5)
+SMTC,602,deposits,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,depreciation_and_amortization,not_presented,,,,,,,,0000088941-26-000005,,,,no face line,,PREDICTED (predict.py v5)
+SMTC,602,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000088941-26-000005,R3,Diluted (in dollars per share),-0.4600,library map,-0.4600,PREDICTED (predict.py v5)
+SMTC,602,dividends_paid,not_presented,,,,,,,,0000088941-26-000005,,,,no face line,,PREDICTED (predict.py v5)
+SMTC,602,dividends_per_share,not_presented,,,,,,,,0000088941-26-000005,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+SMTC,602,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Goodwill,457925000.0000,library map,457925000.0000,PREDICTED (predict.py v5)
+SMTC,602,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Gross profit,542144000.0000,library map,542144000.0000,PREDICTED (predict.py v5)
+SMTC,602,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,Loss before taxes and equity method income (loss),-21180000.0000,library map,-21180000.0000,PREDICTED (predict.py v5)
+SMTC,602,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Provision (benefit) for income taxes,19832000.0000,library map,19832000.0000,PREDICTED (predict.py v5)
+SMTC,602,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,Y,InterestIncomeExpenseNet,sec_api,0000088941-26-000005,R3,Interest expense,40618000.0000,library map,40618000.0000,PREDICTED (predict.py v5)
+SMTC,602,interest_income,mapped,us-gaap:InterestIncomeOperating,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Interest income,2522000.0000,library map,2522000.0000,PREDICTED (predict.py v5)
+SMTC,602,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Inventories,195737000.0000,library map,195737000.0000,PREDICTED (predict.py v5)
+SMTC,602,loans_net,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,Net loss attributable to common stockholders,-40376000.0000,library map,-40376000.0000,PREDICTED (predict.py v5)
+SMTC,602,net_interest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,noninterest_expense,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,noninterest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,"Total operating expenses, net",509579000.0000,printed opex total excluding cost of revenue (ties to GP - OI),509579000.0000,PREDICTED (predict.py v5)
+SMTC,602,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Operating income (loss),32565000.0000,library map,32565000.0000,PREDICTED (predict.py v5)
+SMTC,602,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000088941-26-000005,R3,"Non-operating (expense) income, net",-5262000.0000,library map,-5262000.0000,PREDICTED (predict.py v5)
+SMTC,602,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,"Property, plant and equipment, net of accumulated depreciation of $340,331 and $313,978, respectively",109345000.0000,library map,109345000.0000,PREDICTED (predict.py v5)
+SMTC,602,provision_for_credit_losses,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Product development and engineering,196348000.0000,library map,196348000.0000,PREDICTED (predict.py v5)
+SMTC,602,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Total net sales,1049975000.0000,library map,1049975000.0000,PREDICTED (predict.py v5)
+SMTC,602,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000088941-26-000005,R8,Share-based compensation,57723000.0000,library map,57723000.0000,PREDICTED (predict.py v5)
+SMTC,602,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,"Selling, general and administrative",221852000.0000,library map,221852000.0000,PREDICTED (predict.py v5)
+SMTC,602,share_buybacks,not_presented,,,,,,,,0000088941-26-000005,,,,no face line,,PREDICTED (predict.py v5)
+SMTC,602,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000088941-26-000005,R6,"Common stock, shares outstanding",92668555.0000,library map,92668555.0000,PREDICTED (predict.py v5)
+SMTC,602,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,Total stockholders equity,549718000.0000,library map,549718000.0000,PREDICTED (predict.py v5)
+SMTC,602,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000088941-26-000005,R5,TOTAL ASSETS,1410337000.0000,library map,1410337000.0000,PREDICTED (predict.py v5)
+SMTC,602,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0000088941-26-000005,R5,Current portion of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum),0.0000,PREDICTED (predict.py v5)
+SMTC,602,total_interest_income,OUT,,,,,,,,0000088941-26-000005,,,,not a bank,,PREDICTED (predict.py v5)
+SMTC,602,total_liabilities,not_presented,,,,,,,,0000088941-26-000005,,,,no face line,,PREDICTED (predict.py v5)
+SMTC,602,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Basic (in shares),88374000.0000,library map,88374000.0000,PREDICTED (predict.py v5)
+SMTC,602,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000088941-26-000005,R3,Diluted (in shares),88374000.0000,library map,88374000.0000,PREDICTED (predict.py v5)

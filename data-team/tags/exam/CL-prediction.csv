@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CL,169,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Accounts payable,2089000000.0000,library map
-CL,169,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Receivables (net of allowances of $90 and $85, respectively)",1675000000.0000,library map
-CL,169,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021665-26-000006,,,78000000.0000,note fact present in the filing (FSN value)
-CL,169,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021665-26-000006,R3,"Earnings per common share, basic (in dollars per share)",2.6400,library map
-CL,169,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Capital expenditures,564000000.0000,library map
-CL,169,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Cash and cash equivalents,1288000000.0000,library map
-CL,169,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Net cash used in financing activities,-3256000000.0000,library map
-CL,169,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Net cash used in investing activities,-817000000.0000,library map
-CL,169,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Income taxes paid,913000000.0000,library map
-CL,169,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Interest paid,270000000.0000,library map
-CL,169,cf_ap_change,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
-CL,169,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Receivables,16000000.0000,library map
-CL,169,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Inventories,-109000000.0000,library map
-CL,169,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Net cash provided by operations,4198000000.0000,library map
-CL,169,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000021665-26-000006,R4,Total Comprehensive income attributable to Colgate-Palmolive Company,2474000000.0000,library map
-CL,169,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Cost of sales,8131000000.0000,library map
-CL,169,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total current assets,5709000000.0000,library map
-CL,169,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total current liabilities,6853000000.0000,library map
-CL,169,deposits,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Depreciation and amortization,630000000.0000,library map
-CL,169,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000021665-26-000006,R3,"Earnings per common share, diluted (in dollars per share)",2.6300,library map
-CL,169,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Dividends paid,1823000000.0000,library map
-CL,169,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000021665-26-000006,R8,Dividends declared per common share (in dollars per share),2.0800,library map
-CL,169,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Goodwill,3122000000.0000,library map
-CL,169,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Gross profit,12251000000.0000,library map
-CL,169,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Income before income taxes,3059000000.0000,library map
-CL,169,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Global effective tax rate,798000000.0000,library map
-CL,169,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Interest expense,267000000.0000,library map
-CL,169,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Interest income,75000000.0000,library map
-CL,169,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Inventories,2032000000.0000,library map
-CL,169,loans_net,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Net income attributable to Colgate-Palmolive Company,2132000000.0000,library map
-CL,169,net_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,noninterest_expense,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,noninterest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,"Selling, general and administrative expenses",7903000000.0000,every face line between GP/COR and OI; ties to GP - OI
-CL,169,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Operating profit,3306000000.0000,library map
-CL,169,other_income_expense_net,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
-CL,169,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Property, plant and equipment, net",4660000000.0000,library map
-CL,169,provision_for_credit_losses,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,research_and_development,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
-CL,169,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Net sales,20382000000.0000,library map
-CL,169,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Stock-based compensation expense,155000000.0000,library map
-CL,169,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,"Selling, general and administrative expenses",7903000000.0000,library map
-CL,169,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Purchases of treasury shares,1210000000.0000,library map
-CL,169,shares_outstanding,not_presented,,,,,,,,0000021665-26-000006,,,,no face line
-CL,169,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total Colgate-Palmolive Company shareholders equity,54000000.0000,library map
-CL,169,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total assets,16330000000.0000,library map
-CL,169,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Long-term debt,6871000000.0000,printed face components (duration sum; total_debt founder sum)
-CL,169,total_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank
-CL,169,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total liabilities,15965000000.0000,library map
-CL,169,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000021665-26-000006,,,808700000.0000,note fact present in the filing (FSN value)
-CL,169,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000021665-26-000006,,,811100000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+CL,169,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Accounts payable,2089000000.0000,library map,2089000000.0000,PREDICTED (predict.py v5)
+CL,169,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Receivables (net of allowances of $90 and $85, respectively)",1675000000.0000,library map,1675000000.0000,PREDICTED (predict.py v5)
+CL,169,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021665-26-000006,,,78000000.0000,note fact present in the filing (FSN value),78000000.0000,PREDICTED (predict.py v5)
+CL,169,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021665-26-000006,R3,"Earnings per common share, basic (in dollars per share)",2.6400,library map,2.6400,PREDICTED (predict.py v5)
+CL,169,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Capital expenditures,564000000.0000,library map,564000000.0000,PREDICTED (predict.py v5)
+CL,169,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Cash and cash equivalents,1288000000.0000,library map,1288000000.0000,PREDICTED (predict.py v5)
+CL,169,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Net cash used in financing activities,-3256000000.0000,library map,-3256000000.0000,PREDICTED (predict.py v5)
+CL,169,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Net cash used in investing activities,-817000000.0000,library map,-817000000.0000,PREDICTED (predict.py v5)
+CL,169,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Income taxes paid,913000000.0000,library map,913000000.0000,PREDICTED (predict.py v5)
+CL,169,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Interest paid,270000000.0000,library map,270000000.0000,PREDICTED (predict.py v5)
+CL,169,cf_ap_change,not_presented,,,,,,,,0000021665-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CL,169,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Receivables,16000000.0000,library map,16000000.0000,PREDICTED (predict.py v5)
+CL,169,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000021665-26-000006,R9,Inventories,-109000000.0000,library map,-109000000.0000,PREDICTED (predict.py v5)
+CL,169,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Net cash provided by operations,4198000000.0000,library map,4198000000.0000,PREDICTED (predict.py v5)
+CL,169,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000021665-26-000006,R4,Total Comprehensive income attributable to Colgate-Palmolive Company,2474000000.0000,library map,2474000000.0000,PREDICTED (predict.py v5)
+CL,169,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Cost of sales,8131000000.0000,library map,8131000000.0000,PREDICTED (predict.py v5)
+CL,169,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total current assets,5709000000.0000,library map,5709000000.0000,PREDICTED (predict.py v5)
+CL,169,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total current liabilities,6853000000.0000,library map,6853000000.0000,PREDICTED (predict.py v5)
+CL,169,deposits,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Depreciation and amortization,630000000.0000,library map,630000000.0000,PREDICTED (predict.py v5)
+CL,169,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000021665-26-000006,R3,"Earnings per common share, diluted (in dollars per share)",2.6300,library map,2.6300,PREDICTED (predict.py v5)
+CL,169,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Dividends paid,1823000000.0000,library map,1823000000.0000,PREDICTED (predict.py v5)
+CL,169,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000021665-26-000006,R8,Dividends declared per common share (in dollars per share),2.0800,library map,2.0800,PREDICTED (predict.py v5)
+CL,169,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Goodwill,3122000000.0000,library map,3122000000.0000,PREDICTED (predict.py v5)
+CL,169,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Gross profit,12251000000.0000,library map,12251000000.0000,PREDICTED (predict.py v5)
+CL,169,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Income before income taxes,3059000000.0000,library map,3059000000.0000,PREDICTED (predict.py v5)
+CL,169,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Global effective tax rate,798000000.0000,library map,798000000.0000,PREDICTED (predict.py v5)
+CL,169,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Interest expense,267000000.0000,library map,267000000.0000,PREDICTED (predict.py v5)
+CL,169,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Interest income,75000000.0000,library map,75000000.0000,PREDICTED (predict.py v5)
+CL,169,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Inventories,2032000000.0000,library map,2032000000.0000,PREDICTED (predict.py v5)
+CL,169,loans_net,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Net income attributable to Colgate-Palmolive Company,2132000000.0000,library map,2132000000.0000,PREDICTED (predict.py v5)
+CL,169,net_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,noninterest_expense,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,noninterest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet;us-gaap:GoodwillAndIntangibleAssetImpairment,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,"Selling, general and administrative expenses",7903000000.0000,every face line between GP/COR and OI; ties to GP - OI,7903000000.0000,PREDICTED (predict.py v5)
+CL,169,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Operating profit,3306000000.0000,library map,3306000000.0000,PREDICTED (predict.py v5)
+CL,169,other_income_expense_net,not_presented,,,,,,,,0000021665-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CL,169,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,"Property, plant and equipment, net",4660000000.0000,library map,4660000000.0000,PREDICTED (predict.py v5)
+CL,169,provision_for_credit_losses,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,research_and_development,not_presented,,,,,,,,0000021665-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CL,169,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,Net sales,20382000000.0000,library map,20382000000.0000,PREDICTED (predict.py v5)
+CL,169,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Stock-based compensation expense,155000000.0000,library map,155000000.0000,PREDICTED (predict.py v5)
+CL,169,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000021665-26-000006,R3,"Selling, general and administrative expenses",7903000000.0000,library map,7903000000.0000,PREDICTED (predict.py v5)
+CL,169,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000021665-26-000006,R9,Purchases of treasury shares,1210000000.0000,library map,1210000000.0000,PREDICTED (predict.py v5)
+CL,169,shares_outstanding,not_presented,,,,,,,,0000021665-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+CL,169,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total Colgate-Palmolive Company shareholders equity,54000000.0000,library map,54000000.0000,PREDICTED (predict.py v5)
+CL,169,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total assets,16330000000.0000,library map,16330000000.0000,PREDICTED (predict.py v5)
+CL,169,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Long-term debt,6871000000.0000,printed face components (duration sum; total_debt founder sum),6871000000.0000,PREDICTED (predict.py v5)
+CL,169,total_interest_income,OUT,,,,,,,,0000021665-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+CL,169,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000021665-26-000006,R5,Total liabilities,15965000000.0000,library map,15965000000.0000,PREDICTED (predict.py v5)
+CL,169,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000021665-26-000006,,,808700000.0000,note fact present in the filing (FSN value),808700000.0000,PREDICTED (predict.py v5)
+CL,169,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000021665-26-000006,,,811100000.0000,note fact present in the filing (FSN value),811100000.0000,PREDICTED (predict.py v5)

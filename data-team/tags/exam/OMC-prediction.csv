@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-OMC,411,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Accounts payable,20659500000.0000,library map
-OMC,411,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,"Accounts receivable, net of allowance for doubtful accounts of $11.9 and $15.0",14398000000.0000,library map
-OMC,411,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000029989-26-000006,,,131600000.0000,note fact present in the filing (FSN value)
-OMC,411,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000029989-26-000006,R5,Basic,-0.2700,library map
-OMC,411,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Capital expenditures,149800000.0000,library map
-OMC,411,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000029989-26-000006,R3,Cash and cash equivalents,6881100000.0000,combined line (library or label demote)
-OMC,411,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Used In Financing Activities,-1590600000.0000,library map
-OMC,411,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Provided By (Used In) Investing Activities,980200000.0000,library map
-OMC,411,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,531300000.0000,note fact present in the filing (FSN value)
-OMC,411,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,175700000.0000,note fact present in the filing (FSN value)
-OMC,411,cf_ap_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,cf_ar_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,cf_inventory_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Provided By Operating Activities,2938200000.0000,library map
-OMC,411,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000029989-26-000006,R6,Comprehensive Income - Omnicom Group Inc.,155200000.0000,library map
-OMC,411,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Cost of services,15804800000.0000,library map
-OMC,411,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Current Assets,27465400000.0000,library map
-OMC,411,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Current Liabilities,29538200000.0000,library map
-OMC,411,deposits,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Depreciation and amortization,276700000.0000,library map
-OMC,411,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000029989-26-000006,R5,Diluted,-0.2700,library map
-OMC,411,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Dividends paid to common shareholders,549600000.0000,library map
-OMC,411,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000029989-26-000006,R7,Dividends Declared Per Common Share,2.9000,library map
-OMC,411,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Goodwill,18641400000.0000,library map
-OMC,411,gross_profit,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Income Before Income Taxes and Income From Equity Method Investments,278200000.0000,library map
-OMC,411,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Income Tax Expense,242200000.0000,library map
-OMC,411,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Interest Expense,263400000.0000,library map
-OMC,411,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Interest Income,96900000.0000,library map
-OMC,411,inventory,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,loans_net,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000029989-26-000006,R5,Net Income (Loss) - Omnicom Group Inc.,-54500000.0000,library map
-OMC,411,net_interest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,noninterest_expense,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,noninterest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,"Selling, general and administrative expenses",745700000.0000,every face line between GP/COR and OI; ties to GP - OI
-OMC,411,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Operating Income,444700000.0000,library map
-OMC,411,other_income_expense_net,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,"Property and Equipment at cost, less accumulated depreciation of $1,386.8 and $1,096.9",1010300000.0000,library map
-OMC,411,provision_for_credit_losses,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,research_and_development,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Revenue,17271900000.0000,library map
-OMC,411,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Share-based compensation,100800000.0000,library map
-OMC,411,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,"Selling, general and administrative expenses",745700000.0000,library map
-OMC,411,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Repurchases of common stock,707900000.0000,library map
-OMC,411,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000029989-26-000006,R4,"Common stock, shares outstanding",313100000.0000,library map
-OMC,411,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Shareholders Equity,12045800000.0000,library map
-OMC,411,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,TOTAL ASSETS,54415300000.0000,library map
-OMC,411,total_debt,component_sum,us-gaap:ShortTermBorrowings,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Short-term debt,62000000.0000,printed face components (duration sum; total_debt founder sum)
-OMC,411,total_interest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank
-OMC,411,total_liabilities,not_presented,,,,,,,,0000029989-26-000006,,,,no face line
-OMC,411,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value)
-OMC,411,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+OMC,411,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Accounts payable,20659500000.0000,library map,20659500000.0000,PREDICTED (predict.py v5)
+OMC,411,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,"Accounts receivable, net of allowance for doubtful accounts of $11.9 and $15.0",14398000000.0000,library map,14398000000.0000,PREDICTED (predict.py v5)
+OMC,411,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000029989-26-000006,,,131600000.0000,note fact present in the filing (FSN value),131600000.0000,PREDICTED (predict.py v5)
+OMC,411,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000029989-26-000006,R5,Basic,-0.2700,library map,-0.2700,PREDICTED (predict.py v5)
+OMC,411,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Capital expenditures,149800000.0000,library map,149800000.0000,PREDICTED (predict.py v5)
+OMC,411,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000029989-26-000006,R3,Cash and cash equivalents,6881100000.0000,combined line (library or label demote),6881100000.0000,PREDICTED (predict.py v5)
+OMC,411,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Used In Financing Activities,-1590600000.0000,library map,-1590600000.0000,PREDICTED (predict.py v5)
+OMC,411,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Provided By (Used In) Investing Activities,980200000.0000,library map,980200000.0000,PREDICTED (predict.py v5)
+OMC,411,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,531300000.0000,note fact present in the filing (FSN value),531300000.0000,PREDICTED (predict.py v5)
+OMC,411,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0000029989-26-000006,,,175700000.0000,note fact present in the filing (FSN value),175700000.0000,PREDICTED (predict.py v5)
+OMC,411,cf_ap_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,cf_ar_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,cf_inventory_change,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Net Cash Provided By Operating Activities,2938200000.0000,library map,2938200000.0000,PREDICTED (predict.py v5)
+OMC,411,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000029989-26-000006,R6,Comprehensive Income - Omnicom Group Inc.,155200000.0000,library map,155200000.0000,PREDICTED (predict.py v5)
+OMC,411,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Cost of services,15804800000.0000,library map,15804800000.0000,PREDICTED (predict.py v5)
+OMC,411,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Current Assets,27465400000.0000,library map,27465400000.0000,PREDICTED (predict.py v5)
+OMC,411,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Current Liabilities,29538200000.0000,library map,29538200000.0000,PREDICTED (predict.py v5)
+OMC,411,deposits,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Depreciation and amortization,276700000.0000,library map,276700000.0000,PREDICTED (predict.py v5)
+OMC,411,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000029989-26-000006,R5,Diluted,-0.2700,library map,-0.2700,PREDICTED (predict.py v5)
+OMC,411,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Dividends paid to common shareholders,549600000.0000,library map,549600000.0000,PREDICTED (predict.py v5)
+OMC,411,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000029989-26-000006,R7,Dividends Declared Per Common Share,2.9000,library map,2.9000,PREDICTED (predict.py v5)
+OMC,411,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Goodwill,18641400000.0000,library map,18641400000.0000,PREDICTED (predict.py v5)
+OMC,411,gross_profit,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Income Before Income Taxes and Income From Equity Method Investments,278200000.0000,library map,278200000.0000,PREDICTED (predict.py v5)
+OMC,411,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Income Tax Expense,242200000.0000,library map,242200000.0000,PREDICTED (predict.py v5)
+OMC,411,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Interest Expense,263400000.0000,library map,263400000.0000,PREDICTED (predict.py v5)
+OMC,411,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Interest Income,96900000.0000,library map,96900000.0000,PREDICTED (predict.py v5)
+OMC,411,inventory,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,loans_net,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-5,N,,sec_api,0000029989-26-000006,R5,Net Income (Loss) - Omnicom Group Inc.,-54500000.0000,library map,-54500000.0000,PREDICTED (predict.py v5)
+OMC,411,net_interest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,noninterest_expense,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,noninterest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,"Selling, general and administrative expenses",745700000.0000,every face line between GP/COR and OI; ties to GP - OI,745700000.0000,PREDICTED (predict.py v5)
+OMC,411,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Operating Income,444700000.0000,library map,444700000.0000,PREDICTED (predict.py v5)
+OMC,411,other_income_expense_net,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,"Property and Equipment at cost, less accumulated depreciation of $1,386.8 and $1,096.9",1010300000.0000,library map,1010300000.0000,PREDICTED (predict.py v5)
+OMC,411,provision_for_credit_losses,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,research_and_development,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,Revenue,17271900000.0000,library map,17271900000.0000,PREDICTED (predict.py v5)
+OMC,411,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Share-based compensation,100800000.0000,library map,100800000.0000,PREDICTED (predict.py v5)
+OMC,411,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000029989-26-000006,R5,"Selling, general and administrative expenses",745700000.0000,library map,745700000.0000,PREDICTED (predict.py v5)
+OMC,411,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000029989-26-000006,R8,Repurchases of common stock,707900000.0000,library map,707900000.0000,PREDICTED (predict.py v5)
+OMC,411,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000029989-26-000006,R4,"Common stock, shares outstanding",313100000.0000,library map,313100000.0000,PREDICTED (predict.py v5)
+OMC,411,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Total Shareholders Equity,12045800000.0000,library map,12045800000.0000,PREDICTED (predict.py v5)
+OMC,411,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,TOTAL ASSETS,54415300000.0000,library map,54415300000.0000,PREDICTED (predict.py v5)
+OMC,411,total_debt,component_sum,us-gaap:ShortTermBorrowings,BS,+,-5,N,,sec_api,0000029989-26-000006,R3,Short-term debt,62000000.0000,printed face components (duration sum; total_debt founder sum),62000000.0000,PREDICTED (predict.py v5)
+OMC,411,total_interest_income,OUT,,,,,,,,0000029989-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+OMC,411,total_liabilities,not_presented,,,,,,,,0000029989-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+OMC,411,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value),204900000.0000,PREDICTED (predict.py v5)
+OMC,411,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000029989-26-000006,,,204900000.0000,note fact present in the filing (FSN value),204900000.0000,PREDICTED (predict.py v5)

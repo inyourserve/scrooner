@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-WLK,793,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Accounts payable,783000000.0000,library map
-WLK,793,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Accounts receivable, net",1504000000.0000,combined line (library or label demote)
-WLK,793,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Amortization of intangibles,124000000.0000,library map
-WLK,793,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001262823-26-000016,R5,Basic (in dollars per share),-11.7000,library map
-WLK,793,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,"Additions to property, plant and equipment",995000000.0000,library map
-WLK,793,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Cash and cash equivalents,2724000000.0000,library map
-WLK,793,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Net cash provided by (used for) financing activities,530000000.0000,library map
-WLK,793,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Net cash used for investing activities,-1223000000.0000,library map
-WLK,793,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001262823-26-000016,,,104000000.0000,note fact present in the filing (FSN value)
-WLK,793,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001262823-26-000016,,,157000000.0000,note fact present in the filing (FSN value)
-WLK,793,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Accounts payable,-67000000.0000,library map
-WLK,793,cf_ar_change,not_presented,,,,,,,,0001262823-26-000016,,,,no face line
-WLK,793,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Inventories,-51000000.0000,library map
-WLK,793,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Net cash provided by operating activities,465000000.0000,library map
-WLK,793,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0001262823-26-000016,R6,Comprehensive income (loss) attributable to Westlake Corporation,-1444000000.0000,library map
-WLK,793,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Cost of sales,10357000000.0000,library map
-WLK,793,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total current assets,6216000000.0000,library map
-WLK,793,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total current liabilities,2770000000.0000,library map
-WLK,793,deposits,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Depreciation and amortization,1178000000.0000,library map
-WLK,793,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001262823-26-000016,R5,Diluted (in dollars per share),-11.7000,library map
-WLK,793,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Dividends paid,272000000.0000,library map
-WLK,793,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001262823-26-000016,,,2.1100,note fact present in the filing (FSN value)
-WLK,793,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Goodwill,1314000000.0000,library map
-WLK,793,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Gross profit,813000000.0000,library map
-WLK,793,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income (loss) before income taxes,-1597000000.0000,library map
-WLK,793,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income tax provision (benefit),-126000000.0000,library map
-WLK,793,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001262823-26-000016,R5,Interest expense,171000000.0000,library map
-WLK,793,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001262823-26-000016,,,100000000.0000,note fact present in the filing (FSN value)
-WLK,793,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Inventories,1653000000.0000,library map
-WLK,793,loans_net,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Net income (loss) attributable to Westlake Corporation,-1508000000.0000,library map
-WLK,793,net_interest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,noninterest_expense,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,noninterest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:AmortizationOfIntangibleAssets;custom:RestructuringTransactionAndIntegrationCost,IS,+,-6,N,,fsn_xbrl,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,every face line between GP/COR and OI; ties to GP - OI
-WLK,793,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income (loss) from operations,-1578000000.0000,library map
-WLK,793,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Other income, net",152000000.0000,combined line (library or label demote)
-WLK,793,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Property, plant and equipment, net",8605000000.0000,library map
-WLK,793,provision_for_credit_losses,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,research_and_development,not_presented,,,,,,,,0001262823-26-000016,,,,no face line
-WLK,793,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Net sales,11170000000.0000,library map
-WLK,793,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Stock-based compensation expense,41000000.0000,library map
-WLK,793,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,library map
-WLK,793,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Repurchase of common stock for treasury,63000000.0000,library map
-WLK,793,shares_outstanding,not_presented,,,,,,,,0001262823-26-000016,,,,no face line
-WLK,793,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total Westlake Corporation stockholders' equity,8792000000.0000,library map
-WLK,793,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total assets,19961000000.0000,library map
-WLK,793,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Current portion of long-term debt, net",497000000.0000,printed face components (duration sum; total_debt founder sum)
-WLK,793,total_interest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank
-WLK,793,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total liabilities,10666000000.0000,library map
-WLK,793,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001262823-26-000016,R5,Basic (in shares),128260331.0000,library map
-WLK,793,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001262823-26-000016,R5,Diluted (in shares),128260331.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+WLK,793,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Accounts payable,783000000.0000,library map,783000000.0000,PREDICTED (predict.py v5)
+WLK,793,accounts_receivable,mapped,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Accounts receivable, net",1504000000.0000,"single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)",1504000000.0000,PREDICTED (predict.py v5)
+WLK,793,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Amortization of intangibles,124000000.0000,library map,124000000.0000,PREDICTED (predict.py v5)
+WLK,793,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001262823-26-000016,R5,Basic (in dollars per share),-11.7000,library map,-11.7000,PREDICTED (predict.py v5)
+WLK,793,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,"Additions to property, plant and equipment",995000000.0000,library map,995000000.0000,PREDICTED (predict.py v5)
+WLK,793,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Cash and cash equivalents,2724000000.0000,library map,2724000000.0000,PREDICTED (predict.py v5)
+WLK,793,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Net cash provided by (used for) financing activities,530000000.0000,library map,530000000.0000,PREDICTED (predict.py v5)
+WLK,793,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Net cash used for investing activities,-1223000000.0000,library map,-1223000000.0000,PREDICTED (predict.py v5)
+WLK,793,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001262823-26-000016,,,104000000.0000,note fact present in the filing (FSN value),104000000.0000,PREDICTED (predict.py v5)
+WLK,793,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001262823-26-000016,,,157000000.0000,note fact present in the filing (FSN value),157000000.0000,PREDICTED (predict.py v5)
+WLK,793,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Accounts payable,-67000000.0000,library map,-67000000.0000,PREDICTED (predict.py v5)
+WLK,793,cf_ar_change,not_presented,,,,,,,,0001262823-26-000016,,,,no face line,,PREDICTED (predict.py v5)
+WLK,793,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001262823-26-000016,R9,Inventories,-51000000.0000,library map,-51000000.0000,PREDICTED (predict.py v5)
+WLK,793,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Net cash provided by operating activities,465000000.0000,library map,465000000.0000,PREDICTED (predict.py v5)
+WLK,793,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0001262823-26-000016,R6,Comprehensive income (loss) attributable to Westlake Corporation,-1444000000.0000,library map,-1444000000.0000,PREDICTED (predict.py v5)
+WLK,793,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Cost of sales,10357000000.0000,library map,10357000000.0000,PREDICTED (predict.py v5)
+WLK,793,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total current assets,6216000000.0000,library map,6216000000.0000,PREDICTED (predict.py v5)
+WLK,793,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total current liabilities,2770000000.0000,library map,2770000000.0000,PREDICTED (predict.py v5)
+WLK,793,deposits,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Depreciation and amortization,1178000000.0000,library map,1178000000.0000,PREDICTED (predict.py v5)
+WLK,793,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001262823-26-000016,R5,Diluted (in dollars per share),-11.7000,library map,-11.7000,PREDICTED (predict.py v5)
+WLK,793,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Dividends paid,272000000.0000,library map,272000000.0000,PREDICTED (predict.py v5)
+WLK,793,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,+,,,,sec_api,0001262823-26-000016,,,2.1100,note fact present in the filing (FSN value),2.1100,PREDICTED (predict.py v5)
+WLK,793,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Goodwill,1314000000.0000,library map,1314000000.0000,PREDICTED (predict.py v5)
+WLK,793,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Gross profit,813000000.0000,library map,813000000.0000,PREDICTED (predict.py v5)
+WLK,793,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income (loss) before income taxes,-1597000000.0000,library map,-1597000000.0000,PREDICTED (predict.py v5)
+WLK,793,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income tax provision (benefit),-126000000.0000,library map,-126000000.0000,PREDICTED (predict.py v5)
+WLK,793,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001262823-26-000016,R5,Interest expense,171000000.0000,library map,171000000.0000,PREDICTED (predict.py v5)
+WLK,793,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001262823-26-000016,,,100000000.0000,note fact present in the filing (FSN value),100000000.0000,PREDICTED (predict.py v5)
+WLK,793,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Inventories,1653000000.0000,library map,1653000000.0000,PREDICTED (predict.py v5)
+WLK,793,loans_net,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Net income (loss) attributable to Westlake Corporation,-1508000000.0000,library map,-1508000000.0000,PREDICTED (predict.py v5)
+WLK,793,net_interest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,noninterest_expense,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,noninterest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:AmortizationOfIntangibleAssets;custom:RestructuringTransactionAndIntegrationCost,IS,+,-6,N,,fsn_xbrl,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,every face line between GP/COR and OI; ties to GP - OI,900000000.0000,PREDICTED (predict.py v5)
+WLK,793,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001262823-26-000016,R5,Income (loss) from operations,-1578000000.0000,library map,-1578000000.0000,PREDICTED (predict.py v5)
+WLK,793,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Other income, net",152000000.0000,combined line (library or label demote),152000000.0000,PREDICTED (predict.py v5)
+WLK,793,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Property, plant and equipment, net",8605000000.0000,library map,8605000000.0000,PREDICTED (predict.py v5)
+WLK,793,provision_for_credit_losses,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,research_and_development,not_presented,,,,,,,,0001262823-26-000016,,,,no face line,,PREDICTED (predict.py v5)
+WLK,793,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,Net sales,11170000000.0000,library map,11170000000.0000,PREDICTED (predict.py v5)
+WLK,793,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Stock-based compensation expense,41000000.0000,library map,41000000.0000,PREDICTED (predict.py v5)
+WLK,793,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001262823-26-000016,R5,"Selling, general and administrative expenses",900000000.0000,library map,900000000.0000,PREDICTED (predict.py v5)
+WLK,793,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001262823-26-000016,R9,Repurchase of common stock for treasury,63000000.0000,library map,63000000.0000,PREDICTED (predict.py v5)
+WLK,793,shares_outstanding,not_presented,,,,,,,,0001262823-26-000016,,,,no face line,,PREDICTED (predict.py v5)
+WLK,793,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total Westlake Corporation stockholders' equity,8792000000.0000,library map,8792000000.0000,PREDICTED (predict.py v5)
+WLK,793,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total assets,19961000000.0000,library map,19961000000.0000,PREDICTED (predict.py v5)
+WLK,793,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,"Current portion of long-term debt, net",497000000.0000,printed face components (duration sum; total_debt founder sum),497000000.0000,PREDICTED (predict.py v5)
+WLK,793,total_interest_income,OUT,,,,,,,,0001262823-26-000016,,,,not a bank,,PREDICTED (predict.py v5)
+WLK,793,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001262823-26-000016,R3,Total liabilities,10666000000.0000,library map,10666000000.0000,PREDICTED (predict.py v5)
+WLK,793,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001262823-26-000016,R5,Basic (in shares),128260331.0000,library map,128260331.0000,PREDICTED (predict.py v5)
+WLK,793,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001262823-26-000016,R5,Diluted (in shares),128260331.0000,library map,128260331.0000,PREDICTED (predict.py v5)

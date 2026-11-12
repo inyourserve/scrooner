@@ -33,6 +33,14 @@ if os.path.exists(sp):
         for v in vals:
             rows_ = [r for r in G if SEC.get(r['ticker'], {}).get(key, '(none)') == v]
             print(line(rows_, f'{name}: {v} ({len({r["ticker"] for r in rows_})} cos)'))
+print('\n### Graduation per data-point class (founder direction 2026-11-12: blind accuracy >= 99% over the last 200 unseen companies AND CP upper error <= 1.5%, hand-verified rows only)\n')
+print('| Class (data point) | Companies (last 200) | Rows | Accuracy | CP upper error | Graduated |\n|---|---|---|---|---|---|')
+last = set(tick[-200:])
+for dp in sorted({r['data_point'] for r in G}):
+    rows_ = [r for r in G if r['data_point'] == dp and r['ticker'] in last]
+    n = len(rows_); k = sum(r['result'] == 'wrong' for r in rows_); ub = cp_upper(k, n)
+    grad = 'yes' if n and (n - k) / n >= 0.99 and ub <= 0.015 and len(last) >= 200 else 'no'
+    print(f'| {dp} | {len({r["ticker"] for r in rows_})} | {n} | {100*(n-k)/max(n,1):.1f}% | {100*ub:.1f}% | {grad} |')
 if len(sys.argv) > 3 and os.path.exists(sys.argv[3]):
     D = [r for r in csv.DictReader(open(sys.argv[3])) if r['result'] in ('correct', 'wrong')]
     print(line(D, 'Dev set (ranks 51-100, current predictor; not blind)'))

@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-TGTX,777,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Accounts payable and accrued expenses,107508000.0000,combined line (library or label demote)
-TGTX,777,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,Y,ReceivablesNetCurrent,sec_api,0001437749-26-006133,R2,"Accounts receivable, net",305628000.0000,library map
-TGTX,777,amortization_of_intangibles,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
-TGTX,777,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Basic (in dollars per share),3.1000,library map
-TGTX,777,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,"Purchases of Property, Plant and Equipment",214000.0000,library map
-TGTX,777,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Cash and cash equivalents,79148000.0000,library map
-TGTX,777,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001437749-26-006133,R7,Net cash (used in) provided by financing activities,-89729000.0000,library map
-TGTX,777,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Net cash provided by (used in) investing activities,13799000.0000,library map
-TGTX,777,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Income taxes,7879000.0000,library map
-TGTX,777,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Interest,24249000.0000,library map
-TGTX,777,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in accounts payable and accrued expenses,55878000.0000,combined line (library or label demote)
-TGTX,777,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in accounts receivable,176443000.0000,library map
-TGTX,777,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in inventory,33452000.0000,library map
-TGTX,777,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001437749-26-006133,R7,Net cash used in operating activities,-24772000.0000,library map
-TGTX,777,comprehensive_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Cost of revenue,100714000.0000,library map
-TGTX,777,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total current assets,630764000.0000,library map
-TGTX,777,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-4,N,,sec_api,0001437749-26-006133,R2,Total current liabilities,153760000.0000,library map
-TGTX,777,deposits,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,Depreciation,sec_api,0001437749-26-006133,R7,Depreciation and amortization,59000.0000,library map
-TGTX,777,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Diluted (in dollars per share),2.7700,library map
-TGTX,777,dividends_paid,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,dividends_per_share,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
-TGTX,777,goodwill,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,gross_profit,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-4,N,,sec_api,0001437749-26-006133,R4,Net income before taxes,107390000.0000,library map
-TGTX,777,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001437749-26-006133,R4,Income tax benefit (expense),-339789000.0000,library map
-TGTX,777,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001437749-26-006133,R4,Interest expense,26727000.0000,library map
-TGTX,777,interest_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact
-TGTX,777,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Inventory,125586000.0000,library map
-TGTX,777,loans_net,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Net income,447179000.0000,library map
-TGTX,777,net_interest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,noninterest_expense,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,noninterest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingExpenses,sec_api,0001437749-26-006133,R4,Total costs and expenses,492963000.0000,"total includes cost of revenue: combined, never opex"
-TGTX,777,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Operating income,123324000.0000,library map
-TGTX,777,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncome,sec_api,0001437749-26-006133,R4,Other income,10793000.0000,library map
-TGTX,777,ppe_net,not_presented,,,,,,,,0001437749-26-006133,,,,no face line
-TGTX,777,provision_for_credit_losses,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Total research and development,160215000.0000,library map
-TGTX,777,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Revenue,616287000.0000,library map
-TGTX,777,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-4,N,,sec_api,0001437749-26-006133,R7,Noncash stock compensation expense,64670000.0000,library map
-TGTX,777,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,"Total selling, general and administrative",232034000.0000,library map
-TGTX,777,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-4,N,,sec_api,0001437749-26-006133,R7,Purchase of treasury stock,91240000.0000,combined line (library or label demote)
-TGTX,777,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001437749-26-006133,R3,"Common stock, outstanding (in shares)",155305953.0000,library map
-TGTX,777,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-4,N,,sec_api,0001437749-26-006133,R2,Total stockholders equity,648020000.0000,library map
-TGTX,777,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total assets,1063253000.0000,library map
-TGTX,777,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Loan payable  non-current,245645000.0000,printed face components (duration sum; total_debt founder sum)
-TGTX,777,total_interest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank
-TGTX,777,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total liabilities,415233000.0000,library map
-TGTX,777,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Basic (in shares),144316786.0000,library map
-TGTX,777,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Diluted (in shares),161412746.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+TGTX,777,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Accounts payable and accrued expenses,107508000.0000,combined line (library or label demote),107508000.0000,PREDICTED (predict.py v5)
+TGTX,777,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,Y,ReceivablesNetCurrent,sec_api,0001437749-26-006133,R2,"Accounts receivable, net",305628000.0000,library map,305628000.0000,PREDICTED (predict.py v5)
+TGTX,777,amortization_of_intangibles,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+TGTX,777,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Basic (in dollars per share),3.1000,library map,3.1000,PREDICTED (predict.py v5)
+TGTX,777,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,"Purchases of Property, Plant and Equipment",214000.0000,library map,214000.0000,PREDICTED (predict.py v5)
+TGTX,777,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Cash and cash equivalents,79148000.0000,library map,79148000.0000,PREDICTED (predict.py v5)
+TGTX,777,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001437749-26-006133,R7,Net cash (used in) provided by financing activities,-89729000.0000,library map,-89729000.0000,PREDICTED (predict.py v5)
+TGTX,777,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Net cash provided by (used in) investing activities,13799000.0000,library map,13799000.0000,PREDICTED (predict.py v5)
+TGTX,777,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Income taxes,7879000.0000,library map,7879000.0000,PREDICTED (predict.py v5)
+TGTX,777,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Interest,24249000.0000,library map,24249000.0000,PREDICTED (predict.py v5)
+TGTX,777,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in accounts payable and accrued expenses,55878000.0000,combined line (library or label demote),55878000.0000,PREDICTED (predict.py v5)
+TGTX,777,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in accounts receivable,176443000.0000,library map,176443000.0000,PREDICTED (predict.py v5)
+TGTX,777,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001437749-26-006133,R7,Increase in inventory,33452000.0000,library map,33452000.0000,PREDICTED (predict.py v5)
+TGTX,777,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001437749-26-006133,R7,Net cash used in operating activities,-24772000.0000,library map,-24772000.0000,PREDICTED (predict.py v5)
+TGTX,777,comprehensive_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line,,PREDICTED (predict.py v5)
+TGTX,777,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Cost of revenue,100714000.0000,library map,100714000.0000,PREDICTED (predict.py v5)
+TGTX,777,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total current assets,630764000.0000,library map,630764000.0000,PREDICTED (predict.py v5)
+TGTX,777,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-4,N,,sec_api,0001437749-26-006133,R2,Total current liabilities,153760000.0000,library map,153760000.0000,PREDICTED (predict.py v5)
+TGTX,777,deposits,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,Y,Depreciation,sec_api,0001437749-26-006133,R7,Depreciation and amortization,59000.0000,library map,59000.0000,PREDICTED (predict.py v5)
+TGTX,777,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Diluted (in dollars per share),2.7700,library map,2.7700,PREDICTED (predict.py v5)
+TGTX,777,dividends_paid,not_presented,,,,,,,,0001437749-26-006133,,,,no face line,,PREDICTED (predict.py v5)
+TGTX,777,dividends_per_share,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+TGTX,777,goodwill,not_presented,,,,,,,,0001437749-26-006133,,,,no face line,,PREDICTED (predict.py v5)
+TGTX,777,gross_profit,not_presented,,,,,,,,0001437749-26-006133,,,,no face line,,PREDICTED (predict.py v5)
+TGTX,777,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-4,N,,sec_api,0001437749-26-006133,R4,Net income before taxes,107390000.0000,library map,107390000.0000,PREDICTED (predict.py v5)
+TGTX,777,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001437749-26-006133,R4,Income tax benefit (expense),-339789000.0000,library map,-339789000.0000,PREDICTED (predict.py v5)
+TGTX,777,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001437749-26-006133,R4,Interest expense,26727000.0000,library map,26727000.0000,PREDICTED (predict.py v5)
+TGTX,777,interest_income,not_presented,,,,,,,,0001437749-26-006133,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+TGTX,777,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Inventory,125586000.0000,library map,125586000.0000,PREDICTED (predict.py v5)
+TGTX,777,loans_net,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Net income,447179000.0000,library map,447179000.0000,PREDICTED (predict.py v5)
+TGTX,777,net_interest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,noninterest_expense,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,noninterest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,Y,OperatingExpenses,sec_api,0001437749-26-006133,R4,Total costs and expenses,492963000.0000,"total includes cost of revenue: combined, never opex",492963000.0000,PREDICTED (predict.py v5)
+TGTX,777,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Operating income,123324000.0000,library map,123324000.0000,PREDICTED (predict.py v5)
+TGTX,777,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,OtherIncome,sec_api,0001437749-26-006133,R4,Other income,10793000.0000,library map,10793000.0000,PREDICTED (predict.py v5)
+TGTX,777,ppe_net,not_presented,,,,,,,,0001437749-26-006133,,,,no face line,,PREDICTED (predict.py v5)
+TGTX,777,provision_for_credit_losses,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Total research and development,160215000.0000,library map,160215000.0000,PREDICTED (predict.py v5)
+TGTX,777,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,Revenue,616287000.0000,library map,616287000.0000,PREDICTED (predict.py v5)
+TGTX,777,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-4,N,,sec_api,0001437749-26-006133,R7,Noncash stock compensation expense,64670000.0000,library map,64670000.0000,PREDICTED (predict.py v5)
+TGTX,777,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001437749-26-006133,R4,"Total selling, general and administrative",232034000.0000,library map,232034000.0000,PREDICTED (predict.py v5)
+TGTX,777,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-4,N,,sec_api,0001437749-26-006133,R7,Purchase of treasury stock,91240000.0000,combined line (library or label demote),91240000.0000,PREDICTED (predict.py v5)
+TGTX,777,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001437749-26-006133,R3,"Common stock, outstanding (in shares)",155305953.0000,library map,155305953.0000,PREDICTED (predict.py v5)
+TGTX,777,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-4,N,,sec_api,0001437749-26-006133,R2,Total stockholders equity,648020000.0000,library map,648020000.0000,PREDICTED (predict.py v5)
+TGTX,777,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total assets,1063253000.0000,library map,1063253000.0000,PREDICTED (predict.py v5)
+TGTX,777,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Loan payable  non-current,245645000.0000,printed face components (duration sum; total_debt founder sum),245645000.0000,PREDICTED (predict.py v5)
+TGTX,777,total_interest_income,OUT,,,,,,,,0001437749-26-006133,,,,not a bank,,PREDICTED (predict.py v5)
+TGTX,777,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001437749-26-006133,R2,Total liabilities,415233000.0000,library map,415233000.0000,PREDICTED (predict.py v5)
+TGTX,777,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Basic (in shares),144316786.0000,library map,144316786.0000,PREDICTED (predict.py v5)
+TGTX,777,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,32767,N,,sec_api,0001437749-26-006133,R4,Diluted (in shares),161412746.0000,library map,161412746.0000,PREDICTED (predict.py v5)

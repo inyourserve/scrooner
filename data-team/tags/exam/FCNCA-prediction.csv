@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-FCNCA,393,accounts_payable,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,accounts_receivable,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Intangible asset amortization,54000000.0000,library map
-FCNCA,393,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000798941-26-000015,R5,Basic (in dollars per share),165.2400,library map
-FCNCA,393,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Purchases of premises and equipment,710000000.0000,library map
-FCNCA,393,cash_and_equivalents,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Net cash provided by (used in) financing activities,2675000000.0000,library map
-FCNCA,393,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000798941-26-000015,R9,Net cash (used in) provided by investing activities,-5611000000.0000,library map
-FCNCA,393,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,Y,IncomeTaxesPaid,sec_api,0000798941-26-000015,R9,Income taxes,315000000.0000,library map
-FCNCA,393,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,Y,InterestPaid,sec_api,0000798941-26-000015,R9,Interest,4810000000.0000,library map
-FCNCA,393,cf_ap_change,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,cf_ar_change,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,cf_inventory_change,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Net cash provided by operating activities,2923000000.0000,library map
-FCNCA,393,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000798941-26-000015,R6,Total comprehensive income,2734000000.0000,library map
-FCNCA,393,cost_of_revenue,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,current_assets,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,current_liabilities,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total deposits,161578000000.0000,bank template tag
-FCNCA,393,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,"Depreciation, amortization, and accretion, net",405000000.0000,combined line (library or label demote)
-FCNCA,393,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000798941-26-000015,R5,Diluted (in dollars per share),165.2400,library map
-FCNCA,393,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,Y,PaymentsOfDividendsCommonStock,sec_api,0000798941-26-000015,R9,Cash dividends paid,161000000.0000,library map
-FCNCA,393,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000798941-26-000015,R8,Cash dividends declared per common share (in dollars per share),7.9500,library map
-FCNCA,393,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Goodwill,346000000.0000,library map
-FCNCA,393,gross_profit,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Income before income taxes,2971000000.0000,library map
-FCNCA,393,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Income tax expense,765000000.0000,library map
-FCNCA,393,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0000798941-26-000015,R5,Total interest expense,4964000000.0000,library map
-FCNCA,393,interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total interest income,11778000000.0000,library map
-FCNCA,393,inventory,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,loans_net,mapped,us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,"Loans and leases, net of allowance for loan and lease losses",146364000000.0000,bank template tag
-FCNCA,393,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Net income,2206000000.0000,library map
-FCNCA,393,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Net interest income,6814000000.0000,bank template tag
-FCNCA,393,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest expense,6056000000.0000,bank template tag
-FCNCA,393,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest income,2727000000.0000,bank template tag
-FCNCA,393,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest expense,6056000000.0000,sector template total
-FCNCA,393,operating_income,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,other_income_expense_net,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,"Premises and equipment, net",2447000000.0000,library map
-FCNCA,393,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Provision for credit losses,514000000.0000,bank template tag
-FCNCA,393,research_and_development,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer)
-FCNCA,393,revenue,not_presented,,,,,,,,0000798941-26-000015,,,,single component only
-FCNCA,393,sbc,mapped,us-gaap:ShareBasedCompensation,CF,0,-6,N,,sec_api,0000798941-26-000015,R9,Stock based compensation expense,0.0000,library map
-FCNCA,393,sga_expense,not_presented,,,,,,,,0000798941-26-000015,,,,single component only
-FCNCA,393,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Repurchase of Class A common stock,3027000000.0000,library map
-FCNCA,393,shares_outstanding,not_presented,,,,,,,,0000798941-26-000015,,,,no face line
-FCNCA,393,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total stockholders equity,22238000000.0000,library map
-FCNCA,393,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total assets,229698000000.0000,library map
-FCNCA,393,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Short-term borrowings,224000000.0000,printed face components (duration sum; total_debt founder sum)
-FCNCA,393,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total interest income,11778000000.0000,bank template tag
-FCNCA,393,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total liabilities,207460000000.0000,library map
-FCNCA,393,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0000798941-26-000015,R5,Basic (in shares),13002455.0000,library map
-FCNCA,393,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0000798941-26-000015,R5,Diluted (in shares),13002455.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+FCNCA,393,accounts_payable,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,accounts_receivable,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Intangible asset amortization,54000000.0000,library map,54000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000798941-26-000015,R5,Basic (in dollars per share),165.2400,library map,165.2400,PREDICTED (predict.py v5)
+FCNCA,393,capex,component_sum,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment;us-gaap:PaymentsToAcquireEquipmentOnLease,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Purchases of premises and equipment,710000000.0000,capex = sum of printed CF capex lines (founder 2026-11-04 item 3),710000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cash_and_equivalents,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Net cash provided by (used in) financing activities,2675000000.0000,library map,2675000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000798941-26-000015,R9,Net cash (used in) provided by investing activities,-5611000000.0000,library map,-5611000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,Y,IncomeTaxesPaid,sec_api,0000798941-26-000015,R9,Income taxes,315000000.0000,library map,315000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,Y,InterestPaid,sec_api,0000798941-26-000015,R9,Interest,4810000000.0000,library map,4810000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cf_ap_change,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,cf_ar_change,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,cf_inventory_change,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Net cash provided by operating activities,2923000000.0000,library map,2923000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000798941-26-000015,R6,Total comprehensive income,2734000000.0000,library map,2734000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,cost_of_revenue,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,current_assets,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,current_liabilities,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total deposits,161578000000.0000,bank template tag,161578000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,"Depreciation, amortization, and accretion, net",405000000.0000,combined line (library or label demote),405000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000798941-26-000015,R5,Diluted (in dollars per share),165.2400,library map,165.2400,PREDICTED (predict.py v5)
+FCNCA,393,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,Y,PaymentsOfDividendsCommonStock,sec_api,0000798941-26-000015,R9,Cash dividends paid,161000000.0000,library map,161000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000798941-26-000015,R8,Cash dividends declared per common share (in dollars per share),7.9500,library map,7.9500,PREDICTED (predict.py v5)
+FCNCA,393,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Goodwill,346000000.0000,library map,346000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,gross_profit,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Income before income taxes,2971000000.0000,library map,2971000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Income tax expense,765000000.0000,library map,765000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0000798941-26-000015,R5,Total interest expense,4964000000.0000,library map,4964000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total interest income,11778000000.0000,library map,11778000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,inventory,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,loans_net,mapped,us-gaap:FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,"Loans and leases, net of allowance for loan and lease losses",146364000000.0000,bank template tag,146364000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Net income,2206000000.0000,library map,2206000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Net interest income,6814000000.0000,bank template tag,6814000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest expense,6056000000.0000,bank template tag,6056000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest income,2727000000.0000,bank template tag,2727000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total noninterest expense,6056000000.0000,sector template total,6056000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,operating_income,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,other_income_expense_net,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,"Premises and equipment, net",2447000000.0000,library map,2447000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Provision for credit losses,514000000.0000,bank template tag,514000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,research_and_development,OUT,,,,,,,,0000798941-26-000015,,,,sector template (bank/insurer),,PREDICTED (predict.py v5)
+FCNCA,393,revenue,not_presented,,,,,,,,0000798941-26-000015,,,,single component only,,PREDICTED (predict.py v5)
+FCNCA,393,sbc,mapped,us-gaap:ShareBasedCompensation,CF,0,-6,N,,sec_api,0000798941-26-000015,R9,Stock based compensation expense,0.0000,library map,0.0000,PREDICTED (predict.py v5)
+FCNCA,393,sga_expense,not_presented,,,,,,,,0000798941-26-000015,,,,single component only,,PREDICTED (predict.py v5)
+FCNCA,393,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000798941-26-000015,R9,Repurchase of Class A common stock,3027000000.0000,library map,3027000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,shares_outstanding,not_presented,,,,,,,,0000798941-26-000015,,,,no face line,,PREDICTED (predict.py v5)
+FCNCA,393,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total stockholders equity,22238000000.0000,library map,22238000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total assets,229698000000.0000,library map,229698000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Short-term borrowings,224000000.0000,printed face components (duration sum; total_debt founder sum),224000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-6,N,,sec_api,0000798941-26-000015,R5,Total interest income,11778000000.0000,bank template tag,11778000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000798941-26-000015,R3,Total liabilities,207460000000.0000,library map,207460000000.0000,PREDICTED (predict.py v5)
+FCNCA,393,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0000798941-26-000015,R5,Basic (in shares),13002455.0000,library map,13002455.0000,PREDICTED (predict.py v5)
+FCNCA,393,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0000798941-26-000015,R5,Diluted (in shares),13002455.0000,library map,13002455.0000,PREDICTED (predict.py v5)

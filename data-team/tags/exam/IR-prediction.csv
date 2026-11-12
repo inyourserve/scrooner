@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-IR,340,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Accounts payable,996100000.0000,library map
-IR,340,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,"Accounts receivable, net of allowance for credit losses of $66.8 and $57.3, respectively",1518000000.0000,library map
-IR,340,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Amortization of intangible assets,387500000.0000,library map
-IR,340,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008617,R3,Basic earnings per share (in USD per share),1.4600,library map
-IR,340,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Capital expenditures,135600000.0000,library map
-IR,340,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Cash and cash equivalents,1248800000.0000,library map
-IR,340,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001628280-26-008617,R8,Net cash provided by (used in) financing activities,-1053800000.0000,library map
-IR,340,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,Y,CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations,sec_api,0001628280-26-008617,R8,Net cash provided by (used in) investing activities,-660600000.0000,library map
-IR,340,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,"Cash paid for income taxes, net of refunds",269300000.0000,library map
-IR,340,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,"Cash paid for interest, net of interest rate derivative settlements",249000000.0000,library map
-IR,340,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Accounts payable,78700000.0000,library map
-IR,340,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Receivables,59100000.0000,library map
-IR,340,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Inventories,26100000.0000,library map
-IR,340,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Net cash provided by operating activities,1355700000.0000,library map
-IR,340,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001628280-26-008617,R4,Comprehensive income attributable to Ingersoll Rand Inc.,901600000.0000,library map
-IR,340,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Cost of sales,4314600000.0000,library map
-IR,340,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total current assets,4248000000.0000,library map
-IR,340,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total current liabilities,2066300000.0000,library map
-IR,340,deposits,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-008617,,,,single component only
-IR,340,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008617,R3,Diluted earnings per share (in USD per share),1.4500,library map
-IR,340,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Cash dividends on common stock,31800000.0000,library map
-IR,340,dividends_per_share,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact
-IR,340,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Goodwill,8484100000.0000,library map
-IR,340,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Gross Profit,3336300000.0000,library map
-IR,340,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Income Before Income Taxes,935300000.0000,library map
-IR,340,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Provision for income taxes,219400000.0000,library map
-IR,340,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-008617,R3,Interest expense,253900000.0000,library map
-IR,340,interest_income,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact
-IR,340,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Inventories,1172900000.0000,library map
-IR,340,loans_net,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Net Income Attributable to Ingersoll Rand Inc.,581400000.0000,library map
-IR,340,net_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,noninterest_expense,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,noninterest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,OtherCostAndExpenseOperating,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,every face line between GP/COR and OI; ties to GP - OI
-IR,340,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Operating Income,1144600000.0000,library map
-IR,340,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,"Other income, net",44600000.0000,library map
-IR,340,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,"Property, plant and equipment, net of accumulated depreciation of $689.6 and $567.5, respectively",930300000.0000,library map
-IR,340,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,research_and_development,not_presented,,,,,,,,0001628280-26-008617,,,,no face line
-IR,340,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Revenues,7650900000.0000,library map
-IR,340,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Stock-based compensation expense,53000000.0000,library map
-IR,340,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,library map
-IR,340,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Purchases of treasury stock,1018000000.0000,library map
-IR,340,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,32767,Y,SharesOutstanding,sec_api,0001628280-26-008617,R7,Balance at beginning of period (shares),391121689.0000,library map
-IR,340,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total Ingersoll Rand Inc. stockholders equity,10089800000.0000,library map
-IR,340,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total assets,18297200000.0000,library map
-IR,340,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,Y,LongTermDebtAndCapitalLeaseObligationsCurrent,sec_api,0001628280-26-008617,R5,Short-term borrowings and current maturities of long-term debt,1400000.0000,printed face components (duration sum; total_debt founder sum)
-IR,340,total_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank
-IR,340,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total liabilities,8143200000.0000,library map
-IR,340,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-008617,,,398100000.0000,note fact present in the filing (FSN value)
-IR,340,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-008617,,,401000000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+IR,340,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Accounts payable,996100000.0000,library map,996100000.0000,PREDICTED (predict.py v5)
+IR,340,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,"Accounts receivable, net of allowance for credit losses of $66.8 and $57.3, respectively",1518000000.0000,library map,1518000000.0000,PREDICTED (predict.py v5)
+IR,340,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Amortization of intangible assets,387500000.0000,library map,387500000.0000,PREDICTED (predict.py v5)
+IR,340,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008617,R3,Basic earnings per share (in USD per share),1.4600,library map,1.4600,PREDICTED (predict.py v5)
+IR,340,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Capital expenditures,135600000.0000,library map,135600000.0000,PREDICTED (predict.py v5)
+IR,340,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Cash and cash equivalents,1248800000.0000,library map,1248800000.0000,PREDICTED (predict.py v5)
+IR,340,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001628280-26-008617,R8,Net cash provided by (used in) financing activities,-1053800000.0000,library map,-1053800000.0000,PREDICTED (predict.py v5)
+IR,340,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,Y,CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations,sec_api,0001628280-26-008617,R8,Net cash provided by (used in) investing activities,-660600000.0000,library map,-660600000.0000,PREDICTED (predict.py v5)
+IR,340,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,"Cash paid for income taxes, net of refunds",269300000.0000,library map,269300000.0000,PREDICTED (predict.py v5)
+IR,340,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,"Cash paid for interest, net of interest rate derivative settlements",249000000.0000,library map,249000000.0000,PREDICTED (predict.py v5)
+IR,340,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Accounts payable,78700000.0000,library map,78700000.0000,PREDICTED (predict.py v5)
+IR,340,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Receivables,59100000.0000,library map,59100000.0000,PREDICTED (predict.py v5)
+IR,340,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Inventories,26100000.0000,library map,26100000.0000,PREDICTED (predict.py v5)
+IR,340,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Net cash provided by operating activities,1355700000.0000,library map,1355700000.0000,PREDICTED (predict.py v5)
+IR,340,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001628280-26-008617,R4,Comprehensive income attributable to Ingersoll Rand Inc.,901600000.0000,library map,901600000.0000,PREDICTED (predict.py v5)
+IR,340,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Cost of sales,4314600000.0000,library map,4314600000.0000,PREDICTED (predict.py v5)
+IR,340,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total current assets,4248000000.0000,library map,4248000000.0000,PREDICTED (predict.py v5)
+IR,340,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total current liabilities,2066300000.0000,library map,2066300000.0000,PREDICTED (predict.py v5)
+IR,340,deposits,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-008617,,,,single component only,,PREDICTED (predict.py v5)
+IR,340,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008617,R3,Diluted earnings per share (in USD per share),1.4500,library map,1.4500,PREDICTED (predict.py v5)
+IR,340,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Cash dividends on common stock,31800000.0000,library map,31800000.0000,PREDICTED (predict.py v5)
+IR,340,dividends_per_share,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+IR,340,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Goodwill,8484100000.0000,library map,8484100000.0000,PREDICTED (predict.py v5)
+IR,340,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Gross Profit,3336300000.0000,library map,3336300000.0000,PREDICTED (predict.py v5)
+IR,340,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Income Before Income Taxes,935300000.0000,library map,935300000.0000,PREDICTED (predict.py v5)
+IR,340,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Provision for income taxes,219400000.0000,library map,219400000.0000,PREDICTED (predict.py v5)
+IR,340,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001628280-26-008617,R3,Interest expense,253900000.0000,library map,253900000.0000,PREDICTED (predict.py v5)
+IR,340,interest_income,not_presented,,,,,,,,0001628280-26-008617,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+IR,340,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Inventories,1172900000.0000,library map,1172900000.0000,PREDICTED (predict.py v5)
+IR,340,loans_net,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Net Income Attributable to Ingersoll Rand Inc.,581400000.0000,library map,581400000.0000,PREDICTED (predict.py v5)
+IR,340,net_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,noninterest_expense,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,noninterest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;us-gaap:ImpairmentOfIntangibleAssetsExcludingGoodwill;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,Y,OtherCostAndExpenseOperating,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,every face line between GP/COR and OI; ties to GP - OI,1439300000.0000,PREDICTED (predict.py v5)
+IR,340,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Operating Income,1144600000.0000,library map,1144600000.0000,PREDICTED (predict.py v5)
+IR,340,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,"Other income, net",44600000.0000,library map,44600000.0000,PREDICTED (predict.py v5)
+IR,340,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,"Property, plant and equipment, net of accumulated depreciation of $689.6 and $567.5, respectively",930300000.0000,library map,930300000.0000,PREDICTED (predict.py v5)
+IR,340,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,research_and_development,not_presented,,,,,,,,0001628280-26-008617,,,,no face line,,PREDICTED (predict.py v5)
+IR,340,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Revenues,7650900000.0000,library map,7650900000.0000,PREDICTED (predict.py v5)
+IR,340,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Stock-based compensation expense,53000000.0000,library map,53000000.0000,PREDICTED (predict.py v5)
+IR,340,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001628280-26-008617,R3,Selling and administrative expenses,1439300000.0000,library map,1439300000.0000,PREDICTED (predict.py v5)
+IR,340,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001628280-26-008617,R8,Purchases of treasury stock,1018000000.0000,library map,1018000000.0000,PREDICTED (predict.py v5)
+IR,340,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,32767,Y,SharesOutstanding,sec_api,0001628280-26-008617,R7,Balance at beginning of period (shares),391121689.0000,library map,391121689.0000,PREDICTED (predict.py v5)
+IR,340,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total Ingersoll Rand Inc. stockholders equity,10089800000.0000,library map,10089800000.0000,PREDICTED (predict.py v5)
+IR,340,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total assets,18297200000.0000,library map,18297200000.0000,PREDICTED (predict.py v5)
+IR,340,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,Y,LongTermDebtAndCapitalLeaseObligationsCurrent,sec_api,0001628280-26-008617,R5,Short-term borrowings and current maturities of long-term debt,1400000.0000,printed face components (duration sum; total_debt founder sum),1400000.0000,PREDICTED (predict.py v5)
+IR,340,total_interest_income,OUT,,,,,,,,0001628280-26-008617,,,,not a bank,,PREDICTED (predict.py v5)
+IR,340,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001628280-26-008617,R5,Total liabilities,8143200000.0000,library map,8143200000.0000,PREDICTED (predict.py v5)
+IR,340,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-008617,,,398100000.0000,note fact present in the filing (FSN value),398100000.0000,PREDICTED (predict.py v5)
+IR,340,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-008617,,,401000000.0000,note fact present in the filing (FSN value),401000000.0000,PREDICTED (predict.py v5)

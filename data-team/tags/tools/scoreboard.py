@@ -57,4 +57,4 @@ ex='data-team/tags/exam'
 if os.path.exists(f'{ex}/results/blind-grade.csv'):
     import subprocess
     print()
-    print(subprocess.run([sys.executable, f'{ex}/tools/exam_score.py', f'{ex}/results/blind-grade.csv', f'{ex}/results/blind-timing.csv', f'{ex}/results/dev-grade-v4.csv'], capture_output=True, text=True).stdout)
+    print(subprocess.run([sys.executable, f'{ex}/tools/exam_score.py', f'{ex}/results/blind-grade.csv', f'{ex}/results/blind-timing.csv', f'{ex}/results/dev-grade-v5.csv'], capture_output=True, text=True).stdout)

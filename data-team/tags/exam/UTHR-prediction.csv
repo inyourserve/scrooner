@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-UTHR,415,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Accounts payable and accrued expenses,488000000.0000,combined line (library or label demote)
-UTHR,415,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Accounts receivable, no allowance for 2025 and 2024",350200000.0000,library map
-UTHR,415,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001082554-26-000006,,,900000.0000,note fact present in the filing (FSN value)
-UTHR,415,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Basic (in dollars per share),30.1300,library map
-UTHR,415,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,"Purchases of property, plant, and equipment",520500000.0000,library map
-UTHR,415,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Cash and cash equivalents,1557100000.0000,library map
-UTHR,415,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001082554-26-000006,R9,Net cash used in financing activities,-1150000000.0000,library map
-UTHR,415,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001082554-26-000006,R9,Net cash (used in) provided by investing activities,-551300000.0000,library map
-UTHR,415,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Cash paid for income taxes,313300000.0000,library map
-UTHR,415,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Cash paid for interest,13500000.0000,library map
-UTHR,415,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Accounts payable and accrued expenses,97900000.0000,combined line (library or label demote)
-UTHR,415,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Accounts receivable,70900000.0000,library map
-UTHR,415,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Inventories,52600000.0000,library map
-UTHR,415,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Net cash provided by operating activities,1561200000.0000,library map
-UTHR,415,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001082554-26-000006,R6,Comprehensive income,1339000000.0000,library map
-UTHR,415,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Cost of sales,384400000.0000,library map
-UTHR,415,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total current assets,3702500000.0000,library map
-UTHR,415,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total current liabilities,560600000.0000,library map
-UTHR,415,deposits,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Depreciation and amortization,85600000.0000,library map
-UTHR,415,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Diluted (in dollars per share),27.8600,library map
-UTHR,415,dividends_paid,not_presented,,,,,,,,0001082554-26-000006,,,,no face line
-UTHR,415,dividends_per_share,not_presented,,,,,,,,0001082554-26-000006,,,,no face line and no note fact
-UTHR,415,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Goodwill and other intangible assets, net",116500000.0000,combined line (library or label demote)
-UTHR,415,gross_profit,not_presented,,,,,,,,0001082554-26-000006,,,,no face line
-UTHR,415,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Income before income taxes,1713900000.0000,library map
-UTHR,415,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Income tax expense,379200000.0000,library map
-UTHR,415,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001082554-26-000006,R5,Interest expense,19500000.0000,library map
-UTHR,415,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Interest income,192000000.0000,library map
-UTHR,415,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Inventories, net",183100000.0000,library map
-UTHR,415,loans_net,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Net income,1334700000.0000,library map
-UTHR,415,net_interest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,noninterest_expense,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,noninterest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,every face line between GP/COR and OI; ties to GP - OI
-UTHR,415,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Operating income,1492500000.0000,library map
-UTHR,415,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,"Other income (expense), net",48900000.0000,library map
-UTHR,415,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Property, plant, and equipment, net",1729700000.0000,library map
-UTHR,415,provision_for_credit_losses,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,library map
-UTHR,415,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Total revenues,3182700000.0000,library map
-UTHR,415,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Share-based compensation expense,147700000.0000,library map
-UTHR,415,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,"Selling, general, and administrative",755800000.0000,library map
-UTHR,415,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Payments to repurchase common stock,1000000000.0000,library map
-UTHR,415,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001082554-26-000006,R4,"Common stock, shares outstanding (in shares)",43643165.0000,library map
-UTHR,415,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total stockholders equity,7096200000.0000,library map
-UTHR,415,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total assets,7880000000.0000,library map
-UTHR,415,total_debt,combined,us-gaap:LinesOfCreditCurrent,BS,0,-5,Y,LongTermLineOfCredit,sec_api,0001082554-26-000006,R3,Line of credit,0.0000,combined line (library or label demote)
-UTHR,415,total_interest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank
-UTHR,415,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total liabilities,783800000.0000,library map
-UTHR,415,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Basic (in shares),44300000.0000,library map
-UTHR,415,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Diluted (in shares),47900000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+UTHR,415,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Accounts payable and accrued expenses,488000000.0000,combined line (library or label demote),488000000.0000,PREDICTED (predict.py v5)
+UTHR,415,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Accounts receivable, no allowance for 2025 and 2024",350200000.0000,library map,350200000.0000,PREDICTED (predict.py v5)
+UTHR,415,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001082554-26-000006,,,900000.0000,note fact present in the filing (FSN value),900000.0000,PREDICTED (predict.py v5)
+UTHR,415,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Basic (in dollars per share),30.1300,library map,30.1300,PREDICTED (predict.py v5)
+UTHR,415,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,"Purchases of property, plant, and equipment",520500000.0000,library map,520500000.0000,PREDICTED (predict.py v5)
+UTHR,415,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Cash and cash equivalents,1557100000.0000,library map,1557100000.0000,PREDICTED (predict.py v5)
+UTHR,415,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001082554-26-000006,R9,Net cash used in financing activities,-1150000000.0000,library map,-1150000000.0000,PREDICTED (predict.py v5)
+UTHR,415,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001082554-26-000006,R9,Net cash (used in) provided by investing activities,-551300000.0000,library map,-551300000.0000,PREDICTED (predict.py v5)
+UTHR,415,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Cash paid for income taxes,313300000.0000,library map,313300000.0000,PREDICTED (predict.py v5)
+UTHR,415,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Cash paid for interest,13500000.0000,library map,13500000.0000,PREDICTED (predict.py v5)
+UTHR,415,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Accounts payable and accrued expenses,97900000.0000,combined line (library or label demote),97900000.0000,PREDICTED (predict.py v5)
+UTHR,415,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Accounts receivable,70900000.0000,library map,70900000.0000,PREDICTED (predict.py v5)
+UTHR,415,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Inventories,52600000.0000,library map,52600000.0000,PREDICTED (predict.py v5)
+UTHR,415,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Net cash provided by operating activities,1561200000.0000,library map,1561200000.0000,PREDICTED (predict.py v5)
+UTHR,415,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001082554-26-000006,R6,Comprehensive income,1339000000.0000,library map,1339000000.0000,PREDICTED (predict.py v5)
+UTHR,415,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Cost of sales,384400000.0000,library map,384400000.0000,PREDICTED (predict.py v5)
+UTHR,415,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total current assets,3702500000.0000,library map,3702500000.0000,PREDICTED (predict.py v5)
+UTHR,415,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total current liabilities,560600000.0000,library map,560600000.0000,PREDICTED (predict.py v5)
+UTHR,415,deposits,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Depreciation and amortization,85600000.0000,library map,85600000.0000,PREDICTED (predict.py v5)
+UTHR,415,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001082554-26-000006,R5,Diluted (in dollars per share),27.8600,library map,27.8600,PREDICTED (predict.py v5)
+UTHR,415,dividends_paid,not_presented,,,,,,,,0001082554-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+UTHR,415,dividends_per_share,not_presented,,,,,,,,0001082554-26-000006,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+UTHR,415,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Goodwill and other intangible assets, net",116500000.0000,combined line (library or label demote),116500000.0000,PREDICTED (predict.py v5)
+UTHR,415,gross_profit,not_presented,,,,,,,,0001082554-26-000006,,,,no face line,,PREDICTED (predict.py v5)
+UTHR,415,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Income before income taxes,1713900000.0000,library map,1713900000.0000,PREDICTED (predict.py v5)
+UTHR,415,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Income tax expense,379200000.0000,library map,379200000.0000,PREDICTED (predict.py v5)
+UTHR,415,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001082554-26-000006,R5,Interest expense,19500000.0000,library map,19500000.0000,PREDICTED (predict.py v5)
+UTHR,415,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Interest income,192000000.0000,library map,192000000.0000,PREDICTED (predict.py v5)
+UTHR,415,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Inventories, net",183100000.0000,library map,183100000.0000,PREDICTED (predict.py v5)
+UTHR,415,loans_net,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Net income,1334700000.0000,library map,1334700000.0000,PREDICTED (predict.py v5)
+UTHR,415,net_interest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,noninterest_expense,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,noninterest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,every face line between GP/COR and OI; ties to GP - OI,550000000.0000,PREDICTED (predict.py v5)
+UTHR,415,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Operating income,1492500000.0000,library map,1492500000.0000,PREDICTED (predict.py v5)
+UTHR,415,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,"Other income (expense), net",48900000.0000,library map,48900000.0000,PREDICTED (predict.py v5)
+UTHR,415,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,"Property, plant, and equipment, net",1729700000.0000,library map,1729700000.0000,PREDICTED (predict.py v5)
+UTHR,415,provision_for_credit_losses,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Research and development,550000000.0000,library map,550000000.0000,PREDICTED (predict.py v5)
+UTHR,415,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Total revenues,3182700000.0000,library map,3182700000.0000,PREDICTED (predict.py v5)
+UTHR,415,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Share-based compensation expense,147700000.0000,library map,147700000.0000,PREDICTED (predict.py v5)
+UTHR,415,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,Y,SellingGeneralAndAdministrativeExpenseAndAdjustments,sec_api,0001082554-26-000006,R5,"Selling, general, and administrative",755800000.0000,library map,755800000.0000,PREDICTED (predict.py v5)
+UTHR,415,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001082554-26-000006,R9,Payments to repurchase common stock,1000000000.0000,library map,1000000000.0000,PREDICTED (predict.py v5)
+UTHR,415,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001082554-26-000006,R4,"Common stock, shares outstanding (in shares)",43643165.0000,library map,43643165.0000,PREDICTED (predict.py v5)
+UTHR,415,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total stockholders equity,7096200000.0000,library map,7096200000.0000,PREDICTED (predict.py v5)
+UTHR,415,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total assets,7880000000.0000,library map,7880000000.0000,PREDICTED (predict.py v5)
+UTHR,415,total_debt,combined,us-gaap:LinesOfCreditCurrent,BS,0,-5,Y,LongTermLineOfCredit,sec_api,0001082554-26-000006,R3,Line of credit,0.0000,combined line (library or label demote),0.0000,PREDICTED (predict.py v5)
+UTHR,415,total_interest_income,OUT,,,,,,,,0001082554-26-000006,,,,not a bank,,PREDICTED (predict.py v5)
+UTHR,415,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001082554-26-000006,R3,Total liabilities,783800000.0000,library map,783800000.0000,PREDICTED (predict.py v5)
+UTHR,415,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Basic (in shares),44300000.0000,library map,44300000.0000,PREDICTED (predict.py v5)
+UTHR,415,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001082554-26-000006,R5,Diluted (in shares),47900000.0000,library map,47900000.0000,PREDICTED (predict.py v5)

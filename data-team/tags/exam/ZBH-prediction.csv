@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-ZBH,477,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Accounts payable,303000000.0000,library map
-ZBH,477,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Accounts receivable, less allowance for credit losses",1704400000.0000,library map
-ZBH,477,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,library map
-ZBH,477,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,Y,WeightedAverageNumberOfSharesOutstandingBasic,sec_api,0001193125-26-059853,R2,Basic,3.5600,library map
-ZBH,477,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,"Additions to other property, plant and equipment",224500000.0000,library map
-ZBH,477,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Cash and cash equivalents,591900000.0000,library map
-ZBH,477,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Net cash provided by (used in) financing activities,326000000.0000,library map
-ZBH,477,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Net cash used in investing activities,-1975700000.0000,library map
-ZBH,477,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-059853,,,376900000.0000,note fact present in the filing (FSN value)
-ZBH,477,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-059853,,,298400000.0000,note fact present in the filing (FSN value)
-ZBH,477,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Accounts payable and accrued liabilities,101800000.0000,combined line (library or label demote)
-ZBH,477,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Receivables,127300000.0000,library map
-ZBH,477,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Inventories,-98200000.0000,library map
-ZBH,477,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Net cash provided by operating activities,1697100000.0000,library map
-ZBH,477,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-059853,R3,"Comprehensive Income Attributable to Zimmer Biomet Holdings, Inc.",762200000.0000,library map
-ZBH,477,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Cost of products sold, excluding intangible asset amortization",2493700000.0000,library map
-ZBH,477,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Current Assets,5119900000.0000,library map
-ZBH,477,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Current Liabilities,2583700000.0000,library map
-ZBH,477,deposits,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Depreciation and amortization,1093800000.0000,library map
-ZBH,477,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,WeightedAverageNumberOfDilutedSharesOutstanding,sec_api,0001193125-26-059853,R2,Diluted,3.5500,library map
-ZBH,477,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Dividends paid to stockholders,190300000.0000,library map
-ZBH,477,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-059853,R7,Cash dividend declared per share,0.9600,library map
-ZBH,477,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Goodwill,9947100000.0000,library map
-ZBH,477,gross_profit,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
-ZBH,477,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Earnings before income taxes,830800000.0000,library map
-ZBH,477,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Provision for income taxes,125700000.0000,library map
-ZBH,477,interest_expense,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
-ZBH,477,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001193125-26-059853,R2,"Interest expense, net",-292800000.0000,interest income only inside a net/other face line between OI and pretax
-ZBH,477,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Inventories,2286400000.0000,library map
-ZBH,477,loans_net,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Net Earnings of Zimmer Biomet Holdings, Inc.",705100000.0000,library map
-ZBH,477,net_interest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,noninterest_expense,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,noninterest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCostReductionInitiatives;custom:AcquisitionIntegrationDivestitureAndRelatedExpenses,IS,+,-5,N,,fsn_xbrl,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,every face line between GP/COR and OI; ties to GP - OI
-ZBH,477,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Operating Profit,1098100000.0000,library map
-ZBH,477,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Other income (expense), net",25500000.0000,library map
-ZBH,477,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Property, plant and equipment, net",2207100000.0000,library map
-ZBH,477,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Research and development,458500000.0000,library map
-ZBH,477,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Net Sales,8231500000.0000,library map
-ZBH,477,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Share-based compensation,90200000.0000,library map
-ZBH,477,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Selling, general and administrative",3257200000.0000,library map
-ZBH,477,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Repurchase of common stock,487000000.0000,library map
-ZBH,477,shares_outstanding,not_presented,,,,,,,,0001193125-26-059853,,,,no face line
-ZBH,477,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Total Zimmer Biomet Holdings, Inc. stockholders' equity",12697700000.0000,library map
-ZBH,477,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Assets,23091700000.0000,library map
-ZBH,477,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Current portion of long-term debt,587100000.0000,printed face components (duration sum; total_debt founder sum)
-ZBH,477,total_interest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank
-ZBH,477,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Liabilities,10386000000.0000,library map
-ZBH,477,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Basic,198000000.0000,library map
-ZBH,477,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Diluted,198700000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+ZBH,477,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Accounts payable,303000000.0000,library map,303000000.0000,PREDICTED (predict.py v5)
+ZBH,477,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Accounts receivable, less allowance for credit losses",1704400000.0000,library map,1704400000.0000,PREDICTED (predict.py v5)
+ZBH,477,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,library map,665900000.0000,PREDICTED (predict.py v5)
+ZBH,477,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,Y,WeightedAverageNumberOfSharesOutstandingBasic,sec_api,0001193125-26-059853,R2,Basic,3.5600,library map,3.5600,PREDICTED (predict.py v5)
+ZBH,477,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,"Additions to other property, plant and equipment",224500000.0000,library map,224500000.0000,PREDICTED (predict.py v5)
+ZBH,477,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Cash and cash equivalents,591900000.0000,library map,591900000.0000,PREDICTED (predict.py v5)
+ZBH,477,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Net cash provided by (used in) financing activities,326000000.0000,library map,326000000.0000,PREDICTED (predict.py v5)
+ZBH,477,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Net cash used in investing activities,-1975700000.0000,library map,-1975700000.0000,PREDICTED (predict.py v5)
+ZBH,477,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-059853,,,376900000.0000,note fact present in the filing (FSN value),376900000.0000,PREDICTED (predict.py v5)
+ZBH,477,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-059853,,,298400000.0000,note fact present in the filing (FSN value),298400000.0000,PREDICTED (predict.py v5)
+ZBH,477,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Accounts payable and accrued liabilities,101800000.0000,combined line (library or label demote),101800000.0000,PREDICTED (predict.py v5)
+ZBH,477,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Receivables,127300000.0000,library map,127300000.0000,PREDICTED (predict.py v5)
+ZBH,477,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-059853,R8,Inventories,-98200000.0000,library map,-98200000.0000,PREDICTED (predict.py v5)
+ZBH,477,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Net cash provided by operating activities,1697100000.0000,library map,1697100000.0000,PREDICTED (predict.py v5)
+ZBH,477,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-059853,R3,"Comprehensive Income Attributable to Zimmer Biomet Holdings, Inc.",762200000.0000,library map,762200000.0000,PREDICTED (predict.py v5)
+ZBH,477,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Cost of products sold, excluding intangible asset amortization",2493700000.0000,library map,2493700000.0000,PREDICTED (predict.py v5)
+ZBH,477,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Current Assets,5119900000.0000,library map,5119900000.0000,PREDICTED (predict.py v5)
+ZBH,477,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Current Liabilities,2583700000.0000,library map,2583700000.0000,PREDICTED (predict.py v5)
+ZBH,477,deposits,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Depreciation and amortization,1093800000.0000,library map,1093800000.0000,PREDICTED (predict.py v5)
+ZBH,477,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,WeightedAverageNumberOfDilutedSharesOutstanding,sec_api,0001193125-26-059853,R2,Diluted,3.5500,library map,3.5500,PREDICTED (predict.py v5)
+ZBH,477,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Dividends paid to stockholders,190300000.0000,library map,190300000.0000,PREDICTED (predict.py v5)
+ZBH,477,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-059853,R7,Cash dividend declared per share,0.9600,library map,0.9600,PREDICTED (predict.py v5)
+ZBH,477,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Goodwill,9947100000.0000,library map,9947100000.0000,PREDICTED (predict.py v5)
+ZBH,477,gross_profit,not_presented,,,,,,,,0001193125-26-059853,,,,no face line,,PREDICTED (predict.py v5)
+ZBH,477,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Earnings before income taxes,830800000.0000,library map,830800000.0000,PREDICTED (predict.py v5)
+ZBH,477,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Provision for income taxes,125700000.0000,library map,125700000.0000,PREDICTED (predict.py v5)
+ZBH,477,interest_expense,not_presented,,,,,,,,0001193125-26-059853,,,,no face line,,PREDICTED (predict.py v5)
+ZBH,477,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001193125-26-059853,R2,"Interest expense, net",-292800000.0000,interest income only inside a net/other face line between OI and pretax,-292800000.0000,PREDICTED (predict.py v5)
+ZBH,477,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Inventories,2286400000.0000,library map,2286400000.0000,PREDICTED (predict.py v5)
+ZBH,477,loans_net,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Net Earnings of Zimmer Biomet Holdings, Inc.",705100000.0000,library map,705100000.0000,PREDICTED (predict.py v5)
+ZBH,477,net_interest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,noninterest_expense,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,noninterest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,operating_expenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCostReductionInitiatives;custom:AcquisitionIntegrationDivestitureAndRelatedExpenses,IS,+,-5,N,,fsn_xbrl,0001193125-26-059853,R2,Intangible asset amortization,665900000.0000,every face line between GP/COR and OI; ties to GP - OI,665900000.0000,PREDICTED (predict.py v5)
+ZBH,477,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Operating Profit,1098100000.0000,library map,1098100000.0000,PREDICTED (predict.py v5)
+ZBH,477,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Other income (expense), net",25500000.0000,library map,25500000.0000,PREDICTED (predict.py v5)
+ZBH,477,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Property, plant and equipment, net",2207100000.0000,library map,2207100000.0000,PREDICTED (predict.py v5)
+ZBH,477,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Research and development,458500000.0000,library map,458500000.0000,PREDICTED (predict.py v5)
+ZBH,477,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Net Sales,8231500000.0000,library map,8231500000.0000,PREDICTED (predict.py v5)
+ZBH,477,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Share-based compensation,90200000.0000,library map,90200000.0000,PREDICTED (predict.py v5)
+ZBH,477,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,"Selling, general and administrative",3257200000.0000,library map,3257200000.0000,PREDICTED (predict.py v5)
+ZBH,477,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-059853,R8,Repurchase of common stock,487000000.0000,library map,487000000.0000,PREDICTED (predict.py v5)
+ZBH,477,shares_outstanding,not_presented,,,,,,,,0001193125-26-059853,,,,no face line,,PREDICTED (predict.py v5)
+ZBH,477,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,"Total Zimmer Biomet Holdings, Inc. stockholders' equity",12697700000.0000,library map,12697700000.0000,PREDICTED (predict.py v5)
+ZBH,477,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Assets,23091700000.0000,library map,23091700000.0000,PREDICTED (predict.py v5)
+ZBH,477,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Current portion of long-term debt,587100000.0000,printed face components (duration sum; total_debt founder sum),587100000.0000,PREDICTED (predict.py v5)
+ZBH,477,total_interest_income,OUT,,,,,,,,0001193125-26-059853,,,,not a bank,,PREDICTED (predict.py v5)
+ZBH,477,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001193125-26-059853,R4,Total Liabilities,10386000000.0000,library map,10386000000.0000,PREDICTED (predict.py v5)
+ZBH,477,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Basic,198000000.0000,library map,198000000.0000,PREDICTED (predict.py v5)
+ZBH,477,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001193125-26-059853,R2,Diluted,198700000.0000,library map,198700000.0000,PREDICTED (predict.py v5)

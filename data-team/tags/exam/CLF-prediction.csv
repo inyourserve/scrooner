@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CLF,867,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Accounts payable,1893000000.0000,library map
-CLF,867,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,"Accounts receivable, net",1442000000.0000,library map
-CLF,867,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000764065-26-000025,,,81000000.0000,note fact present in the filing (FSN value)
-CLF,867,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000764065-26-000025,R5,Earnings (loss) per common share attributable to Cliffs common shareholders - basic (in dollars per share),-2.9100,library map
-CLF,867,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,"Purchase of property, plant and equipment",561000000.0000,library map
-CLF,867,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Cash and cash equivalents,57000000.0000,library map
-CLF,867,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,Net cash provided (used) by financing activities,942000000.0000,library map
-CLF,867,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Net cash used by investing activities,-479000000.0000,library map
-CLF,867,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000764065-26-000025,,,-16000000.0000,note fact present in the filing (FSN value)
-CLF,867,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000764065-26-000025,,,459000000.0000,note fact present in the filing (FSN value)
-CLF,867,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,"Payables, accrued employment and accrued expenses",-78000000.0000,combined line (library or label demote)
-CLF,867,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,"Accounts receivable, net",-134000000.0000,library map
-CLF,867,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Inventories,-315000000.0000,library map
-CLF,867,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Net cash provided (used) by operating activities,-462000000.0000,library map
-CLF,867,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0000764065-26-000025,R6,Comprehensive income (loss) attributable to Cliffs shareholders,-1523000000.0000,library map
-CLF,867,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Cost of goods sold,19470000000.0000,library map
-CLF,867,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total current assets,6435000000.0000,library map
-CLF,867,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total current liabilities,3302000000.0000,library map
-CLF,867,deposits,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,"Depreciation, depletion and amortization",1235000000.0000,library map
-CLF,867,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000764065-26-000025,R5,Earnings (loss) per common share attributable to Cliffs common shareholders - diluted (in dollars per share),-2.9100,library map
-CLF,867,dividends_paid,not_presented,,,,,,,,0000764065-26-000025,,,,no face line
-CLF,867,dividends_per_share,not_presented,,,,,,,,0000764065-26-000025,,,,no face line and no note fact
-CLF,867,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Goodwill,1814000000.0000,library map
-CLF,867,gross_profit,not_presented,,,,,,,,0000764065-26-000025,,,,no face line
-CLF,867,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Income (loss) from continuing operations before income taxes,-2004000000.0000,library map
-CLF,867,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Income tax benefit (expense),-581000000.0000,library map
-CLF,867,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,"Interest expense, net",-594000000.0000,combined line (library or label demote)
-CLF,867,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,"Interest expense, net",-594000000.0000,interest income only inside a net/other face line between OI and pretax
-CLF,867,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Inventories,4772000000.0000,library map
-CLF,867,loans_net,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,net_income,not_presented,,,,,,,,0000764065-26-000025,,,,no face line
-CLF,867,net_interest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,noninterest_expense,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,noninterest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:TangibleAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,every face line between GP/COR and OI; ties to GP - OI
-CLF,867,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Operating income (loss),-1579000000.0000,library map
-CLF,867,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Other non-operating income,1000000.0000,library map
-CLF,867,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,"Property, plant and equipment, net",9481000000.0000,library map
-CLF,867,provision_for_credit_losses,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,research_and_development,not_presented,,,,,,,,0000764065-26-000025,,,,no face line
-CLF,867,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Revenues,18610000000.0000,library map
-CLF,867,sbc,component_in_note,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000764065-26-000025,,,57000000.0000,note fact present in the filing (FSN value)
-CLF,867,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,library map
-CLF,867,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0000764065-26-000025,R7,Repurchase of common shares,0.0000,library map
-CLF,867,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000764065-26-000025,R4,"Common shares, outstanding (in shares)",569759243.0000,library map
-CLF,867,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total Cliffs shareholders' equity,6116000000.0000,library map
-CLF,867,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,TOTAL ASSETS,20012000000.0000,library map
-CLF,867,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Long-term debt,7253000000.0000,printed face components (duration sum; total_debt founder sum)
-CLF,867,total_interest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank
-CLF,867,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,TOTAL LIABILITIES,13689000000.0000,library map
-CLF,867,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000764065-26-000025,,,508000000.0000,note fact present in the filing (FSN value)
-CLF,867,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000764065-26-000025,,,508000000.0000,note fact present in the filing (FSN value)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+CLF,867,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Accounts payable,1893000000.0000,library map,1893000000.0000,PREDICTED (predict.py v5)
+CLF,867,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,"Accounts receivable, net",1442000000.0000,library map,1442000000.0000,PREDICTED (predict.py v5)
+CLF,867,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000764065-26-000025,,,81000000.0000,note fact present in the filing (FSN value),81000000.0000,PREDICTED (predict.py v5)
+CLF,867,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000764065-26-000025,R5,Earnings (loss) per common share attributable to Cliffs common shareholders - basic (in dollars per share),-2.9100,library map,-2.9100,PREDICTED (predict.py v5)
+CLF,867,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,"Purchase of property, plant and equipment",561000000.0000,library map,561000000.0000,PREDICTED (predict.py v5)
+CLF,867,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Cash and cash equivalents,57000000.0000,library map,57000000.0000,PREDICTED (predict.py v5)
+CLF,867,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,Net cash provided (used) by financing activities,942000000.0000,library map,942000000.0000,PREDICTED (predict.py v5)
+CLF,867,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Net cash used by investing activities,-479000000.0000,library map,-479000000.0000,PREDICTED (predict.py v5)
+CLF,867,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,-,,,,sec_api,0000764065-26-000025,,,-16000000.0000,note fact present in the filing (FSN value),-16000000.0000,PREDICTED (predict.py v5)
+CLF,867,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000764065-26-000025,,,459000000.0000,note fact present in the filing (FSN value),459000000.0000,PREDICTED (predict.py v5)
+CLF,867,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,"Payables, accrued employment and accrued expenses",-78000000.0000,combined line (library or label demote),-78000000.0000,PREDICTED (predict.py v5)
+CLF,867,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,"Accounts receivable, net",-134000000.0000,library map,-134000000.0000,PREDICTED (predict.py v5)
+CLF,867,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Inventories,-315000000.0000,library map,-315000000.0000,PREDICTED (predict.py v5)
+CLF,867,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-6,N,,sec_api,0000764065-26-000025,R7,Net cash provided (used) by operating activities,-462000000.0000,library map,-462000000.0000,PREDICTED (predict.py v5)
+CLF,867,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0000764065-26-000025,R6,Comprehensive income (loss) attributable to Cliffs shareholders,-1523000000.0000,library map,-1523000000.0000,PREDICTED (predict.py v5)
+CLF,867,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Cost of goods sold,19470000000.0000,library map,19470000000.0000,PREDICTED (predict.py v5)
+CLF,867,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total current assets,6435000000.0000,library map,6435000000.0000,PREDICTED (predict.py v5)
+CLF,867,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total current liabilities,3302000000.0000,library map,3302000000.0000,PREDICTED (predict.py v5)
+CLF,867,deposits,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000764065-26-000025,R7,"Depreciation, depletion and amortization",1235000000.0000,library map,1235000000.0000,PREDICTED (predict.py v5)
+CLF,867,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0000764065-26-000025,R5,Earnings (loss) per common share attributable to Cliffs common shareholders - diluted (in dollars per share),-2.9100,library map,-2.9100,PREDICTED (predict.py v5)
+CLF,867,dividends_paid,not_presented,,,,,,,,0000764065-26-000025,,,,no face line,,PREDICTED (predict.py v5)
+CLF,867,dividends_per_share,not_presented,,,,,,,,0000764065-26-000025,,,,no face line and no note fact,,PREDICTED (predict.py v5)
+CLF,867,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Goodwill,1814000000.0000,library map,1814000000.0000,PREDICTED (predict.py v5)
+CLF,867,gross_profit,not_presented,,,,,,,,0000764065-26-000025,,,,no face line,,PREDICTED (predict.py v5)
+CLF,867,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Income (loss) from continuing operations before income taxes,-2004000000.0000,library map,-2004000000.0000,PREDICTED (predict.py v5)
+CLF,867,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Income tax benefit (expense),-581000000.0000,library map,-581000000.0000,PREDICTED (predict.py v5)
+CLF,867,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,"Interest expense, net",-594000000.0000,net or partial interest line,-594000000.0000,PREDICTED (predict.py v5)
+CLF,867,interest_income,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,"Interest expense, net",-594000000.0000,interest income only inside a net/other face line between OI and pretax,-594000000.0000,PREDICTED (predict.py v5)
+CLF,867,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Inventories,4772000000.0000,library map,4772000000.0000,PREDICTED (predict.py v5)
+CLF,867,loans_net,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,net_income,not_presented,,,,,,,,0000764065-26-000025,,,,no face line,,PREDICTED (predict.py v5)
+CLF,867,net_interest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,noninterest_expense,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,noninterest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:TangibleAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,every face line between GP/COR and OI; ties to GP - OI,543000000.0000,PREDICTED (predict.py v5)
+CLF,867,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000764065-26-000025,R5,Operating income (loss),-1579000000.0000,library map,-1579000000.0000,PREDICTED (predict.py v5)
+CLF,867,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Other non-operating income,1000000.0000,library map,1000000.0000,PREDICTED (predict.py v5)
+CLF,867,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,"Property, plant and equipment, net",9481000000.0000,library map,9481000000.0000,PREDICTED (predict.py v5)
+CLF,867,provision_for_credit_losses,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,research_and_development,not_presented,,,,,,,,0000764065-26-000025,,,,no face line,,PREDICTED (predict.py v5)
+CLF,867,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,Revenues,18610000000.0000,library map,18610000000.0000,PREDICTED (predict.py v5)
+CLF,867,sbc,mapped,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0000764065-26-000025,,,57000000.0000,note fact present in the filing (FSN value),57000000.0000,PREDICTED (predict.py v5)
+CLF,867,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000764065-26-000025,R5,"Selling, general and administrative expenses",543000000.0000,library map,543000000.0000,PREDICTED (predict.py v5)
+CLF,867,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-6,N,,sec_api,0000764065-26-000025,R7,Repurchase of common shares,0.0000,library map,0.0000,PREDICTED (predict.py v5)
+CLF,867,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000764065-26-000025,R4,"Common shares, outstanding (in shares)",569759243.0000,library map,569759243.0000,PREDICTED (predict.py v5)
+CLF,867,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Total Cliffs shareholders' equity,6116000000.0000,library map,6116000000.0000,PREDICTED (predict.py v5)
+CLF,867,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,TOTAL ASSETS,20012000000.0000,library map,20012000000.0000,PREDICTED (predict.py v5)
+CLF,867,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,Long-term debt,7253000000.0000,printed face components (duration sum; total_debt founder sum),7253000000.0000,PREDICTED (predict.py v5)
+CLF,867,total_interest_income,OUT,,,,,,,,0000764065-26-000025,,,,not a bank,,PREDICTED (predict.py v5)
+CLF,867,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000764065-26-000025,R3,TOTAL LIABILITIES,13689000000.0000,library map,13689000000.0000,PREDICTED (predict.py v5)
+CLF,867,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0000764065-26-000025,,,508000000.0000,note fact present in the filing (FSN value),508000000.0000,PREDICTED (predict.py v5)
+CLF,867,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0000764065-26-000025,,,508000000.0000,note fact present in the filing (FSN value),508000000.0000,PREDICTED (predict.py v5)

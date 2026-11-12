@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-ZTS,319,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Accounts payable,487000000.0000,library map
-ZTS,319,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Accounts receivable, less allowance for doubtful accounts of $16 in 2025 and $18 in 2024",1590000000.0000,library map
-ZTS,319,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001555280-26-000011,,,157000000.0000,note fact present in the filing (FSN value)
-ZTS,319,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001555280-26-000011,R3,Basic (in dollars per share),6.0300,library map
-ZTS,319,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,Y,CapitalExpendituresIncurredButNotYetPaid,sec_api,0001555280-26-000011,R9,Capital expenditures,621000000.0000,library map
-ZTS,319,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Cash and cash equivalents,2312000000.0000,combined line (library or label demote)
-ZTS,319,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001555280-26-000011,R9,Net cash used in financing activities,-1870000000.0000,library map
-ZTS,319,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001555280-26-000011,R9,Net cash used in investing activities,-748000000.0000,library map
-ZTS,319,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Income Taxes Paid, Net",715000000.0000,library map
-ZTS,319,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Interest, net of capitalized interest",261000000.0000,library map
-ZTS,319,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Accounts payable,46000000.0000,library map
-ZTS,319,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Accounts receivable,236000000.0000,library map
-ZTS,319,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Inventories,199000000.0000,library map
-ZTS,319,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Net cash provided by operating activities,2904000000.0000,library map
-ZTS,319,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001555280-26-000011,R4,Comprehensive income attributable to Zoetis Inc.,2779000000.0000,library map
-ZTS,319,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Cost of Sales,2666000000.0000,library map
-ZTS,319,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total current assets,6768000000.0000,library map
-ZTS,319,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total current liabilities,2235000000.0000,library map
-ZTS,319,deposits,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Depreciation and amortization expense,487000000.0000,library map
-ZTS,319,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001555280-26-000011,R3,Diluted (in dollars per share),6.0200,library map
-ZTS,319,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Cash dividends paid,889000000.0000,library map
-ZTS,319,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,32767,N,,sec_api,0001555280-26-000011,R3,Dividends declared per common share,2.0300,library map
-ZTS,319,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Goodwill,2767000000.0000,library map
-ZTS,319,gross_profit,not_presented,,,,,,,,0001555280-26-000011,,,,no face line
-ZTS,319,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Income before provision for taxes on income,3360000000.0000,library map
-ZTS,319,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Provision for taxes on income,687000000.0000,library map
-ZTS,319,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,library map
-ZTS,319,interest_income,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,interest income only inside a net/other face line between OI and pretax
-ZTS,319,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Inventories,2430000000.0000,library map
-ZTS,319,loans_net,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Net income attributable to Zoetis Inc.,2673000000.0000,library map
-ZTS,319,net_interest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,noninterest_expense,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,noninterest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,operating_expenses,not_presented,,,,,,,,0001555280-26-000011,,,,no opex total and no GP/COR anchor
-ZTS,319,operating_income,not_presented,,,,,,,,0001555280-26-000011,,,,no face line
-ZTS,319,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Other (income)/deductionsnet,36000000.0000,combined line (library or label demote)
-ZTS,319,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Property, plant and equipment, less accumulated depreciation of $2,925 in 2025 and $2,635 in 2024",3681000000.0000,library map
-ZTS,319,provision_for_credit_losses,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Research and development expenses,698000000.0000,library map
-ZTS,319,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Revenues,9467000000.0000,library map
-ZTS,319,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Share-based compensation expense,83000000.0000,library map
-ZTS,319,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Selling, general and administrative expenses",2378000000.0000,library map
-ZTS,319,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Purchases of treasury stock, including excise taxes paid",3235000000.0000,combined line (library or label demote)
-ZTS,319,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001555280-26-000011,R7,"Common stock, shares outstanding",424927535.0000,library map
-ZTS,319,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total Zoetis Inc. equity,3331000000.0000,library map
-ZTS,319,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total assets,15467000000.0000,library map
-ZTS,319,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001555280-26-000011,R6,Current portion of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
-ZTS,319,total_interest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank
-ZTS,319,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total liabilities,12136000000.0000,library map
-ZTS,319,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001555280-26-000011,R3,Basic (in shares),443443000.0000,library map
-ZTS,319,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001555280-26-000011,R3,Diluted (in shares),443835000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+ZTS,319,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Accounts payable,487000000.0000,library map,487000000.0000,PREDICTED (predict.py v5)
+ZTS,319,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Accounts receivable, less allowance for doubtful accounts of $16 in 2025 and $18 in 2024",1590000000.0000,library map,1590000000.0000,PREDICTED (predict.py v5)
+ZTS,319,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001555280-26-000011,,,157000000.0000,note fact present in the filing (FSN value),157000000.0000,PREDICTED (predict.py v5)
+ZTS,319,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001555280-26-000011,R3,Basic (in dollars per share),6.0300,library map,6.0300,PREDICTED (predict.py v5)
+ZTS,319,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,Y,CapitalExpendituresIncurredButNotYetPaid,sec_api,0001555280-26-000011,R9,Capital expenditures,621000000.0000,library map,621000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Cash and cash equivalents,2312000000.0000,combined line (library or label demote),2312000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001555280-26-000011,R9,Net cash used in financing activities,-1870000000.0000,library map,-1870000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001555280-26-000011,R9,Net cash used in investing activities,-748000000.0000,library map,-748000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Income Taxes Paid, Net",715000000.0000,library map,715000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Interest, net of capitalized interest",261000000.0000,library map,261000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Accounts payable,46000000.0000,library map,46000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Accounts receivable,236000000.0000,library map,236000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Inventories,199000000.0000,library map,199000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Net cash provided by operating activities,2904000000.0000,library map,2904000000.0000,PREDICTED (predict.py v5)
+ZTS,319,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001555280-26-000011,R4,Comprehensive income attributable to Zoetis Inc.,2779000000.0000,library map,2779000000.0000,PREDICTED (predict.py v5)
+ZTS,319,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Cost of Sales,2666000000.0000,library map,2666000000.0000,PREDICTED (predict.py v5)
+ZTS,319,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total current assets,6768000000.0000,library map,6768000000.0000,PREDICTED (predict.py v5)
+ZTS,319,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total current liabilities,2235000000.0000,library map,2235000000.0000,PREDICTED (predict.py v5)
+ZTS,319,deposits,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Depreciation and amortization expense,487000000.0000,library map,487000000.0000,PREDICTED (predict.py v5)
+ZTS,319,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001555280-26-000011,R3,Diluted (in dollars per share),6.0200,library map,6.0200,PREDICTED (predict.py v5)
+ZTS,319,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Cash dividends paid,889000000.0000,library map,889000000.0000,PREDICTED (predict.py v5)
+ZTS,319,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,32767,N,,sec_api,0001555280-26-000011,R3,Dividends declared per common share,2.0300,library map,2.0300,PREDICTED (predict.py v5)
+ZTS,319,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Goodwill,2767000000.0000,library map,2767000000.0000,PREDICTED (predict.py v5)
+ZTS,319,gross_profit,not_presented,,,,,,,,0001555280-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+ZTS,319,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Income before provision for taxes on income,3360000000.0000,library map,3360000000.0000,PREDICTED (predict.py v5)
+ZTS,319,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Provision for taxes on income,687000000.0000,library map,687000000.0000,PREDICTED (predict.py v5)
+ZTS,319,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,library map,222000000.0000,PREDICTED (predict.py v5)
+ZTS,319,interest_income,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Interest expense, net of capitalized interest",222000000.0000,interest income only inside a net/other face line between OI and pretax,222000000.0000,PREDICTED (predict.py v5)
+ZTS,319,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Inventories,2430000000.0000,library map,2430000000.0000,PREDICTED (predict.py v5)
+ZTS,319,loans_net,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Net income attributable to Zoetis Inc.,2673000000.0000,library map,2673000000.0000,PREDICTED (predict.py v5)
+ZTS,319,net_interest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,noninterest_expense,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,noninterest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,operating_expenses,not_presented,,,,,,,,0001555280-26-000011,,,,no opex total and no GP/COR anchor,,PREDICTED (predict.py v5)
+ZTS,319,operating_income,not_presented,,,,,,,,0001555280-26-000011,,,,no face line,,PREDICTED (predict.py v5)
+ZTS,319,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Other (income)/deductionsnet,36000000.0000,combined line (library or label demote),36000000.0000,PREDICTED (predict.py v5)
+ZTS,319,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,"Property, plant and equipment, less accumulated depreciation of $2,925 in 2025 and $2,635 in 2024",3681000000.0000,library map,3681000000.0000,PREDICTED (predict.py v5)
+ZTS,319,provision_for_credit_losses,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Research and development expenses,698000000.0000,library map,698000000.0000,PREDICTED (predict.py v5)
+ZTS,319,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,Revenues,9467000000.0000,library map,9467000000.0000,PREDICTED (predict.py v5)
+ZTS,319,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,Share-based compensation expense,83000000.0000,library map,83000000.0000,PREDICTED (predict.py v5)
+ZTS,319,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001555280-26-000011,R3,"Selling, general and administrative expenses",2378000000.0000,library map,2378000000.0000,PREDICTED (predict.py v5)
+ZTS,319,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001555280-26-000011,R9,"Purchases of treasury stock, including excise taxes paid",3235000000.0000,combined line (library or label demote),3235000000.0000,PREDICTED (predict.py v5)
+ZTS,319,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001555280-26-000011,R7,"Common stock, shares outstanding",424927535.0000,library map,424927535.0000,PREDICTED (predict.py v5)
+ZTS,319,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total Zoetis Inc. equity,3331000000.0000,library map,3331000000.0000,PREDICTED (predict.py v5)
+ZTS,319,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total assets,15467000000.0000,library map,15467000000.0000,PREDICTED (predict.py v5)
+ZTS,319,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001555280-26-000011,R6,Current portion of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum),0.0000,PREDICTED (predict.py v5)
+ZTS,319,total_interest_income,OUT,,,,,,,,0001555280-26-000011,,,,not a bank,,PREDICTED (predict.py v5)
+ZTS,319,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001555280-26-000011,R6,Total liabilities,12136000000.0000,library map,12136000000.0000,PREDICTED (predict.py v5)
+ZTS,319,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001555280-26-000011,R3,Basic (in shares),443443000.0000,library map,443443000.0000,PREDICTED (predict.py v5)
+ZTS,319,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001555280-26-000011,R3,Diluted (in shares),443835000.0000,library map,443835000.0000,PREDICTED (predict.py v5)

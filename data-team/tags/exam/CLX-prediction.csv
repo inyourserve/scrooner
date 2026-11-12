@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CLX,676,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Accounts payable and accrued liabilities,1600000000.0000,combined line (library or label demote)
-CLX,676,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Receivables, net",791000000.0000,combined line (library or label demote)
-CLX,676,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021076-26-000034,,,28000000.0000,note fact present in the filing (FSN value)
-CLX,676,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021076-26-000034,R3,Basic net earnings per share (in dollars per share),4.8200,library map
-CLX,676,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Capital expenditures,207000000.0000,library map
-CLX,676,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Cash and cash equivalents,143000000.0000,library map
-CLX,676,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Net cash provided by (used for) financing activities,1668000000.0000,library map
-CLX,676,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000021076-26-000034,R9,Net cash used for investing activities,-2301000000.0000,library map
-CLX,676,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,"Income taxes paid, net of refunds",104000000.0000,library map
-CLX,676,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Interest paid,122000000.0000,library map
-CLX,676,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Accounts payable and accrued liabilities,38000000.0000,combined line (library or label demote)
-CLX,676,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0000021076-26-000034,R9,"Receivables, net",-151000000.0000,library map
-CLX,676,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,"Inventories, net",71000000.0000,library map
-CLX,676,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Net cash provided by operations,612000000.0000,library map
-CLX,676,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000021076-26-000034,R4,Total comprehensive income attributable to Clorox,587000000.0000,library map
-CLX,676,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Cost of products sold,3876000000.0000,library map
-CLX,676,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total current assets,1824000000.0000,library map
-CLX,676,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total current liabilities,2773000000.0000,library map
-CLX,676,deposits,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Depreciation and amortization,247000000.0000,library map
-CLX,676,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000021076-26-000034,R3,Diluted net earnings per share (in dollars per share),4.8100,library map
-CLX,676,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Cash dividends paid to Clorox stockholders,602000000.0000,library map
-CLX,676,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000021076-26-000034,R8,Dividends per share declared (in dollars per share),4.9600,library map
-CLX,676,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Goodwill,1945000000.0000,library map
-CLX,676,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Gross profit,2844000000.0000,library map
-CLX,676,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Earnings before income taxes,791000000.0000,library map
-CLX,676,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Income taxes,190000000.0000,library map
-CLX,676,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Interest expense,130000000.0000,library map
-CLX,676,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0000021076-26-000034,,,8000000.0000,note fact present in the filing (FSN value)
-CLX,676,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Inventories, net",777000000.0000,library map
-CLX,676,loans_net,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Net earnings attributable to Clorox,587000000.0000,library map
-CLX,676,net_interest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,noninterest_expense,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,noninterest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,operating_expenses,not_presented,,,,,,,,0000021076-26-000034,,,,no opex total and no GP/COR anchor
-CLX,676,operating_income,not_presented,,,,,,,,0000021076-26-000034,,,,no face line
-CLX,676,other_income_expense_net,not_presented,,,,,,,,0000021076-26-000034,,,,no face line
-CLX,676,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Property, plant and equipment, net",1512000000.0000,library map
-CLX,676,provision_for_credit_losses,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Research and development costs,116000000.0000,library map
-CLX,676,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Net sales,6720000000.0000,library map
-CLX,676,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Stock-based compensation,48000000.0000,library map
-CLX,676,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Selling and administrative expenses,1066000000.0000,library map
-CLX,676,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Treasury stock purchased,256000000.0000,library map
-CLX,676,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000021076-26-000034,R6,"Common stock, shares outstanding (in shares)",120926454.0000,library map
-CLX,676,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total Clorox stockholders equity,90000000.0000,library map
-CLX,676,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total assets,7794000000.0000,library map
-CLX,676,total_debt,component_sum,us-gaap:CommercialPaper;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Notes and loans payable,1086000000.0000,printed face components (duration sum; total_debt founder sum)
-CLX,676,total_interest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank
-CLX,676,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total liabilities,7542000000.0000,library map
-CLX,676,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000021076-26-000034,R3,Basic (in shares),121775000.0000,library map
-CLX,676,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000021076-26-000034,R3,Diluted (in shares),122132000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+CLX,676,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Accounts payable and accrued liabilities,1600000000.0000,combined line (library or label demote),1600000000.0000,PREDICTED (predict.py v5)
+CLX,676,accounts_receivable,mapped,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Receivables, net",791000000.0000,"single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)",791000000.0000,PREDICTED (predict.py v5)
+CLX,676,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000021076-26-000034,,,28000000.0000,note fact present in the filing (FSN value),28000000.0000,PREDICTED (predict.py v5)
+CLX,676,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000021076-26-000034,R3,Basic net earnings per share (in dollars per share),4.8200,library map,4.8200,PREDICTED (predict.py v5)
+CLX,676,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Capital expenditures,207000000.0000,library map,207000000.0000,PREDICTED (predict.py v5)
+CLX,676,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Cash and cash equivalents,143000000.0000,library map,143000000.0000,PREDICTED (predict.py v5)
+CLX,676,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Net cash provided by (used for) financing activities,1668000000.0000,library map,1668000000.0000,PREDICTED (predict.py v5)
+CLX,676,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000021076-26-000034,R9,Net cash used for investing activities,-2301000000.0000,library map,-2301000000.0000,PREDICTED (predict.py v5)
+CLX,676,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,"Income taxes paid, net of refunds",104000000.0000,library map,104000000.0000,PREDICTED (predict.py v5)
+CLX,676,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Interest paid,122000000.0000,library map,122000000.0000,PREDICTED (predict.py v5)
+CLX,676,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Accounts payable and accrued liabilities,38000000.0000,combined line (library or label demote),38000000.0000,PREDICTED (predict.py v5)
+CLX,676,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-6,N,,sec_api,0000021076-26-000034,R9,"Receivables, net",-151000000.0000,library map,-151000000.0000,PREDICTED (predict.py v5)
+CLX,676,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,"Inventories, net",71000000.0000,library map,71000000.0000,PREDICTED (predict.py v5)
+CLX,676,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Net cash provided by operations,612000000.0000,library map,612000000.0000,PREDICTED (predict.py v5)
+CLX,676,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000021076-26-000034,R4,Total comprehensive income attributable to Clorox,587000000.0000,library map,587000000.0000,PREDICTED (predict.py v5)
+CLX,676,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Cost of products sold,3876000000.0000,library map,3876000000.0000,PREDICTED (predict.py v5)
+CLX,676,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total current assets,1824000000.0000,library map,1824000000.0000,PREDICTED (predict.py v5)
+CLX,676,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total current liabilities,2773000000.0000,library map,2773000000.0000,PREDICTED (predict.py v5)
+CLX,676,deposits,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Depreciation and amortization,247000000.0000,library map,247000000.0000,PREDICTED (predict.py v5)
+CLX,676,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000021076-26-000034,R3,Diluted net earnings per share (in dollars per share),4.8100,library map,4.8100,PREDICTED (predict.py v5)
+CLX,676,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Cash dividends paid to Clorox stockholders,602000000.0000,library map,602000000.0000,PREDICTED (predict.py v5)
+CLX,676,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000021076-26-000034,R8,Dividends per share declared (in dollars per share),4.9600,library map,4.9600,PREDICTED (predict.py v5)
+CLX,676,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Goodwill,1945000000.0000,library map,1945000000.0000,PREDICTED (predict.py v5)
+CLX,676,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Gross profit,2844000000.0000,library map,2844000000.0000,PREDICTED (predict.py v5)
+CLX,676,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Earnings before income taxes,791000000.0000,library map,791000000.0000,PREDICTED (predict.py v5)
+CLX,676,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Income taxes,190000000.0000,library map,190000000.0000,PREDICTED (predict.py v5)
+CLX,676,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Interest expense,130000000.0000,library map,130000000.0000,PREDICTED (predict.py v5)
+CLX,676,interest_income,combined,us-gaap:InvestmentIncomeInterestAndDividend,NOTE,+,,,,sec_api,0000021076-26-000034,,,8000000.0000,note fact present in the filing (FSN value),8000000.0000,PREDICTED (predict.py v5)
+CLX,676,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Inventories, net",777000000.0000,library map,777000000.0000,PREDICTED (predict.py v5)
+CLX,676,loans_net,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Net earnings attributable to Clorox,587000000.0000,library map,587000000.0000,PREDICTED (predict.py v5)
+CLX,676,net_interest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,noninterest_expense,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,noninterest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,operating_expenses,not_presented,,,,,,,,0000021076-26-000034,,,,no opex total and no GP/COR anchor,,PREDICTED (predict.py v5)
+CLX,676,operating_income,not_presented,,,,,,,,0000021076-26-000034,,,,no face line,,PREDICTED (predict.py v5)
+CLX,676,other_income_expense_net,not_presented,,,,,,,,0000021076-26-000034,,,,no face line,,PREDICTED (predict.py v5)
+CLX,676,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,"Property, plant and equipment, net",1512000000.0000,library map,1512000000.0000,PREDICTED (predict.py v5)
+CLX,676,provision_for_credit_losses,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Research and development costs,116000000.0000,library map,116000000.0000,PREDICTED (predict.py v5)
+CLX,676,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Net sales,6720000000.0000,library map,6720000000.0000,PREDICTED (predict.py v5)
+CLX,676,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Stock-based compensation,48000000.0000,library map,48000000.0000,PREDICTED (predict.py v5)
+CLX,676,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000021076-26-000034,R3,Selling and administrative expenses,1066000000.0000,library map,1066000000.0000,PREDICTED (predict.py v5)
+CLX,676,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000021076-26-000034,R9,Treasury stock purchased,256000000.0000,library map,256000000.0000,PREDICTED (predict.py v5)
+CLX,676,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000021076-26-000034,R6,"Common stock, shares outstanding (in shares)",120926454.0000,library map,120926454.0000,PREDICTED (predict.py v5)
+CLX,676,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total Clorox stockholders equity,90000000.0000,library map,90000000.0000,PREDICTED (predict.py v5)
+CLX,676,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total assets,7794000000.0000,library map,7794000000.0000,PREDICTED (predict.py v5)
+CLX,676,total_debt,component_sum,us-gaap:CommercialPaper;us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Notes and loans payable,1086000000.0000,printed face components (duration sum; total_debt founder sum),1086000000.0000,PREDICTED (predict.py v5)
+CLX,676,total_interest_income,OUT,,,,,,,,0000021076-26-000034,,,,not a bank,,PREDICTED (predict.py v5)
+CLX,676,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000021076-26-000034,R5,Total liabilities,7542000000.0000,library map,7542000000.0000,PREDICTED (predict.py v5)
+CLX,676,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000021076-26-000034,R3,Basic (in shares),121775000.0000,library map,121775000.0000,PREDICTED (predict.py v5)
+CLX,676,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000021076-26-000034,R3,Diluted (in shares),122132000.0000,library map,122132000.0000,PREDICTED (predict.py v5)
