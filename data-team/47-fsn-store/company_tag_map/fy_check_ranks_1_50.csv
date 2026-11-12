@@ -1035,8 +1035,8 @@ company_id,ticker,data_point,fy,period,status
 666,LLY,total_liabilities,FY-1,2024-12-31,held C8 (BS derive lane)
 716,BAC,accounts_receivable,FY0,2025-12-31,combined (reasoned blank)
 716,BAC,accounts_receivable,FY-1,2024-12-31,combined (reasoned blank)
-716,BAC,amortization_of_intangibles,FY0,2025-12-31,GAP
-716,BAC,amortization_of_intangibles,FY-1,2024-12-31,GAP
+716,BAC,amortization_of_intangibles,FY0,2025-12-31,served
+716,BAC,amortization_of_intangibles,FY-1,2024-12-31,served
 716,BAC,basic_eps,FY0,2025-12-31,served
 716,BAC,basic_eps,FY-1,2024-12-31,served
 716,BAC,cash_and_equivalents,FY0,2025-12-31,served
@@ -1061,8 +1061,8 @@ company_id,ticker,data_point,fy,period,status
 716,BAC,diluted_eps,FY-1,2024-12-31,served
 716,BAC,dividends_paid,FY0,2025-12-31,served
 716,BAC,dividends_paid,FY-1,2024-12-31,served
-716,BAC,dividends_per_share,FY0,2025-12-31,GAP
-716,BAC,dividends_per_share,FY-1,2024-12-31,GAP
+716,BAC,dividends_per_share,FY0,2025-12-31,served
+716,BAC,dividends_per_share,FY-1,2024-12-31,served
 716,BAC,effective_tax_rate_reported,FY0,2025-12-31,tax note
 716,BAC,effective_tax_rate_reported,FY-1,2024-12-31,tax note
 716,BAC,employee_count,FY0,2025-12-31,cover page / 10-K text
@@ -2739,8 +2739,8 @@ company_id,ticker,data_point,fy,period,status
 1857,COST,diluted_eps,FY-1,2025-08-31,served
 1857,COST,dividends_paid,FY0,2026-08-31,served
 1857,COST,dividends_paid,FY-1,2025-08-31,served
-1857,COST,dividends_per_share,FY0,2026-08-31,GAP
-1857,COST,dividends_per_share,FY-1,2025-08-31,GAP
+1857,COST,dividends_per_share,FY0,2026-08-31,served
+1857,COST,dividends_per_share,FY-1,2025-08-31,served
 1857,COST,effective_tax_rate_reported,FY0,2026-08-31,tax note
 1857,COST,effective_tax_rate_reported,FY-1,2025-08-31,tax note
 1857,COST,employee_count,FY0,2026-08-31,cover page / 10-K text
@@ -3698,7 +3698,7 @@ company_id,ticker,data_point,fy,period,status
 4015,GEV,diluted_eps,FY0,2025-12-31,served
 4015,GEV,diluted_eps,FY-1,2024-12-31,served
 4015,GEV,dividends_paid,FY0,2025-12-31,served
-4015,GEV,dividends_paid,FY-1,2024-12-31,GAP
+4015,GEV,dividends_paid,FY-1,2024-12-31,served
 4015,GEV,dividends_per_share,FY0,2025-12-31,served
 4015,GEV,dividends_per_share,FY-1,2024-12-31,served
 4015,GEV,effective_tax_rate_reported,FY0,2025-12-31,tax note
@@ -3742,7 +3742,7 @@ company_id,ticker,data_point,fy,period,status
 4015,GEV,sga_expense,FY0,2025-12-31,served
 4015,GEV,sga_expense,FY-1,2024-12-31,served
 4015,GEV,share_buybacks,FY0,2025-12-31,served
-4015,GEV,share_buybacks,FY-1,2024-12-31,GAP
+4015,GEV,share_buybacks,FY-1,2024-12-31,served
 4015,GEV,shares_outstanding,FY0,2025-12-31,served
 4015,GEV,shares_outstanding,FY-1,2024-12-31,served
 4015,GEV,stockholders_equity,FY0,2025-12-31,served
@@ -4261,8 +4261,8 @@ company_id,ticker,data_point,fy,period,status
 5116,AVGO,cfo,FY-1,2024-10-31,served
 5116,AVGO,collaborative_arrangement_revenue,FY0,2025-10-31,template seed: should be COND
 5116,AVGO,collaborative_arrangement_revenue,FY-1,2024-10-31,template seed: should be COND
-5116,AVGO,comprehensive_income,FY0,2025-10-31,GAP
-5116,AVGO,comprehensive_income,FY-1,2024-10-31,GAP
+5116,AVGO,comprehensive_income,FY0,2025-10-31,served
+5116,AVGO,comprehensive_income,FY-1,2024-10-31,served
 5116,AVGO,cost_of_revenue,FY0,2025-10-31,served
 5116,AVGO,cost_of_revenue,FY-1,2024-10-31,served
 5116,AVGO,current_assets,FY0,2025-10-31,served

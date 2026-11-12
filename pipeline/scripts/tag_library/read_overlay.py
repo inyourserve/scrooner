@@ -128,6 +128,18 @@ RULINGS = {
     ("AMD", "operating_expenses"): [("IS", "us-gaap", "OperatingExpenses", "concept", "operating_expenses_resolved", None)],  # read tag = mapped tag
     ("CAT", "sbc"): [("EQ", "us-gaap", "AllocatedShareBasedCompensationExpense", "concept", "sbc", None)],  # read tag = mapped tag, value in the SBC note
     ("GE", "ppe_net"): [("BS", "ge", "PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAsset", "combined", "ppe_net;operating_lease_rou_asset", None)],
+    # Engineering DB check 2026-11-12: the FY2025 10-K prints the FY2024 column (0 and 43M are values), the read PASSes both years
+    ("GEV", "dividends_paid"): [("CF", "us-gaap", "PaymentsOfDividends", "concept", "dividends_paid_resolved", None)],
+    ("GEV", "share_buybacks"): [("CF", "us-gaap", "PaymentsForRepurchaseOfCommonStock", "concept", "share_buybacks_resolved", None)],
+    # no NCI line printed: comprehensive income = the incl-NCI total (23,137 / 5,895, read PASS)
+    ("AVGO", "comprehensive_income"): [("CI", "us-gaap", "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest", "concept", "comprehensive_income", None)],
+    # notes read 2026-11-12 (scratchpad/reads/BAC-COST-gaps-2026-11-12.md, FILING-CHECKED)
+    ("BAC", "amortization_of_intangibles"): [("IS", "us-gaap", "AmortizationOfIntangibleAssets", "concept", "amortization_of_intangibles", None,
+                                              "note-sourced: R108 in 0000070858-26-000157")],
+    ("BAC", "dividends_per_share"): [("IS", "us-gaap", "CommonStockDividendsPerShareCashPaid", "concept", "dividends_per_share_resolved", None,
+                                      "serve note: paid (declared is printed per quarter only); R133")],
+    ("COST", "dividends_per_share"): [("IS", "us-gaap", "CommonStockDividendsPerShareDeclared", "concept", "dividends_per_share_resolved", None,
+                                       "note-sourced: R55 in 0000909832-26-000093; FY2024's 19.36 includes the $15.00 special dividend")],
 }
 ROU_NOT_PPE = {("JPM", "ppe_net")}  # custom premises line incl. operating-lease ROU: shown as the company line, feeds no PP&E
 co_by_tick = {r["ticker"]: r["company_id"] for r in rows}
@@ -137,7 +149,7 @@ for (tk, dp), specs in RULINGS.items():
     if not c:
         continue
     ps = sorted(fyp.get(c, []), reverse=True)[:2]
-    for st, tax, tag, dec, con, era in specs:
+    for st, tax, tag, dec, con, era, *note in specs:
         a, b = era or (min(ps), max(ps))
         for r in by_co[c] + new_rows:  # the ruled tag/concept owns these dates
             cc = r["canonical_concept"] if r["decision"] == "concept" else r["parent_concept"] if r["decision"] == "component" else ""
@@ -151,7 +163,7 @@ for (tk, dp), specs in RULINGS.items():
         e = {k: v for k, v in by_co[c][0].items() if k != "_drop"}
         e.update({k: "" for k in ("canonical_concept", "parent_concept", "combine_sign", "components", "reason_class", "evidence_report", "evidence_line", "evidence_cal_parent", "rule_id", "evidence_plabel")})
         e.update(taxonomy=tax, tag=tag, stmt=st, decision=dec, era_from=a, era_to=b, decided_by="ruling", lines="1", filings="1",
-                 reason=f"Dhairya ruling 2026-11-12 on the full 10-K read ({tk} {dp})")
+                 reason=f"Dhairya ruling 2026-11-12 on the full 10-K read ({tk} {dp})" + (f"; {note[0]}" if note else ""))
         if dec == "concept":
             e["canonical_concept"] = con
         elif dec == "component":
