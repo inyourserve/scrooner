@@ -44,6 +44,8 @@ IS = _page("CONSOLIDATED STATEMENTS OF INCOME", [
     _row("us-gaap:OperatingIncomeLoss", "Operating income", "300", "250"),
     _row("us-gaap:InterestAndDebtExpense", "Interest and debt expense", "20", "18"),
     _row("us-gaap:NetIncomeLoss", "Net income", "200", "180"),
+    _row("us-gaap:OperatingIncomeLoss", "Operating income", "120", "100"),   # co-registrant block: same tag and label,
+    _row("us-gaap:NetIncomeLoss", "Net income", "90", "70"),                 # different values (AEE): never summed
 ])
 BS = _page("CONSOLIDATED BALANCE SHEETS", [
     _row("us-gaap:Assets", "Total assets", "5,000", "4,800"),
@@ -215,3 +217,9 @@ def test_11_reit_dividends_are_distributions_paid_not_declared(tmp_path):
         CF = saved
     assert rows["dividends_paid"]["tags"] == "us-gaap:PaymentsOfDividendsCommonStock"
     assert rows["dividends_paid"]["fy0_printed"] == "-125000000"
+
+
+def test_12_coregistrant_blocks_with_other_values_are_not_members(tmp_path):
+    rows = _read(tmp_path)
+    assert rows["operating_income"]["status"] == "mapped" and rows["operating_income"]["fy0_printed"] == "300000000"
+    assert rows["net_income"]["fy0_printed"] == "200000000"

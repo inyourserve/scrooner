@@ -322,9 +322,9 @@ def dedupe_coreg(rows: list[dict]) -> list[dict]:
     out = []
     for r in rows:
         key = r["tag"]
-        if key and key in seen and any(v == r["vals"] for v in seen[key]):
-            continue  # same tag, same values: a co-registrant repeat
-        seen.setdefault(key, []).append(r["vals"])
+        if key and key in seen and any(v == r["vals"] or lab == r["label"] for v, lab in seen[key]):
+            continue  # same tag with the same values or the same label: a co-registrant block repeat (AEE, PLD)
+        seen.setdefault(key, []).append((r["vals"], r["label"]))
         out.append(r)
     return out
 
