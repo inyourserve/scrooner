@@ -148,3 +148,7 @@ Guard: when a label would demote a line, check it against the calc position and 
 
 ## U. No label promotion at library level (Dhairya 2026-11-12, doc 02 item 2)
 - A wider tag never maps to a narrower concept because its label is plain. Defaults are combined: ReceivablesNetCurrent, BS CashCashEquivalentsRestrictedCash…, IncreaseDecreaseInAccountsAndOtherReceivables. Plain-label cases live in library/company-overrides.csv, company-scoped and FILING-CHECKED (RTX, FITB, LLY; GILD/DHR pending an R-page read).
+
+## V. CostsAndExpenses → operating_expenses: structural rule (Dhairya 2026-11-12)
+- Allowed only when the IS face prints NO cost-of-revenue line and CostsAndExpenses is the last expense total above operating income (V 0001403161-26-000134 R5 17,793M: revenue 45,903 − 17,793 = OI 28,110). This is the statement's shape, not a label promotion.
+- Engineering test cases (a printed cost-of-revenue line must block it): V → map; AMZN 0001018724-26-000004 R4 (cost of sales 356,414M inside 636,949M) → blocked; CVX/AJG (total includes interest) → blocked.
