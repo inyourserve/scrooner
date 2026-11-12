@@ -133,3 +133,5 @@ Relayed lessons processed (FILING-CHECKED by the named role unless marked; not r
 - `IncomeLossIncludingPortionAttributableToNoncontrollingInterest` as pretax: PG 2024+, DELL 2019-2021, MCK, PSX (calc +1 beside the tax line).
 
 - Shares outstanding printed only per class (GOOGL A/B/C on the cover; per-class BS parentheticals): not_presented, never summed (Dhairya 2026-11-12).
+
+- EPS printed per class only (Visa, SHOP): serve Class A EPS as printed (Dhairya ruling 2026-11-12); never average or derive across classes.
