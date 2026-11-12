@@ -150,3 +150,18 @@ def test_a_component_sum_with_an_extension_part_reads_every_part_from_fsn_xbrl_o
     rd = [(r["era_from"], r["era_to"], r["value_source"]) for r in out if r["tag"] == "ResearchAndDevelopmentExpense"]
     assert rd == [("2015-03-31", "2018-06-29", "sec_api"), ("2018-06-30", "2018-06-30", "fsn_xbrl"), ("2018-07-01", "2026-09-30", "sec_api")]
     assert mod.single_source_sums(out) == out
+
+
+def test_one_statement_serves_a_concept_per_period_and_the_lower_statement_keeps_only_the_periods_outside():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("cross_stmt", D / "cross_stmt.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    base = {**{k: "" for k in TM}, "company_id": "1", "decision": "concept", "canonical_concept": "sbc", "value_source": "sec_api"}
+    rows = [{**base, "stmt": "IS", "tag": "AllocatedShareBasedCompensationExpense", "era_from": "2015-03-31", "era_to": "2022-12-31"},
+            {**base, "stmt": "CF", "tag": "ShareBasedCompensation", "era_from": "2016-03-31", "era_to": "2026-09-30"}]
+    out, cut = mod.apply(rows)
+    got = sorted((r["stmt"], r["decision"], r["era_from"], r["era_to"]) for r in out)
+    assert cut == 1 and got == [("CF", "concept", "2016-03-31", "2026-09-30"), ("IS", "concept", "2015-03-31", "2016-03-30"),
+                                ("IS", "excluded", "2016-03-31", "2022-12-31")]
+    assert mod.apply(out)[1] == 0
