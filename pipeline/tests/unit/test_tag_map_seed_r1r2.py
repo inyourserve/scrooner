@@ -307,3 +307,67 @@ def test_eras_of_one_key_never_overlap():
     rows = m.expand_company(1, set(), groups, p, m.build_index(ents))[("us-gaap", "Assets", "BS")]["rows"]
     spans_ = sorted((a, b or date.max) for _, a, b, _ in rows)
     assert len(spans_) >= 2 and all(y[0] > x[1] for x, y in zip(spans_, spans_[1:]))
+
+
+# ---- pass 3: presentation pattern, aliases, rulings, free-text applies_to
+def test_applies_to_free_text_with_digits_is_all_not_a_company_id():
+    e = m.parse_source("fsn-x.csv", [dict(CARD[0], applies_to='bank "Total interest expense" (WTFC 1,503,981)')])[0]
+    assert m.applies(e, 1, set()) and m.applies(e, 503, set())
+    e2 = m.parse_source("fsn-x.csv", [dict(CARD[0], applies_to="503;sector:bank")])[0]
+    assert m.applies(e2, 503, set()) and not m.applies(e2, 1, set()) and m.applies(e2, 1, {"Bank"})
+
+
+PRES = [{"tag": "presentation elements: StatementTable, StatementLineItems, *Abstract, *Axis, *Domain, *Member",
+         "home_stmt": "BS/IS/CF/EQ", "decision": "excluded", "canonical_concept_key": "", "sign_rule": "none",
+         "applies_to": "all", "exceptions": "x", "era_from": "", "era_to": "", "evidence": "AAPL R5 AssetsCurrentAbstract"}]
+
+
+def pres_row(tag, datatype, abstract, stmt="BS"):
+    r = ap2(0, stmt, tag, P[0], "x")
+    return r[:4] + (abstract,) + r[5:] + (False, datatype)
+
+
+def test_presentation_pattern_keys_on_suffix_and_datatype():
+    assert m.presentation_match("AssetsAbstract", None, True)
+    assert m.presentation_match("StatementTable", None, True)
+    assert m.presentation_match("FooAxis", "axis", False)  # non-abstract flag but axis datatype: still structure
+    assert m.presentation_match("CustomMember", "member", False)
+    assert not m.presentation_match("OddAbstract", "monetary", False)  # suffix alone is not enough
+    assert not m.presentation_match("FooAxis", "monetary", False)
+    ents = m.parse_source("fsn-balance-sheet-assets.csv", PRES)
+    assert ents[0]["kind"] == "pattern" and ents[0]["source"] == "tag-card"
+    key = ("us-gaap", "AssetsAbstract", "BS")
+    r = (ap2(0, "BS", "AssetsAbstract", P[0], "x")[:4] + (True,) + ap2(0, "BS", "AssetsAbstract", P[0], "x")[5:] + (False, None))
+    res = m.expand_company(1, set(), {key: {P[0]: r}}, P, m.build_index(ents))[key]
+    (e, *_), = res["rows"]
+    assert m.library_row(e)["reason_class"] == "presentation_only" and m.library_row(e)["decision"] == "excluded"
+
+
+def test_alias_resolution_and_unknown_concepts_listed():
+    valid = {"depreciation_and_amortization_resolved", "cash_and_equivalents_resolved"}
+    ents = m.parse_source("companies-x.csv", [co(1, "CF", "A", "map", "d_and_a"), co(1, "BS", "B", "map", "cash"),
+                                              co(1, "BS", "C", "map", "made_up_key")])
+    unknown = m.resolve_concepts(ents, valid)
+    assert [e["concept"] for e in ents[:2]] == ["depreciation_and_amortization_resolved", "cash_and_equivalents_resolved"]
+    assert list(unknown) == ["made_up_key"]
+
+
+def test_ruling_ambiguity_goes_to_needs_detail():
+    rul = [{"tag": "us-gaap:PaymentsOfDividends", "home_stmt": "CF", "decision": "map", "concept": "dividends_paid_resolved",
+            "condition": "amb_label~preferred|noncontrolling", "reason_class": "", "reason": "r"}]
+    ents = m.parse_source("rulings_2026-11-12.csv", rul)
+    assert ents[0]["source"] == "ruling:dhairya-2026-11-12" and ents[0]["rule_id"] == m.RULE_RULING
+    key = ("us-gaap", "PaymentsOfDividends", "CF")
+    plain = {key: {P[0]: ap2(0, "CF", "PaymentsOfDividends", P[0], "Dividends paid")}}
+    pref = {key: {P[0]: ap2(0, "CF", "PaymentsOfDividends", P[0], "Dividends paid to preferred stockholders")}}
+    assert len(m.expand_company(1, set(), plain, P, m.build_index(ents))[key]["rows"]) == 1
+    res = m.expand_company(1, set(), pref, P, m.build_index(ents))[key]
+    assert res["rows"] == [] and res["needs_detail"]
+
+
+def test_company_row_with_several_concepts_or_tags():
+    rows = [dict(co(1, "IS", "A", "map", "basic_eps;diluted_eps"), tag="us-gaap:A|us-gaap:B"),
+            dict(co(1, "IS", "C", "map", "revenue"), tag="us-gaap:X|us-gaap:Y")]
+    ents = m.parse_source("companies-x.csv", rows)
+    assert [(e["tag"], e["decision"]) for e in ents] == [("A", "needs_detail"), ("B", "needs_detail"), ("X", "concept"), ("Y", "concept")]
+    assert "several concepts" in ents[0]["detail_note"]
