@@ -381,6 +381,9 @@ NOTE_FAMILY = {  # data point -> (tags that ARE the data point, tags that are on
 }
 
 
+OUT_FOR_FIN = {"cost_of_revenue", "gross_profit", "research_and_development", "inventory", "current_assets",
+               "current_liabilities"}
+
 KEYWORDS = {  # label search (any tag, custom included) for the by-hand review of not_presented rows
     "revenue": r"\b(revenues?|net sales|sales)\b", "cost_of_revenue": r"cost of (revenue|sales|goods|products|services)",
     "gross_profit": r"gross (profit|margin)", "operating_expenses": r"operating (costs and )?expenses",
@@ -656,6 +659,19 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                    note="AUTO: no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical; dei cover count not used")
     out.append(rec)
     resolve_by_filing(out, cf, accn, cik, cache, quirks, tic)
+    # OUT ruling (Dhairya, main @020ebb29): for banks and insurers these data points are outside the template
+    sub = get(f"https://data.sec.gov/submissions/CIK{cik}.json", cache)
+    try:
+        sic = int(json.loads(sub).get("sic") or 0)
+    except Exception:
+        sic = 0
+    fam = "bank" if (6021 <= sic <= 6036 or sic == 6712) else ("insurer" if 6311 <= sic <= 6411 else "")
+    meta["sic"] = sic
+    if fam:
+        for r in out:
+            if r["data_point"] in OUT_FOR_FIN:
+                was = f"{r.get('status')} {r.get('tags', '')} {r.get('fy0_printed', '')}".strip()
+                r.update(status="OUT", note=f"OUT: outside the {fam} template (SIC {sic}; Dhairya OUT ruling main @020ebb29); was: {was[:120]}")
     # era coverage FY2015 -> latest (Dhairya 2026-11-12: a docmap is loadable only when every data point's eras
     # cover FY2015 to the latest year). Runs come from companyfacts 10-K annual facts (DATA-INFERRED); the FY2015
     # 10-K is always opened and its printed line recorded (FILING-CHECKED), plus up to 2 more era-change 10-Ks.
@@ -759,7 +775,7 @@ def write_company(out: list[dict], meta: dict, out_dir: str) -> None:
     for a, filed, reps in meta["filings"]:
         L.append(f"- 10-K {a} (CIK {meta['cik']}{', filed ' + filed if filed else ', era filing'}): "
                  + ", ".join(f"{k} {v}" for k, v in reps.items()))
-    L.append("- companyfacts CIK" + meta["cik"] + ".json (one call).")
+    L.append("- companyfacts CIK" + meta["cik"] + ".json (one call); submissions CIK" + meta["cik"] + f".json (SIC {meta.get('sic', '')}).")
     L += ["", "## Data points", "| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |",
           "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in out:
