@@ -371,6 +371,14 @@ def expand_company(company_id: int, templates: set[str], groups: dict, annual: l
         for (tx, tag, stmt), appear in groups.items():
             _expand_key(company_id, templates, tx, tag, stmt, appear, annual, index, printed, totals, phase,
                         res[(tx, tag, stmt)])
+    for r in res.values():  # eras of one key must not overlap (0122 trigger): earlier (higher precedence) rows win
+        claimed: list[tuple] = []
+        kept = []
+        for e, a, b, rr in r["rows"]:
+            for pa, pb in clip((a, b), (None, None), claimed):
+                kept.append((e, pa, pb, rr))
+                claimed.append((pa, pb))
+        r["rows"] = kept
     return res
 
 
@@ -406,7 +414,9 @@ def _expand_key(company_id, templates, taxonomy, tag, stmt, appear, annual, inde
                                  bad))
             for ent, sub in variants:
                 sub_eras = build_eras(sub, annual)
-                if sub_eras and sub_eras[-1][1] is None and max(in_era) > max(sub):
+                if sub_eras and sub_eras[-1][1] is None and era[1] is not None:
+                    sub_eras[-1] = (sub_eras[-1][0], era[1], sub_eras[-1][2])  # a closed era never runs open
+                elif sub_eras and sub_eras[-1][1] is None and max(in_era) > max(sub):
                     # the last eligible span ends where a later filing of this era no longer qualifies
                     sub_eras[-1] = (sub_eras[-1][0], max(sub), sub_eras[-1][2])
                 for a, b, rr in sub_eras:

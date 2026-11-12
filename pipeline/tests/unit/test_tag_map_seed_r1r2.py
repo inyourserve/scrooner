@@ -297,3 +297,13 @@ def test_pld_shaped_coregistrant_lines_never_become_parent_rows():
                         for i, p in enumerate(P)}}
     out = expand(lib, groups)
     assert len(out[key_parent]["rows"]) == 1 and out[key_sub]["rows"] == []
+
+
+def test_eras_of_one_key_never_overlap():
+    # a tag that leaves and returns, with an open-ended company row and a tag-level row on the same key
+    p = [date(2019, 12, 31), date(2020, 12, 31), date(2021, 12, 31), date(2022, 12, 31)]
+    groups = {("us-gaap", "Assets", "BS"): {d: ap(i, "BS", "Assets", d) for i, d in enumerate(p) if i != 1}}
+    ents = m.parse_source("fsn-x.csv", CARD) + m.parse_source("companies-x.csv", [co(1, "BS", "Assets", "map", "total_assets")])
+    rows = m.expand_company(1, set(), groups, p, m.build_index(ents))[("us-gaap", "Assets", "BS")]["rows"]
+    spans_ = sorted((a, b or date.max) for _, a, b, _ in rows)
+    assert len(spans_) >= 2 and all(y[0] > x[1] for x, y in zip(spans_, spans_[1:]))
