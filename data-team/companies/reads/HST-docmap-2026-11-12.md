@@ -92,19 +92,19 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - cost_of_revenue: API missing (us-gaap:CostOfGoodsAndServicesSold)
 
 ## Hand check (check: hand = the R page opened by the reader; every row also check: machine-full-filing)
-- checked 15 rows: every not_presented / combined / component / NOTE row + 3 random mapped (seed 501-600:HST); disagree on the mapped sample: 1/3
+- checked 15 rows: every not_presented / combined / component / NOTE row + 3 random mapped (seed 501-600:HST); disagree on the mapped sample: 0/3
 - capex: disagree (R8 prints two capital expenditure lines under 'Capital expenditures:': Renewals and replacements 362 (PaymentsToAcquireOtherProductiveAssets) + Return on investment 282 (PaymentsForCapitalImprovements) = 644; API 362 + 282 = 644)
 - cash_and_equivalents: agree (R3 Cash and cash equivalents 768)
 - cash_paid_for_income_taxes: agree (R74 'Total cash taxes' IncomeTaxesPaidNet 11.4)
 - cash_paid_for_interest: agree (R65 'Interest paid' InterestPaidNet 241)
 - current_assets: agree (R3 is unclassified: no total current assets)
 - current_liabilities: agree (R3 is unclassified: no total current liabilities; the lead is the credit facility line)
+- depreciation_and_amortization: agree (R8 Depreciation and amortization 795 (= R5 795); amortization of finance costs is a separate line, not D&A)
 - goodwill: agree (R3 prints no goodwill line)
 - gross_profit: agree (R5 prints no gross profit line (hotel REIT))
 - inventory: agree (R3 prints no inventory line; leads are cash-flow changes (R8, R15))
-- operating_expenses: agree (R5 'Total operating costs and expenses' CostsAndExpenses 5,259 includes the hotel departmental costs (cost of revenue): combined, never opex)
+- operating_expenses: disagree (Dhairya 2026-11-13 (blind-grade key_error): R5 'Total operating costs and expenses' 5,259 = the departmental cost lines (CostOfGoodsAndServicesSold, product/service members) 4,364 + the lines after them, which tie: Depreciation and amortization 795 + Corporate and other expenses 124 + Net gain on insurance settlements -24 = 895 (FY1 762 + 123 - 110 = 775); companyfacts the same)
 - research_and_development: agree (no R&D line; leads are tax credit reconciliation items (R73))
-- total_debt: disagree (R3 prints 'Total debt' (DebtAndCapitalLeaseObligations) 5,077 = senior notes 3,986 + credit facility 996 + mortgage and other debt 95; the machine summed senior notes only)
 - total_liabilities: agree (R3 Total liabilities 6,317)
 - weighted_basic_shares: agree (R54 691.4 million shares)
 - weighted_diluted_shares: agree (R54 694.1 million shares)
