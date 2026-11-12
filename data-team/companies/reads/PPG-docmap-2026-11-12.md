@@ -1,0 +1,93 @@
+# PPG document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.
+
+## Filings opened
+- 10-K 0000079879-26-000046 (CIK 0000079879, filed 2026-02-19): COVER R1.htm, IS R3.htm, CI R4.htm, BS R5.htm, CF R7.htm
+- 10-K 0000079879-16-000065 (CIK 0000079879, filed FY2015 era): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, CF R6.htm
+- 10-K 0000079879-18-000010 (CIK 0000079879, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, CF R6.htm
+- 10-K 0000079879-24-000040 (CIK 0000079879, era filing): COVER R1.htm, IS R3.htm, CI R4.htm, BS R5.htm, CF R7.htm
+- companyfacts CIK0000079879.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R3.htm | Net sales | 15875000000 | 15875000000 | 15845000000 | 15845000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R3.htm | Cost of sales, exclusive of depreciation and amortization | 9316000000 | 9316000000 | 9252000000 | 9252000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| gross_profit | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of GrossProfit in MetaLinks.json (1112 tags across all 122 R pages, face and notes) of 0000079879-26-000046; no face row matched |
+| operating_expenses | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingExpenses in MetaLinks.json (1112 tags across all 122 R pages, face and notes) of 0000079879-26-000046; no face row matched |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R3.htm | Selling, general and administrative | 3439000000 | 3439000000 | 3391000000 | 3391000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R3.htm | Research and development, net | 423000000 | 423000000 | 423000000 | 423000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| operating_income | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingIncomeLoss in MetaLinks.json (1112 tags across all 122 R pages, face and notes) of 0000079879-26-000046; no face row matched |
+| interest_expense | mapped | us-gaap:InterestExpenseNonoperating | R3.htm | Interest expense | 241000000 | 241000000 | 241000000 | 241000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R3.htm | Income before income taxes | 2045000000 | 2045000000 | 1852000000 | 1852000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R3.htm | Income tax expense | 458000000 | 458000000 | 475000000 | 475000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R3.htm | Net income (attributable to PPG) | 1576000000 | 1576000000 | 1116000000 | 1116000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R3.htm | Net Income (attributable to PPG) (in dollars per share) | 6.96 | 6.96 | 4.77 | 4.77 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R3.htm | Net Income (attributable to PPG) (in dollars per share) | 6.94 | 6.94 | 4.75 | 4.75 | Y | FILING-CHECKED | accn 0000079879-26-000046 R3.htm period ..2025-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R85.htm | Earnings Per Common Share (Additional Detail) (Detail) |  | 226300000 |  |  |  | FILING-CHECKED | not on the face statement; shown in R85.htm 'Earnings Per Common Share (Additional Detail) (Detail)' (MetaLinks.json presentation); value from companyfacts same accession |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R85.htm | Earnings Per Common Share (Additional Detail) (Detail) |  | 227100000 |  |  |  | FILING-CHECKED | not on the face statement; shown in R85.htm 'Earnings Per Common Share (Additional Detail) (Detail)' (MetaLinks.json presentation); value from companyfacts same accession |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R5.htm | Cash and cash equivalents | 2163000000 | 2163000000 | 1270000000 | 1270000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| accounts_receivable | mapped | us-gaap:ReceivablesNetCurrent | R5.htm | Receivables | 3336000000 | 3336000000 | 2985000000 | 2985000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| inventory | mapped | us-gaap:InventoryNet | R5.htm | Inventories | 1996000000 | 1996000000 | 1846000000 | 1846000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R5.htm | Total current assets | 7959000000 | 7959000000 | 6557000000 | 6557000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R5.htm | Property, plant and equipment, net | 4005000000 | 4005000000 | 3464000000 | 3464000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| goodwill | mapped | us-gaap:Goodwill | R5.htm | Goodwill | 6149000000 | 6149000000 | 5690000000 | 5690000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| total_assets | mapped | us-gaap:Assets | R5.htm | Total | 22098000000 | 22098000000 | 19433000000 | 19433000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| accounts_payable | mapped | us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent | R5.htm | Accounts payable and accrued liabilities | 3957000000 | 3957000000 | 3731000000 | 3731000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R5.htm | Total current liabilities | 4900000000 | 4900000000 | 5014000000 | 5014000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| total_liabilities | mapped | us-gaap:Liabilities | R5.htm | Total liabilities | 14001000000 | 14001000000 | 12471000000 | 12471000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R5.htm | Total PPG shareholders’ equity | 7941000000 | 7941000000 | 6785000000 | 6785000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R5.htm period ..2025-12-31 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R7.htm | Cash from operating activities | 1941000000 | 1941000000 | 1420000000 | 1420000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R7.htm | Cash (used for)/from investing activities | -700000000 | -700000000 | 107000000 | 107000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R7.htm | Cash used for financing activities | -545000000 | -545000000 | -1425000000 | -1425000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R7.htm | Capital expenditures | -778000000 | 778000000 | -721000000 | 721000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationAndAmortization | R7.htm | Depreciation and amortization | 528000000 | 528000000 | 492000000 | 492000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R7.htm | Stock-based compensation expense | 46000000 | 46000000 | 42000000 | 42000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| dividends_paid | mapped | us-gaap:PaymentsOfDividends | R7.htm | Dividends paid on PPG common stock | -628000000 | 628000000 | -622000000 | 622000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Purchase of treasury stock | -790000000 | 790000000 | -752000000 | 752000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R7.htm | Interest paid, net of amount capitalized | 210000000 | 210000000 | 247000000 | 247000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaid | R7.htm | Taxes paid, net of refunds | 438000000 | 438000000 | 653000000 | 653000000 | Y | FILING-CHECKED | accn 0000079879-26-000046 R7.htm period ..2025-12-31 |
+| total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent | R5.htm | Short-term debt and current portion of long-term debt + Long-term debt | 7308000000 | 7308000000 |  |  | Y | FILING-CHECKED | sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R106.htm | Shareholders' Equity (Summary of Shares Outstanding) (Detail) |  | 223426948 |  |  |  | FILING-CHECKED | not on the face statement; shown in R106.htm 'Shareholders' Equity (Summary of Shares Outstanding) (Detail)' (MetaLinks.json presentation); value from companyfacts same accession |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- revenue: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Net sales' on us-gaap:SalesRevenueNet = 15330000000 (FILING-CHECKED)
+- cost_of_revenue: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Cost of sales, exclusive of depreciation and amortization' on us-gaap:CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization = 8591000000 (FILING-CHECKED)
+- sga_expense: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Selling, general and administrative' on us-gaap:SellingGeneralAndAdministrativeExpense = 3679000000 (FILING-CHECKED)
+- research_and_development: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Research and development, net' on us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost = 486000000 (FILING-CHECKED)
+- interest_expense: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Interest expense' on us-gaap:InterestExpense = 126000000 (FILING-CHECKED)
+- income_before_tax: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Income before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = 1882000000 (FILING-CHECKED)
+- income_tax_expense: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Income tax expense' on us-gaap:IncomeTaxExpenseBenefit = 456000000 (FILING-CHECKED)
+- net_income: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Net income (attributable to PPG)' on us-gaap:NetIncomeLoss = 1406000000 (FILING-CHECKED)
+- basic_eps: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Net Income (attributable to PPG) (in dollars per share)' on us-gaap:EarningsPerShareBasic = 5.18 (FILING-CHECKED)
+- diluted_eps: FY2015 10-K 0000079879-16-000065 R2.htm prints 'Net Income (attributable to PPG) (in dollars per share)' on us-gaap:EarningsPerShareDiluted = 5.14 (FILING-CHECKED)
+- weighted_basic_shares: FY2015 10-K 0000079879-16-000065 R2.htm read; no row matched (auto)
+- weighted_diluted_shares: FY2015 10-K 0000079879-16-000065 R2.htm read; no row matched (auto)
+- cash_and_equivalents: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 1311000000 (FILING-CHECKED)
+- accounts_receivable: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Receivables' on us-gaap:ReceivablesNetCurrent = 2788000000 (FILING-CHECKED)
+- inventory: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Inventories' on us-gaap:InventoryNet = 1705000000 (FILING-CHECKED)
+- current_assets: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Total current assets' on us-gaap:AssetsCurrent = 6554000000 (FILING-CHECKED)
+- ppe_net: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Property, plant and equipment, net' on us-gaap:PropertyPlantAndEquipmentNet = 3017000000 (FILING-CHECKED)
+- goodwill: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Goodwill' on us-gaap:Goodwill = 3669000000 (FILING-CHECKED)
+- total_assets: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Total' on us-gaap:Assets = 17076000000 (FILING-CHECKED)
+- accounts_payable: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Accounts payable and accrued liabilities' on us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent = 3490000000 (FILING-CHECKED)
+- current_liabilities: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Total current liabilities' on us-gaap:LiabilitiesCurrent = 4656000000 (FILING-CHECKED)
+- total_liabilities: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Total liabilities' on us-gaap:Liabilities = 12007000000 (FILING-CHECKED)
+- stockholders_equity: FY2015 10-K 0000079879-16-000065 R4.htm prints 'Total PPG shareholders’ equity' on us-gaap:StockholdersEquity = 4983000000 (FILING-CHECKED)
+- cfo: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Cash from operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 1837000000 (FILING-CHECKED)
+- cash_flow_investing: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Cash (used for)/from investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivities = -395000000 (FILING-CHECKED)
+- cash_flow_financing: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Cash used for financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivities = -754000000 (FILING-CHECKED)
+- capex: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Additions to property and investments' on us-gaap:PaymentsToAcquirePropertyPlantAndEquipment = -476000000 (FILING-CHECKED)
+- depreciation_and_amortization: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Depreciation and amortization' on us-gaap:DepreciationAndAmortization = 495000000 (FILING-CHECKED)
+- sbc: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Stock-based compensation expense' on us-gaap:ShareBasedCompensation = 56000000 (FILING-CHECKED)
+- dividends_paid: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Dividends paid on PPG common stock' on us-gaap:PaymentsOfDividends = -383000000 (FILING-CHECKED)
+- share_buybacks: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Purchase of treasury stock' on us-gaap:PaymentsForRepurchaseOfCommonStock = -751000000 (FILING-CHECKED)
+- cash_paid_for_interest: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Interest paid, net of amount capitalized' on us-gaap:InterestPaid = 115000000 (FILING-CHECKED)
+- cash_paid_for_income_taxes: FY2015 10-K 0000079879-16-000065 R6.htm prints 'Taxes paid, net of refunds' on us-gaap:IncomeTaxesPaid = 383000000 (FILING-CHECKED)
+- revenue: era 10-K 0000079879-18-000010 R2.htm prints 'Net sales' on us-gaap:SalesRevenueNet = 14750000000 (FILING-CHECKED)
+- cash_paid_for_interest: era 10-K 0000079879-18-000010 R6.htm prints 'Interest paid, net of amount capitalized' on us-gaap:InterestPaid = 100000000 (FILING-CHECKED)
+- interest_expense: era 10-K 0000079879-24-000040 R3.htm prints 'Interest expense' on us-gaap:InterestExpense = 247000000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+none beyond sign differences
