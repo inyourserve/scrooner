@@ -303,29 +303,16 @@ def test_redeemable_line_between_liabilities_and_equity_is_temporary_equity():
     assert bd.derive_tl(mand, arcs, KMB_COL)[0][0] == D("15908000000")
 
 
-def test_an_unconfirmed_total_is_not_presented_never_a_sum_of_face_lines():
-    """Ruling (Dhairya 2026-11-11): a sum of printed face lines only where the calc tree or the section confirms
-    completeness, otherwise not_presented. NEE's children with Other liabilities altered no longer tie to L&E: the
-    column gets a not_presented cell carrying the reason, and it passes the cell-loader contract; a printed total
-    gets no cell from here (select serves it); a confirmed derivation stays derived."""
+def test_a_total_liabilities_line_that_is_not_printed_is_never_derived():
+    """Doc 02 (2026-11-04 items 4 and 6): instants are never derived (Dhairya 2026-11-12). A face column with no
+    printed total-liabilities line is not_presented whether or not the calc tree would tie; the check is kept as
+    evidence only, with no value; a printed total gets no cell from here (select serves it)."""
     import json
     from datetime import date, datetime
 
     from scrooner_pipeline.fsn_store import select as sel
     from scrooner_pipeline.normalizer import cell_loader
 
-    off = dict(NEE_COL, LiabilitiesCurrent=(D("12000000000"), 9))
-    res, rule, inputs = bd.derive_tl(NEE_FACE, NEE_ARCS, off)
-    cell = bd.tl_cell(date(2020, 6, 30), 7, "0000753308-20-000150", res, rule, inputs)
-    assert (cell.state, cell.reason_code, cell.value) == (
-        "not_presented",
-        bd.REASON_TL,
-        None,
-    )
-    assert cell.input_refs == {
-        "accession": "0000753308-20-000150",
-        "not_derived": "calc_children_do_not_tie_le",
-    }
     filings = {
         7: sel.Filing(
             7,
@@ -338,15 +325,31 @@ def test_an_unconfirmed_total_is_not_presented_never_a_sum_of_face_lines():
             "1231",
         )
     }
+    res, rule, inputs = bd.derive_tl(
+        NEE_FACE, NEE_ARCS, NEE_COL
+    )  # ties: 80,096M would be derivable
+    cell = bd.tl_cell(date(2020, 6, 30), 7, "0000753308-20-000150", res, rule, inputs)
+    assert (cell.state, cell.reason_code, cell.value, cell.derivation) == (
+        "not_presented",
+        bd.REASON_TL,
+        None,
+        None,
+    )
+    assert cell.input_refs == {
+        "accession": "0000753308-20-000150",
+        "check": "calc_children_tie_le",
+    }
     row = json.loads(json.dumps(sel.to_row(cell, 1, filings), default=str))
-    assert row["reason_text"] and not isinstance(
-        cell_loader.parse_row(1, row, {bd.TL}), str
+    assert row["value"] is None and row["reason_text"]
+    assert not isinstance(cell_loader.parse_row(1, row, {bd.TL}), str)
+    off = dict(NEE_COL, LiabilitiesCurrent=(D("12000000000"), 9))
+    res, rule, inputs = bd.derive_tl(NEE_FACE, NEE_ARCS, off)
+    assert (
+        bd.tl_cell(date(2020, 6, 30), 7, "x", res, rule, inputs).input_refs["check"]
+        == "calc_children_do_not_tie_le"
     )
     printed = NEE_FACE + [
         {"tag": "Liabilities", "label": "Total liabilities", "custom": False}
     ]
     res, rule, inputs = bd.derive_tl(printed, NEE_ARCS, NEE_COL)
     assert bd.tl_cell(date(2020, 6, 30), 7, "x", res, rule, inputs) is None
-    res, rule, inputs = bd.derive_tl(NEE_FACE, NEE_ARCS, NEE_COL)
-    ok = bd.tl_cell(date(2020, 6, 30), 7, "x", res, rule, inputs)
-    assert ok.state == "derived" and ok.value == D("80096000000")

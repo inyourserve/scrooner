@@ -3,9 +3,7 @@
  "debt_records": 557,
  "debt_records_clean": 477,
  "tl_cells": {
-  "derived:derive_total_liabilities_calc": 1244,
-  "not_presented": 18,
-  "derived:derive_total_liabilities_identity": 7
+  "not_presented": 1269
  },
  "per_company": [
   {
@@ -35,7 +33,7 @@
    "debt_records": 4,
    "debt_records_clean": 4,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -67,7 +65,7 @@
    "debt_records": 18,
    "debt_records_clean": 18,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 49
+    "not_presented": 49
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -119,7 +117,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -131,7 +129,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -183,7 +181,7 @@
    "debt_records": 10,
    "debt_records_clean": 10,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -195,8 +193,7 @@
    "debt_records": 4,
    "debt_records_clean": 4,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 50,
-    "derived:derive_total_liabilities_identity": 2
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -228,7 +225,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -330,7 +327,7 @@
    "debt_records": 15,
    "debt_records_clean": 15,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 34
+    "not_presented": 34
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -362,8 +359,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 47,
-    "not_presented": 5
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -405,7 +401,7 @@
    "debt_records": 4,
    "debt_records_clean": 4,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -447,7 +443,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 8
+    "not_presented": 8
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -519,8 +515,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 46,
-    "not_presented": 6
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -532,7 +527,7 @@
    "debt_records": 23,
    "debt_records_clean": 4,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -544,7 +539,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 41
+    "not_presented": 41
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": true
@@ -566,7 +561,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 49
+    "not_presented": 49
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -578,7 +573,7 @@
    "debt_records": 2,
    "debt_records_clean": 2,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -650,8 +645,7 @@
    "debt_records": 20,
    "debt_records_clean": 20,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 43,
-    "not_presented": 5
+    "not_presented": 48
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -663,7 +657,7 @@
    "debt_records": 10,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -685,8 +679,7 @@
    "debt_records": 11,
    "debt_records_clean": 11,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 49,
-    "derived:derive_total_liabilities_identity": 3
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -698,7 +691,7 @@
    "debt_records": 13,
    "debt_records_clean": 13,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 28
+    "not_presented": 28
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -720,7 +713,7 @@
    "debt_records": 7,
    "debt_records_clean": 6,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 55
+    "not_presented": 55
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -732,7 +725,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -744,7 +737,7 @@
    "debt_records": 3,
    "debt_records_clean": 3,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 51
+    "not_presented": 51
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -766,9 +759,7 @@
    "debt_records": 2,
    "debt_records_clean": 2,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 46,
-    "not_presented": 2,
-    "derived:derive_total_liabilities_identity": 2
+    "not_presented": 50
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -780,7 +771,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 25
+    "not_presented": 25
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -832,7 +823,7 @@
    "debt_records": 2,
    "debt_records_clean": 2,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 51
+    "not_presented": 51
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -864,7 +855,7 @@
    "debt_records": 1,
    "debt_records_clean": 1,
    "tl_cells": {
-    "derived:derive_total_liabilities_calc": 52
+    "not_presented": 52
    },
    "tl_prints_own_line_or_no_face_gap": false,
    "predecessor_history": false
@@ -989,5 +980,6 @@
    "tl_prints_own_line_or_no_face_gap": true,
    "predecessor_history": true
   }
- ]
+ ],
+ "tl_rule": "doc 02: instants never derived; a face column without a printed total-liabilities line is not_presented (total_liabilities_not_printed); input_refs.check records the calc/identity completeness check as evidence only"
 }

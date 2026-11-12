@@ -295,40 +295,29 @@ def bs_arcs(
 def tl_cell(
     dd, fid: int, accession: str, res, rule: str, inputs: dict
 ) -> "sel.Cell | None":
-    """The total-liabilities cell of one face column: the derived value (calc route or identity route), or, when
-    neither route can confirm the total (ruling, Dhairya 2026-11-11: a sum of printed face lines only where the
-    calc tree or the section confirms completeness), not_presented with the reason the derivation stopped. None
-    when the face prints its own total (that cell comes from select)."""
-    if res is None:
-        if rule == "printed_total_liabilities":
-            return None
-        return sel.Cell(
-            TL,
-            dd,
-            0,
-            "not_presented",
-            filing_id=fid,
-            rule_id=RULE_TL_NOT_PRINTED,
-            reason_code=REASON_TL,
-            input_refs={"accession": accession, "not_derived": rule},
+    """The total-liabilities cell of one face column whose face prints no total-liabilities line:
+    not_presented, reason total_liabilities_not_printed. Doc 02 (decisions 2026-11-04, items 4 and 6): instants are
+    never derived, so the calc-tree / L&E-identity check is kept only as evidence of whether the printed lines are
+    complete (input_refs.check), never as a served value (Dhairya 2026-11-12). None when the face prints its own
+    total: that cell comes from select."""
+    if res is None and rule == "printed_total_liabilities":
+        return None
+    check = (
+        rule
+        if res is None
+        else (
+            "calc_children_tie_le" if rule == RULE_CALC else "le_identity_terms_printed"
         )
-    value, ids = res
+    )
     return sel.Cell(
         TL,
         dd,
         0,
-        "derived",
-        value=value,
+        "not_presented",
         filing_id=fid,
-        source_value_ids=ids,
-        rule_id=rule,
-        derivation={
-            "formula": "sum of the L&E calc children classed liability"
-            if rule == RULE_CALC
-            else "L&E - total equity incl. NCI - temporary equity",
-            "accession": accession,
-            "inputs": inputs,
-        },
+        rule_id=RULE_TL_NOT_PRINTED,
+        reason_code=REASON_TL,
+        input_refs={"accession": accession, "check": check},
     )
 
 

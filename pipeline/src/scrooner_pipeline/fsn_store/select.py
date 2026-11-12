@@ -128,7 +128,7 @@ REASON_TEXT = {
     "note_value_not_positive": "The note prints zero or a negative figure, which is not a gross amount for this line.",
     "sole_debt_label_not_interest": "The only interest line the filing prints is not labelled as interest expense, so it is not taken as the total.",
     "sign_inconsistent": "The filing stores this expense with a negative sign; it is shown only after the sign is checked against the printed page.",
-    "total_liabilities_not_printed": "The balance sheet prints no total-liabilities line, and its own calculation does not confirm that the printed liability lines are complete, so no total is shown.",
+    "total_liabilities_not_printed": "The balance sheet prints no total-liabilities line, and a balance-sheet total is never computed from other lines, so no total is shown.",
     "unclassified_balance_sheet": "The balance sheet is not split into current and non-current sections, so no current total is printed.",
 }
 
