@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+PNR,768,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Accounts payable,301500000.0000,library map
+PNR,768,accounts_receivable,not_presented,,,,,,,,0000077360-26-000007,,,,no face line
+PNR,768,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000077360-26-000007,,,,note-sourced default tag (no face line)
+PNR,768,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000077360-26-000007,R3,Basic earnings per ordinary share (USD per share),3.9900,library map
+PNR,768,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Capital expenditures,68800000.0000,library map
+PNR,768,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Cash and cash equivalents,101600000.0000,combined line (library or label demote)
+PNR,768,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000077360-26-000007,R6,Net cash used for financing activities,-402500000.0000,library map
+PNR,768,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000077360-26-000007,R6,Net cash used for investing activities,-404500000.0000,library map
+PNR,768,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,"Cash paid for income taxes, net",86900000.0000,library map
+PNR,768,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,"Cash paid for interest, net",79800000.0000,library map
+PNR,768,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Accounts payable,20500000.0000,library map
+PNR,768,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Accounts receivable,93100000.0000,library map
+PNR,768,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Inventories,36900000.0000,library map
+PNR,768,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-5,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0000077360-26-000007,R6,Net cash provided by operating activities of continuing operations,814800000.0000,library map
+PNR,768,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Comprehensive income,662200000.0000,library map
+PNR,768,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Cost of goods sold,2485700000.0000,library map
+PNR,768,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Total current assets,1541800000.0000,library map
+PNR,768,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Total current liabilities,959300000.0000,library map
+PNR,768,deposits,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-5,Y,AdjustmentForAmortization,sec_api,0000077360-26-000007,R6,Depreciation,59600000.0000,printed face components (duration sum; total_debt founder sum)
+PNR,768,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000077360-26-000007,R3,Diluted earnings per ordinary share (USD per share),3.9600,library map
+PNR,768,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Dividends paid,164300000.0000,library map
+PNR,768,dividends_per_share,not_presented,,,,,,,,0000077360-26-000007,,,,no face line
+PNR,768,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Goodwill,3538100000.0000,library map
+PNR,768,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Gross profit,1690300000.0000,library map
+PNR,768,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Income from continuing operations before income taxes,756500000.0000,library map
+PNR,768,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Provision (benefit) for income taxes,107000000.0000,library map
+PNR,768,interest_expense,not_presented,,,,,,,,0000077360-26-000007,,,,no face line
+PNR,768,interest_income,not_presented,,,,,,,,0000077360-26-000007,,,,no face line
+PNR,768,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Inventories,632600000.0000,library map
+PNR,768,loans_net,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Net income,653800000.0000,library map
+PNR,768,net_interest_income,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,noninterest_expense,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,noninterest_income,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,"Selling, general and administrative",736900000.0000,printed opex lines (duration sum)
+PNR,768,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Operating income,857500000.0000,library map
+PNR,768,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000077360-26-000007,R3,Other expense (income),-5300000.0000,library map
+PNR,768,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,"Property, plant and equipment, net",376800000.0000,library map
+PNR,768,provision_for_credit_losses,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Research and development,95900000.0000,library map
+PNR,768,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Net sales,4176000000.0000,library map
+PNR,768,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Share-based compensation,37000000.0000,library map
+PNR,768,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,"Selling, general and administrative",736900000.0000,library map
+PNR,768,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0000077360-26-000007,R6,Repurchases of ordinary shares,225000000.0000,library map
+PNR,768,shares_outstanding,not_presented,,,,,,,,0000077360-26-000007,,,,no face line
+PNR,768,stockholders_equity,mapped,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Total equity,3869200000.0000,library map
+PNR,768,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Total assets,6868800000.0000,library map
+PNR,768,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Long-term debt,1638600000.0000,printed face components (duration sum; total_debt founder sum)
+PNR,768,total_interest_income,OUT,,,,,,,,0000077360-26-000007,,,,not a bank
+PNR,768,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000077360-26-000007,R4,Total liabilities,2999600000.0000,library map
+PNR,768,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Basic (shares),164100000.0000,library map
+PNR,768,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0000077360-26-000007,R3,Diluted (shares),165500000.0000,library map

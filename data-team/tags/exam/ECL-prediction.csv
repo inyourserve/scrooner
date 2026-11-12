@@ -26,8 +26,8 @@ ECL,156,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-018357
 ECL,156,gross_profit,not_presented,,,,,,,,0001104659-26-018357,,,,no face line
 ECL,156,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-018357,R2,Income before income taxes,2547900000.0000,library map
 ECL,156,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-018357,R2,Provision for income taxes,454600000.0000,library map
-ECL,156,interest_expense,not_presented,,,,,,,,0001104659-26-018357,,,,no face line
-ECL,156,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-26-018357,,,,note-sourced default tag (no face line)
+ECL,156,interest_expense,combined,custom:InterestExpenseNet,IS,-,-5,N,,fsn_xbrl,0001104659-26-018357,R2,"Interest expense, net",-241100000.0000,combined line (library or label demote)
+ECL,156,interest_income,not_presented,,,,,,,,0001104659-26-018357,,,,no face line
 ECL,156,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-018357,R5,Inventories,1490400000.0000,library map
 ECL,156,loans_net,OUT,,,,,,,,0001104659-26-018357,,,,not a bank
 ECL,156,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-018357,R2,Net income attributable to Ecolab,2075600000.0000,library map
@@ -36,7 +36,7 @@ ECL,156,noninterest_expense,OUT,,,,,,,,0001104659-26-018357,,,,not a bank
 ECL,156,noninterest_income,OUT,,,,,,,,0001104659-26-018357,,,,not a bank
 ECL,156,operating_expenses,not_presented,,,,,,,,0001104659-26-018357,,,,no face line
 ECL,156,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-018357,R2,Operating income,2737600000.0000,library map
-ECL,156,other_income_expense_net,not_presented,,,,,,,,0001104659-26-018357,,,,no face line
+ECL,156,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-5,Y,OtherNonoperatingIncomeExpenseMember,sec_api,0001104659-26-018357,R2,Other (income) expense,51400000.0000,combined line (library or label demote)
 ECL,156,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-018357,R5,"Property, plant and equipment, net",4276600000.0000,library map
 ECL,156,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-018357,,,,not a bank
 ECL,156,research_and_development,not_presented,,,,,,,,0001104659-26-018357,,,,no face line

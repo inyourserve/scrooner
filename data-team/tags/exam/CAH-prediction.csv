@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CAH,206,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,Accounts payable,38283000000.0000,library map
-CAH,206,accounts_receivable,not_presented,,,,,,,,0000721371-26-000038,,,,no face line
+CAH,206,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,"Trade receivables, net",13815000000.0000,combined line (library or label demote)
 CAH,206,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000721371-26-000038,,,,note-sourced default tag (no face line)
 CAH,206,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000721371-26-000038,R3,Basic (in dollars per share),7.2700,library map
 CAH,206,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000721371-26-000038,R8,Additions to property and equipment,649000000.0000,library map
@@ -21,20 +21,20 @@ CAH,206,deposits,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000721371-26-000038,R8,Depreciation and amortization,956000000.0000,library map
 CAH,206,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000721371-26-000038,R3,Diluted (in dollars per share),7.2300,library map
 CAH,206,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000721371-26-000038,R8,Dividends on common shares,491000000.0000,library map
-CAH,206,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000721371-26-000038,,,,note-sourced default tag (no face line)
-CAH,206,goodwill,not_presented,,,,,,,,0000721371-26-000038,,,,no face line
+CAH,206,dividends_per_share,not_presented,,,,,,,,0000721371-26-000038,,,,no face line
+CAH,206,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,"Goodwill and other intangibles, net",13631000000.0000,combined line (library or label demote)
 CAH,206,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,Gross margin,9774000000.0000,library map
 CAH,206,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,Earnings before income taxes,2174000000.0000,library map
 CAH,206,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,Income Tax Expense (Benefit),469000000.0000,library map
 CAH,206,interest_expense,combined,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Interest expense, net",348000000.0000,combined line (library or label demote)
-CAH,206,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000721371-26-000038,,,,note-sourced default tag (no face line)
+CAH,206,interest_income,not_presented,,,,,,,,0000721371-26-000038,,,,no face line
 CAH,206,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,"Inventories, net",17297000000.0000,library map
 CAH,206,loans_net,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Net earnings attributable to Cardinal Health, Inc.",1714000000.0000,library map
 CAH,206,net_interest_income,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,noninterest_expense,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
 CAH,206,noninterest_income,OUT,,,,,,,,0000721371-26-000038,,,,not a bank
-CAH,206,operating_expenses,not_presented,,,,,,,,0000721371-26-000038,,,,no face line
+CAH,206,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Distribution, selling, general, and administrative expenses",6132000000.0000,printed opex lines (duration sum)
 CAH,206,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,Operating earnings,2613000000.0000,library map
 CAH,206,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000721371-26-000038,R3,"Other (income)/expense, net",31000000.0000,library map
 CAH,206,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000721371-26-000038,R5,"Property and equipment, net",3031000000.0000,library map

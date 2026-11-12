@@ -1,15 +1,15 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-SNPS,140,accounts_payable,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
+SNPS,140,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Accounts payable and accrued liabilities,1326211000.0000,combined line (library or label demote)
 SNPS,140,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,"Accounts receivable, net",1505427000.0000,library map
 SNPS,140,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Amortization of acquired intangible assets,192525000.0000,library map
 SNPS,140,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000883241-25-000028,R5,Basic net income per share (in USD per share),8.1300,library map
-SNPS,140,capex,combined,us-gaap:PaymentsToAcquireOtherProductiveAssets,CF,0,-3,N,,sec_api,0000883241-25-000028,R9,Capitalization of software development costs,0.0000,single component line
+SNPS,140,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,"Purchases of property and equipment, net",169454000.0000,library map
 SNPS,140,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Cash and cash equivalents,2888030000.0000,library map
 SNPS,140,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Net cash provided by (used in) financing activities,13355757000.0000,library map
 SNPS,140,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000883241-25-000028,R9,Net cash provided by (used in) investing activities,-15881269000.0000,library map
 SNPS,140,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Cash paid for income taxes during the year:,512705000.0000,library map
 SNPS,140,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Interest payments during the year:,353773000.0000,library map
-SNPS,140,cf_ap_change,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
+SNPS,140,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0000883241-25-000028,R9,Accounts payable and accrued liabilities,-13487000.0000,combined line (library or label demote)
 SNPS,140,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Accounts receivable,174140000.0000,library map
 SNPS,140,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Inventories,22517000.0000,library map
 SNPS,140,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Net cash provided by operating activities,1518608000.0000,library map
@@ -21,22 +21,22 @@ SNPS,140,deposits,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000883241-25-000028,R9,Amortization and depreciation,660430000.0000,library map
 SNPS,140,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000883241-25-000028,R5,Diluted net income per share (in USD per share),8.0400,library map
 SNPS,140,dividends_paid,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
-SNPS,140,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000883241-25-000028,,,,note-sourced default tag (no face line)
+SNPS,140,dividends_per_share,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
 SNPS,140,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Goodwill,26899215000.0000,library map
 SNPS,140,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Gross margin,5430629000.0000,library map
 SNPS,140,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Income before income taxes,1393142000.0000,library map
 SNPS,140,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Provision for income taxes,55991000.0000,library map
 SNPS,140,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Interest expense,446729000.0000,library map
-SNPS,140,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000883241-25-000028,,,,note-sourced default tag (no face line)
+SNPS,140,interest_income,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
 SNPS,140,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,Inventories,365190000.0000,library map
 SNPS,140,loans_net,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Net income attributed to Synopsys,1332220000.0000,library map
 SNPS,140,net_interest_income,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,noninterest_expense,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,noninterest_income,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
-SNPS,140,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Total operating expenses,4515702000.0000,library map
+SNPS,140,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Total operating expenses,4515702000.0000,printed opex total tag
 SNPS,140,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Operating income,914927000.0000,library map
-SNPS,140,other_income_expense_net,not_presented,,,,,,,,0000883241-25-000028,,,,no face line
+SNPS,140,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,"Other income (expense), net",924944000.0000,combined line (library or label demote)
 SNPS,140,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000883241-25-000028,R3,"Property and equipment, net",696693000.0000,library map
 SNPS,140,provision_for_credit_losses,OUT,,,,,,,,0000883241-25-000028,,,,not a bank
 SNPS,140,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0000883241-25-000028,R5,Research and development,2479338000.0000,library map

@@ -1,10 +1,10 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 IFF,410,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,Accounts payable,1287000000.0000,library map
-IFF,410,accounts_receivable,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
+IFF,410,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,"Receivables, net, current",1731000000.0000,combined line (library or label demote)
 IFF,410,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000051253-26-000006,R3,Amortization of acquisition-related intangibles,568000000.0000,library map
 IFF,410,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000051253-26-000006,R3,Net income per share - basic (in dollars per share),-1.4100,library map
 IFF,410,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000051253-26-000006,R6,"Additions to property, plant and equipment",594000000.0000,library map
-IFF,410,cash_and_equivalents,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
+IFF,410,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,"Cash, cash equivalents, and restricted cash",590000000.0000,combined line (library or label demote)
 IFF,410,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000051253-26-000006,R6,Net cash used in financing activities,-3091000000.0000,library map
 IFF,410,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0000051253-26-000006,R6,Net cash provided by investing activities,2269000000.0000,library map
 IFF,410,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0000051253-26-000006,R6,Income taxes paid,329000000.0000,library map
@@ -27,14 +27,14 @@ IFF,410,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000051253-26
 IFF,410,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,(Loss) income before taxes,-412000000.0000,library map
 IFF,410,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,Income Tax Expense,-53000000.0000,library map
 IFF,410,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000051253-26-000006,R3,Interest expense,229000000.0000,library map
-IFF,410,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000051253-26-000006,,,,note-sourced default tag (no face line)
+IFF,410,interest_income,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
 IFF,410,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,Inventories,2245000000.0000,library map
 IFF,410,loans_net,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,net_income,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
 IFF,410,net_interest_income,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,noninterest_expense,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
 IFF,410,noninterest_income,OUT,,,,,,,,0000051253-26-000006,,,,not a bank
-IFF,410,operating_expenses,not_presented,,,,,,,,0000051253-26-000006,,,,no face line
+IFF,410,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,Y,RestructuringandOtherCharges,sec_api,0000051253-26-000006,R3,Research and development expenses,694000000.0000,printed opex lines (duration sum)
 IFF,410,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,Operating (loss) profit,-382000000.0000,library map
 IFF,410,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000051253-26-000006,R3,"Other expense, net",-65000000.0000,library map
 IFF,410,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000051253-26-000006,R4,"Property, plant and equipment, net",4029000000.0000,library map

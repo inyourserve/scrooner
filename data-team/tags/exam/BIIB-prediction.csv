@@ -4,7 +4,7 @@ BIIB,309,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5
 BIIB,309,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
 BIIB,309,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000875045-26-000013,R3,Basic earnings per share attributable to Biogen Inc. (in dollars per share),8.8300,library map
 BIIB,309,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000875045-26-000013,R7,"Purchases of property, plant and equipment",153800000.0000,library map
-BIIB,309,cash_and_equivalents,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
+BIIB,309,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Cash and cash equivalents,3008500000.0000,combined line (library or label demote)
 BIIB,309,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000875045-26-000013,R7,Net cash flow provided by (used in) financing activities,-301900000.0000,library map
 BIIB,309,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000875045-26-000013,R7,Net cash flow provided by (used in) investing activities,-1371100000.0000,library map
 BIIB,309,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
@@ -21,22 +21,22 @@ BIIB,309,deposits,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000875045-26-000013,R7,Depreciation and amortization,779900000.0000,library map
 BIIB,309,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000875045-26-000013,R3,Diluted earnings per share attributable to Biogen Inc. (in dollars per share),8.7900,library map
 BIIB,309,dividends_paid,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
-BIIB,309,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
+BIIB,309,dividends_per_share,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Goodwill,6491100000.0000,library map
 BIIB,309,gross_profit,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Income before income tax (benefit) expense,1556500000.0000,library map
 BIIB,309,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000875045-26-000013,R3,Income tax (benefit) expense,263600000.0000,library map
 BIIB,309,interest_expense,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
-BIIB,309,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000875045-26-000013,,,,note-sourced default tag (no face line)
+BIIB,309,interest_income,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
 BIIB,309,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,Inventory,2168100000.0000,library map
 BIIB,309,loans_net,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Net income attributable to Biogen Inc.,1292900000.0000,library map
 BIIB,309,net_interest_income,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,noninterest_expense,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,noninterest_income,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
-BIIB,309,operating_expenses,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
+BIIB,309,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Research and development,1778600000.0000,printed opex lines (duration sum)
 BIIB,309,operating_income,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
-BIIB,309,other_income_expense_net,not_presented,,,,,,,,0000875045-26-000013,,,,no face line
+BIIB,309,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000875045-26-000013,R3,"Other (income) expense, net",-305600000.0000,combined line (library or label demote)
 BIIB,309,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000875045-26-000013,R5,"Property, plant and equipment, net",3055400000.0000,library map
 BIIB,309,provision_for_credit_losses,OUT,,,,,,,,0000875045-26-000013,,,,not a bank
 BIIB,309,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-5,N,,sec_api,0000875045-26-000013,R3,Research and development,1778600000.0000,library map

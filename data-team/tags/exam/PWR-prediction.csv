@@ -1,5 +1,5 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-PWR,125,accounts_payable,not_presented,,,,,,,,0001050915-26-000006,,,,no face line
+PWR,125,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001050915-26-000006,R3,Accounts payable and accrued expenses,4579458000.0000,combined line (library or label demote)
 PWR,125,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001050915-26-000006,R3,"Accounts receivable, net",6847091000.0000,library map
 PWR,125,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001050915-26-000006,R5,Amortization of intangible assets,498795000.0000,library map
 PWR,125,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001050915-26-000006,R5,Basic (in dollars per share),6.9100,library map
@@ -10,7 +10,7 @@ PWR,125,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActiv
 PWR,125,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001050915-26-000006,,,,note-sourced default tag (no face line)
 PWR,125,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001050915-26-000006,,,,note-sourced default tag (no face line)
 PWR,125,cf_ap_change,not_presented,,,,,,,,0001050915-26-000006,,,,no face line
-PWR,125,cf_ar_change,not_presented,,,,,,,,0001050915-26-000006,,,,no face line
+PWR,125,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,"Accounts, notes and retainage receivable",853835000.0000,combined line (library or label demote)
 PWR,125,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,Inventories,121743000.0000,library map
 PWR,125,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001050915-26-000006,R7,Net cash provided by operating activities,2229970000.0000,library map
 PWR,125,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001050915-26-000006,R6,Comprehensive income attributable to common stock,1093875000.0000,library map
@@ -34,7 +34,7 @@ PWR,125,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001050915-26
 PWR,125,net_interest_income,OUT,,,,,,,,0001050915-26-000006,,,,not a bank
 PWR,125,noninterest_expense,OUT,,,,,,,,0001050915-26-000006,,,,not a bank
 PWR,125,noninterest_income,OUT,,,,,,,,0001050915-26-000006,,,,not a bank
-PWR,125,operating_expenses,not_presented,,,,,,,,0001050915-26-000006,,,,no face line
+PWR,125,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001050915-26-000006,R5,"Selling, general and administrative expenses",2189209000.0000,printed opex lines (duration sum)
 PWR,125,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001050915-26-000006,R5,Operating income,1611509000.0000,library map
 PWR,125,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001050915-26-000006,R5,"Other income, net",23739000.0000,library map
 PWR,125,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001050915-26-000006,R3,"Property and equipment, net",3455204000.0000,library map

@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CDNS,139,accounts_payable,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
-CDNS,139,accounts_receivable,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
+CDNS,139,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0000813672-26-000016,R3,Accounts payable and accrued liabilities,856856000.0000,combined line (library or label demote)
+CDNS,139,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000813672-26-000016,R3,"Receivables, net",944939000.0000,combined line (library or label demote)
 CDNS,139,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Amortization of acquired intangibles,39937000.0000,library map
 CDNS,139,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000813672-26-000016,R5,Net income per share - basic (in usd per share),4.0900,library map
 CDNS,139,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,"Purchases of property, plant and equipment",141871000.0000,library map
@@ -9,7 +9,7 @@ CDNS,139,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActi
 CDNS,139,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000813672-26-000016,R8,Net cash used for investing activities,-460523000.0000,library map
 CDNS,139,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000813672-26-000016,,,,note-sourced default tag (no face line)
 CDNS,139,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,Cash paid for interest,111951000.0000,library map
-CDNS,139,cf_ap_change,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
+CDNS,139,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,Accounts payable and accrued liabilities,184897000.0000,combined line (library or label demote)
 CDNS,139,cf_ar_change,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
 CDNS,139,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,Inventories,91029000.0000,library map
 CDNS,139,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,Net cash provided by operating activities,1728781000.0000,library map
@@ -21,20 +21,20 @@ CDNS,139,deposits,OUT,,,,,,,,0000813672-26-000016,,,,not a bank
 CDNS,139,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000813672-26-000016,R8,Depreciation and amortization,227828000.0000,library map
 CDNS,139,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000813672-26-000016,R5,Net income per share - diluted (in usd per share),4.0600,library map
 CDNS,139,dividends_paid,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
-CDNS,139,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000813672-26-000016,,,,note-sourced default tag (no face line)
+CDNS,139,dividends_per_share,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
 CDNS,139,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000813672-26-000016,R3,Goodwill,2749143000.0000,library map
 CDNS,139,gross_profit,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
 CDNS,139,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Income before provision for income taxes,1522043000.0000,library map
 CDNS,139,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Provision for income taxes,413155000.0000,library map
 CDNS,139,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Interest expense,116541000.0000,library map
-CDNS,139,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000813672-26-000016,,,,note-sourced default tag (no face line)
+CDNS,139,interest_income,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
 CDNS,139,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000813672-26-000016,R3,Inventories,303545000.0000,library map
 CDNS,139,loans_net,OUT,,,,,,,,0000813672-26-000016,,,,not a bank
 CDNS,139,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Net income,1108888000.0000,library map
 CDNS,139,net_interest_income,OUT,,,,,,,,0000813672-26-000016,,,,not a bank
 CDNS,139,noninterest_expense,OUT,,,,,,,,0000813672-26-000016,,,,not a bank
 CDNS,139,noninterest_income,OUT,,,,,,,,0000813672-26-000016,,,,not a bank
-CDNS,139,operating_expenses,not_presented,,,,,,,,0000813672-26-000016,,,,no face line
+CDNS,139,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Total costs and expenses,3804717000.0000,CostsAndExpenses value check (structural)
 CDNS,139,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,Income from operations,1492042000.0000,library map
 CDNS,139,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000813672-26-000016,R5,"Other income, net",146542000.0000,library map
 CDNS,139,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000813672-26-000016,R3,"Property, plant and equipment, net",517004000.0000,library map

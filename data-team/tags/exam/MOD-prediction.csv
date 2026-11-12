@@ -21,20 +21,20 @@ MOD,801,deposits,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
 MOD,801,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001104659-26-066795,R6,Depreciation and amortization,79700000.0000,library map
 MOD,801,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-066795,R2,Diluted (in dollars per share),2.2600,library map
 MOD,801,dividends_paid,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
-MOD,801,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001104659-26-066795,,,,note-sourced default tag (no face line)
+MOD,801,dividends_per_share,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
 MOD,801,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Goodwill,292100000.0000,library map
 MOD,801,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Gross profit,731100000.0000,library map
 MOD,801,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Earnings before income taxes,186500000.0000,library map
 MOD,801,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Provision for income taxes,63200000.0000,library map
 MOD,801,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001104659-26-066795,R2,Interest expense,31600000.0000,library map
-MOD,801,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-26-066795,,,,note-sourced default tag (no face line)
+MOD,801,interest_income,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
 MOD,801,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,Inventories,506100000.0000,library map
 MOD,801,loans_net,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
 MOD,801,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Net earnings attributable to Modine,121500000.0000,library map
 MOD,801,net_interest_income,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
 MOD,801,noninterest_expense,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
 MOD,801,noninterest_income,OUT,,,,,,,,0001104659-26-066795,,,,not a bank
-MOD,801,operating_expenses,not_presented,,,,,,,,0001104659-26-066795,,,,no face line
+MOD,801,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,"Selling, general and administrative expenses",360100000.0000,printed opex lines (duration sum)
 MOD,801,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-066795,R2,Operating income,342400000.0000,library map
 MOD,801,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001104659-26-066795,R2,Other expense - net,-8200000.0000,library map
 MOD,801,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-066795,R4,"Property, plant and equipment - net",520900000.0000,library map

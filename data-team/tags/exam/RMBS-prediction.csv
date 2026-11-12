@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+RMBS,730,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Accounts payable,35915000.0000,library map
+RMBS,730,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Accounts receivable,137476000.0000,library map
+RMBS,730,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-057101,,,,note-sourced default tag (no face line)
+RMBS,730,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-057101,R4,Basic net income per share,2.1400,library map
+RMBS,730,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Purchases of property and equipment,26842000.0000,library map
+RMBS,730,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-057101,R7,Net cash used in financing activities,-54414000.0000,library map
+RMBS,730,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-057101,R7,Net cash used in investing activities,-223110000.0000,library map
+RMBS,730,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,"Income taxes, net of refunds",24992000.0000,library map
+RMBS,730,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,0,-3,N,,sec_api,0001193125-26-057101,R7,Interest,0.0000,library map
+RMBS,730,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Accounts payable,11397000.0000,library map
+RMBS,730,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Accounts receivable,14653000.0000,library map
+RMBS,730,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001193125-26-057101,R7,Inventories,-536000.0000,library map
+RMBS,730,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Net cash provided by operating activities,360019000.0000,library map
+RMBS,730,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001193125-26-057101,R5,Total comprehensive income,231591000.0000,library map
+RMBS,730,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Cost of revenue,144415000.0000,library map
+RMBS,730,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Total current assets,988816000.0000,library map
+RMBS,730,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Total current liabilities,120574000.0000,library map
+RMBS,730,deposits,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,depreciation_and_amortization,not_presented,,,,,,,,0001193125-26-057101,,,,single component only
+RMBS,730,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-057101,R4,Diluted net income per share,2.1100,library map
+RMBS,730,dividends_paid,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,dividends_per_share,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Goodwill,286812000.0000,library map
+RMBS,730,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Gross profit,563215000.0000,library map
+RMBS,730,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Income before income taxes,281956000.0000,library map
+RMBS,730,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Provision for (benefit from) income taxes,51501000.0000,library map
+RMBS,730,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-057101,R4,Interest expense,1373000.0000,library map
+RMBS,730,interest_income,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Inventories,44098000.0000,library map
+RMBS,730,loans_net,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Net income,230455000.0000,library map
+RMBS,730,net_interest_income,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,noninterest_expense,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,noninterest_income,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Total operating expenses,302997000.0000,printed opex total tag
+RMBS,730,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Operating income,260218000.0000,library map
+RMBS,730,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-3,Y,InterestIncomeExpenseNonoperatingNet,sec_api,0001193125-26-057101,R4,"Interest income and other income (expense), net",23111000.0000,combined line (library or label demote)
+RMBS,730,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,"Property and equipment, net",113051000.0000,library map
+RMBS,730,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Research and development,187708000.0000,library map
+RMBS,730,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Revenue,707630000.0000,library map
+RMBS,730,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,Stock-based compensation,54267000.0000,library map
+RMBS,730,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,"Sales, general and administrative",115289000.0000,library map
+RMBS,730,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-057101,R7,"Repurchase and retirement of common stock, including prepayment under accelerated share repurchase program in 2024 and 2023",7114000.0000,library map
+RMBS,730,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-057101,R3,"Common stock, outstanding shares",107781863.0000,library map
+RMBS,730,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Total stockholders equity,1364425000.0000,library map
+RMBS,730,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Total assets,1529545000.0000,library map
+RMBS,730,total_debt,not_presented,,,,,,,,0001193125-26-057101,,,,no face line
+RMBS,730,total_interest_income,OUT,,,,,,,,0001193125-26-057101,,,,not a bank
+RMBS,730,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-057101,R2,Total liabilities,165120000.0000,library map
+RMBS,730,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Basic (in shares),107548000.0000,library map
+RMBS,730,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-057101,R4,Diluted (in shares),109235000.0000,library map

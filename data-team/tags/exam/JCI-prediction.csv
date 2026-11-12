@@ -9,7 +9,7 @@ JCI,133,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 JCI,133,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,Y,NetCashProvidedByUsedInInvestingActivities,sec_api,0000833444-25-000097,R7,Cash used by investing activities from continuing operations,-412000000.0000,library map
 JCI,133,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000833444-25-000097,,,,note-sourced default tag (no face line)
 JCI,133,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000833444-25-000097,,,,note-sourced default tag (no face line)
-JCI,133,cf_ap_change,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
+JCI,133,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000833444-25-000097,R7,Accounts payable and accrued liabilities,694000000.0000,combined line (library or label demote)
 JCI,133,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0000833444-25-000097,R7,Accounts receivable,211000000.0000,library map
 JCI,133,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000833444-25-000097,R7,Inventories,75000000.0000,library map
 JCI,133,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-6,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0000833444-25-000097,R7,Cash provided by operating activities from continuing operations,2554000000.0000,library map
@@ -27,14 +27,14 @@ JCI,133,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0000833444-25
 JCI,133,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000833444-25-000097,R3,Income from continuing operations before income taxes,1969000000.0000,library map
 JCI,133,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000833444-25-000097,R3,Income tax provision (benefit),245000000.0000,library map
 JCI,133,interest_expense,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
-JCI,133,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000833444-25-000097,,,,note-sourced default tag (no face line)
+JCI,133,interest_income,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
 JCI,133,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000833444-25-000097,R5,Inventories,1820000000.0000,library map
 JCI,133,loans_net,OUT,,,,,,,,0000833444-25-000097,,,,not a bank
 JCI,133,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000833444-25-000097,R3,Net income attributable to Johnson Controls,3291000000.0000,library map
 JCI,133,net_interest_income,OUT,,,,,,,,0000833444-25-000097,,,,not a bank
 JCI,133,noninterest_expense,OUT,,,,,,,,0000833444-25-000097,,,,not a bank
 JCI,133,noninterest_income,OUT,,,,,,,,0000833444-25-000097,,,,not a bank
-JCI,133,operating_expenses,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
+JCI,133,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000833444-25-000097,R3,"Selling, general and administrative expenses",5764000000.0000,printed opex lines (duration sum)
 JCI,133,operating_income,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
 JCI,133,other_income_expense_net,not_presented,,,,,,,,0000833444-25-000097,,,,no face line
 JCI,133,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000833444-25-000097,R5,"Property, plant and equipment - net",2193000000.0000,library map

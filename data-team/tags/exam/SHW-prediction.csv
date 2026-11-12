@@ -27,14 +27,14 @@ SHW,155,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000089800-26
 SHW,155,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Income before income taxes,3338200000.0000,library map
 SHW,155,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Income taxes,769700000.0000,library map
 SHW,155,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000089800-26-000008,R3,Interest expense,465000000.0000,library map
-SHW,155,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000089800-26-000008,,,,note-sourced default tag (no face line)
+SHW,155,interest_income,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
 SHW,155,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Inventories,2318200000.0000,library map
 SHW,155,loans_net,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Net income,2568500000.0000,library map
 SHW,155,net_interest_income,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,noninterest_expense,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
 SHW,155,noninterest_income,OUT,,,,,,,,0000089800-26-000008,,,,not a bank
-SHW,155,operating_expenses,combined,us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Other general (income) expense - net,10200000.0000,single component line
+SHW,155,operating_expenses,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
 SHW,155,operating_income,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
 SHW,155,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0000089800-26-000008,R3,Other expense (income) - net,-20900000.0000,library map
 SHW,155,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,"Property, plant and equipment, net",4137400000.0000,library map
@@ -43,7 +43,7 @@ SHW,155,research_and_development,not_presented,,,,,,,,0000089800-26-000008,,,,no
 SHW,155,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,Net sales,23574300000.0000,library map
 SHW,155,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000089800-26-000008,R7,Stock-based compensation expense,123500000.0000,library map
 SHW,155,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000089800-26-000008,R3,"Selling, general and administrative expenses",7695000000.0000,library map
-SHW,155,share_buybacks,not_presented,,,,,,,,0000089800-26-000008,,,,no face line
+SHW,155,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,+,-5,N,,sec_api,0000089800-26-000008,R7,Treasury stock purchased,1656400000.0000,combined line (library or label demote)
 SHW,155,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000089800-26-000008,R6,"Common stock, shares outstanding (in shares)",247700000.0000,library map
 SHW,155,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Total shareholders equity,4598300000.0000,library map
 SHW,155,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000089800-26-000008,R5,Total Assets,25901700000.0000,library map

@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MLM,342,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Accounts payable,389000000.0000,library map
+MLM,342,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,"Accounts receivable, net",723000000.0000,library map
+MLM,342,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-059193,,,,note-sourced default tag (no face line)
+MLM,342,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-059193,R2,Total basic attributable to common shareholders,18.8100,library map
+MLM,342,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,"Additions to property, plant and equipment",807000000.0000,library map
+MLM,342,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Cash and cash equivalents,67000000.0000,library map
+MLM,342,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001193125-26-059193,R7,Net Cash (Used for) Provided by Financing Activities,-800000000.0000,library map
+MLM,342,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-059193,R7,Net Cash (Used for) Provided by Investing Activities,-1588000000.0000,library map
+MLM,342,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-059193,,,,note-sourced default tag (no face line)
+MLM,342,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-059193,,,,note-sourced default tag (no face line)
+MLM,342,cf_ap_change,not_presented,,,,,,,,0001193125-26-059193,,,,no face line
+MLM,342,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,"Accounts receivable, net",51000000.0000,library map
+MLM,342,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,"Inventories, net",30000000.0000,library map
+MLM,342,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,Net Cash Provided by Operating Activities,1785000000.0000,library map
+MLM,342,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001193125-26-059193,R3,Comprehensive Earnings Attributable to Martin Marietta,1210000000.0000,library map
+MLM,342,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Cost of revenues,4261000000.0000,library map
+MLM,342,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Total Current Assets,3193000000.0000,library map
+MLM,342,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Total Current Liabilities,895000000.0000,library map
+MLM,342,deposits,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,"Depreciation, depletion and amortization",637000000.0000,library map
+MLM,342,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-059193,R2,Total diluted attributable to common shareholders,18.7700,library map
+MLM,342,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,Dividends paid,197000000.0000,library map
+MLM,342,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-059193,R9,Dividends declared,3.2400,library map
+MLM,342,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Goodwill,3614000000.0000,library map
+MLM,342,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Gross Profit,1889000000.0000,library map
+MLM,342,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Earnings from continuing operations before income tax expense,1226000000.0000,library map
+MLM,342,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Income tax expense,236000000.0000,library map
+MLM,342,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Interest expense,230000000.0000,library map
+MLM,342,interest_income,not_presented,,,,,,,,0001193125-26-059193,,,,no face line
+MLM,342,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,"Inventories, net",1078000000.0000,library map
+MLM,342,loans_net,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Net Earnings Attributable to Martin Marietta,1137000000.0000,library map
+MLM,342,net_interest_income,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,noninterest_expense,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,noninterest_income,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,operating_expenses,not_presented,,,,,,,,0001193125-26-059193,,,,no face line
+MLM,342,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Earnings from Operations,1437000000.0000,library map
+MLM,342,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,"Other nonoperating income, net",19000000.0000,library map
+MLM,342,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,"Property, plant and equipment, net",10290000000.0000,library map
+MLM,342,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,research_and_development,not_presented,,,,,,,,0001193125-26-059193,,,,no face line
+MLM,342,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,Revenues,6150000000.0000,library map
+MLM,342,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,Stock-based compensation expense,46000000.0000,library map
+MLM,342,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001193125-26-059193,R2,"Selling, general and administrative expenses",443000000.0000,library map
+MLM,342,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001193125-26-059193,R7,Repurchases of common stock,450000000.0000,library map
+MLM,342,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-059193,R6,"Common stock, shares outstanding",60309739.0000,library map
+MLM,342,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Total Shareholders Equity,10032000000.0000,library map
+MLM,342,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Total Assets,18711000000.0000,library map
+MLM,342,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Current maturities of long-term debt,30000000.0000,printed face components (duration sum; total_debt founder sum)
+MLM,342,total_interest_income,OUT,,,,,,,,0001193125-26-059193,,,,not a bank
+MLM,342,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-059193,R5,Total Liabilities,8677000000.0000,library map
+MLM,342,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001193125-26-059193,R2,Basic,60500000.0000,library map
+MLM,342,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001193125-26-059193,R2,Diluted,60600000.0000,library map

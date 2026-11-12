@@ -27,7 +27,7 @@ MMM,147,gross_profit,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
 MMM,147,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Income (loss) from continuing operations before income taxes,4213000000.0000,library map
 MMM,147,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Provision (benefit) for income taxes,1003000000.0000,library map
 MMM,147,interest_expense,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
-MMM,147,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000066740-26-000014,,,,note-sourced default tag (no face line)
+MMM,147,interest_income,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
 MMM,147,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000066740-26-000014,R5,Total inventories,3661000000.0000,library map
 MMM,147,loans_net,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Net income (loss) attributable to 3M,3250000000.0000,library map
@@ -36,7 +36,7 @@ MMM,147,noninterest_expense,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,noninterest_income,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,operating_expenses,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
 MMM,147,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000066740-26-000014,R3,Operating income (loss),4629000000.0000,library map
-MMM,147,other_income_expense_net,not_presented,,,,,,,,0000066740-26-000014,,,,no face line
+MMM,147,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000066740-26-000014,R3,"Other expense (income), net",-416000000.0000,combined line (library or label demote)
 MMM,147,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,Y,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,sec_api,0000066740-26-000014,R5,"Property, plant and equipment  net",7101000000.0000,library map
 MMM,147,provision_for_credit_losses,OUT,,,,,,,,0000066740-26-000014,,,,not a bank
 MMM,147,research_and_development,not_presented,,,,,,,,0000066740-26-000014,,,,no face line

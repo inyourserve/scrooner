@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+BXP,725,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,"Accounts payable and accrued expenses (amounts related to VIEs of $88,849 and $115,808 at December 31, 2025 and December 31, 2024, respectively)",480017000.0000,combined line (library or label demote)
+BXP,725,accounts_receivable,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001037540-26-000006,,,,note-sourced default tag (no face line)
+BXP,725,basic_eps,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,capex,not_presented,,,,,,,,0001037540-26-000006,,,,single component only
+BXP,725,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,"Cash and cash equivalents (amounts related to VIEs of $255,631 and $373,737 at December 31, 2025 and December 31, 2024, respectively)",1478206000.0000,library map
+BXP,725,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,Net cash provided by (used in) financing activities,-378561000.0000,library map
+BXP,725,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,Net cash used in investing activities,-644526000.0000,library map
+BXP,725,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001037540-26-000006,,,,note-sourced default tag (no face line)
+BXP,725,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Cash paid for interest (net of amounts capitalized),677156000.0000,library map
+BXP,725,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Accounts payable and accrued expenses,27161000.0000,combined line (library or label demote)
+BXP,725,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001037540-26-000006,R9,"Tenant and other receivables, net",-32507000.0000,combined line (library or label demote)
+BXP,725,cf_inventory_change,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Net cash provided by operating activities,1245157000.0000,library map
+BXP,725,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001037540-26-000006,R6,"Comprehensive income attributable to BXP, Inc.",265951000.0000,library map
+BXP,725,cost_of_revenue,combined,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Rental,1335069000.0000,combined line (library or label demote)
+BXP,725,current_assets,not_presented,,,,,,,,0001037540-26-000006,,,,unclassified balance sheet
+BXP,725,current_liabilities,not_presented,,,,,,,,0001037540-26-000006,,,,unclassified balance sheet
+BXP,725,deposits,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Depreciation and amortization,912088000.0000,library map
+BXP,725,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001037540-26-000006,R5,"Diluted Earnings: Net income (Loss), Per Share Amount (in dollars per share / unit)",1.7400,library map
+BXP,725,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Dividends and distributions,643107000.0000,library map
+BXP,725,dividends_per_share,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,goodwill,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,gross_profit,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,income_before_tax,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,income_tax_expense,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Interest expense,653138000.0000,library map
+BXP,725,interest_income,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,inventory,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,loans_net,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,"Net income attributable to BXP, Inc.",276800000.0000,library map
+BXP,725,net_interest_income,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,noninterest_expense,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,noninterest_income,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,General and administrative,168789000.0000,printed opex lines (duration sum)
+BXP,725,operating_income,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,other_income_expense_net,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,ppe_net,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,provision_for_credit_losses,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,research_and_development,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Total revenue,3482279000.0000,library map
+BXP,725,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001037540-26-000006,R9,Non-cash compensation expense,44334000.0000,library map
+BXP,725,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,General and administrative,168789000.0000,lone G&A line
+BXP,725,share_buybacks,not_presented,,,,,,,,0001037540-26-000006,,,,no face line
+BXP,725,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001037540-26-000006,R4,"Common Stock, Shares, Outstanding",158548298.0000,library map
+BXP,725,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,"Total stockholders' equity attributable to BXP, Inc.",5147190000.0000,library map
+BXP,725,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,Total assets,26166164000.0000,library map
+BXP,725,total_debt,component_sum,us-gaap:CommercialPaper,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,Unsecured commercial paper,750000000.0000,printed face components (duration sum; total_debt founder sum)
+BXP,725,total_interest_income,OUT,,,,,,,,0001037540-26-000006,,,,not a bank
+BXP,725,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001037540-26-000006,R3,Total liabilities,18473924000.0000,library map
+BXP,725,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Weighted average number of common shares / units outstanding (in shares / units),158330000.0000,library map
+BXP,725,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001037540-26-000006,R5,Weighted average number of common and common equivalent shares / units outstanding (in shares / units),158869000.0000,library map

@@ -21,20 +21,20 @@ NET,114,deposits,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
 NET,114,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001477333-26-000016,R8,Depreciation and amortization expense,189742000.0000,library map
 NET,114,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001477333-26-000016,R5,"Net loss per share attributable to common stockholders, diluted (in dollars per share)",-0.2900,library map
 NET,114,dividends_paid,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
-NET,114,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001477333-26-000016,,,,note-sourced default tag (no face line)
+NET,114,dividends_per_share,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
 NET,114,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,Goodwill,226563000.0000,library map
 NET,114,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001477333-26-000016,R5,Gross profit,1615412000.0000,library map
 NET,114,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001477333-26-000016,R5,Loss before income taxes,-92706000.0000,library map
 NET,114,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001477333-26-000016,R5,Provision for income taxes,9561000.0000,library map
 NET,114,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001477333-26-000016,R5,Interest expense,8766000.0000,library map
-NET,114,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001477333-26-000016,,,,note-sourced default tag (no face line)
+NET,114,interest_income,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
 NET,114,inventory,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
 NET,114,loans_net,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
 NET,114,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001477333-26-000016,R5,Net loss,-102267000.0000,library map
 NET,114,net_interest_income,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
 NET,114,noninterest_expense,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
 NET,114,noninterest_income,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
-NET,114,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001477333-26-000016,R5,Total operating expenses,1822617000.0000,library map
+NET,114,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001477333-26-000016,R5,Total operating expenses,1822617000.0000,printed opex total tag
 NET,114,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001477333-26-000016,R5,Loss from operations,-207205000.0000,library map
 NET,114,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001477333-26-000016,R5,"Other income (expense), net",-7954000.0000,library map
 NET,114,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,"Property and equipment, net",618691000.0000,library map
@@ -47,7 +47,7 @@ NET,114,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-3
 NET,114,shares_outstanding,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
 NET,114,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,Total stockholders equity,1459123000.0000,library map
 NET,114,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,Total assets,6036256000.0000,library map
-NET,114,total_debt,not_presented,,,,,,,,0001477333-26-000016,,,,no face line
+NET,114,total_debt,combined,us-gaap:ConvertibleDebtNoncurrent,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,"Convertible senior notes, net",1974120000.0000,combined line (library or label demote)
 NET,114,total_interest_income,OUT,,,,,,,,0001477333-26-000016,,,,not a bank
 NET,114,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001477333-26-000016,R3,Total liabilities,4577133000.0000,library map
 NET,114,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001477333-26-000016,R5,"Weighted-average shares used in computing net loss per share attributable to common stockholders, basic (in shares)",348421000.0000,library map

@@ -10,7 +10,7 @@ PCG,302,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActiv
 PCG,302,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001004980-26-000009,,,,note-sourced default tag (no face line)
 PCG,302,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001004980-26-000009,R8,"Interest, net of amounts capitalized",2665000000.0000,library map
 PCG,302,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001004980-26-000009,R8,Accounts payable,176000000.0000,library map
-PCG,302,cf_ar_change,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
+PCG,302,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-6,N,,sec_api,0001004980-26-000009,R8,Accounts receivable,61000000.0000,combined line (library or label demote)
 PCG,302,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,0,-6,N,,sec_api,0001004980-26-000009,R8,Inventories,0.0000,library map
 PCG,302,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001004980-26-000009,R8,Net cash provided by operating activities,8716000000.0000,library map
 PCG,302,comprehensive_income,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
@@ -21,7 +21,7 @@ PCG,302,deposits,OUT,,,,,,,,0001004980-26-000009,,,,not a bank
 PCG,302,depreciation_and_amortization,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001004980-26-000009,R3,"Net Income Per Common Share, Diluted (in dollars per share)",1.1800,library map
 PCG,302,dividends_paid,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
-PCG,302,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001004980-26-000009,,,,note-sourced default tag (no face line)
+PCG,302,dividends_per_share,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,goodwill,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,gross_profit,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001004980-26-000009,R3,Income Before Income Taxes,2423000000.0000,library map
@@ -41,7 +41,7 @@ PCG,302,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUs
 PCG,302,provision_for_credit_losses,OUT,,,,,,,,0001004980-26-000009,,,,not a bank
 PCG,302,research_and_development,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001004980-26-000009,R3,Total operating revenues,24935000000.0000,library map
-PCG,302,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001004980-26-000009,,,,note-sourced default tag (no face line)
+PCG,302,sbc,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,sga_expense,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,share_buybacks,not_presented,,,,,,,,0001004980-26-000009,,,,no face line
 PCG,302,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001004980-26-000009,R7,"Common stock, shares outstanding (in shares)",2197942874.0000,library map

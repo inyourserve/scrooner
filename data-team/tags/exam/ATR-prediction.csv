@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ATR,805,accounts_payable,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,accounts_receivable,combined,us-gaap:AccountsNotesAndLoansReceivableNetCurrent,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,"""Accounts and notes receivable, less current expected credit loss (""""CECL"""") of $17,732 in 2025 and $15,785 in 2024""",803830000.0000,combined line (library or label demote)
+ATR,805,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000896622-26-000007,,,,note-sourced default tag (no face line)
+ATR,805,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000896622-26-000007,R3,Basic (in dollars per share),5.9700,library map
+ATR,805,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Capital expenditures,270419000.0000,library map
+ATR,805,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Cash and equivalents,402424000.0000,library map
+ATR,805,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000896622-26-000007,R8,Net Cash Used by Financing Activities,-77471000.0000,library map
+ATR,805,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000896622-26-000007,R8,Net Cash Used by Investing Activities,-331426000.0000,library map
+ATR,805,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000896622-26-000007,,,,note-sourced default tag (no face line)
+ATR,805,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Interest paid,49972000.0000,library map
+ATR,805,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-3,N,,sec_api,0000896622-26-000007,R8,"Accounts payable, accrued and other liabilities",-18274000.0000,combined line (library or label demote)
+ATR,805,cf_ar_change,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Inventories,10646000.0000,library map
+ATR,805,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Net Cash Provided by Operations,569999000.0000,library map
+ATR,805,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000896622-26-000007,R4,"Comprehensive Income Attributable to AptarGroup, Inc.",635892000.0000,library map
+ATR,805,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,IS,+,-3,N,,sec_api,0000896622-26-000007,R3,Cost of Sales (exclusive of depreciation and amortization):,2372446000.0000,library map
+ATR,805,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Total Current Assets,1893562000.0000,library map
+ATR,805,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Total Current Liabilities,1166444000.0000,library map
+ATR,805,deposits,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AdjustmentForAmortization,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Depreciation,242312000.0000,printed face components (duration sum; total_debt founder sum)
+ATR,805,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000896622-26-000007,R3,Diluted (in dollars per share),5.8900,library map
+ATR,805,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Dividends paid,120784000.0000,library map
+ATR,805,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,IS,+,2,N,,sec_api,0000896622-26-000007,R3,Dividends per Common Share (in dollars per share),1.8300,library map
+ATR,805,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Goodwill,1077898000.0000,library map
+ATR,805,gross_profit,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000896622-26-000007,R3,Income before Income Taxes,491378000.0000,library map
+ATR,805,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000896622-26-000007,R3,Provision for Income Taxes,98881000.0000,library map
+ATR,805,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000896622-26-000007,R3,Interest expense,52737000.0000,library map
+ATR,805,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0000896622-26-000007,R3,Interest income,11676000.0000,library map
+ATR,805,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Inventories,537845000.0000,library map
+ATR,805,loans_net,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0000896622-26-000007,R3,"Net Income Attributable to AptarGroup, Inc.",392789000.0000,library map
+ATR,805,net_interest_income,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,noninterest_expense,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,noninterest_income,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,operating_expenses,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000896622-26-000007,R3,Operating Income,501038000.0000,library map
+ATR,805,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000896622-26-000007,R3,"Miscellaneous (expense) income, net",-2027000.0000,library map
+ATR,805,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,"Property, Plant and Equipment, Net",1676479000.0000,library map
+ATR,805,provision_for_credit_losses,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,research_and_development,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,revenue,mapped,us-gaap:Revenues,IS,+,-3,Y,RevenueFromContractWithCustomerExcludingAssessedTax,sec_api,0000896622-26-000007,R3,Net Sales,3777181000.0000,library map
+ATR,805,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Stock-based compensation,43941000.0000,library map
+ATR,805,sga_expense,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000896622-26-000007,R8,Purchase of treasury stock,365005000.0000,library map
+ATR,805,shares_outstanding,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,"Total AptarGroup, Inc. Stockholders Equity",2668096000.0000,library map
+ATR,805,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Total Assets,5252719000.0000,library map
+ATR,805,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0000896622-26-000007,R5,Short-term obligations,183947000.0000,printed face components (duration sum; total_debt founder sum)
+ATR,805,total_interest_income,OUT,,,,,,,,0000896622-26-000007,,,,not a bank
+ATR,805,total_liabilities,not_presented,,,,,,,,0000896622-26-000007,,,,no face line
+ATR,805,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0000896622-26-000007,,,,note-sourced default tag (no face line)
+ATR,805,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0000896622-26-000007,,,,note-sourced default tag (no face line)

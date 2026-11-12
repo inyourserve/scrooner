@@ -21,22 +21,22 @@ UPS,152,deposits,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
 UPS,152,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-008432,R7,Depreciation and amortization,3746000000.0000,library map
 UPS,152,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008432,R5,Diluted Earnings Per Share (in dollars per share),6.5600,library map
 UPS,152,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-008432,R7,Dividends,5398000000.0000,library map
-UPS,152,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001628280-26-008432,,,,note-sourced default tag (no face line)
+UPS,152,dividends_per_share,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
 UPS,152,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-008432,R3,Goodwill,5837000000.0000,library map
 UPS,152,gross_profit,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
 UPS,152,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-008432,R5,Income Before Income Taxes,7164000000.0000,library map
 UPS,152,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-008432,R5,Income Tax Expense,1592000000.0000,library map
 UPS,152,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-008432,R5,Interest expense,1017000000.0000,library map
-UPS,152,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001628280-26-008432,,,,note-sourced default tag (no face line)
+UPS,152,interest_income,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
 UPS,152,inventory,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
 UPS,152,loans_net,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
 UPS,152,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008432,R5,Net Income,5572000000.0000,library map
 UPS,152,net_interest_income,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
 UPS,152,noninterest_expense,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
 UPS,152,noninterest_income,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
-UPS,152,operating_expenses,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
+UPS,152,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-008432,R5,Total Operating Expenses,80794000000.0000,CostsAndExpenses value check (structural)
 UPS,152,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008432,R5,Operating Profit,7867000000.0000,library map
-UPS,152,other_income_expense_net,not_presented,,,,,,,,0001628280-26-008432,,,,no face line
+UPS,152,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-008432,R5,Total Other Income and (Expense),-703000000.0000,combined line (library or label demote)
 UPS,152,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001628280-26-008432,R3,"Property, Plant and Equipment, Net",37731000000.0000,library map
 UPS,152,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008432,,,,not a bank
 UPS,152,research_and_development,not_presented,,,,,,,,0001628280-26-008432,,,,no face line

@@ -9,32 +9,32 @@ AMT,144,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 AMT,144,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001053507-26-000035,R10,Cash (used for) provided by investing activities,-1859800000.0000,library map
 AMT,144,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
 AMT,144,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
-AMT,144,cf_ap_change,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
+AMT,144,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001053507-26-000035,R10,Accounts payable and accrued expenses,-65600000.0000,combined line (library or label demote)
 AMT,144,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001053507-26-000035,R10,Accounts receivable,62200000.0000,library map
 AMT,144,cf_inventory_change,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001053507-26-000035,R10,Cash provided by operating activities,5464000000.0000,library map
 AMT,144,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001053507-26-000035,R7,Comprehensive income attributable to American Tower Corporation stockholders,3668300000.0000,library map
-AMT,144,cost_of_revenue,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
+AMT,144,cost_of_revenue,combined,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,Property,2574100000.0000,combined line (library or label demote)
 AMT,144,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,Total current assets,2741800000.0000,library map
 AMT,144,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,Total current liabilities,6913800000.0000,library map
 AMT,144,deposits,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
 AMT,144,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,"Depreciation, amortization and accretion",2041600000.0000,combined line (library or label demote)
 AMT,144,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001053507-26-000035,R5,Diluted net income attributable to American Tower Corporation common stockholders (in dollars per share),5.4000,library map
 AMT,144,dividends_paid,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
-AMT,144,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
+AMT,144,dividends_per_share,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,GOODWILL,12255500000.0000,library map
 AMT,144,gross_profit,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,INCOME FROM CONTINUING OPERATIONS BEFORE INCOME TAXES,3044200000.0000,library map
 AMT,144,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,Income tax provision,415700000.0000,library map
 AMT,144,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001053507-26-000035,R5,Interest expense,1359400000.0000,library map
-AMT,144,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001053507-26-000035,,,,note-sourced default tag (no face line)
+AMT,144,interest_income,combined,us-gaap:InterestIncomeOther,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,Interest income,134000000.0000,combined line (library or label demote)
 AMT,144,inventory,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,loans_net,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
 AMT,144,net_income,not_presented,,,,,,,,0001053507-26-000035,,,,no face line
 AMT,144,net_interest_income,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
 AMT,144,noninterest_expense,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
 AMT,144,noninterest_income,OUT,,,,,,,,0001053507-26-000035,,,,not a bank
-AMT,144,operating_expenses,combined,us-gaap:OtherOperatingIncomeExpenseNet,IS,-,-5,N,,sec_api,0001053507-26-000035,R5,Other operating expense,-68400000.0000,single component line
+AMT,144,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,Total operating expenses,5798800000.0000,CostsAndExpenses value check (structural)
 AMT,144,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001053507-26-000035,R5,OPERATING INCOME,4845800000.0000,library map
 AMT,144,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001053507-26-000035,R5,"Other (expense) income (including foreign currency (losses) gains of $(809.4), $308.3, and $(330.6) respectively)",-576200000.0000,library map
 AMT,144,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001053507-26-000035,R3,"PROPERTY AND EQUIPMENT, net",20356300000.0000,library map

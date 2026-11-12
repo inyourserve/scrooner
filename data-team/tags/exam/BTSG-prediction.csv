@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+BTSG,615,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Trade accounts payable,1217946000.0000,library map
+BTSG,615,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,"Accounts receivable, net of allowance for credit losses",989719000.0000,library map
+BTSG,615,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-079454,,,,note-sourced default tag (no face line)
+BTSG,615,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-079454,R4,Net income (loss) per share,0.9400,library map
+BTSG,615,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Purchases of property and equipment,95484000.0000,library map
+BTSG,615,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Cash and cash equivalents,88370000.0000,library map
+BTSG,615,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-079454,R9,Net cash (used in) provided by financing activities,-157866000.0000,library map
+BTSG,615,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-079454,R9,Net cash used in investing activities,-305079000.0000,library map
+BTSG,615,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,"Income taxes, net of refunds",26970000.0000,library map
+BTSG,615,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,"Interest, net",183512000.0000,library map
+BTSG,615,cf_ap_change,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Accounts receivable,131287000.0000,library map
+BTSG,615,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Inventories,177906000.0000,library map
+BTSG,615,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Net cash provided by operating activities,490169000.0000,library map
+BTSG,615,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001193125-26-079454,R5,"Comprehensive income (loss) attributable to BrightSpring Health Services, Inc. and subsidiaries",182557000.0000,library map
+BTSG,615,cost_of_revenue,mapped,custom:CostOfServices,IS,+,-3,N,,fsn_xbrl,0001193125-26-079454,R4,Cost of services,885356000.0000,library map
+BTSG,615,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Total current assets,2894050000.0000,library map
+BTSG,615,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Total current liabilities,1849034000.0000,library map
+BTSG,615,deposits,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Depreciation and amortization,164277000.0000,library map
+BTSG,615,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-079454,R4,Net income (loss) per share,0.8700,library map
+BTSG,615,dividends_paid,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,dividends_per_share,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Goodwill,2545673000.0000,library map
+BTSG,615,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Gross profit,1517777000.0000,library map
+BTSG,615,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Income (loss) from continuing operations before income taxes,137941000.0000,library map
+BTSG,615,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Income tax expense (benefit),33145000.0000,library map
+BTSG,615,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,"Interest expense, net",157311000.0000,combined line (library or label demote)
+BTSG,615,interest_income,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Inventories,815180000.0000,library map
+BTSG,615,loans_net,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,"Net income (loss) attributable to BrightSpring Health Services, Inc. and subsidiaries",190666000.0000,library map
+BTSG,615,net_interest_income,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,noninterest_expense,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,noninterest_income,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,operating_expenses,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Operating income,295252000.0000,library map
+BTSG,615,other_income_expense_net,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,"Property and equipment, net of accumulated depreciation of $404,878 and $339,892 at December 31, 2025 and 2024, respectively",204689000.0000,library map
+BTSG,615,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,research_and_development,not_presented,,,,,,,,0001193125-26-079454,,,,no face line
+BTSG,615,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Total revenues,12910564000.0000,library map
+BTSG,615,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Share-based compensation,70099000.0000,library map
+BTSG,615,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,"Selling, general, and administrative expenses",1222525000.0000,library map
+BTSG,615,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-079454,R9,Repurchase of shares of common stock,43173000.0000,library map
+BTSG,615,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-079454,R3,"Common Stock, shares outstanding",192124125.0000,library map
+BTSG,615,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Total shareholders' equity,1875065000.0000,library map
+BTSG,615,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Total assets,6413311000.0000,library map
+BTSG,615,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Current portion of long-term debt,52340000.0000,printed face components (duration sum; total_debt founder sum)
+BTSG,615,total_interest_income,OUT,,,,,,,,0001193125-26-079454,,,,not a bank
+BTSG,615,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-079454,R2,Total liabilities,4526945000.0000,library map
+BTSG,615,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Basic,202564000.0000,library map
+BTSG,615,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-079454,R4,Diluted,219774000.0000,library map

@@ -1,5 +1,5 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-MCO,149,accounts_payable,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
+MCO,149,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-009136,R5,Accounts payable and accrued liabilities,1304000000.0000,combined line (library or label demote)
 MCO,149,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-009136,R5,"Accounts receivable, net of allowances for credit losses of $29 in 2025 and $32 in 2024",2024000000.0000,library map
 MCO,149,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-009136,,,,note-sourced default tag (no face line)
 MCO,149,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-009136,R3,Basic (in USD per share),13.7300,library map
@@ -9,7 +9,7 @@ MCO,149,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 MCO,149,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001628280-26-009136,R7,Net cash provided by (used in) investing activities,2000000.0000,library map
 MCO,149,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-009136,,,,note-sourced default tag (no face line)
 MCO,149,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-009136,,,,note-sourced default tag (no face line)
-MCO,149,cf_ap_change,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
+MCO,149,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-009136,R7,Accounts payable and accrued liabilities,-55000000.0000,combined line (library or label demote)
 MCO,149,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001628280-26-009136,R7,Accounts receivable,203000000.0000,library map
 MCO,149,cf_inventory_change,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
 MCO,149,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-009136,R7,Net cash provided by operating activities,2901000000.0000,library map
@@ -26,15 +26,15 @@ MCO,149,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-009136
 MCO,149,gross_profit,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
 MCO,149,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Income before provision for income taxes,3130000000.0000,library map
 MCO,149,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Provision for income taxes,668000000.0000,library map
-MCO,149,interest_expense,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
-MCO,149,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001628280-26-009136,,,,note-sourced default tag (no face line)
+MCO,149,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0001628280-26-009136,R3,"Interest expense, net",-213000000.0000,combined line (library or label demote)
+MCO,149,interest_income,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
 MCO,149,inventory,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
 MCO,149,loans_net,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
 MCO,149,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Net income attributable to Moodys,2459000000.0000,library map
 MCO,149,net_interest_income,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
 MCO,149,noninterest_expense,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
 MCO,149,noninterest_income,OUT,,,,,,,,0001628280-26-009136,,,,not a bank
-MCO,149,operating_expenses,not_presented,,,,,,,,0001628280-26-009136,,,,no face line
+MCO,149,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,"Selling, general and administrative",1803000000.0000,printed opex lines (duration sum)
 MCO,149,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-009136,R3,Operating income,3351000000.0000,library map
 MCO,149,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-009136,R3,"Other non-operating (expense) income, net",-31000000.0000,library map
 MCO,149,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-009136,R5,"Property and equipment, net of accumulated depreciation of $1,572 in 2025 and $1,453 in 2024",722000000.0000,library map

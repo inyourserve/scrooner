@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+VG,331,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Accounts payable,737000000.0000,library map
+VG,331,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Accounts receivable,918000000.0000,library map
+VG,331,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
+VG,331,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0002007855-26-000013,R5,Net income attributable to common stockholders per sharebasic (in usd per share),0.9300,library map
+VG,331,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Capital expenditures,13365000000.0000,library map
+VG,331,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Cash and cash equivalents,2355000000.0000,library map
+VG,331,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Net cash from financing activities,5465000000.0000,library map
+VG,331,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0002007855-26-000013,R9,Net cash used by investing activities,-13220000000.0000,library map
+VG,331,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
+VG,331,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0002007855-26-000013,,,,note-sourced default tag (no face line)
+VG,331,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Accounts payable and accrued liabilities,873000000.0000,combined line (library or label demote)
+VG,331,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Accounts receivable,564000000.0000,library map
+VG,331,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Inventory,61000000.0000,library map
+VG,331,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Net cash from operating activities,6566000000.0000,library map
+VG,331,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0002007855-26-000013,R6,COMPREHENSIVE INCOME ATTRIBUTABLE TO COMMON STOCKHOLDERS,2270000000.0000,library map
+VG,331,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Cost of sales (exclusive of depreciation and amortization shown separately below),5920000000.0000,library map
+VG,331,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Total current assets,4040000000.0000,library map
+VG,331,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Total current liabilities,4344000000.0000,library map
+VG,331,deposits,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Depreciation and amortization,941000000.0000,library map
+VG,331,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0002007855-26-000013,R5,Net income attributable to common stockholders per sharediluted (in usd per share),0.8600,library map
+VG,331,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Payments of dividends and subsidiary distributions,465000000.0000,library map
+VG,331,dividends_per_share,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,goodwill,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,gross_profit,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,INCOME BEFORE INCOME TAX EXPENSE,3363000000.0000,library map
+VG,331,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Income tax expense,630000000.0000,library map
+VG,331,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,"Interest expense, net",1454000000.0000,combined line (library or label demote)
+VG,331,interest_income,combined,us-gaap:InterestIncomeOther,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Interest income,151000000.0000,combined line (library or label demote)
+VG,331,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,"Inventory, net",253000000.0000,library map
+VG,331,loans_net,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,net_income,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,net_interest_income,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,noninterest_expense,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,noninterest_income,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,operating_expenses,component_sum,us-gaap:OtherCostAndExpenseOperating;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Operating and maintenance expense,975000000.0000,printed opex lines (duration sum)
+VG,331,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,INCOME FROM OPERATIONS,5156000000.0000,library map
+VG,331,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0002007855-26-000013,R5,Total other income (expense),-1793000000.0000,combined line (library or label demote)
+VG,331,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,"Property, plant and equipment, net",46588000000.0000,library map
+VG,331,provision_for_credit_losses,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Development expense,344000000.0000,library map
+VG,331,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,REVENUE,13769000000.0000,library map
+VG,331,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0002007855-26-000013,R9,Stock-based compensation,46000000.0000,library map
+VG,331,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,General and administrative expense,433000000.0000,lone G&A line
+VG,331,share_buybacks,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,shares_outstanding,not_presented,,,,,,,,0002007855-26-000013,,,,no face line
+VG,331,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,"Total Venture Global, Inc. stockholders' equity",6743000000.0000,library map
+VG,331,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,TOTAL ASSETS,53446000000.0000,library map
+VG,331,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,"Current portion of long-term debt, net",812000000.0000,printed face components (duration sum; total_debt founder sum)
+VG,331,total_interest_income,OUT,,,,,,,,0002007855-26-000013,,,,not a bank
+VG,331,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0002007855-26-000013,R3,Total liabilities,41450000000.0000,library map
+VG,331,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Weighted average number of shares of common stock outstandingbasic (in shares),2426000000.0000,library map
+VG,331,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-6,N,,sec_api,0002007855-26-000013,R5,Weighted average number of shares of common stock outstandingdiluted (in shares),2635000000.0000,library map

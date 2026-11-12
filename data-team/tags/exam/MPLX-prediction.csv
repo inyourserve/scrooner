@@ -9,7 +9,7 @@ MPLX,208,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActi
 MPLX,208,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001552000-26-000009,R7,Net cash used in investing activities,-4856000000.0000,library map
 MPLX,208,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001552000-26-000009,,,,note-sourced default tag (no face line)
 MPLX,208,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001552000-26-000009,,,,note-sourced default tag (no face line)
-MPLX,208,cf_ap_change,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
+MPLX,208,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001552000-26-000009,R7,Current liabilities and other current assets,-12000000.0000,combined line (library or label demote)
 MPLX,208,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001552000-26-000009,R7,Current receivables,-48000000.0000,library map
 MPLX,208,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001552000-26-000009,R7,Inventories,26000000.0000,library map
 MPLX,208,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001552000-26-000009,R7,Net cash provided by operating activities,5909000000.0000,library map
@@ -21,13 +21,13 @@ MPLX,208,deposits,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
 MPLX,208,depreciation_and_amortization,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,diluted_eps,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,dividends_paid,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
-MPLX,208,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001552000-26-000009,,,,note-sourced default tag (no face line)
+MPLX,208,dividends_per_share,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001552000-26-000009,R5,Goodwill,8755000000.0000,library map
 MPLX,208,gross_profit,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,Income before income taxes,4960000000.0000,library map
 MPLX,208,income_tax_expense,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,interest_expense,combined,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,Net interest and other financial costs,983000000.0000,combined line (library or label demote)
-MPLX,208,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001552000-26-000009,,,,note-sourced default tag (no face line)
+MPLX,208,interest_income,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,inventory,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,loans_net,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
 MPLX,208,net_income,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
@@ -41,11 +41,11 @@ MPLX,208,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfU
 MPLX,208,provision_for_credit_losses,OUT,,,,,,,,0001552000-26-000009,,,,not a bank
 MPLX,208,research_and_development,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
 MPLX,208,revenue,combined,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,Total revenues and other income,12998000000.0000,combined line (library or label demote)
-MPLX,208,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001552000-26-000009,,,,note-sourced default tag (no face line)
-MPLX,208,sga_expense,combined,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,General and administrative expenses,446000000.0000,single component line
+MPLX,208,sbc,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
+MPLX,208,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001552000-26-000009,R3,General and administrative expenses,446000000.0000,lone G&A line
 MPLX,208,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001552000-26-000009,R7,Unit repurchases,400000000.0000,library map
 MPLX,208,shares_outstanding,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
-MPLX,208,stockholders_equity,not_presented,,,,,,,,0001552000-26-000009,,,,no face line
+MPLX,208,stockholders_equity,combined,us-gaap:PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest,BS,+,-6,N,,sec_api,0001552000-26-000009,R5,Total equity,14528000000.0000,combined line (library or label demote)
 MPLX,208,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001552000-26-000009,R5,Total assets,43005000000.0000,library map
 MPLX,208,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001552000-26-000009,R5,Long-term debt due within one year,1502000000.0000,printed face components (duration sum; total_debt founder sum)
 MPLX,208,total_interest_income,OUT,,,,,,,,0001552000-26-000009,,,,not a bank

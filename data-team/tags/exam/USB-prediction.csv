@@ -18,7 +18,7 @@ USB,129,cost_of_revenue,OUT,,,,,,,,0000036104-26-000011,,,,sector template (bank
 USB,129,current_assets,OUT,,,,,,,,0000036104-26-000011,,,,sector template (bank/insurer)
 USB,129,current_liabilities,OUT,,,,,,,,0000036104-26-000011,,,,sector template (bank/insurer)
 USB,129,deposits,mapped,us-gaap:Deposits,BS,+,-6,N,,sec_api,0000036104-26-000011,R2,Total deposits,522216000000.0000,bank template tag
-USB,129,depreciation_and_amortization,combined,us-gaap:AmortizationOfIntangibleAssets,CF,+,-6,N,,sec_api,0000036104-26-000011,R8,Amortization of intangibles,498000000.0000,single component line
+USB,129,depreciation_and_amortization,not_presented,,,,,,,,0000036104-26-000011,,,,single component only
 USB,129,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000036104-26-000011,R4,Diluted earnings per common share (in dollars per share),4.6200,library map
 USB,129,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000036104-26-000011,R8,Cash dividends paid on common stock,3168000000.0000,library map
 USB,129,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0000036104-26-000011,R7,Common stock dividends (in dollars per share),2.0400,library map
@@ -34,15 +34,15 @@ USB,129,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000036104-26
 USB,129,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Net interest income,16649000000.0000,bank template tag
 USB,129,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Total noninterest expense,16837000000.0000,bank template tag
 USB,129,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Total noninterest income,11891000000.0000,bank template tag
-USB,129,operating_expenses,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
+USB,129,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Total noninterest expense,16837000000.0000,printed opex total tag
 USB,129,operating_income,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
 USB,129,other_income_expense_net,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
 USB,129,ppe_net,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
 USB,129,provision_for_credit_losses,mapped,us-gaap:ProvisionForLoanLeaseAndOtherLosses,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Provision for credit losses,2186000000.0000,bank template tag
 USB,129,research_and_development,OUT,,,,,,,,0000036104-26-000011,,,,sector template (bank/insurer)
-USB,129,revenue,combined,us-gaap:NoninterestIncomeOtherOperatingIncome,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Other,836000000.0000,single component line
-USB,129,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0000036104-26-000011,,,,note-sourced default tag (no face line)
-USB,129,sga_expense,combined,us-gaap:MarketingAndAdvertisingExpense,IS,+,-6,N,,sec_api,0000036104-26-000011,R4,Marketing and business development,705000000.0000,single component line
+USB,129,revenue,not_presented,,,,,,,,0000036104-26-000011,,,,single component only
+USB,129,sbc,not_presented,,,,,,,,0000036104-26-000011,,,,no face line
+USB,129,sga_expense,not_presented,,,,,,,,0000036104-26-000011,,,,single component only
 USB,129,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000036104-26-000011,R8,Repurchase of common stock,489000000.0000,library map
 USB,129,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,EQ,+,-8,N,,sec_api,0000036104-26-000011,R6,Beginning Balance (in shares),1600000000.0000,library map
 USB,129,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000036104-26-000011,R2,Total U.S. Bancorp shareholders equity,65193000000.0000,library map

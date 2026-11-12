@@ -4,7 +4,7 @@ WCC,504,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,
 WCC,504,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000929008-26-000008,,,,note-sourced default tag (no face line)
 WCC,504,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Basic,13.2600,library map
 WCC,504,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Capital expenditures,99800000.0000,library map
-WCC,504,cash_and_equivalents,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
+WCC,504,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-5,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000929008-26-000008,R3,Cash and cash equivalents,604800000.0000,combined line (library or label demote)
 WCC,504,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash provided (used) by financing activities,-92700000.0000,library map
 WCC,504,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000929008-26-000008,R7,Net cash used in investing activities,-140700000.0000,library map
 WCC,504,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Cash paid for taxes,237800000.0000,library map
@@ -21,13 +21,13 @@ WCC,504,deposits,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
 WCC,504,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Depreciation and amortization,197600000.0000,library map
 WCC,504,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000929008-26-000008,R4,Diluted,13.0500,library map
 WCC,504,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000929008-26-000008,R7,Payment of common stock dividends,88400000.0000,library map
-WCC,504,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000929008-26-000008,,,,note-sourced default tag (no face line)
+WCC,504,dividends_per_share,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
 WCC,504,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Goodwill,3343400000.0000,library map
 WCC,504,gross_profit,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
 WCC,504,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Income before income taxes,855900000.0000,library map
 WCC,504,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,Provision for income taxes,213400000.0000,library map
-WCC,504,interest_expense,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
-WCC,504,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000929008-26-000008,,,,note-sourced default tag (no face line)
+WCC,504,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000929008-26-000008,R4,"Interest expense, net",-386700000.0000,combined line (library or label demote)
+WCC,504,interest_income,not_presented,,,,,,,,0000929008-26-000008,,,,no face line
 WCC,504,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000929008-26-000008,R3,Inventories,4008800000.0000,library map
 WCC,504,loans_net,OUT,,,,,,,,0000929008-26-000008,,,,not a bank
 WCC,504,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000929008-26-000008,R4,"Net Income attributable to WESCO International, Inc.",640200000.0000,library map

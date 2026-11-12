@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MUR,934,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Accounts payable,572183000.0000,library map
+MUR,934,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,"Accounts receivable, net",346759000.0000,library map
+MUR,934,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-011709,,,,note-sourced default tag (no face line)
+MUR,934,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-011709,R5,Net income (in USD per share),0.7300,library map
+MUR,934,capex,not_presented,,,,,,,,0001628280-26-011709,,,,single component only
+MUR,934,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Cash and cash equivalents,377196000.0000,library map
+MUR,934,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-011709,R7,Net cash required by financing activities,-264065000.0000,library map
+MUR,934,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-011709,R7,Net cash required by investing activities,-1028926000.0000,library map
+MUR,934,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-011709,,,,note-sourced default tag (no face line)
+MUR,934,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-011709,,,,note-sourced default tag (no face line)
+MUR,934,cf_ap_change,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,cf_ar_change,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,cf_inventory_change,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-3,Y,NetCashProvidedByUsedInOperatingActivities,sec_api,0001628280-26-011709,R7,Net cash provided by continuing operations activities,1247808000.0000,library map
+MUR,934,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001628280-26-011709,R6,COMPREHENSIVE INCOME ATTRIBUTABLE TO MURPHY,178079000.0000,library map
+MUR,934,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,0,-3,N,,sec_api,0001628280-26-011709,R5,Costs of purchased natural gas,0.0000,library map
+MUR,934,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Total current assets,816712000.0000,library map
+MUR,934,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Total current liabilities,1062749000.0000,library map
+MUR,934,deposits,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-011709,R7,"Depreciation, depletion and amortization",977753000.0000,library map
+MUR,934,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-011709,R5,Net income (in USD per share),0.7200,library map
+MUR,934,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-011709,R7,Cash dividends paid,186205000.0000,library map
+MUR,934,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,32767,N,,sec_api,0001628280-26-011709,R5,Cash dividends per Common share (in USD per share),1.3000,library map
+MUR,934,goodwill,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,gross_profit,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Income from continuing operations before income taxes,182866000.0000,library map
+MUR,934,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Income tax expense,44552000.0000,library map
+MUR,934,interest_expense,combined,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-011709,R5,"Interest expense, net",96072000.0000,combined line (library or label demote)
+MUR,934,interest_income,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Inventories,57284000.0000,library map
+MUR,934,loans_net,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,NET INCOME ATTRIBUTABLE TO MURPHY,104234000.0000,library map
+MUR,934,net_interest_income,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,noninterest_expense,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,noninterest_income,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,operating_expenses,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Operating income from continuing operations,301237000.0000,library map
+MUR,934,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,Y,NonoperatingIncomeExpenseAbstract,sec_api,0001628280-26-011709,R5,Other income (loss),-22299000.0000,library map
+MUR,934,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,"Property, plant and equipment, at cost less accumulated depreciation, depletion and amortization of $15,068,149 in 2025 and $13,811,539 in 2024",8136346000.0000,library map
+MUR,934,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,research_and_development,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Total revenue from sales to customers,2689845000.0000,library map
+MUR,934,sbc,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-011709,R5,Selling and general expenses,137332000.0000,library map
+MUR,934,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001628280-26-011709,R7,Repurchase of common stock,102620000.0000,library map
+MUR,934,shares_outstanding,not_presented,,,,,,,,0001628280-26-011709,,,,no face line
+MUR,934,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Murphy Shareholders' Equity,5118380000.0000,library map
+MUR,934,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Total assets,9832626000.0000,library map
+MUR,934,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,"Current maturities of long-term debt, finance lease",2514000.0000,printed face components (duration sum; total_debt founder sum)
+MUR,934,total_interest_income,OUT,,,,,,,,0001628280-26-011709,,,,not a bank
+MUR,934,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-011709,R3,Total liabilities,4595929000.0000,library map
+MUR,934,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001628280-26-011709,R5,Basic (in shares),143124118.0000,library map
+MUR,934,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001628280-26-011709,R5,Diluted (in shares),144025322.0000,library map

@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 OKE,207,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001039684-26-000006,R7,Accounts payable,2838000000.0000,library map
-OKE,207,accounts_receivable,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
+OKE,207,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001039684-26-000006,R7,"Accounts receivable, net",3010000000.0000,combined line (library or label demote)
 OKE,207,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001039684-26-000006,,,,note-sourced default tag (no face line)
 OKE,207,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001039684-26-000006,R3,Basic EPS (in dollars per share),5.4300,library map
 OKE,207,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001039684-26-000006,R9,Capital expenditures (less allowance for equity funds used during construction),3152000000.0000,library map
@@ -27,21 +27,21 @@ OKE,207,gross_profit,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Income before income taxes,4490000000.0000,library map
 OKE,207,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Income taxes (Note M),1028000000.0000,library map
 OKE,207,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Interest expense,1783000000.0000,library map
-OKE,207,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001039684-26-000006,,,,note-sourced default tag (no face line)
+OKE,207,interest_income,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001039684-26-000006,R7,Inventories,948000000.0000,library map
 OKE,207,loans_net,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Net income attributable to ONEOK,3393000000.0000,library map
 OKE,207,net_interest_income,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,noninterest_expense,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,noninterest_income,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
-OKE,207,operating_expenses,combined,us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,"Other operating income, net (Notes A and B)",43000000.0000,single component line
+OKE,207,operating_expenses,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Operating income,5741000000.0000,library map
 OKE,207,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,"Other income, net",146000000.0000,library map
 OKE,207,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001039684-26-000006,R7,"Net property, plant and equipment (Note E)",47861000000.0000,library map
 OKE,207,provision_for_credit_losses,OUT,,,,,,,,0001039684-26-000006,,,,not a bank
 OKE,207,research_and_development,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001039684-26-000006,R3,Total revenues (Note Q),33629000000.0000,library map
-OKE,207,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001039684-26-000006,,,,note-sourced default tag (no face line)
+OKE,207,sbc,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,sga_expense,not_presented,,,,,,,,0001039684-26-000006,,,,no face line
 OKE,207,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001039684-26-000006,R9,Repurchase of common stock (Note H),75000000.0000,library map
 OKE,207,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001039684-26-000006,R8,"Common stock, shares, outstanding (in shares)",629707691.0000,library map

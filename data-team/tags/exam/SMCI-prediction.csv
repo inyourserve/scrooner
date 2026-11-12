@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SMCI,444,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Accounts payable (including amounts due to related parties of $117,062 and $129,752 at June 30, 2026 and 2025, respectively)",2247003000.0000,library map
+SMCI,444,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Accounts receivable, net of allowance for credit losses of $109 and $0 at June 30, 2026 and 2025, respectively (including amounts receivable from related parties of $624 and $393 at June 30, 2026 and 2025, respectively)",6125414000.0000,library map
+SMCI,444,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001375365-26-000022,,,,note-sourced default tag (no face line)
+SMCI,444,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001375365-26-000022,R5,Basic (in dollars per share),3.6500,library map
+SMCI,444,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,"Purchases of property, plant, and equipment (including payments to related parties of $12,567, $17,677, and $10,625 in fiscal years 2026, 2025, and 2024, respectively)",161999000.0000,library map
+SMCI,444,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Cash and cash equivalents,7521474000.0000,library map
+SMCI,444,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,Net cash provided by financing activities,9478755000.0000,library map
+SMCI,444,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001375365-26-000022,R9,Net cash used in investing activities,-200279000.0000,library map
+SMCI,444,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,"Cash paid for income taxes, net of refunds",399276000.0000,library map
+SMCI,444,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,Cash paid for interest,109306000.0000,library map
+SMCI,444,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,"Accounts payable (including changes in related party balances of $(12,690), $(35,543), and $76,161 in fiscal years 2026, 2025, and 2024, respectively)",963258000.0000,combined line (library or label demote)
+SMCI,444,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,"Accounts receivable, net (including changes in related party balances of $(231), $5,801, and $(721) in fiscal years 2026, 2025, and 2024, respectively)",3921872000.0000,combined line (library or label demote)
+SMCI,444,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,Inventories,8876747000.0000,library map
+SMCI,444,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001375365-26-000022,R9,Net cash (used in) provided by operating activities,-6809886000.0000,library map
+SMCI,444,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001375365-26-000022,R7,Total comprehensive income,2230145000.0000,library map
+SMCI,444,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,"Cost of sales (including related party purchases of $725,694, $650,658, and $552,136 in fiscal years 2026, 2025, and 2024, respectively)",34835821000.0000,library map
+SMCI,444,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Total current assets,27726252000.0000,library map
+SMCI,444,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Total current liabilities,7160106000.0000,library map
+SMCI,444,deposits,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,depreciation_and_amortization,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
+SMCI,444,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001375365-26-000022,R5,Diluted (in dollars per share),3.2600,library map
+SMCI,444,dividends_paid,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
+SMCI,444,dividends_per_share,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
+SMCI,444,goodwill,not_presented,,,,,,,,0001375365-26-000022,,,,no face line
+SMCI,444,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Gross profit,4227251000.0000,library map
+SMCI,444,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Income before income tax provision,2789264000.0000,library map
+SMCI,444,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Income tax provision,556329000.0000,library map
+SMCI,444,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001375365-26-000022,R5,Interest expense,194574000.0000,library map
+SMCI,444,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Interest income,186920000.0000,library map
+SMCI,444,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Inventories,12895949000.0000,library map
+SMCI,444,loans_net,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Net income,2230453000.0000,library map
+SMCI,444,net_interest_income,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,noninterest_expense,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,noninterest_income,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Total operating expenses,1456765000.0000,printed opex total tag
+SMCI,444,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Income from operations,2770486000.0000,library map
+SMCI,444,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,Y,NonoperatingIncomeExpense,sec_api,0001375365-26-000022,R5,"Other income (expense), net",26432000.0000,library map
+SMCI,444,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Property, plant, and equipment, net",625553000.0000,library map
+SMCI,444,provision_for_credit_losses,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Research and development,771232000.0000,library map
+SMCI,444,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,"Net sales (including related party sales of $29,781, $42,259, and $69,791 in fiscal years 2026, 2025, and 2024, respectively)",39063072000.0000,library map
+SMCI,444,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001375365-26-000022,R9,Stock-based compensation expense,412115000.0000,library map
+SMCI,444,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Sales and marketing,352594000.0000,printed face components (duration sum; total_debt founder sum)
+SMCI,444,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfEquity,CF,0,-3,N,,sec_api,0001375365-26-000022,R9,Stock repurchases,0.0000,combined line (library or label demote)
+SMCI,444,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001375365-26-000022,R4,"Common stock and additional paid-in capital, shares outstanding (in shares)",656882000.0000,library map
+SMCI,444,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,"Total Super Micro Computer, Inc. stockholders equity",14479452000.0000,library map
+SMCI,444,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Total assets,29945467000.0000,library map
+SMCI,444,total_debt,combined,us-gaap:ConvertibleLongTermNotesPayable,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Convertible notes,4664139000.0000,combined line (library or label demote)
+SMCI,444,total_interest_income,OUT,,,,,,,,0001375365-26-000022,,,,not a bank
+SMCI,444,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001375365-26-000022,R3,Total liabilities,15465851000.0000,library map
+SMCI,444,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Basic (in shares),601806000.0000,library map
+SMCI,444,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001375365-26-000022,R5,Diluted (in shares),697348000.0000,library map

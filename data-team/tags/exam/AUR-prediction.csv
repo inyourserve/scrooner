@@ -21,20 +21,20 @@ AUR,706,deposits,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001828108-26-000016,R8,Depreciation and amortization,30000000.0000,library map
 AUR,706,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001828108-26-000016,R5,Diluted net loss per share (in usd per share),-0.4400,library map
 AUR,706,dividends_paid,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
-AUR,706,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001828108-26-000016,,,,note-sourced default tag (no face line)
+AUR,706,dividends_per_share,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,goodwill,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,gross_profit,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Loss before income taxes,-816000000.0000,library map
 AUR,706,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,0,-6,N,,sec_api,0001828108-26-000016,R5,Income tax expense,0.0000,library map
 AUR,706,interest_expense,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
-AUR,706,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001828108-26-000016,,,,note-sourced default tag (no face line)
+AUR,706,interest_income,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,inventory,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
 AUR,706,loans_net,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Net loss,-816000000.0000,library map
 AUR,706,net_interest_income,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,noninterest_expense,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
 AUR,706,noninterest_income,OUT,,,,,,,,0001828108-26-000016,,,,not a bank
-AUR,706,operating_expenses,not_presented,,,,,,,,0001828108-26-000016,,,,no face line
+AUR,706,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001828108-26-000016,R5,Research and development,745000000.0000,printed opex lines (duration sum)
 AUR,706,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-6,N,,sec_api,0001828108-26-000016,R5,Loss from operations,-901000000.0000,library map
 AUR,706,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001828108-26-000016,R5,"Other income, net",56000000.0000,library map
 AUR,706,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001828108-26-000016,R3,"Property and equipment, net",103000000.0000,library map

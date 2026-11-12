@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LNG,204,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000003570-26-000005,R4,Accounts payable,123000000.0000,library map
-LNG,204,accounts_receivable,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
+LNG,204,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000003570-26-000005,R4,"Trade and other receivables, net of current expected credit losses",1380000000.0000,combined line (library or label demote)
 LNG,204,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000003570-26-000005,,,,note-sourced default tag (no face line)
 LNG,204,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000003570-26-000005,R3,Net income per share attributable to common stockholdersbasic (1),24.1900,library map
 LNG,204,capex,combined,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000003570-26-000005,R7,"Property, plant and equipment, net of proceeds from commissioning sales of LNG of $174 million, zero and zero, respectively",3078000000.0000,combined line (library or label demote)
@@ -9,7 +9,7 @@ LNG,204,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 LNG,204,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000003570-26-000005,R7,Net cash used in investing activities,-3012000000.0000,library map
 LNG,204,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000003570-26-000005,,,,note-sourced default tag (no face line)
 LNG,204,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000003570-26-000005,,,,note-sourced default tag (no face line)
-LNG,204,cf_ap_change,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
+LNG,204,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0000003570-26-000005,R7,Accounts payable and accrued liabilities,-232000000.0000,combined line (library or label demote)
 LNG,204,cf_ar_change,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
 LNG,204,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000003570-26-000005,R7,Inventory,32000000.0000,library map
 LNG,204,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000003570-26-000005,R7,Net cash provided by operating activities,5539000000.0000,library map
@@ -21,20 +21,20 @@ LNG,204,deposits,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,depreciation_and_amortization,combined,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0000003570-26-000005,R7,"Depreciation, amortization and accretion expense",1329000000.0000,combined line (library or label demote)
 LNG,204,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000003570-26-000005,R3,Net income per share attributable to common stockholdersdiluted (1),24.1300,library map
 LNG,204,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0000003570-26-000005,R7,Dividends to stockholders,451000000.0000,library map
-LNG,204,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000003570-26-000005,,,,note-sourced default tag (no face line)
+LNG,204,dividends_per_share,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
 LNG,204,goodwill,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
 LNG,204,gross_profit,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
 LNG,204,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Income before income taxes and NCI,8282000000.0000,library map
 LNG,204,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Less: income tax provision,1488000000.0000,library map
 LNG,204,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0000003570-26-000005,R3,"Interest expense, net of capitalized interest",948000000.0000,library map
-LNG,204,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000003570-26-000005,,,,note-sourced default tag (no face line)
+LNG,204,interest_income,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
 LNG,204,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000003570-26-000005,R4,Inventory,524000000.0000,library map
 LNG,204,loans_net,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Net income attributable to Cheniere,5330000000.0000,library map
 LNG,204,net_interest_income,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,noninterest_expense,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
 LNG,204,noninterest_income,OUT,,,,,,,,0000003570-26-000005,,,,not a bank
-LNG,204,operating_expenses,not_presented,,,,,,,,0000003570-26-000005,,,,no face line
+LNG,204,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,"Selling, general and administrative expense",383000000.0000,printed opex lines (duration sum)
 LNG,204,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,Income from operations,9112000000.0000,library map
 LNG,204,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0000003570-26-000005,R3,"Other income, net",20000000.0000,library map
 LNG,204,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000003570-26-000005,R4,"Property, plant and equipment, net of accumulated depreciation",35755000000.0000,library map

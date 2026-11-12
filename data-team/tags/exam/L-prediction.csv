@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+L,417,accounts_payable,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,accounts_receivable,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
+L,417,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000060086-26-000008,R5,Basic net income per share (in dollars per share),7.9800,library map
+L,417,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,"Purchases of property, plant and equipment",579000000.0000,library map
+L,417,cash_and_equivalents,mapped,us-gaap:Cash,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Cash,495000000.0000,library map
+L,417,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0000060086-26-000008,R10,Net cash flow used by financing activities,-513000000.0000,library map
+L,417,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0000060086-26-000008,R10,Net cash flow used by investing activities,-2828000000.0000,library map
+L,417,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
+L,417,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000060086-26-000008,,,,note-sourced default tag (no face line)
+L,417,cf_ap_change,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,Y,IncreaseDecreaseInReceivables,sec_api,0000060086-26-000008,R10,Receivables,408000000.0000,library map
+L,417,cf_inventory_change,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,Net cash flow provided by operating activities,3279000000.0000,library map
+L,417,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0000060086-26-000008,R7,Total comprehensive income attributable to Loews Corporation,2468000000.0000,library map
+L,417,cost_of_revenue,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,current_assets,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,current_liabilities,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,deposits,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,Depreciation and amortization,610000000.0000,library map
+L,417,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000060086-26-000008,R5,Diluted net income per share (in dollars per share),7.9700,library map
+L,417,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,Dividends paid,52000000.0000,library map
+L,417,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,32767,N,,sec_api,0000060086-26-000008,R9,Dividends paid (in dollars per share),0.2500,library map
+L,417,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Goodwill,349000000.0000,library map
+L,417,gross_profit,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Income before income tax,2283000000.0000,library map
+L,417,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Income tax expense,511000000.0000,library map
+L,417,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Interest,437000000.0000,library map
+L,417,interest_income,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,inventory,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,loans_net,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Net income attributable to Loews Corporation,1667000000.0000,library map
+L,417,net_interest_income,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,noninterest_expense,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,noninterest_income,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0000060086-26-000008,R5,Total,16171000000.0000,printed opex total tag
+L,417,operating_income,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,other_income_expense_net,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,"Property, plant and equipment",10695000000.0000,library map
+L,417,provision_for_credit_losses,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,research_and_development,OUT,,,,,,,,0000060086-26-000008,,,,sector template (bank/insurer)
+L,417,revenue,mapped,us-gaap:Revenues,IS,+,-6,Y,BenefitsLossesAndExpenses,sec_api,0000060086-26-000008,R5,Total,18454000000.0000,library map
+L,417,sbc,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,sga_expense,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000060086-26-000008,R10,Purchases of Loews Corporation treasury stock,806000000.0000,library map
+L,417,shares_outstanding,not_presented,,,,,,,,0000060086-26-000008,,,,no face line
+L,417,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Total shareholders equity,18686000000.0000,library map
+L,417,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Total assets,86348000000.0000,library map
+L,417,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Short-term debt,1052000000.0000,printed face components (duration sum; total_debt founder sum)
+L,417,total_interest_income,OUT,,,,,,,,0000060086-26-000008,,,,not a bank
+L,417,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0000060086-26-000008,R3,Total liabilities,66707000000.0000,library map
+L,417,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-4,N,,sec_api,0000060086-26-000008,R5,Basic weighted average number of shares outstanding (in shares),208960000.0000,library map
+L,417,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-4,N,,sec_api,0000060086-26-000008,R5,Diluted weighted average number of shares outstanding (in shares),209100000.0000,library map

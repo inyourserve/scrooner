@@ -21,7 +21,7 @@ BURL,506,deposits,OUT,,,,,,,,0001193125-26-116001,,,,not a bank
 BURL,506,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-116001,R6,Depreciation and amortization,417871000.0000,library map
 BURL,506,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-116001,R2,Net income per common share - diluted,9.5100,library map
 BURL,506,dividends_paid,not_presented,,,,,,,,0001193125-26-116001,,,,no face line
-BURL,506,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001193125-26-116001,,,,note-sourced default tag (no face line)
+BURL,506,dividends_per_share,not_presented,,,,,,,,0001193125-26-116001,,,,no face line
 BURL,506,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-116001,R4,Goodwill,47064000.0000,library map
 BURL,506,gross_profit,not_presented,,,,,,,,0001193125-26-116001,,,,no face line
 BURL,506,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-116001,R2,Income before income tax expense,816118000.0000,library map

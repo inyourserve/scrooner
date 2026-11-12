@@ -27,23 +27,23 @@ MPWR,205,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001437749-2
 MPWR,205,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Income before income taxes,766216000.0000,library map
 MPWR,205,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,"Income tax expense (benefit), net",144733000.0000,library map
 MPWR,205,interest_expense,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
-MPWR,205,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001437749-26-006113,,,,note-sourced default tag (no face line)
+MPWR,205,interest_income,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
 MPWR,205,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Inventories,564649000.0000,library map
 MPWR,205,loans_net,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
 MPWR,205,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Net income,621483000.0000,library map
 MPWR,205,net_interest_income,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
 MPWR,205,noninterest_expense,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
 MPWR,205,noninterest_income,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
-MPWR,205,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Total operating expenses,811105000.0000,library map
+MPWR,205,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Total operating expenses,811105000.0000,printed opex total tag
 MPWR,205,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Operating income,728636000.0000,library map
-MPWR,205,other_income_expense_net,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
+MPWR,205,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-4,N,,sec_api,0001437749-26-006113,R4,"Other income, net",37580000.0000,combined line (library or label demote)
 MPWR,205,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,"Property and equipment, net",627689000.0000,library map
 MPWR,205,provision_for_credit_losses,OUT,,,,,,,,0001437749-26-006113,,,,not a bank
 MPWR,205,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Research and development,382263000.0000,library map
 MPWR,205,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,Revenue,2790459000.0000,library map
 MPWR,205,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001437749-26-006113,R9,Stock-based compensation expense,227491000.0000,library map
 MPWR,205,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001437749-26-006113,R4,"Selling, general and administrative",428842000.0000,library map
-MPWR,205,share_buybacks,not_presented,,,,,,,,0001437749-26-006113,,,,no face line
+MPWR,205,share_buybacks,combined,custom:PaymentsForRepurchaseOfCommonStockIncludingExciseTax,CF,+,-3,N,,fsn_xbrl,0001437749-26-006113,R9,Repurchases of common stock,7686000.0000,combined line (library or label demote)
 MPWR,205,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001437749-26-006113,R3,"Common stock, shares outstanding (in shares)",48709000.0000,library map
 MPWR,205,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Total stockholders equity,3531497000.0000,library map
 MPWR,205,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001437749-26-006113,R2,Total assets,4194199000.0000,library map

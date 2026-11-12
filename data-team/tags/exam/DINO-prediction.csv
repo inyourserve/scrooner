@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+DINO,421,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Accounts payable,1902000000.0000,library map
+DINO,421,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,"Total Accounts Receivable, net",1136000000.0000,library map
+DINO,421,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001915657-26-000016,,,,note-sourced default tag (no face line)
+DINO,421,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001915657-26-000016,R5,Basic (in USD per share),3.0800,library map
+DINO,421,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,"Additions to properties, plants and equipment",449000000.0000,library map
+DINO,421,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Cash and cash equivalents,978000000.0000,library map
+DINO,421,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Net cash used for financing activities,-631000000.0000,library map
+DINO,421,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Net cash used for investing activities,-516000000.0000,library map
+DINO,421,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001915657-26-000016,,,,note-sourced default tag (no face line)
+DINO,421,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Cash paid for interest,139000000.0000,library map
+DINO,421,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Accounts payable,-345000000.0000,library map
+DINO,421,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-6,N,,sec_api,0001915657-26-000016,R7,Accounts receivable,-123000000.0000,library map
+DINO,421,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Inventories,171000000.0000,library map
+DINO,421,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Net cash provided by operating activities,1315000000.0000,library map
+DINO,421,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001915657-26-000016,R6,Comprehensive income attributable to HF Sinclair stockholders,600000000.0000,library map
+DINO,421,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Total cost of sales,24568000000.0000,library map
+DINO,421,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total current assets,4812000000.0000,library map
+DINO,421,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total current liabilities,2485000000.0000,library map
+DINO,421,deposits,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Depreciation and amortization,909000000.0000,library map
+DINO,421,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001915657-26-000016,R5,Diluted (in USD per share),3.0800,library map
+DINO,421,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Dividends,376000000.0000,library map
+DINO,421,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001915657-26-000016,R9,Dividends declared per common share (in USD per share),2.0000,library map
+DINO,421,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Goodwill (Note 11),2978000000.0000,library map
+DINO,421,gross_profit,not_presented,,,,,,,,0001915657-26-000016,,,,no face line
+DINO,421,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Income before income taxes,732000000.0000,library map
+DINO,421,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Total income tax expense,146000000.0000,library map
+DINO,421,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Interest expense,217000000.0000,library map
+DINO,421,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Interest income,42000000.0000,library map
+DINO,421,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total inventories,2573000000.0000,library map
+DINO,421,loans_net,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Net income attributable to HF Sinclair stockholders,579000000.0000,library map
+DINO,421,net_interest_income,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,noninterest_expense,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,noninterest_income,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,operating_expenses,not_presented,,,,,,,,0001915657-26-000016,,,,no face line
+DINO,421,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Income from operations,927000000.0000,library map
+DINO,421,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001915657-26-000016,R5,"Other income (expense), net (Note 5)",-53000000.0000,library map
+DINO,421,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,"Properties, plants and equipment, net",6533000000.0000,library map
+DINO,421,provision_for_credit_losses,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,research_and_development,not_presented,,,,,,,,0001915657-26-000016,,,,no face line
+DINO,421,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,Sales and other revenues (Note 4),26869000000.0000,library map
+DINO,421,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,Equity-based compensation expense,33000000.0000,library map
+DINO,421,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001915657-26-000016,R5,"Selling, general and administrative expenses",456000000.0000,library map
+DINO,421,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001915657-26-000016,R7,"Purchase of treasury stock, inclusive of excise tax",354000000.0000,combined line (library or label demote)
+DINO,421,shares_outstanding,not_presented,,,,,,,,0001915657-26-000016,,,,no face line
+DINO,421,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total HF Sinclair stockholders equity,9184000000.0000,library map
+DINO,421,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total assets,16510000000.0000,library map
+DINO,421,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001915657-26-000016,R3,Current debt (Note 13),0.0000,printed face components (duration sum; total_debt founder sum)
+DINO,421,total_interest_income,OUT,,,,,,,,0001915657-26-000016,,,,not a bank
+DINO,421,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001915657-26-000016,R3,Total liabilities,7261000000.0000,library map
+DINO,421,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001915657-26-000016,R5,Basic (in shares),186465000.0000,library map
+DINO,421,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001915657-26-000016,R5,Diluted (in shares),186465000.0000,library map

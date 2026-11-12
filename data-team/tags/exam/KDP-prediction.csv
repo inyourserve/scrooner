@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+KDP,248,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Accounts payable,2996000000.0000,library map
+KDP,248,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,"Trade accounts receivable, net",1671000000.0000,library map
+KDP,248,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001418135-26-000016,,,,note-sourced default tag (no face line)
+KDP,248,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001418135-26-000016,R2,Basic (in dollars per share),1.5300,library map
+KDP,248,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,"Purchases of property, plant, and equipment",486000000.0000,library map
+KDP,248,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Cash and Cash Equivalent,1026000000.0000,library map
+KDP,248,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001418135-26-000016,R7,Net cash used in financing activities,-999000000.0000,library map
+KDP,248,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001418135-26-000016,R7,Net cash used in investing activities,-573000000.0000,library map
+KDP,248,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001418135-26-000016,,,,note-sourced default tag (no face line)
+KDP,248,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,"Interest Paid, Excluding Capitalized Interest, Operating Activity",594000000.0000,library map
+KDP,248,cf_ap_change,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
+KDP,248,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Trade accounts receivable,202000000.0000,library map
+KDP,248,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Inventories,405000000.0000,library map
+KDP,248,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Net cash provided by operating activities,1991000000.0000,library map
+KDP,248,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,Y,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,sec_api,0001418135-26-000016,R3,Comprehensive income,2457000000.0000,library map
+KDP,248,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Cost of sales,7604000000.0000,library map
+KDP,248,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Total current assets,5266000000.0000,library map
+KDP,248,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Total current liabilities,8290000000.0000,library map
+KDP,248,deposits,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Depreciation expense,455000000.0000,printed face components (duration sum; total_debt founder sum)
+KDP,248,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001418135-26-000016,R2,Diluted (in dollars per share),1.5300,library map
+KDP,248,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Cash dividends paid,1250000000.0000,library map
+KDP,248,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001418135-26-000016,R9,"Common Stock, Dividends, Per Share, Declared",0.9200,library map
+KDP,248,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Goodwill,20247000000.0000,library map
+KDP,248,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Gross profit,8999000000.0000,library map
+KDP,248,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Income before provision for income taxes,2687000000.0000,library map
+KDP,248,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Income Tax Expense (Benefit),608000000.0000,library map
+KDP,248,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestExpenseDebt,sec_api,0001418135-26-000016,R2,Interest expense,-754000000.0000,combined line (library or label demote)
+KDP,248,interest_income,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
+KDP,248,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Inventories,1733000000.0000,library map
+KDP,248,loans_net,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Net income,2079000000.0000,library map
+KDP,248,net_interest_income,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,noninterest_expense,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,noninterest_income,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,operating_expenses,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
+KDP,248,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Income from operations,3575000000.0000,library map
+KDP,248,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001418135-26-000016,R2,"Other expense (income), net",-134000000.0000,library map
+KDP,248,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,"Property, plant, and equipment, net",3230000000.0000,library map
+KDP,248,provision_for_credit_losses,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,research_and_development,not_presented,,,,,,,,0001418135-26-000016,,,,no face line
+KDP,248,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,Net sales,16603000000.0000,library map
+KDP,248,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,Employee stock-based compensation expense,97000000.0000,library map
+KDP,248,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001418135-26-000016,R2,"Selling, general, and administrative expenses",5351000000.0000,library map
+KDP,248,share_buybacks,combined,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001418135-26-000016,R7,"Repurchases of common stock, inclusive of excise tax obligation",9000000.0000,combined line (library or label demote)
+KDP,248,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001418135-26-000016,R6,Common stock outstanding (in shares),1358663795.0000,library map
+KDP,248,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Total equity,25516000000.0000,library map
+KDP,248,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Total assets,55459000000.0000,library map
+KDP,248,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Short-term borrowings and current portion of long-term obligations,3105000000.0000,printed face components (duration sum; total_debt founder sum)
+KDP,248,total_interest_income,OUT,,,,,,,,0001418135-26-000016,,,,not a bank
+KDP,248,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001418135-26-000016,R5,Total liabilities,29943000000.0000,library map
+KDP,248,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001418135-26-000016,R2,Basic (in shares),1358100000.0000,library map
+KDP,248,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001418135-26-000016,R2,Diluted (in shares),1362800000.0000,library map

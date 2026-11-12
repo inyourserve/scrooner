@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SWX,901,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Accounts payable,225732000.0000,library map
+SWX,901,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,"Accounts receivable, net of allowances",170601000.0000,library map
+SWX,901,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001692115-26-000062,,,,note-sourced default tag (no face line)
+SWX,901,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001692115-26-000062,R5,Net earnings per share - basic (in USD per share),6.0900,library map
+SWX,901,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Capital expenditures and property additions,807866000.0000,library map
+SWX,901,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Cash and cash equivalents,576645000.0000,library map
+SWX,901,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,CF,-,-3,N,,sec_api,0001692115-26-000062,R8,Net cash used in financing activities of continuing operations,-846523000.0000,library map
+SWX,901,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-3,N,,sec_api,0001692115-26-000062,R8,Net cash provided by (used in) investing activities of continuing operations,-801492000.0000,library map
+SWX,901,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001692115-26-000062,,,,note-sourced default tag (no face line)
+SWX,901,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,"Interest paid, net of amounts capitalized",240175000.0000,library map
+SWX,901,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Accounts payable,13172000.0000,library map
+SWX,901,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001692115-26-000062,R8,"Accounts receivable, net of allowances",-32411000.0000,library map
+SWX,901,cf_inventory_change,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Net cash provided by operating activities of continuing operations,594161000.0000,library map
+SWX,901,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001692115-26-000062,R6,"Comprehensive income attributable to Southwest Gas Holdings, Inc.",448545000.0000,library map
+SWX,901,cost_of_revenue,combined,us-gaap:UtilitiesOperatingExpenseGasAndPetroleumPurchased,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Net cost of gas sold,497636000.0000,combined line (library or label demote)
+SWX,901,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Total current assets,1192092000.0000,library map
+SWX,901,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Total current liabilities,929898000.0000,library map
+SWX,901,deposits,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Depreciation and amortization,330724000.0000,library map
+SWX,901,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001692115-26-000062,R5,Net earnings per share - diluted (in USD per share),6.0800,library map
+SWX,901,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Dividends paid,178509000.0000,library map
+SWX,901,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001692115-26-000062,R11,Dividends declared per common share (in USD per share),2.4800,library map
+SWX,901,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Goodwill,11155000.0000,library map
+SWX,901,gross_profit,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Income from continuing operations before income taxes,330873000.0000,library map
+SWX,901,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Income tax expense,96037000.0000,library map
+SWX,901,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,Y,InterestExpense,sec_api,0001692115-26-000062,R5,Net interest deductions,-203081000.0000,combined line (library or label demote)
+SWX,901,interest_income,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,inventory,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,loans_net,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,ProfitLoss,sec_api,0001692115-26-000062,R5,Net income,439826000.0000,library map
+SWX,901,net_interest_income,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,noninterest_expense,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,noninterest_income,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,operating_expenses,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Operating income,473886000.0000,library map
+SWX,901,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Other income (deductions),60068000.0000,library map
+SWX,901,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Net regulated operations plant,8690539000.0000,library map
+SWX,901,provision_for_credit_losses,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,research_and_development,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,revenue,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001692115-26-000062,R8,Share-based compensation expense,14631000.0000,library map
+SWX,901,sga_expense,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,share_buybacks,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001692115-26-000062,R4,"Common stock, outstanding (in shares)",72224593.0000,library map
+SWX,901,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,"Total equity attributable to Southwest Gas Holdings, Inc. stockholders",3961119000.0000,library map
+SWX,901,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,Total assets,10429477000.0000,library map
+SWX,901,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:LongTermDebtCurrent;us-gaap:ShortTermBorrowings,BS,+,-3,N,,sec_api,0001692115-26-000062,R3,"Long-term debt, less current maturities",3433012000.0000,printed face components (duration sum; total_debt founder sum)
+SWX,901,total_interest_income,OUT,,,,,,,,0001692115-26-000062,,,,not a bank
+SWX,901,total_liabilities,not_presented,,,,,,,,0001692115-26-000062,,,,no face line
+SWX,901,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Basic (in shares),72162000.0000,library map
+SWX,901,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001692115-26-000062,R5,Diluted (in shares),72337000.0000,library map

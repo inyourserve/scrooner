@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+WEX,912,accounts_payable,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,"Accounts receivable, net",3362600000.0000,combined line (library or label demote)
+WEX,912,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001309108-26-000010,,,,note-sourced default tag (no face line)
+WEX,912,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001309108-26-000010,R3,Basic (in dollars per share),8.5700,library map
+WEX,912,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,"Purchases of property, equipment and capitalized software",140600000.0000,library map
+WEX,912,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Cash and cash equivalents,905800000.0000,library map
+WEX,912,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Net cash provided by (used for) financing activities,418900000.0000,library map
+WEX,912,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001309108-26-000010,R8,Net cash used for investing activities,-696900000.0000,library map
+WEX,912,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001309108-26-000010,,,,note-sourced default tag (no face line)
+WEX,912,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Interest paid,333600000.0000,library map
+WEX,912,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001309108-26-000010,R8,Accounts payable,-20100000.0000,library map
+WEX,912,cf_ar_change,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,cf_inventory_change,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Net cash provided by operating activities,454300000.0000,library map
+WEX,912,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001309108-26-000010,R4,Comprehensive income,488200000.0000,library map
+WEX,912,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Total cost of services,1100600000.0000,library map
+WEX,912,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Total current assets,9713000000.0000,library map
+WEX,912,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Total current liabilities,9286600000.0000,library map
+WEX,912,deposits,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Depreciation and amortization,331100000.0000,library map
+WEX,912,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001309108-26-000010,R3,Diluted (in dollars per share),8.4700,library map
+WEX,912,dividends_paid,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,dividends_per_share,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Goodwill,3015300000.0000,library map
+WEX,912,gross_profit,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Income before income taxes,420200000.0000,library map
+WEX,912,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Income tax provision,116100000.0000,library map
+WEX,912,interest_expense,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,interest_income,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,inventory,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,loans_net,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Net income attributable to shareholders,304100000.0000,library map
+WEX,912,net_interest_income,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,noninterest_expense,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,noninterest_income,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,operating_expenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,General and administrative,330200000.0000,printed opex lines (duration sum)
+WEX,912,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Operating income,663900000.0000,library map
+WEX,912,other_income_expense_net,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,"Property, equipment and capitalized software",253700000.0000,library map
+WEX,912,provision_for_credit_losses,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,research_and_development,not_presented,,,,,,,,0001309108-26-000010,,,,no face line
+WEX,912,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Total revenues,2660800000.0000,library map
+WEX,912,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Stock-based compensation,100300000.0000,library map
+WEX,912,sga_expense,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,General and administrative,330200000.0000,printed face components (duration sum; total_debt founder sum)
+WEX,912,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001309108-26-000010,R8,Repurchases of common stock,799800000.0000,library map
+WEX,912,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0001309108-26-000010,R6,"Common stock, shares outstanding (in shares)",34300000.0000,library map
+WEX,912,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,Y,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,sec_api,0001309108-26-000010,R5,Total stockholders equity,1234500000.0000,library map
+WEX,912,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Total assets,14399500000.0000,library map
+WEX,912,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,"Short-term debt, net",1326400000.0000,printed face components (duration sum; total_debt founder sum)
+WEX,912,total_interest_income,OUT,,,,,,,,0001309108-26-000010,,,,not a bank
+WEX,912,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001309108-26-000010,R5,Total liabilities,13165000000.0000,library map
+WEX,912,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Basic (in shares),35500000.0000,library map
+WEX,912,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001309108-26-000010,R3,Diluted (in shares),35900000.0000,library map

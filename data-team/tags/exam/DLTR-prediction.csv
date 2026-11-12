@@ -21,13 +21,13 @@ DLTR,407,deposits,OUT,,,,,,,,0000935703-26-000025,,,,not a bank
 DLTR,407,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000935703-26-000025,R8,Depreciation and amortization,648100000.0000,library map
 DLTR,407,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000935703-26-000025,R3,Total diluted earnings (loss) per share of common stock (usd per share),6.2200,library map
 DLTR,407,dividends_paid,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
-DLTR,407,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000935703-26-000025,,,,note-sourced default tag (no face line)
+DLTR,407,dividends_per_share,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000935703-26-000025,R5,Goodwill,423200000.0000,library map
 DLTR,407,gross_profit,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Income from continuing operations before income taxes,1629500000.0000,library map
 DLTR,407,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Provision for income taxes,404200000.0000,library map
-DLTR,407,interest_expense,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
-DLTR,407,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000935703-26-000025,,,,note-sourced default tag (no face line)
+DLTR,407,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-5,N,,sec_api,0000935703-26-000025,R3,"Interest expense, net",-85500000.0000,combined line (library or label demote)
+DLTR,407,interest_income,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,inventory,not_presented,,,,,,,,0000935703-26-000025,,,,no face line
 DLTR,407,loans_net,OUT,,,,,,,,0000935703-26-000025,,,,not a bank
 DLTR,407,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000935703-26-000025,R3,Net income (loss),1282500000.0000,library map

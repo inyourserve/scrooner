@@ -27,7 +27,7 @@ FAST,209,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000815556-2
 FAST,209,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Income before income taxes,1655000000.0000,library map
 FAST,209,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Income tax expense,396600000.0000,library map
 FAST,209,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000815556-26-000009,R5,Interest expense,6200000.0000,library map
-FAST,209,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000815556-26-000009,,,,note-sourced default tag (no face line)
+FAST,209,interest_income,not_presented,,,,,,,,0000815556-26-000009,,,,no face line
 FAST,209,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000815556-26-000009,R3,Inventories,1748000000.0000,library map
 FAST,209,loans_net,OUT,,,,,,,,0000815556-26-000009,,,,not a bank
 FAST,209,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000815556-26-000009,R5,Net income,1258400000.0000,library map

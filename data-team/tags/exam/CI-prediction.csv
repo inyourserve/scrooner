@@ -1,9 +1,9 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CI,159,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001739940-26-000006,R5,Accounts payable,10659000000.0000,library map
-CI,159,accounts_receivable,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
+CI,159,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001739940-26-000006,R5,"Accounts receivable, net",28768000000.0000,combined line (library or label demote)
 CI,159,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,Amortization of acquired intangible assets,1743000000.0000,library map
 CI,159,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001739940-26-000006,R3,Basic (in dollars per share),22.3300,library map
-CI,159,capex,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
+CI,159,capex,combined,custom:PaymentsForProceedsFromPropertyPlantAndEquipment,CF,+,-6,N,,fsn_xbrl,0001739940-26-000006,R9,"Property and equipment purchases, net",1212000000.0000,combined line (library or label demote)
 CI,159,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001739940-26-000006,R5,Cash and cash equivalents,7676000000.0000,library map
 CI,159,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001739940-26-000006,R9,NET CASH USED IN FINANCING ACTIVITIES,-6421000000.0000,library map
 CI,159,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001739940-26-000006,R9,NET CASH USED IN INVESTING ACTIVITIES,-4407000000.0000,library map
@@ -27,21 +27,21 @@ CI,159,gross_profit,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
 CI,159,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,Income before income taxes,7781000000.0000,library map
 CI,159,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,TOTAL INCOME TAXES,1493000000.0000,library map
 CI,159,interest_expense,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
-CI,159,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001739940-26-000006,,,,note-sourced default tag (no face line)
+CI,159,interest_income,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
 CI,159,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001739940-26-000006,R5,Inventories,7338000000.0000,library map
 CI,159,loans_net,OUT,,,,,,,,0001739940-26-000006,,,,not a bank
 CI,159,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001739940-26-000006,R3,SHAREHOLDERS' NET INCOME,5957000000.0000,library map
 CI,159,net_interest_income,OUT,,,,,,,,0001739940-26-000006,,,,not a bank
 CI,159,noninterest_expense,OUT,,,,,,,,0001739940-26-000006,,,,not a bank
 CI,159,noninterest_income,OUT,,,,,,,,0001739940-26-000006,,,,not a bank
-CI,159,operating_expenses,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
+CI,159,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,TOTAL BENEFITS AND EXPENSES,265700000000.0000,printed opex total tag
 CI,159,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,Income from operations,9200000000.0000,library map
 CI,159,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001739940-26-000006,R3,Interest expense and other,-1408000000.0000,combined line (library or label demote)
 CI,159,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001739940-26-000006,R5,Property and equipment,3651000000.0000,library map
 CI,159,provision_for_credit_losses,OUT,,,,,,,,0001739940-26-000006,,,,not a bank
 CI,159,research_and_development,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
 CI,159,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,TOTAL REVENUES,274900000000.0000,library map
-CI,159,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001739940-26-000006,,,,note-sourced default tag (no face line)
+CI,159,sbc,not_presented,,,,,,,,0001739940-26-000006,,,,no face line
 CI,159,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001739940-26-000006,R3,"Selling, general and administrative expenses",14617000000.0000,library map
 CI,159,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001739940-26-000006,R9,Repurchase of common stock,3621000000.0000,library map
 CI,159,shares_outstanding,not_presented,,,,,,,,0001739940-26-000006,,,,no face line

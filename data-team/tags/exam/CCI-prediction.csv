@@ -21,12 +21,12 @@ CCI,303,deposits,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,depreciation_and_amortization,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001051470-26-000016,R6,"Depreciation, amortization and accretion",690000000.0000,combined line (library or label demote)
 CCI,303,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001051470-26-000016,R5,Diluted (in dollars per share),1.0100,library map
 CCI,303,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,-,-6,N,,sec_api,0001051470-26-000016,R6,Dividends/distributions paid on common stock,-2080000000.0000,library map
-CCI,303,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001051470-26-000016,,,,note-sourced default tag (no face line)
+CCI,303,dividends_per_share,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
 CCI,303,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,Goodwill,5127000000.0000,library map
 CCI,303,gross_profit,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
 CCI,303,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,"Income (Loss) from Continuing Operations before Income Taxes, Noncontrolling Interest",1119000000.0000,library map
 CCI,303,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Benefit (provision) for income taxes,16000000.0000,library map
-CCI,303,interest_expense,combined,us-gaap:InterestExpenseDebt,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,"Interest expense and amortization of deferred financing costs, net",972000000.0000,single component line
+CCI,303,interest_expense,not_presented,,,,,,,,0001051470-26-000016,,,,single component only
 CCI,303,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Interest income,13000000.0000,library map
 CCI,303,inventory,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
 CCI,303,loans_net,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
@@ -34,7 +34,7 @@ CCI,303,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,Y,ProfitLoss,sec_api,000
 CCI,303,net_interest_income,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,noninterest_expense,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
 CCI,303,noninterest_income,OUT,,,,,,,,0001051470-26-000016,,,,not a bank
-CCI,303,operating_expenses,not_presented,,,,,,,,0001051470-26-000016,,,,no face line
+CCI,303,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,"Selling, general and administrative",383000000.0000,printed opex lines (duration sum)
 CCI,303,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Operating income (loss),2075000000.0000,library map
 CCI,303,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001051470-26-000016,R5,Other income (expense),3000000.0000,library map
 CCI,303,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001051470-26-000016,R3,"Property and equipment, net",6273000000.0000,library map

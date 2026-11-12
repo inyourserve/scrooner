@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+AFG,611,accounts_payable,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,accounts_receivable,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001042046-26-000010,,,,note-sourced default tag (no face line)
+AFG,611,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001042046-26-000010,R5,Basic (USD per share),10.0800,library map
+AFG,611,capex,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Cash and cash equivalents,1727000000.0000,library map
+AFG,611,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001042046-26-000010,R9,Net cash used in financing activities,-377000000.0000,library map
+AFG,611,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001042046-26-000010,R9,Net cash provided by (used in) investing activities,-835000000.0000,library map
+AFG,611,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001042046-26-000010,,,,note-sourced default tag (no face line)
+AFG,611,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001042046-26-000010,,,,note-sourced default tag (no face line)
+AFG,611,cf_ap_change,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,cf_ar_change,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,cf_inventory_change,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001042046-26-000010,R9,Net cash provided by operating activities,1533000000.0000,library map
+AFG,611,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001042046-26-000010,R6,Comprehensive income,1032000000.0000,library map
+AFG,611,cost_of_revenue,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,current_assets,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,current_liabilities,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,deposits,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001042046-26-000010,R9,Depreciation and amortization,86000000.0000,library map
+AFG,611,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001042046-26-000010,R5,Diluted (USD per share),10.0800,library map
+AFG,611,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001042046-26-000010,R9,Cash dividends paid on Common Stock,606000000.0000,library map
+AFG,611,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001042046-26-000010,R8,Cash dividends per Common Share (USD per share),7.2800,library map
+AFG,611,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Goodwill,327000000.0000,library map
+AFG,611,gross_profit,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,income_before_tax,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Provision for income taxes,231000000.0000,library map
+AFG,611,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Interest charges on borrowed money,80000000.0000,library map
+AFG,611,interest_income,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,inventory,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,loans_net,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Net Earnings,842000000.0000,library map
+AFG,611,net_interest_income,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,noninterest_expense,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,noninterest_income,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Total costs and expenses,7101000000.0000,printed opex total tag
+AFG,611,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Earnings before income taxes,1073000000.0000,library map
+AFG,611,other_income_expense_net,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,ppe_net,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,provision_for_credit_losses,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,research_and_development,OUT,,,,,,,,0001042046-26-000010,,,,sector template (bank/insurer)
+AFG,611,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001042046-26-000010,R5,Total revenues,8174000000.0000,library map
+AFG,611,sbc,not_presented,,,,,,,,0001042046-26-000010,,,,no face line
+AFG,611,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,Y,PropertyAndCasualtyCommissionsAndOtherUnderwritingExpenses,sec_api,0001042046-26-000010,R5,Commissions and other underwriting expenses,2059000000.0000,library map
+AFG,611,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001042046-26-000010,R9,Repurchases of Common Stock,99000000.0000,library map
+AFG,611,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001042046-26-000010,R4,"Common Stock, shares outstanding",83422202.0000,library map
+AFG,611,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Shareholders equity,4820000000.0000,library map
+AFG,611,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Total assets,32642000000.0000,library map
+AFG,611,total_debt,component_sum,us-gaap:LongTermDebt,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Long-term debt,1820000000.0000,printed face components (duration sum; total_debt founder sum)
+AFG,611,total_interest_income,OUT,,,,,,,,0001042046-26-000010,,,,not a bank
+AFG,611,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001042046-26-000010,R3,Total liabilities,27822000000.0000,library map
+AFG,611,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001042046-26-000010,R5,Basic (shares),83500000.0000,library map
+AFG,611,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001042046-26-000010,R5,Diluted (shares),83500000.0000,library map

@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ULTA,381,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Accounts payable,685887000.0000,library map
+ULTA,381,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,"Receivables, net",296217000.0000,combined line (library or label demote)
+ULTA,381,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-035243,,,,note-sourced default tag (no face line)
+ULTA,381,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-035243,R4,Basic,25.7200,library map
+ULTA,381,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Capital expenditures,434829000.0000,library map
+ULTA,381,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Cash and cash equivalents,424243000.0000,library map
+ULTA,381,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001104659-26-035243,R6,Net cash used in financing activities,-850666000.0000,library map
+ULTA,381,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001104659-26-035243,R6,Net cash used in investing activities,-931346000.0000,library map
+ULTA,381,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,"Income taxes paid, net of refunds",381812000.0000,library map
+ULTA,381,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Cash paid for interest,9673000.0000,library map
+ULTA,381,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Accounts payable,89061000.0000,library map
+ULTA,381,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Receivables,71375000.0000,library map
+ULTA,381,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Merchandise inventories,135801000.0000,library map
+ULTA,381,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Net cash provided by operating activities,1502780000.0000,library map
+ULTA,381,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001104659-26-035243,R5,Comprehensive income,1157239000.0000,library map
+ULTA,381,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Cost of sales,7547596000.0000,library map
+ULTA,381,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Total current assets,3144146000.0000,library map
+ULTA,381,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Total current liabilities,2224342000.0000,library map
+ULTA,381,deposits,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Depreciation and amortization,300772000.0000,library map
+ULTA,381,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-035243,R4,Diluted,25.6400,library map
+ULTA,381,dividends_paid,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,dividends_per_share,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Goodwill,226421000.0000,library map
+ULTA,381,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Gross profit,4845224000.0000,library map
+ULTA,381,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Income before income taxes and equity net loss of affiliate,1531205000.0000,library map
+ULTA,381,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Income tax expense,373869000.0000,library map
+ULTA,381,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001104659-26-035243,R4,"Interest expense (income), net",-1787000.0000,combined line (library or label demote)
+ULTA,381,interest_income,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,inventory,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,loans_net,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Net income,1153479000.0000,library map
+ULTA,381,net_interest_income,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,noninterest_expense,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,noninterest_income,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,operating_expenses,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Operating income,1532992000.0000,library map
+ULTA,381,other_income_expense_net,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,"Property and equipment, net",1434062000.0000,library map
+ULTA,381,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,research_and_development,not_presented,,,,,,,,0001104659-26-035243,,,,no face line
+ULTA,381,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,Net sales,12392820000.0000,library map
+ULTA,381,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Share-based Compensation,37426000.0000,library map
+ULTA,381,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001104659-26-035243,R4,"Selling, general and administrative expenses",3296411000.0000,library map
+ULTA,381,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001104659-26-035243,R6,Repurchase of common shares,901388000.0000,library map
+ULTA,381,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001104659-26-035243,R3,"Common stock, shares outstanding",44166000.0000,library map
+ULTA,381,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Total stockholders' equity,2803451000.0000,library map
+ULTA,381,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Total assets,6999294000.0000,library map
+ULTA,381,total_debt,component_sum,us-gaap:ShortTermBorrowings,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Short-term debt,62287000.0000,printed face components (duration sum; total_debt founder sum)
+ULTA,381,total_interest_income,OUT,,,,,,,,0001104659-26-035243,,,,not a bank
+ULTA,381,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001104659-26-035243,R2,Total liabilities,4195843000.0000,library map
+ULTA,381,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,Y,EarningsPerShareBasic,sec_api,0001104659-26-035243,R4,Basic,44842000.0000,library map
+ULTA,381,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,Y,EarningsPerShareDiluted,sec_api,0001104659-26-035243,R4,Diluted,44991000.0000,library map

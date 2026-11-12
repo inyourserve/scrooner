@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+FOX,400,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,"Accounts payable, accrued expenses and other current liabilities",2667000000.0000,combined line (library or label demote)
+FOX,400,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,"Receivables, net",3455000000.0000,library map
+FOX,400,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-053960,,,,note-sourced default tag (no face line)
+FOX,400,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-053960,R3,Basic (in dollars per share),3.9100,library map
+FOX,400,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Property and equipment,502000000.0000,library map
+FOX,400,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Cash and cash equivalents,4205000000.0000,combined line (library or label demote)
+FOX,400,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-053960,R8,Net cash used in financing activities,-2411000000.0000,library map
+FOX,400,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-053960,R8,Net cash used in investing activities,-705000000.0000,library map
+FOX,400,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-053960,,,,note-sourced default tag (no face line)
+FOX,400,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-053960,,,,note-sourced default tag (no face line)
+FOX,400,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Accounts payable and accrued expenses,66000000.0000,combined line (library or label demote)
+FOX,400,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Receivables and other assets,1055000000.0000,combined line (library or label demote)
+FOX,400,cf_inventory_change,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Net cash provided by operating activities,1970000000.0000,library map
+FOX,400,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-053960,R4,Comprehensive income attributable to Fox Corporation stockholders,1702000000.0000,library map
+FOX,400,cost_of_revenue,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Total current assets,8453000000.0000,library map
+FOX,400,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Total current liabilities,2667000000.0000,library map
+FOX,400,deposits,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Depreciation and amortization,410000000.0000,library map
+FOX,400,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-053960,R3,Diluted (in dollars per share),3.8400,library map
+FOX,400,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Dividends paid and distributions,287000000.0000,library map
+FOX,400,dividends_per_share,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Goodwill,3647000000.0000,library map
+FOX,400,gross_profit,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-053960,R3,Income before income tax expense,2278000000.0000,library map
+FOX,400,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-053960,R3,Income tax expense,551000000.0000,library map
+FOX,400,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,Y,InterestIncomeExpenseNet,sec_api,0001628280-26-053960,R3,"Interest expense, net",-274000000.0000,combined line (library or label demote)
+FOX,400,interest_income,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,"Inventories, net",487000000.0000,library map
+FOX,400,loans_net,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,net_income,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,net_interest_income,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,noninterest_expense,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,noninterest_income,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,operating_expenses,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,operating_income,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001628280-26-053960,R3,"Non-operating other, net",-773000000.0000,library map
+FOX,400,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,"Property and equipment, net",1842000000.0000,library map
+FOX,400,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,research_and_development,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001628280-26-053960,R3,Revenues,17126000000.0000,library map
+FOX,400,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Equity-based compensation,132000000.0000,library map
+FOX,400,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001628280-26-053960,R3,"Selling, general and administrative",2367000000.0000,library map
+FOX,400,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-053960,R8,Repurchase of shares,2000000000.0000,library map
+FOX,400,shares_outstanding,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Total Fox Corporation stockholders equity,11628000000.0000,library map
+FOX,400,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-053960,R6,Total assets,22482000000.0000,library map
+FOX,400,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-6,Y,LongTermDebtCurrent,sec_api,0001628280-26-053960,R6,Borrowings,6606000000.0000,printed face components (duration sum; total_debt founder sum)
+FOX,400,total_interest_income,OUT,,,,,,,,0001628280-26-053960,,,,not a bank
+FOX,400,total_liabilities,not_presented,,,,,,,,0001628280-26-053960,,,,no face line
+FOX,400,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-053960,,,,note-sourced default tag (no face line)
+FOX,400,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-053960,,,,note-sourced default tag (no face line)

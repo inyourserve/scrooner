@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+TSCO,493,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Accounts payable,1390833000.0000,library map
+TSCO,493,accounts_receivable,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000916365-26-000014,,,,note-sourced default tag (no face line)
+TSCO,493,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000916365-26-000014,R3,Net Income per share  basic (a),2.0700,library map
+TSCO,493,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Capital expenditures,894770000.0000,library map
+TSCO,493,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Cash and cash equivalents,194109000.0000,library map
+TSCO,493,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000916365-26-000014,R8,Net cash used in financing activities,-914063000.0000,library map
+TSCO,493,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000916365-26-000014,R8,Net cash used in investing activities,-778578000.0000,library map
+TSCO,493,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000916365-26-000014,,,,note-sourced default tag (no face line)
+TSCO,493,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,"Cash paid for interest, net of amounts capitalized",69757000.0000,library map
+TSCO,493,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Accounts payable,143429000.0000,library map
+TSCO,493,cf_ar_change,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Inventories,225687000.0000,library map
+TSCO,493,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Net cash provided by operating activities,1635259000.0000,library map
+TSCO,493,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000916365-26-000014,R4,Total comprehensive income,1094870000.0000,library map
+TSCO,493,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Cost of merchandise sold,9869538000.0000,library map
+TSCO,493,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Total current assets,3507797000.0000,library map
+TSCO,493,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Total current liabilities,2614449000.0000,library map
+TSCO,493,deposits,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Depreciation and amortization,494011000.0000,library map
+TSCO,493,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000916365-26-000014,R3,Net Income per share  diluted (a),2.0600,library map
+TSCO,493,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Cash dividends paid to stockholders,487669000.0000,library map
+TSCO,493,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,IS,+,2,N,,sec_api,0000916365-26-000014,R3,Dividends declared per common share outstanding (a),0.9200,library map
+TSCO,493,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Goodwill and other intangible assets,398755000.0000,combined line (library or label demote)
+TSCO,493,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Gross profit,5654508000.0000,library map
+TSCO,493,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Income before income taxes,1398245000.0000,library map
+TSCO,493,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Income tax expense,302158000.0000,library map
+TSCO,493,interest_expense,combined,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,"Interest expense, net",69144000.0000,combined line (library or label demote)
+TSCO,493,interest_income,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Inventories,3084086000.0000,library map
+TSCO,493,loans_net,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Net income,1096087000.0000,library map
+TSCO,493,net_interest_income,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,noninterest_expense,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,noninterest_income,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,operating_expenses,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Operating income,1467389000.0000,library map
+TSCO,493,other_income_expense_net,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,"Property and equipment, net",3026544000.0000,library map
+TSCO,493,provision_for_credit_losses,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,research_and_development,not_presented,,,,,,,,0000916365-26-000014,,,,no face line
+TSCO,493,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Net sales,15524046000.0000,library map
+TSCO,493,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Share-based compensation expense,57063000.0000,library map
+TSCO,493,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,"Selling, general and administrative expenses",3693108000.0000,library map
+TSCO,493,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000916365-26-000014,R8,Repurchase of common stock,361261000.0000,library map
+TSCO,493,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0000916365-26-000014,R6,"Common stock, outstanding (in shares)",527017000.0000,library map
+TSCO,493,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Total stockholders' equity,2581293000.0000,library map
+TSCO,493,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Total assets,10933679000.0000,library map
+TSCO,493,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Long-term debt,1764974000.0000,printed face components (duration sum; total_debt founder sum)
+TSCO,493,total_interest_income,OUT,,,,,,,,0000916365-26-000014,,,,not a bank
+TSCO,493,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000916365-26-000014,R5,Total liabilities,8352386000.0000,library map
+TSCO,493,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Basic,529957000.0000,library map
+TSCO,493,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000916365-26-000014,R3,Diluted,532178000.0000,library map

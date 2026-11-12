@@ -4,12 +4,12 @@ HSY,306,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,
 HSY,306,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
 HSY,306,basic_eps,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Capital additions (including software),454622000.0000,library map
-HSY,306,cash_and_equivalents,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
+HSY,306,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Cash and cash equivalents,925859000.0000,combined line (library or label demote)
 HSY,306,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-008586,R7,Net cash used in financing activities,-803357000.0000,library map
 HSY,306,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-008586,R7,Net cash used in investing activities,-1278717000.0000,library map
 HSY,306,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Income taxes paid,140616000.0000,library map
 HSY,306,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Interest paid,195927000.0000,library map
-HSY,306,cf_ap_change,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
+HSY,306,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Accounts payable and accrued liabilities,163495000.0000,combined line (library or label demote)
 HSY,306,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,-,-3,N,,sec_api,0001628280-26-008586,R7,"Accounts receivabletrade, net",-98968000.0000,library map
 HSY,306,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Inventories,133320000.0000,library map
 HSY,306,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Net cash provided by operating activities,2277367000.0000,library map
@@ -21,13 +21,13 @@ HSY,306,deposits,OUT,,,,,,,,0001628280-26-008586,,,,not a bank
 HSY,306,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Depreciation and amortization,503701000.0000,library map
 HSY,306,diluted_eps,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001628280-26-008586,R7,Cash dividends paid,1085296000.0000,library map
-HSY,306,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
+HSY,306,dividends_per_share,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Goodwill,2996005000.0000,library map
 HSY,306,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Gross profit,3922691000.0000,library map
 HSY,306,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Income before income taxes,1214208000.0000,library map
 HSY,306,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Provision for income taxes,330949000.0000,library map
-HSY,306,interest_expense,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
-HSY,306,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001628280-26-008586,,,,note-sourced default tag (no face line)
+HSY,306,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001628280-26-008586,R3,"Interest expense, net",-190206000.0000,combined line (library or label demote)
+HSY,306,interest_income,not_presented,,,,,,,,0001628280-26-008586,,,,no face line
 HSY,306,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-008586,R5,Inventories,1429254000.0000,library map
 HSY,306,loans_net,OUT,,,,,,,,0001628280-26-008586,,,,not a bank
 HSY,306,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-008586,R3,Net income,883259000.0000,library map

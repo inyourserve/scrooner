@@ -26,22 +26,22 @@ HWM,138,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000004281-26-000012
 HWM,138,gross_profit,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
 HWM,138,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Income before income taxes,1840000000.0000,library map
 HWM,138,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000004281-26-000012,R3,Provision for income taxes (H),332000000.0000,library map
-HWM,138,interest_expense,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
-HWM,138,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000004281-26-000012,,,,note-sourced default tag (no face line)
+HWM,138,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-6,N,,sec_api,0000004281-26-000012,R3,"Interest expense, net (E)",-151000000.0000,combined line (library or label demote)
+HWM,138,interest_income,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
 HWM,138,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0000004281-26-000012,R5,Inventories (M),1849000000.0000,library map
 HWM,138,loans_net,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Net income,1508000000.0000,library map
 HWM,138,net_interest_income,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,noninterest_expense,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,noninterest_income,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
-HWM,138,operating_expenses,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
+HWM,138,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,"Selling, general administrative, and other expenses",370000000.0000,printed opex lines (duration sum)
 HWM,138,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Operating income,2046000000.0000,library map
-HWM,138,other_income_expense_net,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
+HWM,138,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000004281-26-000012,R3,"Other expense, net (F)",-40000000.0000,combined line (library or label demote)
 HWM,138,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000004281-26-000012,R5,"Properties, plants, and equipment, net (N)",2593000000.0000,library map
 HWM,138,provision_for_credit_losses,OUT,,,,,,,,0000004281-26-000012,,,,not a bank
 HWM,138,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Research and development expenses,37000000.0000,library map
 HWM,138,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,Sales (C),8252000000.0000,library map
-HWM,138,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0000004281-26-000012,,,,note-sourced default tag (no face line)
+HWM,138,sbc,not_presented,,,,,,,,0000004281-26-000012,,,,no face line
 HWM,138,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0000004281-26-000012,R3,"Selling, general administrative, and other expenses",370000000.0000,library map
 HWM,138,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0000004281-26-000012,R7,Repurchases of common stock (I),700000000.0000,library map
 HWM,138,shares_outstanding,not_presented,,,,,,,,0000004281-26-000012,,,,no face line

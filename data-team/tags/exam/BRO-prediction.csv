@@ -18,7 +18,7 @@ BRO,409,cost_of_revenue,not_presented,,,,,,,,0001193125-26-046984,,,,no face lin
 BRO,409,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001193125-26-046984,R4,Total current assets,8614000000.0000,library map
 BRO,409,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-046984,R4,Total current liabilities,8294000000.0000,library map
 BRO,409,deposits,OUT,,,,,,,,0001193125-26-046984,,,,not a bank
-BRO,409,depreciation_and_amortization,combined,us-gaap:Depreciation,CF,+,-6,N,,sec_api,0001193125-26-046984,R8,Depreciation,55000000.0000,single component line
+BRO,409,depreciation_and_amortization,not_presented,,,,,,,,0001193125-26-046984,,,,single component only
 BRO,409,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-046984,R2,Diluted,3.1600,library map
 BRO,409,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001193125-26-046984,R8,Cash dividends paid,193000000.0000,library map
 BRO,409,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,32767,N,,sec_api,0001193125-26-046984,R7,Cash dividends paid,0.6200,library map
@@ -27,7 +27,7 @@ BRO,409,gross_profit,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
 BRO,409,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-046984,R2,Income before income taxes,1371000000.0000,library map
 BRO,409,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-046984,R2,Income taxes,304000000.0000,library map
 BRO,409,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001193125-26-046984,R2,Interest,297000000.0000,library map
-BRO,409,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001193125-26-046984,,,,note-sourced default tag (no face line)
+BRO,409,interest_income,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
 BRO,409,inventory,not_presented,,,,,,,,0001193125-26-046984,,,,no face line
 BRO,409,loans_net,OUT,,,,,,,,0001193125-26-046984,,,,not a bank
 BRO,409,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-046984,R2,Net income attributable to the Company,1054000000.0000,library map

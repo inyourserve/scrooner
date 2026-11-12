@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+HXL,871,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Accounts payable,146600000.0000,library map
+HXL,871,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,"Accounts receivable, net",249300000.0000,library map
+HXL,871,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-046377,,,,note-sourced default tag (no face line)
+HXL,871,basic_eps,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Capital expenditures,73300000.0000,library map
+HXL,871,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Cash and cash equivalents,71000000.0000,library map
+HXL,871,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-046377,R8,Net cash used for financing activities,-212300000.0000,library map
+HXL,871,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-046377,R8,Net cash used for investing activities,-76000000.0000,library map
+HXL,871,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Income Taxes,7300000.0000,library map
+HXL,871,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,"Interest, net of capitalized interest",40200000.0000,library map
+HXL,871,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001193125-26-046377,R8,Increase (decrease) in accounts payable/accrued liabilities,-20400000.0000,combined line (library or label demote)
+HXL,871,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Decrease (increase) in accounts receivable,22500000.0000,library map
+HXL,871,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-046377,R8,Increase in inventories,-45400000.0000,library map
+HXL,871,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Net cash provided by operating activities,230500000.0000,library map
+HXL,871,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-046377,R5,Comprehensive income,211500000.0000,library map
+HXL,871,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Cost of sales,1459100000.0000,library map
+HXL,871,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Total current assets,730700000.0000,library map
+HXL,871,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Total current liabilities,322700000.0000,library map
+HXL,871,deposits,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Depreciation and amortization,122300000.0000,library map
+HXL,871,diluted_eps,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Dividends paid,53900000.0000,library map
+HXL,871,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,2,N,,sec_api,0001193125-26-046377,R7,Dividends paid on common stock price per share,0.6800,library map
+HXL,871,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Goodwill and other intangible assets,239800000.0000,combined line (library or label demote)
+HXL,871,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Gross margin,434800000.0000,library map
+HXL,871,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Total income before income taxes,135000000.0000,library map
+HXL,871,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Income tax expense,25600000.0000,library map
+HXL,871,interest_expense,combined,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Interest expense, net",37700000.0000,combined line (library or label demote)
+HXL,871,interest_income,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Inventories,328800000.0000,library map
+HXL,871,loans_net,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,net_income,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,net_interest_income,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,noninterest_expense,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,noninterest_income,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Selling, general and administrative expenses",169000000.0000,printed opex lines (duration sum)
+HXL,871,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Operating income,171600000.0000,library map
+HXL,871,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Other expense (income),1100000.0000,library map
+HXL,871,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,"Property, plant and equipment, net",1611500000.0000,library map
+HXL,871,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Research and technology expenses,56400000.0000,library map
+HXL,871,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Net sales,1893900000.0000,library map
+HXL,871,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Stock-based compensation,14400000.0000,library map
+HXL,871,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,"Selling, general and administrative expenses",169000000.0000,library map
+HXL,871,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-046377,R8,Repurchase of stock,454300000.0000,library map
+HXL,871,shares_outstanding,not_presented,,,,,,,,0001193125-26-046377,,,,no face line
+HXL,871,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Total stockholders' equity,1250700000.0000,library map
+HXL,871,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Total assets,2704000000.0000,library map
+HXL,871,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-6,N,,sec_api,0001193125-26-046377,R2,Short-term borrowings,0.0000,printed face components (duration sum; total_debt founder sum)
+HXL,871,total_interest_income,OUT,,,,,,,,0001193125-26-046377,,,,not a bank
+HXL,871,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001193125-26-046377,R2,Total liabilities,1453300000.0000,library map
+HXL,871,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Basic,79500000.0000,library map
+HXL,871,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001193125-26-046377,R4,Diluted,80000000.0000,library map

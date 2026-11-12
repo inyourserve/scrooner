@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+WTS,620,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Accounts payable,182200000.0000,library map
+WTS,620,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,"Trade accounts receivable, less reserve allowances of $12.5 million at December 31, 2025 and $11.9 million at December 31, 2024",294000000.0000,library map
+WTS,620,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001104659-26-018541,,,,note-sourced default tag (no face line)
+WTS,620,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001104659-26-018541,R2,NET INCOME PER SHARE,10.1700,library map
+WTS,620,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,"Additions to property, plant and equipment",45700000.0000,library map
+WTS,620,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Cash and cash equivalents,405500000.0000,library map
+WTS,620,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001104659-26-018541,R8,Net cash (used in) provided by financing activities,-96900000.0000,library map
+WTS,620,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001104659-26-018541,R8,Net cash used in investing activities,-302800000.0000,library map
+WTS,620,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Income taxes,74400000.0000,library map
+WTS,620,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Interest,9900000.0000,library map
+WTS,620,cf_ap_change,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Accounts receivable,9500000.0000,library map
+WTS,620,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Inventories,75400000.0000,library map
+WTS,620,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Net cash provided by operating activities,402000000.0000,library map
+WTS,620,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001104659-26-018541,R3,Comprehensive income,389700000.0000,library map
+WTS,620,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,Cost of goods sold,1232500000.0000,library map
+WTS,620,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Total Current Assets,1286100000.0000,library map
+WTS,620,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Total Current Liabilities,512400000.0000,library map
+WTS,620,deposits,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Depreciation,36200000.0000,printed face components (duration sum; total_debt founder sum)
+WTS,620,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001104659-26-018541,R2,NET INCOME PER SHARE,10.1700,library map
+WTS,620,dividends_paid,mapped,us-gaap:PaymentsOfOrdinaryDividends,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Dividends,66900000.0000,library map
+WTS,620,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,32767,N,,sec_api,0001104659-26-018541,R2,Dividends declared per share,1.9900,library map
+WTS,620,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Goodwill,859000000.0000,library map
+WTS,620,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,GROSS PROFIT,1206000000.0000,library map
+WTS,620,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,INCOME BEFORE INCOME TAXES,445800000.0000,library map
+WTS,620,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,Provision for income taxes,105000000.0000,library map
+WTS,620,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0001104659-26-018541,R2,Interest expense,10800000.0000,library map
+WTS,620,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,Interest income,9800000.0000,library map
+WTS,620,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Total Inventories,524300000.0000,library map
+WTS,620,loans_net,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,net_income,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,net_interest_income,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,noninterest_expense,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,noninterest_income,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,operating_expenses,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,OPERATING INCOME,448100000.0000,library map
+WTS,620,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001104659-26-018541,R2,"Other expense (income), net",-1300000.0000,library map
+WTS,620,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,"Property, plant and equipment, net",297100000.0000,library map
+WTS,620,provision_for_credit_losses,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,research_and_development,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,Net sales,2438500000.0000,library map
+WTS,620,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Stock-based compensation,21200000.0000,library map
+WTS,620,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,"Selling, general and administrative expenses",734200000.0000,library map
+WTS,620,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001104659-26-018541,R8,Payments to repurchase common stock,16000000.0000,library map
+WTS,620,shares_outstanding,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,Total Stockholders' Equity,2027700000.0000,library map
+WTS,620,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,TOTAL ASSETS,2881200000.0000,library map
+WTS,620,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0001104659-26-018541,R5,LONG-TERM DEBT,197700000.0000,printed face components (duration sum; total_debt founder sum)
+WTS,620,total_interest_income,OUT,,,,,,,,0001104659-26-018541,,,,not a bank
+WTS,620,total_liabilities,not_presented,,,,,,,,0001104659-26-018541,,,,no face line
+WTS,620,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,Y,WeightedAverageNumberOfDilutedSharesOutstanding,sec_api,0001104659-26-018541,R2,Weighted average number of shares,33500000.0000,library map
+WTS,620,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001104659-26-018541,R2,Weighted average number of shares,33500000.0000,library map

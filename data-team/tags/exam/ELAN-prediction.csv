@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+ELAN,634,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Accounts payable,368000000.0000,library map
+ELAN,634,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,"Accounts receivable, net",873000000.0000,library map
+ELAN,634,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Amortization of intangible assets,543000000.0000,library map
+ELAN,634,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001739104-26-000012,R3,Basic (usd per share),-0.4700,library map
+ELAN,634,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Net purchases of property and equipment and software,276000000.0000,library map
+ELAN,634,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Cash and cash equivalents,545000000.0000,library map
+ELAN,634,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001739104-26-000012,R8,Net Cash Used for Financing Activities,-275000000.0000,library map
+ELAN,634,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001739104-26-000012,R8,Net Cash (Used for) Provided by Investing Activities,-279000000.0000,library map
+ELAN,634,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001739104-26-000012,,,,note-sourced default tag (no face line)
+ELAN,634,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001739104-26-000012,,,,note-sourced default tag (no face line)
+ELAN,634,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Accounts payable and other liabilities,147000000.0000,combined line (library or label demote)
+ELAN,634,cf_ar_change,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Inventories,57000000.0000,library map
+ELAN,634,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Net Cash Provided by Operating Activities,560000000.0000,library map
+ELAN,634,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001739104-26-000012,R4,Comprehensive income (loss),398000000.0000,library map
+ELAN,634,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Cost of sales,2122000000.0000,library map
+ELAN,634,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Total current assets,3458000000.0000,library map
+ELAN,634,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Total current liabilities,1597000000.0000,library map
+ELAN,634,deposits,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Depreciation and amortization,680000000.0000,library map
+ELAN,634,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001739104-26-000012,R3,Diluted (usd per share),-0.4700,library map
+ELAN,634,dividends_paid,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,dividends_per_share,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Goodwill,4779000000.0000,library map
+ELAN,634,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Gross Profit,2593000000.0000,library map
+ELAN,634,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001739104-26-000012,R3,(Loss) income before income taxes,-224000000.0000,library map
+ELAN,634,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Income tax expense,8000000.0000,library map
+ELAN,634,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-6,Y,InterestExpense,sec_api,0001739104-26-000012,R3,"Interest expense, net of capitalized interest",220000000.0000,library map
+ELAN,634,interest_income,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Inventories,1737000000.0000,library map
+ELAN,634,loans_net,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001739104-26-000012,R3,Net (loss) income,-232000000.0000,library map
+ELAN,634,net_interest_income,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,noninterest_expense,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,noninterest_income,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Research and development,368000000.0000,printed opex lines (duration sum)
+ELAN,634,operating_income,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,other_income_expense_net,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,Y,PropertyPlantAndEquipmentNet,sec_api,0001739104-26-000012,R5,"Property and equipment, net",1409000000.0000,library map
+ELAN,634,provision_for_credit_losses,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,Research and development,368000000.0000,library map
+ELAN,634,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,Y,RevenueFromContractWithCustomerIncludingAssessedTax,sec_api,0001739104-26-000012,R3,Revenue,4715000000.0000,library map
+ELAN,634,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001739104-26-000012,R8,Stock-based compensation expense,68000000.0000,library map
+ELAN,634,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001739104-26-000012,R3,"Marketing, selling and administrative",1430000000.0000,library map
+ELAN,634,share_buybacks,not_presented,,,,,,,,0001739104-26-000012,,,,no face line
+ELAN,634,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001739104-26-000012,R6,Common stock outstanding (in shares),496975154.0000,library map
+ELAN,634,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Total equity,6547000000.0000,library map
+ELAN,634,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Total assets,13358000000.0000,library map
+ELAN,634,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Current portion of long-term debt and finance lease liability,74000000.0000,printed face components (duration sum; total_debt founder sum)
+ELAN,634,total_interest_income,OUT,,,,,,,,0001739104-26-000012,,,,not a bank
+ELAN,634,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001739104-26-000012,R5,Total liabilities,6811000000.0000,library map
+ELAN,634,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001739104-26-000012,R3,Basic (in shares),496400000.0000,library map
+ELAN,634,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001739104-26-000012,R3,Diluted (in shares),496400000.0000,library map

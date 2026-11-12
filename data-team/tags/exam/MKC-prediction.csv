@@ -21,13 +21,13 @@ MKC,607,deposits,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Depreciation and amortization,231300000.0000,library map
 MKC,607,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000063754-26-000037,R3,Earnings per sharediluted (usd per share),2.9300,library map
 MKC,607,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0000063754-26-000037,R7,Dividends paid,483000000.0000,library map
-MKC,607,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,dividends_per_share,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
 MKC,607,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Goodwill,5301300000.0000,library map
 MKC,607,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Gross profit,2592200000.0000,library map
 MKC,607,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income from consolidated operations before income taxes,913000000.0000,library map
 MKC,607,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Income tax expense,195800000.0000,library map
 MKC,607,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Interest expense,196200000.0000,library map
-MKC,607,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000063754-26-000037,,,,note-sourced default tag (no face line)
+MKC,607,interest_income,not_presented,,,,,,,,0000063754-26-000037,,,,no face line
 MKC,607,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000063754-26-000037,R5,Inventories,1272000000.0000,library map
 MKC,607,loans_net,OUT,,,,,,,,0000063754-26-000037,,,,not a bank
 MKC,607,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000063754-26-000037,R3,Net income,789400000.0000,library map

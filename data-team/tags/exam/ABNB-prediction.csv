@@ -1,5 +1,5 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-ABNB,112,accounts_payable,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
+ABNB,112,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0001559720-26-000004,R3,"Accrued expenses, accounts payable, and other current liabilities",2948000000.0000,combined line (library or label demote)
 ABNB,112,accounts_receivable,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001559720-26-000004,,,,note-sourced default tag (no face line)
 ABNB,112,basic_eps,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
@@ -21,20 +21,20 @@ ABNB,112,deposits,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,depreciation_and_amortization,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,diluted_eps,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,dividends_paid,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
-ABNB,112,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001559720-26-000004,,,,note-sourced default tag (no face line)
-ABNB,112,goodwill,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
+ABNB,112,dividends_per_share,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
+ABNB,112,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0001559720-26-000004,R3,"Goodwill and intangible assets, net",770000000.0000,combined line (library or label demote)
 ABNB,112,gross_profit,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Income before income taxes,3137000000.0000,library map
 ABNB,112,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Provision for (benefit from) income taxes,626000000.0000,library map
 ABNB,112,interest_expense,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
-ABNB,112,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001559720-26-000004,,,,note-sourced default tag (no face line)
+ABNB,112,interest_income,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,inventory,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
 ABNB,112,loans_net,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Net income,2511000000.0000,library map
 ABNB,112,net_interest_income,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,noninterest_expense,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
 ABNB,112,noninterest_income,OUT,,,,,,,,0001559720-26-000004,,,,not a bank
-ABNB,112,operating_expenses,not_presented,,,,,,,,0001559720-26-000004,,,,no face line
+ABNB,112,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Product development,2354000000.0000,printed opex lines (duration sum)
 ABNB,112,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001559720-26-000004,R5,Income from operations,2544000000.0000,library map
 ABNB,112,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0001559720-26-000004,R5,"Other expense, net",-112000000.0000,library map
 ABNB,112,ppe_net,not_presented,,,,,,,,0001559720-26-000004,,,,no face line

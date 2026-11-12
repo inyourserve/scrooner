@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+BLCO,945,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Accounts payable (Note 3),388000000.0000,library map
+BLCO,945,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,"Trade receivables, net",1221000000.0000,combined line (library or label demote)
+BLCO,945,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001860742-26-000007,,,,note-sourced default tag (no face line)
+BLCO,945,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001860742-26-000007,R5,Basic loss per share attributable to Bausch + Lomb Corporation (in usd per share),-1.0200,library map
+BLCO,945,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,"Purchases of property, plant and equipment",349000000.0000,library map
+BLCO,945,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Cash and cash equivalents,383000000.0000,library map
+BLCO,945,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,Net cash provided by financing activities,225000000.0000,library map
+BLCO,945,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001860742-26-000007,R8,Net cash used in investing activities,-455000000.0000,library map
+BLCO,945,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001860742-26-000007,,,,note-sourced default tag (no face line)
+BLCO,945,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001860742-26-000007,,,,note-sourced default tag (no face line)
+BLCO,945,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,"Accounts payable, accrued and other liabilities",108000000.0000,combined line (library or label demote)
+BLCO,945,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,Trade receivables,148000000.0000,library map
+BLCO,945,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-6,N,,sec_api,0001860742-26-000007,R8,Inventories,-38000000.0000,library map
+BLCO,945,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,Net cash provided by (used in) operating activities,283000000.0000,library map
+BLCO,945,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-6,N,,sec_api,0001860742-26-000007,R6,Comprehensive loss attributable to Bausch + Lomb Corporation,-159000000.0000,library map
+BLCO,945,cost_of_revenue,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Total current assets,2977000000.0000,library map
+BLCO,945,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Total current liabilities,1920000000.0000,library map
+BLCO,945,deposits,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,Depreciation and amortization of intangible assets,421000000.0000,library map
+BLCO,945,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001860742-26-000007,R5,Diluted loss per share attributable to Bausch + Lomb Corporation (in usd per share),-1.0200,library map
+BLCO,945,dividends_paid,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,dividends_per_share,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Goodwill,4758000000.0000,library map
+BLCO,945,gross_profit,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-6,N,,sec_api,0001860742-26-000007,R5,Loss before provision for income taxes,-317000000.0000,library map
+BLCO,945,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Provision for income taxes,35000000.0000,library map
+BLCO,945,interest_expense,not_presented,,,,,,,,0001860742-26-000007,,,,single component only
+BLCO,945,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Interest income,12000000.0000,library map
+BLCO,945,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,"Inventories, net",976000000.0000,library map
+BLCO,945,loans_net,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-6,N,,sec_api,0001860742-26-000007,R5,Net loss attributable to Bausch + Lomb Corporation,-360000000.0000,library map
+BLCO,945,net_interest_income,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,noninterest_expense,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,noninterest_income,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Total expenses,4988000000.0000,CostsAndExpenses value check (structural)
+BLCO,945,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Operating income,113000000.0000,library map
+BLCO,945,other_income_expense_net,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,"Property, plant and equipment, net",1762000000.0000,library map
+BLCO,945,provision_for_credit_losses,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Research and development,371000000.0000,library map
+BLCO,945,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,Total revenues,5101000000.0000,library map
+BLCO,945,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001860742-26-000007,R8,Share-based compensation,149000000.0000,library map
+BLCO,945,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001860742-26-000007,R5,"Selling, general and administrative (Note 3)",2234000000.0000,library map
+BLCO,945,share_buybacks,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001860742-26-000007,R4,"Common shares, outstanding (in shares)",354209319.0000,library map
+BLCO,945,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Total Bausch + Lomb Corporation shareholders equity,6448000000.0000,library map
+BLCO,945,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Total assets,14022000000.0000,library map
+BLCO,945,total_debt,not_presented,,,,,,,,0001860742-26-000007,,,,no face line
+BLCO,945,total_interest_income,OUT,,,,,,,,0001860742-26-000007,,,,not a bank
+BLCO,945,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001860742-26-000007,R3,Total liabilities,7503000000.0000,library map
+BLCO,945,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001860742-26-000007,R5,Basic weighted-average common shares (in shares),353800000.0000,library map
+BLCO,945,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001860742-26-000007,R5,Diluted weighted-average common shares (in shares),353800000.0000,library map

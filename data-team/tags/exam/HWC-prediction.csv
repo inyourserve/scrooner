@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+HWC,946,accounts_payable,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,accounts_receivable,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Amortization of intangibles,9953000.0000,library map
+HWC,946,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-077903,R4,Earnings per common share - basic,5.7000,library map
+HWC,946,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Purchases of property and equipment,18720000.0000,library map
+HWC,946,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Cash and due from banks,562995000.0000,combined line (library or label demote)
+HWC,946,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-077903,R8,Net cash used in financing activities,-239337000.0000,library map
+HWC,946,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-077903,R8,Net cash provided by (used in) investing activities,-314356000.0000,library map
+HWC,946,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Income taxes paid (net of refunds received),103142000.0000,library map
+HWC,946,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Interest paid,511358000.0000,library map
+HWC,946,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,-,-3,N,,sec_api,0001193125-26-077903,R8,Increase (decrease) in interest payable and other liabilities,-15910000.0000,combined line (library or label demote)
+HWC,946,cf_ar_change,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,cf_inventory_change,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Net cash provided by operating activities,541778000.0000,library map
+HWC,946,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001193125-26-077903,R5,Comprehensive income,715914000.0000,library map
+HWC,946,cost_of_revenue,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,current_assets,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,current_liabilities,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,deposits,mapped,us-gaap:Deposits,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Total deposits,29279774000.0000,bank template tag
+HWC,946,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Depreciation and amortization,27314000.0000,library map
+HWC,946,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-077903,R4,Earnings per common share - diluted,5.6700,library map
+HWC,946,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Dividends paid,153803000.0000,library map
+HWC,946,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,IS,+,2,N,,sec_api,0001193125-26-077903,R4,Dividends paid per share,1.8000,library map
+HWC,946,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Goodwill,925404000.0000,library map
+HWC,946,gross_profit,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Income before income taxes,612395000.0000,library map
+HWC,946,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Income tax expense,126322000.0000,library map
+HWC,946,interest_expense,mapped,us-gaap:InterestExpenseOperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-077903,R4,Total interest expense,505848000.0000,library map
+HWC,946,interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Total interest income,1614620000.0000,library map
+HWC,946,inventory,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,loans_net,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,net_income,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,net_interest_income,mapped,us-gaap:InterestIncomeExpenseNet,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Net interest income,1108772000.0000,bank template tag
+HWC,946,noninterest_expense,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Total noninterest expense,851641000.0000,bank template tag
+HWC,946,noninterest_income,mapped,us-gaap:NoninterestIncome,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Total noninterest income,406447000.0000,bank template tag
+HWC,946,operating_expenses,mapped,us-gaap:NoninterestExpense,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Total noninterest expense,851641000.0000,printed opex total tag
+HWC,946,operating_income,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,other_income_expense_net,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,"Property and equipment, net of accumulated depreciation of $370,818 and $345,962",261181000.0000,library map
+HWC,946,provision_for_credit_losses,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,research_and_development,OUT,,,,,,,,0001193125-26-077903,,,,sector template (bank/insurer)
+HWC,946,revenue,not_presented,,,,,,,,0001193125-26-077903,,,,single component only
+HWC,946,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Stock-based compensation expense,24444000.0000,library map
+HWC,946,sga_expense,not_presented,,,,,,,,0001193125-26-077903,,,,no face line
+HWC,946,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001193125-26-077903,R8,Other repurchases of common stock,246874000.0000,library map
+HWC,946,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Common shares outstanding,82259000.0000,library map
+HWC,946,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Total stockholders' equity,4460117000.0000,library map
+HWC,946,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Total assets,35472762000.0000,library map
+HWC,946,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Short-term borrowings,1017292000.0000,printed face components (duration sum; total_debt founder sum)
+HWC,946,total_interest_income,mapped,us-gaap:InterestAndDividendIncomeOperating,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Total interest income,1614620000.0000,bank template tag
+HWC,946,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-077903,R2,Total liabilities,31012645000.0000,library map
+HWC,946,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Weighted average shares outstanding - basic,84905000.0000,library map
+HWC,946,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-077903,R4,Weighted average shares outstanding - diluted,85440000.0000,library map

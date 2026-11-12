@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CCL,304,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0000815097-26-000007,R5,Accounts payable,1245000000.0000,library map
-CCL,304,accounts_receivable,not_presented,,,,,,,,0000815097-26-000007,,,,no face line
+CCL,304,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000815097-26-000007,R5,"Trade and other receivables, net",678000000.0000,combined line (library or label demote)
 CCL,304,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000815097-26-000007,,,,note-sourced default tag (no face line)
 CCL,304,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000815097-26-000007,R3,Basic (in dollars per share),2.1000,library map
 CCL,304,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000815097-26-000007,R7,Purchases of property and equipment,3611000000.0000,library map
@@ -21,7 +21,7 @@ CCL,304,deposits,OUT,,,,,,,,0000815097-26-000007,,,,not a bank
 CCL,304,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000815097-26-000007,R7,Depreciation and amortization,2790000000.0000,library map
 CCL,304,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000815097-26-000007,R3,Diluted (in dollars per share),2.0200,library map
 CCL,304,dividends_paid,not_presented,,,,,,,,0000815097-26-000007,,,,no face line
-CCL,304,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000815097-26-000007,,,,note-sourced default tag (no face line)
+CCL,304,dividends_per_share,not_presented,,,,,,,,0000815097-26-000007,,,,no face line
 CCL,304,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000815097-26-000007,R5,Goodwill,579000000.0000,library map
 CCL,304,gross_profit,not_presented,,,,,,,,0000815097-26-000007,,,,no face line
 CCL,304,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,Y,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,sec_api,0000815097-26-000007,R3,Income (Loss) Before Income Taxes,2772000000.0000,library map

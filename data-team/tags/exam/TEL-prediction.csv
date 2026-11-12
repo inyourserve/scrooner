@@ -21,13 +21,13 @@ TEL,202,deposits,OUT,,,,,,,,0001104659-25-109150,,,,not a bank
 TEL,202,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001104659-25-109150,R7,Depreciation and amortization,838000000.0000,library map
 TEL,202,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-25-109150,R2,Net income (in dollars per share),6.1600,library map
 TEL,202,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001104659-25-109150,R7,Payment of ordinary/common share dividends to shareholders,803000000.0000,library map
-TEL,202,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001104659-25-109150,,,,note-sourced default tag (no face line)
+TEL,202,dividends_per_share,not_presented,,,,,,,,0001104659-25-109150,,,,no face line
 TEL,202,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001104659-25-109150,R4,Goodwill,7126000000.0000,library map
 TEL,202,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001104659-25-109150,R2,Gross margin,6079000000.0000,library map
 TEL,202,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001104659-25-109150,R2,Income from continuing operations before income taxes,3204000000.0000,library map
 TEL,202,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001104659-25-109150,R2,Income tax (expense) benefit,1361000000.0000,library map
 TEL,202,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001104659-25-109150,R2,Interest expense,77000000.0000,library map
-TEL,202,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-25-109150,,,,note-sourced default tag (no face line)
+TEL,202,interest_income,combined,us-gaap:InterestIncomeOther,IS,+,-6,N,,sec_api,0001104659-25-109150,R2,Interest income,83000000.0000,combined line (library or label demote)
 TEL,202,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001104659-25-109150,R4,Inventories,2699000000.0000,library map
 TEL,202,loans_net,OUT,,,,,,,,0001104659-25-109150,,,,not a bank
 TEL,202,net_income,not_presented,,,,,,,,0001104659-25-109150,,,,no face line

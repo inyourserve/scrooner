@@ -10,7 +10,7 @@ PNW,604,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActiv
 PNW,604,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
 PNW,604,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
 PNW,604,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Accounts payable,171138000.0000,library map
-PNW,604,cf_ar_change,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
+PNW,604,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Customer and other receivables,51275000.0000,combined line (library or label demote)
 PNW,604,cf_inventory_change,combined,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,"Materials, supplies and fossil fuel",63711000.0000,combined line (library or label demote)
 PNW,604,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000764622-26-000011,R8,Net cash provided by operating activities,1805095000.0000,library map
 PNW,604,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000764622-26-000011,R4,COMPREHENSIVE INCOME ATTRIBUTABLE TO COMMON SHAREHOLDERS,615065000.0000,library map
@@ -27,7 +27,7 @@ PNW,604,gross_profit,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,income_before_tax,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000764622-26-000011,R3,Income Taxes (Note 5),106726000.0000,library map
 PNW,604,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,CostsAndExpenses,sec_api,0000764622-26-000011,R3,Total,421968000.0000,library map
-PNW,604,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000764622-26-000011,,,,note-sourced default tag (no face line)
+PNW,604,interest_income,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,inventory,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,loans_net,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,net_income,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
@@ -36,7 +36,7 @@ PNW,604,noninterest_expense,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,noninterest_income,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,operating_expenses,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
 PNW,604,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000764622-26-000011,R3,OPERATING INCOME,1067630000.0000,library map
-PNW,604,other_income_expense_net,not_presented,,,,,,,,0000764622-26-000011,,,,no face line
+PNW,604,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,Y,CostsAndExpenses,sec_api,0000764622-26-000011,R3,Total,92707000.0000,combined line (library or label demote)
 PNW,604,ppe_net,mapped,us-gaap:PublicUtilitiesPropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000764622-26-000011,R6,"Total property, plant and equipment",20720104000.0000,library map
 PNW,604,provision_for_credit_losses,OUT,,,,,,,,0000764622-26-000011,,,,not a bank
 PNW,604,research_and_development,not_presented,,,,,,,,0000764622-26-000011,,,,no face line

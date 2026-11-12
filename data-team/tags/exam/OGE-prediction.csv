@@ -27,16 +27,16 @@ OGE,705,gross_profit,not_presented,,,,,,,,0001193125-26-055414,,,,no face line
 OGE,705,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,INCOME BEFORE TAXES,560500000.0000,library map
 OGE,705,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,INCOME TAX EXPENSE,89800000.0000,library map
 OGE,705,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Interest expense,270300000.0000,library map
-OGE,705,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001193125-26-055414,,,,note-sourced default tag (no face line)
+OGE,705,interest_income,not_presented,,,,,,,,0001193125-26-055414,,,,no face line
 OGE,705,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,Fuel inventories,112000000.0000,library map
 OGE,705,loans_net,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
 OGE,705,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,NET INCOME,470700000.0000,library map
 OGE,705,net_interest_income,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
 OGE,705,noninterest_expense,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
 OGE,705,noninterest_income,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
-OGE,705,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Operating expenses,1200800000.0000,library map
+OGE,705,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Operating expenses,1200800000.0000,printed opex total tag
 OGE,705,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,OPERATING INCOME,799400000.0000,library map
-OGE,705,other_income_expense_net,not_presented,,,,,,,,0001193125-26-055414,,,,no face line
+OGE,705,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncome,IS,+,-5,N,,sec_api,0001193125-26-055414,R2,Other income,39400000.0000,combined line (library or label demote)
 OGE,705,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-055414,R7,"Net property, plant and equipment",12730400000.0000,library map
 OGE,705,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-055414,,,,not a bank
 OGE,705,research_and_development,not_presented,,,,,,,,0001193125-26-055414,,,,no face line

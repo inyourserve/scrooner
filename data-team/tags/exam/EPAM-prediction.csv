@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+EPAM,903,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Accounts payable,55329000.0000,library map
+EPAM,903,accounts_receivable,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001352010-26-000015,,,,note-sourced default tag (no face line)
+EPAM,903,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001352010-26-000015,R5,Basic (in dollars per share),6.7600,library map
+EPAM,903,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001352010-26-000015,R8,Purchases of property and equipment,42243000.0000,library map
+EPAM,903,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Cash and cash equivalents,1296077000.0000,library map
+EPAM,903,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001352010-26-000015,R8,Net cash used in financing activities,-651200000.0000,library map
+EPAM,903,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001352010-26-000015,R8,Net cash used in investing activities,-49047000.0000,library map
+EPAM,903,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001352010-26-000015,,,,note-sourced default tag (no face line)
+EPAM,903,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001352010-26-000015,R8,Interest,1397000.0000,library map
+EPAM,903,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001352010-26-000015,R8,Accounts payable,-12683000.0000,library map
+EPAM,903,cf_ar_change,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,cf_inventory_change,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001352010-26-000015,R8,Net cash provided by operating activities,654934000.0000,library map
+EPAM,903,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001352010-26-000015,R6,Comprehensive income,513087000.0000,library map
+EPAM,903,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Cost of revenues (exclusive of depreciation and amortization),3883535000.0000,library map
+EPAM,903,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Total current assets,2533888000.0000,library map
+EPAM,903,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Total current liabilities,976942000.0000,library map
+EPAM,903,deposits,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Depreciation and amortization expense,124811000.0000,library map
+EPAM,903,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001352010-26-000015,R5,Diluted (in dollars per share),6.7200,library map
+EPAM,903,dividends_paid,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,dividends_per_share,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Goodwill,1210564000.0000,library map
+EPAM,903,gross_profit,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Income before provision for income taxes,505624000.0000,library map
+EPAM,903,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Provision for income taxes,127946000.0000,library map
+EPAM,903,interest_expense,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,interest_income,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,inventory,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,loans_net,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Net income,377678000.0000,library map
+EPAM,903,net_interest_income,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,noninterest_expense,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,noninterest_income,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,operating_expenses,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Income from operations,520003000.0000,library map
+EPAM,903,other_income_expense_net,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,"Property and equipment, net",202387000.0000,library map
+EPAM,903,provision_for_credit_losses,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,research_and_development,not_presented,,,,,,,,0001352010-26-000015,,,,no face line
+EPAM,903,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Revenues,5457056000.0000,library map
+EPAM,903,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001352010-26-000015,R8,Stock-based compensation expense,176764000.0000,library map
+EPAM,903,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,"Selling, general and administrative expenses",928707000.0000,library map
+EPAM,903,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001352010-26-000015,R8,Repurchase of common stock,662159000.0000,library map
+EPAM,903,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001352010-26-000015,R4,"Common stock, shares outstanding (in shares)",54274000.0000,library map
+EPAM,903,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,"Total EPAM Systems, Inc. stockholders equity",3677226000.0000,library map
+EPAM,903,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Total assets,4902136000.0000,library map
+EPAM,903,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Long-term debt,25034000.0000,printed face components (duration sum; total_debt founder sum)
+EPAM,903,total_interest_income,OUT,,,,,,,,0001352010-26-000015,,,,not a bank
+EPAM,903,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001352010-26-000015,R3,Total liabilities,1224328000.0000,library map
+EPAM,903,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Basic (in shares),55893000.0000,library map
+EPAM,903,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001352010-26-000015,R5,Diluted (in shares),56233000.0000,library map

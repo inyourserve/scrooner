@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-PPG,402,accounts_payable,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
-PPG,402,accounts_receivable,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
+PPG,402,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Accounts payable and accrued liabilities,3957000000.0000,combined line (library or label demote)
+PPG,402,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Receivables,3336000000.0000,combined line (library or label demote)
 PPG,402,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0000079879-26-000046,R3,Amortization,125000000.0000,library map
 PPG,402,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000079879-26-000046,R3,Net Income (attributable to PPG) (in dollars per share),6.9600,library map
 PPG,402,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Capital expenditures,778000000.0000,library map
@@ -9,7 +9,7 @@ PPG,402,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 PPG,402,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,CF,-,-6,N,,sec_api,0000079879-26-000046,R7,Cash used for investing activities - continuing operations,-700000000.0000,library map
 PPG,402,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,"Taxes paid, net of refunds",438000000.0000,library map
 PPG,402,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,"Interest paid, net of amount capitalized",210000000.0000,library map
-PPG,402,cf_ap_change,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
+PPG,402,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Accounts payable and accrued liabilities,67000000.0000,combined line (library or label demote)
 PPG,402,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Receivables,190000000.0000,library map
 PPG,402,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Inventories,35000000.0000,library map
 PPG,402,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Cash from operating activities,1941000000.0000,library map
@@ -21,7 +21,7 @@ PPG,402,deposits,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Depreciation and amortization,528000000.0000,library map
 PPG,402,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0000079879-26-000046,R3,Net Income (attributable to PPG) (in dollars per share),6.9400,library map
 PPG,402,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0000079879-26-000046,R7,Dividends paid on PPG common stock,628000000.0000,library map
-PPG,402,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0000079879-26-000046,,,,note-sourced default tag (no face line)
+PPG,402,dividends_per_share,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
 PPG,402,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,Goodwill,6149000000.0000,library map
 PPG,402,gross_profit,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
 PPG,402,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0000079879-26-000046,R3,Income before income taxes,2045000000.0000,library map
@@ -34,7 +34,7 @@ PPG,402,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0000079879-26
 PPG,402,net_interest_income,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,noninterest_expense,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
 PPG,402,noninterest_income,OUT,,,,,,,,0000079879-26-000046,,,,not a bank
-PPG,402,operating_expenses,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
+PPG,402,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0000079879-26-000046,R3,"Selling, general and administrative",3439000000.0000,printed opex lines (duration sum)
 PPG,402,operating_income,not_presented,,,,,,,,0000079879-26-000046,,,,no face line
 PPG,402,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-6,N,,sec_api,0000079879-26-000046,R3,"Other charges/(income), net",-6000000.0000,library map
 PPG,402,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0000079879-26-000046,R5,"Property, plant and equipment, net",4005000000.0000,library map

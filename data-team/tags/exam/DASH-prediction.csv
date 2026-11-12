@@ -21,20 +21,20 @@ DASH,154,deposits,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001792789-26-000013,R8,Depreciation and amortization,747000000.0000,library map
 DASH,154,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001792789-26-000013,R5,Diluted (in $ per share),2.1300,library map
 DASH,154,dividends_paid,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
-DASH,154,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001792789-26-000013,,,,note-sourced default tag (no face line)
+DASH,154,dividends_per_share,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
 DASH,154,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,Goodwill,5519000000.0000,library map
 DASH,154,gross_profit,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
 DASH,154,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Income (loss) before income taxes,939000000.0000,library map
 DASH,154,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Provision for income taxes,7000000.0000,library map
 DASH,154,interest_expense,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
-DASH,154,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001792789-26-000013,,,,note-sourced default tag (no face line)
+DASH,154,interest_income,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
 DASH,154,inventory,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
 DASH,154,loans_net,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,"Net income (loss) attributable to DoorDash, Inc. common stockholders",935000000.0000,library map
 DASH,154,net_interest_income,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,noninterest_expense,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,noninterest_income,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
-DASH,154,operating_expenses,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
+DASH,154,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Sales and marketing,2476000000.0000,printed opex lines (duration sum)
 DASH,154,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,Income (loss) from operations,723000000.0000,library map
 DASH,154,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001792789-26-000013,R5,"Other income (expense), net",5000000.0000,library map
 DASH,154,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,"Property and equipment, net",1067000000.0000,library map
@@ -47,7 +47,7 @@ DASH,154,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-
 DASH,154,shares_outstanding,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
 DASH,154,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,Total stockholders equity,10033000000.0000,library map
 DASH,154,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,Total assets,19659000000.0000,library map
-DASH,154,total_debt,not_presented,,,,,,,,0001792789-26-000013,,,,no face line
+DASH,154,total_debt,combined,us-gaap:ConvertibleLongTermNotesPayable,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,"Convertible notes, net",2724000000.0000,combined line (library or label demote)
 DASH,154,total_interest_income,OUT,,,,,,,,0001792789-26-000013,,,,not a bank
 DASH,154,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001792789-26-000013,R3,Total liabilities,9613000000.0000,library map
 DASH,154,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001792789-26-000013,R5,Basic (in shares),427043000.0000,library map

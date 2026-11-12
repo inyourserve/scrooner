@@ -9,7 +9,7 @@ PCAR,210,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActi
 PCAR,210,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Used in Investing Activities,-2267200000.0000,library map
 PCAR,210,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
 PCAR,210,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
-PCAR,210,cf_ap_change,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
+PCAR,210,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Accounts payable and accrued expenses,-432600000.0000,combined line (library or label demote)
 PCAR,210,cf_ar_change,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Inventories,-296400000.0000,library map
 PCAR,210,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Provided by Operating Activities,4415800000.0000,library map
@@ -27,21 +27,21 @@ PCAR,210,gross_profit,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Total Income Before Income Taxes,3023500000.0000,library map
 PCAR,210,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Income taxes,647700000.0000,library map
 PCAR,210,interest_expense,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
+PCAR,210,interest_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,inventory,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,loans_net,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Net Income,2375800000.0000,library map
 PCAR,210,net_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,noninterest_expense,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,noninterest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,operating_expenses,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
+PCAR,210,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,printed opex lines (duration sum)
 PCAR,210,operating_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-057025,R2,"Interest and other expenses (income), net",-284300000.0000,combined line (library or label demote)
 PCAR,210,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,"Property, plant and equipment, net",4505300000.0000,library map
 PCAR,210,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
 PCAR,210,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,library map
 PCAR,210,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Revenues,28444800000.0000,library map
-PCAR,210,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
+PCAR,210,sbc,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
 PCAR,210,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,"Selling, general and administrative",735800000.0000,library map
 PCAR,210,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Purchases of treasury stock,36100000.0000,library map
 PCAR,210,shares_outstanding,not_presented,,,,,,,,0001193125-26-057025,,,,no face line

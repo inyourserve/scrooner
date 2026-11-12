@@ -9,7 +9,7 @@ HCA,115,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 HCA,115,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-044769,R8,Net cash used in investing activities,-4988000000.0000,library map
 HCA,115,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,"Income tax payments, net",1740000000.0000,library map
 HCA,115,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,Interest payments,2207000000.0000,library map
-HCA,115,cf_ap_change,not_presented,,,,,,,,0001193125-26-044769,,,,no face line
+HCA,115,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,Accounts payable and accrued expenses,666000000.0000,combined line (library or label demote)
 HCA,115,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,Accounts receivable,94000000.0000,library map
 HCA,115,cf_inventory_change,not_presented,,,,,,,,0001193125-26-044769,,,,no face line
 HCA,115,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,Net cash provided by operating activities,12636000000.0000,library map
@@ -22,12 +22,12 @@ HCA,115,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmo
 HCA,115,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-044769,R2,Diluted earnings per share,28.3300,library map
 HCA,115,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001193125-26-044769,R8,Payment of dividends,679000000.0000,library map
 HCA,115,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001193125-26-044769,R7,"Cash dividends declared, per share",2.8800,library map
-HCA,115,goodwill,not_presented,,,,,,,,0001193125-26-044769,,,,no face line
+HCA,115,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-6,N,,sec_api,0001193125-26-044769,R4,Goodwill and other intangible assets,10293000000.0000,combined line (library or label demote)
 HCA,115,gross_profit,not_presented,,,,,,,,0001193125-26-044769,,,,no face line
 HCA,115,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-044769,R2,Income before income taxes,9832000000.0000,library map
 HCA,115,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-044769,R2,Provision for income taxes,2050000000.0000,library map
 HCA,115,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001193125-26-044769,R2,Interest expense,2248000000.0000,library map
-HCA,115,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001193125-26-044769,,,,note-sourced default tag (no face line)
+HCA,115,interest_income,not_presented,,,,,,,,0001193125-26-044769,,,,no face line
 HCA,115,inventory,mapped,us-gaap:InventoryNet,BS,+,-6,N,,sec_api,0001193125-26-044769,R4,Inventories,1652000000.0000,library map
 HCA,115,loans_net,OUT,,,,,,,,0001193125-26-044769,,,,not a bank
 HCA,115,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-044769,R2,"Net income attributable to HCA Healthcare, Inc.",6784000000.0000,library map

@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 CLS,305,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,Accounts payable,1866100000.0000,library map
-CLS,305,accounts_receivable,not_presented,,,,,,,,0001030894-26-000011,,,,no face line
+CLS,305,accounts_receivable,combined,us-gaap:AccountsAndOtherReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,"Accounts receivable, net",2638100000.0000,combined line (library or label demote)
 CLS,305,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Amortization of intangible assets,45600000.0000,library map
 CLS,305,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001030894-26-000011,R5,Basic (in dollars per share),7.2200,library map
 CLS,305,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001030894-26-000011,R9,"Purchase of property, plant and equipment",201200000.0000,library map
@@ -21,20 +21,20 @@ CLS,305,deposits,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001030894-26-000011,R9,Depreciation and amortization,175700000.0000,library map
 CLS,305,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001030894-26-000011,R5,Diluted (in dollars per share),7.1600,library map
 CLS,305,dividends_paid,not_presented,,,,,,,,0001030894-26-000011,,,,no face line
-CLS,305,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001030894-26-000011,,,,note-sourced default tag (no face line)
+CLS,305,dividends_per_share,not_presented,,,,,,,,0001030894-26-000011,,,,no face line
 CLS,305,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,Goodwill,333100000.0000,library map
 CLS,305,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Gross profit,1494100000.0000,library map
 CLS,305,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Earnings before income taxes,983200000.0000,library map
 CLS,305,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Income tax expense,150700000.0000,library map
 CLS,305,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Finance costs,52600000.0000,library map
-CLS,305,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001030894-26-000011,,,,note-sourced default tag (no face line)
+CLS,305,interest_income,not_presented,,,,,,,,0001030894-26-000011,,,,no face line
 CLS,305,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,Inventories,2188000000.0000,library map
 CLS,305,loans_net,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Net earnings,832500000.0000,library map
 CLS,305,net_interest_income,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,noninterest_expense,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
 CLS,305,noninterest_income,OUT,,,,,,,,0001030894-26-000011,,,,not a bank
-CLS,305,operating_expenses,not_presented,,,,,,,,0001030894-26-000011,,,,no face line
+CLS,305,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,"Selling, general and administrative expenses",259900000.0000,printed opex lines (duration sum)
 CLS,305,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001030894-26-000011,R5,Earnings from operations,1040700000.0000,library map
 CLS,305,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001030894-26-000011,R5,Miscellaneous expense (income),-4900000.0000,library map
 CLS,305,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001030894-26-000011,R3,"Property, plant and equipment, net",586000000.0000,library map

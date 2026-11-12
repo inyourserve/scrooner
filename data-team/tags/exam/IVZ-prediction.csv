@@ -1,5 +1,5 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-IVZ,609,accounts_payable,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
+IVZ,609,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrentAndNoncurrent,BS,+,-5,N,,sec_api,0000914208-26-000079,R3,Accounts payable and accrued expenses,1303700000.0000,combined line (library or label demote)
 IVZ,609,accounts_receivable,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000914208-26-000079,,,,note-sourced default tag (no face line)
 IVZ,609,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0000914208-26-000079,R5,-basic (in usd per share),-1.6000,library map
@@ -9,8 +9,8 @@ IVZ,609,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActiv
 IVZ,609,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000914208-26-000079,R7,Net cash provided by/(used in) investing activities,-974400000.0000,library map
 IVZ,609,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0000914208-26-000079,R7,Taxes paid,238700000.0000,library map
 IVZ,609,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000914208-26-000079,R7,Interest paid,77200000.0000,library map
-IVZ,609,cf_ap_change,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
-IVZ,609,cf_ar_change,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
+IVZ,609,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities,CF,-,-5,N,,sec_api,0000914208-26-000079,R7,Increase/(decrease) in payables and other liabilities,-210800000.0000,combined line (library or label demote)
+IVZ,609,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets,CF,+,-5,N,,sec_api,0000914208-26-000079,R7,(Increase)/decrease in receivables and other assets,5600000.0000,combined line (library or label demote)
 IVZ,609,cf_inventory_change,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000914208-26-000079,R7,Net cash provided by/(used in) operating activities,1525300000.0000,library map
 IVZ,609,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-5,Y,ComprehensiveIncomeNetOfTaxBasic,sec_api,0000914208-26-000079,R6,Comprehensive income/(loss) attributable to Invesco Ltd.,-413100000.0000,library map
@@ -27,14 +27,14 @@ IVZ,609,gross_profit,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-5,N,,sec_api,0000914208-26-000079,R5,Income/(loss) before income taxes,-379400000.0000,library map
 IVZ,609,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-5,N,,sec_api,0000914208-26-000079,R5,Income tax benefit/(provision),-204600000.0000,library map
 IVZ,609,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-5,Y,InterestExpense,sec_api,0000914208-26-000079,R5,Interest expense,82500000.0000,library map
-IVZ,609,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000914208-26-000079,,,,note-sourced default tag (no face line)
+IVZ,609,interest_income,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,inventory,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,loans_net,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
 IVZ,609,net_income,not_presented,,,,,,,,0000914208-26-000079,,,,no face line
 IVZ,609,net_interest_income,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
 IVZ,609,noninterest_expense,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
 IVZ,609,noninterest_income,OUT,,,,,,,,0000914208-26-000079,,,,not a bank
-IVZ,609,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0000914208-26-000079,R5,Total operating expenses,7072800000.0000,library map
+IVZ,609,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0000914208-26-000079,R5,Total operating expenses,7072800000.0000,printed opex total tag
 IVZ,609,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-5,N,,sec_api,0000914208-26-000079,R5,Operating income/(loss),-695700000.0000,library map
 IVZ,609,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0000914208-26-000079,R5,"Other gains/(losses), net",55900000.0000,library map
 IVZ,609,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000914208-26-000079,R3,"Property, equipment and software, net",378900000.0000,library map

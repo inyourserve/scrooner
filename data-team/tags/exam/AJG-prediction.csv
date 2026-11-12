@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+AJG,188,accounts_payable,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,"Accounts receivable, net",5175000000.0000,library map
+AJG,188,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-008662,,,,note-sourced default tag (no face line)
+AJG,188,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-008662,R3,Basic net earnings per share (in dollars per share),5.8300,library map
+AJG,188,capex,combined,us-gaap:PaymentsForCapitalImprovements,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Capital expenditures,145000000.0000,combined line (library or label demote)
+AJG,188,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-6,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0001628280-26-008662,R5,Cash and cash equivalents,1396000000.0000,combined line (library or label demote)
+AJG,188,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Net cash provided by financing activities,1713000000.0000,library map
+AJG,188,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-008662,R7,Net cash used by investing activities,-15876000000.0000,library map
+AJG,188,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-008662,,,,note-sourced default tag (no face line)
+AJG,188,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-008662,,,,note-sourced default tag (no face line)
+AJG,188,cf_ap_change,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,"Net change in accounts receivable, net",278000000.0000,library map
+AJG,188,cf_inventory_change,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Net cash provided by operating activities,1930000000.0000,library map
+AJG,188,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-008662,R4,Comprehensive earnings attributable to controlling interests,2120000000.0000,library map
+AJG,188,cost_of_revenue,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Total current assets,34356000000.0000,library map
+AJG,188,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Total current liabilities,32519000000.0000,library map
+AJG,188,deposits,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Depreciation and amortization,1122000000.0000,library map
+AJG,188,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-008662,R3,Diluted net earnings per share (in dollars per share),5.7400,library map
+AJG,188,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Dividends paid,667000000.0000,library map
+AJG,188,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,IS,+,2,N,,sec_api,0001628280-26-008662,R3,Dividends declared per common share (in dollars per share),2.6000,library map
+AJG,188,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Goodwill - net,22593000000.0000,library map
+AJG,188,gross_profit,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Total earnings before income taxes,1871000000.0000,library map
+AJG,188,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Provision for income taxes,368000000.0000,library map
+AJG,188,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Interest,639000000.0000,library map
+AJG,188,interest_income,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,inventory,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,loans_net,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Net earnings attributable to controlling interests,1494000000.0000,library map
+AJG,188,net_interest_income,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,noninterest_expense,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,noninterest_income,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Operating,2258000000.0000,printed opex total tag
+AJG,188,operating_income,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,other_income_expense_net,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Fixed assets - net,789000000.0000,library map
+AJG,188,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,research_and_development,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001628280-26-008662,R3,Total revenues,13942000000.0000,library map
+AJG,188,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001628280-26-008662,R7,Stock-based and other noncash compensation expense,49000000.0000,library map
+AJG,188,sga_expense,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,share_buybacks,not_presented,,,,,,,,0001628280-26-008662,,,,no face line
+AJG,188,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001628280-26-008662,R6,Common stock - outstanding shares (in shares),257000000.0000,library map
+AJG,188,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Stockholders' equity attributable to controlling interests,23321000000.0000,library map
+AJG,188,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Total assets,70665000000.0000,library map
+AJG,188,total_debt,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtNoncurrent,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Corporate related borrowings - current,640000000.0000,printed face components (duration sum; total_debt founder sum)
+AJG,188,total_interest_income,OUT,,,,,,,,0001628280-26-008662,,,,not a bank
+AJG,188,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001628280-26-008662,R5,Total liabilities,47318000000.0000,library map
+AJG,188,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-008662,,,,note-sourced default tag (no face line)
+AJG,188,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-008662,,,,note-sourced default tag (no face line)

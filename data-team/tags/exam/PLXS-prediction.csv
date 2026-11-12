@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+PLXS,924,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Accounts payable,726597000.0000,library map
+PLXS,924,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,"Accounts receivable, net of allowances of $2,381 and $3,189, respectively",656573000.0000,library map
+PLXS,924,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000785786-25-000064,,,,note-sourced default tag (no face line)
+PLXS,924,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000785786-25-000064,R2,Basic (in dollars per share),6.3900,library map
+PLXS,924,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,"Payments for property, plant and equipment",95264000.0000,library map
+PLXS,924,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Cash and cash equivalents,306464000.0000,library map
+PLXS,924,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000785786-25-000064,R6,Cash flows used in financing activities,-196404000.0000,library map
+PLXS,924,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000785786-25-000064,R6,Cash flows used in investing activities,-95611000.0000,library map
+PLXS,924,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Income taxes paid,44782000.0000,library map
+PLXS,924,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Interest paid,12339000.0000,library map
+PLXS,924,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Accounts payable,98644000.0000,library map
+PLXS,924,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Accounts receivable,30749000.0000,library map
+PLXS,924,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0000785786-25-000064,R6,Inventories,-84862000.0000,library map
+PLXS,924,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Cash flows provided by operating activities,249231000.0000,library map
+PLXS,924,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Total comprehensive income,180082000.0000,library map
+PLXS,924,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Cost of sales,3626452000.0000,library map
+PLXS,924,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Total current assets,2398793000.0000,library map
+PLXS,924,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Total current liabilities,1518683000.0000,library map
+PLXS,924,deposits,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Depreciation and amortization,77792000.0000,library map
+PLXS,924,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000785786-25-000064,R2,Diluted (in dollars per share),6.2600,library map
+PLXS,924,dividends_paid,not_presented,,,,,,,,0000785786-25-000064,,,,no face line
+PLXS,924,dividends_per_share,not_presented,,,,,,,,0000785786-25-000064,,,,no face line
+PLXS,924,goodwill,not_presented,,,,,,,,0000785786-25-000064,,,,no face line
+PLXS,924,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Gross profit,406514000.0000,library map
+PLXS,924,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Income before income taxes,188018000.0000,library map
+PLXS,924,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Income tax expense,15133000.0000,library map
+PLXS,924,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Interest expense,11605000.0000,library map
+PLXS,924,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Interest income,3922000.0000,library map
+PLXS,924,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Inventories,1229839000.0000,library map
+PLXS,924,loans_net,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Net income,172885000.0000,library map
+PLXS,924,net_interest_income,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,noninterest_expense,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,noninterest_income,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCharges,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Selling and administrative expenses,199460000.0000,printed opex lines (duration sum)
+PLXS,924,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Operating income,202371000.0000,library map
+PLXS,924,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000785786-25-000064,R2,"Miscellaneous, net",-6670000.0000,library map
+PLXS,924,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,"Property, plant and equipment, net",546052000.0000,library map
+PLXS,924,provision_for_credit_losses,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,research_and_development,not_presented,,,,,,,,0000785786-25-000064,,,,no face line
+PLXS,924,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Net sales,4032966000.0000,library map
+PLXS,924,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Share-based compensation expense and related charges,30268000.0000,library map
+PLXS,924,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Selling and administrative expenses,199460000.0000,library map
+PLXS,924,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000785786-25-000064,R6,Repurchases of common stock,65336000.0000,library map
+PLXS,924,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0000785786-25-000064,R4,"Common stock, shares outstanding (in shares)",26828000.0000,library map
+PLXS,924,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Total shareholders equity,1454588000.0000,library map
+PLXS,924,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Total assets,3137110000.0000,library map
+PLXS,924,total_debt,not_presented,,,,,,,,0000785786-25-000064,,,,no face line
+PLXS,924,total_interest_income,OUT,,,,,,,,0000785786-25-000064,,,,not a bank
+PLXS,924,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000785786-25-000064,R3,Total liabilities,1682522000.0000,library map
+PLXS,924,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Basic (in shares),27038000.0000,library map
+PLXS,924,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000785786-25-000064,R2,Diluted (in shares),27616000.0000,library map

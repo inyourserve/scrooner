@@ -1,6 +1,6 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 TT,116,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001628280-26-005731,R5,Accounts payable,2153900000.0000,library map
-TT,116,accounts_receivable,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
+TT,116,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001628280-26-005731,R5,"Accounts and notes receivable, net",3235300000.0000,combined line (library or label demote)
 TT,116,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-005731,,,,note-sourced default tag (no face line)
 TT,116,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-005731,R3,Net earnings,13.0900,library map
 TT,116,capex,mapped,us-gaap:PaymentsToAcquireProductiveAssets,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,Capital expenditures,383000000.0000,library map
@@ -10,7 +10,7 @@ TT,116,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivi
 TT,116,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,"Income taxes, net of refunds",647100000.0000,library map
 TT,116,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,"Interest, net of amounts capitalized",222000000.0000,library map
 TT,116,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-5,N,,sec_api,0001628280-26-005731,R9,Accounts payable,-2600000.0000,library map
-TT,116,cf_ar_change,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
+TT,116,cf_ar_change,combined,us-gaap:IncreaseDecreaseInAccountsAndNotesReceivable,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,Accounts and notes receivable,61200000.0000,combined line (library or label demote)
 TT,116,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,Inventories,84800000.0000,library map
 TT,116,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,CF,+,-5,N,,sec_api,0001628280-26-005731,R9,Net cash (used in) provided by continuing operating activities,3220400000.0000,library map
 TT,116,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001628280-26-005731,R4,"Comprehensive Income (Loss), Net of Tax, Attributable to Parent",3343900000.0000,library map
@@ -27,7 +27,7 @@ TT,116,gross_profit,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
 TT,116,income_before_tax,mapped,us-gaap:IncomeLossAttributableToParent,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,"Income (Loss) Attributable to Parent, before Tax",3678600000.0000,library map
 TT,116,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,Benefit (provision) for income taxes,705900000.0000,library map
 TT,116,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,Interest expense,226700000.0000,library map
-TT,116,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001628280-26-005731,,,,note-sourced default tag (no face line)
+TT,116,interest_income,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
 TT,116,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001628280-26-005731,R5,Inventories,2103600000.0000,library map
 TT,116,loans_net,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,Net earnings (loss) attributable to Trane Technologies plc,2918600000.0000,library map
@@ -36,7 +36,7 @@ TT,116,noninterest_expense,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,noninterest_income,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,operating_expenses,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
 TT,116,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001628280-26-005731,R3,Operating income (loss),3967400000.0000,library map
-TT,116,other_income_expense_net,not_presented,,,,,,,,0001628280-26-005731,,,,no face line
+TT,116,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001628280-26-005731,R3,"Other, net",-62100000.0000,combined line (library or label demote)
 TT,116,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001628280-26-005731,R5,"Property, plant and equipment, net",2251300000.0000,library map
 TT,116,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-005731,,,,not a bank
 TT,116,research_and_development,not_presented,,,,,,,,0001628280-26-005731,,,,no face line

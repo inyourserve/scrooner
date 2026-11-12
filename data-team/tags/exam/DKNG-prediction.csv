@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+DKNG,733,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Accounts payable and accrued expenses,785441000.0000,combined line (library or label demote)
+DKNG,733,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Accounts receivable,105577000.0000,library map
+DKNG,733,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)
+DKNG,733,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001883685-26-000013,R5,Basic (in dollars per share),0.0100,library map
+DKNG,733,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Purchases of property and equipment,15352000.0000,library map
+DKNG,733,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Cash and cash equivalents,1127545000.0000,library map
+DKNG,733,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001883685-26-000013,R7,Net cash flows provided by (used in) financing activities,-222456000.0000,library map
+DKNG,733,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001883685-26-000013,R7,Net cash flows provided by (used in) investing activities,-165997000.0000,library map
+DKNG,733,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Cash paid for income taxes,8236000.0000,library map
+DKNG,733,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Cash paid for interest,27881000.0000,library map
+DKNG,733,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Accounts payable and accrued expenses,132182000.0000,combined line (library or label demote)
+DKNG,733,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Accounts receivable,57695000.0000,library map
+DKNG,733,cf_inventory_change,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Net cash flows provided by (used in) operating activities,662855000.0000,library map
+DKNG,733,comprehensive_income,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Cost of revenue,3556947000.0000,library map
+DKNG,733,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total current assets,1815009000.0000,library map
+DKNG,733,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total current liabilities,1755471000.0000,library map
+DKNG,733,deposits,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Depreciation and amortization,275488000.0000,library map
+DKNG,733,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001883685-26-000013,R5,Diluted (in dollars per share),-0.0100,library map
+DKNG,733,dividends_paid,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,dividends_per_share,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Goodwill,1597647000.0000,library map
+DKNG,733,gross_profit,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Income (loss) before income tax and equity method investments,7013000.0000,library map
+DKNG,733,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Income tax provision (benefit),4274000.0000,library map
+DKNG,733,interest_expense,combined,us-gaap:InterestIncomeExpenseNonoperatingNet,IS,-,-3,N,,sec_api,0001883685-26-000013,R5,"Interest income (expense), net",-19941000.0000,combined line (library or label demote)
+DKNG,733,interest_income,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,inventory,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,loans_net,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Net income (loss) attributable to common stockholders,3710000.0000,library map
+DKNG,733,net_interest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,noninterest_expense,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,noninterest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,operating_expenses,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Sales and marketing,1379880000.0000,printed opex lines (duration sum)
+DKNG,733,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001883685-26-000013,R5,Income (loss) from operations,-15817000.0000,library map
+DKNG,733,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,"Other gain (loss), net",38024000.0000,library map
+DKNG,733,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,"Property and equipment, net",51081000.0000,library map
+DKNG,733,provision_for_credit_losses,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,research_and_development,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,revenue,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Revenue,6054525000.0000,library map
+DKNG,733,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Stock-based compensation expense,339311000.0000,library map
+DKNG,733,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001883685-26-000013,R5,Sales and marketing,1379880000.0000,printed face components (duration sum; total_debt founder sum)
+DKNG,733,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001883685-26-000013,R7,Purchase of treasury stock under Stock Repurchase Program,571528000.0000,library map
+DKNG,733,shares_outstanding,not_presented,,,,,,,,0001883685-26-000013,,,,no face line
+DKNG,733,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total stockholders equity,631461000.0000,library map
+DKNG,733,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total assets,4530784000.0000,library map
+DKNG,733,total_debt,combined,us-gaap:ConvertibleLongTermNotesPayable,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,"Convertible notes, net of issuance costs",1259096000.0000,combined line (library or label demote)
+DKNG,733,total_interest_income,OUT,,,,,,,,0001883685-26-000013,,,,not a bank
+DKNG,733,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001883685-26-000013,R3,Total liabilities,3899323000.0000,library map
+DKNG,733,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)
+DKNG,733,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001883685-26-000013,,,,note-sourced default tag (no face line)

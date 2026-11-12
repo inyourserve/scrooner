@@ -21,20 +21,20 @@ TTMI,702,deposits,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,Y,AmortizationOfIntangibleAssetsIncludingCostOfGoodAndServicesAmortization,sec_api,0001193125-26-051976,R7,"Depreciation of property, plant, and equipment",110274000.0000,printed face components (duration sum; total_debt founder sum)
 TTMI,702,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-051976,R4,Diluted earnings (loss) per share,1.6800,library map
 TTMI,702,dividends_paid,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
-TTMI,702,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,dividends_per_share,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
 TTMI,702,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Goodwill,670135000.0000,library map
 TTMI,702,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Gross profit,601686000.0000,library map
 TTMI,702,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income before income taxes,210337000.0000,library map
 TTMI,702,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Income tax provision,32889000.0000,library map
 TTMI,702,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-051976,R4,Interest expense,45334000.0000,library map
-TTMI,702,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001193125-26-051976,,,,note-sourced default tag (no face line)
+TTMI,702,interest_income,not_presented,,,,,,,,0001193125-26-051976,,,,no face line
 TTMI,702,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,Inventories,250057000.0000,library map
 TTMI,702,loans_net,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Net income (loss),177448000.0000,library map
 TTMI,702,net_interest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,noninterest_expense,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
 TTMI,702,noninterest_income,OUT,,,,,,,,0001193125-26-051976,,,,not a bank
-TTMI,702,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Total operating expenses,337002000.0000,library map
+TTMI,702,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Total operating expenses,337002000.0000,printed opex total tag
 TTMI,702,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-051976,R4,Operating income,264684000.0000,library map
 TTMI,702,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001193125-26-051976,R4,"Other, net",-9013000.0000,library map
 TTMI,702,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-051976,R2,"Property, plant, and equipment, net",1010710000.0000,library map

@@ -27,14 +27,14 @@ STLD,307,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001104659-2
 STLD,307,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,Income before income taxes,1492971000.0000,library map
 STLD,307,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,Income tax expense,305660000.0000,library map
 STLD,307,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001104659-26-021395,R4,"Interest expense, net of capitalized interest",70043000.0000,library map
-STLD,307,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-26-021395,,,,note-sourced default tag (no face line)
+STLD,307,interest_income,not_presented,,,,,,,,0001104659-26-021395,,,,no face line
 STLD,307,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001104659-26-021395,R2,Inventories,3738516000.0000,library map
 STLD,307,loans_net,OUT,,,,,,,,0001104659-26-021395,,,,not a bank
 STLD,307,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,Y,NetIncomeLossAvailableToCommonStockholdersBasic,sec_api,0001104659-26-021395,R4,"Net income attributable to Steel Dynamics, Inc.",1185595000.0000,library map
 STLD,307,net_interest_income,OUT,,,,,,,,0001104659-26-021395,,,,not a bank
 STLD,307,noninterest_expense,OUT,,,,,,,,0001104659-26-021395,,,,not a bank
 STLD,307,noninterest_income,OUT,,,,,,,,0001104659-26-021395,,,,not a bank
-STLD,307,operating_expenses,not_presented,,,,,,,,0001104659-26-021395,,,,no face line
+STLD,307,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,Y,OtherSellingGeneralAndAdministrativeExpense,sec_api,0001104659-26-021395,R4,"Selling, general and administrative expenses",765308000.0000,printed opex lines (duration sum)
 STLD,307,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,Operating income,1475986000.0000,library map
 STLD,307,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001104659-26-021395,R4,"Other (income) expense, net",87028000.0000,library map
 STLD,307,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001104659-26-021395,R2,"Property, plant and equipment, net",8569466000.0000,library map

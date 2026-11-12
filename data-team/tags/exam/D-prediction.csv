@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+D,218,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Accounts payable,1338000000.0000,library map
+D,218,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Customer receivables (less allowance for doubtful accounts),2531000000.0000,library map
+D,218,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-063120,,,,note-sourced default tag (no face line)
+D,218,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-063120,R2,Net income attributable to Dominion Energy,3.4600,library map
+D,218,capex,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Cash and cash equivalents,250000000.0000,library map
+D,218,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Net cash provided by financing activities,7586000000.0000,library map
+D,218,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001193125-26-063120,R10,Net cash used in investing activities,-12969000000.0000,library map
+D,218,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-063120,,,,note-sourced default tag (no face line)
+D,218,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-063120,,,,note-sourced default tag (no face line)
+D,218,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Accounts payable,66000000.0000,library map
+D,218,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Accounts receivable,862000000.0000,library map
+D,218,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Inventories,187000000.0000,library map
+D,218,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Net cash provided by operating activities,5361000000.0000,library map
+D,218,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001193125-26-063120,R4,Comprehensive income,3032000000.0000,library map
+D,218,cost_of_revenue,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Total current assets,8071000000.0000,library map
+D,218,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Total current liabilities,10444000000.0000,library map
+D,218,deposits,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Depreciation and amortization,2387000000.0000,library map
+D,218,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-063120,R2,Net income attributable to Dominion Energy,3.4500,library map
+D,218,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-6,N,,sec_api,0001193125-26-063120,R10,Common dividend payments,2278000000.0000,library map
+D,218,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-063120,R9,Dividends declared per common share,2.6700,library map
+D,218,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Goodwill,4143000000.0000,library map
+D,218,gross_profit,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Income from continuing operations including noncontrolling interests before income tax expense,3611000000.0000,library map
+D,218,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Income tax expense,532000000.0000,library map
+D,218,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Interest and related charges,2022000000.0000,library map
+D,218,interest_income,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,inventory,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,loans_net,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Net Income,2998000000.0000,library map
+D,218,net_interest_income,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,noninterest_expense,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,noninterest_income,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Total operating expenses,12092000000.0000,CostsAndExpenses value check (structural)
+D,218,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Income from operations,4414000000.0000,library map
+D,218,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Other income (expense),1219000000.0000,library map
+D,218,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,"Total property, plant and equipment, net",78967000000.0000,library map
+D,218,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,research_and_development,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,revenue,mapped,us-gaap:Revenues,IS,+,-6,N,,sec_api,0001193125-26-063120,R2,Operating Revenue,16506000000.0000,library map
+D,218,sbc,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,sga_expense,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,share_buybacks,not_presented,,,,,,,,0001193125-26-063120,,,,no face line
+D,218,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-6,N,,sec_api,0001193125-26-063120,R7,"Common stock, shares outstanding",879000000.0000,library map
+D,218,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Shareholders' equity,29083000000.0000,library map
+D,218,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Total assets,115857000000.0000,library map
+D,218,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:ShortTermBorrowings;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Securities due within one year,2409000000.0000,printed face components (duration sum; total_debt founder sum)
+D,218,total_interest_income,OUT,,,,,,,,0001193125-26-063120,,,,not a bank
+D,218,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001193125-26-063120,R6,Total liabilities,82440000000.0000,library map
+D,218,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001193125-26-063120,,,,note-sourced default tag (no face line)
+D,218,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001193125-26-063120,,,,note-sourced default tag (no face line)

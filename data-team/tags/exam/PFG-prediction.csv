@@ -21,20 +21,20 @@ PFG,403,deposits,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-5,N,,sec_api,0001104659-26-017031,R7,Depreciation and amortization expense,251400000.0000,library map
 PFG,403,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001104659-26-017031,R4,Diluted earnings per common share (in dollars per share),5.2500,library map
 PFG,403,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001104659-26-017031,R7,Dividends to common stockholders,684000000.0000,library map
-PFG,403,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,NOTE,,,,,sec_api,0001104659-26-017031,,,,note-sourced default tag (no face line)
+PFG,403,dividends_per_share,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Goodwill,1600500000.0000,library map
 PFG,403,gross_profit,OUT,,,,,,,,0001104659-26-017031,,,,sector template (bank/insurer)
 PFG,403,income_before_tax,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001104659-26-017031,R4,Income taxes (benefits),160500000.0000,library map
 PFG,403,interest_expense,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
-PFG,403,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0001104659-26-017031,,,,note-sourced default tag (no face line)
+PFG,403,interest_income,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,inventory,OUT,,,,,,,,0001104659-26-017031,,,,sector template (bank/insurer)
 PFG,403,loans_net,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001104659-26-017031,R4,"Net income (loss) attributable to Principal Financial Group, Inc.",1185100000.0000,library map
 PFG,403,net_interest_income,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,noninterest_expense,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
 PFG,403,noninterest_income,OUT,,,,,,,,0001104659-26-017031,,,,not a bank
-PFG,403,operating_expenses,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
+PFG,403,operating_expenses,mapped,us-gaap:BenefitsLossesAndExpenses,IS,+,-5,N,,sec_api,0001104659-26-017031,R4,Total expenses,14209500000.0000,printed opex total tag
 PFG,403,operating_income,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,other_income_expense_net,not_presented,,,,,,,,0001104659-26-017031,,,,no face line
 PFG,403,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-5,N,,sec_api,0001104659-26-017031,R2,Property and equipment,701400000.0000,library map
