@@ -22,7 +22,7 @@ def close(a, b):
     return abs(abs(a) - abs(b)) <= max(0.5, 1e-6 * abs(b))
 
 
-def page_value(base, rpage, tags, end, stmt, dp):
+def page_value(base, rpage, tags, end, stmt, dp, sum_rows=False):
     """Sum of the FY0 values of the rows carrying these elements on these R pages (one tag per page or all on one)."""
     pages = rpage.split("+")
     total, found = 0.0, 0
@@ -31,14 +31,18 @@ def page_value(base, rpage, tags, end, stmt, dp):
         for pg in dict.fromkeys(pages):
             p = D.parse_r(D.get(base + pg, cache))
             idx = [i for i, (m, e) in enumerate(p["cols"]) if e == end and (stmt in ("BS", "NOTE") or m in (12, None))]
+            vals = []
             for r in p["rows"]:
                 if r["tag"] == t:
                     for i in idx:
                         if i < len(r["vals"]) and r["vals"][i] is not None:
-                            hit = (D.scaled(r["vals"][i], dp, p), pg)
+                            x = r["vals"][i] * p["shares_scale"] if dp == "shares_outstanding" else D.scaled(r["vals"][i], dp, p)
+                            vals.append(x)
                             break
-                if hit:
-                    break
+                    if vals and not sum_rows:
+                        break
+            if vals:
+                hit = (sum(vals), pg)
             if hit:
                 break
         if hit is None:
@@ -83,7 +87,9 @@ RULES = [  # (data point, predicate on (tags, label), ruling, replacement candid
      "withholding-tax payment is not a buyback (founder 2026-11-04 item 4)", ["PaymentsForRepurchaseOfCommonStock"]),
     ("dividends_paid", lambda t, l: re.search(r"MinorityInterest|Noncontrolling|Preferred", t) or re.search(r"noncontrolling|minority|preferred", l, re.I),
      "NCI or preferred dividends are not common dividends (shareholder-returns card)", ["PaymentsOfDividendsCommonStock"]),
-    ("accounts_receivable", lambda t, l: re.search(r"Interest|Notes|Financing|Loans|Lease", t) or re.search(r"interest|notes|financing|loans?\b", l, re.I),
+    ("accounts_receivable", lambda t, l: re.search(r"InterestReceivable|NotesReceivable|NotesAndLoansReceivable|FinancingReceivable|LoansAndLeasesReceivable|LeaseReceivable", t),
+     # tags only: a wider single receivables line (e.g. 'Accounts and notes receivable' on ReceivablesNetCurrent) stays AR
+     # under Dhairya's 2026-11-12 wider-receivables ruling
      "interest, notes or financing receivables are not accounts receivable (sector-faces card)", ["AccountsReceivableNetCurrent"]),
     ("interest_expense", lambda t, l: re.search(r"Net\b|Net$|IncomeExpense", t) or re.search(r",\s*net\b(?!\s+of)|net interest|interest.*\bnet\b(?!\s+of)", l, re.I),
      "net interest line: interest_expense is the gross charge only (Dhairya 2026-11-12)", "combined"),
@@ -191,7 +197,8 @@ def check_company(rank):
         elif not r["r_page"] or not tags:
             ok, why = None, "no R page or tag to re-open"
         else:
-            v, why = page_value(base, r["r_page"], tags, end_d, r["stmt"], r["data_point"])
+            v, why = page_value(base, r["r_page"], tags, end_d, r["stmt"], r["data_point"],
+                              sum_rows=r["status"] == "component sum" and len(tags) == 1)
             ref = r["fy0_printed"] or r["fy0_api"]
             if v is None:
                 ok = False

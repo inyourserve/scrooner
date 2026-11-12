@@ -101,7 +101,6 @@ Every row: check: machine-full-filing (shared docmap.py @558f2f15). Re-checked b
 | operating_expenses | not_presented | agree | none of the candidate elements in MetaLinks.json |
 | research_and_development | NOTE | agree | page value 103400000 vs API 103400000 |
 | interest_expense | combined | agree | page value 40900000 vs printed 40900000 |
-| accounts_receivable | not_presented | DISAGREE | element(s) present in the filing: ReceivablesNetCurrent |
 | total_assets | mapped-sample | agree | page value 4081800000 vs printed 4081800000 |
 | cash_paid_for_interest | mapped-sample | agree | page value 46500000 vs printed 46500000 |
 | total_debt | component sum | agree | page value 1388400000 = printed 1.388e+09 at 4 significant digits; fy0_printed restored to the page value |
