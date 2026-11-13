@@ -1,0 +1,5 @@
+ticker,data_point,fiscal_year,period_end,coverage_reason,why
+AAPL,total_debt,2018,2018-09-29,proof_unchecked,component sum us-gaap:CommercialPaper+us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:FinanceLeaseLiabilityNoncurrent: part us-gaap:FinanceLeaseLiabilityCurrent has no 10-K fact at 2018-09-29 (alternates tried)
+GOOG,basic_eps,2015,2015-12-31,no_value_no_reason,mapped us-gaap:EarningsPerShareBasic: no 10-K fact at 2015-12-31 in companyfacts (alternates tried)
+GOOG,diluted_eps,2015,2015-12-31,no_value_no_reason,mapped us-gaap:EarningsPerShareDiluted: no 10-K fact at 2015-12-31 in companyfacts (alternates tried)
+GOOG,ppe_net,2019,2019-12-31,no_proof_row,mapped us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization: no 10-K fact at 2019-12-31 in companyfacts (alternates tried)

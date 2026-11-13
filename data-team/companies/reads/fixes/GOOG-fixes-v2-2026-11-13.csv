@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+dividends_paid,2022,2022-12-31,mapped,us-gaap:PaymentsOfDividends,CF,0001652044-25-000014,R9.htm,0,"R page 'CONSOLIDATED STATEMENTS OF CASH FLOWS - USD ($) $ in Millions' row 'Dividend payments', undimensioned, column 2022-12-31; ties to SEC companyfacts (same accession, period); value from the 10-K that prints this period (own, else the next comparative column); same tag as the nearest year"
