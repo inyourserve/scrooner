@@ -447,8 +447,12 @@ def _load_fsn_vintages(
 def _load_proof_disagree(
     conn: psycopg.Connection, company_id: int
 ) -> dict[tuple[str, str, date, date], Decimal]:
-    """(data point, grain, start, end) -> the value the latest run's DISAGREE verdict judged (analytics.cell_proof
-    keeps one row per cell key, upserted). Empty when the table is absent."""
+    """(data point, grain, start, end) -> the value the cell's LAST proof verdict judged wrong (analytics.cell_proof
+    keeps one row per cell key, upserted, so that row is the cell's latest verdict whichever run wrote it). A held
+    cell is not served, so no later run re-proves it: its DISAGREE row is still the evidence. The hold applies only
+    while the mapper would serve that same value (_proof_guard), so a corrected value is never hidden. (A latest-run
+    window released the cells step 3 held and step 4 never saw: 358 served DISAGREE on 2026-11-12.) Empty when the
+    table is absent."""
     if conn.execute("select to_regclass('analytics.cell_proof')").fetchone()[0] is None:
         return {}
     return {
@@ -458,12 +462,8 @@ def _load_proof_disagree(
             select data_point_name, period_grain, period_start, period_end, shown_value
             from analytics.cell_proof
             where company_id = %s and basis = 'latest' and verdict = 'DISAGREE' and shown_value is not null
-              -- the company's LATEST proof run only (a run takes minutes): a row an older run left for a key the
-              -- latest run did not prove never hides a cell
-              and proved_at >= (select max(proved_at) - interval '6 hours'
-                                from analytics.cell_proof where company_id = %s)
             """,
-            (company_id, company_id),
+            (company_id,),
         ).fetchall()
     }
 

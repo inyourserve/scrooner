@@ -159,14 +159,14 @@ def test_mapper_vintages_carry_same_value_copies_never_a_different_value(isolate
 
 
 @pytest.mark.integration
-def test_proof_guard_reads_only_the_latest_proof_run_of_the_company(isolated_database_url):
+def test_proof_guard_keeps_a_cells_last_disagree_whichever_run_wrote_it(isolated_database_url):
     from scrooner_pipeline.mapper import company_tag_map as ctm
 
     with psycopg.connect(isolated_database_url) as conn:
         cid = conn.execute("insert into core.company (cik, company_name) values ('0000000017', 'T') returning id").fetchone()[0]
         for name, end, at, verdict in [
             ("revenue", "2020-12-31", "2026-11-12 12:00+00", "DISAGREE"),  # latest run
-            ("revenue", "2019-12-31", "2026-11-02 12:00+00", "DISAGREE"),  # an older run's leftover row
+            ("revenue", "2019-12-31", "2026-11-02 12:00+00", "DISAGREE"),  # held since an older run: still held
             ("cfo", "2020-12-31", "2026-11-12 12:05+00", "PROVEN"),
         ]:
             conn.execute(
@@ -176,7 +176,7 @@ def test_proof_guard_reads_only_the_latest_proof_run_of_the_company(isolated_dat
                 (cid, name, end, end, verdict, "x" if verdict == "DISAGREE" else None, at),
             )
         got = ctm._load_proof_disagree(conn, cid)
-        assert [(k[0], k[3].isoformat()) for k in got] == [("revenue", "2020-12-31")]
+        assert sorted((k[0], k[3].isoformat()) for k in got) == [("revenue", "2019-12-31"), ("revenue", "2020-12-31")]
 
 
 @pytest.mark.integration
