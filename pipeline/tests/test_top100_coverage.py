@@ -352,3 +352,55 @@ def test_proven_cell_carries_no_reason_code_or_text():
     )
     assert reason_fields("REASON", "np", "why") == ("np", "why")
     assert reason_fields("BLANK", None, None) == ("", "")
+
+
+def test_note_only_fact_gets_its_page_from_the_cached_pre_lookup_of_the_same_filing():
+    from scrooner_pipeline.mapper.top100_coverage import proven_locator
+
+    A, B = "0001564590-18-019062", "0001564590-17-014900"
+    look = {(A, "InterestPaid"): 53, (B, "InterestPaid"): 9}
+    assert proven_locator(A, "CF", None, "InterestPaid", _idx(), look) == (
+        A,
+        "R53.htm",
+        "note_report_from_pre",
+    )
+    # the lookup is keyed by accession: another filing's page is never borrowed
+    other = "0000000000-00-000001"
+    assert proven_locator(other, "CF", None, "InterestPaid", _idx(), look) == (
+        other,
+        "",
+        "note_fact_report_not_stored",
+    )
+    # a statement line still wins over the lookup
+    assert proven_locator(A, "BS", 9, "AssetsCurrent", _idx(), look)[2] == "proof_line"
+
+
+def test_scan_pre_keeps_only_wanted_pairs_and_lookup_roundtrip(tmp_path):
+    import csv
+    import subprocess
+
+    from scrooner_pipeline.mapper import note_report_lookup as nl
+
+    d = tmp_path / "2024q1"
+    d.mkdir()
+    tsv = d / "2024q1_pre.tsv"
+    tsv.write_text(
+        "adsh\treport\tline\tstmt\tinpth\ttag\tversion\tprole\tplabel\tnegating\n"
+        "A-1\t53\t4\t\t0\tInterestPaid\tus-gaap/2023\tterseLabel\tInterest paid\t0\n"
+        "A-1\t60\t2\t\t0\tInterestPaid\tus-gaap/2023\tterseLabel\tInterest paid\t0\n"
+        "A-1\t4\t2\tBS\t0\tAssets\tus-gaap/2023\tterseLabel\tAssets\t0\n"
+        "B-2\t7\t1\t\t0\tInterestPaid\tus-gaap/2023\tterseLabel\tx\t0\n"
+    )
+    subprocess.run(["zstd", "-q", "--rm", str(tsv)], check=True)
+    got = nl.scan_pre(d / "2024q1_pre.tsv.zst", {("A-1", "InterestPaid")})
+    assert list(got) == [("A-1", "InterestPaid")]
+    assert sorted(r for r, _l, _p in got[("A-1", "InterestPaid")]) == [53, 60]
+    rows, missing = nl.build_rows(tmp_path, {("A-1", "InterestPaid"), ("C-3", "X")})
+    assert rows[0]["report"] == 53 and rows[0]["n_reports"] == 2
+    assert missing == {("C-3", "X")}
+    p = tmp_path / "l.csv"
+    with p.open("w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=nl.COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+    assert nl.load_lookup(p) == {("A-1", "InterestPaid"): 53}

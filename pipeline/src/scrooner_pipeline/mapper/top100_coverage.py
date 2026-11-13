@@ -34,6 +34,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
 CLASSES = ("PROVEN", "REASON", "DERIVED", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
@@ -168,6 +169,7 @@ def proven_locator(
     line: int | None,
     tags: str | None,
     idx: LocatorIndex,
+    note_lookup: dict[tuple[str, str], int] | None = None,
 ) -> tuple[str, str, str]:
     """(accession, r_page, source) for a cell with a proof: the proof's accession and a report of THAT filing only.
     Order: the proof's own (stmt, line) position; the statement line carrying the shown tag(s) (note line for a note
@@ -190,6 +192,14 @@ def proven_locator(
         rep = idx.stmt_report(acc, stmt)
         if rep is not None:
             return acc, _page(rep), "proof_stmt"
+    # a note-only fact: the report of the SAME filing's SEC pre.tsv (cached lookup, note_report_lookup.py)
+    reps = [
+        note_lookup[(acc, t)]
+        for t in (x.strip() for x in (tags or "").split(",") if x.strip())
+        if note_lookup and (acc, t) in note_lookup
+    ]
+    if reps:
+        return acc, _page(min(reps)), "note_report_from_pre"
     return acc, "", "note_fact_report_not_stored"
 
 
@@ -404,7 +414,11 @@ def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIn
 
 
 def build_rows(
-    conn: Any, companies: list[Company], reads_dir: Path, today: date
+    conn: Any,
+    companies: list[Company],
+    reads_dir: Path,
+    today: date,
+    note_lookup: dict[tuple[str, str], int] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
     templates = {c.company_id: load_docmap(reads_dir, c.ticker) for c in companies}
     live = [c for c in companies if templates[c.company_id]]
@@ -572,7 +586,9 @@ def build_rows(
                         [x[1] for x in pref], dstmt, idx
                     )
                 else:
-                    acc, page, lsrc = proven_locator(pacc, pstmt, pline, ptag, idx)
+                    acc, page, lsrc = proven_locator(
+                        pacc, pstmt, pline, ptag, idx, note_lookup
+                    )
                 if lsrc in (
                     "none",
                     "note_fact_report_not_stored",
@@ -739,7 +755,7 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     with get_connection() as conn:
         conn.execute("set transaction read only")
         conn.execute("set statement_timeout = '10min'")
-        rows, notes = build_rows(conn, companies, reads_dir, now.date())
+        rows, notes = build_rows(conn, companies, reads_dir, now.date(), load_lookup())
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
     summary = summarize(rows, companies, notes, as_of)
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
