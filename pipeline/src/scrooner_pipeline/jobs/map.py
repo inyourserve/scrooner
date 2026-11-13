@@ -930,6 +930,89 @@ def seed_sector_templates_cmd(
             typer.echo(f"seed-sector-templates applied: {st.write_plan(conn, rows)}")
 
 
+@app.command("seed-templates-from-catalog")
+def seed_templates_from_catalog_cmd(
+    catalog: Path = typer.Option(
+        Path("data-team/47-fsn-store/company_tag_map/concepts_catalog.csv"),
+        help="Concept list (column name).",
+    ),
+    cohort: Path = typer.Option(
+        Path("doc/data-moat/team/top1000/shards.csv"),
+        help="Cohort file with rank, company_id, cik, ticker, sic, excluded.",
+    ),
+    top_n: int = typer.Option(110, help="Ranks 1..N only."),
+    plan_out: Path = typer.Option(
+        Path("pipeline/scripts/results/catalog_template_plan.csv"),
+        help="Plan CSV (always written).",
+    ),
+    before_out: Path = typer.Option(
+        Path("pipeline/scripts/results/catalog_template_before_image.csv"),
+        help="Before-image CSV of existing rows (written with --validate-db or --apply).",
+    ),
+    validate_db: bool = typer.Option(
+        False, help="Read-only DB validation and before-image."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write the rows (founder-approved)."
+    ),
+    confirm_version: str = typer.Option(
+        "", help="With --apply: must equal the catalog version."
+    ),
+) -> None:
+    """Seed analytics.company_data_point_template from the concept catalog and each
+    company's SIC group, for ranks 1..N. Dry run by default; idempotent when applied."""
+    from scrooner_pipeline.mapper import sector_templates as st
+
+    try:
+        concepts = st.load_catalog(catalog)
+        companies, excluded = st.load_ranked_cohort(cohort, top_n)
+        rows = st.build_catalog_plan(concepts, companies)
+    except (st.TemplateError, OSError) as exc:
+        typer.echo(f"ERROR {exc}", err=True)
+        raise typer.Exit(2) from exc
+    st.write_plan_csv(rows, plan_out)
+    per_group = st.rows_per_company_group(rows)
+    typer.echo(
+        f"catalog {len(concepts)} concepts; {len(companies)} companies; {len(rows)} rows"
+    )
+    typer.echo(f"per group: {json.dumps(per_group)}")
+    counts: dict[int, tuple[str, str, int]] = {}
+    tick = {c.company_id: c.ticker for c in companies}
+    for r in rows:
+        g, t, n = counts.get(r.company_id, (r.template, tick[r.company_id], 0))
+        counts[r.company_id] = (g, t, n + (1 if r.in_template else 0))
+    for cid, (g, t, n) in sorted(counts.items(), key=lambda kv: kv[1][1]):
+        typer.echo(f"  {t:6} {g:12} in_template={n}")
+    for rank, ticker, why in excluded:
+        typer.echo(f"EXCLUDED (no template) rank {rank} {ticker}: {why}")
+    if not (validate_db or apply):
+        return
+    if apply and confirm_version != st.CATALOG_VERSION:
+        typer.echo(
+            f"ERROR --apply needs --confirm-version {st.CATALOG_VERSION}", err=True
+        )
+        raise typer.Exit(2)
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("select count(*) from pg_stat_activity")
+            active = cur.fetchone()[0]  # type: ignore[index]
+        typer.echo(f"pg_stat_activity count: {active}")
+        if active > 60:
+            typer.echo("ERROR pg_stat_activity > 60; pausing", err=True)
+            raise typer.Exit(3)
+        try:
+            st.validate_against_db(conn, rows)
+        except st.TemplateError as exc:
+            typer.echo(f"ERROR {exc}", err=True)
+            raise typer.Exit(2) from exc
+        n_before = st.write_before_image(
+            conn, sorted({r.company_id for r in rows}), before_out
+        )
+        typer.echo(f"before-image: {n_before} existing rows -> {before_out}")
+        if apply:
+            typer.echo(f"applied: {st.write_plan(conn, rows)}")
+
+
 @app.command()
 def errors(
     stage: str = typer.Option(
