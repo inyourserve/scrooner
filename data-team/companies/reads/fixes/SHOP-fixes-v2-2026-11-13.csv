@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+sga_expense,2023,2023-12-31,mapped,us-gaap:GeneralAndAdministrativeExpense,CI,0001594805-25-000012,R5.htm,491000000,"FILING-CHECKED (v2 red cell, mapper hold no_calc_evidence: a part is missing in this year): R5 prints 'General and administrative' 491,000,000 under us-gaap:GeneralAndAdministrativeExpense for the period ending 2023-12-31; equals companyfacts (same accession)"
