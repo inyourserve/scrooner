@@ -1,0 +1,117 @@
+data_point,ticker,class,key_status,key_tags,pred_status,pred_tags
+shares_outstanding,APA,rule wrong - fixed today,mapped,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,APG,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,BG,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,CF,rule wrong - fixed today,mapped,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,CRCL,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,EWBC,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,EXE,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,HEI,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,IOT,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,KEY,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,MKL,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,NDSN,rule wrong - fixed today,mapped,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,NTNX,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,PPG,rule wrong - fixed today,mapped,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,PR,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,RBRK,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,RL,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,ROKU,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,SOFI,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,SYM,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,mapped,us-gaap:CommonStockSharesOutstanding
+shares_outstanding,THC,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,TOST,RULING GAP/rule: multi-class shares = sum of class members (no member values in lines),component_sum,us-gaap:CommonStockSharesOutstanding,not_presented,
+shares_outstanding,ZBRA,rule wrong / other,mapped,us-gaap:CommonStockSharesOutstanding,not_presented,
+total_debt,AMRZ,rule wrong / other,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:LongTermDebtC,not_presented,
+total_debt,APG,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability
+total_debt,CRCL,rule wrong: convertible notes demoted to combined,component_sum,us-gaap:ConvertibleNotesPayableCurrent+us-gaap:ConvertibleDebtNoncurrent,combined,us-gaap:ConvertibleDebtNoncurrent
+total_debt,CW,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent
+total_debt,DINO,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,DOW,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:ShortTermBankLoansAndNotesPayable+us-gaap:LongTermDebtAndCapitalLeaseObl,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCap
+total_debt,ENTG,rule wrong - fixed today,component_sum,us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiabilityNoncurrent,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiabilityNoncurrent
+total_debt,ESS,rule wrong / other,component_sum,us-gaap:UnsecuredDebt+us-gaap:SecuredDebt+ess:LinesOfCreditAndCommercialPaper,combined,us-gaap:UnsecuredDebt
+total_debt,EVRG,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:CommercialPaper+us-gaap:LongTermDebtNoncurre,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:CommercialPaper;us-gaap:LongTermDebtNoncurre
+total_debt,FSLR,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability
+total_debt,GH,rule wrong: convertible notes demoted to combined,mapped,us-gaap:ConvertibleDebtNoncurrent,combined,us-gaap:ConvertibleDebtNoncurrent
+total_debt,GPN,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LinesOfCreditCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligationsCurre,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCap
+total_debt,IFF,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:DebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability
+total_debt,INCY,rule wrong / other,component_sum,us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:FinanceLeaseLiabilityNoncurrent,combined,us-gaap:FinanceLeaseLiabilityCurrent
+total_debt,INSM,rule wrong - fixed today,component_sum,us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:Fina,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiabilityCurrent;us-gaap:Fina
+total_debt,KEY,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:ShortTermBankLoansAndNotesPayable+us-gaap:LongTermDebt,component_sum,us-gaap:LongTermDebt
+total_debt,LEN,"key wrong: single debt line keyed mapped, status should be component_sum (founder total_debt sum)",mapped,us-gaap:LongTermDebt,component_sum,us-gaap:LongTermDebt
+total_debt,LNT,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:CommercialPaper+us-gaap:LongTermDebtNoncurre,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:CommercialPaper;us-gaap:LongTermDebtNoncurre
+total_debt,MEDP,rule wrong / other,mapped,us-gaap:DebtInstrumentCarryingAmount,not_presented,
+total_debt,MTSI,rule wrong - fixed today,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:Finance,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,NDSN,rule wrong - fixed today,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:LongTer,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,NTNX,rule wrong: convertible notes demoted to combined,component_sum,us-gaap:ConvertibleLongTermNotesPayable+us-gaap:FinanceLeaseLiabilityCurrent+us-,combined,us-gaap:ConvertibleLongTermNotesPayable
+total_debt,NVT,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,OMC,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:NotesPayableCurrent+us-gaap:ShortTermBorrowings+us-gaap:LongTermNotesPay,component_sum,us-gaap:ShortTermBorrowings
+total_debt,OVV,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent
+total_debt,PAA,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:DebtCurrent+us-gaap:SeniorLongTermNotes+us-gaap:OtherLongTermDebtNoncurr,component_sum,us-gaap:DebtCurrent
+total_debt,PFG,rule wrong - fixed today,component_sum,us-gaap:ShortTermBorrowings+us-gaap:LongTermDebt+us-gaap:FinanceLeaseLiability,component_sum,us-gaap:ShortTermBorrowings;us-gaap:LongTermDebt;us-gaap:FinanceLeaseLiability
+total_debt,PHM,rule wrong / other,component_sum,us-gaap:NotesPayable+phm:FinancialServicesDebt,not_presented,
+total_debt,PKG,rule wrong - fixed today,component_sum,us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:Fina,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiabilityCurrent;us-gaap:Fina
+total_debt,PR,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebt+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:FinanceLeaseLi,component_sum,us-gaap:LongTermDebt;us-gaap:FinanceLeaseLiability
+total_debt,RBRK,rule wrong: convertible notes demoted to combined,component_sum,us-gaap:OtherLongTermDebtNoncurrent,combined,us-gaap:ConvertibleLongTermNotesPayable
+total_debt,RIVN,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:Fina,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability
+total_debt,RL,rule wrong - fixed today,component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,RVTY,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:OtherLongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent,component_sum,us-gaap:LongTermDebtNoncurrent
+total_debt,SBAC,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseL
+total_debt,SMCI,rule wrong: convertible notes demoted to combined,component_sum,smci:LineOfCreditAndTermLoansCurrentMaturities+smci:LineOfCreditAndTermLoansNonc,combined,us-gaap:ConvertibleLongTermNotesPayable
+total_debt,SNA,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,us-gaap:NotesPayableCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseL,component_sum,us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability
+total_debt,SOFI,rule wrong / other,component_sum,us-gaap:DebtLongtermAndShorttermCombinedAmount+us-gaap:BeneficialInterest+us-gaa,not_presented,
+total_debt,SYF,"key wrong: single debt line keyed mapped, status should be component_sum (founder total_debt sum)",mapped,us-gaap:LongTermDebt,component_sum,us-gaap:LongTermDebt
+total_debt,U,rule wrong: convertible notes demoted to combined,component_sum,us-gaap:ConvertibleDebtCurrent+us-gaap:ConvertibleDebtNoncurrent,combined,us-gaap:ConvertibleDebtNoncurrent
+total_debt,UTHR,rule wrong / other,component_sum,us-gaap:LinesOfCreditCurrent,combined,us-gaap:LinesOfCreditCurrent
+total_debt,VMRK,rule wrong / other,component_sum,us-gaap:SecuredDebt+us-gaap:NotesPayable+eqr:LineOfCreditAndCommercialPaper+us-g,combined,us-gaap:SecuredDebt
+total_debt,XPO,"rule wrong: debt component missing from library (notes payable, bank loans, lines of credit, other LTD)",component_sum,xpo:ShortTermDebtAndMaturitiesOfLongTermDebtCurrent+us-gaap:LongTermDebtNoncurre,component_sum,us-gaap:LongTermDebtNoncurrent
+operating_expenses,APA,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:TaxesOther;us-gaap:ExplorationExpense;us-gaap:GeneralAndAdministrativeEx
+operating_expenses,BR,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense
+operating_expenses,BRO,rule wrong / other,combined,bro:OperatingExpensesAndNonoperatingExpenses,not_presented,
+operating_expenses,CF,rule wrong / other,mapped,us-gaap:OperatingCostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us
+operating_expenses,DINO,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:OperatingCostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndA
+operating_expenses,EFX,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortizati
+operating_expenses,EWBC,RULING GAP: bank NoninterestExpense as opex,not_presented,,mapped,us-gaap:NoninterestExpense
+operating_expenses,FIS,rule wrong / other,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:AssetImpairmentCharges+us,not_presented,
+operating_expenses,GH,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap
+operating_expenses,GPC,rule wrong / other,mapped,us-gaap:OperatingExpenses,combined,us-gaap:OperatingExpenses
+operating_expenses,GPN,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us
+operating_expenses,HEI,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense
+operating_expenses,INCY,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:GainLossRelatedToLitigationSettlement;us-gaap:ResearchAndDevelopmentExpe
+operating_expenses,INSM,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExp
+operating_expenses,KEY,RULING GAP: bank NoninterestExpense as opex,not_presented,,mapped,us-gaap:NoninterestExpense
+operating_expenses,L,RULING GAP: insurer total as opex,combined,us-gaap:BenefitsLossesAndExpenses,mapped,us-gaap:BenefitsLossesAndExpenses
+operating_expenses,LEN,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;custom:ContributionExpense
+operating_expenses,LYB,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:GoodwillImpairmentLoss;us-gaap:OtherAssetImpairmentCharges;us-gaap:Selli
+operating_expenses,MKL,RULING GAP: insurer total as opex,combined,us-gaap:CostsAndExpenses,mapped,us-gaap:CostsAndExpenses
+operating_expenses,NDSN,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfLongLivedAsse
+operating_expenses,NRG,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-g
+operating_expenses,OMC,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortizati
+operating_expenses,PAA,rule wrong / other,combined,us-gaap:CostsAndExpenses,combined,us-gaap:OperatingCostsAndExpenses
+operating_expenses,RF,RULING GAP: bank NoninterestExpense as opex,not_presented,,mapped,us-gaap:NoninterestExpense
+operating_expenses,RGA,RULING GAP: insurer BenefitsLossesAndExpenses as opex,not_presented,,mapped,us-gaap:BenefitsLossesAndExpenses
+operating_expenses,RGLD,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:TaxesExcludingIncomeAndExciseTax
+operating_expenses,RS,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndA
+operating_expenses,RVTY,rule wrong / other,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:ResearchAndDevelopmentExp,not_presented,
+operating_expenses,SNA,rule wrong / other,mapped,us-gaap:OperatingExpenses,not_presented,
+operating_expenses,SOFI,RULING GAP: bank NoninterestExpense as opex,not_presented,,mapped,us-gaap:NoninterestExpense
+operating_expenses,SYF,RULING GAP: bank NoninterestExpense as opex,not_presented,,mapped,us-gaap:NoninterestExpense
+operating_expenses,UTHR,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExp
+operating_expenses,WES,rule wrong / other,combined,us-gaap:CostsAndExpenses,combined,us-gaap:OperatingCostsAndExpenses
+operating_expenses,WWD,rule wrong / other,combined,wwd:CostsAndExpensesAll,not_presented,
+operating_expenses,XPO,rule wrong / other,not_presented,,mapped,us-gaap:OperatingCostsAndExpenses
+operating_expenses,ZBH,"key wrong: band ties GP-OI -> component_sum (opex rulings 1-5, WYNN)",combined,us-gaap:CostsAndExpenses,component_sum,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcl
+interest_expense,APA,rule wrong - fixed today,mapped,us-gaap:InterestExpenseDebt,mapped,us-gaap:InterestExpenseDebt
+interest_expense,CRCL,rule wrong - fixed today,mapped,us-gaap:InterestExpenseNonoperating,mapped,us-gaap:InterestExpenseNonoperating
+interest_expense,DOW,rule wrong / other,mapped,us-gaap:InterestExpenseDebt,combined,us-gaap:InterestExpenseDebt
+interest_expense,GPN,rule wrong - fixed today,mapped,us-gaap:InterestExpenseDebt,mapped,us-gaap:InterestExpenseDebt
+interest_expense,IP,rule wrong: net interest line routed to bank net_interest_income,combined,us-gaap:InterestIncomeExpenseNet,not_presented,
+interest_expense,LEN,RULING GAP: note InterestExpenseDebt mapped vs component_in_note,component_in_note,us-gaap:InterestExpenseNonoperating,not_presented,
+interest_expense,NTNX,RULING GAP: note InterestExpenseDebt mapped vs component_in_note,component_in_note,us-gaap:InterestExpenseDebt,not_presented,
+interest_expense,NVT,rule wrong: net interest line routed to bank net_interest_income,combined,us-gaap:InterestIncomeExpenseNet,not_presented,
+interest_expense,PHM,rule wrong - fixed today,mapped,us-gaap:InterestExpense,mapped,us-gaap:InterestExpense
+interest_expense,PKG,rule wrong: net interest line routed to bank net_interest_income,combined,us-gaap:InterestIncomeExpenseNet,not_presented,
+interest_expense,RGLD,RULING GAP: note InterestExpenseDebt mapped vs component_in_note,component_in_note,us-gaap:InterestExpenseDebt,not_presented,
+interest_expense,RVTY,rule wrong / other,not_presented,,mapped,us-gaap:InterestExpenseNonoperating
+interest_expense,USFD,rule wrong / other,combined,us-gaap:InterestExpenseNonoperating,mapped,us-gaap:InterestExpenseNonoperating
+interest_expense,ZBH,rule wrong: net interest line routed to bank net_interest_income,combined,us-gaap:InterestIncomeExpenseNet,not_presented,
