@@ -461,10 +461,31 @@ def _fy_valued(expected, valued: set, periods, names: dict[str, int]) -> int:
     return n
 
 
-def era_shortfall(map_rows, period_ends: list[date]) -> dict[int, date]:
+FIX_RULE_ID = (
+    "company_tag_map.docmap_fix@1"  # the reader fix rows (docmap_loader.FIX_RULE_ID)
+)
+
+
+def unread_tail_concepts(rows) -> set[int]:
+    """Concepts whose latest-ending map row is a reader fix (rows: concept_id, era_from, era_to, rule_id). Such a concept
+    ends at the last FY a reader checked: a later period is printed only by a newer filing nobody has read. Pure."""
+    last: dict[int, tuple[date, str | None]] = {}
+    for c, _, to, rule in rows:
+        if c is not None and (c not in last or (to or date.max) > last[c][0]):
+            last[c] = (to or date.max, rule)
+    return {
+        c for c, (to, rule) in last.items() if rule == FIX_RULE_ID and to != date.max
+    }
+
+
+def era_shortfall(
+    map_rows, period_ends: list[date], unread_tail: set[int] | frozenset = frozenset()
+) -> dict[int, date]:
     """Concept id -> the first company period end in the data window (I11, from 2015-01-01) that no era of the
     MERGED map (library and docmap rows, value or reason) covers; concepts fully covered are absent. Eras are
-    (concept_id, era_from, era_to); a gap between two eras counts. Pure."""
+    (concept_id, era_from, era_to); a gap between two eras counts. unread_tail: concepts whose map ends at a reader
+    fix; the periods after their last era are UNCHECKED ('unread_period'), no reason and no shortfall (Ritwik
+    2026-11-13: a carry-forward must never stand as evidence for a period whose own filing has not been read). Pure."""
     eras: dict[int, list[tuple[date, date]]] = defaultdict(list)
     for concept_id, era_from, era_to in map_rows:
         if concept_id is not None:
@@ -472,8 +493,14 @@ def era_shortfall(map_rows, period_ends: list[date]) -> dict[int, date]:
     out: dict[int, date] = {}
     window = sorted(e for e in period_ends if e >= DATA_WINDOW_START)
     for c, spans in eras.items():
+        tail = max(hi for _, hi in spans) if c in unread_tail else date.max
         miss = next(
-            (e for e in window if not any(lo <= e <= hi for lo, hi in spans)), None
+            (
+                e
+                for e in window
+                if e <= tail and not any(lo <= e <= hi for lo, hi in spans)
+            ),
+            None,
         )
         if miss is not None:
             out[c] = miss
@@ -530,10 +557,11 @@ def coverage(
         )
         reasoned = set(cur.fetchall())
         cur.execute(
-            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to from analytics.company_tag_map where company_id = %s",
+            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to, rule_id from analytics.company_tag_map where company_id = %s",
             (cid,),
         )
-        map_rows = cur.fetchall()
+        full = cur.fetchall()
+    map_rows = [r[:3] for r in full]
     end_of = {pid: end for end, _, _, pid in periods}
     gone = [
         (c, p)
@@ -545,7 +573,9 @@ def coverage(
         for c, p in gone
         if c in concept_info
     )
-    short = era_shortfall(map_rows, reporting_period_ends(conn, cid))
+    short = era_shortfall(
+        map_rows, reporting_period_ends(conn, cid), unread_tail_concepts(full)
+    )
     return {
         "era_from_min": min((e for _, e, _ in map_rows), default=None),
         "era_short": {
@@ -603,12 +633,15 @@ def concepts_to_skip(
     -> (concept ids to leave as served today, concept id -> why)."""
     with conn.cursor() as cur:
         cur.execute(
-            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to "
+            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to, rule_id "
             "from analytics.company_tag_map where company_id = %s",
             (cid,),
         )
-        map_rows = cur.fetchall()
-    short = era_shortfall(map_rows, reporting_period_ends(conn, cid))
+        full = cur.fetchall()
+    map_rows = [r[:3] for r in full]
+    short = era_shortfall(
+        map_rows, reporting_period_ends(conn, cid), unread_tail_concepts(full)
+    )
     why = {c: f"era short from {d.isoformat()}" for c, d in short.items()}
     mapped = {c for c, _, _ in map_rows if c is not None}
     for c in managed - mapped:

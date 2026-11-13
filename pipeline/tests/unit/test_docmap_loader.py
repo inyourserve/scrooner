@@ -284,3 +284,27 @@ def test_instant_component_sum_allowed_for_total_debt_and_multi_class_shares_onl
     assert not instant_sum_refused("shares_outstanding_resolved", "balance_sheet")
     assert instant_sum_refused("inventory", "balance_sheet")
     assert not instant_sum_refused("operating_expenses", "income_statement")
+
+
+def test_era_shortfall_unread_tail_after_reader_fix_is_unchecked_not_short():
+    from scrooner_pipeline.mapper import company_tag_map_plan as plan
+
+    fix = plan.FIX_RULE_ID
+    full = [
+        (1, date(2015, 7, 1), date(2025, 6, 30), fix),
+        (1, date(2025, 7, 1), date(2026, 6, 30), fix),  # last reader-fixed FY
+        (2, date(2015, 7, 1), date(2026, 6, 30), "company_tag_map.docmap@1"),  # not a fix: its shortfall stays
+        (3, date(2015, 7, 1), date(2025, 6, 30), fix),  # a fix ends, then a hole inside the read years
+        (3, date(2026, 1, 1), date(2026, 6, 30), fix),
+    ]
+    rows = [r[:3] for r in full]
+    ends = [date(2016, 6, 30), date(2025, 12, 31), date(2026, 9, 30)]
+    tail = plan.unread_tail_concepts(full)
+    assert tail == {1, 3}  # 2 ends at a library row, not a reader fix
+    assert plan.era_shortfall(rows, ends) == {1: date(2026, 9, 30), 2: date(2026, 9, 30), 3: date(2025, 12, 31)}
+    got = plan.era_shortfall(rows, ends, tail)
+    assert 1 not in got  # 2026-09-30 is past the last read FY: UNCHECKED unread_period, not a shortfall
+    assert got[2] == date(2026, 9, 30)  # a library row that ends early is still a real shortfall
+    assert got[3] == date(2025, 12, 31)  # a hole inside the read years still counts
+    open_end = [(1, date(2015, 7, 1), None, fix)]
+    assert plan.unread_tail_concepts(open_end) == set()

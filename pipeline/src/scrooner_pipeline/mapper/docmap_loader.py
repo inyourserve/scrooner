@@ -42,6 +42,7 @@ from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_plan import (
     era_shortfall,
     reporting_period_ends,
+    unread_tail_concepts,
 )
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
@@ -1301,6 +1302,17 @@ def load(
                 for r in kept + keep_pred + new_all
             ],
             period_ends.get(cid, []),
+            unread_tail_concepts(
+                [
+                    (
+                        r["canonical_concept_id"] or r["parent_concept_id"],
+                        r["era_from"],
+                        r["era_to"],
+                        r.get("rule_id"),
+                    )
+                    for r in kept + keep_pred + new_all
+                ]
+            ),
         )
         era_report = {
             "era_short": len(short),
