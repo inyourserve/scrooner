@@ -70,6 +70,7 @@ TAGLESS_STATUS = {
     "not_presented": "not_presented",
     "OUT": "not_in_template",
 }
+COMBINED_CLASS = "line_presented_combined"
 FACE_CODES = {"IS", "BS", "CF", "CI", "EQ"}
 # docmap data points are catalog names; the screen serves the resolved concept where one exists (the library's names)
 SERVED_ALIAS = {"revenue": "revenue_sanity_resolved"}
@@ -558,7 +559,11 @@ def table_rows(
                 "canonical_concept": d.data_point,
                 "stmt": stmt_code(d.stmt_raw, d.data_point, st, value_row=False),
                 "reason": reason,
-                "reason_class": f"docmap_{d.status.replace(' ', '_').lower()}"
+                # a combined line keeps the decision value (the table's 'combined' needs tags and components) but
+                # its class says what the filing says; the row carries accession, printed label and R page
+                "reason_class": COMBINED_CLASS
+                if d.status == "combined"
+                else f"docmap_{d.status.replace(' ', '_').lower()}"
                 if not d.is_fix
                 else f"docmap_fix_{d.status.replace(' ', '_').lower()}",
             }

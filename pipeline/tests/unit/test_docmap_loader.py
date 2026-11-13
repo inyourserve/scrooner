@@ -202,7 +202,7 @@ def test_every_decided_status_yields_a_row_covering_its_era():
     cs = {"revenue_sanity_resolved": "income_statement"}
     expect = {
         "not_presented": ("not_presented", "docmap_not_presented"),
-        "combined": ("not_in_template", "docmap_combined"),
+        "combined": ("not_in_template", "line_presented_combined"),
         "OUT": ("not_in_template", "docmap_out"),
         "mapped": ("concept", None),
         "component_in_note": ("concept", None),

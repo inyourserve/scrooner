@@ -167,3 +167,24 @@ def test_r_page_comes_from_the_years_own_filing_not_the_docmap_read():
         date(2015, 6, 30),
         "IS",
     ) not in pages  # no guess where the filing prints nothing
+
+
+def test_combined_line_with_filing_evidence_is_a_reason_bare_not_in_template_is_blank():
+    def k(bs=None, tm=None, tpl=None, comb=False):
+        return classify(
+            None, None, None, None, bs, bs, tm, "mapped", None, None, tpl, comb
+        )
+
+    assert k(bs="not_in_template", tpl=True, comb=True) == (
+        "REASON",
+        "line_presented_combined",
+    )
+    assert k(tm="not_in_template", tpl=True, comb=True)[0] == "REASON"
+    assert k(bs="not_in_template", tpl=True, comb=False)[0] == "BLANK"
+    # evidence never overrides a served value
+    assert (
+        classify(
+            None, None, None, D(1), None, None, None, "mapped", None, None, True, True
+        )[0]
+        == "UNCHECKED"
+    )

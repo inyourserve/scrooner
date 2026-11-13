@@ -68,6 +68,14 @@ INSTANT_DPS = {
 }
 FIRST_FY = 2015
 UNMAPPED = "era_unmapped"
+COMBINED = "line_presented_combined"
+# reason_class values of a tagless not_in_template row that records a printed combined line
+COMBINED_CLASSES = {
+    COMBINED,
+    "docmap_combined",
+    "docmap_fix_combined",
+    "line_presented_combined_with_others",
+}
 # docmap data point -> concept names looked up in order (resolved concept first: it is what is served).
 SPECIAL_CANDIDATES = {"revenue": ["revenue_sanity_resolved", "revenue"]}
 
@@ -108,6 +116,7 @@ def classify(
     blank_defect_class: str | None = None,
     tagmap_reason_class: str | None = None,
     in_template: bool | None = None,
+    combined_evidence: bool = False,
 ) -> tuple[str, str | None]:
     """(class, reason_code). Pure. Precedence: proof verdict, served-but-unproven value, stored reason, blank."""
     if proof_verdict == "PROVEN":
@@ -124,6 +133,10 @@ def classify(
         return "UNCHECKED", "no_proof_row"
     if proof_verdict == "NOT_PRESENTED":
         return "REASON", proof_reason or "not_presented"
+    # a combined line with filing evidence (accession, printed line, R page) is the reason: the filing prints one line
+    # that spans this data point and others. Without evidence a not_in_template on an in-template point is a contradiction.
+    if combined_evidence:
+        return "REASON", COMBINED
     # era_unmapped: the era guard found no filing-checked mapping for that year. A gap in the map, not a reason.
     if blank_reason == UNMAPPED or (
         tagmap_decision and tagmap_reason_class == UNMAPPED and not blank_state
@@ -283,13 +296,16 @@ def build_rows(
     ).fetchall():
         blanks[(row[0], row[1], row[2], row[3])] = row[4:]
     tagmap: dict[tuple[int, str], list[tuple]] = defaultdict(list)
-    for cid, name, dec, ef, et, reason, rclass in conn.execute(
-        """select m.company_id, c.name, m.decision, m.era_from, m.era_to, m.reason, m.reason_class
+    for cid, name, dec, ef, et, reason, rclass, eadsh, erep, elab in conn.execute(
+        """select m.company_id, c.name, m.decision, m.era_from, m.era_to, m.reason, m.reason_class,
+                  m.evidence_adsh, m.evidence_report, m.evidence_plabel
            from analytics.company_tag_map m join analytics.canonical_concept c on c.id = m.canonical_concept_id
-           where m.company_id = any(%s) and m.decision in ('not_presented', 'not_in_template')""",
+           where m.company_id = any(%s) and m.decision in ('not_presented', 'not_in_template', 'combined')""",
         (ids,),
     ).fetchall():
-        tagmap[(cid, name)].append((dec, ef, et, reason, rclass))
+        tagmap[(cid, name)].append(
+            (dec, ef, et, reason, rclass, bool(eadsh and (erep or elab)))
+        )
 
     # the company's CURRENT sector template (latest effective_from <= today): data point -> in_template
     in_tpl: dict[tuple[int, str], bool] = {}
@@ -331,10 +347,16 @@ def build_rows(
                     if brow is None and (c.company_id, n, s, e) in blanks:
                         brow = blanks[(c.company_id, n, s, e)]
                 tm = None
+                comb = False
                 for n in cand:
-                    for dec, ef, et, why, rcl in tagmap.get((c.company_id, n), []):
+                    for dec, ef, et, why, rcl, evid in tagmap.get(
+                        (c.company_id, n), []
+                    ):
                         if (ef is None or ef <= e) and (et is None or et >= e):
-                            tm = (dec, why, rcl)
+                            if evid and (dec == "combined" or rcl in COMBINED_CLASSES):
+                                comb = True
+                            if dec != "combined":
+                                tm = (dec, why, rcl)
                 verdict, preason, ptext, pval, ptag, pacc, psrc, pface = (
                     prow if prow else (None,) * 8
                 )
@@ -350,6 +372,7 @@ def build_rows(
                     brow[3] if brow else None,
                     tm[2] if tm else None,
                     in_tpl.get((c.company_id, dp)),
+                    comb,
                 )
                 # The docmap's r_page is the page in the read (latest) 10-K only: wrong for every earlier year.
                 # The page comes from the proof (face_report) or from the fsn report of THAT year's own 10-K.
