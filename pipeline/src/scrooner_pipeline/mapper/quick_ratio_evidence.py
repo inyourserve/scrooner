@@ -39,6 +39,8 @@ from decimal import Decimal
 from itertools import combinations
 from typing import Any
 
+from scrooner_pipeline.fsn_store import new_path
+
 RULE_ID = "quick_ratio.inventory_evidence@1"
 EVIDENCE_POINT = "inventory"
 # Founder ruling 2026-10-25: a current MaterialsSuppliesAndOther (or materials-captioned non-inventory) face line hides
@@ -281,14 +283,31 @@ def face_unavailable(
     )
 
 
-def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
-    """(unmapped inventory-like core.concept ids, mapped inventory concept ids)."""
+def load_inventory_concept_ids(
+    conn: Any, company_id: int | None = None
+) -> tuple[list[int], set[int]]:
+    """(unmapped inventory-like core.concept ids, mapped inventory concept ids).
+
+    "Mapped" comes from analytics.concept_mapping, except for a new-path company with HYBRID_NEW_PATH=on: there it
+    is the company's own tag map (analytics.company_tag_map, the tags it serves as inventory or as a component of
+    inventory), so the old mapping is never read for that company (fsn_store/new_path.py, canonical_only)."""
     with conn.cursor() as cur:
-        cur.execute(
-            """select m.concept_id from analytics.concept_mapping m
-               join analytics.canonical_concept cc on cc.id = m.canonical_concept_id where cc.name = %s""",
-            (EVIDENCE_POINT,),
-        )
+        if company_id is not None and new_path.canonical_only(conn, company_id):
+            cur.execute(
+                """select distinct k.id from analytics.company_tag_map m
+                   join core.concept k on k.taxonomy = m.taxonomy and k.tag = m.tag
+                   join analytics.canonical_concept cc
+                     on cc.id = case when m.decision = 'component' then m.parent_concept_id
+                                     else m.canonical_concept_id end
+                   where m.company_id = %s and m.decision in ('concept', 'component') and cc.name = %s""",
+                (company_id, EVIDENCE_POINT),
+            )
+        else:
+            cur.execute(
+                """select m.concept_id from analytics.concept_mapping m
+                   join analytics.canonical_concept cc on cc.id = m.canonical_concept_id where cc.name = %s""",
+                (EVIDENCE_POINT,),
+            )
         mapped = {r[0] for r in cur.fetchall()}
         cur.execute(
             "select id, tag from core.concept where taxonomy = 'us-gaap' and (tag ilike %s or tag ilike %s)",
@@ -348,7 +367,7 @@ def load_context(
     mapped_ids: set[int] | None = None,
 ) -> Context:
     if like_ids is None or mapped_ids is None:
-        like_ids, mapped_ids = load_inventory_concept_ids(conn)
+        like_ids, mapped_ids = load_inventory_concept_ids(conn, company_id)
     if face is None:
         face = default_face()
     with conn.cursor() as cur:

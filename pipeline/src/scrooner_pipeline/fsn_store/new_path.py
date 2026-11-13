@@ -35,9 +35,11 @@ def enabled() -> bool:
     return os.environ.get(FLAG, "off").strip().lower() == "on"
 
 
-def company_ids(conn: Any) -> set[int]:
-    """Every company on the new path (read-only, indexed, statement_timeout 15s)."""
-    conn.execute(f"set statement_timeout = '{STATEMENT_TIMEOUT}'")
+def company_ids(conn: Any, *, set_timeout: bool = True) -> set[int]:
+    """Every company on the new path (read-only, indexed, statement_timeout 15s). set_timeout=False leaves the
+    session's own statement_timeout alone (a caller inside its own run)."""
+    if set_timeout:
+        conn.execute(f"set statement_timeout = '{STATEMENT_TIMEOUT}'")
     ids = {int(r[0]) for r in conn.execute(NEW_PATH_SQL).fetchall()}
     if (
         conn.execute("select to_regclass('analytics.company_value_owner')").fetchone()[
@@ -51,8 +53,37 @@ def company_ids(conn: Any) -> set[int]:
                 "select company_id from analytics.company_value_owner"
             ).fetchall()
         }
-    conn.execute("reset statement_timeout")
+    if set_timeout:
+        conn.execute("reset statement_timeout")
     return ids
+
+
+# ---------------------------------------------------------------- the derived-metric stages
+#
+# Dhairya 2026-11-13 (before the flag switch): the derived-metric stages (calculate, growth, ttm-*, price, expanded,
+# piotroski, quality flags, reconciliations, fcf growth, dividend streak) must read only canonical_fact for a new-path
+# company, never the old mapping. Three reads did not (tests/unit/test_fsn_new_path_derived.py lists every table those
+# stages read). With HYBRID_NEW_PATH=on, for a new-path company:
+#   - quick_ratio's inventory evidence takes "which tags are inventory" from the company's tag map
+#     (analytics.company_tag_map), not analytics.concept_mapping;
+#   - market cap's weighted-diluted share count comes from canonical_fact weighted_diluted_shares (the tag map's
+#     concept, 0122), not a hard-coded core.fact tag;
+#   - the rendered-report share count (core.shares_outstanding_fallback, an old-path source) is not used.
+_derived_cache: dict[str, set[int]] = {}
+
+
+def canonical_only(conn: Any, company_id: int) -> bool:
+    """True when a derived-metric stage must take this company's inputs from canonical_fact / the tag map only.
+    Flag off: always False, and the database is not touched. On: the new-path set is read once per process."""
+    if not enabled():
+        return False
+    if "ids" not in _derived_cache:
+        _derived_cache["ids"] = company_ids(conn, set_timeout=False)
+    return company_id in _derived_cache["ids"]
+
+
+def reset_cache() -> None:
+    _derived_cache.clear()
 
 
 def ciks(conn: Any) -> list[str]:

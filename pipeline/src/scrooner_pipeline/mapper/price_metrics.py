@@ -56,6 +56,7 @@ import structlog
 from scrooner_pipeline.common.derivation_policy import PER_SHARE_NOT_DERIVED_REASON
 from scrooner_pipeline.common.rule_flags import rule_enabled
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.fsn_store import new_path
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
 
 logger = structlog.get_logger()
@@ -298,7 +299,12 @@ def _load_shares_outstanding_fallback(
     data) has nothing; never overrides a working value. No source_fact_ids
     (this isn't sourced from core.fact at all) -- lineage instead is the
     row's own accession_number, inspectable directly in
-    core.shares_outstanding_fallback."""
+    core.shares_outstanding_fallback.
+
+    Not for a new-path company with HYBRID_NEW_PATH=on: an old-path source, and the derived stages read only
+    canonical_fact for those (fsn_store/new_path.py, canonical_only)."""
+    if new_path.canonical_only(conn, company_id):
+        return None
     with conn.cursor() as cur:
         cur.execute(
             "select shares, filing_date from core.shares_outstanding_fallback where company_id = %s",
@@ -315,7 +321,20 @@ def _load_latest_diluted_weighted_shares(
     Outstanding. Multi-class filers (Comcast, UPS, Ford, Mastercard) tag
     their point-in-time share count per class, which the Company Facts API
     strips, but they still file this total undimensioned. Read from
-    core.fact (authoritative only) because no canonical concept holds it."""
+    core.fact (authoritative only) because no canonical concept holds it.
+
+    A new-path company with HYBRID_NEW_PATH=on: canonical_fact weighted_diluted_shares, the tag map's concept (0122),
+    so the value comes through the company's own tag map like every other input (fsn_store/new_path.py)."""
+    if new_path.canonical_only(conn, company_id):
+        concept_id = _load_concept_ids(conn, {"weighted_diluted_shares"}).get(
+            "weighted_diluted_shares"
+        )
+        hit = (
+            _latest_instant_fact(conn, company_id, concept_id)
+            if concept_id is not None
+            else None
+        )
+        return (hit[0], list(hit[1] or []), hit[2]) if hit and hit[0] > 0 else None
     with conn.cursor() as cur:
         cur.execute(
             """
