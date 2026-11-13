@@ -1,0 +1,55 @@
+ticker,data_point,fiscal_year,period_end,reason
+DE,amortization_of_intangibles,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,basic_eps,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cash_flow_financing,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cash_flow_investing,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cf_ar_change,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cf_inventory_change,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cfo,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,comprehensive_income,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,cost_of_revenue,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,depreciation_and_amortization,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,diluted_eps,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,dividends_paid,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,dividends_per_share,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,income_before_tax,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,income_tax_expense,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,interest_expense,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,net_income,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,research_and_development,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,revenue,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,sbc,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,sga_expense,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+DE,share_buybacks,2017,2017-12-31,no fiscal year of DE ends on 2017-12-31 (fiscal year ends the Sunday nearest October 31 (FY2017 ended 2017-10-29)); no 10-K has this period: the core.period row is not a fiscal year
+MCD,accounts_payable,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,accounts_receivable,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,cash_and_equivalents,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,current_assets,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,current_liabilities,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,goodwill,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,inventory,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,ppe_net,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,stockholders_equity,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,total_assets,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+MCD,total_debt,2026,2026-09-12,no fiscal year of MCD ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,accounts_receivable,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,cash_and_equivalents,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,current_assets,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,current_liabilities,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,goodwill,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,inventory,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,ppe_net,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,shares_outstanding,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,stockholders_equity,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,total_assets,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+SNDK,total_liabilities,2026,2026-09-12,no fiscal year of SNDK ends on 2026-09-12 (fiscal year ends the Friday nearest June 30); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,accounts_receivable,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,cash_and_equivalents,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,current_assets,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,current_liabilities,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,goodwill,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,inventory,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,ppe_net,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,shares_outstanding,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,stockholders_equity,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
+TMUS,total_assets,2026,2026-09-12,no fiscal year of TMUS ends on 2026-09-12 (fiscal year ends December 31); no 10-K has this period: the core.period row is not a fiscal year
