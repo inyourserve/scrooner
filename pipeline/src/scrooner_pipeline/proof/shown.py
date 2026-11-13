@@ -294,7 +294,11 @@ def load_shown(
         auth_accs = auth_by.get((_base_name(name), period_id), set())
         # the authoritative (latest accepted periodic filing) copy is what the cell must show; an
         # earlier copy that differs is restated history (audit R13)
-        auth_differs = [d for d in disagreeing if d[0] in auth_accs]
+        # a differing fact of the SAME filing the value was taken from is no other vintage: the
+        # filing's own printed line judges it
+        auth_differs = [
+            d for d in disagreeing if d[0] in auth_accs and d[0] != accession
+        ]
         out.append(
             Shown(
                 company_id=company_id,
