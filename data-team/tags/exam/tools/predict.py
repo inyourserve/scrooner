@@ -184,7 +184,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                         if -20 < d <= 0: t += 0.5 * 10 ** (-d)
                     return t * PO.get('dcml_tolerance_factor', 1)
                 anchors = [x for x in (gpl or corl, oil) if x is not None]
-                bsum = sum((-fv(l) if l.get('cr') == 'C' else fv(l)) for l in band) if band else None
+                bsum = sum((-fv(l) if (l.get('cr') == 'C' and PO.get('credit_sign_negate', True)) else fv(l)) for l in band) if band else None
                 tie_ok = band and (abs(bsum - (gp - oi)) <= dtol(band + anchors) if PO.get('dcml_tolerance') else near(bsum, gp - oi))
                 if tie_ok:
                     status, chosen, rule = 'component_sum', band, 'every face line between GP/COR and OI; ties to GP - OI'
