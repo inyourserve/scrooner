@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+depreciation_and_amortization,2019,2019-01-31,combined,us-gaap:DepreciationAmortizationAndAccretionNet,CF,0000104169-20-000011,R7.htm,10678000000,"R page 'Consolidated Statements of Cash Flows - USD ($) $ in Millions' row 'Depreciation and amortization', undimensioned, column 2019-01-31; ties to SEC companyfacts (same accession, period); value from the 10-K that prints this period (own, else the next comparative column); same tag as the nearest year"
