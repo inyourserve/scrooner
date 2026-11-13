@@ -223,3 +223,55 @@ def test_12_coregistrant_blocks_with_other_values_are_not_members(tmp_path):
     rows = _read(tmp_path)
     assert rows["operating_income"]["status"] == "mapped" and rows["operating_income"]["fy0_printed"] == "300000000"
     assert rows["net_income"]["fy0_printed"] == "200000000"
+
+
+# ---------------------------------------------------------------- fixes 17-21: direct unit fixtures (no page fetch)
+
+def _r(tag, label, *vals):
+    return {"tag": tag, "label": label, "vals": list(vals)}
+
+
+def test_13_entity_blocks_dropped_member_blocks_kept_whole():
+    rows = [_r("us-gaap:Revenues", "Total revenues", 100.0),
+            _r("dei:LegalEntityAxis", "Sub A", None),
+            _r("us-gaap:Revenues", "Total revenues", 60.0),
+            _r("srt:ProductOrServiceAxis", "Product", None),
+            _r("us-gaap:CostOfGoodsAndServicesSold", "Cost of goods sold", 40.0),
+            _r("srt:ProductOrServiceAxis", "Other", None),
+            _r("us-gaap:CostOfGoodsAndServicesSold", "Cost of goods sold", 5.0)]
+    out = docmap.dedupe_coreg(rows)
+    vals = [(r["tag"], r["vals"][0]) for r in out if not docmap.is_block_header(r)]
+    assert ("us-gaap:Revenues", 60.0) not in vals  # the legal-entity block is a co-registrant block
+    assert vals.count(("us-gaap:CostOfGoodsAndServicesSold", 40.0)) == 1 and ("us-gaap:CostOfGoodsAndServicesSold", 5.0) in vals
+
+
+def test_14_total_with_member_cogs_is_component_sum_of_face_lines():
+    page = {"rows": [_r("us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax", "Total revenues", 5101.0),
+                     _r("us-gaap:SellingGeneralAndAdministrativeExpense", "Selling, general and administrative", 2234.0),
+                     _r("us-gaap:ResearchAndDevelopmentExpense", "Research and development", 371.0),
+                     _r("us-gaap:OtherOperatingIncomeExpenseNet", "Other expense, net", 333.0),
+                     _r("us-gaap:CostsAndExpenses", "Total expenses", 4988.0),
+                     _r("us-gaap:OperatingIncomeLoss", "Operating income", 113.0),
+                     _r("srt:ProductOrServiceAxis", "Product sales", None),
+                     _r("us-gaap:CostOfGoodsAndServicesSold", "Cost of goods sold", 2045.0),
+                     _r("srt:ProductOrServiceAxis", "Other revenues", None),
+                     _r("us-gaap:CostOfGoodsAndServicesSold", "Cost of goods sold", 5.0)]}
+    row, status, _ = docmap.opex_row(page)
+    assert status == "component sum" and row["vals"][0] == 2938.0
+    page["rows"][3]["vals"] = [350.0]  # no longer ties: the total still includes COGS -> combined, never opex
+    row, status, _ = docmap.opex_row(page)
+    assert status == "combined"
+
+
+def test_15_proceeds_from_repurchase_of_equity_is_never_buybacks():
+    assert docmap._excluded("share_buybacks", _r("us-gaap:ProceedsFromRepurchaseOfEquity", "Repurchases of common stock, net", -224.0))
+    assert not docmap._excluded("share_buybacks", _r("us-gaap:PaymentsForRepurchaseOfCommonStock", "Repurchases of common stock", -224.0))
+
+
+def test_16_affiliate_summarized_pages_are_rejected_notes():
+    assert re.search(docmap.NOTE_REJECT, "Investments in Affiliated Companies (Summarized Financial Data-RRPF) (Details 6)", re.I)
+
+
+def test_17_financial_group_from_the_group_file(monkeypatch):
+    monkeypatch.setattr(docmap, "_GROUPS", {"CACC": "lender_nonbank", "AAPL": "corporate"})
+    assert docmap.template_group("CACC") in docmap.FIN_GROUPS and docmap.template_group("AAPL") not in docmap.FIN_GROUPS

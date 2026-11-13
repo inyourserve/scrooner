@@ -308,7 +308,7 @@ def pick_cols(page: dict, stmt: str) -> list[int]:
 
 
 EXCLUDE = {  # rule-based keying errors to avoid (Dhairya 2026-11-12)
-    "share_buybacks": (r"TaxWithholding|SharesPaidForTaxWithholding", r"withh?old|tax(es)? (paid )?(related to|for|on) (net share|share-based|stock-based|vesting)|net share settlement"),
+    "share_buybacks": (r"TaxWithholding|SharesPaidForTaxWithholding|ProceedsFromRepurchaseOfEquity",r"withh?old|tax(es)? (paid )?(related to|for|on) (net share|share-based|stock-based|vesting)|net share settlement"),
     "dividends_paid": (r"MinorityInterest|NoncontrollingInterest|PreferredStock|PreferenceStock|Declared",
                        r"noncontrolling|non-controlling|minority|preferred|preference|declared"),
     "accounts_receivable": (r"InterestReceivable|NotesReceivable|FinancingReceivable|LoansAndLeasesReceivable|LoansReceivable", r"interest receivable|notes? receivable|financing receivable|loans? receivable|loans and leases"),
@@ -320,13 +320,37 @@ def dedupe_coreg(rows: list[dict]) -> list[dict]:
     only the first (parent, consolidated) occurrence counts (Dhairya / Ritwik 2026-11-12, PLD 70,074 vs 35,037)."""
     seen: dict[str, list] = {}
     out = []
+    block = "main"  # main face block, then dimension blocks headed by an Axis/Member row (fix 17)
     for r in rows:
+        if is_block_header(r):
+            # a legal-entity block (or a multi-dimension header such as 'Electric | Ameren Missouri') is a
+            # co-registrant or subsidiary block: dropped whole. Other axes (product / service members) are kept whole.
+            block = "entity" if (r["tag"] == "dei:LegalEntityAxis" or " | " in r["label"]) else "member"
+            if block == "member":
+                out.append(r)
+            continue
+        if block == "entity":
+            continue
+        if block == "member":
+            r = dict(r, member_block=True)
+            out.append(r)
+            continue
         key = r["tag"]
         if key and key in seen and any(v == r["vals"] or lab == r["label"] for v, lab in seen[key]):
             continue  # same tag with the same values or the same label: a co-registrant block repeat (AEE, PLD)
         seen.setdefault(key, []).append((r["vals"], r["label"]))
         out.append(r)
     return out
+
+
+def is_block_header(r: dict) -> bool:
+    """A dimension block header row on an R page: an Axis/Member tag carrying no values."""
+    return bool(r["tag"]) and bool(re.search(r"(Axis|Member)$", r["tag"])) and not any(v is not None for v in r["vals"])
+
+
+def main_block(rows: list[dict]) -> int:
+    """Index of the first dimension block header (end of the undimensioned face block)."""
+    return next((i for i, r in enumerate(rows) if is_block_header(r)), len(rows))
 
 
 def member_sum(page: dict, r: dict) -> dict:
@@ -379,16 +403,42 @@ def opex_row(page: dict) -> tuple[dict | None, str, str]:
     1. A printed total opex line that excludes COGS -> mapped.
     2. Else every face line between gross profit and operating income, summed, tied exactly to GP - OI -> component sum.
     3. A total (e.g. CostsAndExpenses) that includes COGS -> combined, never opex."""
-    rows = page["rows"]
+    allrows = page["rows"]
+    end_main = main_block(allrows)
+    rows = allrows[:end_main]  # locate face lines in the undimensioned block only (fix 18)
     loc = lambda tags, rx: next((i for i, r in enumerate(rows) if _has(r) and (
         r["tag"].split(":")[-1] in tags or re.search(rx, r["label"], re.I))), None)
     i_gp = loc(["GrossProfit"], r"^gross (profit|margin)")
     i_oi = loc(["OperatingIncomeLoss"], r"^(total )?operating (income|profit|earnings)|income from operations")
     i_cogs = loc(["CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices"],
                  r"^(total )?cost of (revenues?|sales|goods|products|services)")
-    i_tot = next((i for i, r in enumerate(rows) if _has(r) and (r["tag"].split(":")[-1] in ("OperatingExpenses", "CostsAndExpenses")
+    i_tot = next((i for i, r in enumerate(rows) if _has(r) and (r["tag"].split(":")[-1] in ("OperatingExpenses", "CostsAndExpenses", "OperatingCostsAndExpenses")
                   or re.search(r"^total (operating )?(costs and )?expenses", r["label"], re.I))), None)
     v = lambda i: rows[i]["vals"][0] if rows[i]["vals"] else None
+    cogs_tags = ("CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices")
+    m_cogs = [r for r in allrows[end_main:] if _has(r) and r["tag"].split(":")[-1] in cogs_tags]
+    if i_tot is not None and i_gp is None and i_cogs is None and m_cogs and v(i_tot) is not None:
+        # cost of revenue printed only in product/service member blocks (BLCO, CZR, WH): the total includes it.
+        # The face lines between revenue and the total are opex when they plus the member COGS rows tie to the
+        # total (Dhairya 2026-11-13 adjudication: BLCO 4,988 = 2,938 + 2,050; CZR 9,628 = 3,885 + 5,743).
+        tot = rows[i_tot]
+        i_rev = max((i for i in range(i_tot) if _has(rows[i]) and (
+            rows[i]["tag"].split(":")[-1] in ("Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
+                                              "RevenueFromContractWithCustomerIncludingAssessedTax", "SalesRevenueNet")
+            or re.search(r"^(total |net )?(revenues?|net sales|sales)$", rows[i]["label"], re.I))), default=None)
+        parts = [rows[i] for i in range((i_rev if i_rev is not None else -1) + 1, i_tot) if _has(rows[i]) and rows[i]["tag"]]
+        mc = sum((r["vals"][0] or 0) for r in m_cogs)
+        if parts and i_rev is not None:
+            ps = sum((p["vals"][0] or 0) for p in parts)
+            if abs(abs(v(i_tot)) - abs(ps + mc)) < 0.5:
+                return ({"tag": "+".join(p["tag"] for p in parts), "label": " + ".join(p["label"] for p in parts),
+                         "vals": [sum((p["vals"][k] or 0) for p in parts if k < len(p["vals"])) for k in range(max(len(p["vals"]) for p in parts))],
+                         "parts": parts}, "component sum",
+                        f"face lines between revenue and the printed total {fmt(v(i_tot))}; they plus cost of revenue printed by member "
+                        f"({fmt(mc)}) tie to the total, so the total includes COGS and is never opex")
+            return tot, "combined", (f"total includes cost of revenue printed by member ({fmt(mc)}); face lines {fmt(ps)} + member COGS "
+                                     f"do not tie to the total {fmt(v(i_tot))} (residual {fmt(v(i_tot) - ps - mc)}): combined, never opex")
+        return tot, "combined", f"total includes cost of revenue printed by member ({fmt(mc)}): combined, never opex"
     if i_tot is not None:
         tot = rows[i_tot]
         if i_gp is not None and i_oi is not None and None not in (v(i_gp), v(i_oi), v(i_tot)):
@@ -430,10 +480,27 @@ NOTE_FAMILY = {  # data point -> (tags that ARE the data point, tags that are on
 
 
 NOTE_REJECT = (r"variable interest|\bVIEs?\b|subsidiar|merger|acquisition|segment|investee|equity method|"
-               r"joint venture|unconsolidated|discontinued|held for sale|guarantor|parent company|condensed financial information")
+               r"joint venture|unconsolidated|discontinued|held for sale|guarantor|parent company|condensed financial information|"
+               r"affiliated compan|summarized financial")  # fix 20: GATX RRPF affiliate pages
 
 OUT_FOR_FIN = {"cost_of_revenue", "gross_profit", "research_and_development", "inventory", "current_assets",
                "current_liabilities"}
+FIN_GROUPS = {"bank", "insurer", "lender_nonbank", "bdc", "broker_dealer", "asset_manager", "reit_mortgage"}
+NET_INTEREST_TAGS = {"InterestIncomeExpenseNonoperatingNet", "InterestIncomeExpenseNet", "InterestRevenueExpenseNet",
+                     "InterestExpenseNet"}
+GROUP_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "strategy", "data", "group_assignment_v2.csv")
+_GROUPS: dict[str, str] | None = None
+
+
+def template_group(tic: str) -> str:
+    """The company's template group from data-team/strategy/data/group_assignment_v2.csv ('' when absent)."""
+    global _GROUPS
+    if _GROUPS is None:
+        _GROUPS = {}
+        if os.path.exists(GROUP_FILE):
+            with open(GROUP_FILE, newline="") as fh:
+                _GROUPS = {r["ticker"]: r.get("group") or "" for r in csv.DictReader(fh)}
+    return _GROUPS.get(tic, "")
 
 KEYWORDS = {  # label search (any tag, custom included) for the by-hand review of not_presented rows
     "revenue": r"\b(revenues?|net sales|sales)\b", "cost_of_revenue": r"cost of (revenue|sales|goods|products|services)",
@@ -742,7 +809,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         fl_face = [x for x in bs["rows"] if _has(x) and x["tag"].split(":")[-1] in FIN_LEASE_TAGS
                    and not re.search(r"operating", x["label"], re.I)]
         lease_note = ""
-        if parts and cols:
+        if (parts or fl_face) and cols:  # face debt carried only on finance-lease tags (LSTR) is total debt too (fix 21)
             end0 = bs["cols"][cols[0]][1]
             extra = [] if lease_in_debt else fl_face
             allp = parts + extra
@@ -751,6 +818,8 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
             av0 = sum(api0) if all(a is not None for a in api0) else None
             if lease_in_debt:
                 lease_note = "finance leases already inside a debt line (tag/label): not added again"
+            elif extra and not parts:
+                lease_note = "the only debt lines on the BS face carry finance lease tags (summed)"
             elif extra:
                 lease_note = "finance lease liabilities printed on the BS face added"
             else:
@@ -802,19 +871,33 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                    note="AUTO: no CommonStockSharesOutstanding count at the BS date on the BS face or parenthetical; dei cover count not used")
     out.append(rec)
     resolve_by_filing(out, cf, accn, cik, cache, quirks, tic)
-    # OUT ruling (Dhairya, main @020ebb29): for banks and insurers these data points are outside the template
+    # fix 19: a net interest line resolved anywhere (face or note) is combined, never gross interest expense
+    # (interest card; Dhairya SPGI caption ruling 2026-11-12; DOCS 'Interest income' on InterestIncomeExpenseNonoperatingNet)
+    for r in out:
+        if r["data_point"] == "interest_expense" and r.get("status") == "mapped" and (
+                re.search(r",\s*net\b|\bnet\b|income|net interest|deductions", r.get("label") or "", re.I)
+                or (r.get("tags") or "").split(":")[-1] in NET_INTEREST_TAGS):
+            r["status"] = "combined"
+            r["note"] = "net interest line: interest_expense is the gross charge only, a net line is combined (Dhairya 2026-11-12) | " + (r.get("note") or "")
+    # OUT ruling (Dhairya, main @020ebb29): for banks and insurers these data points are outside the template.
+    # fix 17 (Dhairya 2026-11-13, SYF CA/CL): the other financial template groups (group_assignment_v2.csv) too,
+    # for a row that is not presented on the filing (a presented line is never overruled by the group alone)
     sub = get(f"https://data.sec.gov/submissions/CIK{cik}.json", cache)
     try:
         sic = int(json.loads(sub).get("sic") or 0)
     except Exception:
         sic = 0
     fam = "bank" if (6021 <= sic <= 6036 or sic == 6712) else ("insurer" if 6311 <= sic <= 6411 else "")
-    meta["sic"] = sic
-    if fam:
-        for r in out:
-            if r["data_point"] in OUT_FOR_FIN:
-                was = f"{r.get('status')} {r.get('tags', '')} {r.get('fy0_printed', '')}".strip()
-                r.update(status="OUT", note=f"OUT: outside the {fam} template (SIC {sic}; Dhairya OUT ruling main @020ebb29); was: {was[:120]}")
+    grp = template_group(tic)
+    meta["sic"], meta["group"] = sic, grp
+    for r in out:
+        if r["data_point"] not in OUT_FOR_FIN:
+            continue
+        was = f"{r.get('status')} {r.get('tags', '')} {r.get('fy0_printed', '')}".strip()
+        if fam:
+            r.update(status="OUT", note=f"OUT: outside the {fam} template (SIC {sic}; Dhairya OUT ruling main @020ebb29); was: {was[:120]}")
+        elif grp in FIN_GROUPS and r.get("status") == "not_presented":
+            r.update(status="OUT", note=f"OUT: outside the {grp} template group (group_assignment_v2.csv; Dhairya ruling 2026-11-13, SYF CA/CL); was: {was[:120]}")
     # era coverage FY2015 -> latest (Dhairya 2026-11-12: a docmap is loadable only when every data point's eras
     # cover FY2015 to the latest year). Runs come from companyfacts 10-K annual facts (DATA-INFERRED); the FY2015
     # 10-K is always opened and its printed line recorded (FILING-CHECKED), plus up to 2 more era-change 10-Ks.
