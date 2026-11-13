@@ -114,6 +114,8 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
         else:
             continue
+        if (not dp or dp not in cand) and l['tag'] in nd and nd[l['tag']][0] in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('data_points', []):
+            dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
         if not dp or dp not in cand: continue
         if l['pth'] and dp not in KB['PTH_OK']: continue
         if l['val'] in (None, ''):
@@ -229,7 +231,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 status, chosen, rule = 'mapped', bsr, 'single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)'
             else:
                 status, chosen, rule = 'combined', [pick(combs)], 'wider receivables tag beside other receivables lines or a wider label'
-        elif dp == 'interest_expense' and not maps:
+        elif dp == 'interest_expense' and not maps and (comps or combs or any(l['st'] == 'IS' and not l['pth'] and l['val'] is not None and l['tag'] in P['is.interest_expense.plain_caption_net_tag']['tags'] for l in L)):
             PI = P['is.interest_expense.plain_caption_net_tag']
             nt = [l for l in L if l['st'] == 'IS' and not l['pth'] and l['val'] is not None and l['tag'] in PI['tags'] and re.fullmatch(PI['label_fullmatch'], l['lab'] or '')]
             if nt:
