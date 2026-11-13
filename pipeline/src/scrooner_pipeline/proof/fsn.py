@@ -120,6 +120,23 @@ class FilingStructure:
         default_factory=lambda: defaultdict(list)
     )
 
+    # dimensional values (dimn > 0), kept only when load_quarter(with_dims=True): (tag, ddate, qtrs, segments) ->
+    # values, segments in the fsn.dim.segments format ('ProductOrService=Product;') the map's dims uses
+    dim_num: dict[tuple[str, date, int, str], list[NumValue]] = field(
+        default_factory=lambda: defaultdict(list)
+    )
+
+    def value_dim(
+        self, tag: str, ddate: date, qtrs: int, segments: str, uom_prefix: str = "USD"
+    ) -> NumValue | None:
+        """The printed value of tag under EXACTLY these segments (never a different slice, never the total)."""
+        vals = [
+            v
+            for v in self.dim_num.get((tag, ddate, qtrs, segments), [])
+            if v.uom.upper().startswith(uom_prefix)
+        ]
+        return vals[0] if vals else None
+
     def lines_on(self, stmt: str) -> list[PreLine]:
         return sorted(
             (p for p in self.pre if p.stmt == stmt), key=lambda p: (p.report, p.line)
@@ -204,10 +221,19 @@ def ensure_quarter(
 
 
 def load_quarter(
-    fsn_root: Path, period: str, accessions: set[str]
+    fsn_root: Path, period: str, accessions: set[str], with_dims: bool = False
 ) -> dict[str, FilingStructure]:
-    """Structures for the given accessions found in one FSN quarter."""
-    d = ensure_quarter(fsn_root, period)
+    """Structures for the given accessions found in one FSN quarter. with_dims also keeps the dimensional num rows
+    under their segments (dim.tsv.zst: dimhash -> segments), for the proof of a dimensional map row (0125)."""
+    d = ensure_quarter(
+        fsn_root, period, ("sub", "pre", "cal", "num") + (("dim",) if with_dims else ())
+    )
+    segments_of: dict[str, str] = {}
+    if with_dims:
+        segments_of = {
+            r["dimhash"]: r.get("segments") or ""
+            for r in _zst_rows(d / f"{period}_dim.tsv.zst")
+        }
     out: dict[str, FilingStructure] = {}
     for r in _zst_rows(d / f"{period}_sub.tsv.zst"):
         if r["adsh"] in accessions:
@@ -252,9 +278,10 @@ def load_quarter(
             s.custom_parents[r["ctag"]].add(r["ptag"])
     for r in _zst_rows(d / f"{period}_num.tsv.zst"):
         s = out.get(r["adsh"])
+        dimensional = r.get("dimn", "0") != "0"
         if (
             s is None
-            or r.get("dimn", "0") != "0"
+            or (dimensional and not with_dims)
             or r.get("iprx", "0") != "0"
             or r.get("coreg")
         ):
@@ -272,7 +299,11 @@ def load_quarter(
         except ValueError:
             dcml = None
         qtrs = int(r["qtrs"] or 0)
-        s.num[(r["tag"], dd, qtrs)].append(
-            NumValue(r["tag"], r["version"], dd, qtrs, r["uom"], value, dcml)
-        )
+        nv = NumValue(r["tag"], r["version"], dd, qtrs, r["uom"], value, dcml)
+        if dimensional:
+            segs = segments_of.get(r.get("dimh", ""), "")
+            if segs:
+                s.dim_num[(r["tag"], dd, qtrs, segs)].append(nv)
+        else:
+            s.num[(r["tag"], dd, qtrs)].append(nv)
     return out

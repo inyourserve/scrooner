@@ -32,6 +32,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
+from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
 
 RULE_ID = "proof.cell_proof@1"
@@ -641,7 +642,7 @@ def _finish(
     mag_ok = (
         shown.value == 0
         or expect == 0
-        or (Decimal("0.5") <= abs(shown.value / expect) <= Decimal("2"))
+        or (Decimal("0.5") <= abs(shown.value / expect) <= Decimal(2))
     )
     p.checks["unit_scale"] = {
         "status": "pass" if (uom_matches(uom, cls) and mag_ok) else "fail",
@@ -755,11 +756,21 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     off_face: list[str] = []
     dcmls: list[int | None] = []
     for sign, tag in claim.parts:
-        nv = find_value(structure, tag, ddate, qtrs, cls)
+        try:
+            base, segs = split_part(tag)
+        except (
+            ValueError
+        ):  # a malformed member claim is unknown, never read as a plain tag
+            missing.append(tag)
+            continue
+        if segs:  # member claim: ONLY the value under exactly these members, never the total (proof/dims.py)
+            nv = find_value_dim(structure, base, ddate, qtrs, cls, segs)
+        else:  # plain claim: the non-dimensional value only
+            nv = find_value(structure, tag, ddate, qtrs, cls)
         if nv is None:
             missing.append(tag)
             continue
-        if claim.stmt not in NOTE_STMTS and tag not in face:
+        if not segs and claim.stmt not in NOTE_STMTS and tag not in face:
             off_face.append(tag)
             continue
         total += sign * nv.value
@@ -792,7 +803,7 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         shown,
         cls,
         total,
-        "USD",
+        "shares" if cls == "shares" else "USD",  # a share-count sum is in shares (R11)
         dcml,
         claim.sign,
         "the sum of " + ",".join(t for _s, t in claim.parts),
@@ -1003,7 +1014,7 @@ def prove_derived(
     mag_ok = (
         shown.value == 0
         or q == 0
-        or (Decimal("0.5") <= abs(shown.value / q) <= Decimal("2"))
+        or (Decimal("0.5") <= abs(shown.value / q) <= Decimal(2))
     )
     p.checks["unit_scale"] = {
         "status": "pass" if (uom_ok and mag_ok) else "fail",

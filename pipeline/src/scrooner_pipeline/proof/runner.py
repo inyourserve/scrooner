@@ -30,7 +30,7 @@ from scrooner_pipeline.proof.fsn import (
     quarter_of,
     require_zstd,
 )
-from scrooner_pipeline.proof.prove import Proof, Shown, prove_cell
+from scrooner_pipeline.proof.prove import Proof, prove_cell
 from scrooner_pipeline.proof.shown import group_by_accession, load_shown
 
 logger = structlog.get_logger()
@@ -76,17 +76,37 @@ class StructureCache:
         self.fsn_root = fsn_root
         self.loaded: dict[str, dict[str, FilingStructure]] = {}
         self.missing_quarters: set[str] = set()
+        self.dims_loaded: set[tuple[str, str]] = (
+            set()
+        )  # (quarter, adsh) loaded with dimensional rows
 
-    def get_many(self, by_quarter: dict[str, set[str]]) -> dict[str, FilingStructure]:
+    def get_many(
+        self, by_quarter: dict[str, set[str]], dims: bool = False
+    ) -> dict[str, FilingStructure]:
+        """dims=True also loads the dimensional num rows (dim.tsv.zst) for member claims; a quarter whose dim file
+        is not in the bucket keeps its plain structure, so member parts stay UNCHECKED and plain cells are untouched."""
         out: dict[str, FilingStructure] = {}
         for q, accs in sorted(by_quarter.items()):
             if q in self.missing_quarters:
                 continue
             have = self.loaded.setdefault(q, {})
             need = {a for a in accs if a not in have}
+            if dims:
+                need |= {
+                    a for a in accs if a in have and (q, a) not in self.dims_loaded
+                }
             if need:
                 try:
-                    have.update(load_quarter(self.fsn_root, q, need))
+                    got = None
+                    if dims:
+                        try:
+                            got = load_quarter(self.fsn_root, q, need, with_dims=True)
+                            self.dims_loaded.update((q, a) for a in need)
+                        except FileNotFoundError:
+                            got = None  # no dim file: plain structure below, member parts UNCHECKED
+                    if got is None:
+                        got = load_quarter(self.fsn_root, q, need)
+                    have.update(got)
                 except FileNotFoundError:
                     self.missing_quarters.add(q)
                     logger.warning("cell_proof.fsn_quarter_missing", quarter=q)
@@ -155,7 +175,10 @@ def prove_company(
                 prior_for[(s.accession, s.period_start)] = best[1]
                 fdates[best[1]] = best[2]
                 by_quarter[quarter_of(best[2])].add(best[1])
-    structures = cache.get_many(by_quarter)
+    wants_dims = any(
+        s.claim is not None and any("[" in t for _sg, t in s.claim.parts) for s in shown
+    )
+    structures = cache.get_many(by_quarter, dims=wants_dims)
     proofs: list[Proof] = []
     for acc, cells in groups.items():
         structure = structures.get(acc) if acc else None
