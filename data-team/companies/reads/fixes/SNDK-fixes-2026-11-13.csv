@@ -1,0 +1,4 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+interest_expense,2024,2024-06-28,mapped,us-gaap:InterestExpenseNonoperating,IS,0002023554-25-000034,R5.htm,40000000,printed line 'Interest expense' = red-cell evidence 40000000; printed as a negative within other income (expense); check: hand R5.htm
+interest_expense,2025,2025-06-27,mapped,us-gaap:InterestExpenseNonoperating,IS,0001628280-26-057406,R5.htm,63000000,printed line 'Interest expense' = red-cell evidence 63000000; printed as a negative within other income (expense); check: hand R5.htm
+interest_expense,2026,2026-07-03,mapped,us-gaap:InterestExpenseNonoperating,IS,0001628280-26-057406,R5.htm,73000000.0000,printed line 'Interest expense' = red-cell evidence 73000000.0000; printed as a negative within other income (expense); check: hand R5.htm
