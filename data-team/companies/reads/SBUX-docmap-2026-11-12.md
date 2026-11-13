@@ -100,3 +100,6 @@ none beyond sign differences
 - weighted_basic_shares: mapped us-gaap:WeightedAverageNumberOfSharesOutstandingBasic (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Basic' is the weighted_basic_shares line, printed 1136000000 = filing XBRL 1136000000; agrees
 - goodwill: mapped us-gaap:Goodwill (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: BS R7.htm 'Goodwill' is the goodwill line, printed 3368900000 = filing XBRL 3368900000; agrees
 - stockholders_equity: mapped us-gaap:StockholdersEquity (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: BS R7.htm 'Stockholders' Equity/(Deficit) Attributable to Par' is the stockholders_equity line, printed -8096600000 = filing XBRL -8096600000; agrees
+
+## Gap 2026-11-13 (top-100 gap work)
+- The latest 10-K on EDGAR is 0000829224-26-000162 (submissions, fetched 2026-11-13 by the sec-reads-fetch run 43368567998); this docmap reads 0000829224-25-000114 (FY2025). Every row here is one fiscal year behind until it is re-read on the new filing. The 8 data points the shared tool never emits are not added here for that reason.
