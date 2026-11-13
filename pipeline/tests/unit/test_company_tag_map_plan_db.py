@@ -105,6 +105,11 @@ def test_custom_tag_is_read_from_the_fsn_store_with_value_id_lineage(isolated_da
         tid = _one(conn, "insert into fsn.tag (tag, version, custom) values ('OpexExclAmort','0000001301-new',true) returning id")
         conn.execute("insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s,4,9,'IS',%s)", (fid, tid))
         vid = _one(conn, "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, iprx, coreg, value) values (%s,%s,%s,'2018-12-31',4,'USD',0,0,'',40) returning id", fid, co, tid)
+        # the filing's face prints the standard Revenues line too (statement coherence: a copy of a filing the FSN
+        # store holds is served only where that filing's face statement prints the tag for the column)
+        rtid = _one(conn, "insert into fsn.tag (tag, version, custom) values ('Revenues','us-gaap/2018',false) returning id")
+        conn.execute("insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s,4,1,'IS',%s)", (fid, rtid))
+        conn.execute("insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, iprx, coreg, value) values (%s,%s,%s,'2018-12-31',4,'USD',0,0,'',100)", (fid, co, rtid))
         opex = x["opex"]
         ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,%s,%s,'IS','concept',%s,'2015-01-01','t','tm.r@1')"
         conn.execute(ins, (co, "us-gaap", "Revenues", x["rev"]))

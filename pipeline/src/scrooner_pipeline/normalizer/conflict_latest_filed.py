@@ -64,7 +64,11 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
-from scrooner_pipeline.common.authority import face_column_eligible
+from scrooner_pipeline.common.authority import (
+    FaceIndex,
+    face_column_eligible,
+    load_face_indexes,
+)
 from scrooner_pipeline.common.periodic_forms import ANNUAL_FORMS_ALL, QUARTERLY_FORMS
 from scrooner_pipeline.common.rule_flags import RULE_PERIODIC_FORM_ONLY, rule_enabled
 
@@ -247,6 +251,9 @@ on conflict (fact_id) do update
 # class, so a loser's reason is superseded_precision (precision rule) or superseded_restated (latest rule). Same
 # sign-only quarantine as above.
 RULE_TAGMAP_PRECISION = "precision_tagmap_v2"
+# Statement coherence (common/authority.FaceIndex.statement_filing): every member of one statement and period is read
+# from the one latest face-eligible filing that prints the column, never a restated member next to original ones.
+RULE_TAGMAP_STATEMENT = "statement_filing_tagmap_v2"
 DEMOTED_RULE = "latest_filed_tagmap_v2:demoted_not_face_column_eligible"
 
 TAGMAP_CANDIDATES_SQL = """
@@ -307,8 +314,12 @@ class TagMapCopy:
     authoritative: bool = False
 
 
-def choose_tag_map_winner(copies: Sequence[TagMapCopy]) -> tuple[int, str] | None:
-    """(winner fact id, rule) for one disagreeing group, or None when no copy may win. Pure."""
+def choose_tag_map_winner(
+    copies: Sequence[TagMapCopy], statement_accession: str | None = None
+) -> tuple[int, str] | None:
+    """(winner fact id, rule) for one disagreeing group, or None when no copy may win. Pure.
+    statement_accession: the statement filing of the group's column (FaceIndex.statement_filing); its copy wins the
+    restatement class when it is eligible (the precision class keeps its own rule)."""
     eligible = [c for c in copies if c.eligible]
     if not eligible:
         return None
@@ -326,6 +337,10 @@ def choose_tag_map_winner(copies: Sequence[TagMapCopy]) -> tuple[int, str] | Non
                     w = sorted(winners, key=lambda c: c.accession)
                     w.sort(key=lambda c: (c.accepted_at, c.filing_date), reverse=True)
                     return w[0].fact_id, RULE_TAGMAP_PRECISION
+    if statement_accession is not None:
+        sc = [c for c in eligible if c.accession == statement_accession]
+        if sc:
+            return sorted(sc, key=lambda c: c.fact_id)[0].fact_id, RULE_TAGMAP_STATEMENT
     w = sorted(eligible, key=lambda c: (c.is_amendment, c.accession))
     w.sort(key=lambda c: (c.accepted_at, c.filing_date), reverse=True)
     return w[0].fact_id, RULE_TAGMAP
@@ -371,10 +386,13 @@ def _tag_map_dcml(conn: psycopg.Connection, rows) -> dict[int, int]:
     return out
 
 
-def _row_copy(r, dcml: dict[int, int]) -> TagMapCopy:
+def _row_copy(r, dcml: dict[int, int], face: FaceIndex | None = None) -> TagMapCopy:
     """One candidate row -> TagMapCopy. Eligible = periodic form (and no statement-less amendment) AND the filing
-    prints the period as a face column (common/authority.face_column_eligible; rule v2)."""
+    prints the period as a face column (common/authority.face_column_eligible; rule v2) AND, where the FSN store
+    holds the filing, its face statement prints this tag for the column (FaceIndex.eligible)."""
     eligible = bool(r[10]) and face_column_eligible(r[15], r[16], r[13], r[14])
+    if eligible and face is not None:
+        eligible = face.eligible(r[15], r[16], r[6], r[11], r[12], r[13], r[14])
     return TagMapCopy(
         r[0],
         Decimal(r[5]),
@@ -386,6 +404,18 @@ def _row_copy(r, dcml: dict[int, int]) -> TagMapCopy:
         dcml.get(r[0]),
         authoritative=bool(r[17]) if len(r) > 17 else True,
     )
+
+
+def _group_statement_filing(rs: list, face: FaceIndex) -> str | None:
+    """The statement filing of one group's column: the statement the tag prints on (in any copy's filing), then
+    FaceIndex.statement_filing for that column. None when the FSN store cannot say."""
+    r0 = rs[0]
+    start, end, ptype = r0[12], r0[13], r0[14]
+    for r in rs:
+        stmt = face.stmt_of(r[6], r[11], end, ptype, start)
+        if stmt in ("BS", "IS", "CF"):
+            return face.statement_filing(stmt, start, end, ptype)
+    return None
 
 
 def plan_tag_map_promotions(
@@ -406,16 +436,30 @@ def plan_tag_map_promotions(
         {"company_ids": company_ids, "forms": list(AUTHORITATIVE_FORMS)},
     ).fetchall()
     dcml = _tag_map_dcml(conn, rows)
+    faces = load_face_indexes(conn, sorted({r[1] for r in rows}))
     groups: dict[tuple, list] = defaultdict(list)
     for r in rows:
         groups[(r[1], r[2], r[3], r[4])].append(r)
     out = []
     for key, rs in groups.items():
-        copies = [_row_copy(r, dcml) for r in rs]
+        face = faces[key[0]]
+        copies = [_row_copy(r, dcml, face) for r in rs]
         auth = [c for c in copies if c.authoritative]
         bad = [c.fact_id for c in auth if not c.eligible]
-        if auth and not bad:
+        sf = _group_statement_filing(rs, face)
+        chosen = choose_tag_map_winner(copies, sf)
+        auth_ids = {c.fact_id for c in auth}
+        # statement coherence: the statement filing's copy beats an eligible authoritative copy of another filing
+        override = (
+            chosen is not None
+            and chosen[1] == RULE_TAGMAP_STATEMENT
+            and chosen[0] not in auth_ids
+            and bool(auth)
+        )
+        if auth and not bad and not override:
             continue  # resolved by an eligible copy: leave it
+        if override:
+            bad = sorted(auth_ids)
         values = [c.value for c in copies]
         base = {
             "company_id": key[0],
@@ -424,10 +468,9 @@ def plan_tag_map_promotions(
             "value_max": max(values),
             "demote": bad,
         }
-        if any(c.eligible for c in auth):
+        if not override and any(c.eligible for c in auth):
             out.append({**base, "fact_id": None, "rule": None})
             continue
-        chosen = choose_tag_map_winner(copies)
         if chosen is None:
             continue  # no eligible copy at all: never blank a cell here
         out.append({**base, "fact_id": chosen[0], "rule": chosen[1]})

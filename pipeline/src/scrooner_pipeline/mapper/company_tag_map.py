@@ -50,7 +50,9 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.authority import (
+    FaceIndex,
     face_column_eligible,
+    load_face_indexes,
     latest_complete_filing,
 )
 from scrooner_pipeline.common.tag_aliases import with_aliases
@@ -210,13 +212,16 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
 
 
 def _load_facts(
-    conn: psycopg.Connection, company_id: int, tags: set[tuple[str | None, str | None]]
+    conn: psycopg.Connection,
+    company_id: int,
+    tags: set[tuple[str | None, str | None]],
+    face: FaceIndex | None = None,
 ):
     """(taxonomy, tag) -> period_id -> Fact of the latest authoritative filing. Authoritative only:
     is_authoritative=false is a hard filter."""
     out: dict[tuple[str | None, str | None], dict[int, Fact]] = defaultdict(dict)
     for key, by_period in _load_fact_vintages(
-        conn, company_id, tags, latest_only=True
+        conn, company_id, tags, latest_only=True, face=face
     ).items():
         for period_id, prints in by_period.items():
             out[key][period_id] = prints[0]
@@ -230,6 +235,7 @@ def _load_fact_vintages(
     company_id: int,
     tags: set[tuple[str | None, str | None]],
     latest_only: bool = False,
+    face: FaceIndex | None = None,
 ) -> dict[tuple[str | None, str | None], dict[int, list[Fact]]]:
     """(taxonomy, tag) -> period_id -> one Fact per filing, newest filing first: the authoritative copy, plus (not
     latest_only) every other filing's copy of the same value. Same source filters as _load_facts; predecessor
@@ -241,11 +247,11 @@ def _load_fact_vintages(
         cur.execute(
             """
             select taxonomy, tag, period_id, value, id, end_date, is_derived, filing_id, accession_number, filing_date,
-                   is_authoritative, form, period_of_report, period_type
+                   is_authoritative, form, period_of_report, period_type, start_date
             from (
                 select c.taxonomy, c.tag, f.period_id, f.value, f.id, p.end_date, f.is_derived, f.filing_id,
                        fl.accession_number, fl.filing_date, f.is_authoritative, fl.form, fl.period_of_report,
-                       p.period_type,
+                       p.period_type, p.start_date,
                        rank() over (partition by c.taxonomy, c.tag, f.period_id
                                     order by fl.filing_date desc nulls last, f.filing_id desc) as rk
                 from core.fact f
@@ -290,7 +296,19 @@ def _load_fact_vintages(
     for r in rows:
         # a same-value copy in a filing that does not print the period as a face column (common/authority) is no
         # vintage: the sum's source filing is chosen among eligible prints only, as the proof's authority does
-        if not r[10] and not face_column_eligible(r[11], r[12], r[5], r[13]):
+        if not r[10] and not (
+            face.eligible(r[11], r[12], r[8], r[1], r[14], r[5], r[13])
+            if face is not None
+            else face_column_eligible(r[11], r[12], r[5], r[13])
+        ):
+            continue
+        # statement coherence: even the authoritative copy must be one this filing's FACE statement prints (JPM
+        # total assets served from a summary table of the next year's 10-Q): the mapper never serves it
+        if (
+            r[10]
+            and face is not None
+            and not face.printed_ok(r[8], r[1], r[14], r[5], r[13])
+        ):
             continue
         grouped[(r[0], r[1], r[2], r[7])].append(r)
     for (taxonomy, tag, period_id, _), rs in grouped.items():
@@ -761,9 +779,11 @@ def _one_filing_parts(
     comps: list[tuple[MapRow, Fact]],
     vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]],
     period_id: int,
+    statement_accession: str | None = None,
 ) -> list[tuple[MapRow, Fact]] | None:
-    """All parts of one sum from the newest filing that prints every one of them (never a restated part next to
-    an unrestated one). None when no single filing prints them all, or a part is not a sec_api vintage."""
+    """All parts of one sum from ONE filing: the statement filing when it prints every part (common/authority
+    FaceIndex.statement_filing), else the newest filing that prints every one of them (never a restated part next
+    to an unrestated one). None when no single filing prints them all, or a part is not a sec_api vintage."""
     by_filing: list[dict[int, Fact]] = []
     for row, f in comps:
         if f.source != "sec_api":
@@ -775,8 +795,16 @@ def _one_filing_parts(
         if not prints:
             return None
         by_filing.append(prints)
+    prefer = next(
+        (
+            fid
+            for fid, v in by_filing[0].items()
+            if statement_accession is not None and v.accession == statement_accession
+        ),
+        None,
+    )
     best = latest_complete_filing(
-        [{fid: v.filed for fid, v in prints.items()} for prints in by_filing]
+        [{fid: v.filed for fid, v in prints.items()} for prints in by_filing], prefer
     )
     if best is None:
         return None
@@ -787,6 +815,7 @@ def _single_source_parts(
     comps: list[tuple[MapRow, Fact]],
     fsn_vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]],
     period_id: int,
+    statement_accession: str | None = None,
 ) -> list[tuple[MapRow, Fact]] | None:
     """A sum with a custom (fsn_xbrl) part reads EVERY part from ONE filing's own XBRL: the latest face-column-
     eligible filing that prints every part (common/authority.latest_complete_filing), never the filing the custom
@@ -805,7 +834,8 @@ def _single_source_parts(
             return None
         by_part.append(prints)
     best = latest_complete_filing(
-        [{acc: v.filed for acc, v in prints.items()} for prints in by_part]
+        [{acc: v.filed for acc, v in prints.items()} for prints in by_part],
+        statement_accession,
     )
     if best is None:
         return None
@@ -941,6 +971,7 @@ def build_cells(
     fsn_vintages: dict[tuple[str | None, str | None], dict[int, list[Fact]]]
     | None = None,
     proof_disagree: dict[tuple[str, str, date, date], Decimal] | None = None,
+    face: FaceIndex | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
     vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
@@ -1076,10 +1107,14 @@ def build_cells(
                 else "component_missing_for_period",
             )
             continue
+        sf = None
+        if face is not None and key[1] in periods and pstmt in STATEMENT_CODE:
+            pstart, pend, ptype_ = periods[key[1]]
+            sf = face.statement_filing(STATEMENT_CODE[pstmt], pstart, pend, ptype_)
         if len({f.source for _, f in c}) > 1:
-            c = _single_source_parts(c, fsn_vintages, key[1]) or c
+            c = _single_source_parts(c, fsn_vintages, key[1], sf) or c
         if len({f.filing_id for _, f in c}) > 1:
-            c = _one_filing_parts(c, vintages, key[1]) or c
+            c = _one_filing_parts(c, vintages, key[1], sf) or c
         reason = _check_components(c, arcs, _base(pname) == "total_debt")
         needs_tie = reason in TIE_REASONS and _base(pname) in TIE_EVIDENCE
         if (
@@ -1568,7 +1603,10 @@ def resolve_for_company(
         if r.tag is not None and r.decision != "excluded"
     }
     periods = _load_periods(conn, company_id)
-    facts = _load_facts(conn, company_id, {k for k in used if not is_custom(k[0])})
+    face = load_face_indexes(conn, [company_id])[company_id]
+    facts = _load_facts(
+        conn, company_id, {k for k in used if not is_custom(k[0])}, face
+    )
     custom_used = {k for k in used if is_custom(k[0])}
     for k, by_period in _load_fsn_facts(conn, company_id, custom_used, periods).items():
         facts[k] = by_period
@@ -1586,7 +1624,7 @@ def resolve_for_company(
     )  # read only to detect winner-tag gaps, never a value
     comp_tags = {(r.taxonomy, r.tag) for r in rows if r.decision == "component"}
     vintages = _load_fact_vintages(
-        conn, company_id, {k for k in comp_tags if not is_custom(k[0])}
+        conn, company_id, {k for k in comp_tags if not is_custom(k[0])}, face=face
     )
     # standard parts of a sum that has a custom part are also read from the filings' own XBRL (one source a cell)
     custom_parents = {
@@ -1603,7 +1641,7 @@ def resolve_for_company(
         in TIE_BASES
     }
     for k, by_period in _load_fact_vintages(
-        conn, company_id, {k for k in tie_tags if not is_custom(k[0])}
+        conn, company_id, {k for k in tie_tags if not is_custom(k[0])}, face=face
     ).items():
         vintages.setdefault(k, by_period)
     fsn_vintages = _load_fsn_vintages(
@@ -1643,6 +1681,7 @@ def resolve_for_company(
         vintages,
         fsn_vintages,
         _load_proof_disagree(conn, company_id),
+        face,
     )
     targets = set(managed_concept_ids)
     for r in rows:

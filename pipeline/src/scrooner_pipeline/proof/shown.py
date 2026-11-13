@@ -17,7 +17,9 @@ from decimal import Decimal
 import psycopg
 
 from scrooner_pipeline.common.authority import (
+    FaceIndex,
     face_column_eligible,
+    load_face_indexes,
     latest_complete_filing,
     latest_eligible,
 )
@@ -177,7 +179,10 @@ PERIODIC_FORMS = (
 
 
 def _periodic_copies(
-    conn: psycopg.Connection, company_id: int, floor: date
+    conn: psycopg.Connection,
+    company_id: int,
+    floor: date,
+    face: FaceIndex | None = None,
 ) -> tuple[
     dict[tuple[str, int], list[tuple[str, Decimal, str]]],
     dict[tuple[str, int], set[tuple[str, str]]],
@@ -196,7 +201,7 @@ def _periodic_copies(
         cur.execute(
             """
             select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
-                   fl.period_of_report, c.tag, f.is_authoritative, fl.form, fl.filing_date
+                   fl.period_of_report, c.tag, f.is_authoritative, fl.form, fl.filing_date, p.start_date
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
@@ -219,6 +224,7 @@ def _periodic_copies(
             is_auth,
             form,
             fdate,
+            pstart,
         ) in cur.fetchall():
             # a copy counts only where its filing can print the period as a face column (shared
             # authority rule, common/authority.py): older instants are cash-flow/equity opening
@@ -226,6 +232,10 @@ def _periodic_copies(
             # goodwill at 2015-02-01) must neither make a shown cell "restated" nor be its
             # authoritative copy. The filing of the period itself is always eligible.
             if not face_column_eligible(form, por, end, ptype):
+                continue
+            # statement coherence: the filing's FACE statement must print this tag for the column (a summary table
+            # of a later 10-Q is no copy of the cell); note-claimed tags and filings outside the FSN store are exempt
+            if face is not None and not face.printed_ok(acc, tag, pstart, end, ptype):
                 continue
             out[(name, pid)].append((acc, Decimal(value), tag))
             filed[acc] = fdate
@@ -245,6 +255,7 @@ def component_sum_authority(
     copies: list[tuple[str, Decimal, str]],
     parts: tuple[tuple[int, str], ...],
     filed: dict[str, date | None],
+    prefer: str | None = None,
 ) -> tuple[str, Decimal] | None:
     """(accession, sum) a component-sum cell is authoritatively read from: the latest face-column-eligible filing
     that prints EVERY part (common/authority.latest_complete_filing, the function the mapper picks its parts with).
@@ -261,7 +272,9 @@ def component_sum_authority(
         if any(len(vs) > 1 for vs in prints.values()):
             return None
         by_part.append({a: next(iter(vs)) for a, vs in prints.items()})
-    best = latest_complete_filing([{a: filed.get(a) for a in p} for p in by_part])
+    best = latest_complete_filing(
+        [{a: filed.get(a) for a in p} for p in by_part], prefer
+    )
     if best is None:
         return None
     total = sum((s * p[best] for (s, _t), p in zip(parts, by_part)), Decimal(0))
@@ -388,7 +401,10 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
-    copies_by, auth_by, filed_by, por_by = _periodic_copies(conn, company_id, floor)
+    face = load_face_indexes(conn, [company_id])[company_id]
+    copies_by, auth_by, filed_by, por_by = _periodic_copies(
+        conn, company_id, floor, face
+    )
     for name, ptype, fp, start, end, value, src, period_id, src_vals in rows:
         if name not in names:
             continue
@@ -449,12 +465,25 @@ def load_shown(
         claim = claim_for(
             map_rows, name, end, por_by.get(accession) if accession else None
         )
+        # statement coherence: every member of the statement and period is read from the statement filing (the
+        # latest face-eligible filing that prints the column, common/authority); its copy is THE authoritative one
+        # of this cell when it has one. Notes-claimed cells follow their own note rule.
+        cstmt = claim.stmt if claim is not None else ""
+        cstmt = "IS" if cstmt == "CI" else cstmt
+        sf = (
+            face.statement_filing(cstmt, start, end, ptype)
+            if cstmt in ("BS", "IS", "CF")
+            else None
+        )
+        if sf is not None and any(a == sf for a, _v, _t in cell_triples):
+            auth_accs = {sf}
         if claim is not None and claim.kind == "component" and len(claim.parts) > 1:
             # a component sum is judged as a sum, never part against total
             win = component_sum_authority(
                 copies_by.get((_base_name(name), period_id), []),
                 tuple((s, t) for s, t in claim.parts),
                 filed_by,
+                sf,
             )
             disagreeing = []
             auth_accs = set()
