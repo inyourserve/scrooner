@@ -1,0 +1,2 @@
+ticker,data_point,fiscal_year,period_end,lane,why
+GOOG,cash_paid_for_income_taxes,2024,2024-12-31,b,us-gaap:IncomeTaxesPaidNet not found undimensioned on an R page of 0001652044-25-000014
