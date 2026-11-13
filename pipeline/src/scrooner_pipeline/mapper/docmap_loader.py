@@ -38,6 +38,7 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.mapper import era_extend
+from scrooner_pipeline.mapper.company_tag_map_plan import era_shortfall
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
@@ -598,7 +599,7 @@ def extend_company(
             for n in (d.data_point, d.data_point.removesuffix("_resolved"))
             if n in concept_ids
         }
-        era, adsh, rlog = era_extend.extend(
+        era, adsh, rlog, by_value = era_extend.extend(
             [tag for _, _, tag in d.parts], dp_ids, d.era_from, d.accession, data
         )
         for r in rlog:
@@ -611,10 +612,17 @@ def extend_company(
                 }
             )
         if adsh is not None and era < d.era_from:
-            note = (
-                f"{era_extend.EXT_MARK}: same tag on the same line (stmt, role/label, calc parent) in each 10-K "
-                f"back to {adsh} (FY from {era}); docmap read {d.accession}"
-            )
+            if by_value:
+                note = (
+                    f"{era_extend.EXT_MARK_VALUE}: same tag carried non-dimensionally, same period type and unit "
+                    f"class, no other tag mapped to the concept, in each 10-K back to {adsh} (FY from {era}); "
+                    f"docmap read {d.accession}"
+                )
+            else:
+                note = (
+                    f"{era_extend.EXT_MARK}: same tag on the same line (stmt, role/label, calc parent) in each "
+                    f"10-K back to {adsh} (FY from {era}); docmap read {d.accession}"
+                )
             d = replace(d, era_from=era, base_era=d.era_from, ext_note=note)
         out.append(d)
     return out
@@ -730,6 +738,14 @@ def load(
             rec = dict(zip(cols, row))
             existing[rec["company_id"]].append(rec)
     names = {i: n for n, i in concept_ids.items()}
+    period_ends: dict[int, list[date]] = defaultdict(list)
+    with conn.cursor() as cur:
+        cur.execute(
+            "select company_id, end_date from core.period where company_id = any(%s)",
+            (sorted(docs),),
+        )
+        for pc, end in cur.fetchall():
+            period_ends[pc].append(end)
     writes = []
     for cid, (cik, rows) in sorted(docs.items()):
         mine = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]
@@ -758,7 +774,34 @@ def load(
             continue
         before = {_content(r, names) for r in mine}
         after = {_content(r, names) for r in new}
+        # the era half of tagmap-plan's coverage gate, on the merged map (library kept + new rows)
+        short = era_shortfall(
+            [
+                (
+                    r["canonical_concept_id"] or r["parent_concept_id"],
+                    r["era_from"],
+                    r["era_to"],
+                )
+                for r in kept + new
+            ],
+            period_ends.get(cid, []),
+        )
+        era_report = {
+            "era_short": len(short),
+            "era_from_min": min((r["era_from"] for r in kept + new), default=None),
+        }
         stats["companies"][cik] = {
+            **era_report,
+            "map_rows": [  # the merged map after this load: (concept, tag, decision, era_from, era_to)
+                (
+                    names.get(r["canonical_concept_id"] or r["parent_concept_id"]),
+                    r["tag"],
+                    r["decision"],
+                    r["era_from"],
+                    r["era_to"],
+                )
+                for r in kept + new
+            ],
             "company_id": cid,
             "docmap_rows": len(new),
             "added": len(after - before),
