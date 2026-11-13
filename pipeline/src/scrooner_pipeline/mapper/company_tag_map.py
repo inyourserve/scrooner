@@ -54,7 +54,7 @@ from scrooner_pipeline.common.authority import (
     latest_complete_filing,
 )
 from scrooner_pipeline.common.tag_aliases import with_aliases
-from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
+from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
@@ -133,6 +133,9 @@ class Fact:
     # fact_id is the fsn.value id and filing_id is NEGATIVE (-fsn.filing.id) so it never equals a core.filing id.
     source: str = "sec_api"
     on_face: bool = True
+    # period_of_report of the filing the fact was printed in: the filing's OWN period decides which map row (tag era)
+    # that filing speaks under (per-filing tag era, MSFT revenue). None = unknown (only the fact's period is judged).
+    por: date | None = None
 
 
 STANDARD_TAXONOMIES = {"us-gaap", "ifrs-full", "dei", "srt"}
@@ -304,6 +307,7 @@ def _load_fact_vintages(
                 first[8],
                 first[9],
                 ambiguous=len({Decimal(x[3]) for x in rs}) > 1,
+                por=first[12],
             )
         )
     return out
@@ -442,7 +446,7 @@ def _load_fsn_vintages(
         if not face_column_eligible(form, fperiod, mend, mtype):
             continue  # a filing speaks for a period only where it prints that column (authority v2)
         grouped[(tag, match[0], fid)].append(
-            (vid, ddate, Decimal(value), fid, acc, accepted, on_face)
+            (vid, ddate, Decimal(value), fid, acc, accepted, on_face, fperiod)
         )
     for (tag, pid, _), same in sorted(
         grouped.items(),
@@ -466,6 +470,7 @@ def _load_fsn_vintages(
                 ambiguous=len({r[2] for r in used}) > 1,
                 source="fsn_xbrl",
                 on_face=on_face,
+                por=first[7],
             )
         )
     return out
@@ -599,8 +604,16 @@ def _in_era(row: MapRow, end: date) -> bool:
     """The map's eras are FSN dates (rounded to the nearest month end); a fact's period end is the TRUE end (a
     52/53-week year ends days off a month end). A true end is inside an era when it is, or its month-end
     rounding is (common/fsn_dates.nearest_month_ends)."""
-    hi = row.era_to or _FAR
-    return any(row.era_from <= x <= hi for x in {end} | nearest_month_ends(end))
+    return era_holds(row.era_from, row.era_to, end)
+
+
+def _filing_in_era(row: MapRow, fact: Fact) -> bool:
+    """Per-filing tag era: a later filing that restates a period prints it under the tag ITS OWN period's map row
+    uses (MSFT revenue: FY2016 SalesRevenueNet in the FY2017 10-K, RevenueFromContractWithCustomerExcludingAssessedTax
+    in the FY2018 10-K, whose own period lies in the new tag's era). The fact is a candidate for the row when the
+    filing it was printed in sits in the row's era, although the fact's own period does not. The newest-filing rule
+    in build_cells then serves the latest eligible filing's print (facts are loaded face-column eligible only)."""
+    return fact.por is not None and _in_era(row, fact.por)
 
 
 def _sign(row: MapRow) -> int:
@@ -969,7 +982,10 @@ def build_cells(
             stats["stmt_mismatch_rows"] += 1
             continue
         for period_id, fact in facts.get((row.taxonomy, row.tag), {}).items():
-            if not _in_era(row, fact.end):
+            if not (
+                _in_era(row, fact.end)
+                or (row.decision == "concept" and _filing_in_era(row, fact))
+            ):
                 continue
             if fact.derived and concept_info[target][0] in NEVER_DERIVED:
                 stats["derived_eps_skipped"] += 1

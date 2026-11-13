@@ -25,6 +25,13 @@ def nearest_month_ends(d: date) -> set[date]:
     return {cur, prev}
 
 
+def era_holds(era_from: date, era_to: date | None, end: date) -> bool:
+    """A map era (FSN dates, rounded to the nearest month end) holds a date when the date, or its month-end rounding,
+    lies inside [era_from, era_to]. ONE definition for the mapper (_in_era) and the proof (claim_for)."""
+    hi = era_to or date.max
+    return any(era_from <= x <= hi for x in {end} | nearest_month_ends(end))
+
+
 def fsn_end_matches(fsn_end: date, true_end: date, days: int = 10) -> bool:
     """True when an FSN date stands for a true period end: within `days`, or the SEC's month-end rounding of it."""
     return abs((fsn_end - true_end).days) <= days or fsn_end in nearest_month_ends(

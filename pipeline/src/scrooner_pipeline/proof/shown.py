@@ -19,7 +19,9 @@ import psycopg
 from scrooner_pipeline.common.authority import (
     face_column_eligible,
     latest_complete_filing,
+    latest_eligible,
 )
+from scrooner_pipeline.common.fsn_dates import era_holds
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
 from scrooner_pipeline.proof.prove import EXPECTED, Claim, Shown
 
@@ -82,12 +84,27 @@ def combined_for(
     )
 
 
-def claim_for(rows: list[MapRow], name: str, period_end: date) -> Claim | None:
-    """The claim of one cell: the company's rows for this concept whose era holds the period end.
-    'concept' rows win over 'component' rows. The statement is the latest era's; the tags are those
-    rows of that statement (latest era first). Parts of a component claim are (sign, tag)."""
+def claim_for(
+    rows: list[MapRow],
+    name: str,
+    period_end: date,
+    filing_por: date | None = None,
+) -> Claim | None:
+    """The claim of one cell: the company's rows for this concept whose era holds the period end, or (concept rows,
+    per-filing tag era) whose era holds the period of the filing the value was printed in (`filing_por`: MSFT
+    FY2016 revenue read from the FY2018 10-K is claimed by the row of THAT filing's era). 'concept' rows win over
+    'component' rows. The statement is the latest era's; the tags are those rows of that statement (latest era
+    first). Other statements the live concept rows name are kept as `alts` (S16: the printed line may sit on
+    another statement than the latest row's). Parts of a component claim are (sign, tag)."""
     live = [
-        r for r in rows if r[7] <= period_end and (r[8] is None or period_end <= r[8])
+        r
+        for r in rows
+        if era_holds(r[7], r[8], period_end)
+        or (
+            filing_por is not None
+            and r[1] == "concept"
+            and era_holds(r[7], r[8], filing_por)
+        )
     ]
     concept = sorted(
         (r for r in live if r[1] == "concept" and r[4] == name),
@@ -97,7 +114,19 @@ def claim_for(rows: list[MapRow], name: str, period_end: date) -> Claim | None:
     if concept:
         stmt = concept[0][2]
         tags = tuple(dict.fromkeys(r[3] for r in concept if r[2] == stmt and r[3]))
-        return Claim("concept", stmt, tags=tags, sign=concept[0][6])
+        alts: dict[str, tuple[list[str], int]] = {}
+        for r in concept:
+            if r[2] != stmt and r[3]:
+                alts.setdefault(r[2], ([], r[6]))[0].append(r[3])
+        return Claim(
+            "concept",
+            stmt,
+            tags=tags,
+            sign=concept[0][6],
+            alts=tuple(
+                (st, tuple(dict.fromkeys(ts)), sg) for st, (ts, sg) in alts.items()
+            ),
+        )
     comps = sorted(
         (r for r in live if r[1] == "component" and r[5] == name),
         key=lambda r: r[0],
@@ -151,7 +180,8 @@ def _periodic_copies(
     conn: psycopg.Connection, company_id: int, floor: date
 ) -> tuple[
     dict[tuple[str, int], list[tuple[str, Decimal, str]]],
-    dict[tuple[str, int], set[str]],
+    dict[tuple[str, int], set[tuple[str, str]]],
+    dict[str, date | None],
     dict[str, date | None],
 ]:
     """(base canonical name, period_id) -> every periodic-form copy (accession,
@@ -159,8 +189,9 @@ def _periodic_copies(
     one, the proof must see them all (restated copies that disagree are hidden,
     founder ruling)."""
     out: dict[tuple[str, int], list[tuple[str, Decimal, str]]] = defaultdict(list)
-    auth: dict[tuple[str, int], set[str]] = defaultdict(set)
+    auth: dict[tuple[str, int], set[tuple[str, str]]] = defaultdict(set)
     filed: dict[str, date | None] = {}
+    por_of: dict[str, date | None] = {}
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -198,9 +229,10 @@ def _periodic_copies(
                 continue
             out[(name, pid)].append((acc, Decimal(value), tag))
             filed[acc] = fdate
+            por_of[acc] = por
             if is_auth:
-                auth[(name, pid)].add(acc)
-    return out, auth, filed
+                auth[(name, pid)].add((acc, tag))
+    return out, auth, filed, por_of
 
 
 def _same_number(a: Decimal, b: Decimal, scale: int) -> bool:
@@ -247,6 +279,36 @@ def matching_copies(
     if not tags:
         return [(a, v) for a, v, _t in copies]
     return [(a, v) for a, v, t in copies if t in tags]
+
+
+def era_tag_copies(
+    copies: list[tuple[str, Decimal, str]],
+    map_rows: list[MapRow],
+    name: str,
+    shown_tags: tuple[str, ...],
+    por_by: dict[str, date | None],
+) -> list[tuple[str, Decimal, str]]:
+    """Copies under ANOTHER tag that the company's map assigns to this concept in the era of the copy's own filing
+    (per-filing tag era; the mapper reads the same rows, company_tag_map._filing_in_era). Not a copy: a fact under
+    a tag no concept row of that filing's era names (MDT NetIncomeLoss vs ProfitLoss stays two lines)."""
+    if not shown_tags:
+        return []
+    out = []
+    for acc, v, t in copies:
+        if t in shown_tags:
+            continue
+        por = por_by.get(acc)
+        if por is None:
+            continue
+        if any(
+            r[1] == "concept"
+            and r[4] == name
+            and r[3] == t
+            and era_holds(r[7], r[8], por)
+            for r in map_rows
+        ):
+            out.append((acc, v, t))
+    return out
 
 
 def disagreeing_copies(
@@ -326,7 +388,7 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
-    copies_by, auth_by, filed_by = _periodic_copies(conn, company_id, floor)
+    copies_by, auth_by, filed_by, por_by = _periodic_copies(conn, company_id, floor)
     for name, ptype, fp, start, end, value, src, period_id, src_vals in rows:
         if name not in names:
             continue
@@ -352,10 +414,41 @@ def load_shown(
         ]
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
-        copies = matching_copies(copies_by.get((_base_name(name), period_id), []), tags)
+        all_copies = copies_by.get((_base_name(name), period_id), [])
+        # per-filing tag era: a later filing may print the period under the tag ITS OWN era row uses (MSFT revenue)
+        cell_triples = (
+            [(a, v, t) for a, v, t in all_copies if t in tags]
+            + era_tag_copies(all_copies, map_rows, name, tags, por_by)
+            if tags
+            else list(all_copies)
+        )
+        copies = [(a, v) for a, v, _t in cell_triples]
         disagreeing = disagreeing_copies(copies, shown_value, scale)
-        auth_accs = auth_by.get((_base_name(name), period_id), set())
-        claim = claim_for(map_rows, name, end)
+        # the authoritative copies OF THIS CELL: only flags of the cell's own copies (its tags, and the tags its
+        # filings' eras name) count; flags of OTHER tags say nothing about the cell (JNJ cash 2022: the
+        # restricted-cash tag's FY2022 copy was taken for the cell's authority). A flagged copy under one tag is
+        # superseded by a LATER flagged copy under another tag of the cell (MSFT revenue: FY2017 SalesRevenueNet
+        # vs the FY2018 10-K's renamed tag), the later filing chosen by common/authority.latest_eligible. No
+        # flagged copy: the latest eligible copy of the cell.
+        flags = auth_by.get((_base_name(name), period_id), set())
+        flagged: dict[str, set[str]] = defaultdict(set)
+        for a, _v, t in cell_triples:
+            if (a, t) in flags:
+                flagged[a].add(t)
+        newest = latest_eligible({a: filed_by.get(a) for a in flagged})
+        auth_accs = {
+            a
+            for a, ts in flagged.items()
+            if a == newest
+            or (filed_by.get(a) or date.min) >= (filed_by.get(newest) or date.min)
+            or ts & flagged[newest]
+        }
+        if not flagged:
+            only = latest_eligible({a: filed_by.get(a) for a, _v, _t in cell_triples})
+            auth_accs = {only} if only else set()
+        claim = claim_for(
+            map_rows, name, end, por_by.get(accession) if accession else None
+        )
         if claim is not None and claim.kind == "component" and len(claim.parts) > 1:
             # a component sum is judged as a sum, never part against total
             win = component_sum_authority(

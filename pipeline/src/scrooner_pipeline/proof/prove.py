@@ -43,7 +43,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v5_2026-11-13"
+DETECTOR_VERSION = "cell_proof_v6_2026-11-13"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -257,6 +257,9 @@ class Claim:
         str, ...
     ] = ()  # the statement of each part, aligned with parts (else `stmt`)
     sign: int = 1
+    # other statements the company's live concept rows name for the cell: (stmt, tags, sign). The printed line may
+    # sit on another statement than the latest row's (S16)
+    alts: tuple[tuple[str, tuple[str, ...], int], ...] = ()
 
 
 # A printed total is itself a component of the next subtotal up (gross profit
@@ -658,6 +661,47 @@ def _claim_check(claim: Claim | None) -> dict[str, Any]:
     }
 
 
+def printed_statement_claim(shown: Shown, structure: FilingStructure) -> Claim | None:
+    """S16: the claim's line is searched on every statement the company's rows name, then on every face statement
+    of the filing, not only the latest row's statement. Returns a replacement claim (same tags/sign, the statement
+    where the filing prints the line) when the claimed statement prints none of the claimed tags and another does
+    (NVDA dividends per share claimed on IS, printed on EQ; MU/PGR comprehensive income claimed on CI or IS, printed
+    on the other). None keeps the claim as it is: the claimed statement prints a line, a note path applies, or no
+    face statement prints the tag."""
+    c = shown.claim
+    if c is None or c.kind != "concept" or c.stmt in NOTE_STMTS:
+        return None
+    if shown.data_point_name == "shares_outstanding_resolved":
+        return None
+    if shown.data_point_name in EXPECTED:
+        return None  # the hand expectation is already the fallback for these (locate)
+
+    def printed(stmt: str, tags: tuple[str, ...]) -> tuple[str, ...]:
+        return tuple(p.tag for p in structure.lines_on(stmt) if p.tag in tags)
+
+    if printed(c.stmt, c.tags):
+        return None
+    for stmt, tags, sign in c.alts:
+        if stmt not in NOTE_STMTS and printed(stmt, tags):
+            return Claim("concept", stmt, tags=tags, sign=sign)
+    every = tuple(dict.fromkeys(c.tags + tuple(t for _s, ts, _g in c.alts for t in ts)))
+    first: dict[str, tuple[int, int]] = {}
+    for p in structure.pre:
+        if p.tag in every and p.stmt not in NOTE_STMTS:
+            first[p.stmt] = min(
+                first.get(p.stmt, (p.report, p.line)), (p.report, p.line)
+            )
+    if not first:
+        return None
+    stmt = min(first, key=lambda k: (first[k], k))
+    return Claim(
+        "concept",
+        stmt,
+        tags=tuple(t for t in every if printed(stmt, (t,))),
+        sign=c.sign,
+    )
+
+
 def _note_only(shown: Shown) -> bool:
     c = shown.claim
     return (
@@ -978,6 +1022,10 @@ def prove_cell(
             "status": "n/a",
             "copies": [{"accession": a, "value": v} for a, v in shown.copies_disagree],
         }
+    if structure is not None:
+        moved = printed_statement_claim(shown, structure)
+        if moved is not None:
+            shown = replace(shown, claim=moved)
     if shown.is_derived:
         return prove_derived(shown, structure, prior_structure, fsn_set)
     if structure is None:

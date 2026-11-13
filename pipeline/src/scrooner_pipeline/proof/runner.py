@@ -244,6 +244,46 @@ def write_proofs(conn: psycopg.Connection, proofs: list[Proof]) -> int:
     return len(rows)
 
 
+def purge_unserved(
+    conn: psycopg.Connection,
+    company_id: int,
+    proofs: list[Proof],
+    floor: date | None = None,
+) -> int:
+    """A PROVEN or UNCHECKED verdict belongs to a served value. After a company's proofs are written, the rows of
+    that company in the proof's window whose cell is no longer served (the mapper held or removed it since: NFLX
+    total_debt 2015 stayed PROVEN after the era guard unserved it) are deleted. DISAGREE rows stay (the mapper's
+    proof guard reads them to keep a wrong value held) and NOT_PRESENTED rows stay (a stored reason for a blank).
+    Returns the number of rows deleted."""
+    from scrooner_pipeline.proof.prove import RULE_ID
+    from scrooner_pipeline.proof.shown import HISTORY_FLOOR
+
+    served = {
+        (
+            p.shown.data_point_name,
+            p.shown.period_grain,
+            p.shown.period_start,
+            p.shown.period_end,
+        )
+        for p in proofs
+    }
+    with conn.cursor() as cur:
+        cur.execute(
+            """select id, data_point_name, period_grain, period_start, period_end
+               from analytics.cell_proof
+               where company_id = %s and basis = 'latest' and rule_id = %s
+                 and verdict in ('PROVEN', 'UNCHECKED') and period_end >= %s""",
+            (company_id, RULE_ID, floor or HISTORY_FLOOR),
+        )
+        stale = [r[0] for r in cur.fetchall() if tuple(r[1:]) not in served]
+        for i in range(0, len(stale), 5000):
+            cur.execute(
+                "delete from analytics.cell_proof where id = any(%s)",
+                (stale[i : i + 5000],),
+            )
+    return len(stale)
+
+
 def table_exists(conn: psycopg.Connection) -> bool:
     with conn.cursor() as cur:
         cur.execute("select to_regclass('analytics.cell_proof')")
@@ -305,6 +345,10 @@ def run(
                 identity_breaks.update(id_counts)
                 if write and proofs:
                     write_proofs(conn, proofs)
+                if write:
+                    totals["purged_unserved"] = totals.get(
+                        "purged_unserved", 0
+                    ) + purge_unserved(conn, company_id, proofs, floor)
             except DecompressError:
                 raise  # abort the whole run; never mark cells UNCHECKED for a broken tool
             except Exception as exc:  # noqa: BLE001

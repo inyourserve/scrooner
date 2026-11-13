@@ -68,3 +68,15 @@ def latest_complete_filing(prints_by_part: list[dict[K, date | None]]) -> K | No
     if not common:
         return None
     return max(common, key=lambda k: (prints_by_part[0][k] or date.min, k))
+
+
+def latest_eligible(filed_by_key: dict[K, date | None]) -> K | None:
+    """The authoritative copy among face-column-eligible copies of one cell: the latest filed, ties to the lower key
+    (the normalizer's conflict_latest_filed rule). ONE definition: the proof (shown.py) picks the cell's authoritative
+    filing with it instead of reading per-tag is_authoritative flags, which say nothing across tags (JNJ cash 2022:
+    the restricted-cash tag's FY2022 copy was authoritative for ITS tag and was taken for the cell's authority).
+    Each element maps filing key -> filing date (None sorts first); the caller passes only eligible copies."""
+    if not filed_by_key:
+        return None
+    best = max(d or date.min for d in filed_by_key.values())
+    return min(k for k, d in filed_by_key.items() if (d or date.min) == best)
