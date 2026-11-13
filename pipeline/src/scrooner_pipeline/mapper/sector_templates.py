@@ -436,6 +436,226 @@ def validate_against_db(conn: psycopg.Connection, rows: list[TemplateRow]) -> No
         raise TemplateError(problems)
 
 
+# --- Catalog-driven seeding (founder approval 2026-11-13) -------------------------------
+# data-team/strategy/SECTOR-TEMPLATES-2026-11-01.md is prose plus matrix tables, not the
+# fixed-heading format parse_templates reads, so it cannot be parsed. The catalog route
+# reads the concept list from concepts_catalog.csv and decides each company's group from
+# SIC (+ company assignments), with the sector OUT sets from that proposal's s2/s3
+# (approved categories A and C): the same rules scripts/tag_library/company_notes.py uses.
+
+CATALOG_PATH = Path("data-team/47-fsn-store/company_tag_map/concepts_catalog.csv")
+CATALOG_VERSION = "catalog-2026-11-13"
+CATALOG_EFFECTIVE_FROM = date(2026, 11, 13)
+CATALOG_OUT_REASON = "sector template OUT (SECTOR-TEMPLATES-2026-11-01 s2/s3, approved categories A and C)"
+# The base-name OUT sets; a `<name>_resolved` concept follows its base name.
+GROUP_OUT: dict[str, frozenset[str]] = {
+    "bank": frozenset(
+        {
+            "gross_profit",
+            "cost_of_revenue",
+            "operating_expenses",
+            "research_and_development",
+            "inventory",
+            "accounts_receivable",
+            "accounts_payable",
+            "operating_income",
+            "capex",
+        }
+    ),
+    "lender": frozenset({"gross_profit", "inventory"}),
+    "broker_am": frozenset({"gross_profit", "inventory", "research_and_development"}),
+    "insurer": frozenset(
+        {
+            "gross_profit",
+            "cost_of_revenue",
+            "inventory",
+            "research_and_development",
+            "capex",
+        }
+    ),
+    "equity_reit": frozenset(
+        {"gross_profit", "inventory", "research_and_development", "capex"}
+    ),
+    "utility": frozenset({"gross_profit", "research_and_development"}),
+    "general": frozenset(),
+}
+# Concepts that belong to one group only (every other group has them OUT).
+# (net_interest_income matches the existing ranks 1-50 template: bank rows only.)
+GROUP_ONLY: dict[str, frozenset[str]] = {
+    "bdc_total_investment_income": frozenset({"bdc"}),
+    "net_interest_income": frozenset({"bank", "lender"}),
+}
+COMPANY_GROUP = {"0001287750": "bdc", "0001736035": "bdc", "0002065601": "bank"}
+
+
+def sic_group(cik: str, sic: int | None) -> str:
+    if cik in COMPANY_GROUP:
+        return COMPANY_GROUP[cik]
+    s = sic or 0
+    if s in (6021, 6022, 6035, 6036):
+        return "bank"
+    if s in (6141, 6162):
+        return "lender"
+    if s in (6200, 6211, 6282):
+        return "broker_am"
+    if 6311 <= s <= 6399 and s not in (6324, 6411):
+        return "insurer"
+    if s == 6798:
+        return "equity_reit"
+    if s in (4911, 4922, 4923, 4924, 4931, 4932, 4941):
+        return "utility"
+    return "general"
+
+
+@dataclass(frozen=True)
+class RankedCompany:
+    rank: int
+    company_id: int
+    cik: str
+    ticker: str
+    sic: int | None
+
+
+def load_catalog(path: Path) -> list[str]:
+    """Concept names from concepts_catalog.csv (column `name`), in file order, no duplicates."""
+    names: list[str] = []
+    with path.open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            n = (r.get("name") or "").strip()
+            if not n:
+                raise TemplateError([f"{path}: a row has no name"])
+            if n in names:
+                raise TemplateError([f"{path}: duplicate concept {n!r}"])
+            names.append(n)
+    if not names:
+        raise TemplateError([f"{path}: no concepts"])
+    return names
+
+
+def load_ranked_cohort(
+    path: Path, top_n: int
+) -> tuple[list[RankedCompany], list[tuple[int, str, str]]]:
+    """Ranks 1..top_n of the cohort file. A row whose `excluded` text is blank, or
+    starts with 'keep' (an explicit keep note), is included; any other excluded row
+    has no template and is returned as (rank, ticker, reason)."""
+    included: list[RankedCompany] = []
+    excluded: list[tuple[int, str, str]] = []
+    with path.open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            rank_s = (r.get("rank") or "").strip()
+            if not rank_s.isdigit() or int(rank_s) > top_n:
+                continue
+            why = (r.get("excluded") or "").strip()
+            if why and not why.lower().startswith("keep"):
+                excluded.append((int(rank_s), r["ticker"], why))
+                continue
+            sic = (r.get("sic") or "").strip()
+            included.append(
+                RankedCompany(
+                    int(rank_s),
+                    int(r["company_id"]),
+                    _cik(r["cik"]),
+                    r["ticker"],
+                    int(sic) if sic.isdigit() else None,
+                )
+            )
+    return included, excluded
+
+
+def build_catalog_plan(
+    concepts: list[str],
+    companies: list[RankedCompany],
+    effective_from: date = CATALOG_EFFECTIVE_FROM,
+    template_version: str = CATALOG_VERSION,
+) -> list[TemplateRow]:
+    """Every company's full row set: each catalog concept IN, except the group's OUT set
+    (with its reason). A group with no definition (e.g. bdc) is an error."""
+    problems: list[str] = []
+    ids = Counter(c.company_id for c in companies)
+    problems += [f"company id {i} listed twice" for i, n in ids.items() if n > 1]
+    rows: list[TemplateRow] = []
+    for c in sorted(companies, key=lambda x: x.company_id):
+        group = sic_group(c.cik, c.sic)
+        if group not in GROUP_OUT:
+            problems.append(f"{c.ticker}: group {group!r} has no template definition")
+            continue
+        out = GROUP_OUT[group]
+        for name in concepts:
+            base = name.removesuffix("_resolved")
+            only = GROUP_ONLY.get(base)
+            reason: str | None
+            if only is not None and group not in only:
+                reason = f"{base} applies only to {sorted(only)}; {c.ticker} is {group}"
+            elif base in out:
+                reason = CATALOG_OUT_REASON
+            else:
+                reason = None
+            rows.append(
+                TemplateRow(
+                    company_id=c.company_id,
+                    data_point=name,
+                    in_template=reason is None,
+                    reason=reason,
+                    effective_from=effective_from,
+                    template=group,
+                    source="sector_default",
+                    template_version=template_version,
+                )
+            )
+    if problems:
+        raise TemplateError(problems)
+    return rows
+
+
+def rows_per_company_group(rows: list[TemplateRow]) -> dict[str, dict[str, int]]:
+    """group -> {companies, in_rows, out_rows, rows}."""
+    per_co: dict[int, list[object]] = {}
+    for r in rows:
+        e = per_co.setdefault(r.company_id, [r.template, 0, 0])
+        e[1 if r.in_template else 2] += 1  # type: ignore[operator]
+    out: dict[str, dict[str, int]] = {}
+    for g, i, o in per_co.values():
+        d = out.setdefault(
+            str(g), {"companies": 0, "in_rows": 0, "out_rows": 0, "rows": 0}
+        )
+        d["companies"] += 1
+        d["in_rows"] += int(i)  # type: ignore[call-overload]
+        d["out_rows"] += int(o)  # type: ignore[call-overload]
+        d["rows"] += int(i) + int(o)  # type: ignore[call-overload]
+    return dict(sorted(out.items()))
+
+
+def write_before_image(
+    conn: psycopg.Connection, company_ids: list[int], path: Path
+) -> int:
+    """Every existing row of these companies, to a CSV (header always written)."""
+    cols = [
+        "company_id",
+        "data_point",
+        "in_template",
+        "reason",
+        "effective_from",
+        "template",
+        "source",
+        "template_version",
+        "seeded_at",
+    ]
+    with conn.cursor() as cur:
+        cur.execute("set statement_timeout = '2min'")
+        cur.execute(
+            f"select {', '.join(cols)} from analytics.company_data_point_template"
+            " where company_id = any(%s) order by company_id, data_point, effective_from",
+            (company_ids,),
+        )
+        data = cur.fetchall()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(cols)
+        w.writerows(data)
+    return len(data)
+
+
 WRITE_CHUNK = 5000
 
 _INSERT_SQL = """

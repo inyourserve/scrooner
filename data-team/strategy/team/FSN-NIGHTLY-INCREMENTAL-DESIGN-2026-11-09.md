@@ -1,0 +1,106 @@
+# FSN nightly incremental: design (2026-11-09)
+
+Status: built on branch `work/fsn-nightly-incremental`, flag off. Asked for by Dhairya (manager session) at the founder's request. Numbers are MEASURED unless marked.
+
+**Problem.** The hybrid build writes `analytics.canonical_fact` only through `pipeline-fsn-write.yml`, which reads SEC FSN sets. Those sets publish weeks after the filing. The nightly refresh has no FSN step, so every new 10-K/10-Q goes through the old mapper alone. Once migration 0119 makes a company "owned", its new quarters would stay empty.
+
+## Source and parse
+
+- **Source: the filing's own XBRL on EDGAR, sec.gov only.** Per accession the fetcher (`fsn_store/edgar_fetch.py`) reads:
+  - `index.json` and the index header (acceptance time, form, period, filer CIKs);
+  - `FilingSummary.xml` and `MetaLinks.json`;
+  - the instance (`*_htm.xml`), the filer's schema and its linkbases;
+  - the R pages of the cover and the statements.
+- **Cost.** About 15 requests and 5–22 MB per filing, at most 4 requests per second, with the declared User-Agent and retry on 429/5xx. It uses the same cross-process lock file as `common.sec_client`. TSLA and BAC took 4.6 s and 4.2 s to fetch and 0.1–0.5 s to convert.
+- **Converter.** `fsn_store/xbrl_fsn.py` builds the same seven tables the shard writes: sub, num, pre, cal, ren, tag, dim. Its module docstring lists every rule and where it was calibrated: ddate rounding, qtrs/durp/datp, iprx order, uom, dimh and segments (typed axes, LegalEntity → coreg), the version string, non-ASCII stripping and quoting, statement typing, and the pre rows mirroring the R page. Values are the instance's own, as `Decimal`, rounded to 4 decimals as the FSN readme says. Nothing is repaired.
+
+## Equivalence with FSN
+
+`pipeline/scripts/fsn_xbrl_equivalence.py` compares, on the shard view, 23 filings against the SEC sets that hold them. There are 20 top-100 filings from 2026m10 (17 10-Qs and 3 10-Ks: GOOG, MSFT, AMZN, META, TSLA, MU, JNJ, INTC, COST, KO, BAC, GE, WFC, IBM, PEP, NEE+FPL as co-registrant, T, BA, ACN, CB). Added on 2026-11-11 for Ritwik's review, every cohort amendment that carries statements in 2026m05..m10: BE 10-Q/A (2026m07) and DASH 10-K/A (2026m05). Also added is the one cover-only amendment, TECH 10-K/A (2026m10). Criteria are in `fsn_store/xbrl_equivalence.py`. Result (`pipeline/scripts/results/fsn_xbrl_equivalence/summary.md`): **23 of 23 pass.**
+
+- **num:** 24,912 rows. 0 missing, 0 extra, 0 value or dcml differences on the keys (tag, version, ddate, qtrs, uom, dimh, iprx, coreg).
+- **pre:** 172 statement and cover reports. 167 match row for row, and every fact-carrying line matches in all 172. 35 structural rows differ (abstracts, axes or members on KO, PEP, T), which carry no values.
+- **cal:** 4,174 arcs. The groups and their (parent, child, weight) are identical.
+- **sub:** cik, form, period, fy, fp, fye, filed, accepted and aciks are identical.
+- **Statement typing:** across all 1,014 10-K/10-Q filings in 2026m10, 99.3% of 7,385 statement reports get the same type, and 993 filings are right on every report (`stmt_classifier_2026m10.txt`).
+- **Not reproduced, and not used downstream:**
+  - SEC's cal group and arc numbering, which follows no order the linkbase has. It only enters `filing_check.check_id`, per filing.
+  - Which of two identical duplicate facts carries a footnote (12 rows).
+  - The taxonomy's own `tlabel` for a standard tag. `fsn.tag` rows are insert-if-absent, so the existing ones stay.
+- **CI** pins two of the 20 filings byte for byte (`pipeline/tests/fixtures/fsn_xbrl/`, META and NEE, 0.5 MB), plus a synthetic filing for the rules those two do not exercise. Each rule was mutation-checked: reverting it fails a test.
+
+## Amendments, restatements, floor
+
+- **Amendments.** 10-K/A, 10-Q/A and the transition forms are included.
+- **Vintage.** The vintage order is `accepted`, rounded to the minute exactly as FSN rounds it. The store keeps every vintage, and selection is unchanged: latest accepted, SAME_BASIS, never derive across a break. A restatement in a new 10-K is a new vintage, so the existing break and witness rules apply as they do to FSN data.
+- **Cover-only amendments** (Part III 10-K/A) load with cover rows only. They print no statement line, so they can never win a cell.
+- **Floor.** Candidates need `period_of_report >= 2014-01-01`. `pilot` already drops comparatives before the floor.
+
+## After the methodology change (founder, 2026-11-11; NOW.md "The hybrid, exactly")
+
+"FSN FOR LEARNING - which tag is what. SEC FOR MAPPING." Values now come from the SEC company API (`core.fact`, collected nightly by `scrooner-incremental`), selected only through `analytics.company_tag_map` (migration 0123, claimed). FSN tells the mapper which tag is which line. For this branch that means:
+
+- **The converter keeps its job, as the structure feed.** A new 10-K/10-Q's statement lines, calc tree and labels reach `fsn.*` the night it is filed, so the tag-map extraction can learn a new or changed tag (an extension, a re-tagged line) before the bulk FSN set arrives. The 23/23 equivalence is what lets the tag map trust EDGAR-built rows like FSN rows.
+- **The `write` stage is the tag-map writer (done 2026-11-12, per Engineering).** For the night's companies that have `analytics.company_tag_map` rows, `fsn_nightly_incremental.sh` calls `scrooner-map tagmap-plan --company-ids … --apply --before-image-dir …` with `SCROONER_RULES_ENABLED=company_tag_map.select@1` for that call only. It writes with `scrooner.writer = 'company_tag_map'` (0123). Companies without a map are not written. The FSN cell write is gone from this script. `build` and `load` are unchanged.
+- **New-path membership follows the writer (done).** `fsn_store/new_path.py` counts a company as moved once an applied `company_tag_map.select@1` or `fsn.*` write has landed, or once a `company_value_owner` row exists. The tag-map writer adds owner `company_tag_map`.
+
+## One writer for the cohort, and the backfill
+
+Founder direction, relayed by Dhairya on 2026-11-09: once the hybrid is live it is the only writer for the 1,000 cohort companies. The nightly path is:
+
+1. EDGAR filing index (`scrooner-incremental`);
+2. this per-filing converter;
+3. `load --increment`;
+4. map, checks and select;
+5. the tag-map write (`scrooner-map tagmap-plan --apply`, rule `company_tag_map.select@1`) for companies with a tag map;
+6. (the gate and protection are inside the tag-map writer);
+7. the derived metrics (`map:calculate` through `map:calculate-dividend-streak` in `reprocess_recent_filers.sh`), recomputed from `canonical_fact` for every company.
+
+- **Old pipeline: the flag-on rule** (founder decisions relayed 2026-11-11: move to the new system, skip at the writer, build no more protection logic).
+  - **Which companies.** A company is on the new path once an applied new-system write has landed for it. That means it holds `slot_protected_cell` rows of a `company_tag_map.select@1` or `fsn.*` rule run in apply mode, or an `analytics.company_value_owner` row (`fsn_store/new_path.py`, `scrooner-fsn new-path-ciks`). The cell loader writes those rows in the same transaction as the cells. So for each company the top-100 or 1,000 write lands, the switch is on in the same step, with no extra list to maintain. A restore that removes the company's FSN rows sends it back to the old path.
+  - **What is skipped, and where** (Ritwik's PR #12 review, 2026-11-12: in the writer commands, for every entry point).
+    - `scrooner-normalize` and `scrooner-map` are built on `new_path.GuardedGroup`. Before a writer subcommand parses its arguments, the new-path CIKs are taken out of its `--ciks`. Without `--ciks` a writer is refused. With only new-path CIKs it does not run.
+    - The writers are the old path's canonical-value writers (`resolve-*`, `split-rebase*`, the parser) and its fact repair or derivation stages (`conflict-latest-filed`, `conflicts`, `derive-interim-quarters`, `derive-q4`, `demote-coregistrant-facts`, `golden`). The lists are `new_path.WRITER_COMMANDS` and `NOT_WRITER_COMMANDS`; every command of both CLIs is classified, and a test fails on an unclassified one.
+    - The population-wide writers that `pipeline-recompute.yml` calls directly (`resolve_all_arithmetic_fallbacks`, `resolve_all_conflict_fills`, `resolve_all_safe_concepts`) refuse to run once any company is on the new path.
+    - `scrooner-sanity investigate` filters its investigation and its re-merge.
+    - **Deviation from the review, flagged:** the SEC ingestion stages (`identity`, `periods`, `units`, `facts`, `dedupe`, `restatements`, `instance-fallback`) are NOT skipped. They write the authoritative `core.fact` rows that the tag-map mapper reads ("SEC FOR MAPPING"), so skipping them would leave a new-path company without its new filings' facts.
+    - The flag reaches the commands through the environment: `pipeline-refresh.yml` (reprocess), `pipeline-sanity.yml` (investigate) and `pipeline-recompute.yml` set it from the repository variable. A manual run of `reprocess_fiscal_year_relabel.sh` or `run_conflict_latest_filed.sh` must export it.
+    - `tests/unit/test_fsn_new_path_guard.py` reads every entry point's stage lists. It invokes each writer they reach through the real CLI with a new-path CIK and fails if the command body ever sees it. All of it is mutation-checked.
+  - **What still runs.** The SEC ingestion stages and the derived-metric stages (`map:calculate` onwards, recomputed from `canonical_fact`) run for every company.
+  - **Fail closed.** If the new-path set cannot be read, the writer command or population writer stops with an error. It does not write.
+  - **Default.** It is off by default, and it is switched on together with `FSN_NIGHTLY_STAGE=write` (founder's typed words).
+- **To verify before switching on:** that each derived-metric stage reads only `canonical_fact` for a new-path company, and nothing that the skipped repair and derivation stages would have refreshed.
+- **Backfill.** The nightly window is not just 7 days. It reaches back to the day after the latest SEC FSN set in the store (`increment.since_last_set`: '2026m10' → from 2026-11-01). EDGAR-built filings do not move that date. So the first run is the one-time backfill of every filing published since the last set (MEASURED stake, from the data chief: the latest 10-Q of 319 companies, about 2,570 company/data-point pairs). Every later night is a catch-up as well, and a deferred filing is never lost.
+- **Running the backfill.** A dispatched run can set `fsn_nightly_since` and raise `fsn_nightly_max_minutes`; the step timeout becomes 170 minutes. At about 5 s per filing, the measured 319 filings take about 27 minutes.
+
+**Protection guard (0113) stays as it is.** This path writes canonical_fact only through `scrooner-cells load --protect`. No new code sets `scrooner.slot_writer` or `scrooner.writer`, or touches `analytics.slot_protected_cell` (grep-checked on 2026-11-10). The old mapper's attempts on written cells keep being skipped and logged in `analytics.slot_protected_write_skipped`. Per Dhairya, 2026-11-10: MDT is the only company written so far, and its 241 skips show the guard working. With `HYBRID_NEW_PATH=on` the old writers stop attempting those writes at all; no further protection logic is built (founder, 2026-11-11).
+
+## Order, budget, isolation, later FSN set
+
+- **Order.** The step runs in `pipeline-refresh.yml` after `scrooner-incremental` (so `core.filing` is fresh) and before `reprocess_recent_filers.sh` (the old mapper). Once a pair is written, the 0113 `slot_protected_cell` guard and the 0119 owner guard stop the old mapper from overwriting it.
+- **Steps** (`pipeline/scripts/fsn_nightly_incremental.sh`):
+  1. `scrooner-fsn nightly`: one indexed read with `statement_timeout` 15 s, then fetch and convert. Fetching is capped at 25 minutes, and the rest is deferred.
+  2. `load --increment`: one connection, one transaction per company.
+  3. `pilot`: map, checks and select.
+  4. `pilot-prod`, which writes the before-image, then `done-gate`.
+  5. `scrooner-cells load --protect` for the passed pairs of done companies.
+  6. A pg_stat_activity headroom check (60 of 90) runs before any write.
+- **Time.** At about 5 s per filing, 25 minutes covers about 300 filings. A peak earnings day for the top 1,000 is ASSUMED at 150–250. The step timeout is 45 minutes.
+- **Before switching load or write on,** raise the job's 180-minute timeout, because `reprocess_recent_filers.sh` already overran on 2026-11-08 (NOW.md).
+- **Isolation.**
+  - One filing failing is reported, never raised.
+  - `load.run` and `pilot` isolate each company.
+  - The script always exits 0, and the step is `continue-on-error`.
+  - A filing that did not make it is still absent from `fsn.filing`, so the next night's window, which reaches back to the latest FSN set, retries it.
+- **When the FSN set arrives.**
+  - EDGAR-built filings carry `fsn_set = 'edgar:<date>'` and a per-accession `src_sha256`.
+  - The full company reload now deletes only FSN-set filings plus the accessions its directory carries. So the set's copy replaces the EDGAR copy by accession, and EDGAR copies the sets do not hold yet are kept.
+  - An increment never overwrites an accession an FSN set already holds, and reruns are no-ops.
+  - No migration was needed (0118 already has `fsn_set` and `src_sha256`).
+
+## Flag and what is left
+
+- **Flag.** `FSN_NIGHTLY_STAGE`, a repository variable or dispatch input, takes `off` (the default), `build` (local files only), `load` (writes fsn.* only) or `write` (canonical_fact with protection). `load` and `write` are production writes and need the founder's typed words before the variable is set.
+- **Open.** Gating is per company through today's `done-gate`. The per-(company, data point) gate (Ritwik's ruling, `review/ruling-done-gate-c4-2026-11-09`) should replace it when it lands.
+- **Open.** `pilot` against production timed out per company in run 42561798991 (NOW.md), and the same fix applies here.
+- **Open.** Standard-tag labels come from `MetaLinks.json`. A filing without it (the pre-2018 renderer) still converts, but a standard line's `plabel` is empty unless the filer relabelled it. Only new filings come through this path, so the case is not expected.

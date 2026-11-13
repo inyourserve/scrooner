@@ -1365,6 +1365,11 @@ _HAS_OWN_POPULATE_STEP = {
 
 
 def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
+    from scrooner_pipeline.fsn_store import new_path
+
+    new_path.refuse_population_writer(
+        conn, "resolve_all_conflict_fills"
+    )  # HYBRID_NEW_PATH: fail closed
     from scrooner_pipeline.mapper.concept_fallback import (
         resolve_capex_with_software,
         resolve_depreciation_and_amortization_max,

@@ -43,46 +43,12 @@ from scrooner_pipeline.common.rule_flags import rule_enabled
 
 RULE_PER_SHARE_TTM = "pershare.never_derive_ttm@1"
 
+from scrooner_pipeline.metrics.generate import growth_metrics
+
 logger = structlog.get_logger()
 
-GROWTH_METRICS = {
-    "revenue_growth_yoy": ("revenue", 1),
-    "revenue_growth_3y_cagr": ("revenue", 3),
-    "eps_growth_yoy": ("diluted_eps", 1),
-    "eps_growth_3y_cagr": ("diluted_eps", 3),
-    # 5Y/10Y CAGR added 2026-08-19 (doc 26's "what moves the needle
-    # next" list) -- purely additive dict entries, zero new code:
-    # _growth_value already generalizes to any lag_years via the CAGR
-    # branch, and _load_metric_ids/the delete-then-insert scope in
-    # _compute_growth_for_company both derive from GROWTH_METRICS' own
-    # keys, so nothing else needed changing. Zero-regression verified:
-    # the original 4 metrics' values are byte-identical before/after.
-    "revenue_growth_5y_cagr": ("revenue", 5),
-    "revenue_growth_10y_cagr": ("revenue", 10),
-    "eps_growth_5y_cagr": ("diluted_eps", 5),
-    "eps_growth_10y_cagr": ("diluted_eps", 10),
-    # dps_growth_yoy/3y_cagr added 2026-08-29 -- same purely-additive
-    # dict-entry pattern as the 5Y/10Y CAGR additions above; "dps" matches
-    # this dict's existing "eps" abbreviation convention.
-    "dps_growth_yoy": ("dividends_per_share", 1),
-    "dps_growth_3y_cagr": ("dividends_per_share", 3),
-    # net_income_growth_*/diluted_shares_growth_* added 2026-09-05
-    # (financials display spec) -- same purely-additive dict-entry
-    # pattern as every prior GROWTH_METRICS addition. diluted_shares_
-    # growth_* uses shares_outstanding (this project has no separate
-    # diluted-weighted-average-shares concept yet, see
-    # doc/learnings/2026-09-05-financials-spec-gap-plan.md) -- the same
-    # concept share_dilution_trend already uses for its own rolling
-    # dilution figure, just as a real FY-vs-prior-FY series here instead
-    # of a ~1yr-ago comparison anchored on "today."
-    "net_income_growth_yoy": ("net_income", 1),
-    "net_income_growth_3y_cagr": ("net_income", 3),
-    "net_income_growth_5y_cagr": ("net_income", 5),
-    "net_income_growth_10y_cagr": ("net_income", 10),
-    "diluted_shares_growth_yoy": ("shares_outstanding", 1),
-    "diluted_shares_growth_3y_cagr": ("shares_outstanding", 3),
-    "diluted_shares_growth_5y_cagr": ("shares_outstanding", 5),
-}
+# GENERATED from the metric registry (expression_status growth_wired: growth(concept, years)).
+GROWTH_METRICS = growth_metrics()
 
 QUARTER_ORDER = ["Q1", "Q2", "Q3", "Q4"]
 

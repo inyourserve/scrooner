@@ -1,0 +1,1001 @@
+ticker,company_id,sector,template_group
+NVDA,2733,Technology,unmapped
+AAPL,3,Technology,unmapped
+GOOG,9,Technology,unmapped
+MSFT,4,Technology,unmapped
+AMZN,2328,Consumer Discretionary,unmapped
+META,5050,Technology,unmapped
+AVGO,5116,Technology,unmapped
+TSLA,4945,Consumer Discretionary,unmapped
+LLY,666,Healthcare,unmapped
+MU,1321,Technology,unmapped
+WMT,1134,Consumer Discretionary,unmapped
+JPM,1,Financials,bank
+AMD,85,Technology,unmapped
+XOM,5351,Energy,energy
+V,5718,Financials,unmapped
+JNJ,1164,Healthcare,unmapped
+MA,3932,Financials,unmapped
+ABBV,2848,Healthcare,unmapped
+INTC,643,Technology,unmapped
+CVX,1086,Energy,energy
+PLTR,4969,Technology,unmapped
+COST,1857,Consumer Discretionary,unmapped
+CSCO,1649,Technology,unmapped
+KO,279,Consumer Staples,unmapped
+ORCL,5203,Technology,unmapped
+PG,1042,Consumer Staples,unmapped
+UNH,1354,Financials,insurer
+MRK,1182,Healthcare,unmapped
+BAC,716,Financials,bank
+CAT,251,Industrials,unmapped
+LRCX,1263,Industrials,unmapped
+GE,608,Technology,unmapped
+AMAT,134,Technology,unmapped
+PM,5761,Consumer Staples,unmapped
+HD,1236,Consumer Discretionary,unmapped
+NFLX,3007,Communication Services,unmapped
+DELL,3083,Technology,unmapped
+MS,1807,Financials,other_financial
+PANW,5058,Technology,unmapped
+RTX,1123,Industrials,unmapped
+GS,1767,Financials,other_financial
+TMO,1105,Industrials,unmapped
+WFC,1010,Financials,unmapped
+TXN,1104,Technology,unmapped
+GEV,4015,Technology,unmapped
+AMGN,1207,Healthcare,unmapped
+CRWD,2726,Technology,unmapped
+LIN,4841,Materials,unmapped
+ANET,3418,Technology,unmapped
+SHOP,3398,Technology,unmapped
+KLAC,1213,Industrials,corporate
+IBM,644,Technology,unmapped
+C,1586,Financials,bank
+AXP,108,Financials,other_financial
+MRVL,2683,Technology,unmapped
+CRM,3569,Technology,unmapped
+GILD,1732,Healthcare,unmapped
+ADI,128,Technology,unmapped
+DIS,5261,Communication Services,unmapped
+SNDK,4227,Technology,unmapped
+VZ,1358,Communication Services,unmapped
+ABT,76,Healthcare,unmapped
+QCOM,1516,Technology,unmapped
+PEP,1028,Consumer Staples,unmapped
+COP,4056,Energy,energy
+BLK,4123,Financials,other_financial
+DE,1196,Industrials,unmapped
+UNP,1117,Industrials,unmapped
+MCD,683,Consumer Discretionary,unmapped
+TMUS,4630,Communication Services,unmapped
+PFE,1030,Healthcare,unmapped
+SCCO,2124,Materials,unmapped
+NEE,1400,Utilities,utility
+WELL,1421,Real Estate,reit
+TJX,1158,Consumer Discretionary,unmapped
+DHR,1190,Industrials,unmapped
+T,1359,Communication Services,unmapped
+SCHW,1204,Financials,other_financial
+ETN,2852,Industrials,unmapped
+BA,207,Industrials,unmapped
+ISRG,2540,Healthcare,unmapped
+NOW,5480,Technology,unmapped
+STX,3886,Technology,unmapped
+UBER,2787,Other,unmapped
+ACN,5943,Other,unmapped
+CB,1813,Financials,bdc_fund_or_unclassified
+MPC,2376,Energy,energy
+VLO,2529,Energy,energy
+LMT,1975,Industrials,unmapped
+VRTX,1700,Healthcare,corporate
+PGR,1043,Financials,bdc_fund_or_unclassified
+SPGI,684,Industrials,unmapped
+MO,1413,Consumer Staples,unmapped
+NEM,4077,Materials,unmapped
+FTNT,4447,Technology,unmapped
+BMY,215,Healthcare,unmapped
+COF,1948,Financials,bank
+BKNG,3155,Industrials,unmapped
+PH,1025,Industrials,unmapped
+MDT,3639,Healthcare,unmapped
+CVS,687,Consumer Discretionary,unmapped
+WDC,1145,Technology,unmapped
+PLD,2725,Real Estate,unmapped
+MCK,1949,Industrials,unmapped
+PSX,2717,Energy,energy
+ADP,171,Technology,unmapped
+SYK,1185,Healthcare,unmapped
+GLW,303,Materials,unmapped
+LOW,671,Consumer Discretionary,unmapped
+SBUX,1583,Consumer Discretionary,unmapped
+SNOW,3982,Technology,unmapped
+ABNB,2929,Industrials,unmapped
+CME,3987,Financials,other_financial
+NET,2007,Technology,unmapped
+HCA,1653,Healthcare,unmapped
+TT,5941,Industrials,unmapped
+MAR,2785,Consumer Discretionary,unmapped
+FCX,1587,Materials,unmapped
+BNY,5614,Financials,unmapped
+EQIX,3485,Real Estate,unmapped
+APH,1554,Technology,unmapped
+CEG,3240,Utilities,unmapped
+ADBE,1488,Technology,unmapped
+DUK,5023,Utilities,utility
+PWR,2832,Industrials,unmapped
+GD,607,Industrials,unmapped
+MELI,3465,Other,unmapped
+ELV,3980,Financials,insurer
+USB,399,Financials,bank
+ICE,3079,Financials,other_financial
+WM,1567,Utilities,utility
+CSX,1178,Industrials,unmapped
+JCI,1595,Industrials,unmapped
+EMR,367,Technology,unmapped
+HOOD,5613,Financials,other_financial
+MRSH,677,Financials,insurer
+APP,5338,Technology,unmapped
+HWM,105,Materials,unmapped
+CDNS,1534,Technology,unmapped
+SNPS,1740,Technology,unmapped
+INTU,1817,Technology,unmapped
+PNC,1282,Financials,unmapped
+DDOG,2956,Technology,unmapped
+AMT,2854,Real Estate,reit
+MRNA,4553,Healthcare,unmapped
+WMB,1150,Utilities,utility
+MMM,700,Healthcare,unmapped
+CTAS,1323,Consumer Discretionary,unmapped
+MCO,2944,Industrials,unmapped
+REGN,1686,Healthcare,unmapped
+EOG,1560,Energy,energy
+UPS,3343,Industrials,unmapped
+MDLZ,3510,Consumer Staples,unmapped
+DASH,5698,Other,unmapped
+SHW,1068,Consumer Discretionary,unmapped
+ECL,361,Consumer Staples,unmapped
+BX,5647,Financials,other_financial
+TRV,1057,Financials,bdc_fund_or_unclassified
+CI,5228,Financials,insurer
+EPD,2961,Utilities,unmapped
+VRT,4398,Technology,unmapped
+CMCSA,4095,Communication Services,unmapped
+HLT,3291,Consumer Discretionary,unmapped
+ITW,637,Industrials,unmapped
+KKR,5726,Financials,bdc_fund_or_unclassified
+MSI,706,Technology,unmapped
+CP,241,Industrials,unmapped
+ROST,1379,Consumer Discretionary,unmapped
+CL,283,Consumer Staples,unmapped
+KMI,2340,Utilities,utility
+GM,5947,Consumer Discretionary,unmapped
+RCL,1750,Industrials,unmapped
+NOC,3849,Industrials,unmapped
+LITE,3898,Technology,unmapped
+SLB,1059,Energy,unmapped
+NSC,1253,Industrials,unmapped
+CMI,318,Industrials,unmapped
+HPE,4057,Technology,unmapped
+ORLY,1823,Consumer Discretionary,unmapped
+RSG,2951,Utilities,utility
+TGT,327,Consumer Discretionary,unmapped
+ET,4541,Utilities,utility
+FDX,2798,Industrials,unmapped
+HON,1436,Industrials,unmapped
+APD,89,Materials,unmapped
+SPG,2985,Real Estate,unmapped
+APO,3117,Financials,other_financial
+AJG,1233,Financials,insurer
+COR,3918,Industrials,unmapped
+IMO,638,Energy,energy
+URI,3030,Industrials,unmapped
+BSX,1759,Healthcare,unmapped
+MET,3459,Financials,insurer
+TDG,4432,Industrials,unmapped
+GWW,1176,Industrials,unmapped
+ALL,1827,Financials,insurer
+BE,4283,Technology,unmapped
+OXY,1492,Energy,energy
+AON,1198,Financials,insurer
+TRGP,5607,Utilities,unmapped
+DLR,4791,Real Estate,unmapped
+TEL,5577,Industrials,unmapped
+AFL,109,Financials,bdc_fund_or_unclassified
+LNG,101,Utilities,unmapped
+MPWR,4586,Technology,unmapped
+CAH,1316,Industrials,unmapped
+OKE,2606,Utilities,utility
+MPLX,2860,Energy,energy
+FAST,1544,Consumer Discretionary,unmapped
+PCAR,1021,Consumer Discretionary,corporate
+NXPI,5762,Technology,unmapped
+NUE,1013,Materials,unmapped
+TFC,1082,Financials,bank
+FANG,2765,Energy,unmapped
+AME,2576,Industrials,unmapped
+NTRA,3538,Healthcare,corporate
+KEYS,3478,Industrials,unmapped
+D,1292,Utilities,utility
+DVN,3331,Energy,unmapped
+CRH,1629,Materials,unmapped
+BKR,4744,Industrials,unmapped
+NKE,2,Consumer Discretionary,unmapped
+GRMN,3695,Industrials,unmapped
+EBAY,3001,Other,unmapped
+O,1335,Real Estate,unmapped
+TEAM,4115,Technology,unmapped
+NDAQ,3677,Financials,other_financial
+PSA,5634,Real Estate,reit
+BDX,195,Healthcare,unmapped
+AZO,1677,Consumer Discretionary,unmapped
+VST,4655,Utilities,unmapped
+F,417,Consumer Discretionary,unmapped
+TER,1102,Industrials,corporate
+FIX,2553,Industrials,unmapped
+VEEV,5632,Technology,unmapped
+EW,3470,Healthcare,unmapped
+HUM,633,Financials,insurer
+PYPL,3895,Financials,unmapped
+DAL,329,Industrials,unmapped
+ALAB,5170,Technology,unmapped
+ADSK,1427,Technology,unmapped
+A,3346,Industrials,unmapped
+WAB,1983,Industrials,unmapped
+TEVA,1550,Healthcare,unmapped
+MSTR,2820,Financials,other_financial
+XEL,1009,Utilities,unmapped
+ROK,2432,Industrials,unmapped
+KDP,5779,Consumer Staples,unmapped
+WDAY,5069,Technology,unmapped
+CIEN,1974,Technology,unmapped
+STT,1088,Financials,unmapped
+XYZ,8,Technology,unmapped
+LHX,1166,Industrials,unmapped
+FITB,395,Financials,unmapped
+CARR,5606,Industrials,unmapped
+COIN,4489,Financials,other_financial
+COHR,1555,Industrials,unmapped
+FERG,4114,Industrials,unmapped
+MNST,1670,Consumer Staples,unmapped
+IQV,2025,Industrials,unmapped
+EXC,3587,Utilities,utility
+AMP,1553,Financials,other_financial
+IDXX,1695,Healthcare,unmapped
+VTR,1369,Real Estate,unmapped
+CVNA,4619,Consumer Discretionary,unmapped
+WAT,2087,Industrials,corporate
+WCN,4929,Utilities,unmapped
+AIG,114,Financials,insurer
+MSCI,5735,Financials,unmapped
+ED,2776,Utilities,utility
+P,5969,Technology,corporate
+YUM,2641,Consumer Discretionary,unmapped
+LYV,5150,Communication Services,unmapped
+MCHP,1577,Technology,unmapped
+PRU,3882,Financials,bdc_fund_or_unclassified
+ADM,140,Consumer Staples,unmapped
+NTAP,2133,Technology,unmapped
+PAYX,1324,Industrials,unmapped
+SYY,1095,Industrials,unmapped
+ILMN,3596,Industrials,unmapped
+ODFL,1714,Industrials,unmapped
+DHI,1733,Industrials,unmapped
+CBRE,3893,Real Estate,corporate
+TTWO,2031,Technology,unmapped
+EL,2107,Consumer Staples,unmapped
+CMG,2921,Consumer Discretionary,unmapped
+ROP,1737,Industrials,unmapped
+RVMD,3831,Healthcare,unmapped
+KR,659,Consumer Staples,unmapped
+TWLO,5893,Technology,unmapped
+IBKR,5543,Financials,other_financial
+HIG,1697,Financials,bdc_fund_or_unclassified
+ARES,4213,Financials,other_financial
+UI,2385,Technology,unmapped
+KVUE,3739,Consumer Staples,unmapped
+PEG,1462,Utilities,unmapped
+WEC,1449,Utilities,utility
+RBLX,4904,Technology,unmapped
+MTD,2572,Industrials,unmapped
+KMB,654,Materials,unmapped
+RPRX,2081,Healthcare,unmapped
+PCG,2165,Utilities,unmapped
+CCI,2835,Real Estate,unmapped
+CCL,1543,Industrials,unmapped
+CLS,2476,Technology,unmapped
+HSY,628,Consumer Staples,unmapped
+STLD,2396,Materials,unmapped
+RMD,1985,Healthcare,unmapped
+BIIB,1699,Healthcare,unmapped
+CNC,3127,Financials,insurer
+ACGL,2042,Financials,insurer
+TKO,3908,Communication Services,corporate
+EQT,375,Energy,energy
+IRM,2353,Real Estate,unmapped
+ZS,4935,Technology,corporate
+VMC,5663,Materials,unmapped
+FLEX,1673,Technology,unmapped
+EXPE,4994,Industrials,corporate
+ZTS,2895,Healthcare,unmapped
+OKTA,4239,Technology,unmapped
+CBOE,5483,Financials,other_financial
+DXCM,3365,Healthcare,unmapped
+CRWV,5511,Technology,unmapped
+EME,1142,Industrials,unmapped
+CRDO,2151,Technology,unmapped
+AXON,3048,Industrials,unmapped
+GEHC,3661,Healthcare,unmapped
+UAL,1113,Industrials,unmapped
+CTSH,2926,Technology,unmapped
+MTB,403,Financials,bank
+VG,4081,Utilities,utility
+ALNY,4237,Healthcare,unmapped
+HBAN,634,Financials,unmapped
+SUNB,4967,Industrials,unmapped
+MDLN,4526,Healthcare,unmapped
+CQP,5568,Utilities,utility
+RKLB,2370,Industrials,corporate
+NTRS,1011,Financials,bank
+RKT,2109,Financials,other_financial
+IR,4719,Industrials,unmapped
+RJF,1311,Financials,other_financial
+MLM,1897,Materials,unmapped
+DG,341,Consumer Discretionary,unmapped
+RDDT,10,Technology,unmapped
+EXR,4725,Real Estate,reit
+WSM,1310,Consumer Discretionary,unmapped
+WTW,3914,Financials,bdc_fund_or_unclassified
+JBL,1825,Technology,corporate
+TDY,3385,Industrials,corporate
+ATO,1355,Utilities,unmapped
+KHC,3940,Consumer Staples,unmapped
+WRB,197,Financials,insurer
+HAL,620,Energy,energy
+ON,3439,Technology,unmapped
+ZM,3283,Technology,unmapped
+HPQ,629,Technology,unmapped
+FTI,4530,Industrials,unmapped
+VRSN,2286,Technology,unmapped
+OTIS,5585,Technology,unmapped
+WST,1144,Healthcare,unmapped
+MDB,5874,Technology,unmapped
+DTE,1973,Utilities,utility
+AWK,5747,Utilities,unmapped
+TW,5429,Financials,other_financial
+FE,2487,Utilities,utility
+CFG,1403,Financials,bank
+CNP,3800,Utilities,unmapped
+DOV,345,Industrials,unmapped
+PPL,1926,Utilities,unmapped
+SN,3814,Technology,unmapped
+CPAY,4197,Other,unmapped
+CPNG,2665,Consumer Discretionary,unmapped
+CINF,271,Financials,bdc_fund_or_unclassified
+QSR,3710,Consumer Discretionary,corporate
+VICI,4814,Real Estate,unmapped
+DGX,2378,Healthcare,unmapped
+CPRT,1834,Consumer Discretionary,unmapped
+LH,1913,Healthcare,unmapped
+CASY,1337,Consumer Discretionary,corporate
+EXPD,1382,Industrials,unmapped
+ULTA,5721,Consumer Discretionary,unmapped
+ATI,2335,Materials,unmapped
+FISV,1498,Other,unmapped
+LPLA,5683,Financials,other_financial
+FFIV,2793,Technology,unmapped
+VRSK,5875,Technology,unmapped
+VLTO,3880,Industrials,unmapped
+CHD,1191,Consumer Staples,unmapped
+AFRM,2387,Financials,other_financial
+ECHO,5771,Communication Services,unmapped
+LVS,4813,Consumer Discretionary,unmapped
+DRI,1981,Consumer Discretionary,unmapped
+FCNCA,1502,Financials,unmapped
+XYL,2542,Industrials,unmapped
+HUBB,632,Technology,unmapped
+ROIV,3907,Healthcare,unmapped
+Q,4627,Technology,corporate
+TPR,3652,Consumer Discretionary,unmapped
+TPL,2198,Real Estate,corporate
+FOX,5380,Communication Services,unmapped
+SYF,3487,Financials,other_financial
+PPG,1038,Materials,unmapped
+PFG,3750,Financials,insurer
+RF,4599,Financials,unmapped
+IOT,4017,Technology,unmapped
+SYM,2706,Industrials,unmapped
+DLTR,1972,Consumer Discretionary,unmapped
+NVT,5010,Industrials,unmapped
+BRO,1036,Financials,insurer
+IFF,645,Materials,unmapped
+OMC,347,Industrials,unmapped
+RL,2564,Consumer Discretionary,unmapped
+VMRK,1840,Real Estate,unmapped
+MKL,3423,Financials,insurer
+UTHR,3215,Healthcare,unmapped
+ROKU,5822,Communication Services,unmapped
+L,669,Financials,bdc_fund_or_unclassified
+STZ,243,Consumer Staples,unmapped
+RBRK,3733,Technology,unmapped
+INCY,1717,Industrials,unmapped
+DINO,3600,Energy,unmapped
+USFD,4294,Industrials,unmapped
+CRCL,3332,Financials,other_financial
+XPO,4090,Industrials,unmapped
+NRG,2275,Utilities,utility
+STE,5421,Healthcare,unmapped
+GPN,3713,Other,unmapped
+EXE,1804,Energy,energy
+DOW,5347,Materials,unmapped
+TROW,3618,Financials,other_financial
+SW,4066,Materials,unmapped
+THC,713,Healthcare,unmapped
+JBHT,1343,Industrials,unmapped
+VTRS,5691,Healthcare,unmapped
+PHM,1563,Industrials,unmapped
+KEY,1076,Financials,bank
+ENTG,3489,Materials,unmapped
+PKG,1022,Materials,unmapped
+GH,3132,Healthcare,unmapped
+INSM,3522,Healthcare,unmapped
+RS,1658,Industrials,unmapped
+PTC,1647,Technology,unmapped
+AMRZ,4425,Materials,unmapped
+SMCI,5497,Technology,unmapped
+LYB,2128,Materials,unmapped
+PR,4225,Energy,unmapped
+BG,4016,Consumer Staples,unmapped
+NI,3607,Utilities,utility
+RGLD,1055,Real Estate,corporate
+AMCR,5306,Consumer Discretionary,unmapped
+BR,5563,Other,unmapped
+MTSI,2169,Technology,unmapped
+SBAC,2515,Real Estate,reit
+SSNC,5716,Technology,unmapped
+SNX,4220,Industrials,unmapped
+BBY,1415,Consumer Discretionary,unmapped
+WWD,1153,Technology,unmapped
+LUV,1083,Industrials,unmapped
+EVRG,4903,Utilities,utility
+CBRS,4212,Technology,unmapped
+OVV,5693,Energy,energy
+SNA,1075,Industrials,unmapped
+EFX,373,Industrials,unmapped
+CDW,5713,Consumer Discretionary,unmapped
+CRS,249,Materials,unmapped
+TOST,4112,Technology,unmapped
+SOFI,2323,Financials,other_financial
+FSLR,4514,Technology,corporate
+CW,319,Industrials,unmapped
+FIS,3873,Other,unmapped
+GPC,612,Industrials,corporate
+LEN,1917,Industrials,unmapped
+NTNX,3703,Technology,unmapped
+CF,4990,Materials,unmapped
+WES,5804,Utilities,utility
+IP,646,Materials,corporate
+ZBH,3869,Healthcare,unmapped
+NDSN,1004,Industrials,unmapped
+PAA,3098,Energy,energy
+ITT,1170,Industrials,unmapped
+U,2191,Technology,unmapped
+GIS,610,Consumer Staples,unmapped
+LNT,1227,Utilities,unmapped
+FTV,4232,Industrials,unmapped
+DD,4316,Materials,unmapped
+DT,5542,Technology,unmapped
+ZBRA,1712,Industrials,unmapped
+RGA,1824,Financials,bdc_fund_or_unclassified
+EWBC,3045,Financials,unmapped
+IEX,1589,Industrials,unmapped
+APG,2011,Industrials,unmapped
+ESS,1916,Real Estate,reit
+TSCO,1898,Consumer Discretionary,unmapped
+MEDP,4330,Industrials,unmapped
+APA,2801,Energy,energy
+HEI,626,Industrials,unmapped
+RVTY,365,Industrials,unmapped
+FTAI,3325,Industrials,unmapped
+FDXF,4926,Industrials,unmapped
+RIVN,3315,Consumer Discretionary,unmapped
+CLH,1565,Utilities,utility
+TLN,3764,Utilities,utility
+BALL,183,Industrials,unmapped
+WCC,1955,Industrials,unmapped
+FICO,1538,Other,unmapped
+BURL,3174,Consumer Discretionary,unmapped
+J,648,Industrials,unmapped
+HST,3113,Real Estate,reit
+WMG,4947,Communication Services,unmapped
+TPG,3380,Financials,other_financial
+CHRW,2703,Industrials,unmapped
+NWSA,3000,Consumer Discretionary,unmapped
+H,5948,Consumer Discretionary,unmapped
+ROL,1054,Industrials,unmapped
+INVH,4574,Real Estate,corporate
+CDE,1168,Materials,unmapped
+RBC,5002,Industrials,unmapped
+NVR,1841,Industrials,unmapped
+BEN,599,Financials,other_financial
+LDOS,5161,Technology,unmapped
+EXEL,1978,Healthcare,unmapped
+RBA,2746,Other,corporate
+CRBG,3450,Financials,insurer
+YUMC,4380,Consumer Discretionary,unmapped
+PFGC,3700,Industrials,unmapped
+KIM,1716,Real Estate,unmapped
+TSN,1112,Consumer Staples,unmapped
+MTZ,225,Industrials,unmapped
+LAMR,3338,Real Estate,unmapped
+JHX,4036,Materials,unmapped
+LOGI,2511,Technology,unmapped
+EG,3396,Financials,insurer
+WPC,2440,Real Estate,reit
+ULS,3539,Industrials,unmapped
+LSCC,1643,Technology,unmapped
+MAS,678,Industrials,unmapped
+TYL,1654,Technology,unmapped
+SOLV,3856,Healthcare,unmapped
+UNM,116,Financials,bdc_fund_or_unclassified
+RNR,1881,Financials,bdc_fund_or_unclassified
+ARMK,3260,Consumer Discretionary,unmapped
+PINS,2336,Technology,unmapped
+EQH,5129,Financials,insurer
+MKSI,2802,Industrials,unmapped
+SUI,1874,Real Estate,unmapped
+GEN,1630,Technology,unmapped
+CNH,3024,Industrials,unmapped
+CRL,3473,Industrials,unmapped
+PNFP,4938,Financials,bank
+LECO,667,Industrials,unmapped
+TRU,2865,Industrials,unmapped
+WY,1147,Real Estate,unmapped
+SITM,5905,Technology,unmapped
+JLL,2580,Real Estate,corporate
+CHTR,3354,Communication Services,unmapped
+AIZ,4477,Financials,bdc_fund_or_unclassified
+SWK,1087,Industrials,unmapped
+PAG,2345,Consumer Discretionary,unmapped
+HAS,622,Consumer Discretionary,unmapped
+DOCU,4439,Technology,unmapped
+TRMB,1669,Industrials,unmapped
+GWRE,2607,Technology,unmapped
+OHI,1776,Real Estate,reit
+NBIX,1891,Healthcare,unmapped
+HALO,4032,Healthcare,unmapped
+NLY,2699,Real Estate,reit
+JAZZ,4385,Healthcare,unmapped
+CACI,231,Technology,unmapped
+MAA,1875,Real Estate,reit
+BF-A,217,Consumer Staples,unmapped
+GME,5038,Consumer Discretionary,unmapped
+SJM,1074,Consumer Staples,unmapped
+ARCC,7,Other,bdc_fund_or_unclassified
+GDDY,3589,Technology,unmapped
+REG,1863,Real Estate,unmapped
+SGI,4297,Consumer Discretionary,unmapped
+ALLE,3171,Industrials,unmapped
+AVY,173,Materials,unmapped
+MLI,1067,Materials,unmapped
+GGG,617,Industrials,unmapped
+CSL,1469,Materials,corporate
+CSGP,2904,Other,unmapped
+DOC,1419,Real Estate,reit
+BAX,193,Healthcare,unmapped
+TXT,1171,Industrials,unmapped
+DKS,3312,Consumer Discretionary,unmapped
+BJ,2658,Consumer Discretionary,unmapped
+BMNR,2566,Financials,other_financial
+FN,5738,Technology,unmapped
+BBIO,5257,Healthcare,unmapped
+GL,1220,Financials,bdc_fund_or_unclassified
+MANH,2889,Technology,unmapped
+IT,1388,Industrials,unmapped
+CG,2568,Financials,other_financial
+CNA,277,Financials,bdc_fund_or_unclassified
+FLUT,3913,Technology,unmapped
+STRL,1691,Industrials,unmapped
+RPM,1163,Materials,unmapped
+PEN,4972,Healthcare,unmapped
+DTM,2813,Utilities,unmapped
+EHC,1454,Healthcare,unmapped
+SMTC,1064,Technology,unmapped
+AKAM,3284,Other,unmapped
+PNW,1416,Utilities,unmapped
+SEIC,1223,Financials,other_financial
+BWXT,2092,Industrials,unmapped
+MKC,682,Consumer Staples,unmapped
+LII,3053,Industrials,unmapped
+IVZ,1890,Financials,other_financial
+CCK,4337,Industrials,unmapped
+AFG,2668,Financials,bdc_fund_or_unclassified
+TOL,1483,Industrials,unmapped
+FIVE,4223,Consumer Discretionary,unmapped
+AIT,1160,Industrials,unmapped
+BTSG,3205,Healthcare,unmapped
+SWKS,103,Technology,unmapped
+IONQ,2475,Technology,unmapped
+ASTS,5580,Communication Services,unmapped
+DVA,1947,Healthcare,unmapped
+WTS,1486,Industrials,unmapped
+CR,3736,Industrials,unmapped
+CORT,3309,Healthcare,unmapped
+BWA,1850,Consumer Discretionary,unmapped
+AR,5831,Energy,energy
+NXT,2982,Technology,unmapped
+ELS,1805,Real Estate,reit
+MOG-A,705,Industrials,unmapped
+DECK,1862,Consumer Discretionary,unmapped
+SMMT,3455,Healthcare,unmapped
+AHR,3885,Real Estate,reit
+WTRG,1031,Utilities,utility
+FRHC,1938,Financials,other_financial
+W,3675,Consumer Discretionary,unmapped
+ELAN,5212,Healthcare,unmapped
+ALLY,611,Financials,bank
+CART,3164,Other,unmapped
+DOCN,3234,Technology,unmapped
+HUBS,5724,Technology,unmapped
+GLPI,3126,Real Estate,reit
+TECH,1610,Healthcare,unmapped
+GNRC,5971,Technology,unmapped
+PAYC,3353,Technology,unmapped
+QXO,4403,Industrials,unmapped
+WSO,1138,Industrials,unmapped
+AMH,2971,Real Estate,reit
+ALB,1896,Materials,unmapped
+ERIE,1928,Financials,insurer
+HRL,631,Consumer Staples,unmapped
+AVTR,5022,Industrials,unmapped
+FIG,3187,Technology,unmapped
+UDR,1016,Real Estate,reit
+SCI,1066,Industrials,unmapped
+TXRH,4720,Consumer Discretionary,unmapped
+UHS,1229,Healthcare,unmapped
+SF,1313,Financials,other_financial
+NYT,720,Consumer Discretionary,unmapped
+COO,1274,Healthcare,unmapped
+ARW,147,Industrials,unmapped
+AA,4434,Materials,corporate
+JKHY,1444,Technology,unmapped
+ONTO,1257,Industrials,unmapped
+MOH,4249,Financials,insurer
+FHN,409,Financials,unmapped
+RYAN,2930,Financials,insurer
+HII,2273,Industrials,unmapped
+FDS,2259,Technology,unmapped
+FNF,5101,Financials,bdc_fund_or_unclassified
+SAIL,4344,Technology,unmapped
+AES,1696,Utilities,unmapped
+BMRN,2788,Healthcare,unmapped
+GSAT,5430,Communication Services,unmapped
+EGP,635,Real Estate,reit
+EVR,5393,Financials,other_financial
+OSCR,3039,Financials,bdc_fund_or_unclassified
+KNX,2162,Industrials,unmapped
+CLX,275,Consumer Staples,corporate
+PSKY,4474,Communication Services,unmapped
+ALGN,3434,Healthcare,unmapped
+SNAP,2998,Technology,unmapped
+AGNC,5802,Real Estate,reit
+AMKR,2763,Technology,unmapped
+FROG,2052,Technology,unmapped
+DDS,335,Consumer Discretionary,unmapped
+MDGL,3998,Healthcare,unmapped
+BSY,2491,Technology,unmapped
+GMED,4406,Healthcare,unmapped
+ENSG,3745,Healthcare,unmapped
+LULU,5678,Consumer Discretionary,unmapped
+RRX,1049,Industrials,unmapped
+HL,1308,Materials,unmapped
+JEF,1096,Financials,other_financial
+DCI,343,Industrials,unmapped
+DPZ,4668,Industrials,unmapped
+BPOP,1409,Financials,bank
+RRC,1202,Energy,unmapped
+MUSA,3099,Consumer Discretionary,unmapped
+UMBF,1120,Financials,bank
+AMG,2152,Financials,other_financial
+CPT,1842,Real Estate,reit
+RGEN,1347,Healthcare,unmapped
+SSB,1411,Financials,bank
+TTMI,3660,Technology,unmapped
+PBF,2708,Energy,unmapped
+MTCH,1789,Technology,unmapped
+OGE,2368,Utilities,unmapped
+AUR,2528,Technology,unmapped
+PODD,3966,Healthcare,unmapped
+WTFC,2297,Financials,bank
+GKOS,4278,Healthcare,unmapped
+IBRX,5018,Healthcare,unmapped
+AM,3774,Utilities,utility
+WMS,3520,Materials,unmapped
+ONB,1262,Financials,bank
+LFUS,1778,Technology,unmapped
+IREN,3349,Financials,other_financial
+ESTC,4833,Technology,unmapped
+DAR,1899,Consumer Staples,unmapped
+ORI,1017,Financials,insurer
+CFR,602,Financials,bank
+HSIC,2073,Industrials,unmapped
+BIO,201,Industrials,unmapped
+AEIS,1946,Technology,unmapped
+TTC,1365,Industrials,unmapped
+DRS,2647,Industrials,unmapped
+BXP,2569,Real Estate,unmapped
+PCVX,4086,Healthcare,no_revenue_line
+SANM,1821,Technology,unmapped
+SM,1793,Energy,energy
+KRYS,4906,Healthcare,unmapped
+RMBS,1904,Technology,unmapped
+SOLS,4689,Materials,unmapped
+FCFS,1608,Consumer Discretionary,unmapped
+DKNG,3406,Communication Services,unmapped
+ZION,1159,Financials,unmapped
+ALSN,5750,Consumer Discretionary,unmapped
+FRT,391,Real Estate,unmapped
+APTV,2520,Consumer Discretionary,unmapped
+R,1056,Industrials,unmapped
+CGNX,1636,Industrials,corporate
+AYI,3955,Technology,unmapped
+LTH,3256,Communication Services,unmapped
+SIRI,1854,Communication Services,unmapped
+VICR,1397,Technology,unmapped
+FLS,353,Industrials,unmapped
+HLI,4822,Financials,other_financial
+SAIA,4230,Industrials,unmapped
+BAH,5880,Industrials,unmapped
+OC,5461,Materials,unmapped
+GTLB,4172,Technology,unmapped
+TTEK,1588,Industrials,unmapped
+TXG,5526,Industrials,unmapped
+JXN,2429,Financials,insurer
+CUBE,4795,Real Estate,reit
+PCTY,3366,Technology,unmapped
+KYMR,2246,Healthcare,unmapped
+PRI,5974,Financials,bdc_fund_or_unclassified
+PCOR,3614,Technology,unmapped
+CTRE,3341,Real Estate,unmapped
+CAI,4188,Healthcare,unmapped
+CYTK,2970,Healthcare,unmapped
+CHWY,5494,Consumer Discretionary,unmapped
+VMI,1128,Industrials,unmapped
+ESI,3336,Materials,unmapped
+EAT,1254,Consumer Discretionary,unmapped
+VOYA,2732,Financials,bdc_fund_or_unclassified
+ALV,2518,Consumer Discretionary,corporate
+BRX,3214,Real Estate,reit
+PNR,1027,Industrials,unmapped
+VNOM,4786,Energy,energy
+CHRD,2088,Energy,energy
+BRKR,3582,Industrials,unmapped
+ADC,1903,Real Estate,unmapped
+PTGX,5514,Healthcare,unmapped
+KNSL,4333,Financials,bdc_fund_or_unclassified
+SPXC,1063,Industrials,unmapped
+HUT,3859,Financials,other_financial
+TGTX,2111,Healthcare,unmapped
+UGI,1748,Utilities,utility
+IDCC,5727,Real Estate,corporate
+AXSM,3176,Healthcare,unmapped
+REXR,3070,Real Estate,unmapped
+TWST,3220,Healthcare,unmapped
+CNM,3092,Industrials,unmapped
+AOS,1072,Technology,unmapped
+VIAV,1870,Technology,unmapped
+MHK,1639,Consumer Discretionary,unmapped
+PB,3040,Financials,bank
+WAL,4314,Financials,bank
+FORM,2602,Technology,unmapped
+VSAT,1495,Communication Services,unmapped
+THG,1997,Financials,insurer
+GAP,605,Consumer Discretionary,unmapped
+WLK,4455,Materials,unmapped
+DBX,5944,Technology,corporate
+NEU,4613,Materials,unmapped
+COLB,1769,Financials,bank
+NNN,1395,Real Estate,reit
+CBSH,285,Financials,bank
+LEVI,1091,Consumer Discretionary,unmapped
+CBC,4691,Other,corporate
+MOD,703,Consumer Discretionary,unmapped
+RHP,2625,Real Estate,reit
+OSK,1439,Consumer Discretionary,unmapped
+ARWR,1718,Healthcare,unmapped
+ATR,1816,Materials,unmapped
+AAL,123,Industrials,unmapped
+ZWS,5869,Industrials,unmapped
+WYNN,4186,Consumer Discretionary,unmapped
+ETSY,5457,Other,unmapped
+FR,1925,Real Estate,reit
+TKR,1107,Industrials,unmapped
+MORN,4717,Financials,other_financial
+MSGS,3928,Communication Services,unmapped
+FPS,4883,Technology,unmapped
+ZETA,2965,Technology,unmapped
+LNC,668,Financials,bdc_fund_or_unclassified
+APPF,5830,Technology,unmapped
+DY,702,Industrials,unmapped
+HQY,5821,Other,unmapped
+NFG,712,Utilities,utility
+IDA,2918,Utilities,unmapped
+PACS,4055,Healthcare,unmapped
+BOKF,1702,Financials,unmapped
+ACM,1684,Industrials,unmapped
+LINE,3238,Real Estate,reit
+KTOS,3057,Industrials,unmapped
+KMX,4124,Consumer Discretionary,unmapped
+NTSK,4658,Technology,unmapped
+TAP,301,Consumer Staples,unmapped
+AXS,4325,Financials,insurer
+URBN,1876,Consumer Discretionary,unmapped
+AVT,175,Industrials,corporate
+SLAB,2584,Technology,unmapped
+RAL,4465,Industrials,unmapped
+ARE,2549,Real Estate,unmapped
+SFD,1073,Consumer Staples,unmapped
+S,3249,Technology,unmapped
+LW,4479,Consumer Staples,unmapped
+MSM,2149,Industrials,unmapped
+AGCO,1725,Industrials,unmapped
+SSD,1914,Industrials,unmapped
+ACA,5222,Industrials,unmapped
+MGM,1467,Consumer Discretionary,unmapped
+KEX,655,Industrials,unmapped
+AXTA,3678,Materials,unmapped
+CMC,287,Materials,unmapped
+PRMB,4491,Consumer Staples,unmapped
+MTDR,2500,Energy,energy
+MP,2059,Materials,unmapped
+IONS,1690,Healthcare,unmapped
+EMN,1892,Materials,unmapped
+AWI,145,Materials,unmapped
+VSXY,3087,Consumer Discretionary,unmapped
+CELH,5207,Consumer Staples,unmapped
+SARO,4255,Industrials,unmapped
+NE,3496,Energy,energy
+MATX,95,Industrials,unmapped
+Z,3690,Other,unmapped
+VLY,1284,Financials,bank
+TRNO,1992,Real Estate,corporate
+SYRE,3922,Healthcare,unmapped
+ALKS,2508,Healthcare,unmapped
+COMP,2983,Real Estate,corporate
+MSA,699,Healthcare,unmapped
+PPC,1512,Consumer Staples,unmapped
+NCLH,2409,Industrials,unmapped
+CLF,1412,Materials,unmapped
+STAG,2034,Real Estate,unmapped
+CAG,295,Consumer Staples,unmapped
+FSS,1177,Consumer Discretionary,unmapped
+HXL,1298,Materials,unmapped
+SNEX,1886,Financials,other_financial
+PRAX,4596,Healthcare,unmapped
+PATH,5149,Technology,unmapped
+NOV,2371,Industrials,unmapped
+CHE,261,Healthcare,unmapped
+VCTR,3062,Financials,other_financial
+ELF,3463,Consumer Staples,unmapped
+CAVA,3969,Consumer Discretionary,unmapped
+FAF,5964,Financials,bdc_fund_or_unclassified
+DUOL,2964,Technology,corporate
+BROS,3213,Consumer Discretionary,unmapped
+GTES,4981,Industrials,unmapped
+MAC,1871,Real Estate,reit
+LNTH,2517,Healthcare,unmapped
+VFC,1131,Consumer Discretionary,unmapped
+ANF,2332,Consumer Discretionary,unmapped
+LAD,2407,Consumer Discretionary,unmapped
+SSRM,1923,Real Estate,corporate
+KNSA,5119,Healthcare,unmapped
+OMF,3254,Financials,other_financial
+ESE,1675,Technology,unmapped
+MXL,4693,Technology,unmapped
+HIMS,5544,Healthcare,unmapped
+ACT,2442,Financials,bdc_fund_or_unclassified
+AAOI,4005,Technology,unmapped
+ACI,4067,Consumer Staples,unmapped
+UBSI,1345,Financials,unmapped
+RNG,5574,Technology,unmapped
+GLXY,3133,Financials,other_financial
+SWX,4637,Utilities,unmapped
+AMRX,5037,Healthcare,unmapped
+EPAM,5289,Technology,unmapped
+LYFT,5440,Other,unmapped
+POOL,2017,Industrials,unmapped
+LB,4009,Real Estate,corporate
+RIG,5904,Energy,energy
+M,1484,Consumer Discretionary,unmapped
+NAVN,3976,Technology,unmapped
+QLYS,3545,Technology,unmapped
+G,5686,Industrials,unmapped
+WEX,4869,Other,unmapped
+FLR,3730,Industrials,unmapped
+TTAN,3956,Technology,unmapped
+CVI,5500,Energy,unmapped
+CVLT,4117,Technology,unmapped
+INGR,2751,Consumer Staples,unmapped
+AVAV,5448,Industrials,unmapped
+OTEX,2139,Technology,unmapped
+IOVA,5810,Healthcare,unmapped
+INGM,3512,Industrials,unmapped
+CWEN,3028,Utilities,unmapped
+VNO,1830,Real Estate,unmapped
+PLXS,1456,Technology,unmapped
+ENS,4707,Technology,unmapped
+AAON,1568,Industrials,unmapped
+FNB,415,Financials,bank
+SFM,3118,Consumer Staples,unmapped
+EXLS,4787,Other,unmapped
+MGY,4706,Energy,energy
+HRB,205,Industrials,unmapped
+HR,5389,Real Estate,unmapped
+MOS,4647,Materials,unmapped
+MUR,1296,Energy,energy
+NPO,4082,Materials,unmapped
+VAL,1195,Energy,energy
+ST,2003,Industrials,unmapped
+LEA,1611,Consumer Discretionary,unmapped
+ALGM,1672,Technology,unmapped
+POWL,1041,Technology,unmapped
+CPB,235,Consumer Staples,unmapped
+CROX,5133,Consumer Discretionary,unmapped
+LGND,1763,Healthcare,unmapped
+BLDR,4916,Consumer Discretionary,unmapped
+BLCO,3149,Healthcare,unmapped
+HWC,1393,Financials,bank
+CZR,3351,Consumer Discretionary,unmapped
+RYTM,4100,Healthcare,unmapped
+GATX,606,Industrials,unmapped
+BKH,3805,Utilities,utility
+HOMB,5097,Financials,bank
+LOAR,4044,Industrials,unmapped
+TEX,1103,Industrials,unmapped
+TTD,4362,Technology,unmapped
+LSTR,1640,Industrials,unmapped
+WULF,3225,Financials,other_financial
+ESNT,5897,Financials,bdc_fund_or_unclassified
+MKTX,4554,Financials,other_financial
+RYN,647,Real Estate,reit
+DLB,4860,Real Estate,corporate
+MTG,1709,Financials,bdc_fund_or_unclassified
+GBCI,1682,Financials,bank
+CHDN,269,Communication Services,unmapped
+MCY,688,Financials,insurer
+SXT,1181,Materials,unmapped
+PEGA,2271,Technology,unmapped
+EPRT,5103,Real Estate,reit
+CAKE,1772,Consumer Discretionary,unmapped
+OLLI,3967,Consumer Discretionary,unmapped
+LKQ,3010,Industrials,unmapped
+CACC,1756,Financials,other_financial
+WH,5029,Consumer Discretionary,unmapped
+RLI,1052,Financials,insurer
+CWST,1867,Utilities,unmapped
+ECG,4162,Industrials,unmapped
+SAIC,3067,Technology,unmapped
+VRNS,5396,Technology,corporate
+DOCS,2441,Technology,unmapped
+BXSL,5164,Other,bdc_fund_or_unclassified
+TFX,1100,Healthcare,unmapped
+BRK-A,3034,Financials,unmapped
+BAM,3697,Financials,unmapped
+UHAL,107,Industrials,unmapped
+FWONA,2946,Communication Services,unmapped
+PLNT,3937,Communication Services,unmapped
+SUN,2870,Energy,unmapped
+ASB,155,Financials,unmapped
+BGC,3392,Financials,unmapped
+INSW,4472,Industrials,unmapped
+NIQ,4591,Technology,unmapped
+WFRD,3513,Industrials,unmapped
+SO,1081,Utilities,unmapped
+SRE,2503,Utilities,unmapped
+AEE,2144,Utilities,unmapped
+ETR,694,Utilities,unmapped
+CTVA,5394,Materials,unmapped
+EIX,1576,Utilities,unmapped
+CMS,1525,Utilities,unmapped
+ES,1008,Utilities,unmapped
+TXNM,3562,Utilities,unmapped

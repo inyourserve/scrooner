@@ -28,6 +28,7 @@ from __future__ import annotations
 import csv
 import io
 import os
+import shutil
 import subprocess
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -135,12 +136,30 @@ class FilingStructure:
         return vals[0] if vals else None
 
 
+class DecompressError(RuntimeError):
+    """zstd missing or failed. Deliberately NOT a FileNotFoundError: a quarter that is
+    not in the bucket is a legitimate 'missing'; a broken tool must abort the run."""
+
+
+def require_zstd() -> str:
+    path = shutil.which("zstd")
+    if path is None:
+        raise DecompressError(
+            "zstd not found on PATH; refusing to run (export PATH when launching via xargs/cron)"
+        )
+    return path
+
+
 def _zst_rows(path: Path):
-    proc = subprocess.Popen(["zstd", "-dc", str(path)], stdout=subprocess.PIPE)
+    try:
+        proc = subprocess.Popen(["zstd", "-dc", str(path)], stdout=subprocess.PIPE)
+    except OSError as exc:
+        raise DecompressError(f"cannot run zstd for {path}: {exc!r}") from exc
     assert proc.stdout is not None
     fh = io.TextIOWrapper(proc.stdout, encoding="utf-8", errors="replace", newline="")
     yield from csv.DictReader(fh, delimiter="\t", quoting=csv.QUOTE_NONE)
-    proc.wait()
+    if proc.wait() != 0:
+        raise DecompressError(f"zstd exited {proc.returncode} on {path}")
 
 
 def _d8(s: str) -> date | None:

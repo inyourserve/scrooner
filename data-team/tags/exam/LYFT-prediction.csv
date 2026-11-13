@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+LYFT,904,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Accounts payable,120464000.0000,library map
+LYFT,904,accounts_receivable,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001628280-26-006960,,,,note-sourced default tag (no face line)
+LYFT,904,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-006960,R5,Basic (in dollars per share),6.9200,library map
+LYFT,904,capex,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Cash and cash equivalents,1132009000.0000,library map
+LYFT,904,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001628280-26-006960,R8,Net cash used in financing activities,-685528000.0000,library map
+LYFT,904,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Net cash provided by (used in) investing activities,406738000.0000,library map
+LYFT,904,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Cash paid for income taxes,7261000.0000,library map
+LYFT,904,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Cash paid for interest,19821000.0000,library map
+LYFT,904,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Accounts payable,21684000.0000,library map
+LYFT,904,cf_ar_change,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,cf_inventory_change,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Net cash provided by (used in) operating activities,1168438000.0000,library map
+LYFT,904,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001628280-26-006960,R6,Comprehensive income (loss),2854736000.0000,library map
+LYFT,904,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Cost of revenue,3697653000.0000,library map
+LYFT,904,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Total current assets,2919515000.0000,library map
+LYFT,904,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Total current liabilities,4525821000.0000,library map
+LYFT,904,deposits,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Depreciation and amortization,135227000.0000,library map
+LYFT,904,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-006960,R5,Diluted (in dollars per share),6.8100,library map
+LYFT,904,dividends_paid,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,dividends_per_share,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Goodwill,439754000.0000,library map
+LYFT,904,gross_profit,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-006960,R5,(Loss) income before income taxes,-53247000.0000,library map
+LYFT,904,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001628280-26-006960,R5,(Benefit from) provision for income taxes,-2897255000.0000,library map
+LYFT,904,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001628280-26-006960,R5,Interest expense,20755000.0000,library map
+LYFT,904,interest_income,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,inventory,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,loans_net,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Net income (loss),2844008000.0000,library map
+LYFT,904,net_interest_income,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,noninterest_expense,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,noninterest_income,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Research and development,451419000.0000,printed opex lines (duration sum)
+LYFT,904,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-006960,R5,Loss from operations,-188374000.0000,library map
+LYFT,904,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,"Other income, net",155882000.0000,combined line (library or label demote)
+LYFT,904,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,"Property and equipment, net",418530000.0000,library map
+LYFT,904,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Research and development,451419000.0000,library map
+LYFT,904,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Revenue,6316261000.0000,library map
+LYFT,904,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Stock-based compensation,322268000.0000,library map
+LYFT,904,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Sales and marketing,875101000.0000,printed face components (duration sum; total_debt founder sum)
+LYFT,904,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001628280-26-006960,R8,Repurchase of Class A common stock,499992000.0000,library map
+LYFT,904,shares_outstanding,not_presented,,,,,,,,0001628280-26-006960,,,,no face line
+LYFT,904,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Total stockholders equity,3273523000.0000,library map
+LYFT,904,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Total assets,9030053000.0000,library map
+LYFT,904,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,"Long-term debt, net of current portion",1002404000.0000,printed face components (duration sum; total_debt founder sum)
+LYFT,904,total_interest_income,OUT,,,,,,,,0001628280-26-006960,,,,not a bank
+LYFT,904,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-006960,R3,Total liabilities,5756530000.0000,library map
+LYFT,904,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Basic (in shares),410840000.0000,library map
+LYFT,904,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001628280-26-006960,R5,Diluted (in shares),417659000.0000,library map

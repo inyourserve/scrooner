@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+MOS,933,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Accounts payable,1171900000.0000,library map
+MOS,933,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,"Receivables, net",1078600000.0000,combined line (library or label demote)
+MOS,933,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001285785-26-000017,,,,note-sourced default tag (no face line)
+MOS,933,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001285785-26-000017,R2,Basic net earnings per share attributable to Mosaic,1.7000,library map
+MOS,933,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,Capital expenditures,1359400000.0000,library map
+MOS,933,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Cash and cash equivalents,276600000.0000,library map
+MOS,933,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,Net cash provided by (used in) financing activities,452000000.0000,library map
+MOS,933,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001285785-26-000017,R6,Net cash used in investing activities,-1309500000.0000,library map
+MOS,933,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001285785-26-000017,,,,note-sourced default tag (no face line)
+MOS,933,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001285785-26-000017,,,,note-sourced default tag (no face line)
+MOS,933,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001285785-26-000017,R6,Accounts payable and accrued liabilities,-359600000.0000,combined line (library or label demote)
+MOS,933,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,-,-5,N,,sec_api,0001285785-26-000017,R6,"Receivables, net",-75700000.0000,library map
+MOS,933,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,"Inventories, net",761500000.0000,library map
+MOS,933,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,Net cash provided by operating activities,824800000.0000,library map
+MOS,933,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001285785-26-000017,R3,Comprehensive income (loss) attributable to Mosaic,857800000.0000,library map
+MOS,933,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Cost of goods sold,10150500000.0000,library map
+MOS,933,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Total current assets,5237500000.0000,library map
+MOS,933,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Total current liabilities,3982800000.0000,library map
+MOS,933,deposits,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,"Depreciation, depletion and amortization",1049900000.0000,library map
+MOS,933,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001285785-26-000017,R2,Diluted net earnings per share attributable to Mosaic,1.7000,library map
+MOS,933,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,Cash dividends paid,280400000.0000,library map
+MOS,933,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,2,N,,sec_api,0001285785-26-000017,R7,Dividends per share (in usd per share),0.8800,library map
+MOS,933,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Goodwill,1005100000.0000,library map
+MOS,933,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Gross margin,1901900000.0000,library map
+MOS,933,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Earnings from consolidated companies before income taxes,1212900000.0000,library map
+MOS,933,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Provision for income taxes,639800000.0000,library map
+MOS,933,interest_expense,not_presented,,,,,,,,0001285785-26-000017,,,,no face line
+MOS,933,interest_income,not_presented,,,,,,,,0001285785-26-000017,,,,no face line
+MOS,933,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Inventories,3363000000.0000,library map
+MOS,933,loans_net,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Net earnings attributable to Mosaic,540700000.0000,library map
+MOS,933,net_interest_income,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,noninterest_expense,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,noninterest_income,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:GoodwillImpairmentLoss;us-gaap:OtherOperatingIncomeExpenseNet,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,"Selling, general and administrative expenses",533900000.0000,every face line between GP/COR and OI; ties to GP - OI
+MOS,933,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Operating earnings,821500000.0000,library map
+MOS,933,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Other income (expense),307400000.0000,library map
+MOS,933,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,"Property, plant and equipment, net",13982600000.0000,library map
+MOS,933,provision_for_credit_losses,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,research_and_development,not_presented,,,,,,,,0001285785-26-000017,,,,no face line
+MOS,933,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Net sales to external customers,12052400000.0000,library map
+MOS,933,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0001285785-26-000017,R6,Share-based compensation expense,30700000.0000,library map
+MOS,933,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,"Selling, general and administrative expenses",533900000.0000,library map
+MOS,933,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-5,N,,sec_api,0001285785-26-000017,R6,Repurchases of stock,0.0000,library map
+MOS,933,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001285785-26-000017,R4,"Common stock, outstanding (in shares)",317408647.0000,library map
+MOS,933,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Total Mosaic stockholders equity,12084900000.0000,library map
+MOS,933,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Total assets,24480100000.0000,library map
+MOS,933,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-5,N,,sec_api,0001285785-26-000017,R4,Current maturities of long-term debt,43100000.0000,printed face components (duration sum; total_debt founder sum)
+MOS,933,total_interest_income,OUT,,,,,,,,0001285785-26-000017,,,,not a bank
+MOS,933,total_liabilities,not_presented,,,,,,,,0001285785-26-000017,,,,no face line
+MOS,933,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Basic weighted average number of shares outstanding (in shares),317300000.0000,library map
+MOS,933,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0001285785-26-000017,R2,Diluted weighted average number of shares outstanding (in shares),318900000.0000,library map

@@ -11,12 +11,15 @@ on:
     inputs:
       code_ref:
         description: "Git ref holding the proof engine"
-        default: "work/engineering/cell-proof"
+        default: "main"
+      ciks:
+        description: "Explicit company list: comma-separated 10-digit CIKs (max 1000). Non-empty = prove exactly these, no families query, no MSFT/HD pilot"
+        default: ""
       families:
         description: "Loaded families whose companies are proved (space separated)"
         default: "capex_da_cash_debt is_core"
       shards:
-        description: "Parallel shards for the cohort after the pilot, 1..20 (1 DB connection each)"
+        description: "Parallel shards for the cohort after the pilot, 1..30 (1 DB connection each)"
         default: "10"
       skip_proved:
         description: "Resume: skip companies that already have analytics.cell_proof rows"
@@ -72,6 +75,7 @@ jobs:
       FAMILIES: ${{ inputs.families }}
       SHARDS: ${{ inputs.shards }}
       SKIP_PROVED: ${{ inputs.skip_proved }}
+      CIKS_INPUT: ${{ inputs.ciks }}
     steps:
       - id: c
         run: |
@@ -83,15 +87,21 @@ jobs:
           if [ $((used + SHARDS)) -gt 60 ]; then
             echo "::error::$used client backends + $SHARDS shards would exceed 60 of max_connections 90 (room kept for the nightly)"; exit 1
           fi
-          fams=$(printf "'%s'," $FAMILIES | sed 's/,$//')
-          skip=""
-          if [ "$SKIP_PROVED" = "true" ]; then skip="and c.id not in (select distinct company_id from analytics.cell_proof)"; fi
-          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc "set statement_timeout = '120s'; select distinct c.cik from analytics.canonical_fact cf join core.company c on c.id = cf.company_id where cf.family in ($fams) $skip order by 1" \
-            | grep -E '^[0-9]{10}$' > ciks.txt
+          if [ -n "$CIKS_INPUT" ]; then
+            if ! printf '%s' "$CIKS_INPUT" | grep -Eq '^[0-9]{10}(,[0-9]{10})*$'; then echo "::error::ciks must match ^[0-9]{10}(,[0-9]{10})*$"; exit 1; fi
+            printf '%s' "$CIKS_INPUT" | tr ',' '\n' | awk '!seen[$0]++' > ciks.txt
+            if [ "$(wc -l < ciks.txt)" -gt 1000 ]; then echo "::error::at most 1000 ciks"; exit 1; fi
+          else
+            fams=$(printf "'%s'," $FAMILIES | sed 's/,$//')
+            skip=""
+            if [ "$SKIP_PROVED" = "true" ]; then skip="and c.id not in (select distinct company_id from analytics.cell_proof)"; fi
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc "set statement_timeout = '120s'; select distinct c.cik from analytics.canonical_fact cf join core.company c on c.id = cf.company_id where cf.family in ($fams) $skip order by 1" \
+              | grep -E '^[0-9]{10}$' > ciks.txt
+          fi
           echo "companies: $(wc -l < ciks.txt)"
           python3 - <<'EOF' >> "$GITHUB_OUTPUT"
           import json, os
-          pilot = set(os.environ["PILOT_CIKS"].split(","))
+          pilot = set() if os.environ["CIKS_INPUT"] else set(os.environ["PILOT_CIKS"].split(","))
           ciks = [c for c in open("ciks.txt").read().split() if c not in pilot]
           n = int(os.environ["SHARDS"])
           print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n) if ciks[i::n]]))
@@ -100,6 +110,7 @@ jobs:
   pilot:
     name: proof MSFT and HD
     needs: companies
+    if: ${{ inputs.ciks == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
@@ -119,6 +130,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Ensure zstd (proof refuses to run without it)
+        run: command -v zstd >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq zstd)
       - run: uv sync --project pipeline --locked
       - name: Prove
         run: |
@@ -138,7 +151,7 @@ jobs:
   cohort:
     name: proof shard ${{ matrix.shard.i }}
     needs: [companies, pilot]
-    if: ${{ !inputs.pilot_only }}
+    if: ${{ !cancelled() && !inputs.pilot_only && needs.companies.result == 'success' && (needs.pilot.result == 'success' || needs.pilot.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
@@ -164,6 +177,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Ensure zstd (proof refuses to run without it)
+        run: command -v zstd >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq zstd)
       - run: uv sync --project pipeline --locked
       - name: Prove
         run: |

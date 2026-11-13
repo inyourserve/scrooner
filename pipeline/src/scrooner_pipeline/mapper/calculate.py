@@ -78,6 +78,12 @@ from scrooner_pipeline.mapper.calculate_shapes import (
     compute as _compute,
 )
 
+from scrooner_pipeline.metrics.generate import (
+    formula_shapes,
+    fy_only_metrics,
+    zero_when_absent_concepts,
+)
+
 logger = structlog.get_logger()
 
 # Re-exported for backward compatibility -- existing callers/tests that
@@ -186,14 +192,8 @@ DEFERRED_TO_EXPANDED_METRICS = {
 # inflates a "days" metric ~4x: the numerator is a period FLOW, the
 # denominator a point-in-time STOCK, and only an annual flow is the right
 # scale to divide by an annual-scale balance.
-FY_ONLY_METRICS = {
-    "roic",
-    "roe",
-    "roa",
-    "debtor_days",
-    "inventory_days",
-    "payables_days",
-}
+# GENERATED from the metric registry (period_rule == fy_only); see metrics/generate.py.
+FY_ONLY_METRICS = fy_only_metrics()
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
 # "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live
@@ -208,72 +208,9 @@ FY_ONLY_METRICS = {
 # locked formula ("Gross Profit / Revenue") is unchanged -- only how
 # Gross Profit itself is sourced changed, from a single required tag to
 # a derived value from two more commonly-tagged inputs.
-FORMULA_SHAPES = {
-    "gross_margin": "sum_diff_ratio",
-    "operating_margin": "ratio",
-    "net_margin": "ratio",
-    "roe": "ratio",
-    "fcf": "sum_diff",
-    "fcf_margin": "sum_diff_ratio",
-    "debt_to_equity": "ratio",
-    "current_ratio": "ratio",
-    "interest_coverage_ratio": "ratio",
-    "roic": "roic",
-    # Additive widening, 2026-08-18 (doc 26's coverage push) -- new
-    # entries only, doc 02's locked 18 above are untouched. Verified
-    # zero regression: rerunning calculate() for the full golden-10
-    # reproduced byte-identical values for all 10 original metrics
-    # before this addition was trusted.
-    "roa": "ratio",
-    "quick_ratio": "sum_diff_ratio",
-    "sbc_pct_revenue": "ratio",
-    "ebitda": "additive",
-    # net_debt_ebitda is NOT here -- its denominator (ebitda) lives in
-    # analytics.metric_value, not canonical_fact, so this engine's
-    # per-concept-role model can't express it. Computed separately in
-    # mapper/expanded_metrics.py instead, alongside the price-dependent
-    # EBITDA-based ratios that need the same TTM EBITDA reconstruction.
-    # debtor_days/inventory_days/payables_days added 2026-08-18 -- new
-    # "days" shape, FY-only (see FY_ONLY_METRICS comment above).
-    # cash_conversion_cycle is NOT here -- it combines these three
-    # METRICS' own outputs (debtor + inventory - payables), not raw
-    # concepts, so it's computed in mapper/expanded_metrics.py instead,
-    # same "combines other metrics' output" pattern as net_debt_ebitda.
-    "debtor_days": "days",
-    "inventory_days": "days",
-    "payables_days": "days",
-    # Added 2026-08-21 (core-fact-utilization-study.md #1/#4). Both reuse
-    # existing shapes unchanged -- eps_dilution_spread's basic_eps
-    # appearing in two roles (add + denominator) needed zero engine
-    # changes, see expanded_definitions.py's module docstring for why
-    # that's safe.
-    "goodwill_pct_assets": "ratio",
-    "eps_dilution_spread": "sum_diff_ratio",
-    # Added 2026-08-21 (doc 28, Trendlyne gap analysis #1/#4).
-    "rnd_intensity": "ratio",
-    "net_interest_income": "sum_diff",
-    # Added 2026-08-22 (P0/coverage execution pass).
-    "capex_pct_revenue": "ratio",
-    "sga_pct_revenue": "ratio",
-    # Added 2026-08-29 (zero-new-fetch coverage pass). payout_ratio/
-    # pretax_margin reuse dividends_per_share/diluted_eps/income_before_tax/
-    # revenue, all already canonical concepts. net_cash/net_cash_per_share
-    # combine cash_and_equivalents/total_debt/shares_outstanding -- all
-    # balance_sheet (instant) -- fitting the EXISTING sum_diff/
-    # sum_diff_ratio shapes exactly, no new shape needed.
-    "payout_ratio": "ratio",
-    "pretax_margin": "ratio",
-    "net_cash": "sum_diff",
-    "net_cash_per_share": "sum_diff_ratio",
-    # Added 2026-09-05 (financials display spec gap-fill). All reuse
-    # existing shapes unchanged -- see expanded_definitions.py's own
-    # entries for the exact formula each represents.
-    "book_value_per_share": "ratio",
-    "working_capital": "sum_diff",
-    "net_change_in_cash": "additive",
-    "ocf_to_net_income": "ratio",
-    "cash_returned_to_shareholders": "additive",
-}
+# GENERATED from the metric registry (expression classified onto the six generic shapes); the
+# per-metric history comments that lived here are in git history and the registry `notes` column.
+FORMULA_SHAPES = formula_shapes()
 
 # Found live 2026-10-05 (cockpit triage, doc/planning/51): quick_ratio was
 # blocking 2,604 companies (50% of the active population) from a full-metric
@@ -298,9 +235,9 @@ FORMULA_SHAPES = {
 # net_cash_per_share (total_debt_resolved) and fcf_margin (capex) were
 # explicitly left out here too -- flagged as "ambiguous, needs its own
 # verification" in that same finding, not assumed safe by analogy.
-ZERO_WHEN_ABSENT_CONCEPTS: dict[str, frozenset[str]] = {
-    "quick_ratio": frozenset({"inventory"}),
-}
+ZERO_WHEN_ABSENT_CONCEPTS: dict[str, frozenset[str]] = (
+    zero_when_absent_concepts()
+)  # registry null_rules
 
 
 def _load_target_metrics(conn: psycopg.Connection) -> list[dict]:

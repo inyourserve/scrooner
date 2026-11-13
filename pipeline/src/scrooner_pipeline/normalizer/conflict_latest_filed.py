@@ -54,6 +54,7 @@ restatements, before the derive stages.
 """
 
 import json
+from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
@@ -70,6 +71,10 @@ logger = structlog.get_logger()
 
 RULE = "latest_filed_fy_v1"
 RULE_QUARTER = "latest_filed_quarter_v1"
+RULE_TAGMAP = "latest_filed_tagmap_v1"
+# Same flag as the mapper (mapper/company_tag_map.py): off by default, so the old mapper never sees
+# is_authoritative flips for tag-map companies before the switch-over.
+RULE_COMPANY_TAG_MAP = "company_tag_map.select@1"
 
 # The tags the rule was validated against (taxonomy, tag).
 VALIDATED_TAGS: list[tuple[str, str]] = [
@@ -228,6 +233,241 @@ on conflict (fact_id) do update
 """
 
 
+# Tag-map companies (analytics.company_tag_map rows): EVERY tag, every period type, one authoritative copy per
+# (company, concept, unit, period) whose copies disagree and none is authoritative (Dhairya ruling 2026-11-12, doc 02
+# decision 2026-11-01 item 3 applied to core.fact):
+#   rounding class    every copy equals the most precise copy at its own stated precision (fsn.value dcml; PANW G&A
+#                     27,000,000 at -6 vs 27,023,000 at -3): the most precise copy wins, whichever filing printed it
+#                     (rule precision_tagmap_v1);
+#   restatement class otherwise the latest ACCEPTED filing's copy wins (MSFT S&M FY2016 14,697 -> 14,635 in the
+#                     FY2018 10-K; rule latest_filed_tagmap_v1); never an older vintage.
+# The winner must be a periodic filing and never an amendment that prints no IS/BS/CF/CI line. Ties: lower
+# accession. The losing copies stay non-authoritative; the winner's core.fact_conflict_resolution rule names the
+# class, so a loser's reason is superseded_precision (precision rule) or superseded_restated (latest rule). Same
+# sign-only quarantine as above.
+RULE_TAGMAP_PRECISION = "precision_tagmap_v1"
+
+TAGMAP_CANDIDATES_SQL = """
+with candidates as (
+    select f.id, f.company_id, f.value, f.is_authoritative,
+           fl.filing_date, fl.accession_number,
+           coalesce(ff.accepted, fl.filing_date::timestamptz) as accepted_at,
+           fl.is_amendment,
+           (   fl.form = any(%(forms)s)
+           and not (fl.is_amendment and not exists (
+                   select 1 from fsn.filing ff2 join fsn.line l on l.filing_id = ff2.id
+                   where ff2.accession = fl.accession_number and l.stmt in ('IS', 'BS', 'CF', 'CI')))
+           ) as eligible,
+           f.concept_id, f.unit_id, f.period_id, c.tag, p.start_date, p.end_date, p.period_type
+    from core.fact f
+    join core.filing fl on fl.id = f.filing_id
+    join core.concept c on c.id = f.concept_id
+    join core.period p on p.id = f.period_id
+    left join fsn.filing ff on ff.accession = fl.accession_number
+    where f.company_id = any(%(company_ids)s)
+      and not f.is_derived
+),
+grouped as (
+    select c.*,
+           count(*) over w as n,
+           bool_or(c.is_authoritative) over w as any_auth,
+           min(c.value) over w as vmin,
+           max(c.value) over w as vmax,
+           bool_or(c.value > 0) over w as has_pos,
+           bool_or(c.value < 0) over w as has_neg,
+           min(abs(c.value)) over w as amin,
+           max(abs(c.value)) over w as amax
+    from candidates c
+    window w as (partition by c.company_id, c.concept_id, c.unit_id, c.period_id)
+)
+select id, company_id, concept_id, unit_id, period_id, value, accession_number, accepted_at, filing_date,
+       is_amendment, eligible, tag, start_date, end_date, period_type
+from grouped
+where n > 1 and not any_auth and vmin <> vmax
+  and not (has_pos and has_neg and amin = amax)
+order by company_id, concept_id, unit_id, period_id, id
+"""
+
+
+@dataclass(frozen=True)
+class TagMapCopy:
+    fact_id: int
+    value: Decimal
+    accession: str
+    accepted_at: object
+    filing_date: object
+    is_amendment: bool
+    eligible: bool
+    dcml: int | None = (
+        None  # decimals the filing printed for this value (fsn.value); None = unknown
+    )
+
+
+def choose_tag_map_winner(copies: Sequence[TagMapCopy]) -> tuple[int, str] | None:
+    """(winner fact id, rule) for one disagreeing group, or None when no copy may win. Pure."""
+    eligible = [c for c in copies if c.eligible]
+    if not eligible:
+        return None
+    if all(c.dcml is not None for c in copies):
+        best_d = max(c.dcml for c in copies)  # type: ignore[type-var]
+        best_values = {c.value for c in copies if c.dcml == best_d}
+        if len(best_values) == 1:
+            (best,) = best_values
+            if all(
+                abs(c.value - best) <= Decimal(5) * Decimal(10) ** (-c.dcml - 1)  # type: ignore[operator]
+                for c in copies
+            ):
+                winners = [c for c in eligible if c.dcml == best_d and c.value == best]
+                if winners:
+                    w = sorted(winners, key=lambda c: c.accession)
+                    w.sort(key=lambda c: (c.accepted_at, c.filing_date), reverse=True)
+                    return w[0].fact_id, RULE_TAGMAP_PRECISION
+    w = sorted(eligible, key=lambda c: (c.is_amendment, c.accession))
+    w.sort(key=lambda c: (c.accepted_at, c.filing_date), reverse=True)
+    return w[0].fact_id, RULE_TAGMAP
+
+
+def _tag_map_dcml(conn: psycopg.Connection, rows) -> dict[int, int]:
+    """fact id -> smallest decimals the copy's own filing printed for that tag and period (fsn.value,
+    non-dimensional; period matched by the SEC month-end ddate and the quarter count)."""
+    from scrooner_pipeline.common.fsn_dates import fsn_end_matches
+
+    accs = sorted({r[6] for r in rows})
+    tags = sorted({r[11] for r in rows})
+    if not accs:
+        return {}
+    prints: dict[tuple[str, str], list[tuple]] = defaultdict(list)
+    for acc, tag, ddate, qtrs, d in conn.execute(
+        """
+        select f.accession, t.tag, v.ddate, v.qtrs, v.dcml
+        from fsn.value v
+        join fsn.filing f on f.id = v.filing_id
+        join fsn.tag t on t.id = v.tag_id
+        where f.accession = any(%s) and t.tag = any(%s)
+          and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.dcml is not null
+        """,
+        (accs, tags),
+    ).fetchall():
+        prints[(acc, tag)].append((ddate, qtrs, d))
+    out: dict[int, int] = {}
+    for r in rows:
+        start, end, ptype = r[12], r[13], r[14]
+        ds = [
+            d
+            for ddate, qtrs, d in prints.get((r[6], r[11]), [])
+            if fsn_end_matches(ddate, end)
+            and (
+                qtrs == 0
+                if ptype == "instant"
+                else qtrs > 0 and qtrs * 91 - 20 <= (end - start).days <= qtrs * 91 + 20
+            )
+        ]
+        if ds:
+            out[r[0]] = min(ds)
+    return out
+
+
+def plan_tag_map_promotions(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> list[dict]:
+    """One winner per disagreeing, unresolved group of the tag-map companies (read only)."""
+    if not company_ids:
+        return []
+    rows = conn.execute(
+        TAGMAP_CANDIDATES_SQL,
+        {"company_ids": company_ids, "forms": list(AUTHORITATIVE_FORMS)},
+    ).fetchall()
+    dcml = _tag_map_dcml(conn, rows)
+    groups: dict[tuple, list] = defaultdict(list)
+    for r in rows:
+        groups[(r[1], r[2], r[3], r[4])].append(r)
+    out = []
+    for key, rs in groups.items():
+        copies = [
+            TagMapCopy(
+                r[0], Decimal(r[5]), r[6], r[7], r[8], r[9], r[10], dcml.get(r[0])
+            )
+            for r in rs
+        ]
+        chosen = choose_tag_map_winner(copies)
+        if chosen is None:
+            continue
+        values = [c.value for c in copies]
+        out.append(
+            {
+                "fact_id": chosen[0],
+                "rule": chosen[1],
+                "company_id": key[0],
+                "group_size": len(copies),
+                "value_min": min(values),
+                "value_max": max(values),
+            }
+        )
+    return out
+
+
+def apply_tag_map_promotions(conn: psycopg.Connection, plan: list[dict]) -> int:
+    """Promote the planned winners (only rows still non-authoritative) and audit each in the same transaction."""
+    if not plan:
+        return 0
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            with w as (
+                select * from unnest(%s::bigint[], %s::text[], %s::int[], %s::numeric[], %s::numeric[])
+                    as t(fact_id, rule, group_size, value_min, value_max)
+            ),
+            promoted as (
+                update core.fact f set is_authoritative = true
+                from w where f.id = w.fact_id and not f.is_authoritative
+                returning f.id
+            )
+            insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max)
+            select w.fact_id, w.rule, w.group_size, w.value_min, w.value_max
+            from w join promoted p on p.id = w.fact_id
+            on conflict (fact_id) do update
+                set rule = excluded.rule, group_size = excluded.group_size,
+                    value_min = excluded.value_min, value_max = excluded.value_max,
+                    resolved_at = now()
+            """,
+            (
+                [p["fact_id"] for p in plan],
+                [p["rule"] for p in plan],
+                [p["group_size"] for p in plan],
+                [p["value_min"] for p in plan],
+                [p["value_max"] for p in plan],
+            ),
+        )
+        return cur.rowcount
+
+
+def tag_map_company_ids(conn: psycopg.Connection, company_ids: list[int]) -> list[int]:
+    """The subset of company_ids with analytics.company_tag_map rows. [] unless rule company_tag_map.select@1
+    is ON (SCROONER_RULES_ENABLED), and [] when the table is absent."""
+    if not rule_enabled(RULE_COMPANY_TAG_MAP):
+        return []
+    if (
+        conn.execute("select to_regclass('analytics.company_tag_map')").fetchone()[0]
+        is None
+    ):
+        return []
+    rows = conn.execute(
+        "select distinct company_id from analytics.company_tag_map where company_id = any(%s)",
+        (company_ids,),
+    ).fetchall()
+    return sorted(r[0] for r in rows)
+
+
+def promote_tag_map_companies(conn: psycopg.Connection, company_ids: list[int]) -> int:
+    if not company_ids:
+        return 0
+    promoted = apply_tag_map_promotions(
+        conn, plan_tag_map_promotions(conn, company_ids)
+    )
+    conn.commit()
+    return promoted
+
+
 def _concept_ids(conn: psycopg.Connection, tags: list[tuple[str, str]]) -> list[int]:
     with conn.cursor() as cur:
         ids = []
@@ -248,6 +488,12 @@ def promote_for_companies(
     concept_ids: list[int],
     quarter_concept_ids: list[int],
 ) -> int:
+    # Tag-map companies get the every-tag rule; the rest keep the six-tag rule below.
+    tm_ids = tag_map_company_ids(conn, company_ids)
+    promoted_tm = promote_tag_map_companies(conn, tm_ids)
+    company_ids = [c for c in company_ids if c not in set(tm_ids)]
+    if not company_ids:
+        return promoted_tm
     with conn.cursor() as cur:
         cur.execute(
             PROMOTE_SQL,
@@ -267,7 +513,7 @@ def promote_for_companies(
         )
         promoted = cur.rowcount
     conn.commit()
-    return promoted
+    return promoted + promoted_tm
 
 
 def _promote_with_split(
@@ -325,13 +571,16 @@ def resolve_latest_filed(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_ids = _concept_ids(conn, VALIDATED_TAGS)
     quarter_concept_ids = _concept_ids(conn, VALIDATED_QUARTER_TAGS)
     totals = {"considered": 0, "batches": 0, "splits": 0, "errored": 0, "promoted": 0}
-    if not concept_ids:
-        return totals
     with conn.cursor() as cur:
         cur.execute(
             "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
         )
         company_id_by_cik = dict(cur.fetchall())
+    # The six-tag rule needs its concepts to exist; tag-map companies (every-tag rule) do not.
+    if not concept_ids and not tag_map_company_ids(
+        conn, sorted(company_id_by_cik.values())
+    ):
+        return totals
     ordered = sorted(company_id_by_cik)
     totals["considered"] = len(ordered)
     batch_size = 10
@@ -504,3 +753,121 @@ def write_winner_backup(
             )
             n += 1
     return n
+
+
+# Only periodic reports hold authoritative facts (Dhairya 2026-11-12): a proxy statement's pay-versus-performance
+# net income, an 8-K exhibit or a prospectus (424B) is a copy, never the source. 10-K / 10-Q, their amendments and
+# transition reports, and the foreign annual forms.
+AUTHORITATIVE_FORMS = tuple(sorted(set(ANNUAL_FORMS_ALL) | set(QUARTERLY_FORMS)))
+
+DUPLICATE_AUTHORITATIVE_SQL = """
+with g as (
+    select company_id, concept_id, unit_id, period_id
+    from core.fact
+    where company_id = any(%(company_ids)s) and is_authoritative
+    group by 1, 2, 3, 4 having count(*) > 1
+)
+select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.value, fl.accession_number,
+       coalesce(ff.accepted, fl.filing_date::timestamptz), fl.filing_date, fl.is_amendment,
+       fl.form = any(%(forms)s), c.tag, p.start_date, p.end_date, p.period_type
+from g
+join core.fact f using (company_id, concept_id, unit_id, period_id)
+join core.filing fl on fl.id = f.filing_id
+join core.concept c on c.id = f.concept_id
+join core.period p on p.id = f.period_id
+left join fsn.filing ff on ff.accession = fl.accession_number
+where f.is_authoritative
+order by f.company_id, f.concept_id, f.unit_id, f.period_id, f.id
+"""
+
+
+def demote_non_periodic(conn: psycopg.Connection, company_ids: list[int]) -> int:
+    """Authoritative facts whose filing is not a periodic report become non-authoritative ("no authoritative fact"
+    is a valid null; the row stays inspectable). Returns the count."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            update core.fact f set is_authoritative = false
+            from core.filing fl
+            where fl.id = f.filing_id and f.company_id = any(%s) and f.is_authoritative
+              and not (fl.form = any(%s))
+            """,
+            (company_ids, list(AUTHORITATIVE_FORMS)),
+        )
+        return cur.rowcount
+
+
+def plan_duplicate_authoritative(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> tuple[list[dict], list[int]]:
+    """Groups holding MORE than one authoritative copy: one winner by the tag-map authority rules (precision class,
+    else latest accepted; only periodic forms may win), every other copy demoted. A group with no eligible copy is
+    demoted whole. Returns (winners to audit, fact ids to demote). Read only."""
+    rows = conn.execute(
+        DUPLICATE_AUTHORITATIVE_SQL,
+        {"company_ids": company_ids, "forms": list(AUTHORITATIVE_FORMS)},
+    ).fetchall()
+    dcml = _tag_map_dcml(conn, rows)
+    groups: dict[tuple, list] = defaultdict(list)
+    for r in rows:
+        groups[(r[1], r[2], r[3], r[4])].append(r)
+    winners: list[dict] = []
+    demote: list[int] = []
+    for key, rs in groups.items():
+        copies = [
+            TagMapCopy(
+                r[0], Decimal(r[5]), r[6], r[7], r[8], r[9], r[10], dcml.get(r[0])
+            )
+            for r in rs
+        ]
+        chosen = choose_tag_map_winner(copies)
+        winner = chosen[0] if chosen else None
+        demote += [c.fact_id for c in copies if c.fact_id != winner]
+        if chosen:
+            values = [c.value for c in copies]
+            winners.append(
+                {
+                    "fact_id": winner,
+                    "rule": chosen[1],
+                    "company_id": key[0],
+                    "group_size": len(copies),
+                    "value_min": min(values),
+                    "value_max": max(values),
+                }
+            )
+    return winners, demote
+
+
+def resolve_duplicate_authoritative(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[str, int]:
+    """In the caller's transaction: periodic-only guard, then one authoritative copy per group (audited)."""
+    non_periodic = demote_non_periodic(conn, company_ids)
+    winners, demote = plan_duplicate_authoritative(conn, company_ids)
+    if demote:
+        conn.execute(
+            "update core.fact set is_authoritative = false where id = any(%s)",
+            (demote,),
+        )
+    if winners:
+        conn.execute(
+            """
+            insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max)
+            select * from unnest(%s::bigint[], %s::text[], %s::int[], %s::numeric[], %s::numeric[])
+            on conflict (fact_id) do update
+                set rule = excluded.rule, group_size = excluded.group_size, value_min = excluded.value_min,
+                    value_max = excluded.value_max, resolved_at = now()
+            """,
+            (
+                [w["fact_id"] for w in winners],
+                [w["rule"] for w in winners],
+                [w["group_size"] for w in winners],
+                [w["value_min"] for w in winners],
+                [w["value_max"] for w in winners],
+            ),
+        )
+    return {
+        "non_periodic_demoted": non_periodic,
+        "groups_resolved": len(winners),
+        "duplicates_demoted": len(demote),
+    }

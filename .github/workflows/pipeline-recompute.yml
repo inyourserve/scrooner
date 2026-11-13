@@ -84,6 +84,9 @@ env:
   RESOLVE_STAGES: ${{ inputs.resolve_stages }}
   POPULATION_STAGES: ${{ inputs.population_stages }}
   METRIC_STAGES: ${{ inputs.metric_stages }}
+  # on: the old-path writer commands and population writers leave new-path companies alone
+  # (fsn_store/new_path.py); off by default, the same repository variable as pipeline-refresh
+  HYBRID_NEW_PATH: ${{ vars.HYBRID_NEW_PATH || 'off' }}
   SHARD_LIST: ${{ inputs.shards }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

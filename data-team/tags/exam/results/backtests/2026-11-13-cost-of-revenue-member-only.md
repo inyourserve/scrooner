@@ -1,0 +1,558 @@
+# Predictor backtest (2026-11-12T19:08:50Z)
+
+Baseline `/tmp/claude-0/-home-user-scrooner/e0c2c2bc-3f21-517b-a31a-2cd36f9600b5/scratchpad/wt/data-team/tags/exam/tools/predict.py` (sha-09d08cd0) vs candidate `/tmp/claude-0/-home-user-scrooner/e0c2c2bc-3f21-517b-a31a-2cd36f9600b5/scratchpad/cand/predict.py` (sha-21373f13). Verdict: **PASS**.
+
+Tickers with keys 240; hand-verified key rows 5845 (excluded as not hand-verified 4254); compared 5708; set aside (key_error / key_unverified in either) 137.
+
+Overall: baseline 88.8%, candidate 88.8%, right->wrong 2, wrong->right 3, net delta +1.
+
+Key sources: origin/main 01fc084a; origin/work/reads/201-300 d0687e15; origin/work/reads/301-400 35854330; origin/work/reads/401-500 de14aace; origin/work/reads/501-600 e87d7686; origin/work/reads/601-700 aa91ef9b; origin/work/reads/701-800 bbdd66dc; origin/work/reads/801-900 ae46ec3a; origin/work/reads/901-1000 296269f3
+
+Predictor runs without output: {'baseline': 1, 'candidate': 1}
+
+## By statement
+
+| Statement | n | Baseline | Candidate |
+|---|---|---|---|
+| BS | 1639 | 88.7% | 88.7% |
+| CF | 1332 | 89.7% | 89.7% |
+| IS | 1882 | 91.0% | 91.1% |
+| NOTE-type | 855 | 82.5% | 82.5% |
+
+## Data point x template group
+
+| Stmt | Data point | Group | n | Baseline % | Candidate % | Delta pp | R->W | W->R | Graduated |
+|---|---|---|---|---|---|---|---|---|---|
+| BS | accounts_payable | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | Real Estate:unclassified | 2 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | bank | 9 | 55.6 | 55.6 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | bdc_fund_or_unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | corporate | 89 | 98.9 | 98.9 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | energy | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | insurer | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | other_financial | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | reit | 3 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_payable | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | Financials:unclassified | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | Other:unclassified | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | Real Estate:unclassified | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | bank | 9 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | bdc_fund_or_unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | corporate | 92 | 88.0 | 88.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | energy | 4 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | insurer | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | other_financial | 8 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | reit | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | accounts_receivable | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | Financials:unclassified | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | bank | 5 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | bdc_fund_or_unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | corporate | 84 | 97.6 | 97.6 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | reit | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | cash_and_equivalents | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | corporate | 83 | 98.8 | 98.8 | +0.0 | 0 | 0 |  |
+| BS | current_assets | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | other_financial | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| BS | current_assets | reit | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_assets | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | corporate | 82 | 98.8 | 98.8 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | other_financial | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | reit | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | current_liabilities | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | deposits | bank | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | deposits | other_financial | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | Energy:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | Utilities:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | bank | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | goodwill | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | corporate | 95 | 94.7 | 94.7 | +0.0 | 0 | 0 |  |
+| BS | goodwill | energy | 9 | 77.8 | 77.8 | +0.0 | 0 | 0 |  |
+| BS | goodwill | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | other_financial | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | reit | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| BS | goodwill | utility | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | Other:unclassified | 7 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | corporate | 105 | 95.2 | 95.2 | +0.0 | 0 | 0 |  |
+| BS | inventory | energy | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| BS | inventory | insurer | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | inventory | other_financial | 8 | 87.5 | 87.5 | +0.0 | 0 | 0 |  |
+| BS | inventory | reit | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | inventory | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | loans_net | bank | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | loans_net | other_financial | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | Other:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | bank | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | corporate | 86 | 89.5 | 89.5 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | insurer | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | other_financial | 7 | 71.4 | 71.4 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | reit | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| BS | ppe_net | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | Financials:unclassified | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | bank | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | corporate | 71 | 84.5 | 84.5 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | energy | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | insurer | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| BS | shares_outstanding | reit | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | corporate | 86 | 95.3 | 95.3 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | insurer | 2 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | other_financial | 6 | 83.3 | 83.3 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | stockholders_equity | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | Energy:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | corporate | 84 | 100.0 | 100.0 | +0.0 | 0 | 0 | Y |
+| BS | total_assets | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_assets | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | Other:unclassified | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | bank | 6 | 16.7 | 16.7 | +0.0 | 0 | 0 |  |
+| BS | total_debt | bdc_fund_or_unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| BS | total_debt | corporate | 119 | 73.1 | 73.1 | +0.0 | 0 | 0 |  |
+| BS | total_debt | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | total_debt | insurer | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | other_financial | 7 | 42.9 | 42.9 | +0.0 | 0 | 0 |  |
+| BS | total_debt | reit | 4 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| BS | total_debt | utility | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | Energy:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | corporate | 99 | 100.0 | 100.0 | +0.0 | 0 | 0 | Y |
+| BS | total_liabilities | energy | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | reit | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| BS | total_liabilities | utility | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | capex | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | capex | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | capex | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | capex | Real Estate:unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| CF | capex | bank | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| CF | capex | bdc_fund_or_unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| CF | capex | corporate | 90 | 90.0 | 90.0 | +0.0 | 0 | 0 |  |
+| CF | capex | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | capex | insurer | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| CF | capex | other_financial | 7 | 71.4 | 71.4 | +0.0 | 0 | 0 |  |
+| CF | capex | reit | 4 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | capex | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | corporate | 83 | 97.6 | 97.6 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_financing | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | corporate | 87 | 97.7 | 97.7 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cash_flow_investing | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | bank | 4 | 25.0 | 25.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | corporate | 85 | 94.1 | 94.1 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | energy | 6 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ap_change | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | bank | 4 | 25.0 | 25.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | corporate | 84 | 82.1 | 82.1 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | energy | 5 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_ar_change | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | corporate | 84 | 95.2 | 95.2 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | energy | 5 | 40.0 | 40.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | other_financial | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cf_inventory_change | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | corporate | 82 | 96.3 | 96.3 | +0.0 | 0 | 0 |  |
+| CF | cfo | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | cfo | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | Financials:unclassified | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | Utilities:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | bank | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | corporate | 93 | 82.8 | 82.8 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | energy | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | insurer | 4 | 25.0 | 25.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | reit | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| CF | depreciation_and_amortization | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | Energy:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | Other:unclassified | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | corporate | 119 | 91.6 | 91.6 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | energy | 6 | 83.3 | 83.3 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | other_financial | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | dividends_paid | utility | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | bdc_fund_or_unclassified | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | sbc | corporate | 85 | 90.6 | 90.6 | +0.0 | 0 | 0 |  |
+| CF | sbc | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | sbc | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | other_financial | 7 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | sbc | reit | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | sbc | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | Energy:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | Utilities:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | bdc_fund_or_unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | corporate | 104 | 100.0 | 100.0 | +0.0 | 0 | 0 | Y |
+| CF | share_buybacks | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | other_financial | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| CF | share_buybacks | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | corporate | 84 | 96.4 | 96.4 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | basic_eps | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | Financials:unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | corporate | 81 | 95.1 | 95.1 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | comprehensive_income | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | Real Estate:unclassified | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | Utilities:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | corporate | 89 | 91.0 | 92.1 | +1.1 | 2 | 3 |  |
+| IS | cost_of_revenue | energy | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | other_financial | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | reit | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| IS | cost_of_revenue | utility | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | corporate | 84 | 97.6 | 97.6 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | diluted_eps | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | Energy:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | Other:unclassified | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | Utilities:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | corporate | 113 | 97.3 | 97.3 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | energy | 10 | 90.0 | 90.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | other_financial | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | reit | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | gross_profit | utility | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | Real Estate:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | corporate | 84 | 94.0 | 94.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | energy | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | insurer | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_before_tax | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | Real Estate:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | corporate | 81 | 98.8 | 98.8 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | income_tax_expense | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | Energy:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | Other:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | corporate | 94 | 83.0 | 83.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | energy | 6 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | interest_expense | utility | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | net_income | Financials:unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | net_income | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | bdc_fund_or_unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | corporate | 84 | 97.6 | 97.6 | +0.0 | 0 | 0 |  |
+| IS | net_income | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_income | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_interest_income | Financials:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_interest_income | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | net_interest_income | other_financial | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | noninterest_expense | bank | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | noninterest_expense | other_financial | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | noninterest_income | bank | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | noninterest_income | other_financial | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | Energy:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | Financials:unclassified | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | Other:unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | Real Estate:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | Utilities:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | bank | 9 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | bdc_fund_or_unclassified | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | corporate | 98 | 73.5 | 73.5 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | energy | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | insurer | 3 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | other_financial | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | reit | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | operating_expenses | utility | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | Financials:unclassified | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | bank | 8 | 25.0 | 25.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | bdc_fund_or_unclassified | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | corporate | 90 | 100.0 | 100.0 | +0.0 | 0 | 0 | Y |
+| IS | operating_income | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | insurer | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | other_financial | 7 | 57.1 | 57.1 | +0.0 | 0 | 0 |  |
+| IS | operating_income | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | operating_income | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | bank | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | corporate | 84 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | other_income_expense_net | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| IS | provision_for_credit_losses | bank | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | Energy:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | Other:unclassified | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | Real Estate:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | Utilities:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | bank | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | corporate | 114 | 96.5 | 96.5 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | energy | 9 | 77.8 | 77.8 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | insurer | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | other_financial | 8 | 87.5 | 87.5 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | reit | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | research_and_development | utility | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | bank | 7 | 85.7 | 85.7 | +0.0 | 0 | 0 |  |
+| IS | revenue | corporate | 83 | 100.0 | 100.0 | +0.0 | 0 | 0 | Y |
+| IS | revenue | energy | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | reit | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | revenue | utility | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | Other:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | Utilities:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | bank | 9 | 77.8 | 77.8 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | bdc_fund_or_unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | corporate | 95 | 93.7 | 93.7 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | energy | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | insurer | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | other_financial | 6 | 83.3 | 83.3 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | reit | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| IS | sga_expense | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | total_interest_income | bank | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| IS | total_interest_income | other_financial | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | Other:unclassified | 2 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | bank | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | corporate | 87 | 69.0 | 69.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | other_financial | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | reit | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| NOTE-type | amortization_of_intangibles | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | Other:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | Real Estate:unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | Utilities:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | bank | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | bdc_fund_or_unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | corporate | 98 | 82.7 | 82.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | insurer | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | other_financial | 6 | 83.3 | 83.3 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | reit | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_income_taxes | utility | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | Financials:unclassified | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | Real Estate:unclassified | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | bdc_fund_or_unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | corporate | 102 | 84.3 | 84.3 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | energy | 5 | 60.0 | 60.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | insurer | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | reit | 5 | 80.0 | 80.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | cash_paid_for_interest | utility | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | Financials:unclassified | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | Other:unclassified | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | bank | 4 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | bdc_fund_or_unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | corporate | 88 | 97.7 | 97.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | energy | 6 | 83.3 | 83.3 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | reit | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | dividends_per_share | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | Financials:unclassified | 3 | 33.3 | 33.3 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | bdc_fund_or_unclassified | 2 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | corporate | 90 | 68.9 | 68.9 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | energy | 6 | 50.0 | 50.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | insurer | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | other_financial | 5 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | reit | 3 | 66.7 | 66.7 | +0.0 | 0 | 0 |  |
+| NOTE-type | interest_income | utility | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | bank | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | corporate | 89 | 89.9 | 89.9 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | insurer | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | reit | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_basic_shares | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | Energy:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | Financials:unclassified | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | Other:unclassified | 2 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | Real Estate:unclassified | 1 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | bank | 3 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | corporate | 89 | 89.9 | 89.9 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | energy | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | insurer | 4 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | other_financial | 6 | 100.0 | 100.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | reit | 4 | 75.0 | 75.0 | +0.0 | 0 | 0 |  |
+| NOTE-type | weighted_diluted_shares | utility | 1 | 0.0 | 0.0 | +0.0 | 0 | 0 |  |

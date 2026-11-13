@@ -21,7 +21,10 @@ from scrooner_pipeline.normalizer.conflict_latest_filed import resolve_latest_fi
 from scrooner_pipeline.normalizer.restatements import resolve_restatements
 from scrooner_pipeline.normalizer.units import normalize_units
 
-app = typer.Typer()
+# HYBRID_NEW_PATH: the writer subcommands leave new-path companies out of --ciks (fsn_store/new_path.py)
+from scrooner_pipeline.fsn_store.new_path import guarded_group  # noqa: E402
+
+app = typer.Typer(cls=guarded_group("scrooner-normalize"))
 logger = structlog.get_logger()
 
 GOLDEN_COMPANIES_PATH = (
@@ -201,6 +204,101 @@ def errors(
     typer.echo(f"{len(rows)} row(s)")
     for row in rows:
         typer.echo(f"  {row}")
+
+
+@app.command("tagmap-dedupe")
+def tagmap_dedupe_cmd(
+    company_ids: str = typer.Option(..., help="Comma-separated core.company ids."),
+    apply: bool = typer.Option(False, help="Commit (default: dry run, rolled back)."),
+) -> None:
+    """Periodic-only guard (proxy, 8-K and prospectus facts are never authoritative), then one authoritative copy
+    per group that holds several (tag-map authority rules). One transaction; prints duplicate groups before/after."""
+    from scrooner_pipeline.normalizer.conflict_latest_filed import (
+        resolve_duplicate_authoritative,
+    )
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    dup = (
+        "select count(*) from (select 1 from core.fact where company_id = any(%s) and is_authoritative "
+        "group by company_id, concept_id, unit_id, period_id having count(*) > 1) d"
+    )
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '15min'")
+        before = conn.execute(dup, (ids,)).fetchone()[0]
+        stats = resolve_duplicate_authoritative(conn, ids)
+        after = conn.execute(dup, (ids,)).fetchone()[0]
+        if apply:
+            conn.commit()
+        else:
+            conn.rollback()
+    typer.echo(
+        f"tagmap-dedupe [{'apply' if apply else 'dry run'}]: duplicate groups {before} -> {after} {stats}"
+    )
+
+
+@app.command("tagmap-authority")
+def tagmap_authority_cmd(
+    company_ids: str = typer.Option(
+        ..., help="Comma-separated core.company ids (tag-map companies)."
+    ),
+    apply: bool = typer.Option(
+        False, help="Promote and commit (default: dry run, rolled back)."
+    ),
+) -> None:
+    """One authoritative copy per disagreeing group of a tag-map company: the most precise copy (rounding) or the
+    latest accepted filing (restatement). The dry run also re-resolves the tag map with the promotions in place and
+    prints the held cells before and after; everything is rolled back."""
+    from collections import Counter
+
+    from scrooner_pipeline.common import cell_store as cs
+    from scrooner_pipeline.mapper import company_tag_map as ctm
+    from scrooner_pipeline.mapper import resolve as resolve_mod
+    from scrooner_pipeline.normalizer.conflict_latest_filed import (
+        apply_tag_map_promotions,
+        plan_tag_map_promotions,
+    )
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '15min'")
+        plan = plan_tag_map_promotions(conn, ids)
+        by = Counter((p["company_id"], p["rule"]) for p in plan)
+        if apply:
+            promoted = apply_tag_map_promotions(conn, plan)
+            conn.commit()
+            typer.echo(
+                f"tagmap-authority [apply]: promoted {promoted} of {len(plan)} planned"
+            )
+        else:
+            managed = resolve_mod._load_managed_concept_ids(conn)
+            concept_info = ctm.load_concept_info(conn)
+
+            def held(cid: int) -> Counter:
+                conn.execute("set local scrooner.writer = 'company_tag_map'")
+                conn.execute("set local scrooner.slot_writer = 'on'")
+                cik = conn.execute(
+                    "select cik from core.company where id = %s", (cid,)
+                ).fetchone()[0]
+                run_id = cs.start_rule_run(conn, ctm.RULE_ID, "dry_run", "on", [cik])
+                st = ctm.resolve_for_company(
+                    conn, cid, managed, concept_info, run_id, commit=False
+                )
+                return Counter(h["reason"] for h in st["held"])
+
+            conn.commit()
+            typer.echo("tagmap-authority [dry run, rolled back]")
+            for cid in ids:  # one transaction per company, always rolled back
+                before = {cid: held(cid)}
+                apply_tag_map_promotions(
+                    conn, [p for p in plan if p["company_id"] == cid]
+                )
+                after = {cid: held(cid)}
+                conn.rollback()
+                typer.echo(
+                    f"  {cid}: promote precision {by[(cid, 'precision_tagmap_v1')]} restated "
+                    f"{by[(cid, 'latest_filed_tagmap_v1')]} | held {sum(before[cid].values())} -> "
+                    f"{sum(after[cid].values())} {dict(after[cid])}"
+                )
 
 
 @app.command("derive-interim-quarters")

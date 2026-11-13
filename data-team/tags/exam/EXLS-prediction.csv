@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+EXLS,929,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Accounts payable,4753000.0000,library map
+EXLS,929,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,"Accounts receivable, net",343105000.0000,library map
+EXLS,929,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001297989-26-000008,,,,note-sourced default tag (no face line)
+EXLS,929,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001297989-26-000008,R5,Basic (in dollars per share),1.5600,library map
+EXLS,929,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Purchases of property and equipment,52598000.0000,library map
+EXLS,929,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Cash and cash equivalents,146326000.0000,library map
+EXLS,929,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001297989-26-000008,R8,Net cash used for financing activities,-312764000.0000,library map
+EXLS,929,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001297989-26-000008,R8,Net cash used for investing activities,-49260000.0000,library map
+EXLS,929,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001297989-26-000008,,,,note-sourced default tag (no face line)
+EXLS,929,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Interest,16958000.0000,library map
+EXLS,929,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,"Accounts payable, accrued expenses and other liabilities",11229000.0000,combined line (library or label demote)
+EXLS,929,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Accounts receivable,35990000.0000,library map
+EXLS,929,cf_inventory_change,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Net cash provided by operating activities,350717000.0000,library map
+EXLS,929,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001297989-26-000008,R6,Total comprehensive income,225014000.0000,library map
+EXLS,929,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Cost of revenues,1286603000.0000,library map
+EXLS,929,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Total current assets,829957000.0000,library map
+EXLS,929,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Total current liabilities,324125000.0000,library map
+EXLS,929,deposits,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Depreciation and amortization expense,59248000.0000,library map
+EXLS,929,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001297989-26-000008,R5,Diluted (in dollars per share),1.5400,library map
+EXLS,929,dividends_paid,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,dividends_per_share,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Goodwill,419654000.0000,library map
+EXLS,929,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Gross profit,801076000.0000,library map
+EXLS,929,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Income before income tax expense and earnings from equity affiliates,315052000.0000,library map
+EXLS,929,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Income tax expense,63728000.0000,library map
+EXLS,929,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001297989-26-000008,R5,Interest expense,17611000.0000,library map
+EXLS,929,interest_income,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,inventory,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,loans_net,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Net income,251019000.0000,library map
+EXLS,929,net_interest_income,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,noninterest_expense,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,noninterest_income,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Total operating expenses,487326000.0000,printed opex total tag
+EXLS,929,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,Income from operations,313750000.0000,library map
+EXLS,929,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,"Other income, net",16054000.0000,library map
+EXLS,929,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,"Property and equipment, net",111821000.0000,library map
+EXLS,929,provision_for_credit_losses,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,research_and_development,not_presented,,,,,,,,0001297989-26-000008,,,,no face line
+EXLS,929,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,"Revenues, net",2087679000.0000,library map
+EXLS,929,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Stock-based compensation expense,79469000.0000,library map
+EXLS,929,sga_expense,component_sum,us-gaap:GeneralAndAdministrativeExpense;us-gaap:SellingAndMarketingExpense,IS,+,-3,N,,sec_api,0001297989-26-000008,R5,General and administrative expenses,255308000.0000,printed face components (duration sum; total_debt founder sum)
+EXLS,929,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001297989-26-000008,R8,Acquisition of treasury stock,328490000.0000,library map
+EXLS,929,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001297989-26-000008,R4,"Common stock, shares outstanding (in shares)",156430028.0000,library map
+EXLS,929,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Total stockholders equity,912705000.0000,library map
+EXLS,929,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Total assets,1702235000.0000,library map
+EXLS,929,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Current portion of long-term borrowings,4886000.0000,printed face components (duration sum; total_debt founder sum)
+EXLS,929,total_interest_income,OUT,,,,,,,,0001297989-26-000008,,,,not a bank
+EXLS,929,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001297989-26-000008,R3,Total liabilities,789530000.0000,library map
+EXLS,929,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001297989-26-000008,R5,Basic (in shares),161028312.0000,library map
+EXLS,929,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,32767,N,,sec_api,0001297989-26-000008,R5,Diluted (in shares),162481586.0000,library map

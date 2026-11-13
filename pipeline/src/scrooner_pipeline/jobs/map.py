@@ -74,7 +74,10 @@ from scrooner_pipeline.mapper.main_calculator import (
     unregistered_metrics,
 )
 
-app = typer.Typer()
+# HYBRID_NEW_PATH: the writer subcommands leave new-path companies out of --ciks (fsn_store/new_path.py)
+from scrooner_pipeline.fsn_store.new_path import guarded_group  # noqa: E402
+
+app = typer.Typer(cls=guarded_group("scrooner-map"))
 
 GOLDEN_COMPANIES_PATH = (
     Path(__file__).resolve().parents[3]
@@ -160,6 +163,348 @@ def resolve_facts_cmd(
     with get_connection() as conn:
         stats = resolve(conn, target_ciks)
     typer.echo(f"resolve-facts: {stats}")
+
+
+@app.command("docmap-load")
+def docmap_load_cmd(
+    reads: Path = typer.Argument(
+        ...,
+        help="Directory of <TICKER>-docmap-<date>.csv reads (data-team/companies/reads).",
+    ),
+    conflicts_out: Path = typer.Option(
+        ...,
+        "--conflicts-out",
+        help="CSV of every docmap/library disagreement (for the Tag Expert).",
+    ),
+    rejects_out: Path = typer.Option(
+        None,
+        "--rejects-out",
+        help="CSV of rejected docmap rows (unknown status, unknown concept, ...).",
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write (one transaction per company). Default: dry run."
+    ),
+    extend_eras: bool = typer.Option(
+        False,
+        "--extend-eras",
+        help="Walk each value row back through earlier 10-Ks (FSN: same tag, same line) -> company_tag_map.era_extend@1 rows.",
+    ),
+    era_log: Path = typer.Option(
+        None, "--era-log", help="CSV of every per-filing era check (pass/fail)."
+    ),
+    predictor_eras: Path = typer.Option(
+        None,
+        "--predictor-eras",
+        help="Directory of the Tag Expert's per-10-K predictions (data-team/tags/exam/eras): the years the extension could not carry become predictor CANDIDATE slices (era_extend@1, decided_by tag_expert_predictor). `era-guard` decides them after the cell proof.",
+    ),
+    predictor_concepts: str = typer.Option(
+        "",
+        "--predictor-concepts",
+        help="Comma-separated base concept names (e.g. total_debt,interest_expense): reload only these concepts' predictor and guard rows.",
+    ),
+    no_filing_ciks: str = typer.Option(
+        "",
+        "--no-filing-ciks",
+        help="Comma-separated CIKs with no 10-K before their listing: uncovered years become no_public_filing_for_period reasons.",
+    ),
+) -> None:
+    """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
+    default: plans, validates and lists conflicts, writes nothing."""
+    from scrooner_pipeline.mapper.docmap_loader import load, write_listing
+
+    with get_connection() as conn:
+        stats = load(
+            conn,
+            sorted(reads.glob("*-docmap-*.csv")),
+            apply=apply,
+            extend_eras=extend_eras,
+            era_log=era_log,
+            predictor_eras=predictor_eras,
+            predictor_concepts={
+                c.strip() for c in predictor_concepts.split(",") if c.strip()
+            }
+            or None,
+            no_filing_ciks={c.strip() for c in no_filing_ciks.split(",") if c.strip()},
+        )
+    write_listing(conflicts_out, stats["conflicts"])
+    if rejects_out:
+        write_listing(rejects_out, stats["rejects"])
+    comps = stats["companies"]
+    typer.echo(
+        f"docmap-load: files={stats['files']} rows={stats['rows']} companies={len(comps)} "
+        f"added={sum(c['added'] for c in comps.values())} removed={sum(c['removed'] for c in comps.values())} "
+        f"library_cut={sum(c['library_cut'] for c in comps.values())} "
+        f"library_deleted={sum(c['library_deleted'] for c in comps.values())} "
+        f"conflicts={len(stats['conflicts'])} rejects={len(stats['rejects'])} blocked={len(stats['blocked'])} "
+        f"extended={len(stats['extended'])} applied={stats['applied']}"
+    )
+    for key, why in sorted(stats["blocked"].items()):
+        typer.echo(f"  blocked {key}: {why}")
+    changed = sorted(
+        c["company_id"]
+        for c in comps.values()
+        if c["added"] or c["removed"] or c["library_cut"] or c["library_deleted"]
+    )
+    typer.echo(f"changed company ids: {','.join(map(str, changed))}")
+
+
+@app.command("era-guard")
+def era_guard_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Write (one transaction per company). Default: report only.",
+    ),
+) -> None:
+    """Phase 2 of the predictor fallback. After docmap-load --predictor-eras, tagmap-plan --apply and scrooner-proof
+    run --write: every predictor slice the cell proof does not back (PROVEN for values, NOT_PRESENTED for reasons) is
+    replaced by a not_presented row, reason_class era_unmapped. Re-run tagmap-plan --apply afterwards."""
+    from scrooner_pipeline.mapper.era_guard import hold_unproven
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    with get_connection() as conn:
+        rep = hold_unproven(conn, ids, apply=apply)
+    typer.echo(
+        f"era-guard: slices={rep['slices']} kept={rep['kept']} held={rep['held']} "
+        f"companies={rep['companies']} applied={rep.get('applied', False)}"
+    )
+    for cid, name, a, b, why in rep["held_cells"][:60]:
+        typer.echo(f"  held {cid} {name} {a}..{b}: {why}")
+
+
+@app.command("seed-company-tag-map")
+def seed_company_tag_map_cmd(
+    path: Path = typer.Argument(
+        ..., help="CSV or JSONL of analytics.company_tag_map rows."
+    ),
+    open_periods: Path = typer.Option(
+        None,
+        "--open-periods",
+        help="open_periods_*.csv: each OPEN period is loaded as a tagless not_presented row (same transaction).",
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Write (one transaction per company, replacing its rows). Default: dry run.",
+    ),
+    only_rule: str = typer.Option(
+        None,
+        "--only-rule",
+        help="Load and replace only this rule_id's rows (family.rule@N); other writers' rows stay. "
+        "A tagless row of the rule that a live row of another rule already decides is dropped (superseded_by_live).",
+    ),
+) -> None:
+    """Load a company's FSN-learned tag map (migration 0122). Dry run by default: validates every row
+    against the table's constraints and prints counts, writes nothing."""
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed as seed_tag_map
+
+    with get_connection() as conn:
+        stats = seed_tag_map(
+            conn, path, apply=apply, open_periods=open_periods, only_rule=only_rule
+        )
+    typer.echo(
+        f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
+        f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"
+    )
+    for cik, c in sorted(stats["completeness"].items(), key=lambda kv: str(kv[0])):
+        typer.echo(
+            f"  {cik}: statement tags decided {c['decided']}/{c['statement_tags']} "
+            f"(undecided {c['undecided']}) {c['by_decision']}"
+        )
+    for (company_id, concept, winner, alt), n in sorted(
+        stats.get("winner_tag_gaps", {}).items()
+    ):
+        typer.echo(
+            f"  winner-tag gap: company {company_id} {concept} {winner}: {n} period(s) only under {alt}"
+        )
+    if only_rule:
+        typer.echo(
+            f"  only rule {only_rule}: superseded_by_live={len(stats['superseded_by_live'])}"
+        )
+    for w in stats["warnings"]:
+        typer.echo(f"  warning: {w}")
+    for e in stats["errors"][:50]:
+        typer.echo(f"  error: {e}")
+    if stats["errors"]:
+        raise typer.Exit(1)
+
+
+@app.command("tagmap-plan")
+def tagmap_plan_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Commit (default: plan, every company's transaction is rolled back).",
+    ),
+    before_image_dir: Path = typer.Option(
+        None,
+        "--before-image-dir",
+        help="Required with --apply: before-image csv.gz directory.",
+    ),
+    fy_check: Path = typer.Option(
+        Path("data-team/47-fsn-store/company_tag_map/fy_check_ranks_1_50.csv"),
+        "--fy-check",
+        help="CSV company_id,ticker,data_point,fy,period,status: the tag library's expected cells (FY0/FY-1).",
+    ),
+    docmap_reads: Path = typer.Option(
+        None,
+        "--docmap-reads",
+        help="Directory of docmap reads: the expected FY0/FY-1 cells come from each company's docmap instead of --fy-check.",
+    ),
+    coverage_gate: bool = typer.Option(
+        False,
+        "--coverage-gate",
+        help="With --apply: commit a company only when its eras cover the data window, it loses no FY0/FY-1 value and no value disappears without a reason.",
+    ),
+    coverage_gate_scope: str = typer.Option(
+        "company",
+        "--coverage-gate-scope",
+        help="company (default): the gate decides per company. concept: every concept whose eras cover the data window is rewritten; a concept that does not is left exactly as served today and listed. Applies with --coverage-gate (also in plan mode).",
+    ),
+    dqc_report: Path = typer.Option(
+        None,
+        "--dqc-report",
+        help="Run the DQC checks (data-team/tags/validations/dqc-checks.csv) on each company's served cells of this run and write the hits here (report only).",
+    ),
+    dqc_hold: bool = typer.Option(
+        False,
+        "--dqc-hold",
+        help="With the DQC checks: a hit whose on_fail is 'hold the cell' removes that served cell and writes a visible defect reason instead.",
+    ),
+    statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
+) -> None:
+    """Rule company_tag_map.select@1 for these companies: tag-map resolve, protection of every written key,
+    ownership. Plan by default (rolled back); prints template cells vs valued / reasoned blank / NEITHER."""
+    from scrooner_pipeline.mapper import company_tag_map_plan as plan
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    if apply and before_image_dir is None:
+        typer.echo("ERROR --apply needs --before-image-dir", err=True)
+        raise typer.Exit(2)
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        if docmap_reads is not None:
+            from scrooner_pipeline.mapper import docmap_loader
+
+            names = {
+                n
+                for (n,) in conn.execute(
+                    "select name from analytics.canonical_concept"
+                ).fetchall()
+            }
+            by_ticker = docmap_loader.companies_by_ticker(conn)
+            tpl = {}
+            for ticker, cells in docmap_loader.expected_cells(
+                sorted(docmap_reads.glob("*-docmap-*.csv")), names
+            ).items():
+                for cid, _ in by_ticker.get(ticker, set()):
+                    if cid in ids and len(by_ticker[ticker]) == 1:
+                        tpl[cid] = cells
+        else:
+            tpl = plan.expected_cells_from_fy_check(fy_check, ids)
+        if apply:
+            typer.echo(
+                f"before-image: {plan.write_before_image(conn, ids, before_image_dir)} -> {before_image_dir}"
+            )
+        from scrooner_pipeline.mapper import dqc_checks
+
+        checks = dqc_checks.load_checks() if (dqc_report or dqc_hold) else None
+        rep = plan.run(
+            conn,
+            ids,
+            tpl,
+            apply=apply,
+            gate=coverage_gate,
+            gate_scope=coverage_gate_scope,
+            dqc_checks=checks,
+            dqc_hold=dqc_hold,
+        )
+    if checks:
+        all_hits = [h for r in rep.values() for h in r.get("dqc_hits", [])]
+        if dqc_report:
+            dqc_checks.write_report(all_hits, dqc_report)
+        typer.echo(
+            f"dqc: hits {dqc_checks.hits_by_check(all_hits)} held {sum(r.get('dqc_held', 0) for r in rep.values())}"
+            f"{f' -> {dqc_report}' if dqc_report else ''}"
+        )
+    typer.echo(f"tagmap-plan [{'apply' if apply else 'plan'}]")
+    for cid, r in rep.items():
+        if "error" in r:
+            typer.echo(f"  {cid}: ERROR {r['error']}")
+            continue
+        typer.echo(
+            f"  {cid}: expected {r['template_cells']} valued {r['valued']} blank {r['reasoned_blank']} "
+            f"library-status {r['library_status_only']} NEITHER {r['neither']} combined_lines {r['combined_lines']} "
+            f"holds {r['holds']} conflicts {r['conflict_cells']} protected {r['protected_keys']} "
+            f"neither_top {dict(list(r['neither_by_data_point'].items())[:6])}"
+        )
+        cov = r["coverage"]
+        typer.echo(
+            f"    coverage: era_from_min {cov['era_from_min']} era_short {len(cov['era_short'])} "
+            f"values_lost {cov['values_lost']} held_with_reason {cov['values_held_with_reason']} "
+            f"fy01 {cov['fy01_before']}->{cov['fy01_after']}/{cov['fy01_expected']}"
+            f"{' GATED (rolled back)' if r.get('gated') else ''}"
+        )
+        if cov.get("skipped_concepts") is not None:
+            typer.echo(
+                f"      concept gate: rewritten {cov['rewritten_concepts']} skipped {len(cov['skipped_concepts'])} "
+                f"(left as served): {dict(list(cov['skipped_concepts'].items())[:40])}"
+            )
+        if cov["era_short"]:
+            typer.echo(f"      era_short {dict(list(cov['era_short'].items())[:8])}")
+        for dp, period in r["neither_cells"][:40]:
+            typer.echo(f"      NEITHER {dp} {period}")
+    bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
+    if bad:
+        typer.echo(f"expected cells with neither value nor reason: {bad}")
+
+
+@app.command("dqc-check")
+def dqc_check_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    report: Path = typer.Option(
+        ...,
+        "--report",
+        help="CSV of the hits (check_id, company, data point, period, values, on_fail, hold).",
+    ),
+    checks_csv: Path = typer.Option(
+        None, "--checks", help="Default: data-team/tags/validations/dqc-checks.csv."
+    ),
+    statement_timeout: str = typer.Option("120s", help="Per-statement cap."),
+) -> None:
+    """DQC checks over the SERVED cells (analytics.canonical_fact) of these companies. Read only: a read-only
+    transaction, nothing is written or held. Prints hits per check_id and per company, and the unsupported checks."""
+    from scrooner_pipeline.mapper import dqc_checks
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    checks = dqc_checks.load_checks(checks_csv)
+    impl, unsupported = dqc_checks.split_checks(checks)
+    hits: list[dqc_checks.Hit] = []
+    with get_connection() as conn:
+        conn.read_only = True
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        for cid in ids:
+            hits += dqc_checks.check_company(conn, cid, checks)
+        conn.rollback()
+    dqc_checks.write_report(hits, report)
+    typer.echo(
+        f"dqc-check: checks {len(checks)} implemented {len(impl)} unsupported {len(unsupported)}"
+    )
+    for cid_, reason in unsupported.items():
+        typer.echo(f"  unsupported {cid_}: {reason}")
+    typer.echo(f"  hits by check: {dqc_checks.hits_by_check(hits)}")
+    for cid in ids:
+        mine = [h for h in hits if h.company_id == cid]
+        typer.echo(f"  {cid}: {len(mine)} hits {dqc_checks.hits_by_check(mine)}")
+    typer.echo(f"  report -> {report}")
 
 
 @app.command("split-rebase")
@@ -739,6 +1084,89 @@ def seed_sector_templates_cmd(
         typer.echo("seed-sector-templates: data points and company ids valid")
         if apply:
             typer.echo(f"seed-sector-templates applied: {st.write_plan(conn, rows)}")
+
+
+@app.command("seed-templates-from-catalog")
+def seed_templates_from_catalog_cmd(
+    catalog: Path = typer.Option(
+        Path("data-team/47-fsn-store/company_tag_map/concepts_catalog.csv"),
+        help="Concept list (column name).",
+    ),
+    cohort: Path = typer.Option(
+        Path("doc/data-moat/team/top1000/shards.csv"),
+        help="Cohort file with rank, company_id, cik, ticker, sic, excluded.",
+    ),
+    top_n: int = typer.Option(110, help="Ranks 1..N only."),
+    plan_out: Path = typer.Option(
+        Path("pipeline/scripts/results/catalog_template_plan.csv"),
+        help="Plan CSV (always written).",
+    ),
+    before_out: Path = typer.Option(
+        Path("pipeline/scripts/results/catalog_template_before_image.csv"),
+        help="Before-image CSV of existing rows (written with --validate-db or --apply).",
+    ),
+    validate_db: bool = typer.Option(
+        False, help="Read-only DB validation and before-image."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write the rows (founder-approved)."
+    ),
+    confirm_version: str = typer.Option(
+        "", help="With --apply: must equal the catalog version."
+    ),
+) -> None:
+    """Seed analytics.company_data_point_template from the concept catalog and each
+    company's SIC group, for ranks 1..N. Dry run by default; idempotent when applied."""
+    from scrooner_pipeline.mapper import sector_templates as st
+
+    try:
+        concepts = st.load_catalog(catalog)
+        companies, excluded = st.load_ranked_cohort(cohort, top_n)
+        rows = st.build_catalog_plan(concepts, companies)
+    except (st.TemplateError, OSError) as exc:
+        typer.echo(f"ERROR {exc}", err=True)
+        raise typer.Exit(2) from exc
+    st.write_plan_csv(rows, plan_out)
+    per_group = st.rows_per_company_group(rows)
+    typer.echo(
+        f"catalog {len(concepts)} concepts; {len(companies)} companies; {len(rows)} rows"
+    )
+    typer.echo(f"per group: {json.dumps(per_group)}")
+    counts: dict[int, tuple[str, str, int]] = {}
+    tick = {c.company_id: c.ticker for c in companies}
+    for r in rows:
+        g, t, n = counts.get(r.company_id, (r.template, tick[r.company_id], 0))
+        counts[r.company_id] = (g, t, n + (1 if r.in_template else 0))
+    for cid, (g, t, n) in sorted(counts.items(), key=lambda kv: kv[1][1]):
+        typer.echo(f"  {t:6} {g:12} in_template={n}")
+    for rank, ticker, why in excluded:
+        typer.echo(f"EXCLUDED (no template) rank {rank} {ticker}: {why}")
+    if not (validate_db or apply):
+        return
+    if apply and confirm_version != st.CATALOG_VERSION:
+        typer.echo(
+            f"ERROR --apply needs --confirm-version {st.CATALOG_VERSION}", err=True
+        )
+        raise typer.Exit(2)
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("select count(*) from pg_stat_activity")
+            active = cur.fetchone()[0]  # type: ignore[index]
+        typer.echo(f"pg_stat_activity count: {active}")
+        if active > 60:
+            typer.echo("ERROR pg_stat_activity > 60; pausing", err=True)
+            raise typer.Exit(3)
+        try:
+            st.validate_against_db(conn, rows)
+        except st.TemplateError as exc:
+            typer.echo(f"ERROR {exc}", err=True)
+            raise typer.Exit(2) from exc
+        n_before = st.write_before_image(
+            conn, sorted({r.company_id for r in rows}), before_out
+        )
+        typer.echo(f"before-image: {n_before} existing rows -> {before_out}")
+        if apply:
+            typer.echo(f"applied: {st.write_plan(conn, rows)}")
 
 
 @app.command()

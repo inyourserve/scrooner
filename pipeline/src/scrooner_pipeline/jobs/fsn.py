@@ -5,6 +5,8 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
+from collections import Counter
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +18,7 @@ SHARDS_CSV = Path("doc/data-moat/team/top1000/shards.csv")
 
 @app.callback()
 def _root() -> None:
-    """Subcommands: shard, load, seed-rules, pilot, pilot-prod."""
+    """Subcommands: shard, load, seed-rules, pilot, pilot-prod, done-gate, extract-sec, nightly."""
 
 
 def _predecessors(spec: str) -> dict[str, str]:
@@ -140,6 +142,11 @@ def load_cmd(
         "",
         help="pred=succ CIK pairs: load the predecessor's filings under the successor.",
     ),
+    increment: bool = typer.Option(
+        False,
+        "--increment",
+        help="EDGAR-built directories (scrooner-fsn nightly): add or replace those accessions only.",
+    ),
     input_sha: str = typer.Option(
         "", help="sha256 of the dispatched CIK list, recorded in the rule_run stats."
     ),
@@ -164,6 +171,7 @@ def load_cmd(
                 # a connection the pooler drops mid-run is replaced (load.run closes it);
                 # the shard goes on with the next company instead of dying in rollback()
                 connect=lambda: psycopg.connect(settings.database_url),
+                increment=increment,
                 input_sha=input_sha or None,
             )
     except psycopg.OperationalError:
@@ -463,6 +471,9 @@ def done_gate_cmd(
       not_done.json          company id -> {"company": failed criteria 1/2/5, "data_points": {dp: reasons}, ...}
       valued_to_blank.json   C2 as a report: valued->blank transitions per data point by reason class, and the
                              pairs whose new cells hold no value where the before-image had values
+    A before-image 6-month, 9-month or multi-year key with no printed TP cell (CELL-FORMAT v1.2) is added to its
+    family's cells file (out/cells/<family>/cells.jsonl.gz) as an exact-dated hybrid gap blank before the C2 check,
+    so the write carries a visible reason for it; a second run finds the blank and adds nothing.
     The before-image (pilot-prod) is required, so the C2 report is never skipped."""
     import gzip
 
@@ -471,7 +482,13 @@ def done_gate_cmd(
         done_pairs,
         fully_done,
         hold_guard,
-        hold_valued_to_no_row,
+        count_valued_to_no_row,
+        ytd_gap_blanks,
+    )
+    from scrooner_pipeline.normalizer.cell_loader import (
+        OWNERSHIP,
+        bind_tp,
+        ytd_periods_by_class,
     )
 
     root = Path(pilot_out)
@@ -500,16 +517,89 @@ def done_gate_cmd(
     for path in sorted(root.glob("cells/*/cells.jsonl.gz")):
         with gzip.open(path, "rt") as fh:
             cells.extend(json.loads(line) for line in fh if line.strip())
-    emptied, transitions, no_row = hold_guard(
-        cells,
-        rows("canonical_fact"),
-        {r["id"]: r["name"] for r in rows("canonical_concept")},
-        {r["id"]: r for r in rows("period")},
-        points,
+    before = rows("canonical_fact")
+    names = {r["id"]: r["name"] for r in rows("canonical_concept")}
+    periods = {r["id"]: r for r in rows("period")}
+    # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed become reasoned TP blanks
+    ytd_rows, ytd_skipped = ytd_gap_blanks(
+        cells, before, names, periods, points, reports
     )
+    by_family: dict[str, list[dict]] = {}
+    for r in ytd_rows:
+        by_family.setdefault(OWNERSHIP.get(r["data_point_name"], "unowned"), []).append(
+            r
+        )
+    for fam, add in sorted(by_family.items()):
+        d = root / "cells" / fam
+        d.mkdir(parents=True, exist_ok=True)
+        path = d / "cells.jsonl.gz"
+        old = []
+        if path.exists():
+            with gzip.open(path, "rt") as fh:
+                old = [json.loads(line) for line in fh if line.strip()]
+        with gzip.open(path, "wt") as fh:
+            for r in old + add:
+                fh.write(json.dumps(r, default=str) + "\n")
+        manifest = d / "manifest.json"
+        if manifest.exists():
+            m = json.loads(manifest.read_text())
+            m["rows"] = len(old) + len(add)
+            m["data_points"] = sorted(
+                set(m.get("data_points") or []) | {r["data_point_name"] for r in add}
+            )
+            manifest.write_text(json.dumps(m))
+    cells.extend(ytd_rows)
+    not_in_template: list[dict] = []
+    emptied, transitions, no_row = hold_guard(
+        cells, before, names, periods, points, not_in_template
+    )
+    # approver ruling 2026-11-10, item 3: a TP print the loader will reject (no YTD period of its class at its end,
+    # or two at the same nearest end) is not written and gets no reason row; count it per company with the share
+    # of the company's TP prints, by the loader's own binding rule (bind_tp) over the before-image core.period
+    by_company_periods: dict[int, list] = {}
+    for pid, p in periods.items():
+        if p.get("company_id"):
+            by_company_periods.setdefault(int(p["company_id"]), []).append(
+                (
+                    pid,
+                    date.fromisoformat(p["start_date"]),
+                    date.fromisoformat(p["end_date"]),
+                    p["period_type"],
+                )
+            )
+    ytd_by_company = {
+        c: ytd_periods_by_class(ps) for c, ps in by_company_periods.items()
+    }
+    tp_stats: dict[int, Counter] = {}
+    for r in cells:
+        if (
+            r.get("period_grain") != "TP"
+            or r["data_point_name"] not in points
+            or r.get("period_start")
+            or r.get("qtrs") not in (2, 3)
+        ):
+            continue
+        cid = int(r["company_id"])
+        st = tp_stats.setdefault(cid, Counter())
+        st["tp_prints"] += 1
+        _pid, why = bind_tp(
+            ytd_by_company.get(cid, {}), date.fromisoformat(r["fsn_end"]), r["qtrs"]
+        )
+        if why:
+            st[why] += 1
+            st["rejected"] += 1
+    tp_rejected_by_company = {
+        str(c): {
+            **dict(st),
+            "share": round(st["rejected"] / st["tp_prints"], 6),
+        }
+        for c, st in sorted(tp_stats.items())
+    }
+    tp_total = sum(st["tp_prints"] for st in tp_stats.values())
+    tp_rej = sum(st["rejected"] for st in tp_stats.values())
     gate = done_gate(reports, gaps, missing, points)
-    # C2 (Ritwik 2026-11-10): a written pair may never drop a before-image value without a cell or a reason
-    no_row_by_pair = hold_valued_to_no_row(gate, no_row)
+    # C2 is the old-vs-new diff, a report (founder 2026-11-11 "move to the new system"; approver's C2 amendment)
+    no_row_by_pair = count_valued_to_no_row(no_row)
     with (root / "valued_to_no_row.tsv").open("w") as fh:
         cols = [
             "company_id",
@@ -526,10 +616,6 @@ def done_gate_cmd(
             fh.write("\t".join("" if k[c] is None else str(k[c]) for c in cols) + "\n")
     pairs = done_pairs(gate)
     written_no_row = sum(no_row_by_pair.get(p, 0) for p in pairs)
-    if (
-        written_no_row
-    ):  # cannot happen (the pairs were held above); refuse rather than write
-        raise RuntimeError(f"{written_no_row} valued->no-row keys in done pairs")
     full = fully_done(gate)
     written = sorted({cid for cid, _dp in pairs})
     listed = sum(len(g["data_points"]) for g in gate.values())
@@ -571,6 +657,27 @@ def done_gate_cmd(
                 "gap_keys_written_as_blanks_by_data_point": dict(
                     sorted(gap_blanks.items())
                 ),
+                # CELL-FORMAT v1.2: before-image YTD / multi-year keys with nothing printed, added as TP blanks
+                "ytd_keys_written_as_blanks_by_data_point": dict(
+                    sorted(Counter(r["data_point_name"] for r in ytd_rows).items())
+                ),
+                "ytd_keys_not_blanked": ytd_skipped,
+                # approver ruling 2026-11-10, item 1: before-image multi-year keys written as not_in_template
+                "valued_to_not_in_template_by_data_point": dict(
+                    sorted(Counter(k["data_point"] for k in not_in_template).items())
+                ),
+                "valued_to_not_in_template_by_pair": [
+                    {"company_id": c, "data_point": dp, "keys": n}
+                    for (c, dp), n in sorted(
+                        Counter(
+                            (k["company_id"], k["data_point"]) for k in not_in_template
+                        ).items()
+                    )
+                ],
+                "valued_to_not_in_template_keys": not_in_template,
+                # item 3: TP prints the loader will reject (ambiguous or no YTD period), per company and in total
+                "tp_rejected_by_company": tp_rejected_by_company,
+                "tp_rejected_share": round(tp_rej / tp_total, 6) if tp_total else 0.0,
             },
             indent=1,
         )
@@ -588,9 +695,18 @@ def done_gate_cmd(
         f"done gate: {sum(gap_blanks.values())} gap keys written as reasoned blanks; "
         f"{len(emptied)} pairs lose every value (valued_to_blank.json, C2 report)"
     )
+    over = sum(1 for v in tp_rejected_by_company.values() if v["share"] > 0.005)
+    typer.echo(
+        f"done gate: TP prints the loader will reject: {tp_rej} of {tp_total}; "
+        f"{over} companies above 0.5%; {len(not_in_template)} multi-year keys written as not_in_template"
+    )
+    typer.echo(
+        f"done gate: {len(ytd_rows)} before-image year-to-date keys with nothing printed added as TP blanks; "
+        f"{len(ytd_skipped)} not blanked (no stored filings in the report)"
+    )
     typer.echo(
         f"done gate: {len(no_row)} before-image values would have no row; "
-        f"{len(no_row_by_pair)} pairs held for it; valued->no-row in written pairs: {written_no_row}"
+        f"{len(no_row_by_pair)} pairs carry such keys (diff report, not a hold); valued->no-row in written pairs: {written_no_row}"
     )
 
 
@@ -720,3 +836,103 @@ def extract_sec_cmd(
 
 if __name__ == "__main__":
     app()
+
+
+NIGHTLY_COHORT = Path("data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv")
+
+
+@app.command("nightly")
+def nightly_cmd(
+    out: str = typer.Option(
+        "companies-nightly", help="Output root: companies/<cik>/ increments."
+    ),
+    cohort: str = typer.Option(str(NIGHTLY_COHORT), help="Cohort CSV (cik column)."),
+    ciks: str = typer.Option("", help="Comma-separated CIKs instead of the cohort."),
+    lookback_days: int = typer.Option(
+        7,
+        help="At least the last N days. The window reaches back to the day after the latest SEC FSN"
+        " set in the store, so filings since that set (the backfill) and deferred ones are caught up.",
+    ),
+    since: str = typer.Option(
+        "", help="YYYY-MM-DD: start of the window instead (a one-off backfill)."
+    ),
+    max_minutes: float = typer.Option(
+        30.0, help="Wall-clock budget for fetching; the rest is deferred."
+    ),
+    report: str = typer.Option("nightly-report.json", help="Run report (JSON)."),
+) -> None:
+    """New periodic filings -> EDGAR-built FSN rows -> increment directories (design note 2026-11-09).
+    Reads the database (one indexed query) and sec.gov (<= 4 req/s); writes local files only. Load them
+    with `scrooner-fsn load --increment`, then `pilot` / `done-gate` / the protected cell write."""
+    import os
+    from datetime import date, timedelta
+
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import edgar_fetch, increment
+
+    if ciks:
+        cik_list = [c.strip().zfill(10) for c in ciks.split(",") if c.strip()]
+    else:
+        path = Path(cohort)
+        if not path.exists():
+            path = Path(__file__).resolve().parents[4] / cohort
+        cik_list = sorted({r["cik"].zfill(10) for r in csv.DictReader(path.open())})
+    today = date.today()
+    with get_connection() as conn:
+        start = today - timedelta(days=lookback_days)
+        after_set = increment.since_last_set(conn)
+        if after_set is not None and after_set < start:
+            start = after_set
+        if since:
+            start = date.fromisoformat(since)
+        cands = increment.candidates(conn, cik_list, start)
+    client = edgar_fetch.EdgarClient(os.environ.get("SEC_USER_AGENT", ""))
+    fsn_set = f"{increment.EDGAR_SET_PREFIX}{today.isoformat()}"
+    try:
+        res = increment.build(
+            cands,
+            lambda c: edgar_fetch.fetch_filing(client, c.cik, c.accession, fsn_set),
+            max_seconds=max_minutes * 60,
+        )
+    finally:
+        client.close()
+    company_ids = {c.cik: c.company_id for c in cands}
+    written = increment.write_dirs(Path(out), res.built, company_ids, fsn_set)
+    summary = {
+        "fsn_set": fsn_set,
+        "since": start.isoformat(),
+        "candidates": len(cands),
+        "built": sum(len(v) for v in res.built.values()),
+        "companies": written,
+        "failed": res.failed,
+        "deferred": res.deferred,
+        "seconds": res.requests_seconds,
+        "filings": [c.__dict__ for c in cands],
+    }
+    Path(report).write_text(json.dumps(summary, indent=1))
+    Path(out).mkdir(parents=True, exist_ok=True)
+    (Path(out) / "ciks.txt").write_text(",".join(written))
+    typer.echo(
+        f"fsn nightly: {summary['candidates']} new filings, {summary['built']} built for {len(written)} companies,"
+        f" {len(res.failed)} failed, {len(res.deferred)} deferred ({res.requests_seconds}s)"
+    )
+
+
+@app.command("new-path-ciks")
+def new_path_ciks_cmd(
+    out: str = typer.Option(
+        "", help="Write the comma-separated CIKs here (default: stdout)."
+    ),
+) -> None:
+    """The companies on the hybrid FSN nightly path (fsn_store/new_path.py), read-only. The old
+    normalize/map writer stages skip them when HYBRID_NEW_PATH=on (reprocess_recent_filers.sh)."""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import new_path
+
+    with get_connection() as conn:
+        found = new_path.ciks(conn)
+        conn.rollback()
+    text = ",".join(found)
+    if out:
+        Path(out).write_text(text)
+    typer.echo(text)

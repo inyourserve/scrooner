@@ -42,7 +42,18 @@ def test_parse_row_accepts_a_valued_cell_and_names_every_rejection():
     assert isinstance(r, cl.CellRow) and r.value == Decimal("100") and r.exact_dates
     cases = {
         "unknown_data_point_name": _row(data_point_name="quick_ratio"),
-        "grain_not_FY_Q_I": _row(period_grain="TP"),
+        "grain_not_FY_Q_I_TP": _row(period_grain="TTM"),
+        # CELL-FORMAT v1.2: TP is a 6/9-month or multi-year span; a quarter's dates are not one
+        "tp_span_not_ytd": _row(period_grain="TP"),
+        "tp_qtrs_disagree_with_dates": _row(
+            period_grain="TP",
+            period_start="2024-01-01",
+            period_end="2024-06-30",
+            qtrs=3,
+        ),
+        "no_period_key": _row(
+            period_grain="TP", period_start=None, period_end=None, fsn_end="2024-06-30"
+        ),
         "state_outside_contract": _row(state="held"),
         "no_period_key": _row(period_start=None, period_end=None),
         "grain_period_type_mismatch": _row(period_grain="I", period_type="duration"),
@@ -595,4 +606,212 @@ def test_a_blank_bound_by_fiscal_label_is_stored_on_its_true_period(conn, tmp_pa
             (cid,),
         )
         == 0
+    )
+
+
+# --- CELL-FORMAT v1.2: grain TP (printed 6/9-month year-to-date spans) ------------------------------------------
+
+
+def _tp_row(cid=1, **over):
+    """A TP row the way fsn_store.select.to_row writes it: no fiscal period, the FSN end and the column length."""
+    base = dict(
+        company_id=cid,
+        period_grain="TP",
+        period_start=None,
+        period_end=None,
+        fiscal_year=2024,
+        fiscal_period=None,
+        period_type="duration",
+        fsn_end="2024-06-30",
+        qtrs=2,
+    )
+    base.update(over)
+    return _row(**base)
+
+
+class _Periods:
+    """A connection whose cursor answers bind_periods' one read with fixed core.period rows."""
+
+    def __init__(self, rows):
+        self.rows = rows
+
+    def cursor(self):
+        return self
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def execute(self, *_a):
+        return None
+
+    def fetchall(self):
+        return self.rows
+
+
+@pytest.mark.unit
+def test_a_tp_row_binds_by_end_and_duration_class_never_by_a_quarter_label():
+    periods = [
+        (11, date(2024, 1, 1), date(2024, 3, 30), "duration", 2024, "Q1"),
+        (12, date(2024, 3, 31), date(2024, 6, 29), "duration", 2024, "Q2"),
+        (
+            13,
+            date(2024, 1, 1),
+            date(2024, 6, 29),
+            "duration",
+            None,
+            None,
+        ),  # 6-month YTD
+        (
+            14,
+            date(2024, 1, 1),
+            date(2024, 9, 28),
+            "duration",
+            None,
+            None,
+        ),  # 9-month YTD
+        (15, date(2023, 12, 31), date(2024, 12, 28), "duration", 2024, "FY"),
+    ]
+    rows = [
+        cl.parse_row(1, _tp_row(), POINTS),
+        cl.parse_row(2, _tp_row(fsn_end="2024-09-30", qtrs=3), POINTS),
+        # a TP row that carries a quarter label anyway is still bound by its class, not by the label
+        cl.parse_row(
+            3,
+            _tp_row(data_point_name="revenue_sanity_resolved", fiscal_period="Q2"),
+            POINTS,
+        ),
+        cl.parse_row(
+            4,
+            _tp_row(
+                period_start="2024-01-01",
+                period_end="2024-09-28",
+                qtrs=None,
+                fsn_end=None,
+            ),
+            POINTS,
+        ),
+    ]
+    assert all(isinstance(r, cl.CellRow) for r in rows), rows
+    bound, bad, created = cl.bind_periods(_Periods(periods), 1, rows, create=False)
+    assert bad == [] and created == 0
+    assert [r.period_id for r in bound] == [13, 14, 13, 14]
+    assert (bound[0].key.period_start, bound[0].key.period_end) == (
+        date(2024, 1, 1),
+        date(2024, 6, 29),
+    )
+    # two 6-month periods at the same nearest end: ambiguous, listed, never guessed
+    twin = periods + [
+        (16, date(2023, 12, 31), date(2024, 6, 29), "duration", None, None)
+    ]
+    bound, bad, _ = cl.bind_periods(
+        _Periods(twin), 1, [cl.parse_row(1, _tp_row(), POINTS)], create=False
+    )
+    assert bound == [] and [why for _r, why in bad] == ["tp_period_ambiguous"]
+    # no YTD period and no exact dates: unresolvable (a period is created only from exact dates)
+    bound, bad, _ = cl.bind_periods(
+        _Periods(periods[:2]), 1, [cl.parse_row(1, _tp_row(), POINTS)], create=True
+    )
+    assert bound == [] and [why for _r, why in bad] == ["period_unresolvable"]
+    # exact dates not stored yet and a quarter label on the row: never sent to the 3-month Q2 period by the label
+    labelled = _tp_row(
+        period_start="2024-01-01", period_end="2024-06-29", fiscal_period="Q2"
+    )
+    bound, bad, _ = cl.bind_periods(
+        _Periods(periods[:2]), 1, [cl.parse_row(1, labelled, POINTS)], create=False
+    )
+    assert bound == [] and [why for _r, why in bad] == ["period_unresolvable"]
+
+
+@pytest.mark.integration
+def test_tp_cells_load_onto_the_existing_ytd_periods_by_exact_dates_and_end(
+    conn, tmp_path
+):
+    """The loader accepts grain TP: a select row (FSN end + qtrs) binds to the company's existing 6/9-month period,
+    an exact-dated TP blank binds by its dates or creates its period once (fiscal period null); no duplicate YTD
+    period is made, a reload creates nothing, and the 3-month Q2 period is never taken."""
+    cid, pid, fact, ccid, cash_id = _seed(conn)
+    h1 = _one(
+        conn,
+        "insert into core.period (company_id, start_date, end_date, period_type) values (%s, '2024-01-01', '2024-06-29', 'duration') returning id",
+        (cid,),
+    )
+    q2 = _one(
+        conn,
+        "insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period) values (%s, '2024-04-03', '2024-06-29', 'duration', 2024, 'Q2') returning id",
+        (cid,),
+    )
+    m9 = _one(
+        conn,
+        "insert into core.period (company_id, start_date, end_date, period_type) values (%s, '2024-01-01', '2024-09-28', 'duration') returning id",
+        (cid,),
+    )
+    conn.commit()
+    blank = dict(state="defect", value=None, unit=None, accession=None, tag=None, reason_code="hybrid_gap_unresolved",
+                 reason_text="not printed", defect_class="unclassified", owner="triage", evidence_level="DATA-INFERRED")  # fmt: skip
+    path = _write(
+        tmp_path,
+        [
+            _tp_row(cid, source_fact_ids=[fact]),  # 6 months, valued
+            _tp_row(cid, fsn_end="2024-09-30", qtrs=3, **blank),  # 9 months, blank
+            _tp_row(
+                cid,
+                period_start="2021-10-01",
+                period_end="2024-09-28",
+                qtrs=12,
+                fsn_end="2024-09-30",
+                **blank,
+            ),  # multi-year, exact dates  # fmt: skip
+            _row(
+                company_id=cid, period_start="2024-01-01", period_end="2024-04-02"
+            ),  # Q1 by exact dates
+        ],
+    )
+    periods_before = _one(
+        conn, "select count(*) from core.period where company_id = %s", (cid,)
+    )
+    rep = cl.load(conn, "capex_da_cash_debt", [path], apply=True)
+    # the manifest's cash point has no valued cell in this file (rejected as a whole, as always); no TP row is
+    assert set(rep.rejected) <= {"data_point_has_no_valued_cells"}, rep.as_dict()
+    assert rep.periods_created == 1  # the multi-year period only
+    valued = conn.execute(
+        "select period_id, value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s order by period_id",
+        (cid, ccid),
+    ).fetchall()
+    assert valued == [(pid, Decimal("100")), (h1, Decimal("100"))] and q2 not in [
+        v[0] for v in valued
+    ]
+    reasons = conn.execute(
+        "select data_point_name, period_grain, period_start, period_end from analytics.cell_blank_reason where company_id = %s order by period_end, period_start",
+        (cid,),
+    ).fetchall()
+    assert reasons == [
+        ("capex_resolved", "TP", date(2021, 10, 1), date(2024, 9, 28)),
+        ("capex_resolved", "TP", date(2024, 1, 1), date(2024, 9, 28)),
+    ]
+    assert (
+        _one(
+            conn,
+            "select fiscal_period from core.period where company_id = %s and start_date = '2021-10-01'",
+            (cid,),
+        )
+        is None
+    )
+    assert (
+        _one(
+            conn,
+            "select count(*) from core.period where company_id = %s and end_date = '2024-09-28' and start_date = '2024-01-01'",
+            (cid,),
+        )
+        == 1
+    )
+    assert m9 is not None
+    cl.load(
+        conn, "capex_da_cash_debt", [path], apply=True
+    )  # idempotent: no new period on a reload
+    assert (
+        _one(conn, "select count(*) from core.period where company_id = %s", (cid,))
+        == periods_before + 1
     )

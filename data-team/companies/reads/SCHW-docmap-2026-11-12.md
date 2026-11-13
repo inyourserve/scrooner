@@ -1,0 +1,112 @@
+# SCHW document-first map, 2026-11-12 (read-only; sec.gov filings + companyfacts)
+
+Latest 10-K opened: 0000316709-26-000009 (period 2025-12-31), https://www.sec.gov/Archives/edgar/data/316709/000031670926000009/ ; R pages read: R1 Cover Page, R3 Consolidated Statements of Income, R4 Consolidated Statements of Comprehensive Inco, R5 Consolidated Balance Sheets, R6 Consolidated Balance Sheets (Parenthetical), R7 Consolidated Statements of Stockholders' Equi, R8 Consolidated Statements of Stockholders' Equi, R9 Consolidated Statements of Cash Flows, R10 Consolidated Statements of Cash Flows (Parent, R68 Revenue Recognition (Details), R77 Bank Loans and Related Allowance for Credit L, R82 Equipment, Office Facilities, and Property - , R83 Equipment, Office Facilities, and Property - , R84 Goodwill and Acquired Intangible Assets - Cha, R85 Goodwill and Acquired Intangible Assets - Nar, R86 Goodwill and Acquired Intangible Assets - Acq, R87 Goodwill and Acquired Intangible Assets - Est, R90 Variable Interest Entities - Narrative (Detai, R91 Variable Interest Entities - Aggregate Assets, R92 Bank Deposits - Deposits from Banking Clients, R93 Borrowings - Long-term Debt Including Unamort, R94 Borrowings - Narrative (Details), R95 Borrowings - Annual Maturities on Long-term D, R96 Borrowings - Annual Maturities on Borrowings , R107 Derivative Instruments and Hedging Activities, R115 Stockholders' Equity - Dividends Declared (De, R116 Accumulated Other Comprehensive Income - Summ, R117 Accumulated Other Comprehensive Income - Narr, R118 Employee Incentive, Retirement, Deferred Comp, R119 Employee Incentive, Retirement, Deferred Comp, R120 Employee Incentive, Retirement, Deferred Comp, R121 Employee Incentive, Retirement, Deferred Comp, R122 Employee Incentive, Retirement, Deferred Comp, R123 Employee Incentive, Retirement, Deferred Comp, R124 Employee Incentive, Retirement, Deferred Comp, R130 Taxes on Income - Reconciliation of Income Ta.
+
+Era-check 10-K opened: 0000316709-22-000009 (period 2021-12-31); R pages: R3, R5, R6, R8.
+
+Evidence: printed values are from the filing R pages (FILING-CHECKED); API = companyfacts value, same accession and period, undimensioned. Match = printed vs API for fy0/fy1 (abs value).
+
+## Verdicts vs cloud Ritwik
+- template_out_pending_read: cost_of_revenue, gross_profit, operating_income: AGREE OUT (IS goes from 'Total expenses excluding interest' to 'Income before taxes on income'). current_assets, current_liabilities: AGREE OUT (unclassified BS).
+- D&A components (custom ex-intangibles + AmortizationOfIntangibleAssets): AGREE; buyback custom tag (2506-2509): FY2025 uses std PaymentsForRepurchaseOfCommonStock 'Repurchases of common stock and nonvoting common stock' (era); NoncashTransaction exclude: AGREE. revenue Revenues total wins: AGREE.
+- Disagreements: 0.
+Flags: (1) cash rule: BS cash 46,030 vs CF ending cash incl. restricted/segregated 69,661; the bank-cash rule (CF printed ending cash) is an open choice for the broker template; (2) FHLB borrowings 1,850 included in total_debt as a perimeter call; (3) equity 49,425 includes 6,763 preferred; (4) 'Dividends paid' PaymentsOfDividends may include preferred dividends (435 on the IS); interest expense tag InterestExpense (FY2021) -> InterestExpenseOperating.
+Caveats: companyfacts holds only undimensioned us-gaap/dei facts: custom-namespace tags and dimensional lines (members) have no API value (match n/a). Abs values compared (printed parentheses vs API sign). Rated FILING-CHECKED when the row is in the opened R page.
+
+
+## Data-point table
+
+| data_point | status | tags | R | label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:Revenues | R3 | Total net revenues | 23921000000 | 23921000000 | 19606000000 | 19606000000 | Y/Y | 'Total net revenues' (broker template; beside RevenueFromContract fee lines, dimensional) | api ev: us-gaap:Revenues@0000316709-26-000009|2025-12-31 us-gaap:Revenues@0000316709-26-000009|2024-12-31 |
+| cost_of_revenue | not_presented |  |  |  |  |  |  |  |  | OUT: broker/bank IS prints interest expense and expense lines by nature; no cost of revenue |
+| gross_profit | not_presented |  |  |  |  |  |  |  |  | OUT |
+| operating_expenses | mapped | us-gaap:NoninterestExpense | R3 | Total expenses excluding interest | 12462000000 | 12462000000 | 11914000000 | 11914000000 | Y/Y | 'Total expenses excluding interest' | api ev: us-gaap:NoninterestExpense@0000316709-26-000009|2025-12-31 us-gaap:NoninterestExpense@0000316709-26-000009|2024-12-31 |
+| sga_expense | not_presented |  |  |  |  |  |  |  |  | no SG&A line (compensation, professional services, occupancy etc.) |
+| research_and_development | not_presented |  |  |  |  |  |  |  |  |  |
+| operating_income | not_presented |  |  |  |  |  |  |  |  | no operating income line (IS goes from total expenses to income before taxes); OUT for broker/bank |
+| interest_expense | mapped | us-gaap:InterestExpenseOperating | R3 | Interest expense | 3754000000 | 3754000000 | 6393000000 | 6393000000 | Y/Y | 'Interest expense' face | api ev: us-gaap:InterestExpenseOperating@0000316709-26-000009|2025-12-31 us-gaap:InterestExpenseOperating@0000316709-26-000009|2024-12-31 |
+| interest_income | mapped | us-gaap:InterestIncomeOperating | R3 | Interest revenue | 15504000000 | 15504000000 | 15537000000 | 15537000000 | Y/Y | 'Interest revenue' face | api ev: us-gaap:InterestIncomeOperating@0000316709-26-000009|2025-12-31 us-gaap:InterestIncomeOperating@0000316709-26-000009|2024-12-31 |
+| other_income_expense_net | not_presented |  |  |  |  |  |  |  |  |  |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R3 | Income before taxes on income | 11459000000 | 11459000000 | 7692000000 | 7692000000 | Y/Y | 'Income before taxes on income' | api ev: us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest@0000316709-26-000009|2025-12-31 us-gaap:IncomeLossFromCont |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R3 | Taxes on income | 2607000000 | 2607000000 | 1750000000 | 1750000000 | Y/Y | 'Taxes on income' | api ev: us-gaap:IncomeTaxExpenseBenefit@0000316709-26-000009|2025-12-31 us-gaap:IncomeTaxExpenseBenefit@0000316709-26-000009|2024-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R3 | Net Income | 8852000000 | 8852000000 | 5942000000 | 5942000000 | Y/Y | 'Net Income' 8,852 (no NCI); 'Net Income Available to Common Stockholders' 8,417 is after preferred dividends | api ev: us-gaap:NetIncomeLoss@0000316709-26-000009|2025-12-31 us-gaap:NetIncomeLoss@0000 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R3 | Basic (in USD per share) | 4.67 | 4.67 | 3 | 3 | Y/Y | api ev: us-gaap:EarningsPerShareBasic@0000316709-26-000009|2025-12-31 us-gaap:EarningsPerShareBasic@0000316709-26-000009|2024-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R3 | Diluted (in USD per share) | 4.65 | 4.65 | 2.99 | 2.99 | Y/Y | api ev: us-gaap:EarningsPerShareDiluted@0000316709-26-000009|2025-12-31 us-gaap:EarningsPerShareDiluted@0000316709-26-000009|2024-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R3 | Basic (in shares) | 1804000000 | 1804000000 | 1828000000 | 1828000000 | Y/Y | api ev: us-gaap:WeightedAverageNumberOfSharesOutstandingBasic@0000316709-26-000009|2025-12-31 us-gaap:WeightedAverageNumberOfSharesOutstandingBasic@0000316709-26-000009|2024-12-31 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R3 | Diluted (in shares) | 1809000000 | 1809000000 | 1834000000 | 1834000000 | Y/Y | api ev: us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding@0000316709-26-000009|2025-12-31 us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding@0000316709-26-000009|2024-12-31 |
+| dividends_per_share | mapped | us-gaap:CommonStockDividendsPerShareDeclared | R8 | Dividends declared on common stock (in USD per share) | 1.08 | 1.08 | 1 | 1 | Y/Y | equity statement 'Dividends declared on common stock (per share)' | api ev: us-gaap:CommonStockDividendsPerShareDeclared@0000316709-26-000009|2025-12-31 us-gaap:CommonStockDividendsPerShareDeclared@00 |
+| comprehensive_income | mapped | us-gaap:ComprehensiveIncomeNetOfTax | R4 | Comprehensive Income (Loss) | 12717000000 | 12717000000 | 9225000000 | 9225000000 | Y/Y | 'Comprehensive Income (Loss)' (no NCI) | api ev: us-gaap:ComprehensiveIncomeNetOfTax@0000316709-26-000009|2025-12-31 us-gaap:ComprehensiveIncomeNetOfTax@0000316709-26-000009|2024-12-31 |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R5 | Cash and cash equivalents | 46030000000 | 46030000000 | 42083000000 | 42083000000 | Y/Y | BS 'Cash and cash equivalents' 46,030; the bank-cash rule (CF printed ending cash = 69,661 incl. restricted/segregated) is the alternative: flag as rule question for the broker template | api ev: us-g |
+| accounts_receivable | not_presented |  |  |  |  |  |  |  |  | BS receivables are 'Receivables from brokerage clients' (margin loans) and 'from brokers, dealers' - not trade AR; broker AR COND OUT here |
+| inventory | not_presented |  |  |  |  |  |  |  |  |  |
+| current_assets | not_presented |  |  |  |  |  |  |  |  | unclassified BS (OUT, agrees with cloud pending_read) |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization | R5 | Equipment, office facilities, and property — net | 3091000000 | 3091000000 | 3338000000 | 3338000000 | Y/Y | 'Equipment, office facilities, and property - net' | api ev: us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization@0000316709-26-000009|2025-12-31  |
+| goodwill | mapped | us-gaap:Goodwill | R5 | Goodwill | 11951000000 | 11951000000 | 11951000000 | 11951000000 | Y/Y | api ev: us-gaap:Goodwill@0000316709-26-000009|2025-12-31 us-gaap:Goodwill@0000316709-26-000009|2024-12-31 |
+| total_assets | mapped | us-gaap:Assets | R5 | Total assets | 490995000000 | 490995000000 | 479843000000 | 479843000000 | Y/Y | api ev: us-gaap:Assets@0000316709-26-000009|2025-12-31 us-gaap:Assets@0000316709-26-000009|2024-12-31 |
+| accounts_payable | not_presented |  |  |  |  |  |  |  |  | payables to brokers/clients only (srt tags), no AP line |
+| current_liabilities | not_presented |  |  |  |  |  |  |  |  | unclassified BS |
+| total_liabilities | mapped | us-gaap:Liabilities | R5 | Total liabilities | 441570000000 | 441570000000 | 431468000000 | 431468000000 | Y/Y | printed | api ev: us-gaap:Liabilities@0000316709-26-000009|2025-12-31 us-gaap:Liabilities@0000316709-26-000009|2024-12-31 |
+| total_debt | component_sum | us-gaap:OtherShortTermBorrowings;us-gaap:AdvancesFromFederalHomeLoanBanks;us-gaap:LongTermDebtAndCapitalLeaseObligations | R5;R5;R5 | Other short-term borrowings + Federal Home Loan Bank borrowi | 30962000000 | 30962000000 | 45127000000 | 45127000000 | Y/Y | 'Other short-term borrowings' + 'Federal Home Loan Bank borrowings' + 'Long-term debt' (tag includes finance leases); FHLB inclusion is a perimeter call (bank deposits excluded) | api ev: us-gaap:Othe |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R5 | Total stockholders’ equity | 49425000000 | 49425000000 | 48375000000 | 48375000000 | Y/Y | 'Total stockholders equity' (includes 6,763 preferred; no parent-common-only line) | api ev: us-gaap:StockholdersEquity@0000316709-26-000009|2025-12-31 us-gaap:StockholdersEquity@0000316709-26-000009| |
+| shares_outstanding | not_presented |  | BS R5.htm |  |  |  |  |  |  | FILING-CHECKED | check: hand R6 prints issued 2,074,188,875 and treasury 315,863,800; R7 equity statement's CommonStockSharesOutstanding 'Ending balance' 2,074 million = the issued count (common column), not outstanding; no BS-date outstanding count printed; instants never summed; dei never used | 2026-11-12 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R9 | Net cash provided by (used for) operating activities | 9311000000 | 9311000000 | 2670000000 | 2670000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInOperatingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInOperatingActivities@0000316709-26-000009|2024-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R9 | Net cash provided by (used for) investing activities | 24538000000 | 24538000000 | 35431000000 | 35431000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInInvestingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInInvestingActivities@0000316709-26-000009|2024-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R9 | Net cash provided by (used for) financing activities | 29702000000 | 29702000000 | 47060000000 | 47060000000 | Y/Y | api ev: us-gaap:NetCashProvidedByUsedInFinancingActivities@0000316709-26-000009|2025-12-31 us-gaap:NetCashProvidedByUsedInFinancingActivities@0000316709-26-000009|2024-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R9 | Purchases of equipment, office facilities, and property | 548000000 | 548000000 | 620000000 | 620000000 | Y/Y | 'Purchases of equipment, office facilities, and property' (broker IN; bank-like 'OUT by definition' question) | api ev: us-gaap:PaymentsToAcquirePropertyPlantAndEquipment@0000316709-26-000009|2025-12- |
+| depreciation_and_amortization | component_sum | schw:DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets;us-gaap:AmortizationOfIntangibleAssets | R9;R9 | Depreciation and amortization + Amortization of acquired int | 1362000000 |  | 1435000000 |  | n/a/n/a | CF 'Depreciation and amortization' (custom tag, excludes intangibles) 850 + 'Amortization of acquired intangible assets' 512; premium amortization (695) excluded; IS prints same two lines | api ev: us |
+| amortization_of_intangibles | mapped | us-gaap:AmortizationOfIntangibleAssets | R9 | Amortization of acquired intangible assets | 512000000 | 512000000 | 519000000 | 519000000 | Y/Y | api ev: us-gaap:AmortizationOfIntangibleAssets@0000316709-26-000009|2025-12-31 us-gaap:AmortizationOfIntangibleAssets@0000316709-26-000009|2024-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R9 | Share-based compensation | 317000000 | 317000000 | 337000000 | 337000000 | Y/Y | api ev: us-gaap:ShareBasedCompensation@0000316709-26-000009|2025-12-31 us-gaap:ShareBasedCompensation@0000316709-26-000009|2024-12-31 |
+| dividends_paid | mapped | us-gaap:PaymentsOfDividends | R9 | Dividends paid | 2329000000 | 2329000000 | 2275000000 | 2275000000 | Y/Y | 'Dividends paid' (tag unspecific: likely common + preferred; check note) flag | api ev: us-gaap:PaymentsOfDividends@0000316709-26-000009|2025-12-31 us-gaap:PaymentsOfDividends@0000316709-26-000009|202 |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R9 | Repurchases of common stock and nonvoting common stock | 7346000000 | 7346000000 | 0 | 0 | Y/Y | 'Repurchases of common stock and nonvoting common stock' (FY2025 std tag; Ritwik row has the custom tag for 2506-2509); preferred redemption 2,458 excluded | api ev: us-gaap:PaymentsForRepurchaseOfCom |
+| cf_ar_change | not_presented |  |  |  |  |  |  |  |  | CF prints brokerage receivables lines, not trade AR |
+| cf_inventory_change | not_presented |  |  |  |  |  |  |  |  |  |
+| cf_ap_change | not_presented |  |  |  |  |  |  |  |  |  |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R9 | Interest | 4557000000 | 4557000000 | 6655000000 | 6655000000 | Y/Y | 'Interest' supplemental | api ev: us-gaap:InterestPaidNet@0000316709-26-000009|2025-12-31 us-gaap:InterestPaidNet@0000316709-26-000009|2024-12-31 |
+| cash_paid_for_income_taxes | component_in_note | us-gaap:IncomeTaxesPaidNet | R130 | Income taxes paid (net of refunds received) | 1575000000 | 1575000000 | 1491000000 | 1491000000 | Y/Y | not on CF face; tax note 'Income taxes paid (net of refunds received)' | api ev: us-gaap:IncomeTaxesPaidNet@0000316709-26-000009|2025-12-31 us-gaap:IncomeTaxesPaidNet@0000316709-26-000009|2024-12-31 |
+
+## Era checks (tag FY coverage in companyfacts; same-label tag in the FY-4 10-K)
+
+- revenue: api FY coverage Revenues:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:Revenues
+- operating_expenses: api FY coverage NoninterestExpense:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:NoninterestExpense
+- interest_expense: api FY coverage InterestExpenseOperating:2022-2025 | FY-4 10-K same-label tag: tag_not_in_old:us-gaap:InterestExpense
+- interest_income: api FY coverage InterestIncomeOperating:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:InterestIncomeOperating
+- income_before_tax: api FY coverage IncomeLossFromContinuingOperationsBefore:2013-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+- income_tax_expense: api FY coverage IncomeTaxExpenseBenefit:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:IncomeTaxExpenseBenefit
+- net_income: api FY coverage NetIncomeLoss:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:NetIncomeLoss
+- basic_eps: api FY coverage EarningsPerShareBasic:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- diluted_eps: api FY coverage EarningsPerShareDiluted:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- weighted_basic_shares: api FY coverage WeightedAverageNumberOfSharesOutstanding:2008-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:WeightedAverageNumberOfSharesOutstandingBasic
+- weighted_diluted_shares: api FY coverage WeightedAverageNumberOfDilutedSharesOuts:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding
+- dividends_per_share: api FY coverage CommonStockDividendsPerShareDeclared:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:DividendsCommonStockCash
+- comprehensive_income: api FY coverage ComprehensiveIncomeNetOfTax:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:ComprehensiveIncomeNetOfTax
+- cash_and_equivalents: api FY coverage CashAndCashEquivalentsAtCarryingValue:2006-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:CashAndCashEquivalentsAtCarryingValue
+- ppe_net: api FY coverage PropertyPlantAndEquipmentAndFinanceLease:2020-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization
+- goodwill: api FY coverage Goodwill:2008-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:Goodwill
+- total_assets: api FY coverage Assets:2008-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:Assets
+- total_liabilities: api FY coverage Liabilities:2008-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:Liabilities
+- total_debt: api FY coverage OtherShortTermBorrowings:2022-2025; AdvancesFromFederalHomeLoanBanks:2022-2025; LongTermDebtAndCapitalLeaseObligations:2012-2025 | FY-4 10-K same-label tag: tag_not_in_old: ; tag_not_in_old: ; SAME_TAG_IN_OLD(accn):us-gaap:LongTermDebtAndCapitalLeaseObligations
+- stockholders_equity: api FY coverage StockholdersEquity:2006-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:StockholdersEquity
+- shares_outstanding: api FY coverage EntityCommonStockSharesOutstanding:2010-2026 | FY-4 10-K same-label tag: tag_not_in_old:
+- cfo: api FY coverage NetCashProvidedByUsedInOperatingActiviti:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- cash_flow_investing: api FY coverage NetCashProvidedByUsedInInvestingActiviti:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- cash_flow_financing: api FY coverage NetCashProvidedByUsedInFinancingActiviti:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- capex: api FY coverage PaymentsToAcquirePropertyPlantAndEquipme:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- depreciation_and_amortization: api FY coverage DepreciationAndAmortizationExcludingAmor:none; AmortizationOfIntangibleAssets:2011-2025 | FY-4 10-K same-label tag: tag_not_in_old:schw:DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets ; SAME_TAG_IN_OLD(accn):us-gaap:AmortizationOfIntangibleAssets
+- amortization_of_intangibles: api FY coverage AmortizationOfIntangibleAssets:2011-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:AmortizationOfIntangibleAssets
+- sbc: api FY coverage ShareBasedCompensation:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):us-gaap:AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue
+- dividends_paid: api FY coverage PaymentsOfDividends:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- share_buybacks: api FY coverage PaymentsForRepurchaseOfCommonStock:2007-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- cash_paid_for_interest: api FY coverage InterestPaidNet:2016-2025 | FY-4 10-K same-label tag: SAME_TAG_IN_OLD(accn):
+- cash_paid_for_income_taxes: api FY coverage IncomeTaxesPaidNet:2023-2025 | FY-4 10-K same-label tag: tag_not_in_old:
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- cost_of_revenue: not_presented -> OUT (bank/insurer template)
+- gross_profit: not_presented -> OUT (bank/insurer template)
+- research_and_development: not_presented -> OUT (bank/insurer template)
+- inventory: not_presented -> OUT (bank/insurer template)
+- current_assets: not_presented -> OUT (bank/insurer template)
+- current_liabilities: not_presented -> OUT (bank/insurer template)
+- shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> not_presented  | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
+- shares_outstanding: check: hand -> not_presented | check: hand R6 prints issued 2,074,188,875 and treasury 315,863,800; R7 equity statement's CommonStockSharesOutstanding 'Ending balance' 2,0
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

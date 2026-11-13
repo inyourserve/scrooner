@@ -1,0 +1,73 @@
+# ACN document-first map, 2026-11-12 (read-only, built bottom-up from the 10-K)
+
+Latest 10-K: accession 0001467373-26-000049, period end 2026-08-31. Evidence: R pages of FilingSummary (face statements + notes opened: R1.htm, R3.htm, R4.htm, R5.htm, R6.htm, R7.htm, R8.htm, R48.htm, R50.htm, R52.htm, R53.htm, R55.htm, R56.htm, R57.htm, R59.htm, R68.htm, R71.htm, R72.htm, R74.htm, R77.htm, R91.htm, R93.htm, R95.htm, R98.htm, R100.htm, R101.htm), values compared with data.sec.gov companyfacts (undimensioned, same accession). Values below are scaled to full units (USD, shares, USD/share). match = printed vs API; Y(abs) = same magnitude, sign differs (expense/outflow printed negative, tag positive).  Custom (company-prefix) tags are not in companyfacts: match NA.
+
+Face statements: R3 balance sheet, R5 income statement, R6 comprehensive income, R7 equity, R8 cash flows; fiscal year ends Aug 31 (FY0 = FY2026).
+
+| data_point | status | tags | page | label | fy0 printed | fy0 api | fy1 printed | fy1 api | match | note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | Revenues | R5.htm | Revenues | 74183445000 | 74183445000 | 69672977000 | 69672977000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cost_of_revenue | mapped | CostOfGoodsAndServicesSold | R5.htm | Cost of services | 50407847000 | 50407847000 | 47437576000 | 47437576000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| gross_profit | not_presented |  |  |  |  |  |  |  |  | IS prints Revenues, Cost of services, S&M, G&A, business optimization, Total operating expenses, OPERATING INCOME; no gross profit subtotal |
+| operating_expenses | combined | CostsAndExpenses | IS R5.htm | Total operating expenses | 62777485000 | 62777485000 | 59447313000 | 59447313000 | Y | FILING-CHECKED | total costs and expenses includes cost of revenue | FIX 2026-11-12
+| sga_expense | component sum | SellingAndMarketingExpense;GeneralAndAdministrativeExpense | R5.htm | Sales and marketing + General and administrative costs | 12062097000 | 12062097000 | 11394413000 | 11394413000 | Y/Y | no SG&A caption on face; duration sum of printed 'Sales and marketing' + 'General and administrative costs' (business optimization costs excluded); definition call for Standardization / fy0=2026-08-31 fy1=2025-08-31 |
+| research_and_development | not_presented |  |  |  |  |  |  |  |  | no R&D line on IS or opened notes (consulting) |
+| operating_income | mapped | OperatingIncomeLoss | R5.htm | OPERATING INCOME | 11405960000 | 11405960000 | 10225664000 | 10225664000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| interest_expense | mapped | InterestExpense | R5.htm | Interest expense | -303397000 | 303397000 | -228555000 | 228555000 | Y(abs)/Y(abs) | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| interest_income | mapped | InvestmentIncomeInterest | R5.htm | Interest income | 363205000 | 363205000 | 336324000 | 336324000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| other_income_expense_net | mapped | OtherNonoperatingIncomeExpense | R5.htm | Other income (expense), net | -93553000 | -93553000 | -63040000 | -63040000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| income_before_tax | mapped | IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R5.htm | INCOME BEFORE INCOME TAXES | 11372215000 | 11372215000 | 10270393000 | 10270393000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| income_tax_expense | mapped | IncomeTaxExpenseBenefit | R5.htm | Income tax expense | 2849333000 | 2849333000 | 2437993000 | 2437993000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| net_income | mapped | NetIncomeLoss | R5.htm | NET INCOME ATTRIBUTABLE TO ACCENTURE PLC | 8367056000 | 8367056000 | 7678433000 | 7678433000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| basic_eps | mapped | EarningsPerShareBasic | R5.htm | Basic (in dollars per share) | 13.66 | 13.66 | 12.29 | 12.29 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| diluted_eps | mapped | EarningsPerShareDiluted | R5.htm | Diluted (in dollars per share) | 13.56 | 13.56 | 12.15 | 12.15 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| weighted_basic_shares | mapped | WeightedAverageNumberOfSharesOutstandingBasic | R5.htm | Basic (in shares) | 612481327 | 612481327 | 624891649 | 624891649 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| weighted_diluted_shares | mapped | WeightedAverageNumberOfDilutedSharesOutstanding | R5.htm | Diluted (in shares) | 617498483 | 617498483 | 632435108 | 632435108 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| dividends_per_share | not_presented |  |  |  |  |  |  |  |  | no annual DPS figure printed or tagged: MD&A/equity text prints a per-quarter table (e.g. $1.63 paid Nov 14 2025, $1.71 declared Sep 30 2026); an annual sum would be derived. FILING-CHECKED in main 10-K text; quarterly-only |
+| comprehensive_income | mapped | ComprehensiveIncomeNetOfTax | R6.htm | COMPREHENSIVE INCOME ATTRIBUTABLE TO ACCENTURE PLC | 8457167000 | 8457167000 | 7767796000 | 7767796000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cash_and_equivalents | mapped | CashAndCashEquivalentsAtCarryingValue | R3.htm | Cash and cash equivalents | 12831471000 | 12831471000 | 11478729000 | 11478729000 | Y/Y | BS face; equals CF ending cash (12,831,471) / fy0=2026-08-31 fy1=2025-08-31 |
+| accounts_receivable | combined | acn:ReceivablesAndContractAssets | R3.htm | Receivables and contract assets | 16328015000 |  | 14985073000 |  | NA/NA | 'Receivables and contract assets' combined line, company's own label (custom tag) / API MISSING: ReceivablesAndContractAssets:custom_tag_not_in_companyfacts / fy0=2026-08-31 fy1=2025-08-31 |
+| inventory | not_presented |  |  |  |  |  |  |  |  | services company; no inventory line on BS |
+| current_assets | mapped | AssetsCurrent | R3.htm | Total current assets | 31831140000 | 31831140000 | 28900689000 | 28900689000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| ppe_net | mapped | PropertyPlantAndEquipmentNet | R3.htm | Property and equipment, net | 1721652000 | 1721652000 | 1566374000 | 1566374000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| goodwill | mapped | Goodwill | R3.htm | Goodwill | 26819458000 | 26819458000 | 22536416000 | 22536416000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| total_assets | mapped | Assets | R3.htm | TOTAL ASSETS | 73597792000 | 73597792000 | 65394897000 | 65394897000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| accounts_payable | mapped | AccountsPayableCurrent | R3.htm | Accounts payable | 3003413000 | 3003413000 | 2695589000 | 2695589000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| current_liabilities | mapped | LiabilitiesCurrent | R3.htm | Total current liabilities | 22304374000 | 22304374000 | 20352097000 | 20352097000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| total_liabilities | not_presented |  |  |  |  |  |  |  |  | BS prints total current and total non-current liabilities, no Total liabilities line; instants are never summed |
+| total_debt | component sum | DebtCurrent;LongTermDebtAndCapitalLeaseObligations | R3.htm | Current portion of long-term debt and bank borrowings + Long | 10111758000 | 10111758000 | 5148653000 | 5148653000 | Y/Y | instant sum allowed for total_debt: current portion of LTD and bank borrowings + long-term debt (tag includes finance leases); no operating leases / fy0=2026-08-31 fy1=2025-08-31 |
+| stockholders_equity | mapped | StockholdersEquity | R3.htm | Total Accenture plc shareholders’ equity | 31567256000 | 31567256000 | 31195446000 | 31195446000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| shares_outstanding | mapped | CommonStockSharesOutstanding | BSP R4.htm | Ordinary shares, shares outstanding (in shares) | 300673 |  |  |  | no API fact (dimensioned or not in companyfacts for this accession) | FILING-CHECKED (printed only) | BS-date count | FIX 2026-11-12
+| cfo | mapped | NetCashProvidedByUsedInOperatingActivities | R8.htm | Net cash provided by (used in) operating activities | 12363346000 | 12363346000 | 11474399000 | 11474399000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | R8.htm | Net cash provided by (used in) investing activities | -5636688000 | -5636688000 | -2019650000 | -2019650000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | R8.htm | Net cash provided by (used in) financing activities | -5314496000 | -5314496000 | -2948334000 | -2948334000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| capex | mapped | PaymentsToAcquirePropertyPlantAndEquipment | R8.htm | Purchases of property and equipment | -742748000 | 742748000 | -600039000 | 600039000 | Y(abs)/Y(abs) | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| depreciation_and_amortization | combined | acn:DepreciationAmortizationAndOther | R8.htm | Depreciation, amortization and other | 2355282000 |  | 2441594000 |  | NA/NA | 'Depreciation, amortization and other' is the company's combined CF line (custom tag) / API MISSING: DepreciationAmortizationAndOth:custom_tag_not_in_companyfacts / fy0=2026-08-31 fy1=2025-08-31 |
+| amortization_of_intangibles | mapped | AmortizationOfIntangibleAssets | R48.htm | Amortization—Intangible assets | 658628000 | 658628000 | 745892000 | 745892000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| sbc | mapped | ShareBasedCompensation | R8.htm | Share-based compensation expense | 2100433000 | 2100433000 | 2093878000 | 2093878000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| dividends_paid | mapped | PaymentsOfOrdinaryDividends | R8.htm | Cash dividends paid | -3987313000 | 3987313000 | -3700169000 | 3700169000 | Y(abs)/Y(abs) | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| share_buybacks | mapped | PaymentsForRepurchaseOfCommonStock | R8.htm | Purchases of shares | -7520965000 | 7520965000 | -4619497000 | 4619497000 | Y(abs)/Y(abs) | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cf_ar_change | combined | IncreaseDecreaseInAccountsReceivable | R8.htm | Receivables and contract assets, current and non-current | -1282203000 | 1282203000 | -1021191000 | 1021191000 | Y(abs)/Y(abs) | 'Receivables and contract assets, current and non-current' change: the company's own combined line / fy0=2026-08-31 fy1=2025-08-31 |
+| cf_inventory_change | not_presented |  |  |  |  |  |  |  |  | no inventory change line on CF |
+| cf_ap_change | mapped | IncreaseDecreaseInAccountsPayable | R8.htm | Accounts payable | 270211000 | 270211000 | -110554000 | -110554000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cash_paid_for_interest | mapped | InterestPaidNet | R8.htm | Interest paid | 265799000 | 265799000 | 155428000 | 155428000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+| cash_paid_for_income_taxes | mapped | IncomeTaxesPaid | R8.htm | Income taxes paid, net | 2638118000 | 2638118000 | 2471554000 | 2471554000 | Y/Y | check: machine-full-filing 2026-11-12 (see the CSV) / fy0=2026-08-31 fy1=2025-08-31 |
+
+## Disagreements with cloud Ritwik (companies-51-100-exceptions-2026-11-11.csv)
+No disagreement. Agree with cloud Ritwik: d_and_a = combined 'Depreciation, amortization and other' (acn custom tag, FY0 2,355,282K); total_liabilities not_presented (BS has total current and total non-current liabilities only); revenue = 'Revenues' total as printed (FY2026 R5 prints one Revenues line, no reimbursements split); cost_of_revenue 'Cost of services' (FY2026 tag CostOfGoodsAndServicesSold; Ritwik row covers CostOfRevenue for FY2014-18, see era checks).
+
+## Era checks (older 10-K opened: tag on the same printed line?)
+Older 10-K opened: 0001467373-23-000324 (period 2023-08-31); face pages ['R3.htm', 'R4.htm', 'R5.htm', 'R6.htm', 'R7.htm', 'R8.htm']. Result: 40 mapped rows checked.
+- (40 rows: same tag and same label on the older 10-K, no change)
+
+## Mismatches / unresolved
+- none
+
+## Method and untested scope
+- FILING-CHECKED = value read from the 10-K R page (MetaLinks used to locate tags/pages) and compared with companyfacts for the same accession; not_presented/OUT rows are FILING-CHECKED for the statements opened (all face statements plus the note pages that carry the candidate tags per MetaLinks); a note not opened could still hold an unprinted detail.
+- Era check: one older 10-K per company (statement pages only, via MetaLinks); same-tag / label comparison on the same statement type. Note-page values of the older filing were not opened.
+- Not covered: 10-Q-era tag history, quarterly values, segment-level data points, FSN store comparison (document-first read only).
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- operating_expenses: mapped us-gaap:CostsAndExpenses -> combined us-gaap:CostsAndExpenses | opex never includes cost of revenue (Dhairya ruling 2026-11-12; expected combined)
+- shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> mapped us-gaap:CommonStockSharesOutstanding | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
+- 32 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

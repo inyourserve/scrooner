@@ -165,6 +165,18 @@ def _q4_value(fy_value, first_three, *, is_average: bool, via_ytd: bool):
     return value if value > 0 else None
 
 
+def _supersede_other_derived(cur, rows: list[dict]) -> None:
+    """Before a derived fact is written for a key, demote the derived copies of that key that came from a DIFFERENT
+    filing: one derived value per (concept, unit, period). Without it a re-derivation after a restatement left the
+    old vintage's derived copy authoritative beside the new one (PANW FY2024 Q4, 2026-11-12)."""
+    cur.executemany(
+        "update core.fact set is_authoritative = false "
+        "where company_id = %(company_id)s and concept_id = %(concept_id)s and unit_id = %(unit_id)s "
+        "and period_id = %(period_id)s and is_derived and is_authoritative and filing_id <> %(filing_id)s",
+        rows,
+    )
+
+
 def _retire_derived(
     conn: psycopg.Connection,
     company_id: int,
@@ -567,6 +579,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             for d in to_derive
         ]
         with conn.cursor() as cur:
+            _supersede_other_derived(cur, rows_to_insert)
             cur.executemany(
                 """
                 insert into core.fact
@@ -887,6 +900,7 @@ def derive_interim_quarters_for_company(
             for d in to_derive
         ]
         with conn.cursor() as cur:
+            _supersede_other_derived(cur, rows_to_insert)
             cur.executemany(
                 """
                 insert into core.fact

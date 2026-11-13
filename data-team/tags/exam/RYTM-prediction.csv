@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+RYTM,948,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Accounts payable,13947000.0000,library map
+RYTM,948,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,"Accounts receivable, net",26081000.0000,library map
+RYTM,948,amortization_of_intangibles,not_presented,,,,,,,,0001628280-26-012399,,,,no face line and no note fact
+RYTM,948,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001628280-26-012399,R5,"Net loss per share attributable to common stockholders, basic (in dollars per share)",-3.1100,library map
+RYTM,948,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,Purchases of property and equipment,953000.0000,library map
+RYTM,948,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Cash and cash equivalents,54301000.0000,library map
+RYTM,948,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,Net cash provided by financing activities,217963000.0000,library map
+RYTM,948,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001628280-26-012399,R8,Net cash used in investing activities,-137153000.0000,library map
+RYTM,948,cash_paid_for_income_taxes,not_presented,,,,,,,,0001628280-26-012399,,,,no face line and no note fact
+RYTM,948,cash_paid_for_interest,not_presented,,,,,,,,0001628280-26-012399,,,,no face line and no note fact
+RYTM,948,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,"Accounts payable, accrued expenses and other liabilities",21892000.0000,combined line (library or label demote)
+RYTM,948,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,Accounts receivable,7570000.0000,library map
+RYTM,948,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,Inventory,7474000.0000,library map
+RYTM,948,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001628280-26-012399,R8,Net cash used in operating activities,-115675000.0000,library map
+RYTM,948,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,-,-3,N,,sec_api,0001628280-26-012399,R5,Comprehensive loss,-202674000.0000,library map
+RYTM,948,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Cost of sales,19492000.0000,library map
+RYTM,948,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Total current assets,466916000.0000,library map
+RYTM,948,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Total current liabilities,105942000.0000,library map
+RYTM,948,deposits,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,depreciation_and_amortization,not_presented,,,,,,,,0001628280-26-012399,,,,no face line
+RYTM,948,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001628280-26-012399,R5,"Net loss per share attributable to common stockholders, diluted (in dollars per share)",-3.1100,library map
+RYTM,948,dividends_paid,not_presented,,,,,,,,0001628280-26-012399,,,,no face line
+RYTM,948,dividends_per_share,not_presented,,,,,,,,0001628280-26-012399,,,,no face line and no note fact
+RYTM,948,goodwill,not_presented,,,,,,,,0001628280-26-012399,,,,no face line
+RYTM,948,gross_profit,not_presented,,,,,,,,0001628280-26-012399,,,,no face line
+RYTM,948,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001628280-26-012399,R5,Loss before income taxes,-196042000.0000,library map
+RYTM,948,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Provision for income taxes,497000.0000,library map
+RYTM,948,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Interest expense,20583000.0000,library map
+RYTM,948,interest_income,combined,us-gaap:InvestmentIncomeNet,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Interest income,15293000.0000,interest income only inside a net/other face line between OI and pretax
+RYTM,948,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Inventory,25753000.0000,library map
+RYTM,948,loans_net,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-012399,R5,Net loss,-196539000.0000,library map
+RYTM,948,net_interest_income,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,noninterest_expense,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,noninterest_income,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Research and development,167340000.0000,every face line between GP/COR and OI; ties to GP - OI
+RYTM,948,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001628280-26-012399,R5,Loss from operations,-192016000.0000,library map
+RYTM,948,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,"Other income, net",1264000.0000,library map
+RYTM,948,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,"Property and equipment, net",1104000.0000,library map
+RYTM,948,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Research and development,167340000.0000,library map
+RYTM,948,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,Total revenues,189757000.0000,library map
+RYTM,948,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001628280-26-012399,R8,Stock-based compensation expense,66818000.0000,library map
+RYTM,948,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001628280-26-012399,R5,"Selling, general, and administrative",194941000.0000,library map
+RYTM,948,share_buybacks,not_presented,,,,,,,,0001628280-26-012399,,,,no face line
+RYTM,948,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001628280-26-012399,R4,"Common stock, outstanding (in shares)",67205321.0000,library map
+RYTM,948,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Total stockholders equity,139069000.0000,library map
+RYTM,948,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Total assets,480196000.0000,library map
+RYTM,948,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,"Deferred royalty obligation, current",7296000.0000,printed face components (duration sum; total_debt founder sum)
+RYTM,948,total_interest_income,OUT,,,,,,,,0001628280-26-012399,,,,not a bank
+RYTM,948,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001628280-26-012399,R3,Total liabilities,210170000.0000,library map
+RYTM,948,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001628280-26-012399,R5,"Weighted-average common shares outstanding, basic (in shares)",64984361.0000,library map
+RYTM,948,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001628280-26-012399,R5,"Weighted-average common shares outstanding, diluted (in shares)",64984361.0000,library map

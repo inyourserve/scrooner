@@ -1,0 +1,437 @@
+company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
+4791,DLR,CF,c:AdjustmentDepreciationAndAmortization,map,d_and_a,1312,2012,29,"CF 'depreciation and amortization of buildings and improvements, tenant improvements and acquired ...' (custom; DLR's D&A line)"
+4791,DLR,CF,us-gaap:PaymentsToDevelopRealEstateAssets,map,capex,,,52,"FILING-CHECKED 0001104659-26-015365 R8: 'Improvements to investments in real estate' (3,181,179) on PaymentsToDevelopRealEstateAssets (rule 24). Acquisitions and unconsolidated investments excluded; parent (coreg) column only"
+4791,DLR,IS,,not_presented,income_before_tax,,,52,REIT IS has no pretax line
+4791,DLR,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,52,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4791,DLR,BS,,template_out_pending_read,current_assets;current_liabilities,,,52,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4791,DLR,CF,,not_presented,share_buybacks,,,52,no repurchase line
+5577,TEL,IS,us-gaap:ProfitLoss,map,net_income,2006,2606,25,map where no NCI line is printed
+109,AFL,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,life insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+109,AFL,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+109,AFL,CF,,not_presented,capex;d_and_a,,,51,insurer CF prints no PP&E or D&A line
+101,LNG,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1909,2606,22,'cost of sales (excluding D&A)' as printed
+101,LNG,CF,us-gaap:PaymentsToMinorityShareholders,exclude,dividends_paid,1406,2109,30,distributions to NCI (Cheniere Partners unitholders)
+101,LNG,CF,us-gaap:PaymentsOfDividendsMinorityInterest,exclude,dividends_paid,1312,1403,2,distributions to NCI
+101,LNG,CF,,not_presented,dividends_paid,1312,2109,32,no common dividend before 2021
+101,LNG,BS,,not_presented,total_liabilities,,,41,no total liabilities line in 41 filings
+4586,MPWR,CF,c:PaymentsOfDividendsAndDividendEquivalents,combined,dividends_paid,1409,1903,19,'dividends and dividend equivalents paid' (dividend equivalents to RSU holders mixed in)
+4586,MPWR,CF,c:DividendsAndDividendEquivalentsAccrued,exclude,dividends_paid,1606,1903,12,non-cash accrual
+4586,MPWR,IS,us-gaap:OtherNonoperatingIncomeExpense,combined,interest_expense,1312,1903,22,'interest and other income (expense) net'
+4586,MPWR,CF,c:PaymentsForRepurchaseOfCommonStockIncludingExciseTax,combined,share_buybacks,2512,2512,1,'repurchases of common stock' including excise tax (Tag Expert: excise wording = combined)
+4586,MPWR,CF,us-gaap:PaymentsForRepurchaseOfEquity,map,share_buybacks,2509,2509,1,'repurchases of common stock'
+1316,CAH,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,exclude,basic_eps,1609,2603,23,FILING-CHECKED 0000721371-17-000083 R2: the continuing-ops per-share row (4.06) sits above a printed total 'Net basic earnings per common share' (EarningsPerShareBasic 4.06; FY15 3.66 vs 3.65). The total wins; the shifted FSN labels are a label artifact
+1316,CAH,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2606,OKE,CF,c:DepreciationDepletionAndAmortizationIncludingDiscontinuedOperations,map,d_and_a,1312,1703,14,CF D&A (custom incl. discontinued)
+2606,OKE,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2860,MPLX,IS,us-gaap:NetIncomeLossPerOutstandingLimitedPartnershipUnitBasicNetOfTax,map,basic_eps,1312,2606,51,MLP: net income per LP unit basic
+2860,MPLX,IS,us-gaap:NetIncomeLossNetOfTaxPerOutstandingLimitedPartnershipUnitDiluted,map,diluted_eps,1312,2606,51,MLP: diluted per unit
+2860,MPLX,CF,us-gaap:DistributionMadeToLimitedPartnerCashDistributionsPaid,map,dividends_paid,1312,2606,51,'distributions to LP unitholders' (common units); preferred and NCI distributions excluded
+2860,MPLX,CF,c:PaymentsofDistributionsonPreferredUnits,exclude,dividends_paid,1609,2512,35,preferred units
+2860,MPLX,CF,us-gaap:PaymentsToMinorityShareholders,exclude,dividends_paid,1312,2512,47,NCI
+2860,MPLX,IS,us-gaap:IncomeLossFromContinuingOperations,map,net_income,2403,2606,8,"FILING-CHECKED 0001552000-26-000009 R3: row 4,912 = 'Net income' 4,952 - NCI 40, i.e. net income attributable to MPLX LP; no discontinued operations"
+2860,MPLX,IS,us-gaap:IncomeLossFromContinuingOperations,map,operating_income,1312,2012,26,"FILING-CHECKED 0001552000-20-000007 R2: face 'Income from operations' 2,377 on IncomeLossFromContinuingOperations; OperatingIncomeLoss from 2021"
+2860,MPLX,IS,us-gaap:RefiningAndMarketingCosts,map,cost_of_revenue,1312,1803,18,'cost of revenues (excludes items below)'
+2860,MPLX,IS,us-gaap:InterestExpenseDebtExcludingAmortization,map,interest_expense,1512,2212,29,"FILING-CHECKED 0001552000-24-000007 R3: 'Interest expense, net of amounts capitalized' 897 (rule 17 expensed amount); 'other financial costs' 26 and related-party lines are not interest expense"
+2860,MPLX,IS,us-gaap:ProfitLoss,exclude,net_income,2403,2606,10,includes NCI
+2860,MPLX,CF,,not_presented,share_buybacks,,,28,no unit repurchase line in 28 filings
+1544,FAST,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1021,PCAR,IS,c:InterestAndOtherBorrowingExpense,exclude,interest_expense,1312,2606,51,"financial-services segment 'interest and other borrowing expenses' (a segment cost, not corporate interest)"
+1021,PCAR,IS,us-gaap:OtherNonoperatingIncomeExpense,combined,interest_expense,1312,2606,51,'interest and other (income) expense net' (truck segment)
+1021,PCAR,IS,,not_presented,operating_income;gross_profit,,,51,no operating income line (segment-split IS)
+5762,NXPI,IS,,not_presented,interest_expense,,,28,no face interest-expense line ('financial income (expense)' style presentation)
+5762,NXPI,BS,,not_presented,total_liabilities,,,7,no total liabilities line in 7 filings
+1013,NUE,IS,us-gaap:InterestRevenueExpenseNet,combined,interest_expense,1312,2606,51,'interest (income) expense net'
+1013,NUE,IS,,not_presented,operating_income;gross_profit,,,51,no operating income line
+1082,TFC,CF,us-gaap:DepreciationNonproduction,map,d_and_a,1312,2606,51,bank CF 'depreciation'
+1082,TFC,CF,us-gaap:PaymentsToAcquireLongtermInvestments,map,capex,2003,2009,3,FILING-CHECKED 0000092230-20-000114 R7 (10-Q): 'Net cash paid for premises and equipment' (716)
+1082,TFC,IS,,component,revenue,,,51,bank rule 11: net interest income + noninterest income (no total line)
+1082,TFC,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1082,TFC,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+2765,FANG,IS,us-gaap:OilAndGasRevenue,map,revenue,1312,1803,18,face 'total revenues' (oil and gas)
+2765,FANG,CF,us-gaap:PaymentsToAcquireOilAndGasProperty,exclude,capex,2109,2606,20,'property acquisitions' (Dhairya E&P ruling: acquisitions printed separately are excluded)
+2765,FANG,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,component,capex,1312,2003,26,'purchase of other property and equipment' (with the drilling/development line)
+2765,FANG,CF,us-gaap:PaymentsToExploreAndDevelopOilAndGasProperties,map,capex,,,51,"FILING-CHECKED 0001539838-26-000010 R6: 'Additions to oil and natural gas properties' (3,523) on PaymentsToExploreAndDevelopOilAndGasProperties; 'Property acquisitions' (5,938) excluded (rule 31)"
+2765,FANG,CF,c:DepreciationDepletionandAmortizationExcludingAmortizationofFinancingCosts,map,d_and_a,1612,2603,33,CF DD&A (custom)
+2765,FANG,CF,c:DepreciationDepletionAndAmortizationNetOfDepreciationReportedInOilAndNaturalGasServices,map,d_and_a,1312,1603,10,CF DD&A (custom)
+2765,FANG,CF,c:DepreciationDepletionAndAmortizationExcludingAmortizationOfFinancingCosts,combined,d_and_a,2112,2606,6,"Dhairya ruling 2026-11-12: D&A that includes accretion is combined. Was: CF 'depreciation, depletion, amortization and accretion' (custom)"
+2765,FANG,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1612,2606,39,"FILING-CHECKED 0001539838-26-000010 R3: face 'Interest expense, net' (244): net of interest income"
+2765,FANG,CF,c:Repurchasedsharesfortaxwithholding,exclude,share_buybacks,1812,1906,3,tax withholding
+2765,FANG,CF,us-gaap:ProceedsFromRepurchaseOfEquity,review,share_buybacks,1906,1906,1,"'repurchased as part of share buyback' under a proceeds tag: label-only, filing-check needed"
+2576,AME,IS,us-gaap:CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1312,1609,12,'cost of sales excluding depreciation' as printed
+3538,NTRA,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2303,2606,14,'cash cash equivalents and restricted cash' (Tag Expert: combined)
+3538,NTRA,IS,c:RoyaltyAndInterestExpenseDebt,combined,interest_expense,1506,1509,2,'royalty and interest expense'
+3538,NTRA,CF,,not_presented,dividends_paid;share_buybacks,,,45,none
+3478,KEYS,IS,us-gaap:ProfitLoss,map,net_income,1501,2310,36,map where no NCI line is printed
+3478,KEYS,CF,c:PaymentsForRepurchaseOfCommonStockAndRelatedExciseTax,combined,share_buybacks,2410,2607,7,"'treasury stock repurchases, including excise tax payments' (Tag Expert: excise wording = combined)"
+3478,KEYS,CF,,not_presented,dividends_paid,,,47,no dividends
+1292,D,CF,c:DepreciationDepletionAndAmortizationIncludingNuclearFuel,map,d_and_a,1312,2606,34,'depreciation and amortization (including nuclear fuel)': nuclear fuel amortization is D&A of a PP&E asset (consistent with Dhairya's nuclear-fuel capex ruling)
+1292,D,CF,us-gaap:PaymentsForRepurchaseOfPreferredStockAndPreferenceStock,exclude,share_buybacks,2406,2509,4,preferred
+1292,D,IS,,not_presented,cost_of_revenue;gross_profit,,,51,utility IS by nature
+3331,DVN,BS,us-gaap:RestrictedCashAndCashEquivalents,combined,cash,2012,2606,21,"BS line 'cash, cash equivalents and restricted cash' (label explicit): combined (Tag Expert); no separate cash line"
+3331,DVN,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2106,2109,2,as above
+3331,DVN,IS,c:IncomeLossFromContinuingOperationsBeforeNoncontrollingInterest,map,income_before_tax,2112,2606,19,"FILING-CHECKED 0001193125-26-056485 R2: custom row is the face 'Earnings before income taxes' 3,466"
+3331,DVN,IS,,not_presented,interest_expense;gross_profit,,,51,"no separate interest-expense line on the face ('financing costs, net')"
+3331,DVN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1629,CRH,CF,c:PaymentsOfDividendsCommonAndPreferredStock,combined,dividends_paid,2312,2606,10,'dividends paid' (custom: common and preferred together)
+1629,CRH,CF,us-gaap:PaymentsOfDividendsMinorityInterest,exclude,dividends_paid,2312,2606,11,NCI distributions
+1629,CRH,CF,c:DepreciationDepletionAmortizationAndImpairment,combined,d_and_a,2509,2509,1,"'depreciation, depletion, amortization and impairment'"
+4744,BKR,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1803,2606,34,cash line tagged with the restricted-cash total (Tag Expert: combined)
+4744,BKR,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1706,2606,37,"FILING-CHECKED 0001701605-26-000007 R3: face 'Interest expense, net' 222: net of interest income"
+4744,BKR,IS,us-gaap:ProfitLoss,map,net_income,1706,1706,1,map where no NCI line is printed (BKR's first post-merger 10-Q: check)
+4744,BKR,CF,c:PaymentsForRepurchaseofParentCommonUnitsBySubsidiary,exclude,share_buybacks,2009,2009,1,repurchase of BHH LLC units from GE (subsidiary units; founder ruling)
+4744,BKR,BS,,not_presented,total_liabilities,,,36,no total liabilities line
+2,NKE,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare+us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTaxPerBasicShare,component,basic_eps,1311,1505,4,FILING-CHECKED 0000320187-15-000113 R2: no total EPS printed; basic = continuing 3.80 + discontinued 0.00 (FY13: 2.74 + 0.02). Sum of two printed per-share lines; diluted likewise
+2,NKE,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1311,2605,51,'interest (income) expense net'
+2,NKE,IS,,not_presented,operating_income,,,51,no operating income line (EBIT and 'income before taxes')
+2,NKE,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+3695,GRMN,CF,c:PaymentForPurchaseOfTreasuryStockUnderShareRepurchasePlan,map,share_buybacks,2206,2606,17,'purchase of treasury shares under share repurchase plan' (the buyback program line)
+3695,GRMN,CF,c:PaymentsForPurchaseOfTreasuryStockShareRepurchasePlan,map,share_buybacks,1403,1506,5,custom twin
+3695,GRMN,CF,c:Paymentsforpurchaseoftreasurystocksharerepurchaseplan,map,share_buybacks,1312,1412,2,custom twin
+3695,GRMN,CF,c:PaymentsForRepurchaseOfTreasuryStockRelatedToEquityAwards,exclude,share_buybacks,1909,2606,26,equity-award (withholding) purchases (founder ruling)
+3695,GRMN,CF,c:PaymentsForPurchaseOfTreasuryStockRelatedToEquityAwards,exclude,share_buybacks,1403,1506,5,as above
+3695,GRMN,IS,,not_presented,interest_expense,,,51,only interest income printed
+3695,GRMN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+3001,EBAY,IS,c:InterestAndOtherNet,combined,interest_expense,1312,2309,40,'interest and other net'
+3001,EBAY,CF,,not_presented,dividends_paid,1312,1812,21,no dividends before 2019
+1335,O,BS,us-gaap:CashEquivalentsAtCarryingValue,map,cash,1312,1709,16,"FILING-CHECKED 0001104659-17-011170 R2: face 'Cash and cash equivalents' 9,420 on the equivalents-only tag"
+1335,O,IS,us-gaap:RealEstateRevenueNet,map,revenue,1312,1712,17,face 'total revenue' (REIT)
+1335,O,CF,,review,capex,,,51,net-lease REIT: no PP&E line found; real-estate acquisitions are excluded; find any 'improvements' line or not_presented
+1335,O,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1335,O,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4115,TEAM,CF,,not_presented,dividends_paid,,,16,no dividends
+3677,NDAQ,IS,,not_presented,cost_of_revenue,,,20,no cost-of-revenue line in 20 filings (transaction-based expenses are netted in 'revenues less transaction-based expenses')
+5634,PSA,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,1312,1812,21,'capital expenditures to maintain real estate facilities' (doc 02 line 114)
+5634,PSA,CF,c:CapitalExpendituresToMaintainRealEstateFacilites,map,capex,1509,2006,20,same line (custom misspelled tag)
+5634,PSA,CF,c:CapitalExpendituresToMaintainRealEstateFacilities + c:CapitalExpendituresForEnergyEfficiencies + c:CapitalExpendituresForPropertyEnhancements,component,capex,2006,2606,25,from 2023 PSA splits capex into maintain + energy efficiencies + property enhancements: sum (the 'remaining unpaid at period end' lines are non-cash and excluded)
+5634,PSA,CF,us-gaap:PaymentsOfCapitalDistribution,combined,dividends_paid,1312,2606,51,"'distributions paid to preferred shareholders, common shareholders and restricted share unitholders'"
+5634,PSA,CF,c:DepreciationAndAmortizationIncludingAmountsInDiscontinuedOperations,map,d_and_a,1312,1512,4,CF D&A (custom incl. discontinued)
+5634,PSA,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,REIT (self-storage cost of operations is REIT property opex) (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+5634,PSA,IS,,not_presented,income_before_tax;income_tax_expense,,,40,REIT IS without pretax/tax lines in 40 filings
+5634,PSA,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+195,BDX,IS,us-gaap:ProfitLoss,map,net_income,1312,1403,2,map where no NCI line is printed
+195,BDX,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1677,AZO,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1504,2604,45,'interest expense net'
+1677,AZO,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1401,1501,5,'interest expense net'
+1677,AZO,CF,,not_presented,dividends_paid,,,50,no dividends
+1677,AZO,BS,,not_presented,total_liabilities,,,50,no total liabilities line
+4655,VST,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1803,1803,1,'interest expense and related charges' (net tag; one filing)
+4655,VST,IS,us-gaap:ProfitLoss,map,net_income,1703,1803,5,map where no NCI line is printed
+4655,VST,CF,us-gaap:RepaymentsOfLongTermDebtAndCapitalSecurities,exclude,share_buybacks,1703,1803,5,debt (label-regex false hit)
+4655,VST,IS,,not_presented,cost_of_revenue;gross_profit,,,38,generator IS by nature (fuel and purchased power)
+417,F,IS,us-gaap:InterestExpenseOther,map,interest_expense,2109,2506,16,"'interest expense on company debt excluding Ford Credit': Ford's corporate interest line (Ford Credit interest sits in 'Ford Credit interest, operating, and other expenses'); interest_expense as printed, perimeter stated (as GM)"
+417,F,IS,us-gaap:OtherCostAndExpenseOperating,exclude,interest_expense,2109,2506,16,Ford Credit segment costs
+417,F,CF,c:DepreciationandAmortizationIncludingDepreciationonOperatingLeases,map,d_and_a,1612,1812,3,"CF 'depreciation and tooling amortization' (incl. operating-lease depreciation, as printed)"
+417,F,IS,,not_presented,operating_income;gross_profit,,,23,no operating income line in 23 filings
+1102,TER,IS,c:InterestExpenseAndOther,combined,interest_expense,1312,1406,3,'interest expense and other'
+5632,VEEV,CF,c:IncreaseDecreaseInCapitalExpendituresIncurredButNotYetPaid,exclude,capex,2007,2401,15,non-cash accrual change
+5632,VEEV,CF,,not_presented,capex;dividends_paid;share_buybacks,,,25,no PP&E line in 25 filings; no dividends; few repurchases
+5632,VEEV,IS,,not_presented,interest_expense,,,51,no interest expense
+3470,EW,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1803,2409,21,'interest (income) expense net'
+3470,EW,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1403,2509,12,'interest expense (income) net'
+3470,EW,CF,,not_presented,dividends_paid,,,51,no dividends
+3470,EW,BS,,not_presented,total_liabilities,,,31,no total liabilities line in 31 filings
+633,HUM,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,health insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3895,PYPL,IS,,not_presented,cost_of_revenue;gross_profit;interest_expense,,,46,"expenses by function with no cost-of-revenue or interest-expense face line ('transaction expense', 'other income (expense)')"
+3895,PYPL,CF,,not_presented,dividends_paid,,,42,no dividends before 2025
+329,DAL,CF,us-gaap:PaymentsForFlightEquipment + us-gaap:PaymentsToAcquireOtherProductiveAssets,component,capex,1312,2606,51,"capex = 'flight equipment, including advance payments' + 'ground property and equipment, including technology' (doc 02 line 114: fleets and capitalized software are capex); leased-equipment acquisitions are non-cash and excluded"
+329,DAL,CF,us-gaap:CapitalLeaseObligationsIncurred,exclude,capex,1312,1912,25,non-cash
+329,DAL,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2403,42,'interest expense net'
+329,DAL,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2406,2606,9,'interest expense net'
+329,DAL,IS,,not_presented,cost_of_revenue;gross_profit,,,51,airline: expenses by nature
+329,DAL,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+5170,ALAB,IS,,not_presented,interest_expense,,,10,only interest income printed
+5170,ALAB,CF,us-gaap:ProceedsFromStockOptionsExercised,exclude,share_buybacks,2403,2509,5,option exercises
+5170,ALAB,CF,,not_presented,dividends_paid,,,10,no dividends
+1427,ADSK,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,1401,2001,7,face 'capital expenditures'
+1427,ADSK,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1401,2404,42,'interest and other (expense) income net'
+1427,ADSK,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2407,2607,9,'interest and other (loss) income net'
+1427,ADSK,CF,,not_presented,dividends_paid,,,51,no dividends
+1427,ADSK,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+3346,A,IS,us-gaap:ProfitLoss,map,net_income,1401,2110,17,map where no NCI line is printed
+1983,WAB,IS,us-gaap:NetIncomeLoss,map,net_income,2206,2303,3,"FILING-CHECKED 0001628280-23-003675 R5: NetIncomeLoss = 'Net income attributable to Wabtec shareholders' 633 (ProfitLoss 641). No trap: the FSN label was wrong, the tag is right"
+1983,WAB,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2109,2606,16,"'cash, cash equivalents and restricted cash' (Tag Expert: combined)"
+1983,WAB,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2403,42,'interest expense net'
+1983,WAB,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2406,2409,2,'interest expense net'
+1550,TEVA,IS,,not_presented,interest_expense,,,35,"no interest-expense face line ('financial expenses, net')"
+1550,TEVA,CF,c:DividendsPaidToNonControllingInterests,exclude,dividends_paid,2403,2606,10,NCI
+1550,TEVA,CF,c:PaymentsRelatedToTaxWithholdingForSharesAndDividend,exclude,dividends_paid,1903,2112,8,tax withholding
+1550,TEVA,CF,,not_presented,dividends_paid;share_buybacks,,,29,no common dividends after 2017; no buybacks
+2820,MSTR,CF,us-gaap:PaymentsOfDividendsPreferredStockAndPreferenceStock,exclude,dividends_paid,2503,2606,6,preferred
+2820,MSTR,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1403,2606,50,'interest (expense) income net'
+2820,MSTR,CF,,not_presented,dividends_paid,,,51,no common dividends
+1009,XEL,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,"utility (fuel and purchased power, cost of natural gas sold and transported): sector-template call (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)"
+1009,XEL,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2112,2512,5,Tag Expert: combined
+1009,XEL,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2432,ROK,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1909,2006,4,Tag Expert: combined
+2432,ROK,IS,,not_presented,operating_income,,,51,no operating income line
+2432,ROK,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+5779,KDP,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1903,2606,24,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: FILING-CHECKED 0001418135-20-000007 R2: face 'Interest expense' 157 on a net tag with no interest-income line; serve the face amount (rule 12 sign column). 'Interest expense - related party' is its own line: add it where valued (rule 13)"
+5779,KDP,IS,us-gaap:InterestExpenseRelatedParty,component,interest_expense,1903,1912,4,second interest component (related party)
+5779,KDP,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1812,1812,1,one filing: check the label
+5069,WDAY,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,2001,2401,17,"'capital expenditures, excluding owned real estate projects' (the owned-real-estate line beside it is a capex component: check and add)"
+5069,WDAY,CF,us-gaap:CapitalExpendituresIncurredButNotYetPaid,exclude,capex,2001,2401,17,non-cash
+5069,WDAY,IS,us-gaap:ProfitLoss,map,net_income,1404,2007,20,map where no NCI line is printed
+5069,WDAY,IS,us-gaap:CurrentIncomeTaxExpenseBenefit,map,income_tax_expense,1401,1607,9,"FILING-CHECKED 0001193125-14-124249 R4: face 'Provision for income taxes' 1,678 on the current-tax tag (no deferred line printed)"
+5069,WDAY,CF,us-gaap:PaymentsRelatedToTaxWithholdingForShareBasedCompensation,exclude,share_buybacks,1404,1701,9,tax withholding
+5069,WDAY,CF,,not_presented,dividends_paid,,,51,no dividends
+5069,WDAY,IS,,not_presented,interest_expense,,,51,"no separate interest-expense line ('other income (expense), net')"
+1974,CIEN,CF,c:PaymentsforRepurchaseofCommonStockShareRepurchaseProgram,map,share_buybacks,1901,2104,8,'repurchases of common stock - repurchase program'
+1974,CIEN,CF,c:PaymentsForRepurchaseOfCommonStockShareRepurchaseProgram,map,share_buybacks,2107,2207,4,case-variant twin
+1974,CIEN,CF,c:PaymentsforRepurchaseofCommonStockIncentiveandSharebasedCompensationPlansExcludingStockOptions,exclude,share_buybacks,1901,2104,8,tax withholding on vesting
+1974,CIEN,CF,c:PaymentsForRepurchaseOfCommonStockIncentiveAndShareBasedCompensationPlansExcludingStockOptions,exclude,share_buybacks,2107,2207,4,tax withholding on vesting
+1974,CIEN,CF,c:RepurchasesOfCommonStockIncurredButNotPaid,exclude,share_buybacks,1901,2207,12,non-cash accrual
+1974,CIEN,CF,c:DepreciationAndAmortizationOfIntangibleAssetsIncludedInPropertyPlantAndEquipment|us-gaap:Depreciation + cien:AmortizationOfIntangibleAssetsExcludingAmortizationIncludedInPropertyPlantAndEquipment,component,d_and_a,1401,1607,9,"FILING-CHECKED 0000936395-16-000128 R7: 'Depreciation of equipment ... and amortization of leasehold improvements' 63,394 + 'Amortization of intangible assets' 78,298, no total printed (rule 13)"
+1974,CIEN,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1904,1904,1,Tag Expert: combined
+1974,CIEN,CF,,not_presented,dividends_paid,,,51,no dividends
+1088,STT,CF,c:NoncashAdjustmentsForDepreciationAmortizationAccretion,combined,d_and_a,1312,2606,51,"'other non-cash adjustments for depreciation, amortization and accretion, net' (includes securities accretion)"
+1088,STT,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,custody bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1088,STT,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+8,XYZ,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1603,2403,31,'interest (income) and expense net'
+8,XYZ,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2406,2606,9,'interest expense (income) net'
+8,XYZ,CF,,not_presented,dividends_paid,,,42,no dividends
+1166,LHX,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,2106,2406,13,'interest expense net'
+1166,LHX,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2412,2606,7,'interest expense net'
+1166,LHX,IS,us-gaap:ProfitLoss,map,net_income,1706,1906,3,map where no NCI line is printed
+1166,LHX,IS,,not_presented,operating_income,,,35,no operating income line in 35 filings
+1166,LHX,BS,,not_presented,total_liabilities,,,36,no total liabilities line
+395,FITB,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2212,2606,15,"FILING-CHECKED 0000035527-26-000124 R3: 'Cash and due from banks' 3,499 on the restricted-cash-total tag; the label does not say restricted cash is included, so rule 9 holds (combined)"
+395,FITB,IS,,component,revenue,,,26,bank rule 11: net interest income + noninterest income
+395,FITB,CF,c:TreasuryStockValueAcquired,combined,share_buybacks,1409,1506,4,'repurchase of treasury shares and related forward contract'
+395,FITB,CF,us-gaap:TreasuryStockValueAcquiredCostMethod,combined,share_buybacks,1312,1406,3,as above
+395,FITB,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,bank (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+395,FITB,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+5606,CARR,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2003,2609,27,'interest (expense) income net'
+5606,CARR,CF,us-gaap:PaymentsOfDividendsMinorityInterest,exclude,dividends_paid,2003,2006,2,NCI
+4489,COIN,CF,us-gaap:PaymentsForRepurchaseOfEquity,exclude,share_buybacks,2106,2212,3,'cash paid to repurchase equity awards' (employee-plan item; founder ruling)
+4489,COIN,CF,us-gaap:RepaymentsOfConvertibleDebt,exclude,share_buybacks,2306,2406,2,debt
+4489,COIN,CF,,not_presented,capex;dividends_paid,,,22,no PP&E line in 11 filings; no dividends
+4489,COIN,IS,,not_presented,cost_of_revenue;gross_profit,,,22,expenses by function without cost of revenue
+1555,COHR,BS,c:CashCashEquivalentsAndRestrictedCashAtCarryingValue,combined,cash,2209,2306,4,"'cash, cash equivalents, and restricted cash' (label explicit): combined"
+1555,COHR,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2112,2206,3,combined
+1555,COHR,BS,c:CashAndCashEquivalentsAtCarryingValueAndRestrictedCashAndCashEquivalentsCurrent,combined,cash,2309,2309,1,combined
+1555,COHR,IS,us-gaap:ProfitLoss,map,net_income,1606,2006,17,map where no NCI line is printed
+1555,COHR,IS,,not_presented,operating_income,,,51,no operating income line
+4114,FERG,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,2210,2606,14,'interest expense net'
+1670,MNST,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1312,2606,51,MNST's only EPS lines are tagged continuing-operations per share and it reports no discontinued operations: they are total EPS
+1670,MNST,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,1312,2606,51,as basic
+1670,MNST,IS,c:InterestAndOtherIncomeExpenseNet,combined,interest_expense,1312,1709,14,'interest and other (expense) income net' (all eras combined)
+1670,MNST,BS,,review,all,,,3,3 filings miss assets/equity/current items: statement scope or ingestion; check
+1670,MNST,CF,,not_presented,dividends_paid,,,51,no dividends
+1670,MNST,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2025,IQV,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,2206,2606,17,"'cost of revenues, exclusive of D&A' as printed"
+2025,IQV,CF,us-gaap:PaymentsOfDistributionsToAffiliates,exclude,dividends_paid,1703,2212,19,NCI distributions
+2025,IQV,IS,us-gaap:ProfitLoss,map,net_income,2412,2506,2,map where no NCI line is printed
+2025,IQV,CF,c:PaymentsForRepurchaseOfStockOptions,exclude,share_buybacks,1403,1503,2,payroll taxes on option repurchases
+2025,IQV,CF,,not_presented,dividends_paid,,,49,no common dividends
+3587,EXC,ALL,,store_scope,all,2106,2606,21,"CO-REGISTRANT FILING: Exelon files one 10-K/10-Q with ComEd, PECO, BGE, PHI, Pepco, DPL, ACE (and Generation to 2022); FSN shows their lines ('net income attributable to membership interest', 'interest expense to affiliates'). Take only Exelon Corporation's statements for every data point (fsn.value.coreg)"
+3587,EXC,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1412,2512,13,"FILING-CHECKED 0001109357-26-000018 R3: only continuing-ops per-share rows are printed (2.74); map where no discontinued per-share line is printed. Where one is printed (2022 Constellation separation), sum the two printed lines (component)"
+3587,EXC,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,utility IS by nature (purchased power and fuel): sector template (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3587,EXC,CF,,not_presented,share_buybacks,,,51,no repurchase line
+1553,AMP,IS,us-gaap:InterestExpenseBorrowings,map,interest_expense,1312,2606,51,'interest and debt expense' is AMP's corporate interest line; 'interest credited to fixed accounts' and 'banking and deposit interest expense' are insurer/bank segment costs (excluded)
+1553,AMP,IS,us-gaap:InterestCreditedToPolicyholdersAccountBalances,exclude,interest_expense,1312,2606,51,insurer benefit cost
+1553,AMP,IS,us-gaap:InterestExpenseDeposits,exclude,interest_expense,1312,2606,51,bank segment cost
+1553,AMP,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,map,income_before_tax,1312,1712,11,custom pretax line
+1553,AMP,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,asset manager / insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1553,AMP,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1695,IDXX,CF,,not_presented,dividends_paid,,,51,no dividends
+1369,VTR,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,2109,2606,15,face 'capital expenditures' (REIT; doc 02 line 114)
+1369,VTR,CF,c:UsGaap_PaymentsToAcquireAndDevelopRealEstate,map,capex,2012,2512,6,face 'capital expenditures' (custom)
+1369,VTR,CF,us-gaap:PaymentsForCapitalImprovements,map,capex,1909,1912,2,face 'capital expenditures'
+1369,VTR,CF,us-gaap:PaymentsToAcquireCommercialRealEstate,exclude,capex,2003,2606,20,'net investment in real estate property' (acquisitions)
+1369,VTR,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,REIT (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1369,VTR,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified REIT balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1369,VTR,CF,,not_presented,share_buybacks,,,51,no repurchase line
+4619,CVNA,CF,c:DepreciationAndAmortizationExcludingDebtIssuanceCosts,map,d_and_a,1809,2606,27,CF 'depreciation and amortization expense' (custom)
+4619,CVNA,CF,c:DepreciationandAmortizationExcludingDebtIssuanceCosts,map,d_and_a,1703,2212,11,case-variant twin
+4619,CVNA,CF,,not_presented,dividends_paid;share_buybacks,,,38,none
+2087,WAT,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,map,capex,1312,2509,48,"'additions to property, plant, equipment and software capitalization' (capex incl. capitalized software, doc 02 line 114); the tag is a capex-family tag"
+2087,WAT,CF,c:PaymentsForIntellectualPropertyLicenses,exclude,capex,1912,2412,13,IP licenses (intangibles)
+2087,WAT,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1312,1412,5,'net income per basic common share' on a continuing-ops EPS tag with no discontinued line (EPS tag family)
+2087,WAT,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,1312,1412,5,as basic
+2087,WAT,IS,us-gaap:IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,map,net_income,1312,1403,2,"FILING-CHECKED 0001193125-14-072515 R4: face 'Net income' 450,003; no discontinued-operations or NCI line printed"
+2087,WAT,CF,,not_presented,dividends_paid,,,51,no dividends
+4929,WCN,CF,,not_presented,share_buybacks,,,10,no repurchase line in 10 filings
+114,AIG,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,50,insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+114,AIG,BS,,template_out_pending_read,current_assets;current_liabilities,,,50,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+114,AIG,CF,,not_presented,capex,,,50,"no PP&E line (flight equipment sits in 'other invested assets' purchases, an investment line)"
+5735,MSCI,IS,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,2112,2609,20,'cost of revenues (exclusive of D&A)' as printed
+2776,ED,ALL,,store_scope,all,1312,2606,51,"CO-REGISTRANT FILING: Consolidated Edison, Inc. files with CECONY (Consolidated Edison Company of New York); FSN shows CECONY's lines ('total liabilities and shareholder's equity', singular). Take only Con Edison, Inc.'s statements (fsn.value.coreg)"
+2776,ED,CF,us-gaap:PaymentsForConstructionInProcess + c:PaymentsNonUtilityConstructionExpenditures,component,capex,2412,2606,7,capex = 'utility capital expenditures' + 'non-utility capital expenditures' (doc 02 line 114: CIP is capex); accrued-but-unpaid lines excluded
+2776,ED,CF,us-gaap:CapitalExpendituresIncurredButNotYetPaid,exclude,capex,1912,2606,27,non-cash
+2776,ED,IS,us-gaap:ProfitLoss,map,net_income,2603,2606,2,map where no NCI line is printed (after the co-registrant filter)
+2776,ED,CF,c:ProceedsfromPaymentsforRepurchaseofCommonStock,combined,share_buybacks,1606,1609,2,'issuance of common shares for stock plans net of repurchases'
+2776,ED,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,51,utility IS by nature: sector template (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+5969,P,CF,,not_presented,dividends_paid,,,44,no dividends
+5969,P,IS,,not_presented,interest_expense,,,44,no interest expense line
+2641,YUM,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2606,51,'interest expense net'
+2641,YUM,IS,,not_presented,gross_profit,,,51,no gross profit line
+5150,LYV,CF,us-gaap:PaymentsOfDividendsMinorityInterest,exclude,dividends_paid,1312,2606,51,NCI distributions
+5150,LYV,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,review,diluted_eps,1606,2106,4,"an amount line, not per-share: the EPS lines in these filings need a look (label 'basic and diluted net income (loss) available to common stockholders' may sit above the per-share row)"
+5150,LYV,IS,,not_presented,cost_of_revenue;gross_profit,,,51,expenses by nature (direct operating expenses)
+5150,LYV,CF,,not_presented,dividends_paid;share_buybacks,,,50,none
+5150,LYV,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1577,MCHP,IS,us-gaap:IncomeTaxExpenseBenefitContinuingOperations,review,income_tax_expense,1312,1312,1,one filing: tax on a continuing-operations tag; check
+1577,MCHP,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+3882,PRU,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxesAndOperatingJointVentures,map,income_before_tax,1312,1609,12,custom pretax line (before equity in joint ventures)
+3882,PRU,IS,us-gaap:InterestCreditedToPolicyholdersAccountBalances,exclude,interest_expense,1506,2606,45,insurer benefit cost
+3882,PRU,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,life insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3882,PRU,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3882,PRU,CF,,not_presented,capex,,,51,no PP&E line
+140,ADM,IS,,not_presented,operating_income,,,51,no operating income line
+140,ADM,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2133,NTAP,IS,,not_presented,interest_expense,,,46,"no interest-expense face line in 46 filings ('other income (expense), net')"
+1324,PAYX,IS,us-gaap:InterestIncomeOperating,exclude,interest_expense,1402,2502,45,interest on client funds is revenue
+1324,PAYX,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1902,1905,2,'interest (expense)/income net'
+1324,PAYX,IS,,not_presented,cost_of_revenue;gross_profit,,,25,no cost-of-revenue line in 25 filings
+1095,SYY,IS,us-gaap:CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1312,1812,21,face 'cost of sales' line above gross profit
+1095,SYY,CF,c:DepreciationandAmortizationExcludingAmortizationofFinancingCosts,map,d_and_a,1506,2506,38,custom CF 'depreciation and amortization' (financing-cost amortization on its own line)
+1095,SYY,CF,c:DepreciationAndAmortizationExcludingAmortizationOfFinancingCosts,map,d_and_a,2409,2606,7,same line with a respelled custom tag
+1095,SYY,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2406,43,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: sign -1. FILING-CHECKED 0000096021-24-000128 R5: face 'Interest expense' 607, value -607, no separate interest-income line (rule 12)"
+1095,SYY,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2409,2606,8,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: sign -1; same face 'Interest expense' row respelled (rule 12; R check on the 2024 10-K above)"
+1095,SYY,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+3596,ILMN,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1903,2606,30,restricted-cash total on the cash line (rule 9)
+3596,ILMN,CF,,not_presented,dividends_paid,,,51,no dividends
+3596,ILMN,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1714,ODFL,IS,,not_presented,cost_of_revenue;gross_profit,,,51,carrier: expenses by nature
+1714,ODFL,CF,c:DepreciationAndAmortizationIncludingDebtIssuanceCosts,combined,d_and_a,2009,2606,24,custom D&A that includes debt-issuance-cost amortization
+1714,ODFL,IS,us-gaap:ProfitLoss,map,net_income,1806,2606,33,no NCI line printed: ProfitLoss = net income
+1714,ODFL,CF,us-gaap:Dividends,review,dividends_paid,1712,1712,1,one filing: equity-statement tag on the CF
+1714,ODFL,CF,,not_presented,dividends_paid,,1706,13,no dividends before 2017
+1733,DHI,IS,us-gaap:RealEstateRevenueNet+us-gaap:FinancialServicesRevenue,component,revenue,1312,1709,16,"FILING-CHECKED 0000882184-17-000103 R4: homebuilding 'Total revenues' 13,741.5 + 'Financial Services Revenue' 349.5; no consolidated total printed"
+1733,DHI,IS,us-gaap:CostOfRealEstateRevenue,map,cost_of_revenue,1312,1903,21,homebuilding 'cost of sales'
+1733,DHI,IS,us-gaap:OtherOperatingIncome,exclude,interest_expense,1412,1709,11,'interest and other (income)' is income
+1733,DHI,IS,us-gaap:ProfitLoss,map,net_income,1312,1709,16,no NCI before the Forestar acquisition (Oct 2017)
+1733,DHI,IS,,not_presented,operating_income,,,51,no operating income line
+1733,DHI,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified homebuilder balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1733,DHI,CF,us-gaap:PaymentsForRepurchaseOfEquity,map,share_buybacks,2012,2606,23,"FILING-CHECKED 0000882184-25-000081 R7: 'Repurchases of common stock' (4,281.6); tax withholding is its own line"
+1733,DHI,CF,c:RepurchaseOfCommonStockNotSettled,exclude,share_buybacks,2012,2606,13,non-cash disclosure
+1733,DHI,CF,us-gaap:ProceedsFromRepaymentsOfLinesOfCredit,exclude,share_buybacks,2012,2606,23,mortgage repurchase facility (debt)
+3893,CBRE,CF,c:DepreciationAndAmortizationIncludingAmountsReportedAsDiscontinuedOperations,combined,d_and_a,1312,1503,6,includes discontinued operations
+3893,CBRE,CF,us-gaap:PaymentsToMinorityShareholders,exclude,dividends_paid,1312,2409,43,NCI distributions
+3893,CBRE,CF,us-gaap:EquityMethodInvestmentDividendsOrDistributions,exclude,dividends_paid,1312,2412,45,received from investees
+3893,CBRE,CF,,not_presented,dividends_paid,,,51,no common dividends
+3893,CBRE,IS,,not_presented,gross_profit,,,51,no gross profit line
+3893,CBRE,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxesAndNoncontrollingInterest,map,income_before_tax,1312,1409,4,custom face pretax line
+3893,CBRE,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1906,2409,22,'interest expense, net of interest income'
+3893,CBRE,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2412,2606,7,'interest expense, net of interest income'
+3893,CBRE,CF,us-gaap:PaymentsRelatedToTaxWithholdingForShareBasedCompensation,exclude,share_buybacks,1312,1809,18,tax withholding
+2031,TTWO,IS,us-gaap:OtherNonoperatingIncomeExpense,combined,interest_expense,1312,2512,48,'interest and other, net'
+2031,TTWO,IS,c:InterestIncomeExpenseAndOtherNonoperatingIncomeExpense,combined,interest_expense,2503,2603,2,'interest and other, net'
+2031,TTWO,CF,,not_presented,dividends_paid,,,51,no dividends
+2031,TTWO,IS,us-gaap:ProfitLoss,review,net_income,2106,2106,1,one filing: check NCI
+2107,EL,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1809,2606,32,restricted-cash total on the cash line (rule 9)
+2107,EL,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1409,1409,1,'interest expense, net'
+2107,EL,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+2921,CMG,IS,us-gaap:FoodAndBeverageRevenue,map,revenue,1312,1806,19,face top line 'revenue'
+2921,CMG,IS,,not_presented,cost_of_revenue;gross_profit,,,51,restaurant cost lines by nature; no total
+2921,CMG,IS,us-gaap:OtherNonoperatingIncomeExpense,combined,interest_expense,1312,2606,51,'interest and other income (expense), net'
+2921,CMG,CF,,not_presented,dividends_paid,,,51,no dividends
+1737,ROP,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,1912,2606,27,FILING-CHECKED 0000882835-26-000009 R9: 'Capital expenditures' (47.4); capitalized software (57.3) is its own line and is not capex
+1737,ROP,CF,us-gaap:Depreciation,exclude,capex,1912,2606,27,an operating D&A line
+1737,ROP,CF,us-gaap:ProceedsFromSaleOfTreasuryStock,exclude,share_buybacks,1312,2509,48,an inflow
+1737,ROP,CF,,not_presented,share_buybacks,,,48,no buyback line
+3831,RVMD,IS,,not_presented,revenue,2503,2606,5,no revenue line
+3831,RVMD,IS,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,exclude,income_tax_expense,2503,2606,5,a pretax line
+3831,RVMD,IS,,not_presented,income_tax_expense,2503,2606,5,no tax line
+3831,RVMD,IS,us-gaap:InvestmentIncomeInterest,exclude,interest_expense,2003,2506,13,interest income
+3831,RVMD,IS,us-gaap:OtherNonoperatingExpense,combined,interest_expense,2003,2312,4,'interest and other expense'
+3831,RVMD,IS,c:InterestAndOtherIncomeExpenseNet,combined,interest_expense,2506,2506,1,'interest and other income (expense), net'
+3831,RVMD,IS,,template_out_pending_read,cost_of_revenue;gross_profit,,,26,clinical-stage biotech (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+3831,RVMD,CF,c:PaymentsForProceedsFromRepurchasesOfEarlyExercisedStock,exclude,share_buybacks,2009,2112,4,repurchase of unvested early-exercised shares
+3831,RVMD,CF,,not_presented,dividends_paid;share_buybacks,,,26,none
+659,KR,IS,,not_presented,gross_profit,,,51,no gross profit line
+659,KR,IS,us-gaap:CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization|us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,,,34,"face 'merchandise costs, including advertising, warehousing and transportation', excluding D&A (as printed)"
+659,KR,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2410,2607,8,'net interest expense'
+659,KR,IS,us-gaap:ProfitLoss,exclude,interest_expense,2410,2607,8,a net earnings line (regex noise)
+5893,TWLO,CF,us-gaap:PaymentsForRepurchaseOfEquity,combined,share_buybacks,1606,1712,4,'repurchases of common and preferred stock'
+5893,TWLO,IS,,not_presented,interest_expense,,,41,no interest-expense face line
+5893,TWLO,CF,,not_presented,dividends_paid,,,41,no dividends
+5893,TWLO,CF,us-gaap:PaymentsToDevelopSoftware,exclude,capex,,,15,capitalized software is not PP&E capex; filings missing a PP&E purchases line need a look (review)
+5543,IBKR,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,map,capex,1312,1412,,"FILING-CHECKED 0001047469-17-001069 R5: 'Purchase of property and equipment' (27); map in the eras printed that way (FY2013-14, FY2016-17); per-filing by label, 10-Qs follow their own label"
+5543,IBKR,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,map,capex,1603,1712,,"FILING-CHECKED 0001047469-17-001069 R5: 'Purchase of property and equipment' (27); map in the eras printed that way (FY2013-14, FY2016-17); per-filing by label, 10-Qs follow their own label"
+5543,IBKR,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,combined,capex,1503,1512,,"FILING-CHECKED 0001381197-26-000062 R8: 'Purchase of property, equipment and intangible assets' (67): PP&E mixed with intangibles (FY2015, FY2018+); per-filing by label"
+5543,IBKR,CF,us-gaap:PaymentsForProceedsFromProductiveAssets,combined,capex,1803,2606,,"FILING-CHECKED 0001381197-26-000062 R8: 'Purchase of property, equipment and intangible assets' (67): PP&E mixed with intangibles (FY2015, FY2018+); per-filing by label"
+5543,IBKR,IS,us-gaap:RevenuesNetOfInterestExpense,map,revenue,2003,2606,26,broker top line 'total net revenues'
+5543,IBKR,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterest,map,income_before_tax,1312,1603,10,custom face pretax line
+5543,IBKR,IS,c:InterestExpensePL,map,interest_expense,1312,1912,25,custom face 'interest expense' line
+5543,IBKR,IS,us-gaap:InterestIncomeOperating|us-gaap:NoninterestExpense,exclude,interest_expense,1312,1912,25,interest income / total non-interest expenses
+5543,IBKR,CF,c:RepurchasesOfCommonStockForEmployeeTaxWithholdingUnderStockIncentivePlans,exclude,share_buybacks,1506,2606,34,tax withholding
+5543,IBKR,CF,us-gaap:ProceedsFromSaleOfTreasuryStock|us-gaap:IncreaseDecreaseInPayablesUnderRepurchaseAgreements,exclude,share_buybacks,1509,2606,32,inflow / repo financing
+5543,IBKR,CF,,not_presented,share_buybacks,,,51,no buyback line
+5543,IBKR,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,broker-dealer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+5543,IBKR,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified broker balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1697,HIG,IS,us-gaap:ProfitLoss,map,net_income,1503,1706,10,"FILING-CHECKED 0000874766-17-000010 R2: 'Net income including portion attributable to NCI' 798, no NCI line printed"
+1697,HIG,CF,c:DepositsAndOtherAdditionsToInvestmentAndUniversalLifeTypeContracts|us-gaap:DeferredPolicyAcquisitionCostsAdditions,exclude,capex,1312,1312,1,insurance flows
+1697,HIG,CF,us-gaap:ProceedsFromPaymentsForInSecuritiesSoldUnderAgreementsToRepurchase|us-gaap:PaymentsForRepurchaseOfWarrants|us-gaap:ProceedsFromSaleOfTreasuryStock,exclude,share_buybacks,1312,1903,3,repo / warrants / mislabelled treasury line
+1697,HIG,IS,,template_out_pending_read,cost_of_revenue;gross_profit;operating_income,,,51,P&C insurer (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+1697,HIG,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified insurer balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4213,ARES,IS,us-gaap:NetIncomeLossPerOutstandingLimitedPartnershipUnitBasicNetOfTax,map,basic_eps,1406,2606,49,"face 'basic (in dollars per share)', a per-unit tag kept after the 2018 conversion"
+4213,ARES,IS,us-gaap:NetIncomeLossNetOfTaxPerOutstandingLimitedPartnershipUnitDiluted,map,diluted_eps,1406,2606,49,"face 'diluted (in dollars per share)', a per-unit tag"
+4213,ARES,CF,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,map,capex,1903,2606,30,'purchase of furniture, equipment and leasehold improvements' = the PP&E purchases line
+4213,ARES,CF,us-gaap:PaymentsOfCapitalDistribution,combined,dividends_paid,1403,2606,47,'dividends and distributions': Class A dividends + Ares Operating Group unit distributions (rule 19)
+4213,ARES,CF,us-gaap:PaymentsToMinorityShareholders|us-gaap:PaymentsOfDividendsMinorityInterest|c:PaymentsToNoncontrollingInterestsNet|c:DistributionMadeToPreferredPartnerCashDistributionsPaid,exclude,dividends_paid,1403,2606,48,NCI / preferred distributions
+4213,ARES,IS,c:InterestIncomeExpenseAndInvestmentIncomeExpenseNet|us-gaap:InvestmentIncomeNet,combined,interest_expense,1603,1709,7,net interest and investment income
+4213,ARES,IS,us-gaap:InvestmentAdvisoryManagementAndAdministrativeFees,map,revenue,1603,1609,3,face 'total revenues' line
+4213,ARES,BS,us-gaap:PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest,not_presented,stockholders_equity,1606,1609,2,total equity including NCI with no parent line (rule 8)
+4213,ARES,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1703,1703,1,one filing 'repurchase of treasury stock'
+4213,ARES,IS,,not_presented,cost_of_revenue;gross_profit;operating_income,,,50,asset manager
+4213,ARES,BS,,template_out_pending_read,current_assets;current_liabilities,,,50,unclassified (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
+4213,ARES,CF,,review,d_and_a,,,29,D&A line absent in 29 filings: check the consolidated-funds CF
+2385,UI,IS,us-gaap:OtherNonoperatingIncomeExpense|us-gaap:InterestIncomeExpenseNet|us-gaap:InvestmentIncomeInterest,combined,interest_expense,1312,2606,51,'interest expense and other, net'
+2385,UI,CF,c:RepurchaseOfCommonStock,map,share_buybacks,1312,1803,17,custom CF 'repurchases of common stock'
+2385,UI,CF,c:UnpaidStockRepurchases|c:StockRepurchaseCostIncurredButNotYetPaid|us-gaap:DividendsCash|c:UnpaidCashDividends,exclude,share_buybacks;dividends_paid,1409,1803,6,non-cash disclosures
+2385,UI,CF,us-gaap:PaymentsForRepurchaseOfConvertiblePreferredStock,exclude,share_buybacks,1406,1406,1,preferred
+3739,KVUE,IS,us-gaap:InterestIncomeExpenseNonoperatingNet|us-gaap:InterestIncomeExpenseNet,combined,interest_expense,2403,2606,10,'interest expense, net'
+3739,KVUE,CF,us-gaap:PaymentForContingentConsiderationLiabilityFinancingActivities,exclude,dividends_paid,2306,2306,1,separation distribution to J&J
+3739,KVUE,IS,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic,review,income_before_tax,2303,2303,1,one carve-out filing: pretax on a domestic tag
+1462,PEG,CF,us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization,map,d_and_a,1906,2606,26,"FILING-CHECKED 0001193125-26-077446 R7: CF 'Depreciation and Amortization' 1,257 (PSEG) and 1,116 (PSE&G co-registrant): parent column only; nuclear fuel and energy-efficiency amortization are separate lines"
+1462,PEG,IS,c:IncomeLossFromContinuingOperationsBeforeIncomeTaxes,map,income_before_tax,1312,1709,15,custom face pretax line; parent (coreg) column only
+1462,PEG,IS,,not_presented,cost_of_revenue;gross_profit,,,50,utility: costs by nature
+1462,PEG,BS,,not_presented,total_liabilities,,,50,no total liabilities line
+1449,WEC,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,1509,2606,33,"face 'basic' EPS; no discontinued-operations line after 2013, so continuing = total"
+1449,WEC,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,1509,2606,33,face 'diluted' EPS; no discontinued-operations line after 2013
+1449,WEC,BS,c:TotalCommonShareholdersEquity,map,stockholders_equity,1612,2606,39,custom 'common shareholders' equity' total
+1449,WEC,BS,us-gaap:CommonStockValue,review,stockholders_equity,1312,1506,7,'common equity' total in capitalization format on a common-stock-value tag: R check owed
+1449,WEC,IS,us-gaap:SalesRevenueEnergyServices,map,revenue,1312,1506,7,face 'operating revenues'
+1449,WEC,IS,us-gaap:TaxesExcludingIncomeAndExciseTaxes|us-gaap:RevenueFromGrants,exclude,revenue,1312,1506,7,not revenue
+1449,WEC,IS,us-gaap:CostOfDomesticRegulatedGasRevenue,exclude,cost_of_revenue,1312,1506,7,one cost line among costs by nature (utility)
+1449,WEC,IS,,not_presented,gross_profit,,,51,utility
+1449,WEC,IS,us-gaap:InterestExpenseOther,map,interest_expense,2409,2606,6,face 'interest expense' line
+1449,WEC,CF,us-gaap:PaymentsToAcquireOtherPropertyPlantAndEquipment,map,capex,2012,2512,6,face 'capital expenditures'
+1449,WEC,CF,us-gaap:ProceedsFromInsuranceSettlementInvestingActivities,exclude,capex,2012,2412,5,an inflow
+1449,WEC,CF,c:DepreciationDepletionandAmortizationIncludingDiscontinuedOperations,combined,d_and_a,1603,1709,6,includes discontinued operations
+1449,WEC,BS,,not_presented,total_liabilities,,,51,capitalization format
+4904,RBLX,IS,us-gaap:InterestIncomeExpenseNet,exclude,interest_expense,2103,2109,3,'interest income'
+4904,RBLX,IS,,not_presented,gross_profit,,,22,no gross profit line
+4904,RBLX,CF,,not_presented,dividends_paid;share_buybacks,,,22,none
+2572,MTD,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2203,2603,7,restricted-cash total on the cash line (rule 9)
+2572,MTD,IS,,review,all_is,,,1,one filing missing every IS concept: likely a statement-less amendment (exclude_filing)
+2572,MTD,IS,,not_presented,operating_income,,,51,no operating income line
+2572,MTD,CF,,not_presented,dividends_paid,,,51,no dividends
+654,KMB,BS,,not_presented,total_liabilities,,,51,no total liabilities line
+1021,PCAR,CF,us-gaap:OtherDepreciationAndAmortization+us-gaap:DepreciationDepletionAndAmortization|us-gaap:Depreciation,component,d_and_a,1412,1906,19,"conflict: CF prints 'D&A, equipment on operating leases' and 'D&A, property, plant and equipment' as two lines with no total: sum (rule 13)"
+1021,PCAR,IS,us-gaap:Revenues,map,revenue,1806,2109,14,"FILING-CHECKED 0001564590-20-005276 R2: top line 'Revenues' 25,599.7 = truck 'Net sales and revenues' 24,119.7 + FS 'Revenues' 1,480.0. Take the first (total) Revenues line; the same tag recurs on the FS segment row (Engineering: pick the top line)"
+4791,DLR,BS,us-gaap:PartnersCapital,exclude,stockholders_equity,1312,2609,52,conflict: operating-partnership co-registrant column; parent StockholdersEquity only (coreg rule)
+5577,TEL,CF,us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,exclude,cfo,1312,2209,28,conflict: total CFO (NetCashProvidedByUsedInOperatingActivities) is printed beside the continuing line; total wins
+2606,OKE,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,exclude,net_income,1706,2512,16,conflict: NetIncomeLoss 'net income attributable to ONEOK' is printed; it wins
+417,F,CF,us-gaap:DepreciationDepletionAndAmortization+us-gaap:OtherDepreciationAndAmortization,component,d_and_a,1412,1512,2,conflict: 'depreciation and tooling amortization' + 'other amortization' with no total (rule 13)
+1292,D,IS,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest|us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,store_scope,income_before_tax,2003,2606,26,"conflict: two pretax tags in one filing, from the co-registrant subsidiaries: parent (coreg) column only"
+1292,D,BS,us-gaap:MembersEquity,store_scope,stockholders_equity,1806,2006,9,conflict: an LLC co-registrant's equity: parent (coreg) column only
+3331,DVN,CF,us-gaap:PaymentsToAcquireProductiveAssets|us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,map,capex,1412,2006,23,"FILING-CHECKED 0001193125-26-056485 R5: 'Capital expenditures' (3,592) is capex; 'Acquisitions of property and equipment' (322) is excluded (rule 31). 1412-2006: PaymentsToAcquirePropertyPlantAndEquipment holds the acquisitions line: exclude it"
+4655,VST,CF,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment+us-gaap:PaymentsForProceedsFromNuclearFuel+us-gaap:PaymentsToAcquireProductiveAssets,component,capex,1803,1909,6,"FILING-CHECKED 0001692819-19-000018 R5 (10-Q): 'Capital expenditures, including LTSA prepayments' 348 + 'Nuclear fuel purchases' 33 + 'Development and growth expenditures' 93 (rule 14, NEE pattern); serve_note 'includes LTSA prepayments'"
+4744,BKR,IS,us-gaap:CostOfGoodsSold+us-gaap:CostOfServices,component,cost_of_revenue,1706,1806,5,conflict: cost of goods sold + cost of services sold with no total (rule 6)
+1009,XEL,IS,us-gaap:InterestAndDebtExpense,map,interest_expense,1312,2606,51,conflict: 'total interest charges and financing costs' (after the AFUDC borrowed-funds credit) wins over gross 'interest charges' (rule 17); parent (coreg) column only
+1009,XEL,IS,us-gaap:InterestExpense,exclude,interest_expense,1312,2606,51,gross interest charges before the AFUDC credit (rule 17)
+5632,VEEV,IS,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,exclude,net_income,1410,1410,1,conflict: an EPS-numerator row labelled 'basic'; NetIncomeLoss wins
+3587,EXC,IS,us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest,store_scope,income_before_tax,1412,1612,3,"conflict: 'net income attributable to membership interest' is a utility-subsidiary co-registrant line, not pretax; parent (coreg) column only"
+3587,EXC,BS,us-gaap:MembersEquity,store_scope,stockholders_equity,1312,2512,41,conflict: LLC co-registrant equity; parent (coreg) column only
+1733,DHI,CF,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,map,capex,1809,2003,7,conflict: 'expenditures for property and equipment' is the capex line
+1733,DHI,CF,us-gaap:PaymentsToAcquireProductiveAssets,exclude,capex,1809,2003,7,Dhairya ruling 2026-11-12: exclude 'expenditures related to multi-family rental properties' from capex (consistent with DHI's later inventory treatment)
+2776,ED,IS,us-gaap:InterestAndDebtExpense|us-gaap:InterestExpense,map,interest_expense,1312,2606,51,"conflict: 'net interest expense' total (after AFUDC, rule 17) wins over 'interest on long-term debt'; parent (coreg) column only"
+2776,ED,IS,us-gaap:InterestExpenseDebt,exclude,interest_expense,1312,2606,51,a component of net interest expense
+2776,ED,CF,us-gaap:PaymentsOfOrdinaryDividends,store_scope,dividends_paid,1312,2112,33,conflict: 'dividend to parent' is CECONY's (co-registrant); parent column only
+654,KMB,BS,us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,exclude,stockholders_equity,1312,2606,51,conflict / trap: the total-equity-incl-NCI tag sits on the 'noncontrolling interests' row; parent StockholdersEquity wins; never serve this tag as total equity for KMB
+2572,MTD,IS,us-gaap:CostOfGoodsSold+us-gaap:CostOfServices,component,cost_of_revenue,1312,1803,18,conflict: products + service cost lines with no total (rule 6)
+4213,ARES,BS,us-gaap:PartnersCapital|us-gaap:MembersEquity,exclude,stockholders_equity,1403,1506,5,conflict: LP-era capital line; 'total controlling interest' StockholdersEquity wins
+2087,WAT,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare|us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,basic_eps;diluted_eps,1312,1403,2,FILING-CHECKED 0001193125-14-072515 R4: 'Net income per basic/diluted common share' 5.27/5.20 on continuing-ops tags; no discontinued operations
+2,NKE,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare+us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTaxPerDilutedShare,component,diluted_eps,1311,1505,4,FILING-CHECKED 0000320187-15-000113 R2: diluted = continuing 3.70 + discontinued 0.00 (FY13: 2.68 + 0.02); no total printed

@@ -3,8 +3,8 @@
 The companies are cohort v1.1 in rank order (the first `limit` when set), or, with `ciks`, exactly that list
 (Ritwik 2026-11-10, reload of the 98 companies lost in run 42561798991's dead shards):
   - every listed CIK must be in cohort v1.1, else the run fails here;
-  - a CIK list is allowed only with stage load_map (select_write and restore stay on the done gate and the
-    cohort path);
+  - a CIK list is allowed only with stage load_map (select_plan, select_write, proof_blank and restore stay on
+    the done gate and the cohort path; proof_blank must see the select_write run's whole shards);
   - an empty `ciks` means the cohort path.
 Shards are company_id % n (company-disjoint). Prints `shards=<json>` and `ciks_sha256=<hex>` for
 $GITHUB_OUTPUT on stdout and the count, first and last CIK on stderr.

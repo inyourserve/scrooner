@@ -1,0 +1,54 @@
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
+SBUX,110,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Accounts Payable, Current",1852800000.0000,library map
+SBUX,110,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Accounts Receivable, net",1277500000.0000,library map
+SBUX,110,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000829224-25-000114,,,,note-sourced default tag (no face line)
+SBUX,110,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000829224-25-000114,R3,"Earnings Per Share, Basic",1.6300,library map
+SBUX,110,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,"Additions to property, plant and equipment",2305500000.0000,library map
+SBUX,110,cash_and_equivalents,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0000829224-25-000114,R5,Net cash used by financing activities,-2298000000.0000,library map
+SBUX,110,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0000829224-25-000114,R5,Net cash used by investing activities,-2485400000.0000,library map
+SBUX,110,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,"Income taxes, net of refunds",715600000.0000,library map
+SBUX,110,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,"Interest, net of capitalized interest",588300000.0000,library map
+SBUX,110,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Accounts payable,261000000.0000,library map
+SBUX,110,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Accounts receivable,89700000.0000,library map
+SBUX,110,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Inventories,408400000.0000,library map
+SBUX,110,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,"Cash Provided by (Used in) Operating Activity, Including Discontinued Operation",4747500000.0000,library map
+SBUX,110,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0000829224-25-000114,R4,"Comprehensive Income, Net of Tax, Attributable to Parent",1826100000.0000,library map
+SBUX,110,cost_of_revenue,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Assets, Current",7382300000.0000,library map
+SBUX,110,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Liabilities, Current",10210400000.0000,library map
+SBUX,110,deposits,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Depreciation and amortization,1771500000.0000,library map
+SBUX,110,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000829224-25-000114,R3,"Earnings/(loss) Per Share, Diluted",1.6300,library map
+SBUX,110,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Cash dividends paid,2771400000.0000,library map
+SBUX,110,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0000829224-25-000114,R6,"Common Stock, Dividends, Per Share, Declared",2.4500,library map
+SBUX,110,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,Goodwill,3368900000.0000,library map
+SBUX,110,gross_profit,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Earnings before income taxes,2507300000.0000,library map
+SBUX,110,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Income tax expense,650600000.0000,library map
+SBUX,110,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Interest expense,542600000.0000,library map
+SBUX,110,interest_income,mapped,us-gaap:InvestmentIncomeInterest,NOTE,,,,,sec_api,0000829224-25-000114,,,,note-sourced default tag (no face line)
+SBUX,110,inventory,mapped,us-gaap:InventoryNet,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Inventory, Net",2185600000.0000,library map
+SBUX,110,loans_net,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Net earnings attributable to Starbucks,1856400000.0000,library map
+SBUX,110,net_interest_income,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,noninterest_expense,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,noninterest_income,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,operating_expenses,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Operating income,2936600000.0000,library map
+SBUX,110,other_income_expense_net,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Property, Plant and Equipment, Net",8493500000.0000,library map
+SBUX,110,provision_for_credit_losses,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,research_and_development,not_presented,,,,,,,,0000829224-25-000114,,,,no face line
+SBUX,110,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Revenues,37184400000.0000,library map
+SBUX,110,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-5,N,,sec_api,0000829224-25-000114,R5,Stock-based compensation,318300000.0000,library map
+SBUX,110,sga_expense,combined,us-gaap:GeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,General and administrative expenses,2617200000.0000,single component line
+SBUX,110,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0,-5,N,,sec_api,0000829224-25-000114,R5,Repurchase of common stock,0.0000,library map
+SBUX,110,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Common Stock, Shares, Outstanding",1136900000.0000,library map
+SBUX,110,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-5,N,,sec_api,0000829224-25-000114,R7,Stockholders' Equity/(Deficit) Attributable to Parent,-8096600000.0000,library map
+SBUX,110,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,Assets,32019700000.0000,library map
+SBUX,110,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,"Long-term Debt, Current Maturities",1498900000.0000,printed face components (duration sum; total_debt founder sum)
+SBUX,110,total_interest_income,OUT,,,,,,,,0000829224-25-000114,,,,not a bank
+SBUX,110,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0000829224-25-000114,R7,Liabilities,40108900000.0000,library map
+SBUX,110,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Basic,1136000000.0000,library map
+SBUX,110,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,N,,sec_api,0000829224-25-000114,R3,Diluted,1139800000.0000,library map
