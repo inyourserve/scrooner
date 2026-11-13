@@ -137,6 +137,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             # the new system (tag map seed and write path)
             "seed-company-tag-map",
             "docmap-load",
+            "era-guard",  # the new system: holds unproven predictor slices of company_tag_map
             "tagmap-plan",
             "dqc-check",  # read-only DQC report over served cells
             # derived metrics, recomputed from canonical_fact for every company
