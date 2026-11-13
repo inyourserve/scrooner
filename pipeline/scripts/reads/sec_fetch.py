@@ -28,7 +28,9 @@ from pathlib import Path
 
 import httpx
 
-MIN_INTERVAL = 2.5  # seconds: 0.4 requests per second
+# seconds between requests: 0.4 req/s by default; SEC_MIN_INTERVAL overrides (Dhairya 2026-11-13: 2 req/s for the
+# red-cell job). Never below 0.25 s (4 req/s, CLAUDE.md).
+MIN_INTERVAL = max(0.25, float(os.environ.get("SEC_MIN_INTERVAL") or 2.5))
 ALLOWED = ("https://www.sec.gov/", "https://data.sec.gov/")
 FORMS = ("10-K", "10-K/A", "10-KT")
 _last = [0.0]

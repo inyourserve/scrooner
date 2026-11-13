@@ -21,6 +21,7 @@ jobs:
     timeout-minutes: 300
     env:
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      SEC_MIN_INTERVAL: "0.5"  # 2 req/s (Dhairya 2026-11-13, red-cell job)
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
