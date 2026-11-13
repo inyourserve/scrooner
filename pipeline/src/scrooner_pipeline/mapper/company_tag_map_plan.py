@@ -544,6 +544,36 @@ def coverage(
     }
 
 
+class _Retry(Exception):
+    """The first attempt of a company (concept gate scope) found concepts that would lose a value: redo without them."""
+
+    def __init__(self, concepts: set[int]):
+        self.concepts = concepts
+
+
+def concepts_to_skip(
+    conn: psycopg.Connection, cid: int, managed: set[int]
+) -> tuple[set[int], dict[int, str]]:
+    """Per-concept coverage gate, before anything is written: the concepts whose merged-map eras do not cover the
+    data window, and the managed concepts the map does not cover at all (resolve would delete their served values).
+    -> (concept ids to leave as served today, concept id -> why)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to "
+            "from analytics.company_tag_map where company_id = %s",
+            (cid,),
+        )
+        map_rows = cur.fetchall()
+        cur.execute("select end_date from core.period where company_id = %s", (cid,))
+        ends = [e for (e,) in cur.fetchall()]
+    short = era_shortfall(map_rows, ends)
+    why = {c: f"era short from {d.isoformat()}" for c, d in short.items()}
+    mapped = {c for c, _, _ in map_rows if c is not None}
+    for c in managed - mapped:
+        why.setdefault(c, "no map row")
+    return set(why), why
+
+
 def run(
     conn: psycopg.Connection,
     company_ids: list[int],
@@ -551,99 +581,180 @@ def run(
     *,
     apply: bool,
     gate: bool = False,
+    gate_scope: str = "company",
     dqc_checks: list[dqc.Check] | None = None,
     dqc_hold: bool = False,
 ) -> dict[int, dict]:
+    """gate_scope 'company' (default): with gate and apply, a company is committed only when all its concepts pass the
+    coverage gate. 'concept': each concept whose merged-map eras cover the data window is rewritten; a concept that
+    does not (or the map does not cover at all, or that would lose a value) is left exactly as served today, no
+    cell touched, and listed in coverage['skipped_concepts']."""
     managed = resolve_mod._load_managed_concept_ids(conn)
     concept_info = ctm.load_concept_info(conn)
     conn.commit()
     out: dict[int, dict] = {}
+    by_concept = gate and gate_scope == "concept"
     for cid in company_ids:
-        try:
-            with conn.transaction():
-                # first statement of the transaction: one snapshot, a concurrent re-seed cannot split it
-                conn.execute("set transaction isolation level repeatable read")
-                cik = conn.execute(
-                    "select cik from core.company where id = %s", (cid,)
-                ).fetchone()[0]
-                before = set(
-                    conn.execute(
-                        "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
-                        (cid,),
-                    ).fetchall()
-                )
-                conn.execute("set local scrooner.writer = 'company_tag_map'")
-                conn.execute("set local scrooner.slot_writer = 'on'")
-                run_id = cs.start_rule_run(
-                    conn, ctm.RULE_ID, "apply" if apply else "dry_run", "on", [cik]
-                )
-                stats = ctm.resolve_for_company(
-                    conn, cid, managed, concept_info, run_id, commit=False
-                )
-                lib = library_status_blanks(
-                    conn, cid, expected.get(cid, []), stats, concept_info
-                )
-                ctm._write_blanks(conn, cid, run_id, lib, concept_info)
-                stats["blanks"] = stats["blanks"] + lib
-                dqc_hits: list[dqc.Hit] = []
-                dqc_held = 0
-                if dqc_checks:  # report-only unless dqc_hold: then HOLD hits remove their served cells
-                    dqc_hits = dqc.check_company(conn, cid, dqc_checks)
-                    if dqc_hold:
-                        dqc_held = hold_dqc_cells(
-                            conn, cid, run_id, dqc_hits, stats, concept_info
-                        )
-                scope = sorted(
-                    set(managed)
-                    | {c["canonical_concept_id"] for c in stats["cells"]}
-                    | {
-                        b["canonical_concept_id"]
-                        for b in stats["blanks"]
-                        if b.get("canonical_concept_id")
-                    }
-                )
-                protected = protect(
-                    conn, cid, scope, stats["cells"], stats["blanks"], run_id
-                )
-                if apply:
-                    conn.execute(
-                        "insert into analytics.company_value_owner (company_id, owner, note) values (%s, 'company_tag_map', 'tag-map write path') "
-                        "on conflict (company_id) do update set owner = 'company_tag_map'",
-                        (cid,),
-                    )
-                rep = _report(
-                    conn, cid, run_id, stats, expected.get(cid, []), concept_info
-                )
-                rep["protected_keys"] = protected
-                rep["dqc_hits"] = dqc_hits
-                rep["dqc_held"] = dqc_held
-                rep["coverage"] = coverage(
-                    conn,
-                    cid,
-                    run_id,
-                    before,
-                    expected.get(cid, []),
-                    concept_info,
-                    set(managed),
-                )
-                out[cid] = rep
-                if apply and gate and not coverage_gate_ok(rep["coverage"]):
-                    rep["gated"] = True  # rolled back: stays on its current serving
-                    raise _PlanRollback
-                if apply:
-                    cs.finish_rule_run(
+        forced: set[int] = set()
+        for _attempt in (0, 1):
+            try:
+                with conn.transaction():
+                    _company(
                         conn,
-                        run_id,
-                        {
-                            k: v
-                            for k, v in rep.items()
-                            if k not in ("neither_by_data_point", "dqc_hits")
-                        },
+                        out,
+                        cid,
+                        expected.get(cid, []),
+                        managed,
+                        concept_info,
+                        apply=apply,
+                        gate=gate,
+                        by_concept=by_concept,
+                        forced=forced,
+                        dqc_checks=dqc_checks,
+                        dqc_hold=dqc_hold,
                     )
-                else:
-                    raise _PlanRollback
-        except _PlanRollback:
-            pass
-        except Exception as exc:  # one company failing never hides the others; its transaction is rolled back
-            out[cid] = {"error": f"{type(exc).__name__}: {str(exc)[:300]}"}
+                break
+            except _Retry as retry:
+                forced |= retry.concepts
+            except _PlanRollback:
+                break
+            except Exception as exc:  # one company failing never hides the others; its transaction is rolled back
+                out[cid] = {"error": f"{type(exc).__name__}: {str(exc)[:300]}"}
+                break
     return out
+
+
+def _company(
+    conn: psycopg.Connection,
+    out: dict[int, dict],
+    cid: int,
+    expected: list[tuple[str, date, str]],
+    managed,
+    concept_info,
+    *,
+    apply: bool,
+    gate: bool,
+    by_concept: bool,
+    forced: set[int],
+    dqc_checks: list[dqc.Check] | None = None,
+    dqc_hold: bool = False,
+) -> None:
+    # first statement of the transaction: one snapshot, a concurrent re-seed cannot split it
+    conn.execute("set transaction isolation level repeatable read")
+    cik = conn.execute("select cik from core.company where id = %s", (cid,)).fetchone()[
+        0
+    ]
+    before = set(
+        conn.execute(
+            "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
+            (cid,),
+        ).fetchall()
+    )
+    skip: set[int] = set(forced)
+    why: dict[int, str] = {c: "would lose a value" for c in forced}
+    if by_concept:
+        more, w = concepts_to_skip(conn, cid, set(managed))
+        skip |= more
+        why = {**w, **why}
+    run_managed = set(managed) - skip
+    conn.execute("set local scrooner.writer = 'company_tag_map'")
+    conn.execute("set local scrooner.slot_writer = 'on'")
+    run_id = cs.start_rule_run(
+        conn, ctm.RULE_ID, "apply" if apply else "dry_run", "on", [cik]
+    )
+    stats = ctm.resolve_for_company(
+        conn,
+        cid,
+        run_managed,
+        concept_info,
+        run_id,
+        commit=False,
+        skip_concept_ids=skip,
+    )
+    lib = [
+        b
+        for b in library_status_blanks(conn, cid, expected, stats, concept_info)
+        if b.get("canonical_concept_id") not in skip
+    ]
+    ctm._write_blanks(conn, cid, run_id, lib, concept_info)
+    stats["blanks"] = stats["blanks"] + lib
+    dqc_hits: list[dqc.Hit] = []
+    dqc_held = 0
+    if (
+        dqc_checks
+    ):  # report-only unless dqc_hold: then HOLD hits remove their served cells
+        dqc_hits = dqc.check_company(conn, cid, dqc_checks)
+        if dqc_hold:
+            dqc_held = hold_dqc_cells(conn, cid, run_id, dqc_hits, stats, concept_info)
+    scope = sorted(
+        run_managed
+        | {c["canonical_concept_id"] for c in stats["cells"]}
+        | {
+            b["canonical_concept_id"]
+            for b in stats["blanks"]
+            if b.get("canonical_concept_id")
+        }
+    )
+    protected = protect(conn, cid, scope, stats["cells"], stats["blanks"], run_id)
+    if apply:
+        conn.execute(
+            "insert into analytics.company_value_owner (company_id, owner, note) values (%s, 'company_tag_map', 'tag-map write path') "
+            "on conflict (company_id) do update set owner = 'company_tag_map'",
+            (cid,),
+        )
+    rep = _report(conn, cid, run_id, stats, expected, concept_info)
+    out[cid] = rep
+    rep["protected_keys"] = protected
+    rep["dqc_hits"] = dqc_hits
+    rep["dqc_held"] = dqc_held
+    rep["coverage"] = coverage(
+        conn, cid, run_id, before, expected, concept_info, set(run_managed)
+    )
+    if by_concept:
+        # a rewritten concept that would still lose a value (no reason row) is dropped from the rewrite and redone
+        after_cells = set(
+            conn.execute(
+                "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
+                (cid,),
+            ).fetchall()
+        )
+        reasoned = {
+            (name, end)
+            for name, end in conn.execute(
+                "select data_point_name, period_end from analytics.cell_blank_reason where company_id = %s and run_id = %s::uuid",
+                (cid, run_id),
+            ).fetchall()
+        }
+        ends = dict(
+            conn.execute(
+                "select id, end_date from core.period where company_id = %s", (cid,)
+            ).fetchall()
+        )
+        bad = {
+            c
+            for c, p in before - after_cells
+            if c in run_managed
+            and ends.get(p, date.min) >= DATA_WINDOW_START
+            and (concept_info.get(c, ("",))[0], ends.get(p)) not in reasoned
+        }
+        if bad:
+            raise _Retry(bad)
+        rep["coverage"]["skipped_concepts"] = {
+            concept_info[c][0]: w for c, w in sorted(why.items()) if c in concept_info
+        }
+        rep["coverage"]["rewritten_concepts"] = len(run_managed)
+    if apply and gate and not by_concept and not coverage_gate_ok(rep["coverage"]):
+        rep["gated"] = True  # rolled back: stays on its current serving
+        raise _PlanRollback
+    if apply:
+        cs.finish_rule_run(
+            conn,
+            run_id,
+            {
+                k: v
+                for k, v in rep.items()
+                if k not in ("neither_by_data_point", "dqc_hits")
+            },
+        )
+    else:
+        raise _PlanRollback
