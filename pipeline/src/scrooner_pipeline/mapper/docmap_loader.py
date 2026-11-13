@@ -796,6 +796,7 @@ def load(
                 {
                     "ticker": d.ticker,
                     "data_point": d.data_point,
+                    "kind": d.status,
                     "era_from": d.era_from,
                     "base_era": d.base_era,
                 }
