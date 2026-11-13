@@ -302,6 +302,11 @@ def tagmap_plan_cmd(
         "--coverage-gate",
         help="With --apply: commit a company only when its eras cover the data window, it loses no FY0/FY-1 value and no value disappears without a reason.",
     ),
+    coverage_gate_scope: str = typer.Option(
+        "company",
+        "--coverage-gate-scope",
+        help="company (default): the gate decides per company. concept: every concept whose eras cover the data window is rewritten; a concept that does not is left exactly as served today and listed. Applies with --coverage-gate (also in plan mode).",
+    ),
     dqc_report: Path = typer.Option(
         None,
         "--dqc-report",
@@ -356,6 +361,7 @@ def tagmap_plan_cmd(
             tpl,
             apply=apply,
             gate=coverage_gate,
+            gate_scope=coverage_gate_scope,
             dqc_checks=checks,
             dqc_hold=dqc_hold,
         )
@@ -385,6 +391,11 @@ def tagmap_plan_cmd(
             f"fy01 {cov['fy01_before']}->{cov['fy01_after']}/{cov['fy01_expected']}"
             f"{' GATED (rolled back)' if r.get('gated') else ''}"
         )
+        if cov.get("skipped_concepts") is not None:
+            typer.echo(
+                f"      concept gate: rewritten {cov['rewritten_concepts']} skipped {len(cov['skipped_concepts'])} "
+                f"(left as served): {dict(list(cov['skipped_concepts'].items())[:40])}"
+            )
         if cov["era_short"]:
             typer.echo(f"      era_short {dict(list(cov['era_short'].items())[:8])}")
         for dp, period in r["neither_cells"][:40]:

@@ -1456,9 +1456,12 @@ def resolve_for_company(
     concept_info: dict[int, tuple[str, str]],
     run_id: str | None = None,
     commit: bool = True,
+    skip_concept_ids: frozenset[int] | set[int] = frozenset(),
 ) -> dict:
     """Rebuild this company's canonical_fact rows from its tag map. Deletes every concept resolve() manages
-    (plus every concept the map targets), so no value of the old path survives for a tag-map company."""
+    (plus every concept the map targets), so no value of the old path survives for a tag-map company.
+    skip_concept_ids (per-concept coverage gate): those concepts are left exactly as served today: not deleted,
+    not rewritten, no blank reason written."""
     rows = _load_rows(conn, company_id)
     used: set[tuple[str | None, str | None]] = {
         (r.taxonomy, r.tag)
@@ -1546,6 +1549,14 @@ def resolve_for_company(
         targets.update(
             x for x in (r.canonical_concept_id, r.parent_concept_id) if x is not None
         )
+    if skip_concept_ids:
+        targets -= set(skip_concept_ids)
+        cells = [c for c in cells if c["canonical_concept_id"] not in skip_concept_ids]
+        stats["blanks"] = [
+            b
+            for b in stats["blanks"]
+            if b.get("canonical_concept_id") not in skip_concept_ids
+        ]
     with conn.cursor() as cur:
         cur.execute(
             "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)",

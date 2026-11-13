@@ -138,3 +138,52 @@ def test_coverage_gate_applies_a_full_window_map_and_rolls_back_a_short_one(isol
         assert rep[co2]["gated"] is True
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co2, per2["in"]) == Decimal("7")
         assert _one(conn, "select count(*) from analytics.company_value_owner where company_id = %s", co2) == 0
+
+
+@pytest.mark.integration
+def test_concept_gate_scope_rewrites_covered_concepts_and_leaves_short_ones_untouched(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001401", True)
+        fact("Revenues", "in", "new", "110")
+        fact("OtherOpex", "in", "new", "44")
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap',%s,'IS','concept',%s,%s,'t','tm.r@1')"
+        conn.execute(ins, (co, "Revenues", x["rev"], "2015-01-01"))  # covers the data window
+        conn.execute(ins, (co, "OtherOpex", x["opex"], "2019-01-01"))  # the 2018 period is outside: short
+        for c, v in ((x["rev"], "1"), (x["opex"], "7")):  # what is served today
+            conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, c, per["in"], Decimal(v)))
+        conn.commit()
+        served = "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s"
+        tpl = {co: [("tm_rev", date(2018, 12, 31), "served")]}
+        # company scope (the default): the short concept gates the whole company; nothing changes
+        rep = plan.run(conn, [co], tpl, apply=True, gate=True)
+        assert rep[co]["gated"] is True and _one(conn, served, co, x["rev"]) == Decimal("1")
+        # concept scope: the covered concept is rewritten, the short one is left exactly as served and listed
+        rep = plan.run(conn, [co], tpl, apply=True, gate=True, gate_scope="concept")
+        assert "error" not in rep[co], rep[co]
+        cov = rep[co]["coverage"]
+        assert not rep[co].get("gated")
+        assert cov["skipped_concepts"] == {"tm_opex": "era short from 2018-12-31"} and cov["rewritten_concepts"] == 1
+        assert _one(conn, served, co, x["rev"]) == Decimal("110")
+        assert _one(conn, served, co, x["opex"]) == Decimal("7")
+        assert conn.execute("select count(*) from analytics.slot_protected_cell where company_id = %s and canonical_concept_id = %s", (co, x["opex"])).fetchone()[0] == 0
+        assert _one(conn, "select owner from analytics.company_value_owner where company_id = %s", co) == "company_tag_map"
+
+
+@pytest.mark.integration
+def test_concept_gate_scope_leaves_a_concept_that_would_lose_a_value(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001501", True)
+        fact("Revenues", "in", "new", "110")  # a fact for 2018 only
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-01-01','t','tm.r@1')", (co, x["rev"]))
+        for p, v in (("in", "1"), ("out", "9")):  # the old path served a 2020 value the map cannot reproduce
+            conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, x["rev"], per[p], Decimal(v)))
+        conn.commit()
+        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        assert "error" not in rep[co], rep[co]
+        assert rep[co]["coverage"]["skipped_concepts"] == {"tm_opex": "no map row", "tm_rev": "would lose a value"}
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["out"]) == Decimal("9")
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["in"]) == Decimal("1")
