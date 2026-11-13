@@ -107,3 +107,12 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - revenue: mapped us-gaap:Revenues (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Net sales' is the revenue line, printed 15629000000 = filing XBRL 15629000000; agrees
 - ppe_net: mapped us-gaap:PropertyPlantAndEquipmentNet (R5.htm): 2026-11-12 R5.htm: 10% mapped sample: BS R5.htm 'Property, plant and equipment, net of accumulated ' is the ppe_net line, printed 14825000000 = filing XBRL 14825000000; agrees
 - sbc: mapped us-gaap:ShareBasedCompensation (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: CF R7.htm 'Share-based compensation expense' is the sbc line, printed 286000000 = filing XBRL 286000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- research_and_development: period/accession added
+- weighted_basic_shares: period/accession added
+- weighted_diluted_shares: period/accession added
+- cash_paid_for_interest: period/accession added
+- cash_paid_for_income_taxes: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: review -> not_presented (ruling 2026-11-12)

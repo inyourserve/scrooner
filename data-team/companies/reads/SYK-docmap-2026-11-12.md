@@ -102,3 +102,8 @@ none beyond sign differences
 - inventory: mapped us-gaap:InventoryNet (R5.htm): 2026-11-12 R5.htm: 10% mapped sample: BS R5.htm 'Total inventories' is the inventory line, printed 5310000000 = filing XBRL 5310000000; agrees
 - total_liabilities: mapped us-gaap:Liabilities (R5.htm): 2026-11-12 R5.htm: 10% mapped sample: BS R5.htm 'Total liabilities' is the total_liabilities line, printed 25424000000 = filing XBRL 25424000000; agrees
 - cash_flow_investing: mapped us-gaap:NetCashProvidedByUsedInInvestingActivities (R8.htm): 2026-11-12 R8.htm: 10% mapped sample: CF R8.htm 'Net cash used in investing activities' is the cash_flow_investing line, printed -4866000000 = filing XBRL -4866000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- share_buybacks: unverified -> re-checked on the R page
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

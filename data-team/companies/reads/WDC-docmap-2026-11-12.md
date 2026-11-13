@@ -105,3 +105,9 @@ none beyond sign differences
 - accounts_payable: mapped us-gaap:AccountsPayableCurrent (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: BS R3.htm 'Accounts payable' is the accounts_payable line, printed 1774000000 = filing XBRL 1774000000; agrees
 - cash_flow_investing: mapped us-gaap:NetCashProvidedByUsedInInvestingActivities (R6.htm): 2026-11-12 R6.htm: 10% mapped sample: CF R6.htm 'Net cash provided by (used in) investing activitie' is the cash_flow_investing line, printed -429000000 = filing XBRL -429000000; agrees
 - depreciation_and_amortization: mapped us-gaap:DepreciationDepletionAndAmortization (R6.htm): 2026-11-12 R6.htm: 10% mapped sample: CF R6.htm 'Depreciation and amortization' is the depreciation_and_amortization line, printed 375000000 = filing XBRL 375000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- weighted_basic_shares: period/accession added
+- weighted_diluted_shares: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

@@ -105,3 +105,19 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - total_debt: mapped us-gaap:LongTermDebt (R2.htm): 2026-11-12 R2.htm: R2 prints 'Debt' 35,037,073 twice: Prologis, Inc. and the co-registrant Prologis, L.P.; the machine sum 70,074 double counts. Parent column only: 35,037,073
 - sbc: mapped us-gaap:ShareBasedCompensation (R8.htm): 2026-11-12 R8.htm: 10% mapped sample: CF R8.htm 'Equity-based compensation awards' is the sbc line, printed 185466000 = filing XBRL 185466000; agrees
 - dividends_paid: combined us-gaap:PaymentsOfDividends (R8.htm): 2026-11-12 R8.htm: R8 'Dividends/distributions paid on common and preferred stock/units' mixes common with preferred and OP units: combined (never keyed as common dividends). SAMPLE DISAGREEMENT
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- cost_of_revenue: unverified -> re-checked on the R page
+- gross_profit: unverified -> re-checked on the R page
+- research_and_development: unverified -> re-checked on the R page
+- accounts_receivable: unverified -> re-checked on the R page
+- inventory: unverified -> re-checked on the R page
+- current_assets: unverified -> re-checked on the R page
+- ppe_net: period/accession added
+- current_liabilities: unverified -> re-checked on the R page
+- capex: unverified -> re-checked on the R page
+- cash_paid_for_interest: period/accession added
+- cash_paid_for_income_taxes: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added
+- goodwill: review -> member row (0125 dims loader)

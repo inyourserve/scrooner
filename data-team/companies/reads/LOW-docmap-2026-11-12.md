@@ -104,3 +104,12 @@ none beyond sign differences
 - cfo: mapped us-gaap:NetCashProvidedByUsedInOperatingActivities (R9.htm): 2026-11-12 R9.htm: 10% mapped sample: CF R9.htm 'Net cash provided by operating activities' is the cfo line, printed 9864000000 = filing XBRL 9864000000; agrees
 - depreciation_and_amortization: mapped us-gaap:DepreciationDepletionAndAmortization (R9.htm): 2026-11-12 R9.htm: 10% mapped sample: CF R9.htm 'Depreciation and amortization' is the depreciation_and_amortization line, printed 2194000000 = filing XBRL 2194000000; agrees
 - share_buybacks: mapped us-gaap:PaymentsForRepurchaseOfCommonStock (R9.htm): 2026-11-12 R9.htm: 10% mapped sample: CF R9.htm 'Repurchases of common stock' is the share_buybacks line, printed -211000000 = filing XBRL 211000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- research_and_development: unverified -> re-checked on the R page
+- weighted_basic_shares: period/accession added
+- weighted_diluted_shares: period/accession added
+- cash_paid_for_interest: period/accession added
+- cash_paid_for_income_taxes: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

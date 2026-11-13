@@ -112,3 +112,15 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - income_before_tax: mapped us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Income before income taxes' is the income_before_tax line, printed 5420000000 = filing XBRL 5420000000; agrees
 - stockholders_equity: mapped us-gaap:StockholdersEquity (R5.htm): 2026-11-12 R5.htm: 10% mapped sample: BS R5.htm 'Total Stockholders’ Equity' is the stockholders_equity line, printed 29093000000 = filing XBRL 29093000000; agrees
 - cfo: mapped us-gaap:NetCashProvidedByUsedInOperatingActivities (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: CF R7.htm 'Net Cash Provided by Operating Activities' is the cfo line, printed 4962000000 = filing XBRL 4962000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- gross_profit: unverified -> re-checked on the R page
+- research_and_development: period/accession added
+- operating_income: unverified -> re-checked on the R page
+- interest_expense: period/accession added
+- accounts_receivable: period/accession added
+- sbc: period/accession added
+- cash_paid_for_interest: period/accession added
+- cash_paid_for_income_taxes: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: unverified -> re-checked on the R page

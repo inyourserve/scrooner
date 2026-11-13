@@ -113,3 +113,7 @@ Caveats: companyfacts holds only undimensioned us-gaap/dei facts: custom-namespa
 - operating_expenses: not_presented -> component sum us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:ResearchAndDevelopmentExpense | opex never includes cost of revenue (Dhairya ruling 2026-11-12; expected component sum)
 - shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> mapped us-gaap:CommonStockSharesOutstanding | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
 - 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- dividends_per_share: not_located -> not_presented
+- cash_paid_for_interest: not_located -> component_in_note R93

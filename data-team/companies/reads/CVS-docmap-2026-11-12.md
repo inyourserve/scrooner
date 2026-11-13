@@ -103,3 +103,10 @@ none beyond sign differences
 - income_tax_expense: mapped us-gaap:IncomeTaxExpenseBenefit (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Income tax provision' is the income_tax_expense line, printed 408000000 = filing XBRL 408000000; agrees
 - diluted_eps: mapped us-gaap:EarningsPerShareDiluted (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Diluted (in dollars per share)' is the diluted_eps line, printed 1.39 = filing XBRL 1.39; agrees
 - capex: mapped us-gaap:PaymentsToAcquirePropertyPlantAndEquipment (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: CF R7.htm 'Purchases of property and equipment' is the capex line, printed -2832000000 = filing XBRL 2832000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- gross_profit: unverified -> re-checked on the R page
+- sga_expense: unverified -> re-checked on the R page
+- research_and_development: unverified -> re-checked on the R page
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

@@ -100,3 +100,9 @@ none beyond sign differences
 - weighted_basic_shares: mapped us-gaap:WeightedAverageNumberOfSharesOutstandingBasic (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Basic' is the weighted_basic_shares line, printed 1136000000 = filing XBRL 1136000000; agrees
 - goodwill: mapped us-gaap:Goodwill (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: BS R7.htm 'Goodwill' is the goodwill line, printed 3368900000 = filing XBRL 3368900000; agrees
 - stockholders_equity: mapped us-gaap:StockholdersEquity (R7.htm): 2026-11-12 R7.htm: 10% mapped sample: BS R7.htm 'Stockholders' Equity/(Deficit) Attributable to Par' is the stockholders_equity line, printed -8096600000 = filing XBRL -8096600000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- gross_profit: unverified -> re-checked on the R page
+- research_and_development: unverified -> re-checked on the R page
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

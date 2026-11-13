@@ -103,3 +103,10 @@ none beyond sign differences
 - sga_expense: mapped us-gaap:SellingGeneralAndAdministrativeExpense (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Selling, distribution, general, and administrative' is the sga_expense line, printed -8096000000 = filing XBRL 8096000000; agrees
 - income_tax_expense: mapped us-gaap:IncomeTaxExpenseBenefit (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'Income tax expense' is the income_tax_expense line, printed -1102000000 = filing XBRL 1102000000; agrees
 - cash_paid_for_income_taxes: mapped us-gaap:IncomeTaxesPaidNet (R9.htm): 2026-11-12 R9.htm: 10% mapped sample: CF R9.htm 'Income taxes, net of refunds' is the cash_paid_for_income_taxes line, printed 1211000000 = filing XBRL 1211000000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- research_and_development: unverified -> re-checked on the R page
+- total_liabilities: period/accession added
+- sbc: period/accession added
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

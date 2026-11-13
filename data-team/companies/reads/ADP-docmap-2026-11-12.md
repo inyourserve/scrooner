@@ -101,3 +101,10 @@ none beyond sign differences
 - net_income: mapped us-gaap:NetIncomeLoss (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'NET EARNINGS' is the net_income line, printed 4413500000 = filing XBRL 4413500000; agrees
 - diluted_eps: mapped us-gaap:EarningsPerShareDiluted (R3.htm): 2026-11-12 R3.htm: 10% mapped sample: IS R3.htm 'DILUTED EARNINGS PER SHARE (in dollars per share)' is the diluted_eps line, printed 10.94 = filing XBRL 10.94; agrees
 - share_buybacks: mapped us-gaap:PaymentsForRepurchaseOfCommonStock (R10.htm): 2026-11-12 R10.htm: 10% mapped sample: CF R10.htm 'Repurchases of common stock' is the share_buybacks line, printed -2.083e+09 = filing XBRL 2083300000; agrees
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- gross_profit: unverified -> re-checked on the R page
+- operating_income: unverified -> re-checked on the R page
+- inventory: unverified -> re-checked on the R page
+- total_debt: unverified -> re-checked on the R page
+- shares_outstanding: period/accession added

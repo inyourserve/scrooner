@@ -76,3 +76,6 @@ none beyond sign differences (R3 prints costs in parentheses; income taxes 1,428
 - operating_expenses: component sum us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:DepreciationDepletionAndAmortization+us-gaap:RestructuringSettlementAndImpairmentProvisions -> combined us-gaap:CostsAndExpenses | opex never includes cost of revenue (Dhairya ruling 2026-11-12; expected not_presented); RE-READ SAYS combined: read the R page
 - operating_expenses: check: hand -> not_presented | check: hand (re-read of the IS R page): 'costs and expenses' includes cost of services and products and DIS prints no gross profit line: no 
 - 1 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately
+
+## Loader-reject fixes 2026-11-13 (docmap-load dry run on 669f8477)
+- cost_of_revenue: part tag repeats -> member syntax (0125)
