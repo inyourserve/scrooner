@@ -112,3 +112,9 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - depreciation_and_amortization: combined epd:DepreciationAndAccretion (R7.htm): 2026-11-12 R7.htm: sample DISAGREES: 'Depreciation and accretion' includes accretion: combined (Dhairya ruling)
 - operating_expenses: combined: 'Total operating costs and expenses' 45,440 includes cost of sales (38,566, R55) and no line-by-line face breakdown ties to GP - OI: combined, never opex
 - total_debt: corrected per finance-lease ruling (founder 2026-11-04 item 5): R119.htm: finance leases sit in other current (3) and other non-current liabilities (13), outside the debt lines: 34395000000 + 16000000 = 34411000000
+
+## MLP rulings applied 2026-11-13
+- stockholders_equity: mapped us-gaap:PartnersCapital (R3.htm): MLP ruling (Dhairya 2026-11-13, binds every MLP) 1: total partners' equity attributable to the partnership 29,739, excluding noncontrolling interests (831)
+- dividends_paid: mapped us-gaap:DistributionMadeToLimitedPartnerCashDistributionsPaid (R7.htm): MLP ruling (Dhairya 2026-11-13, binds every MLP) 2: cash distributions paid to common unitholders 4,678; distributions to NCI (93), distribution equivalent rights and preferred units are excluded
+- shares_outstanding: mapped us-gaap:LimitedPartnersCapitalAccountUnitsOutstanding (R4.htm): MLP ruling (Dhairya 2026-11-13, binds every MLP) 3: common units outstanding at 2025-12-31 (BS parenthetical R4); never the cover count
+- weighted_basic_shares: mapped us-gaap:WeightedAverageLimitedPartnershipUnitsOutstanding (R92.htm): by analogy to MLP ruling (Dhairya 2026-11-13, binds every MLP) 3: weighted-average common units outstanding (basic) 2,166 million in the EPU note R92; flagged to Dhairya as an analogy
