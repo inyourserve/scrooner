@@ -267,7 +267,7 @@ def tagmap_authority_cmd(
             promoted = apply_tag_map_promotions(conn, plan)
             conn.commit()
             typer.echo(
-                f"tagmap-authority [apply]: promoted {promoted} of {len(plan)} planned"
+                f"tagmap-authority [apply]: promoted {promoted} of {len(plan)} planned, demoted {sum(len(p['demote']) for p in plan)}"
             )
         else:
             managed = resolve_mod._load_managed_concept_ids(conn)
@@ -295,8 +295,8 @@ def tagmap_authority_cmd(
                 after = {cid: held(cid)}
                 conn.rollback()
                 typer.echo(
-                    f"  {cid}: promote precision {by[(cid, 'precision_tagmap_v1')]} restated "
-                    f"{by[(cid, 'latest_filed_tagmap_v1')]} | held {sum(before[cid].values())} -> "
+                    f"  {cid}: demote {sum(len(p['demote']) for p in plan if p['company_id'] == cid)} promote precision {by[(cid, 'precision_tagmap_v2')]} restated "
+                    f"{by[(cid, 'latest_filed_tagmap_v2')]} | held {sum(before[cid].values())} -> "
                     f"{sum(after[cid].values())} {dict(after[cid])}"
                 )
 
