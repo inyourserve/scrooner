@@ -678,15 +678,16 @@ def resolve_derived(rows: list[dict[str, Any]]) -> None:
                 for i in inputs
                 if i is not None
             )
-        if ok:
+        first = next((i for i in inputs if i is not None), None)
+        if ok and first is not None:
             r["class"], r["reason_code"] = "DERIVED", DERIVED_CODE
             r["reason"] = (
                 f"{r['data_point']} is not printed; derived from {r['evidence']}, "
                 "inputs proven against one filing"
             )
             r["accession"], r["r_page"], r["locator_source"] = (
-                inputs[0]["accession"],
-                inputs[0]["r_page"],
+                first["accession"],
+                first["r_page"],
                 "derived_input",
             )
         else:
