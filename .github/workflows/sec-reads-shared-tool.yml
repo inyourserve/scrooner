@@ -1,7 +1,7 @@
 name: Shared reader machine pass (ranks 301-400)
 
 # Dhairya 2026-11-12: one method for every reader. Runs the shared tool data-team/companies/reads/tools/docmap.py
-# (copied unchanged from origin/work/reads/901-1000 @558f2f15) in Actions, because it sends its own SEC requests:
+# (copied unchanged from origin/work/reads/401-500 @de14aace) in Actions, because it sends its own SEC requests:
 # the User-Agent contact comes from the repo's SEC_USER_AGENT secret (founder's choice: no session sends a contact
 # address). sec.gov only, 0.4 requests per second (the tool's own limit). Its cache is seeded from the documents the
 # sec-reads-fetch run already stored, so they are not fetched twice. Range: pipeline/scripts/reads/shared_request.txt.
@@ -32,10 +32,29 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: sec_docs
         continue-on-error: true
+      - name: Earlier machine pass cache (shared run 43285759679)
+        uses: actions/download-artifact@v4
+        with:
+          name: shared-reads-15210537b0dbd7c64530e49a7f5da6d7e64348b5
+          run-id: 43285759679
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: prev
+        continue-on-error: true
+      - name: Note and lease pages (sec-reads-fetch run 43292258274)
+        uses: actions/download-artifact@v4
+        with:
+          name: sec-docs-bd5038eb8530f5e2e84ad35deb548617e4805df3
+          run-id: 43292258274
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: sec_docs2
+        continue-on-error: true
       - name: Seed the tool cache
         run: |
           mkdir -p tool_cache
+          if [ -d prev/tool_cache ]; then cp -n prev/tool_cache/* tool_cache/; fi
           if [ -d sec_docs ]; then python3 -I pipeline/scripts/reads/seed_tool_cache.py sec_docs tool_cache; fi
+          if [ -d sec_docs2 ]; then python3 -I pipeline/scripts/reads/seed_tool_cache.py sec_docs2 tool_cache; fi
+          ls tool_cache | wc -l
       - name: Machine pass (0.4 requests per second)
         env:
           SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
