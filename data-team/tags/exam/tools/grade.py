@@ -107,7 +107,7 @@ def main(pdir, ddir, *only):
             kt = tagset(k['tags'])
             if dp == 'share_buybacks' and norm_status(k['status']) == 'mapped' and ({'paymentsrelatedtotaxwithholdingforsharebasedcompensation', 'proceedsfromrepurchaseofequity'} & kt):
                 rk = 'withholding or non-repurchase tag keyed as buybacks (founder 2026-11-04 item 4)'
-            if dp == 'dividends_paid' and norm_status(k['status']) == 'mapped' and ({'paymentsofdividendsminorityinterest', 'paymentsofdividendspreferredstockandpreferencestock'} & kt):
+            if dp == 'dividends_paid' and norm_status(k['status']) == 'mapped' and ({'paymentsofdividendsminorityinterest', 'paymentsofdividendspreferredstockandpreferencestock', 'paymentstominorityshareholders'} & kt):
                 rk = 'NCI or preferred dividends keyed as common dividends (shareholder-returns card)'
             if dp == 'accounts_receivable' and norm_status(k['status']) == 'mapped' and ({'interestreceivable', 'notesreceivablenet', 'financingreceivableexcludingaccruedinterestafterallowanceforcreditloss'} & kt):
                 rk = 'interest/notes/financing receivables keyed as accounts receivable (sector-faces card)'
