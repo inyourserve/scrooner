@@ -1,0 +1,553 @@
+rank,ticker,company_id,data_point,fiscal_year,period_end,class,reason_code,reason,shown_value,proof_verdict,verdict,accession,r_page,tag,value_source,docmap_status
+4,MSFT,4,accounts_payable,2015,2015-06-30,PROVEN,,,6591000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2016,2016-06-30,PROVEN,,,6898000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2017,2017-06-30,PROVEN,,,7390000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2018,2018-06-30,PROVEN,,,8617000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2019,2019-06-30,PROVEN,,,9382000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2020,2020-06-30,PROVEN,,,12530000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2021,2021-06-30,PROVEN,,,15163000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2022,2022-06-30,PROVEN,,,19000000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2023,2023-06-30,PROVEN,,,18095000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2024,2024-06-30,PROVEN,,,21996000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2025,2025-06-30,PROVEN,,,27724000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_payable,2026,2026-06-30,PROVEN,,,42416000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,AccountsPayableCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2015,2015-06-30,PROVEN,,,17908000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2016,2016-06-30,PROVEN,,,18277000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,22431000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2018,2018-06-30,PROVEN,,,26481000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2019,2019-06-30,PROVEN,,,29524000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2020,2020-06-30,PROVEN,,,32011000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2021,2021-06-30,PROVEN,,,38043000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2022,2022-06-30,PROVEN,,,44261000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2023,2023-06-30,PROVEN,,,48688000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2024,2024-06-30,PROVEN,,,56924000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2025,2025-06-30,PROVEN,,,69905000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,accounts_receivable,2026,2026-06-30,PROVEN,,,80876000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,AccountsReceivableNetCurrent,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2015,2015-06-30,PROVEN,,,1300000000,PROVEN,PROVEN,0001193125-15-272806,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2016,2016-06-30,PROVEN,,,978000000,PROVEN,PROVEN,0001193125-16-662209,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2017,2017-06-30,PROVEN,,,1700000000,PROVEN,PROVEN,0001564590-17-014900,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2018,2018-06-30,PROVEN,,,2200000000,PROVEN,PROVEN,0001564590-18-019062,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2019,2019-06-30,PROVEN,,,1900000000,PROVEN,PROVEN,0001564590-19-027952,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2020,2020-06-30,PROVEN,,,1600000000,PROVEN,PROVEN,0001564590-20-034944,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2021,2021-06-30,PROVEN,,,1600000000,PROVEN,PROVEN,0001564590-21-039151,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2022,2022-06-30,PROVEN,,,2000000000,PROVEN,PROVEN,0001564590-22-026876,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2023,2023-06-30,PROVEN,,,2500000000,PROVEN,PROVEN,0000950170-23-035122,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2024,2024-06-30,PROVEN,,,4800000000,PROVEN,PROVEN,0000950170-24-087843,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2025,2025-06-30,PROVEN,,FY-1 2025-06-30: row: held_read_verified_pass_of_note_sourced_candidate,6000000000,PROVEN,PROVEN,0000950170-25-100235,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,amortization_of_intangibles,2026,2026-06-30,PROVEN,,FY0 2026-06-30: row: held_read_verified_pass_of_note_sourced_candidate,4700000000,PROVEN,PROVEN,0001193125-26-323660,R71.htm,AmortizationOfIntangibleAssets,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2015,2015-06-30,PROVEN,,,1.49,PROVEN,PROVEN,0001193125-15-272806,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2016,2016-06-30,PROVEN,,"3 fact(s) under EarningsPerShareBasic for this period, none authoritative (unresolved cross-filing conflict)",2.59,PROVEN,PROVEN,0001564590-18-019062,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2017,2017-06-30,PROVEN,,"3 fact(s) under EarningsPerShareBasic for this period, none authoritative (unresolved cross-filing conflict)",3.29,PROVEN,PROVEN,0001564590-19-027952,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2018,2018-06-30,PROVEN,,,2.15,PROVEN,PROVEN,0001564590-18-019062,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2019,2019-06-30,PROVEN,,,5.11,PROVEN,PROVEN,0001564590-19-027952,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2020,2020-06-30,PROVEN,,,5.82,PROVEN,PROVEN,0001564590-20-034944,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2021,2021-06-30,PROVEN,,,8.12,PROVEN,PROVEN,0001564590-21-039151,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2022,2022-06-30,PROVEN,,,9.7,PROVEN,PROVEN,0001564590-22-026876,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2023,2023-06-30,PROVEN,,,9.72,PROVEN,PROVEN,0000950170-23-035122,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2024,2024-06-30,PROVEN,,,11.86,PROVEN,PROVEN,0000950170-24-087843,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2025,2025-06-30,PROVEN,,,13.7,PROVEN,PROVEN,0000950170-25-100235,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,basic_eps,2026,2026-06-30,PROVEN,,,18,PROVEN,PROVEN,0001193125-26-323660,R2.htm,EarningsPerShareBasic,fsn_pre_calc,mapped
+4,MSFT,4,capex,2015,2015-06-30,PROVEN,,,5944000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2016,2016-06-30,PROVEN,,,8343000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2017,2017-06-30,PROVEN,,,8129000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2018,2018-06-30,PROVEN,,,11632000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2019,2019-06-30,PROVEN,,,13925000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2020,2020-06-30,PROVEN,,,15441000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2021,2021-06-30,PROVEN,,,20622000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2022,2022-06-30,PROVEN,,,23886000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2023,2023-06-30,PROVEN,,,28107000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2024,2024-06-30,PROVEN,,,44477000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2025,2025-06-30,PROVEN,,,64551000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,capex,2026,2026-06-30,PROVEN,,,115948000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,PaymentsToAcquirePropertyPlantAndEquipment,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2015,2015-06-30,PROVEN,,,5595000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2016,2016-06-30,PROVEN,,,6510000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2017,2017-06-30,PROVEN,,,7663000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2018,2018-06-30,PROVEN,,,11946000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2019,2019-06-30,PROVEN,,,11356000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2020,2020-06-30,PROVEN,,,13576000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2021,2021-06-30,PROVEN,,,14224000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2022,2022-06-30,PROVEN,,,13931000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2023,2023-06-30,PROVEN,,,34704000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2024,2024-06-30,PROVEN,,,18315000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2025,2025-06-30,PROVEN,,,30242000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_and_equivalents,2026,2026-06-30,PROVEN,,,20935000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,CashAndCashEquivalentsAtCarryingValue,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,-9668000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2016,2016-06-30,PROVEN,,,-8393000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2017,2017-06-30,PROVEN,,,8408000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2018,2018-06-30,PROVEN,,,-33590000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2019,2019-06-30,PROVEN,,,-36887000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2020,2020-06-30,PROVEN,,,-46031000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2021,2021-06-30,PROVEN,,,-48486000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2022,2022-06-30,PROVEN,,,-58876000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2023,2023-06-30,PROVEN,,,-43935000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2024,2024-06-30,PROVEN,,,-37757000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2025,2025-06-30,PROVEN,,,-51699000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_financing,2026,2026-06-30,PROVEN,,,-52546000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,NetCashProvidedByUsedInFinancingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2015,2015-06-30,PROVEN,,,-23001000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2016,2016-06-30,PROVEN,,,-23950000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2017,2017-06-30,PROVEN,,,-46781000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2018,2018-06-30,PROVEN,,,-6061000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2019,2019-06-30,PROVEN,,,-15773000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2020,2020-06-30,PROVEN,,,-12223000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2021,2021-06-30,PROVEN,,,-27577000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2022,2022-06-30,PROVEN,,,-30311000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2023,2023-06-30,PROVEN,,,-22680000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2024,2024-06-30,PROVEN,,,-96970000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2025,2025-06-30,PROVEN,,,-72599000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_flow_investing,2026,2026-06-30,PROVEN,,,-139500000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,NetCashProvidedByUsedInInvestingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2015,2015-06-30,PROVEN,,,4400000000,PROVEN,PROVEN,0001193125-15-272806,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2016,2016-06-30,PROVEN,,,3900000000,PROVEN,PROVEN,0001193125-16-662209,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2017,2017-06-30,PROVEN,,,2400000000,PROVEN,PROVEN,0001564590-17-014900,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2018,2018-06-30,PROVEN,,,5500000000,PROVEN,PROVEN,0001564590-18-019062,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2019,2019-06-30,PROVEN,,,8400000000,PROVEN,PROVEN,0001564590-19-027952,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2020,2020-06-30,PROVEN,,,12500000000,PROVEN,PROVEN,0001564590-20-034944,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2021,2021-06-30,PROVEN,,,13400000000,PROVEN,PROVEN,0001564590-21-039151,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2022,2022-06-30,PROVEN,,,16000000000,PROVEN,PROVEN,0001564590-22-026876,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2023,2023-06-30,PROVEN,,,23100000000,PROVEN,PROVEN,0000950170-23-035122,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2024,2024-06-30,PROVEN,,,23400000000,PROVEN,PROVEN,0000950170-24-087843,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2025,2025-06-30,PROVEN,,,28700000000,PROVEN,PROVEN,0000950170-25-100235,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_income_taxes,2026,2026-06-30,PROVEN,,,21188000000,PROVEN,PROVEN,0001193125-26-323660,R82.htm,IncomeTaxesPaidNet,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2015,2015-06-30,PROVEN,,,620000000,PROVEN,PROVEN,0001193125-15-272806,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2016,2016-06-30,PROVEN,,,1100000000,PROVEN,PROVEN,0001193125-16-662209,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2017,2017-06-30,PROVEN,,,1600000000,PROVEN,PROVEN,0001564590-17-014900,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2018,2018-06-30,PROVEN,,,2400000000,PROVEN,PROVEN,0001564590-18-019062,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2019,2019-06-30,PROVEN,,,2400000000,PROVEN,PROVEN,0001564590-19-027952,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2020,2020-06-30,PROVEN,,,2400000000,PROVEN,PROVEN,0001564590-21-039151,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2021,2021-06-30,PROVEN,,,2000000000,PROVEN,PROVEN,0001564590-21-039151,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2022,2022-06-30,PROVEN,,,1900000000,PROVEN,PROVEN,0001564590-22-026876,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2023,2023-06-30,PROVEN,,,1700000000,PROVEN,PROVEN,0000950170-23-035122,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2024,2024-06-30,PROVEN,,,1700000000,PROVEN,PROVEN,0000950170-24-087843,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2025,2025-06-30,PROVEN,,,1600000000,PROVEN,PROVEN,0000950170-25-100235,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cash_paid_for_interest,2026,2026-06-30,PROVEN,,,1500000000,PROVEN,PROVEN,0001193125-26-323660,R75.htm,InterestPaid,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2015,2015-06-30,PROVEN,,,-1054000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2016,2016-06-30,PROVEN,,,88000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2017,2017-06-30,PROVEN,,,81000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2018,2018-06-30,PROVEN,,,1148000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2019,2019-06-30,PROVEN,,,232000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2020,2020-06-30,PROVEN,,,3018000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2021,2021-06-30,PROVEN,,,2798000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2022,2022-06-30,PROVEN,,,2943000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2023,2023-06-30,PROVEN,,,-2721000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2024,2024-06-30,PROVEN,,,3545000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2025,2025-06-30,PROVEN,,,569000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ap_change,2026,2026-06-30,PROVEN,,,5268000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,IncreaseDecreaseInAccountsPayable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2015,2015-06-30,PROVEN,,,-1456000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,-562000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,1216000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2018,2018-06-30,PROVEN,,,3862000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2019,2019-06-30,PROVEN,,,2812000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2020,2020-06-30,PROVEN,,,2577000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2021,2021-06-30,PROVEN,,,6481000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2022,2022-06-30,PROVEN,,,6834000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2023,2023-06-30,PROVEN,,,4087000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2024,2024-06-30,PROVEN,,,7191000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2025,2025-06-30,PROVEN,,,10581000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_ar_change,2026,2026-06-30,PROVEN,,,12737000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,IncreaseDecreaseInAccountsReceivable,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2015,2015-06-30,PROVEN,,,272000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2016,2016-06-30,PROVEN,,,-600000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2017,2017-06-30,PROVEN,,,-50000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2018,2018-06-30,PROVEN,,,465000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2019,2019-06-30,PROVEN,,,-597000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2020,2020-06-30,PROVEN,,,-168000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2021,2021-06-30,PROVEN,,,737000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2022,2022-06-30,PROVEN,,,1123000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2023,2023-06-30,PROVEN,,,-1242000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2024,2024-06-30,PROVEN,,,-1284000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2025,2025-06-30,PROVEN,,,-309000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cf_inventory_change,2026,2026-06-30,PROVEN,,,461000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,IncreaseDecreaseInInventories,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,29668000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2016,2016-06-30,PROVEN,,,33325000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2017,2017-06-30,PROVEN,,,39507000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2018,2018-06-30,PROVEN,,,43884000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2019,2019-06-30,PROVEN,,,52185000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2020,2020-06-30,PROVEN,,,60675000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2021,2021-06-30,PROVEN,,,76740000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2022,2022-06-30,PROVEN,,,89035000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2023,2023-06-30,PROVEN,,,87582000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2024,2024-06-30,PROVEN,,,118548000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2025,2025-06-30,PROVEN,,,136162000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,cfo,2026,2026-06-30,PROVEN,,,182935000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,NetCashProvidedByUsedInOperatingActivities,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2015,2015-06-30,PROVEN,,,11007000000,PROVEN,PROVEN,0001193125-15-272806,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,19811000000,PROVEN,PROVEN,0001564590-18-019062,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,24322000000,PROVEN,PROVEN,0001564590-19-027952,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2018,2018-06-30,PROVEN,,,13715000000,PROVEN,PROVEN,0001564590-18-019062,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2019,2019-06-30,PROVEN,,,41154000000,PROVEN,PROVEN,0001564590-19-027952,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2020,2020-06-30,PROVEN,,,47807000000,PROVEN,PROVEN,0001564590-20-034944,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2021,2021-06-30,PROVEN,,,59897000000,PROVEN,PROVEN,0001564590-21-039151,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2022,2022-06-30,PROVEN,,,66238000000,PROVEN,PROVEN,0001564590-22-026876,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2023,2023-06-30,PROVEN,,,70696000000,PROVEN,PROVEN,0000950170-23-035122,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2024,2024-06-30,PROVEN,,,88889000000,PROVEN,PROVEN,0000950170-24-087843,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2025,2025-06-30,PROVEN,,,104075000000,PROVEN,PROVEN,0000950170-25-100235,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,comprehensive_income,2026,2026-06-30,PROVEN,,,133812000000,PROVEN,PROVEN,0001193125-26-323660,R3.htm,ComprehensiveIncomeNetOfTax,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,33038000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,CostOfRevenue,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,32780000000,PROVEN,PROVEN,0001193125-16-662209,R2.htm,CostOfRevenue,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,34261000000,PROVEN,PROVEN,0001564590-17-014900,R2.htm,CostOfRevenue,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2018,2018-06-30,PROVEN,,,38353000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2019,2019-06-30,PROVEN,,,42910000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2020,2020-06-30,PROVEN,,,46078000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2021,2021-06-30,PROVEN,,,52232000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2022,2022-06-30,PROVEN,,,62650000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2023,2023-06-30,PROVEN,,,65863000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2024,2024-06-30,PROVEN,,,74114000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2025,2025-06-30,PROVEN,,,87831000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,cost_of_revenue,2026,2026-06-30,PROVEN,,,106374000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,CostOfGoodsAndServicesSold,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,122797000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2016,2016-06-30,PROVEN,,,139660000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,162696000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2018,2018-06-30,PROVEN,,,169662000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2019,2019-06-30,PROVEN,,,175552000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2020,2020-06-30,PROVEN,,,181915000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2021,2021-06-30,PROVEN,,,184406000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2022,2022-06-30,PROVEN,,,169684000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2023,2023-06-30,PROVEN,,,184257000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2024,2024-06-30,PROVEN,,,159734000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2025,2025-06-30,PROVEN,,,191131000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_assets,2026,2026-06-30,PROVEN,,,207710000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,AssetsCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,49647000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2016,2016-06-30,PROVEN,,,59357000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,55745000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2018,2018-06-30,PROVEN,,,58488000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2019,2019-06-30,PROVEN,,,69420000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2020,2020-06-30,PROVEN,,,72310000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2021,2021-06-30,PROVEN,,,88657000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2022,2022-06-30,PROVEN,,,95082000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2023,2023-06-30,PROVEN,,,104149000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2024,2024-06-30,PROVEN,,,125286000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2025,2025-06-30,PROVEN,,,141218000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,current_liabilities,2026,2026-06-30,PROVEN,,,168825000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,LiabilitiesCurrent,fsn_pre_calc,mapped
+4,MSFT,4,depreciation_and_amortization,2015,2015-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2016,2016-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2017,2017-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2018,2018-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2019,2019-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2020,2020-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2021,2021-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2022,2022-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2023,2023-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2024,2024-06-30,REASON,era_unmapped,the predictor's candidate for this period was not backed by the cell proof (no proof row): the line is not mapped for this era,,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2025,2025-06-30,REASON,docmap_combined,"combined line 'Depreciation, amortization, and other' (msft:DepreciationAmortizationAndOther): CF R6 'Depreciation, amortization, and other' (custom) spans D&A and other non-cash items: combined; notes print depreciation and intangible amortization only rounded to $0.1bn; value_source fsn_xbrl; check: hand R6.htm",,,,,R6.htm,,,combined
+4,MSFT,4,depreciation_and_amortization,2026,2026-06-30,REASON,docmap_combined,"combined line 'Depreciation, amortization, and other' (msft:DepreciationAmortizationAndOther): CF R6 'Depreciation, amortization, and other' (custom) spans D&A and other non-cash items: combined; notes print depreciation and intangible amortization only rounded to $0.1bn; value_source fsn_xbrl; check: hand R6.htm",,,,,R6.htm,,,combined
+4,MSFT,4,diluted_eps,2015,2015-06-30,PROVEN,,,1.48,PROVEN,PROVEN,0001193125-15-272806,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2016,2016-06-30,PROVEN,,"3 fact(s) under EarningsPerShareDiluted for this period, none authoritative (unresolved cross-filing conflict)",2.56,PROVEN,PROVEN,0001564590-18-019062,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2017,2017-06-30,PROVEN,,"3 fact(s) under EarningsPerShareDiluted for this period, none authoritative (unresolved cross-filing conflict)",3.25,PROVEN,PROVEN,0001564590-19-027952,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2018,2018-06-30,PROVEN,,,2.13,PROVEN,PROVEN,0001564590-18-019062,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2019,2019-06-30,PROVEN,,,5.06,PROVEN,PROVEN,0001564590-19-027952,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2020,2020-06-30,PROVEN,,,5.76,PROVEN,PROVEN,0001564590-20-034944,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2021,2021-06-30,PROVEN,,,8.05,PROVEN,PROVEN,0001564590-21-039151,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2022,2022-06-30,PROVEN,,,9.65,PROVEN,PROVEN,0001564590-22-026876,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2023,2023-06-30,PROVEN,,,9.68,PROVEN,PROVEN,0000950170-23-035122,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2024,2024-06-30,PROVEN,,,11.8,PROVEN,PROVEN,0000950170-24-087843,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2025,2025-06-30,PROVEN,,,13.64,PROVEN,PROVEN,0000950170-25-100235,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,diluted_eps,2026,2026-06-30,PROVEN,,,17.95,PROVEN,PROVEN,0001193125-26-323660,R2.htm,EarningsPerShareDiluted,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2015,2015-06-30,PROVEN,,,9882000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2016,2016-06-30,PROVEN,,,11006000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2017,2017-06-30,PROVEN,,,11845000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2018,2018-06-30,PROVEN,,,12699000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2019,2019-06-30,PROVEN,,,13811000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2020,2020-06-30,PROVEN,,,15137000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2021,2021-06-30,PROVEN,,,16521000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2022,2022-06-30,PROVEN,,,18135000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2023,2023-06-30,PROVEN,,,19800000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2024,2024-06-30,PROVEN,,,21771000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2025,2025-06-30,PROVEN,,,24082000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_paid,2026,2026-06-30,PROVEN,,,26445000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,PaymentsOfDividendsCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2015,2015-06-30,PROVEN,,,1.24,PROVEN,PROVEN,0001193125-15-272806,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2016,2016-06-30,PROVEN,,,1.44,PROVEN,PROVEN,0001193125-16-662209,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2017,2017-06-30,PROVEN,,,1.56,PROVEN,PROVEN,0001564590-17-014900,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2018,2018-06-30,PROVEN,,,1.68,PROVEN,PROVEN,0001564590-18-019062,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2019,2019-06-30,PROVEN,,,1.84,PROVEN,PROVEN,0001564590-19-027952,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2020,2020-06-30,PROVEN,,,2.04,PROVEN,PROVEN,0001564590-20-034944,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2021,2021-06-30,PROVEN,,,2.24,PROVEN,PROVEN,0001564590-21-039151,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2022,2022-06-30,PROVEN,,,2.48,PROVEN,PROVEN,0001564590-22-026876,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2023,2023-06-30,PROVEN,,,2.72,PROVEN,PROVEN,0000950170-23-035122,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2024,2024-06-30,PROVEN,,,3,PROVEN,PROVEN,0000950170-24-087843,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2025,2025-06-30,PROVEN,,,3.32,PROVEN,PROVEN,0000950170-25-100235,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,dividends_per_share,2026,2026-06-30,PROVEN,,,3.64,PROVEN,PROVEN,0001193125-26-323660,R7.htm,CommonStockDividendsPerShareDeclared,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2015,2015-06-30,PROVEN,,,16939000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2016,2016-06-30,PROVEN,,,17872000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2017,2017-06-30,PROVEN,,,35122000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2018,2018-06-30,PROVEN,,,35683000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2019,2019-06-30,PROVEN,,,42026000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2020,2020-06-30,PROVEN,,,43351000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2021,2021-06-30,PROVEN,,,49711000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2022,2022-06-30,PROVEN,,,67524000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2023,2023-06-30,PROVEN,,,67886000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2024,2024-06-30,PROVEN,,,119220000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2025,2025-06-30,PROVEN,,,119509000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,goodwill,2026,2026-06-30,PROVEN,,,119651000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,Goodwill,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2015,2015-06-30,PROVEN,,,60542000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,58374000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,62310000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2018,2018-06-30,PROVEN,,,72007000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2019,2019-06-30,PROVEN,,,82933000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2020,2020-06-30,PROVEN,,,96937000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2021,2021-06-30,PROVEN,,,115856000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2022,2022-06-30,PROVEN,,,135620000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2023,2023-06-30,PROVEN,,,146052000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2024,2024-06-30,PROVEN,,,171008000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2025,2025-06-30,PROVEN,,,193893000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,gross_profit,2026,2026-06-30,PROVEN,,,225465000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,GrossProfit,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2015,2015-06-30,PROVEN,,,18507000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,25639000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,29901000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2018,2018-06-30,PROVEN,,,36474000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2019,2019-06-30,PROVEN,,,43688000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2020,2020-06-30,PROVEN,,,53036000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2021,2021-06-30,PROVEN,,,71102000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2022,2022-06-30,PROVEN,,,83716000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2023,2023-06-30,PROVEN,,,89311000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2024,2024-06-30,PROVEN,,,107787000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2025,2025-06-30,PROVEN,,,123627000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,fsn_pre_calc,mapped
+4,MSFT,4,income_before_tax,2026,2026-06-30,PROVEN,,,165934000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2015,2015-06-30,PROVEN,,,6314000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,5100000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,4412000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2018,2018-06-30,PROVEN,,,19903000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2019,2019-06-30,PROVEN,,,4448000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2020,2020-06-30,PROVEN,,,8755000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2021,2021-06-30,PROVEN,,,9831000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2022,2022-06-30,PROVEN,,,10978000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2023,2023-06-30,PROVEN,,,16950000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2024,2024-06-30,PROVEN,,,19651000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2025,2025-06-30,PROVEN,,,21795000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,income_tax_expense,2026,2026-06-30,PROVEN,,,32185000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,IncomeTaxExpenseBenefit,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2015,2015-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,781000000,PROVEN,PROVEN,0001193125-15-272806,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2016,2016-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,1243000000,PROVEN,PROVEN,0001193125-16-662209,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2017,2017-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2222000000,PROVEN,PROVEN,0001564590-17-014900,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2018,2018-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2733000000,PROVEN,PROVEN,0001564590-18-019062,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2019,2019-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2686000000,PROVEN,PROVEN,0001564590-19-027952,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2020,2020-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2591000000,PROVEN,PROVEN,0001564590-20-034944,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2021,2021-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2346000000,PROVEN,PROVEN,0001564590-21-039151,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2022,2022-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,2063000000,PROVEN,PROVEN,0001564590-22-026876,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2023,2023-06-30,PROVEN,,the predictor's candidate for this period was not backed by the cell proof (NOT_PRESENTED): the line is not mapped for this era,1968000000,PROVEN,PROVEN,0000950170-23-035122,R48.htm,InterestExpense,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2024,2024-06-30,PROVEN,,"shown as the company's combined line 'Other income (expense), net'",2935000000,PROVEN,PROVEN,0000950170-25-100235,R48.htm,InterestExpenseNonoperating,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2025,2025-06-30,PROVEN,,FY-1 2025-06-30: row: combined,2385000000,PROVEN,PROVEN,0000950170-25-100235,R48.htm,InterestExpenseNonoperating,fsn_pre_calc,mapped
+4,MSFT,4,interest_expense,2026,2026-06-30,PROVEN,,FY0 2026-06-30: row: combined,3051000000,PROVEN,PROVEN,0001193125-26-323660,R48.htm,InterestExpenseNonoperating,fsn_pre_calc,mapped
+4,MSFT,4,interest_income,2015,2015-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2016,2016-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2017,2017-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2018,2018-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2019,2019-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2020,2020-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2021,2021-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2022,2022-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2023,2023-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2024,2024-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2025,2025-06-30,REASON,combined,FY-1 2025-06-30: row: combined,,,,,R48.htm,,,combined
+4,MSFT,4,interest_income,2026,2026-06-30,REASON,combined,FY0 2026-06-30: row: combined,,,,,R48.htm,,,combined
+4,MSFT,4,inventory,2015,2015-06-30,PROVEN,,,2902000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2016,2016-06-30,PROVEN,,,2251000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2017,2017-06-30,PROVEN,,,2181000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2018,2018-06-30,PROVEN,,,2662000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2019,2019-06-30,PROVEN,,,2063000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2020,2020-06-30,PROVEN,,,1895000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2021,2021-06-30,PROVEN,,,2636000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2022,2022-06-30,PROVEN,,,3742000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2023,2023-06-30,PROVEN,,,2500000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2024,2024-06-30,PROVEN,,,1246000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2025,2025-06-30,PROVEN,,,938000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,inventory,2026,2026-06-30,PROVEN,,,1397000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,InventoryNet,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2015,2015-06-30,PROVEN,,,12193000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,20539000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,25489000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2018,2018-06-30,PROVEN,,,16571000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2019,2019-06-30,PROVEN,,,39240000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2020,2020-06-30,PROVEN,,,44281000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2021,2021-06-30,PROVEN,,,61271000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2022,2022-06-30,PROVEN,,,72738000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2023,2023-06-30,PROVEN,,,72361000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2024,2024-06-30,PROVEN,,,88136000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2025,2025-06-30,PROVEN,,,101832000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,net_income,2026,2026-06-30,PROVEN,,,133749000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,NetIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_expenses,2015,2015-06-30,PROVEN,,held by the tag-map mapper: opex_components_do_not_tie_gross_profit_to_operating_income,42381000000.0000,PROVEN,PROVEN,0001564590-17-014900,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ImpairmentIntegrationAndRestructuringExpenses,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2016,2016-06-30,PROVEN,,held by the tag-map mapper: opex_components_do_not_tie_gross_profit_to_operating_income,32358000000.0000,PROVEN,PROVEN,0001564590-17-014900,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ImpairmentIntegrationAndRestructuringExpenses,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2017,2017-06-30,PROVEN,,held by the tag-map mapper: opex_components_do_not_tie_gross_profit_to_operating_income,33363000000.0000,PROVEN,PROVEN,0001564590-17-014900,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ImpairmentIntegrationAndRestructuringExpenses,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2018,2018-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,36949000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2019,2019-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,39974000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2020,2020-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,43978000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2021,2021-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,45940000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2022,2022-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,52237000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2023,2023-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,57529000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2024,2024-06-30,PROVEN,,,61575000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2025,2025-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,65365000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_expenses,2026,2026-06-30,PROVEN,,held by the tag-map mapper: components_without_single_calc_parent,70228000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm+R2.htm+R2.htm,"GeneralAndAdministrativeExpense,ResearchAndDevelopmentExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,operating_income,2015,2015-06-30,PROVEN,,,18161000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,26078000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,29025000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2018,2018-06-30,PROVEN,,,35058000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2019,2019-06-30,PROVEN,,,42959000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2020,2020-06-30,PROVEN,,,52959000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2021,2021-06-30,PROVEN,,,69916000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2022,2022-06-30,PROVEN,,,83383000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2023,2023-06-30,PROVEN,,,88523000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2024,2024-06-30,PROVEN,,,109433000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2025,2025-06-30,PROVEN,,,128528000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,operating_income,2026,2026-06-30,PROVEN,,,155237000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,OperatingIncomeLoss,fsn_pre_calc,mapped
+4,MSFT,4,other_income_expense_net,2015,2015-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2016,2016-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2017,2017-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2018,2018-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2019,2019-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2020,2020-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2021,2021-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2022,2022-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2023,2023-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2024,2024-06-30,REASON,not_in_template,"shown as the company's combined line 'Other income (expense), net'",,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2025,2025-06-30,REASON,combined,FY-1 2025-06-30: row: combined,,,,,R2.htm,,,combined
+4,MSFT,4,other_income_expense_net,2026,2026-06-30,REASON,combined,FY0 2026-06-30: row: combined,,,,,R2.htm,,,combined
+4,MSFT,4,ppe_net,2015,2015-06-30,PROVEN,,,14731000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2016,2016-06-30,PROVEN,,,18356000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2017,2017-06-30,PROVEN,,,23734000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2018,2018-06-30,PROVEN,,,29460000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2019,2019-06-30,PROVEN,,,36477000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2020,2020-06-30,PROVEN,,,44151000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2021,2021-06-30,PROVEN,,,59715000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2022,2022-06-30,PROVEN,,,74398000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2023,2023-06-30,PROVEN,,,95641000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2024,2024-06-30,PROVEN,,,135591000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2025,2025-06-30,PROVEN,,,204966000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,ppe_net,2026,2026-06-30,PROVEN,,,313076000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,PropertyPlantAndEquipmentNet,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2015,2015-06-30,PROVEN,,,12046000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2016,2016-06-30,PROVEN,,,11988000000,PROVEN,PROVEN,0001193125-16-662209,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2017,2017-06-30,PROVEN,,,13037000000,PROVEN,PROVEN,0001564590-17-014900,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2018,2018-06-30,PROVEN,,,14726000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2019,2019-06-30,PROVEN,,,16876000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2020,2020-06-30,PROVEN,,,19269000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2021,2021-06-30,PROVEN,,,20716000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2022,2022-06-30,PROVEN,,,24512000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2023,2023-06-30,PROVEN,,,27195000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2024,2024-06-30,PROVEN,,,29510000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2025,2025-06-30,PROVEN,,,32488000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,research_and_development,2026,2026-06-30,PROVEN,,,35562000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,ResearchAndDevelopmentExpense,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2015,2015-06-30,PROVEN,,,93580000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,SalesRevenueNet,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2016,2016-06-30,PROVEN,,Later filings print a different number for this period than the original filing.,85320000000,PROVEN,PROVEN,0001193125-16-662209,R2.htm,SalesRevenueNet,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2017,2017-06-30,PROVEN,,Later filings print a different number for this period than the original filing.,89950000000,PROVEN,PROVEN,0001564590-17-014900,R2.htm,SalesRevenueNet,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2018,2018-06-30,PROVEN,,,110360000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2019,2019-06-30,PROVEN,,,125843000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2020,2020-06-30,PROVEN,,,143015000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2021,2021-06-30,PROVEN,,,168088000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2022,2022-06-30,PROVEN,,,198270000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2023,2023-06-30,PROVEN,,,211915000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2024,2024-06-30,PROVEN,,,245122000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2025,2025-06-30,PROVEN,,,281724000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,revenue,2026,2026-06-30,PROVEN,,,331839000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,RevenueFromContractWithCustomerExcludingAssessedTax,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2015,2015-06-30,PROVEN,,,2574000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,AllocatedShareBasedCompensationExpense,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2016,2016-06-30,PROVEN,,,2668000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,AllocatedShareBasedCompensationExpense,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2017,2017-06-30,PROVEN,,,3266000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2018,2018-06-30,PROVEN,,,3940000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2019,2019-06-30,PROVEN,,,4652000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2020,2020-06-30,PROVEN,,,5289000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2021,2021-06-30,PROVEN,,,6118000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2022,2022-06-30,PROVEN,,,7502000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2023,2023-06-30,PROVEN,,,9611000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2024,2024-06-30,PROVEN,,,10734000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2025,2025-06-30,PROVEN,,,11974000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sbc,2026,2026-06-30,PROVEN,,,12405000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,ShareBasedCompensation,fsn_pre_calc,mapped
+4,MSFT,4,sga_expense,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,20324000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,19198000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,19942000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2018,2018-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,22223000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2019,2019-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,23098000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2020,2020-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,24709000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2021,2021-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,25224000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2022,2022-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,27725000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2023,2023-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,30334000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2024,2024-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,32065000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2025,2025-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,32877000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,sga_expense,2026,2026-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,34666000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm+R2.htm,"GeneralAndAdministrativeExpense,SellingAndMarketingExpense",fsn_pre_calc,component sum
+4,MSFT,4,share_buybacks,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,14443000000,PROVEN,PROVEN,0001193125-15-272806,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,15969000000,PROVEN,PROVEN,0001193125-16-662209,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,11788000000,PROVEN,PROVEN,0001564590-17-014900,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2018,2018-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,10721000000,PROVEN,PROVEN,0001564590-18-019062,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2019,2019-06-30,PROVEN,,,19543000000,PROVEN,PROVEN,0001564590-19-027952,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2020,2020-06-30,PROVEN,,,22968000000,PROVEN,PROVEN,0001564590-20-034944,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2021,2021-06-30,PROVEN,,,27385000000,PROVEN,PROVEN,0001564590-21-039151,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2022,2022-06-30,PROVEN,,,32696000000,PROVEN,PROVEN,0001564590-22-026876,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2023,2023-06-30,PROVEN,,,22245000000,PROVEN,PROVEN,0000950170-23-035122,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2024,2024-06-30,PROVEN,,,17254000000,PROVEN,PROVEN,0000950170-24-087843,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2025,2025-06-30,PROVEN,,,18420000000,PROVEN,PROVEN,0000950170-25-100235,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,share_buybacks,2026,2026-06-30,PROVEN,,,22271000000,PROVEN,PROVEN,0001193125-26-323660,R6.htm,PaymentsForRepurchaseOfCommonStock,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2015,2015-06-30,PROVEN,,,8027000000,PROVEN,PROVEN,0001193125-15-272806,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2016,2016-06-30,PROVEN,,,7808000000,PROVEN,PROVEN,0001193125-16-662209,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2017,2017-06-30,PROVEN,,,7708000000,PROVEN,PROVEN,0001564590-17-014900,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2018,2018-06-30,PROVEN,,,7677000000,PROVEN,PROVEN,0001564590-18-019062,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2019,2019-06-30,PROVEN,,,7643000000,PROVEN,PROVEN,0001564590-19-027952,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2020,2020-06-30,PROVEN,,,7571000000,PROVEN,PROVEN,0001564590-20-034944,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2021,2021-06-30,PROVEN,,,7519000000,PROVEN,PROVEN,0001564590-21-039151,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2022,2022-06-30,PROVEN,,,7464000000,PROVEN,PROVEN,0001564590-22-026876,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2023,2023-06-30,PROVEN,,,7432000000,PROVEN,PROVEN,0000950170-23-035122,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2024,2024-06-30,PROVEN,,,7434000000,PROVEN,PROVEN,0000950170-24-087843,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2025,2025-06-30,PROVEN,,,7434000000,PROVEN,PROVEN,0000950170-25-100235,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,shares_outstanding,2026,2026-06-30,PROVEN,,,7427000000,PROVEN,PROVEN,0001193125-26-323660,R5.htm,CommonStockSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2015,2015-06-30,PROVEN,,,80083000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,71997000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,87711000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2018,2018-06-30,PROVEN,,,82718000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2019,2019-06-30,PROVEN,,,102330000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2020,2020-06-30,PROVEN,,,118304000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2021,2021-06-30,PROVEN,,,141988000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2022,2022-06-30,PROVEN,,,166542000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2023,2023-06-30,PROVEN,,,206223000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2024,2024-06-30,PROVEN,,,268477000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2025,2025-06-30,PROVEN,,,343479000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,stockholders_equity,2026,2026-06-30,PROVEN,,,442387000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,StockholdersEquity,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,174472000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,193468000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,250312000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2018,2018-06-30,PROVEN,,,258848000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2019,2019-06-30,PROVEN,,,286556000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2020,2020-06-30,PROVEN,,,301311000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2021,2021-06-30,PROVEN,,,333779000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2022,2022-06-30,PROVEN,,,364840000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2023,2023-06-30,PROVEN,,,411976000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2024,2024-06-30,PROVEN,,,512163000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2025,2025-06-30,PROVEN,,,619003000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_assets,2026,2026-06-30,PROVEN,,,758376000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,Assets,fsn_pre_calc,mapped
+4,MSFT,4,total_debt,2015,2015-06-30,PROVEN,,,30307000000,PROVEN,PROVEN,0001193125-15-272806,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2016,2016-06-30,PROVEN,,,40557000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2017,2017-06-30,PROVEN,,,77122000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2018,2018-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,76240000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2019,2019-06-30,PROVEN,,,72178000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2020,2020-06-30,PROVEN,,,63327000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2021,2021-06-30,PROVEN,,,58146000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2022,2022-06-30,PROVEN,,,49781000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2023,2023-06-30,PROVEN,,,47237000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2024,2024-06-30,PROVEN,,,44937000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2025,2025-06-30,PROVEN,,FY-1 2025-06-30: read: held_debt_lane,43151000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_debt,2026,2026-06-30,PROVEN,,FY0 2026-06-30: read: held_debt_lane,40294000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm+R4.htm,"LongTermDebtCurrent,LongTermDebtNoncurrent",fsn_pre_calc,component sum
+4,MSFT,4,total_liabilities,2015,2015-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,94389000000,PROVEN,PROVEN,0001193125-16-662209,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2016,2016-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,121471000000,PROVEN,PROVEN,0001564590-17-014900,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2017,2017-06-30,PROVEN,,held by the tag-map mapper: proof_disagree,162601000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2018,2018-06-30,PROVEN,,,176130000000,PROVEN,PROVEN,0001564590-18-019062,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2019,2019-06-30,PROVEN,,,184226000000,PROVEN,PROVEN,0001564590-19-027952,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2020,2020-06-30,PROVEN,,,183007000000,PROVEN,PROVEN,0001564590-20-034944,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2021,2021-06-30,PROVEN,,,191791000000,PROVEN,PROVEN,0001564590-21-039151,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2022,2022-06-30,PROVEN,,,198298000000,PROVEN,PROVEN,0001564590-22-026876,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2023,2023-06-30,PROVEN,,,205753000000,PROVEN,PROVEN,0000950170-23-035122,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2024,2024-06-30,PROVEN,,,243686000000,PROVEN,PROVEN,0000950170-24-087843,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2025,2025-06-30,PROVEN,,,275524000000,PROVEN,PROVEN,0000950170-25-100235,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,total_liabilities,2026,2026-06-30,PROVEN,,,315989000000,PROVEN,PROVEN,0001193125-26-323660,R4.htm,Liabilities,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2015,2015-06-30,PROVEN,,,8177000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2016,2016-06-30,PROVEN,,,7925000000,PROVEN,PROVEN,0001193125-16-662209,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2017,2017-06-30,PROVEN,,,7746000000,PROVEN,PROVEN,0001564590-17-014900,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2018,2018-06-30,PROVEN,,,7700000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2019,2019-06-30,PROVEN,,,7673000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2020,2020-06-30,PROVEN,,,7610000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2021,2021-06-30,PROVEN,,,7547000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2022,2022-06-30,PROVEN,,,7496000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2023,2023-06-30,PROVEN,,,7446000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2024,2024-06-30,PROVEN,,,7431000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2025,2025-06-30,PROVEN,,,7433000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_basic_shares,2026,2026-06-30,PROVEN,,,7429000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,WeightedAverageNumberOfSharesOutstandingBasic,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2015,2015-06-30,PROVEN,,,8254000000,PROVEN,PROVEN,0001193125-15-272806,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2016,2016-06-30,PROVEN,,,8013000000,PROVEN,PROVEN,0001193125-16-662209,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2017,2017-06-30,PROVEN,,,7832000000,PROVEN,PROVEN,0001564590-17-014900,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2018,2018-06-30,PROVEN,,,7794000000,PROVEN,PROVEN,0001564590-18-019062,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2019,2019-06-30,PROVEN,,,7753000000,PROVEN,PROVEN,0001564590-19-027952,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2020,2020-06-30,PROVEN,,,7683000000,PROVEN,PROVEN,0001564590-20-034944,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2021,2021-06-30,PROVEN,,,7608000000,PROVEN,PROVEN,0001564590-21-039151,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2022,2022-06-30,PROVEN,,,7540000000,PROVEN,PROVEN,0001564590-22-026876,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2023,2023-06-30,PROVEN,,,7472000000,PROVEN,PROVEN,0000950170-23-035122,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2024,2024-06-30,PROVEN,,,7469000000,PROVEN,PROVEN,0000950170-24-087843,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2025,2025-06-30,PROVEN,,,7465000000,PROVEN,PROVEN,0000950170-25-100235,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
+4,MSFT,4,weighted_diluted_shares,2026,2026-06-30,PROVEN,,,7453000000,PROVEN,PROVEN,0001193125-26-323660,R2.htm,WeightedAverageNumberOfDilutedSharesOutstanding,fsn_pre_calc,mapped
