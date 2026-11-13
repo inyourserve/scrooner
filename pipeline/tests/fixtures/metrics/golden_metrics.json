@@ -1,5 +1,5 @@
 {
- "_comment": "Inputs are FY0 printed values from the filing (FILING-CHECKED): the docmaps in data-team/companies/reads for CB, JPM, MSFT, PLD, XOM; sec.gov R pages read 2026-11-13 for EPD, GD, INTU (no docmap). Every input carries its accession and R page; an input a docmap marks 'combined' is not a golden input. Expected values are hand arithmetic (independent Fraction code, rounded to 6 dp), not read from any metric table. Sign convention: canonical positive outflows (capex, interest expense) = absolute printed value. Insurer (CB) carries only metrics IN for insurers (applies_to all); corporate-only metrics are OUT with not_applicable_insurer. EPD is an MLP: keys partners_equity, common_units, unitholder_distributions map to stockholders_equity, shares_outstanding, dividends_paid by family (applicability.FAMILY_INPUT_ALIASES). GD total_debt includes note finance-lease liabilities (R79). INTU cost_of_revenue is the sum of the two member rows (Service, Product and other); the amortization-of-acquired-technology line is outside that perimeter (perimeter ruling pending).",
+ "_comment": "Inputs are FY0 printed values from the filing (FILING-CHECKED): the docmaps in data-team/companies/reads for CB, JPM, MSFT, PLD, XOM; sec.gov R pages read 2026-11-13 for EPD, GD, INTU (no docmap). Every input carries its accession and R page; an input a docmap marks 'combined' is not a golden input. Expected values are hand arithmetic (independent Fraction code, rounded to 6 dp), not read from any metric table. Sign convention: canonical positive outflows (capex, interest expense) = absolute printed value. Insurer (CB) carries only metrics IN for insurers (applies_to all); corporate-only metrics are OUT with not_applicable_insurer. EPD is an MLP: keys partners_equity, common_units, unitholder_distributions map to stockholders_equity, shares_outstanding, dividends_paid by family (applicability.FAMILY_INPUT_ALIASES). GD total_debt includes note finance-lease liabilities (R79). INTU cost_of_revenue = every line under the Cost of revenue heading, incl. Amortization of acquired technology (Dhairya ruling 2026-11-13): 4,016 + 63 + 174 = 4,253; opex tie 21,448 - 4,253 - 5,884 = 11,311.",
  "companies": {
   "CB": {
    "docmap": "data-team/companies/reads/CB-docmap-2026-11-12.csv",
@@ -488,7 +488,7 @@
     "book_value_per_share": "70.764278",
     "debt_to_equity": "0.403802",
     "goodwill_pct_assets": "0.380063",
-    "gross_margin": "0.809819",
+    "gross_margin": "0.801706",
     "net_cash": "-2964000000.000000",
     "net_margin": "0.212887",
     "operating_margin": "0.274338",
@@ -496,7 +496,7 @@
     "roa": "0.124123",
     "roe": "0.240417"
    },
-   "group": "general (software, member-row cost of revenue)",
+   "group": "general (software, all cost-of-revenue lines)",
    "inputs": {
     "cash_and_equivalents": {
      "accession": "0000896878-26-000037",
@@ -507,10 +507,10 @@
     },
     "cost_of_revenue": {
      "accession": "0000896878-26-000037",
-     "label": "Cost of revenue, member rows: Service 4,016 + Product and other 63 (perimeter excludes the Amortization of acquired technology line, 174)",
-     "printed": "4079000000",
+     "label": "Cost of revenue heading: Service 4,016 + Product and other 63 + Amortization of acquired technology 174",
+     "printed": "4253000000",
      "r_page": "R3.htm",
-     "value": "4079000000"
+     "value": "4253000000"
     },
     "goodwill": {
      "accession": "0000896878-26-000037",

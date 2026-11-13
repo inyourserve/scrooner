@@ -324,11 +324,11 @@ def test_mlp_inputs_map_by_family_not_company():
 
 
 @pytest.mark.unit
-def test_golden_special_cases_gd_finance_lease_debt_and_intu_member_rows():
+def test_golden_special_cases_gd_finance_lease_debt_and_intu_all_cost_of_revenue_lines():
     gd = GOLDEN["companies"]["GD"]["inputs"]
     assert D(gd["total_debt"]["value"]) == D(1006 + 7007 + 39 + 353) * 10**6
     intu = GOLDEN["companies"]["INTU"]["inputs"]
-    assert D(intu["cost_of_revenue"]["value"]) == D(4016 + 63) * 10**6
+    assert D(intu["cost_of_revenue"]["value"]) == D(4016 + 63 + 174) * 10**6  # Dhairya ruling 2026-11-13: all lines under the Cost of revenue heading
 
 
 # ---- "which company uses which calculation": generated views -------------------------------------------
