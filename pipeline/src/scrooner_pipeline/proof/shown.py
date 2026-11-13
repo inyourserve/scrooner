@@ -99,11 +99,19 @@ def claim_for(rows: list[MapRow], name: str, period_end: date) -> Claim | None:
         key=lambda r: r[0],
     )
     if comps:
+        # a claim may mix statements (face debt lines + a note finance-lease total, audit R06): each
+        # part keeps its own statement; the same (sign, tag) on two statements counts once
         stmt = comps[0][2]
-        parts = tuple(
-            dict.fromkeys((r[6], r[3]) for r in comps if r[2] == stmt and r[3])
+        seen: dict[tuple[int, str], str] = {}
+        for r in comps:
+            if r[3]:
+                seen.setdefault((r[6], r[3]), r[2])
+        return Claim(
+            "component",
+            stmt,
+            parts=tuple(seen),
+            part_stmts=tuple(seen.values()),
         )
-        return Claim("component", stmt, parts=parts)
     return None
 
 

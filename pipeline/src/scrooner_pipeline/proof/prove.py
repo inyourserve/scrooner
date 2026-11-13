@@ -70,9 +70,11 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
     "gross_profit_resolved": ("IS", ("GrossProfit",), True),
     "operating_expenses_resolved": (
         "IS",
-        ("OperatingExpenses",),
+        # a bank's operating expenses are NoninterestExpense (audit R16); CostsAndExpenses includes
+        # cost of revenue and BenefitsLossesAndExpenses an insurer's benefits: neither is a candidate
+        ("OperatingExpenses", "NoninterestExpense"),
         True,
-    ),  # CostsAndExpenses includes cost of revenue
+    ),
     "operating_income_resolved": ("IS", ("OperatingIncomeLoss",), True),
     "interest_expense_resolved": (
         "IS",
@@ -235,6 +237,9 @@ class Claim:
     stmt: str
     tags: tuple[str, ...] = ()
     parts: tuple[tuple[int, str], ...] = ()  # (sign, tag)
+    part_stmts: tuple[
+        str, ...
+    ] = ()  # the statement of each part, aligned with parts (else `stmt`)
     sign: int = 1
 
 
@@ -669,9 +674,14 @@ def _finish(
     dcml: int | None,
     sign: int,
     label: str,
+    tol_override: Decimal | None = None,
 ) -> Proof:
     """unit_scale + value comparison -> verdict (shared by every proof path)."""
-    tol = slack_for(cls, dcml, shown.presentation_scale)
+    tol = (
+        tol_override
+        if tol_override is not None
+        else slack_for(cls, dcml, shown.presentation_scale)
+    )
     expect = sign * printed
     p.position_value = expect
     mag_ok = (
@@ -769,6 +779,10 @@ def prove_note(shown: Shown, structure: FilingStructure, p: Proof) -> Proof:
     )
 
 
+def structure_face(structure: FilingStructure, stmt: str) -> set[str]:
+    return {ln.tag for ln in structure.lines_on(stmt)}
+
+
 def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof:
     """A component sum (total debt): the shown value is the signed sum of the parts the company's
     map names, each part matched in this filing at the cell's column and on the claimed statement.
@@ -784,13 +798,15 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     if qtrs is None:
         p.reason_text = f"grain {shown.period_grain} has no FSN duration"
         return p
-    face = {ln.tag for ln in structure.lines_on(claim.stmt)}
+    notes: list[str] = []
     total = Decimal(0)
     found: list[dict[str, Any]] = []
     missing: list[str] = []
     off_face: list[str] = []
     dcmls: list[int | None] = []
-    for sign, tag in claim.parts:
+    all_face = {ln.tag for ln in structure.pre if ln.stmt not in NOTE_STMTS}
+    for i, (sign, tag) in enumerate(claim.parts):
+        pstmt = claim.part_stmts[i] if i < len(claim.part_stmts) else claim.stmt
         try:
             base, segs = split_part(tag)
         except (
@@ -805,9 +821,16 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         if nv is None:
             missing.append(tag)
             continue
-        if not segs and claim.stmt not in NOTE_STMTS and tag not in face:
-            off_face.append(tag)
-            continue
+        if not segs:
+            # a face part must be a line of ITS statement; a note part (stmt UN/CP, or a tag the
+            # filing prints on no face statement) is the filing's undimensioned note fact
+            if pstmt not in NOTE_STMTS and tag not in structure_face(structure, pstmt):
+                if tag in all_face:
+                    off_face.append(tag)
+                    continue
+                notes.append(tag)
+            elif pstmt in NOTE_STMTS:
+                notes.append(tag)
         total += sign * nv.value
         dcmls.append(nv.dcml)
         found.append({"tag": tag, "sign": sign, "value": str(nv.value)})
@@ -817,6 +840,7 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         "found": found,
         "missing": missing,
         "not_on_statement": off_face,
+        "note_facts": notes,
     }
     if missing or off_face:
         p.reason_text = (
@@ -833,6 +857,16 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     }
     known = [d for d in dcmls if d is not None]
     dcml = min(known) if known else None  # the coarsest filer precision among the parts
+    # TMO ruling (audit R05): the sum of n printed parts is exact to half a unit of each part's own
+    # printed precision, n/2 units in all (not a flat 1.5 units whatever the number of parts)
+    part_tol = sum(
+        (
+            Decimal("0.5")
+            * (Decimal(10) ** (-d if d is not None else shown.presentation_scale))
+            for d in dcmls
+        ),
+        Decimal(0),
+    )
     return _finish(
         p,
         shown,
@@ -842,6 +876,7 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         dcml,
         claim.sign,
         "the sum of " + ",".join(t for _s, t in claim.parts),
+        tol_override=part_tol,
     )
 
 
