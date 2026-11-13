@@ -9,6 +9,7 @@ one unit of the coarsest decimals when dcml is missing.
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
@@ -43,6 +44,17 @@ CF_FX = (
     "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations",
 )
 IS_GP = ("is_gross_profit", "GrossProfit", "Revenues", "CostOfRevenue")
+# fallback operand families when the filer's calc tree has no arcs under the change-in-cash line: the FX
+# effect and the change line come in several element names (ASU 2016-18 restricted-cash totals, the
+# disposal-group variants MSFT uses since FY2023), so they are matched by family, not by a fixed list
+CF_CHANGE_RE = re.compile(r"(?i)^(Cash\w*PeriodIncreaseDecrease\w*)$")
+CF_FX_RE = re.compile(r"(?i)^EffectOfExchangeRateOn\w+$")
+CF_CONT = (
+    "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+    "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+    "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
+)
+CF_DISC_RE = re.compile(r"^(Net)?CashProvidedByUsedIn\w*DiscontinuedOperations\w*$")
 
 
 @dataclass(frozen=True)
@@ -189,47 +201,9 @@ def check_column(
                     }
                 )
     if stmt == "CF":
-        parts = [p for (t, _v), p in col.items() if t in CF_PARTS]
-        # several change or FX tags can sit in one column: order change candidates by CF_CHANGE_TAGS
-        # priority and try every (change, form, fx) pairing; the column passes if any ties, and the
-        # detail records which pairing did. Failing columns report the first-priority pairing.
-        change = sorted(
-            (p for (t, _v), p in col.items() if t in CF_CHANGE_TAGS),
-            key=lambda p: CF_CHANGE_TAGS.index(p.tag),
-        )
-        if len(parts) == 3 and change:
-            fx = [p for (t, _v), p in col.items() if t in CF_FX]
-            # Whether the change line includes the FX line is the filer's layout, not the tag's name:
-            # the pre-2018 CashAndCashEquivalentsPeriodIncreaseDecrease is used both ways (MSFT
-            # includes FX, HD prints the change before FX). The column ties if it ties either way;
-            # the "Excluding" tag never includes FX. The detail records which form tied.
-            base = sum((p.value for p in parts), Decimal(0))
-            cands: list[tuple[Print, Print | None, Decimal, Decimal]] = []
-            for c in change:
-                tol_no = tol_of([c.dcml, *(p.dcml for p in parts)])
-                if "Excluding" not in c.tag:
-                    for fxp in fx:
-                        cands.append(
-                            (c, fxp, base + fxp.value, tol_no + tol_of([fxp.dcml]))
-                        )
-                cands.append((c, None, base, tol_no))
-            c, fx_used, rhs, tol = next(
-                (x for x in cands if abs(x[0].value - x[2]) <= x[3]), cands[0]
-            )
-            out.append(
-                {
-                    "check_id": "cf_parts_eq_change",
-                    "ok": abs(c.value - rhs) <= tol,
-                    "lhs": c.value,
-                    "rhs": rhs,
-                    "tol": tol,
-                    "detail": {
-                        "change_tag": c.tag,
-                        "fx_included": fx_used is not None,
-                        "fx_tag": fx_used.tag if fx_used is not None else None,
-                    },
-                }
-            )
+        rec = cf_change_check(col, groups)
+        if rec is not None:
+            out.append(rec)
     if stmt == "IS":
         gp = {t: p for (t, _v), p in col.items() if t in IS_GP[1:]}
         if len(gp) == 3:
@@ -246,6 +220,119 @@ def check_column(
                 }
             )
     return out
+
+
+def cf_change_check(
+    col: dict[tuple[str, str], Print], groups: dict
+) -> dict[str, Any] | None:
+    """cf_parts_eq_change: the change in cash equals its parts.
+
+    1. The filer's own calc tree: when the change line is a calc parent whose children are all printed
+       in this column, the identity is that arithmetic (FX, discontinued flows, restricted cash all come
+       in because the filer put them in the tree). When the tree does not tie but the printed numbers do
+       by step 2 (a defect in the linkbase, e.g. CFO weighted -1), the column passes and the detail
+       records calc_tree_failed.
+    2. No arcs: CFO + CFI + CFF (totals, else continuing + discontinued) + the FX effect against the
+       printed change line (the ASU 2016-18 cash-plus-restricted-cash total when printed). Whether the
+       change line includes FX is the filer's layout (HD prints the change before FX): the column ties if
+       it ties either way; an "Excluding" change line never includes FX.
+    """
+    changes = [p for (t, _v), p in col.items() if CF_CHANGE_RE.match(t)]
+    if not changes:
+        return None
+    # prefer the cash-plus-restricted-cash total including FX, then any other printed change line
+    changes.sort(
+        key=lambda p: ("RestrictedCash" not in p.tag, "Excluding" in p.tag, len(p.tag))
+    )
+    tree = _cf_tree(col, groups, changes)
+    if tree is not None and tree["ok"]:
+        return tree
+    fb = _cf_fallback(col, changes)
+    if tree is None:
+        return fb
+    if fb is not None and fb["ok"]:
+        # the printed numbers tie; the filer's calc linkbase does not (a weight or rounding defect in the
+        # tree, e.g. CFO weighted -1): the column passes, the tree defect is recorded
+        fb["detail"]["calc_tree_failed"] = {
+            "diff": str(tree["lhs"] - tree["rhs"]),
+            "children": tree["detail"]["children"],
+        }
+        return fb
+    return tree
+
+
+def _cf_tree(
+    col: dict[tuple[str, str], Print], groups: dict, changes: list[Print]
+) -> dict[str, Any] | None:
+    for change in changes:
+        for (ptag, _pver, _grp), children in groups.items():
+            if ptag != change.tag or len(children) < 2:
+                continue
+            terms = [(col.get((c, v)), w) for c, v, w in children]
+            if any(t is None for t, _ in terms):
+                continue
+            rhs = sum((t.value * w for t, w in terms), Decimal(0))
+            tol = tol_of([change.dcml, *(t.dcml for t, _ in terms)])
+            return {
+                "check_id": "cf_parts_eq_change",
+                "ok": abs(change.value - rhs) <= tol,
+                "lhs": change.value,
+                "rhs": rhs,
+                "tol": tol,
+                "detail": {
+                    "change_tag": change.tag,
+                    "form": "calc_tree",
+                    "children": [[c, str(w)] for c, _v, w in children],
+                },
+            }
+    return None
+
+
+def _cf_fallback(
+    col: dict[tuple[str, str], Print], changes: list[Print]
+) -> dict[str, Any] | None:
+    tags = {t: p for (t, _v), p in col.items()}
+    parts = [tags[t] for t in CF_PARTS if t in tags]
+    form_parts = "totals"
+    if len(parts) < 3:
+        cont = [tags[t] for t in CF_CONT if t in tags]
+        if len(cont) + len(parts) < 3:
+            return None
+        parts = parts + cont
+        form_parts = "continuing"
+    disc = (
+        [p for t, p in tags.items() if CF_DISC_RE.match(t)]
+        if form_parts == "continuing"
+        else []
+    )
+    fx = [p for t, p in tags.items() if CF_FX_RE.match(t)]
+    base = sum((p.value for p in parts + disc), Decimal(0))
+    # several change or FX elements can sit in one column: try every (change, FX) pairing in priority
+    # order; the column passes if any ties and the detail records which did (6b0b4355)
+    cands: list[tuple[Print, Print | None, Decimal, Decimal]] = []
+    for c in changes:
+        tol_no = tol_of([c.dcml, *(p.dcml for p in parts + disc)])
+        if "Excluding" not in c.tag:
+            for fxp in fx:
+                cands.append((c, fxp, base + fxp.value, tol_no + tol_of([fxp.dcml])))
+        cands.append((c, None, base, tol_no))
+    c, fx_used, rhs, tol = next(
+        (x for x in cands if abs(x[0].value - x[2]) <= x[3]), cands[0]
+    )
+    return {
+        "check_id": "cf_parts_eq_change",
+        "ok": abs(c.value - rhs) <= tol,
+        "lhs": c.value,
+        "rhs": rhs,
+        "tol": tol,
+        "detail": {
+            "change_tag": c.tag,
+            "form": f"fallback_{form_parts}",
+            "fx_included": fx_used is not None,
+            "fx_tag": fx_used.tag if fx_used is not None else None,
+            "discontinued": [p.tag for p in disc],
+        },
+    }
 
 
 # NI incl. NCI - NCI = NI attributable to the parent (IS column)

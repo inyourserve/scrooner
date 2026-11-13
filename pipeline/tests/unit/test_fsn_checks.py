@@ -195,3 +195,100 @@ def test_tolerance_treats_the_inf_decimals_sentinel_as_exact():
     # FSN dcml sentinel for decimals="INF": a tolerance of 5e-32769 overflows Postgres numeric
     assert checks.tol_of([32767, -6]) == Decimal(500000)
     assert checks.tol_of([None]) == Decimal("0.5")
+
+
+def _cf(rows, version="us-gaap/2023", dcml=-6):
+    return {
+        (t, version): checks.Print(t, version, Decimal(v), dcml, None) for t, v in rows
+    }
+
+
+MSFT_FY2024 = (
+    ("NetCashProvidedByUsedInOperatingActivities", "118548000000"),
+    ("NetCashProvidedByUsedInFinancingActivities", "-37757000000"),
+    ("NetCashProvidedByUsedInInvestingActivities", "-96970000000"),
+    (
+        "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations",
+        "-210000000",
+    ),
+    (
+        "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+        "-16389000000",
+    ),
+)
+
+
+@pytest.mark.unit
+def test_cash_change_fallback_finds_the_disposal_group_fx_variant():
+    # MSFT 10-K 0000950170-24-087843 FY2024: the FX line uses the disposal-group element; without it the
+    # check failed by exactly the FX effect (-210M) and v10 quarantined the filing
+    c = checks.cf_change_check(_cf(MSFT_FY2024), {})
+    assert (
+        c["ok"]
+        and c["detail"]["fx_included"]
+        and c["detail"]["form"] == "fallback_totals"
+    )
+    broken = _cf(
+        [
+            r if not r[0].startswith("CashCash") else (r[0], "-16000000000")
+            for r in MSFT_FY2024
+        ]
+    )
+    assert not checks.cf_change_check(broken, {})["ok"]
+
+
+@pytest.mark.unit
+def test_cash_change_uses_the_filers_calc_tree_when_it_has_arcs():
+    root = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect"
+    groups = {
+        (root, "us-gaap/2023", 21): [
+            (t, "us-gaap/2023", Decimal(1)) for t, _ in MSFT_FY2024 if t != root
+        ]
+    }
+    c = checks.cf_change_check(_cf(MSFT_FY2024), groups)
+    assert c["ok"] and c["detail"]["form"] == "calc_tree"
+    # a tree with a child missing from the column falls back to the operand families
+    groups2 = {
+        (root, "us-gaap/2023", 21): groups[(root, "us-gaap/2023", 21)]
+        + [("CashAcquiredFromAcquisition", "us-gaap/2023", Decimal(1))]
+    }
+    assert (
+        checks.cf_change_check(_cf(MSFT_FY2024), groups2)["detail"]["form"]
+        == "fallback_totals"
+    )
+
+
+@pytest.mark.unit
+def test_cash_change_fallback_adds_discontinued_flows_to_continuing_parts():
+    rows = (
+        ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations", "1000"),
+        ("NetCashProvidedByUsedInInvestingActivitiesContinuingOperations", "-600"),
+        ("NetCashProvidedByUsedInFinancingActivitiesContinuingOperations", "-300"),
+        ("CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations", "50"),
+        (
+            "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+            "-10",
+        ),
+        (
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+            "140",
+        ),
+    )
+    c = checks.cf_change_check(_cf(rows, dcml=0), {})
+    assert c["ok"] and c["detail"]["discontinued"] == [
+        "CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations"
+    ]
+
+
+@pytest.mark.unit
+def test_cash_change_passes_when_only_the_filers_calc_weights_are_wrong():
+    # UNH 10-K 0000731766-22-000008: the linkbase weights CFO -1 under the change line; the printed
+    # numbers tie, so the column passes and the linkbase defect is recorded, never a quarantine
+    root = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect"
+    kids = [t for t, _ in MSFT_FY2024 if t != root]
+    groups = {(root, "us-gaap/2023", 1): [(t, "us-gaap/2023", Decimal(-1 if "Operating" in t else 1)) for t in kids]}
+    c = checks.cf_change_check(_cf(MSFT_FY2024), groups)
+    assert c["ok"] and c["detail"]["form"] == "fallback_totals" and "calc_tree_failed" in c["detail"]
+    # numbers that tie neither way still fail
+    broken = _cf([r if not r[0].startswith("CashCash") else (r[0], "-16000000000") for r in MSFT_FY2024])
+    assert not checks.cf_change_check(broken, groups)["ok"]
