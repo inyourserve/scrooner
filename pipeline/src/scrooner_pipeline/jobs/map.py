@@ -375,7 +375,7 @@ def tagmap_plan_cmd(
     coverage_gate_scope: str = typer.Option(
         "company",
         "--coverage-gate-scope",
-        help="company (default): the gate decides per company. concept: every concept whose eras cover the data window is rewritten; a concept that does not is left exactly as served today and listed. Applies with --coverage-gate (also in plan mode).",
+        help="Default: new-only serving, every served cell of a tag-map company comes from the new system (value, derived value or reason); old rows are deleted, uncovered periods become era_unmapped blanks. company (with --coverage-gate): legacy, the gate rolls a whole company back.",
     ),
     dqc_report: Path = typer.Option(
         None,

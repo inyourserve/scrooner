@@ -1603,8 +1603,8 @@ def resolve_for_company(
     commit: bool = True,
     skip_concept_ids: frozenset[int] | set[int] = frozenset(),
 ) -> dict:
-    """Rebuild this company's canonical_fact rows from its tag map. Deletes every concept resolve() manages
-    (plus every concept the map targets), so no value of the old path survives for a tag-map company.
+    """Rebuild this company's canonical_fact rows from its tag map. Deletes ALL of the company's canonical_fact
+    rows (founder 2026-11-14: new-only serving), so no value of the old path survives for a tag-map company.
     skip_concept_ids (per-concept coverage gate): those concepts are left exactly as served today: not deleted,
     not rewritten, no blank reason written."""
     rows = _load_rows(conn, company_id)
@@ -1713,10 +1713,18 @@ def resolve_for_company(
             if b.get("canonical_concept_id") not in skip_concept_ids
         ]
     with conn.cursor() as cur:
-        cur.execute(
-            "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)",
-            (company_id, sorted(targets)),
-        )
+        if (
+            skip_concept_ids
+        ):  # legacy scoped rewrite: only the targeted concepts are replaced
+            cur.execute(
+                "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)",
+                (company_id, sorted(targets)),
+            )
+        else:  # new-only serving: every row the new system does not produce is deleted (any concept, any family)
+            cur.execute(
+                "delete from analytics.canonical_fact where company_id = %s",
+                (company_id,),
+            )
         if cells:
             cur.executemany(
                 """

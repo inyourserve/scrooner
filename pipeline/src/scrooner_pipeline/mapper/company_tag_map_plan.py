@@ -150,6 +150,7 @@ def protect(
 
 
 LIBRARY_STATUS_RULE_ID = "tagmap.library_status@1"
+ERA_GAP_RULE_ID = "tagmap.era_gap@1"
 
 
 def classify_status(status: str) -> tuple[str, str | None, str | None, str, str]:
@@ -591,46 +592,13 @@ def coverage(
     }
 
 
-class _Retry(Exception):
-    """The first attempt of a company (concept gate scope) found concepts that would lose a value: redo without them."""
-
-    def __init__(self, concepts: set[int]):
-        self.concepts = concepts
-
-
-def served_managed(
-    conn: psycopg.Connection, cid: int, managed: set[int], concept_info
-) -> set[int]:
-    """The managed concepts the map serves under their own name, plus the ones it does not map at all. A base
-    concept the map never targets because it serves a twin (revenue -> revenue_sanity_resolved, gross_profit ->
-    gross_profit_resolved; docmap_loader.served_concept) is not a served concept: it is neither judged nor
-    rewritten, so it cannot be 'skipped'. A concept without a mapped twin stays (the 'no map row' skip)."""
-    from scrooner_pipeline.mapper.docmap_loader import (
-        served_concept,
-    )  # docmap_loader imports this module
-
-    names = {n for n, _ in concept_info.values()}
-    ids = {v[0]: i for i, v in concept_info.items()}
-    with conn.cursor() as cur:
-        cur.execute(
-            "select distinct coalesce(canonical_concept_id, parent_concept_id) from analytics.company_tag_map where company_id = %s",
-            (cid,),
-        )
-        mapped = {c for (c,) in cur.fetchall() if c is not None}
-    out = set(managed)
-    for c in managed - mapped:
-        twin = served_concept(concept_info[c][0], names) if c in concept_info else None
-        if twin and twin != concept_info[c][0] and ids.get(twin) in mapped:
-            out.discard(c)
-    return out
-
-
-def concepts_to_skip(
-    conn: psycopg.Connection, cid: int, managed: set[int]
-) -> tuple[set[int], dict[int, str]]:
-    """Per-concept coverage gate, before anything is written: the concepts whose merged-map eras do not cover the
-    data window, and the managed concepts the map does not cover at all (resolve would delete their served values).
-    -> (concept ids to leave as served today, concept id -> why)."""
+def era_gap_blanks(
+    conn, cid: int, concept_info, valued: set, have: set, unread_tail=frozenset()
+) -> list[dict]:
+    """New-only serving: a period inside the read years (I11 window) that no era of the merged map covers is a gap in
+    the map, not a filing fact. Each such cell with no value gets a not_presented row, reason_class era_unmapped
+    (the coverage report counts it BLANK, so it lands in the work queue). Periods after an unread tail are skipped
+    (unchecked)."""
     with conn.cursor() as cur:
         cur.execute(
             "select coalesce(canonical_concept_id, parent_concept_id), era_from, era_to, rule_id "
@@ -638,15 +606,50 @@ def concepts_to_skip(
             (cid,),
         )
         full = cur.fetchall()
-    map_rows = [r[:3] for r in full]
-    short = era_shortfall(
-        map_rows, reporting_period_ends(conn, cid), unread_tail_concepts(full)
-    )
-    why = {c: f"era short from {d.isoformat()}" for c, d in short.items()}
-    mapped = {c for c, _, _ in map_rows if c is not None}
-    for c in managed - mapped:
-        why.setdefault(c, "no map row")
-    return set(why), why
+        cur.execute(
+            "select end_date, period_type, start_date, id from core.period where company_id = %s",
+            (cid,),
+        )
+        periods = cur.fetchall()
+    spans: dict[int, list[tuple[date, date]]] = defaultdict(list)
+    for c, lo, hi, _ in full:
+        if c is not None:
+            spans[c].append((lo, hi or date.max))
+    tail = unread_tail_concepts(full)
+    out: list[dict] = []
+    for c, sp in spans.items():
+        if c not in concept_info:
+            continue
+        name, stmt = concept_info[c]
+        last = max(h for _, h in sp) if c in tail else date.max
+        want = "I" if stmt == "balance_sheet" else "FY"
+        for end, ptype, start, pid in periods:
+            if end < DATA_WINDOW_START or end > last or (c, pid) in valued:
+                continue
+            if any(lo <= end <= hi for lo, hi in sp):
+                continue
+            if ("I" if ptype == "instant" else _grain(start, end, ptype)) != want:
+                continue
+            if (name, want, end) in have:
+                continue
+            out.append(
+                {
+                    "canonical_concept_id": c,
+                    "concept_name": name,
+                    "period_id": pid,
+                    "state": "not_presented",
+                    "defect_class": None,
+                    "owner": None,
+                    "reason_code": "era_unmapped",
+                    "reason_class": "era_unmapped",
+                    "reason": "no filing-checked mapping covers this period (era_unmapped)",
+                    "rule_id": ERA_GAP_RULE_ID,
+                    "period_start": start,
+                    "period_end": end,
+                    "grain": want,
+                }
+            )
+    return out
 
 
 def run(
@@ -668,10 +671,12 @@ def run(
     concept_info = ctm.load_concept_info(conn)
     conn.commit()
     out: dict[int, dict] = {}
-    by_concept = gate and gate_scope == "concept"
+    # new-only serving (founder 2026-11-14): a tag-map company serves only what the new system produces; the
+    # legacy company-scope gate (gate + scope 'company') is the one remaining way to roll a company back
+    by_concept = not (gate and gate_scope == "company")
     for cid in company_ids:
         forced: set[int] = set()
-        for _attempt in (0, 1):
+        for _attempt in (0,):
             try:
                 with conn.transaction():
                     _company(
@@ -689,8 +694,6 @@ def run(
                         dqc_hold=dqc_hold,
                     )
                 break
-            except _Retry as retry:
-                forced |= retry.concepts
             except _PlanRollback:
                 break
             except Exception as exc:  # one company failing never hides the others; its transaction is rolled back
@@ -726,12 +729,6 @@ def _company(
         ).fetchall()
     )
     skip: set[int] = set(forced)
-    why: dict[int, str] = {c: "would lose a value" for c in forced}
-    if by_concept:
-        managed = served_managed(conn, cid, set(managed), concept_info)
-        more, w = concepts_to_skip(conn, cid, set(managed))
-        skip |= more
-        why = {**w, **why}
     run_managed = set(managed) - skip
     conn.execute("set local scrooner.writer = 'company_tag_map'")
     conn.execute("set local scrooner.slot_writer = 'on'")
@@ -752,6 +749,13 @@ def _company(
         for b in library_status_blanks(conn, cid, expected, stats, concept_info)
         if b.get("canonical_concept_id") not in skip
     ]
+    if by_concept:
+        have = {
+            (b["concept_name"], b["grain"], b["period_end"])
+            for b in stats["blanks"] + lib
+        }
+        valued = {(c["canonical_concept_id"], c["period_id"]) for c in stats["cells"]}
+        lib = lib + era_gap_blanks(conn, cid, concept_info, valued, have)
     ctm._write_blanks(conn, cid, run_id, lib, concept_info)
     stats["blanks"] = stats["blanks"] + lib
     dqc_hits: list[dqc.Hit] = []
@@ -787,38 +791,14 @@ def _company(
         conn, cid, run_id, before, expected, concept_info, set(run_managed)
     )
     if by_concept:
-        # a rewritten concept that would still lose a value (no reason row) is dropped from the rewrite and redone
-        after_cells = set(
-            conn.execute(
-                "select canonical_concept_id, period_id from analytics.canonical_fact where company_id = %s",
-                (cid,),
-            ).fetchall()
-        )
-        reasoned = {
-            (name, end)
-            for name, end in conn.execute(
-                "select data_point_name, period_end from analytics.cell_blank_reason where company_id = %s and run_id = %s::uuid",
-                (cid, run_id),
-            ).fetchall()
-        }
-        ends = dict(
-            conn.execute(
-                "select id, end_date from core.period where company_id = %s", (cid,)
-            ).fetchall()
-        )
-        bad = {
-            c
-            for c, p in before - after_cells
-            if c in run_managed
-            and ends.get(p, date.min) >= DATA_WINDOW_START
-            and (concept_info.get(c, ("",))[0], ends.get(p)) not in reasoned
-        }
-        if bad:
-            raise _Retry(bad)
-        rep["coverage"]["skipped_concepts"] = {
-            concept_info[c][0]: w for c, w in sorted(why.items()) if c in concept_info
-        }
         rep["coverage"]["rewritten_concepts"] = len(run_managed)
+        rep["coverage"]["deleted_not_produced"] = len(
+            {
+                k
+                for k in before
+                - {(c["canonical_concept_id"], c["period_id"]) for c in stats["cells"]}
+            }
+        )
     if apply and gate and not by_concept and not coverage_gate_ok(rep["coverage"]):
         rep["gated"] = True  # rolled back: stays on its current serving
         raise _PlanRollback

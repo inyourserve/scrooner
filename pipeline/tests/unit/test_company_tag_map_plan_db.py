@@ -146,7 +146,9 @@ def test_coverage_gate_applies_a_full_window_map_and_rolls_back_a_short_one(isol
 
 
 @pytest.mark.integration
-def test_concept_gate_scope_rewrites_covered_concepts_and_leaves_short_ones_untouched(isolated_database_url, monkeypatch):
+def test_new_only_old_rows_of_every_concept_are_deleted_era_gap_is_blank(isolated_database_url, monkeypatch):
+    """Founder 2026-11-14: a tag-map company serves only new-system cells. An old-path row of a concept with a map row,
+    of a base concept with none, is deleted; an era-short concept is blanked with era_unmapped, never kept."""
     monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
     with psycopg.connect(isolated_database_url) as conn:
         x = _seed(conn)
@@ -154,44 +156,44 @@ def test_concept_gate_scope_rewrites_covered_concepts_and_leaves_short_ones_unto
         fact("Revenues", "in", "new", "110")
         fact("OtherOpex", "in", "new", "44")
         ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap',%s,'IS','concept',%s,%s,'t','tm.r@1')"
-        conn.execute(ins, (co, "Revenues", x["rev"], "2015-01-01"))  # covers the data window
-        conn.execute(ins, (co, "OtherOpex", x["opex"], "2019-01-01"))  # the 2018 period is outside: short
-        for c, v in ((x["rev"], "1"), (x["opex"], "7")):  # what is served today
+        conn.execute(ins, (co, "Revenues", x["rev"], "2015-01-01"))
+        conn.execute(ins, (co, "OtherOpex", x["opex"], "2019-01-01"))  # the 2018 period is outside: era short
+        for c, v in ((x["rev"], "1"), (x["opex"], "7")):
             conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, c, per["in"], Decimal(v)))
         conn.commit()
         served = "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s"
-        tpl = {co: [("tm_rev", date(2018, 12, 31), "served")]}
-        # company scope (the default): the short concept gates the whole company; nothing changes
-        rep = plan.run(conn, [co], tpl, apply=True, gate=True)
-        assert rep[co]["gated"] is True and _one(conn, served, co, x["rev"]) == Decimal("1")
-        # concept scope: the covered concept is rewritten, the short one is left exactly as served and listed
-        rep = plan.run(conn, [co], tpl, apply=True, gate=True, gate_scope="concept")
+        rep = plan.run(conn, [co], {co: []}, apply=True)
         assert "error" not in rep[co], rep[co]
-        cov = rep[co]["coverage"]
-        assert not rep[co].get("gated")
-        assert cov["skipped_concepts"] == {"tm_opex": "era short from 2018-12-31"} and cov["rewritten_concepts"] == 1
         assert _one(conn, served, co, x["rev"]) == Decimal("110")
-        assert _one(conn, served, co, x["opex"]) == Decimal("7")
-        assert conn.execute("select count(*) from analytics.slot_protected_cell where company_id = %s and canonical_concept_id = %s", (co, x["opex"])).fetchone()[0] == 0
-        assert _one(conn, "select owner from analytics.company_value_owner where company_id = %s", co) == "company_tag_map"
+        assert conn.execute(served, (co, x["opex"])).fetchall() == []  # era short inside the read years: blank, old 7 gone
+        assert conn.execute("select reason_code from analytics.cell_blank_reason where company_id = %s and data_point_name = 'tm_opex' and period_end = '2018-12-31'", (co,)).fetchall() == [("era_unmapped",)]
 
 
 @pytest.mark.integration
-def test_concept_gate_scope_leaves_a_concept_that_would_lose_a_value(isolated_database_url, monkeypatch):
+def test_new_only_would_lose_cell_and_no_map_row_concept_are_deleted(isolated_database_url, monkeypatch):
     monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
     with psycopg.connect(isolated_database_url) as conn:
         x = _seed(conn)
         co, per, fil, fact = x["company"]("0000001501", True)
+        co2, per2, _, _ = x["company"]("0000001502", False)  # no tag-map rows: untouched
         fact("Revenues", "in", "new", "110")  # a fact for 2018 only
         conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-01-01','t','tm.r@1')", (co, x["rev"]))
+        ins = "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')"
         for p, v in (("in", "1"), ("out", "9")):  # the old path served a 2020 value the map cannot reproduce
-            conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, x["rev"], per[p], Decimal(v)))
+            conn.execute(ins, (co, x["rev"], per[p], Decimal(v)))
+        conn.execute(ins, (co, x["opex"], per["in"], Decimal("5")))  # concept with no map row
+        conn.execute(ins, (co2, x["rev"], per2["in"], Decimal("3")))
+        orphan = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_orphan','income_statement','first_match') returning id")
+        conn.execute(ins, (co, orphan, per["in"], Decimal("4")))  # no concept_mapping row, no map row: not even managed
         conn.commit()
-        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        rep = plan.run(conn, [co], {co: []}, apply=True)
+        assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, orphan) == 0
         assert "error" not in rep[co], rep[co]
-        assert rep[co]["coverage"]["skipped_concepts"] == {"tm_opex": "no map row", "tm_rev": "would lose a value"}
-        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["out"]) == Decimal("9")
-        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["in"]) == Decimal("1")
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["in"]) == Decimal("110")
+        assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["out"]) == 0
+        assert _one(conn, "select count(*) from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, x["opex"]) == 0
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s", co2) == Decimal("3")
+        assert rep[co]["coverage"]["values_lost"] >= 1  # reported, never kept
 
 
 @pytest.mark.integration
@@ -212,13 +214,13 @@ def test_concept_without_any_concept_mapping_row_is_served_by_the_tag_map(isolat
         conn.execute(ins, (co, "OpA", shares))
         fact("OpA", "in", "new", "7")
         conn.commit()
-        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        rep = plan.run(conn, [co], {co: []}, apply=True)
         assert "error" not in rep[co], rep[co]
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, shares) == Decimal("7")
 
 
 @pytest.mark.integration
-def test_concept_gate_scope_base_concept_served_through_its_resolved_twin_is_not_skipped(isolated_database_url, monkeypatch):
+def test_new_only_old_base_concept_row_is_deleted_twin_is_served(isolated_database_url, monkeypatch):
     """The map serves tm_gp_resolved (docmap_loader.served_concept); the base tm_gp is managed (it has a concept_mapping
     row) but the map never targets it: not 'no map row', not rewritten, left as it is. A managed concept with no mapped
     twin is still 'no map row'."""
@@ -236,11 +238,10 @@ def test_concept_gate_scope_base_concept_served_through_its_resolved_twin_is_not
         fact("OpA", "in", "new", "7")
         conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, base, per["in"], Decimal("5")))
         conn.commit()
-        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        rep = plan.run(conn, [co], {co: []}, apply=True)
         assert "error" not in rep[co], rep[co]
-        assert rep[co]["coverage"]["skipped_concepts"] == {"tm_opex": "no map row"}
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, twin) == Decimal("7")
-        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, base) == Decimal("5")
+        assert conn.execute("select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", (co, base)).fetchall() == []  # old-path base row is gone
 
 
 @pytest.mark.integration
@@ -256,8 +257,7 @@ def test_cover_page_instant_is_no_era_shortfall_but_a_valued_period_is(isolated_
         conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-03-31','t','tm.r@1')", (co, x["rev"]))
         conn.commit()
         assert date(2015, 1, 22) not in plan.reporting_period_ends(conn, co)
-        rep = plan.run(conn, [co], {co: []}, apply=False, gate=True, gate_scope="concept")
-        assert "tm_rev" not in rep[co]["coverage"]["skipped_concepts"], rep[co]["coverage"]
+        rep = plan.run(conn, [co], {co: []}, apply=False)
         assert rep[co]["coverage"]["era_short"] == {}
         conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, x["opex"], cover, Decimal("3")))
         assert date(2015, 1, 22) in plan.reporting_period_ends(conn, co)
