@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+cf_ar_change,2015,2015-12-31,mapped,us-gaap:IncreaseDecreaseInAccountsAndOtherReceivables,CF,0001047469-16-010239,R9.htm,1076000000,"the CF face prints one receivables change line 'Accounts and other receivables' (the single receivables line, as in the AR ruling 2026-11-12) | value_source sec_api"
