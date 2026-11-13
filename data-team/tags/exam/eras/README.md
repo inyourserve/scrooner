@@ -14,7 +14,8 @@ These are predictor runs over the earlier 10-Ks of the top-110 cohort companies 
   - Note facts: NOTES.sql, the same way.
   - Location slices: LOCATION.sql, the same way.
 - **Engine:** `tools/predict.py LINES.jsonl TICKER RANK ../../rules NOTES.jsonl --accession <ACC>`. The `--accession` filter keeps only that filing's lines and note facts. FY0 output is unchanged with or without it.
-- **Limits:**
-  - The two instance-fed inputs (finance-lease balance-sheet location `fl_loc`, and per-series interest `debt_series`) exist for FY0 only. They need SEC instance reads.
-  - In these files the note-only finance-lease addition to total_debt and the per-series interest sum therefore do not fire. Face finance-lease lines are still added.
-  - The prior-era label (`prior`) is the tag of the same printed label in the 10-K about four years before each filing.
+- **Instance-fed inputs** (regenerated 2026-11-13): exam/tools/fetch_era_instances.py read each era filing's XBRL instance from sec.gov at no more than 3 requests per second, plus the calculation linkbase where capital leases appear. exam/tools/build_era_notes.py turns the reads into the notes fields. 937 of 938 instances read; one had no index.
+  - `fl_loc` (where the finance leases sit on the balance sheet). For ASC 842 filings it comes from FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList. Before ASC 842 (FY2015-FY2018) it comes from the calculation-linkbase parent of CapitalLeaseObligations*: a debt total means in; other liabilities, accrued liabilities or accounts payable means out. Counts: in 113, out 39, none 785.
+  - `debt_series`: per-series interest. It appears in 7 filings, and in each a face interest total exists, so the rule stands down.
+  - Capital-lease facts were added to the note facts for 112 filings. The total_debt lease guards apply to capital lease obligations exactly as to finance leases (bs.total_debt.finance_leases v2).
+- **Limit:** the prior-era label (`prior`) is the tag of the same printed label in the 10-K about four years before each filing.
