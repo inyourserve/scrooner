@@ -413,7 +413,53 @@ def test_a_value_from_a_note_is_not_proven_on_the_statement_face():
 
 
 @pytest.mark.unit
-def test_disagreeing_periodic_copies_make_the_cell_disagree_whichever_is_shown():
+def test_earlier_differing_copies_are_history_the_authoritative_copy_is_judged():
+    # R13: an earlier vintage that differs is a recast, recorded in checks, never the verdict
+    q = pv.Shown(
+        3,
+        "total_assets_resolved",
+        "I",
+        FY_END,
+        FY_END,
+        Decimal("359241000000"),
+        ("Assets",),
+        ADSH,
+        (1,),
+        False,
+        6,
+        copies_disagree=(("0001564590-17-014900", "193468000000"),),
+        copies=2,
+    )
+    p = pv.prove_cell(q, structure(), "2025q4")
+    assert p.verdict == pv.PROVEN, (p.reason_code, p.reason_text)
+    assert p.checks["restated_history"]["copies"][0]["value"] == "193468000000"
+
+
+@pytest.mark.unit
+def test_shown_value_that_is_not_the_authoritative_copy_disagrees():
+    q = pv.Shown(
+        3,
+        "total_assets_resolved",
+        "I",
+        FY_END,
+        FY_END,
+        Decimal("359241000000"),
+        ("Assets",),
+        ADSH,
+        (1,),
+        False,
+        6,
+        copies_disagree=(("0001564590-17-014900", "193468000000"),),
+        authoritative_disagrees=(("0001564590-17-014900", "193468000000"),),
+        copies=2,
+    )
+    p = pv.prove_cell(q, structure(), "2025q4")
+    assert p.verdict == pv.DISAGREE
+    assert p.reason_code == "shown_is_not_the_authoritative_copy"
+
+
+@pytest.mark.unit
+def test_authoritative_copy_that_differs_from_its_filing_disagrees():
     q = pv.Shown(
         3,
         "total_assets_resolved",
@@ -422,16 +468,16 @@ def test_disagreeing_periodic_copies_make_the_cell_disagree_whichever_is_shown()
         FY_END,
         Decimal("193694000000"),
         ("Assets",),
-        "0001193125-16-662209",
+        ADSH,
         (1,),
         False,
         6,
-        copies_disagree=(("0001564590-17-014900", "193468000000"),),
+        copies_disagree=(("0001564590-17-014900", "359241000000"),),
         copies=2,
     )
     p = pv.prove_cell(q, structure(), "2025q4")
-    assert p.verdict == pv.DISAGREE and p.reason_code == "restated_copies_disagree"
-    assert "193468000000" in p.reason_text and "founder" in p.reason_text
+    assert p.verdict == pv.DISAGREE
+    assert p.reason_code == "shown_differs_from_printed_line"
 
 
 def _mdt_shown(copies):
@@ -474,7 +520,7 @@ def test_copy_under_another_tag_is_not_a_copy_mdt_profitloss():
 
 
 @pytest.mark.unit
-def test_same_tag_copy_with_a_different_value_still_disagrees():
+def test_same_tag_copy_with_a_different_value_is_history_not_a_disagreement():
     q = _mdt_shown(
         [
             ("0001613103-19-000028", Decimal("112010000000"), "NetIncomeLoss"),
@@ -483,7 +529,7 @@ def test_same_tag_copy_with_a_different_value_still_disagrees():
     )
     assert q.copies_disagree
     p = pv.prove_cell(q, structure(), "2025q4")
-    assert p.verdict == pv.DISAGREE and p.reason_code == "restated_copies_disagree"
+    assert p.verdict == pv.PROVEN and "restated_history" in p.checks
 
 
 @pytest.mark.unit

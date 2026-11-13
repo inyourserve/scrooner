@@ -353,6 +353,9 @@ class Shown:
     copies_disagree: tuple[tuple[str, str], ...] | None = (
         None  # periodic copies (accession, value) outside precision
     )
+    # the subset of copies_disagree that is the authoritative copy itself: the shown value is then
+    # not the authoritative copy's value
+    authoritative_disagrees: tuple[tuple[str, str], ...] | None = None
     copies: int = 0
     claim: Claim | None = None
     # tags of the company's 'combined' map rows spanning this data point in this era: one printed
@@ -848,14 +851,23 @@ def prove_cell(
             f"line spanning several concepts; a combined line is never {shown.data_point_name}"
         )
         return p
-    if shown.copies_disagree:
-        p.verdict, p.reason_code = DISAGREE, "restated_copies_disagree"
-        others = "; ".join(f"{v} in {acc}" for acc, v in shown.copies_disagree[:4])
+    if shown.authoritative_disagrees:
+        p.verdict, p.reason_code = DISAGREE, "shown_is_not_the_authoritative_copy"
+        others = "; ".join(
+            f"{v} in {acc}" for acc, v in shown.authoritative_disagrees[:4]
+        )
         p.reason_text = (
-            f"production shows {shown.value} ({shown.accession}) but another periodic copy of this cell reads {others}; "
-            "restated copies that disagree are hidden (founder ruling); 'show the latest recast' is a founder decision"
+            f"production shows {shown.value} ({shown.accession}) but the authoritative copy of this "
+            f"cell reads {others}"
         )
         return p
+    if shown.copies_disagree:
+        # earlier or non-authoritative copies that differ are restated history, not the verdict:
+        # the proof judges the shown (authoritative) copy against its own filing
+        p.checks["restated_history"] = {
+            "status": "n/a",
+            "copies": [{"accession": a, "value": v} for a, v in shown.copies_disagree],
+        }
     if shown.is_derived:
         return prove_derived(shown, structure, prior_structure, fsn_set)
     if structure is None:
