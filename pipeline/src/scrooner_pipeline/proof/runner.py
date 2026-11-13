@@ -167,7 +167,6 @@ def prove_company(
     company_id: int,
     cache: StructureCache,
     floor: date | None = None,
-    structures_out: dict[str, FilingStructure] | None = None,
 ) -> list[Proof]:
     shown = (
         load_shown(conn, company_id, floor=floor)
@@ -217,8 +216,6 @@ def prove_company(
         s.claim is not None and any("[" in t for _sg, t in s.claim.parts) for s in shown
     )
     structures = cache.get_many(by_quarter, dims=wants_dims)
-    if structures_out is not None:
-        structures_out.update(structures)
     proofs: list[Proof] = []
     for acc, cells in groups.items():
         structure = structures.get(acc) if acc else None
@@ -293,8 +290,12 @@ def run(
             totals["companies"] += 1
             cache.company = cik
             try:
-                structures: dict[str, FilingStructure] = {}
-                proofs = prove_company(conn, company_id, cache, floor, structures)
+                proofs = prove_company(conn, company_id, cache, floor)
+                structures = {
+                    a: st
+                    for by_acc in cache.loaded.values()
+                    for a, st in by_acc.items()
+                }
                 # identities over the served values, after the per-cell proof and before the upsert
                 id_counts = apply_identities(
                     proofs,
