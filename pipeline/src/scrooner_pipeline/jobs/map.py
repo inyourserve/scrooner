@@ -74,7 +74,10 @@ from scrooner_pipeline.mapper.main_calculator import (
     unregistered_metrics,
 )
 
-app = typer.Typer()
+# HYBRID_NEW_PATH: the writer subcommands leave new-path companies out of --ciks (fsn_store/new_path.py)
+from scrooner_pipeline.fsn_store.new_path import guarded_group  # noqa: E402
+
+app = typer.Typer(cls=guarded_group("scrooner-map"))
 
 GOLDEN_COMPANIES_PATH = (
     Path(__file__).resolve().parents[3]

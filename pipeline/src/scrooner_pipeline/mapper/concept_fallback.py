@@ -600,6 +600,11 @@ def resolve_arithmetic_fallback(
 
 
 def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
+    from scrooner_pipeline.fsn_store import new_path
+
+    new_path.refuse_population_writer(
+        conn, "resolve_all_arithmetic_fallbacks"
+    )  # HYBRID_NEW_PATH: fail closed
     stats: dict[str, Any] = {
         "considered": len(ARITHMETIC_FALLBACKS),
         "rows_written": {},

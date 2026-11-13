@@ -1,0 +1,154 @@
+"""Equivalence run: EDGAR-built FSN rows (fsn_store.xbrl_fsn) vs the same filings in SEC FSN sets.
+
+usage:
+  SEC_USER_AGENT="Name contact@example.com" uv run --project pipeline python pipeline/scripts/fsn_xbrl_equivalence.py \\
+      --fsn-zip .cache/2026_10_notes.zip --filings pipeline/scripts/results/fsn_xbrl_equivalence/filings.txt \\
+      --edgar-cache .cache/edgar --out pipeline/scripts/results/fsn_xbrl_equivalence
+
+--fsn-zip (repeatable): SEC Financial Statement and Notes set zips (sec.gov); each filing is compared
+with the first set that holds it.
+--filings: lines 'cik accession ticker'. Writes results.json (per filing, xbrl_equivalence.compare)
+and summary.md. Reads sec.gov only, at most 4 requests/s (edgar_fetch.EdgarClient). No database.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import io
+import json
+import os
+import sys
+import zipfile
+from pathlib import Path
+
+from scrooner_pipeline.fsn_store.edgar_fetch import EdgarClient, fetch_filing
+from scrooner_pipeline.fsn_store.xbrl_equivalence import compare
+from scrooner_pipeline.fsn_store.xbrl_fsn import FilingFiles, convert
+
+csv.field_size_limit(1 << 24)
+TABLES = ("sub", "num", "pre", "cal", "ren")
+
+
+def fsn_rows(
+    zpath: Path, want: set[str], fsn_set: str
+) -> dict[str, dict[str, list[dict[str, str]]]]:
+    """accession -> table -> rows, for the wanted accessions (streamed; values untouched)."""
+    out: dict[str, dict[str, list[dict[str, str]]]] = {
+        a: {t: [] for t in TABLES} for a in want
+    }
+    with zipfile.ZipFile(zpath) as zf:
+        for t in TABLES:
+            with zf.open(f"{t}.tsv") as raw:
+                fh = io.TextIOWrapper(
+                    raw, encoding="utf-8", errors="replace", newline=""
+                )
+                for r in csv.DictReader(fh, delimiter="\t", quoting=csv.QUOTE_NONE):
+                    if r["adsh"] in want:
+                        if t == "sub":
+                            r = {"fsn_set": fsn_set, **r}
+                        out[r["adsh"]][t].append(r)
+    return out
+
+
+def cached_filing(
+    client: EdgarClient | None, cache: Path, cik: str, adsh: str
+) -> FilingFiles:
+    d = cache / adsh
+    if (d / "header.json").exists():
+        header = json.loads((d / "header.json").read_text())
+        files = {p.name: p.read_bytes() for p in d.iterdir() if p.name != "header.json"}
+        return FilingFiles(adsh, files, header)
+    if client is None:
+        raise FileNotFoundError(d)
+    ff = fetch_filing(client, cik, adsh, fsn_set="edgar")
+    d.mkdir(parents=True, exist_ok=True)
+    for name, raw in ff.files.items():
+        (d / name).write_bytes(raw)
+    (d / "header.json").write_text(json.dumps(ff.header))
+    return ff
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--fsn-zip", required=True, action="append", help="one or more SEC FSN set zips"
+    )
+    ap.add_argument("--filings", required=True)
+    ap.add_argument("--edgar-cache", default=".cache/edgar")
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+    picks = [
+        ln.split()
+        for ln in Path(args.filings).read_text().splitlines()
+        if ln.strip() and not ln.startswith("#")
+    ]
+    sets = [(Path(z), Path(z).name.replace("_notes.zip", "").replace("_", "m")) for z in args.fsn_zip]
+    expected: dict[str, dict[str, list[dict[str, str]]]] = {}
+    found_in: dict[str, str] = {}
+    for zpath, name in sets:
+        for adsh, tables in fsn_rows(zpath, {p[1] for p in picks}, name).items():
+            if tables["sub"] and adsh not in expected:
+                expected[adsh], found_in[adsh] = tables, name
+    missing = [p[1] for p in picks if p[1] not in expected]
+    if missing:
+        raise SystemExit(f"not in any given FSN set: {missing}")
+    fsn_set = ",".join(name for _, name in sets)
+    ua = os.environ.get("SEC_USER_AGENT", "")
+    client = EdgarClient(ua) if ua else None
+    results = {}
+    for p in picks:
+        cik, adsh = p[0], p[1]
+        ticker = p[2] if len(p) > 2 else ""
+        got = convert(cached_filing(client, Path(args.edgar_cache), cik, adsh))
+        res = compare(expected[adsh], got)
+        res["ticker"] = ticker
+        res["cik"] = cik
+        res["form"] = expected[adsh]["sub"][0]["form"]
+        res["fsn_set"] = found_in[adsh]
+        results[adsh] = res
+        print(
+            f"{ticker:6} {adsh} pass={res['pass']} num={res['num']['fsn']}/{res['num']['missing']}/{res['num']['extra']}"
+            f" pre_exact={res['pre']['reports_exact']}/{res['pre']['reports']} cal={res['cal']['pass']} sub={res['sub']['diff']}",
+            flush=True,
+        )
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "results.json").write_text(
+        json.dumps({"fsn_set": fsn_set, "filings": results}, indent=1, sort_keys=True)
+    )
+    n = len(results)
+    lines = [
+        f"# EDGAR XBRL -> FSN rows: equivalence against the SEC set {fsn_set}",
+        "",
+        "Generated by `pipeline/scripts/fsn_xbrl_equivalence.py`. Criteria: `fsn_store/xbrl_equivalence.py`.",
+        "",
+        f"- Filings: {n}; passed (num exact, statement line items exact, cal arcs exact, sub): "
+        f"{sum(r['pass'] for r in results.values())}",
+        f"- num rows compared: {sum(r['num']['fsn'] for r in results.values())}; missing "
+        f"{sum(r['num']['missing'] for r in results.values())}, extra {sum(r['num']['extra'] for r in results.values())}, "
+        f"value/dcml diffs {sum(r['num']['column_diffs'].get('value', 0) + r['num']['column_diffs'].get('dcml', 0) for r in results.values())}, "
+        f"footnote diffs (not gated) {sum(r['num']['column_diffs'].get('footnote', 0) for r in results.values())}",
+        f"- statement/cover reports: {sum(r['pre']['reports'] for r in results.values())}; identical row for row "
+        f"{sum(r['pre']['reports_exact'] for r in results.values())}; with a line-item difference "
+        f"{sum(r['pre']['reports_item_diffs'] for r in results.values())}; structural rows differing (not gated) "
+        f"{sum(r['pre']['structural_row_diffs'] for r in results.values())}",
+        f"- cal arcs: {sum(r['cal']['fsn_arcs'] for r in results.values())}; filings with identical arc groups "
+        f"{sum(r['cal']['pass'] for r in results.values())}",
+        "",
+        "| ticker | form | set | accession | pass | num rows | num missing/extra | reports exact | item diffs | structural | cal | sub diff |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for adsh, r in results.items():
+        lines.append(
+            f"| {r['ticker']} | {r['form']} | {r['fsn_set']} | {adsh} | {'yes' if r['pass'] else 'NO'} | {r['num']['fsn']} | {r['num']['missing']}/{r['num']['extra']} "
+            f"| {r['pre']['reports_exact']}/{r['pre']['reports']} | {r['pre']['reports_item_diffs']} | {r['pre']['structural_row_diffs']} "
+            f"| {'same' if r['cal']['pass'] else 'DIFF'} | {r['sub']['diff'] or ''} |"
+        )
+    (out / "summary.md").write_text("\n".join(lines) + "\n")
+    print("\n".join(lines[:12]))
+    return 0 if all(r["pass"] for r in results.values()) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

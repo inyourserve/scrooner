@@ -85,6 +85,11 @@ jobs:
       - name: Investigate and auto-fix reconcilable findings
         if: always()
         timeout-minutes: 30
+        env:
+          # on: companies on the hybrid FSN path are never written here (fsn_store/new_path.py,
+          # FSN-NIGHTLY-INCREMENTAL-DESIGN-2026-11-09.md); off by default, switched on together with pipeline-refresh's
+          # HYBRID_NEW_PATH (the same repository variable)
+          HYBRID_NEW_PATH: ${{ vars.HYBRID_NEW_PATH || 'off' }}
         run: uv run --project pipeline scrooner-sanity investigate
       - name: Run rendered-report parser on remaining critical findings
         # Added 2026-09-20 -- closes a real gap: tag_investigator's

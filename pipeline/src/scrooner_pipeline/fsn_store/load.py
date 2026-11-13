@@ -11,6 +11,13 @@ company directory may carry filings whose registrant is another company
 (Entergy Arkansas holds Entergy's combined 10-K): those are inserted only
 when absent (ON CONFLICT accession DO NOTHING) and never deleted by the
 co-registrant's reload; fsn.filing.aciks keeps the link.
+
+EDGAR-built filings (fsn_store.xbrl_fsn, the nightly incremental: fsn_set 'edgar:<date>') are
+loaded with increment=True: per accession, never touching the company's other filings. An
+accession already held from a SEC FSN set is left alone (the FSN set wins); an EDGAR build of the
+same accession with the same src_sha256 is skipped; an older EDGAR build is replaced. A full
+company reload (increment=False) keeps the EDGAR-built filings its directory does not carry, and
+replaces those it does (the FSN set arrived: dedupe by accession).
 """
 
 from __future__ import annotations
@@ -32,6 +39,7 @@ from scrooner_pipeline.fsn_store.company_dir import NO_DIM, read
 
 logger = structlog.get_logger()
 RULE_ID = "fsn.store_load@1"
+EDGAR_SET_PREFIX = "edgar:"
 STATEMENT_TIMEOUT = "5min"
 
 
@@ -123,10 +131,12 @@ def load_company(
     run_id: str | None = None,
     force: bool = False,
     predecessors: dict[str, str] | None = None,
+    increment: bool = False,
 ) -> dict[str, Any]:
     """Load one companies/<cik>/ directory. Returns the row counts written (or {"skipped": True}).
     predecessors: predecessor cik -> successor cik (a registrant reorganised into a new holding
-    company: XOM 0000034088 -> 0002115436); its filings load under the successor's company."""
+    company: XOM 0000034088 -> 0002115436); its filings load under the successor's company.
+    increment: the directory holds EDGAR-built filings only (module docstring)."""
     predecessors = predecessors or {}
     loader_commit = loader_commit or _git_commit()
     data = read(company_dir)
@@ -140,7 +150,11 @@ def load_company(
     if row is None:
         raise LookupError(f"no core.company for cik {cik}")
     company_id = row[0]
-    if not force and already_loaded(conn, company_id, m["input_sha256"], loader_commit):
+    if (
+        not increment
+        and not force
+        and already_loaded(conn, company_id, m["input_sha256"], loader_commit)
+    ):
         logger.info(
             "fsn_load.skip_already_loaded", cik=cik, input_sha256=m["input_sha256"][:16]
         )
@@ -197,8 +211,57 @@ def load_company(
             dim_id = {h: i for i, h in cur.fetchall()}
             # --- filings: delete this company's own, insert all (others only if absent) ---
             subs = {r["adsh"]: r for r in data["sub"]}
-            cur.execute("delete from fsn.filing where company_id = %s", (company_id,))
-            counts["filings_deleted"] = cur.rowcount
+            acc_sha = m.get("accession_sha256") or {}
+            if increment:
+                if any(
+                    not r["fsn_set"].startswith(EDGAR_SET_PREFIX) for r in subs.values()
+                ):
+                    raise ValueError(
+                        "an increment directory holds EDGAR-built filings only"
+                    )
+                cur.execute(
+                    "select accession, fsn_set, src_sha256 from fsn.filing where accession = any(%s)",
+                    (list(subs),),
+                )
+                held = {a: (fs, sha) for a, fs, sha in cur.fetchall()}
+                stale = []
+                for a in list(subs):
+                    if a not in held:
+                        continue
+                    fs, sha = held[a]
+                    if not fs.startswith(EDGAR_SET_PREFIX):
+                        counts["held_from_fsn_set"] += 1  # the SEC set wins
+                        subs.pop(a)
+                    elif sha == acc_sha.get(a) and not force:
+                        counts["unchanged"] += 1
+                        subs.pop(a)
+                    else:
+                        stale.append(a)
+                cur.execute(
+                    "delete from fsn.filing where accession = any(%s) and fsn_set like 'edgar:%%'",
+                    (stale,),
+                )
+                counts["filings_deleted"] = cur.rowcount
+                if not subs:
+                    logger.info("fsn_load.increment_nothing_new", cik=cik, **counts)
+                    return {
+                        "cik": cik,
+                        "company_id": company_id,
+                        "skipped": True,
+                        **counts,
+                    }
+            else:
+                # EDGAR-built filings the directory does not carry stay (their FSN set has not arrived)
+                cur.execute(
+                    "delete from fsn.filing where company_id = %s and (fsn_set not like 'edgar:%%' or accession = any(%s))",
+                    (company_id, list(subs)),
+                )
+                counts["filings_deleted"] = cur.rowcount
+                cur.execute(
+                    "select count(*) from fsn.filing where company_id = %s and fsn_set like 'edgar:%%'",
+                    (company_id,),
+                )
+                counts["edgar_filings_kept"] = cur.fetchone()[0]
             sub_ciks = {r["cik"].zfill(10) for r in subs.values()}
             cur.execute(
                 "select cik, id from core.company where cik = any(%s)",
@@ -243,7 +306,7 @@ def load_company(
                         r.get("prevrpt") == "1",
                         [c.zfill(10) for c in (r.get("aciks") or "").split() if c],
                         r["fsn_set"],
-                        m.get("file_sha256", {}).get("sub"),
+                        acc_sha.get(a) or m.get("file_sha256", {}).get("sub"),
                     )
                     for a, r in subs.items()
                 ],
@@ -411,23 +474,25 @@ def load_company(
                 ("filing_id", "grp", "arc", "parent_tag_id", "child_tag_id", "weight"),
                 arc_rows,
             )
-            cur.execute(
-                """
-                insert into fsn.company_load (company_id, cik, input_sha256, loader_commit, row_counts, run_id)
-                values (%s, %s, %s, %s, %s::jsonb, %s::uuid)
-                on conflict (company_id) do update set input_sha256 = excluded.input_sha256,
-                    loader_commit = excluded.loader_commit, row_counts = excluded.row_counts,
-                    run_id = excluded.run_id, loaded_at = now()
-                """,
-                (
-                    company_id,
-                    cik,
-                    m["input_sha256"],
-                    loader_commit,
-                    json.dumps(dict(counts)),
-                    run_id,
-                ),
-            )
+            # fsn.company_load keys the full reload; an increment leaves it alone
+            if not increment:
+                cur.execute(
+                    """
+                    insert into fsn.company_load (company_id, cik, input_sha256, loader_commit, row_counts, run_id)
+                    values (%s, %s, %s, %s, %s::jsonb, %s::uuid)
+                    on conflict (company_id) do update set input_sha256 = excluded.input_sha256,
+                        loader_commit = excluded.loader_commit, row_counts = excluded.row_counts,
+                        run_id = excluded.run_id, loaded_at = now()
+                    """,
+                    (
+                        company_id,
+                        cik,
+                        m["input_sha256"],
+                        loader_commit,
+                        json.dumps(dict(counts)),
+                        run_id,
+                    ),
+                )
     logger.info("fsn_load.company", cik=cik, **counts)
     return {"cik": cik, "company_id": company_id, "skipped": False, **counts}
 
@@ -441,10 +506,12 @@ def run(
     git_commit: str | None = None,
     predecessors: dict[str, str] | None = None,
     connect: Callable[[], psycopg.Connection] | None = None,
+    increment: bool = False,
     input_sha: str | None = None,
 ) -> dict[str, Any]:
     """Load every (or the named) company directories; one rule_run for the batch. input_sha: the sha256 of the
     dispatched CIK list (pipeline-fsn-write.yml `ciks`), recorded in the run's stats.
+    increment: EDGAR-built directories (load_company, module docstring).
 
     A company that fails is rolled back and skipped. If the failure LOST the connection (the pooler dropped it:
     FSN write run 42561798991, shards 4/6/7), `connect` opens a fresh one and that company is tried once more;
@@ -488,6 +555,7 @@ def run(
                         run_id=run_id,
                         force=force,
                         predecessors=predecessors,
+                        increment=increment,
                     )
                     current.commit()
                     break

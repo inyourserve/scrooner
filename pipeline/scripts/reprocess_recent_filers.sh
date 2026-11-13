@@ -274,6 +274,11 @@ STAGES=(
   map:calculate-fcf-growth map:calculate-dividend-streak
   map:build-tag-library
 )
+# HYBRID_NEW_PATH (off by default; fsn_store/new_path.py): when on, the old-path writer commands themselves
+# (scrooner-normalize / scrooner-map, GuardedGroup) leave every company on the new nightly path out of their
+# --ciks, whichever entry point runs them (Ritwik's PR #12 review, 2026-11-12). The SEC ingestion stages and the
+# derived metrics still run for every company. Nothing to do here: the variable reaches each command through
+# the environment, and every stage below passes --ciks.
 SKIPPED=""
 for ((i = 0; i < ${#STAGES[@]}; i++)); do
   entry="${STAGES[$i]}"
