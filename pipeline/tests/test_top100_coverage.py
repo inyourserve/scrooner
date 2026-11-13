@@ -25,10 +25,7 @@ def test_disagree_and_unchecked():
 def test_reasons_only_without_a_served_value():
     assert c("NOT_PRESENTED", "np") == ("REASON", "np")
     assert c(bs="not_in_template", br="not_in_template")[0] == "REASON"
-    assert c(bs="defect", br="held_pending_verifier") == (
-        "REASON",
-        "held_pending_verifier",
-    )
+    assert c(bs="defect", br="held_pending_verifier")[0] == "HELD"
     assert c(bs="not_presented", sv=D(1))[0] == "UNCHECKED"
     assert c(tm="not_presented")[0] == "REASON"
 
@@ -37,3 +34,91 @@ def test_blank_variants():
     assert c(bs="defect", br="not_captured") == ("BLANK", "not_captured")
     assert c(dm="not_presented") == ("BLANK", "docmap_not_presented_not_loaded")
     assert c() == ("BLANK", "no_value_no_reason")
+
+
+def test_held_is_its_own_class_not_blank_not_reason():
+    # guard-held and open-finding defects are HELD whatever the code; plain capture defects stay BLANK
+    assert c(bs="defect", br="proof_disagree") == ("BLANK", "proof_disagree")
+    assert classify(
+        None,
+        None,
+        None,
+        None,
+        "defect",
+        "proof_disagree",
+        None,
+        "mapped",
+        "guard_hidden",
+    ) == (
+        "HELD",
+        "proof_disagree",
+    )
+    assert classify(
+        None,
+        None,
+        None,
+        None,
+        "defect",
+        "filer_scale_error",
+        None,
+        "mapped",
+        "finding_open",
+    ) == (
+        "HELD",
+        "filer_scale_error",
+    )
+    assert classify(
+        None, None, None, None, "defect", "not_captured", None, "mapped", "unclassified"
+    ) == (
+        "BLANK",
+        "not_captured",
+    )
+    assert (
+        classify(None, None, None, D(1), "defect", "x", None, "mapped", "guard_hidden")[
+            0
+        ]
+        == "UNCHECKED"
+    )
+
+
+def test_summary_pct_excludes_held():
+    from scrooner_pipeline.mapper.top100_coverage import Company, summarize
+
+    rows = [
+        {"company_id": 1, "class": k} for k in ("PROVEN", "REASON", "HELD", "BLANK")
+    ]
+    out = summarize(rows, [Company(1, "X", 1, "")], {}, "t")
+    assert out[0]["HELD"] == 1 and out[0]["pct_proven_plus_reason"] == "50.0"
+
+
+def test_era_unmapped_is_a_gap_not_a_reason():
+    assert c(bs="not_presented", br="era_unmapped") == ("BLANK", "era_unmapped")
+    assert classify(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        "not_presented",
+        "mapped",
+        None,
+        "era_unmapped",
+    ) == ("BLANK", "era_unmapped")
+    # a served value stays UNCHECKED, a genuine not_presented stays a reason
+    assert c(bs="not_presented", br="era_unmapped", sv=D(1))[0] == "UNCHECKED"
+    assert c(bs="not_presented", br="x")[0] == "REASON"
+
+
+def test_not_in_template_on_an_in_template_point_is_blank():
+    def k(bs=None, tm=None, tpl=None):
+        return classify(None, None, None, None, bs, bs, tm, "mapped", None, None, tpl)
+
+    assert k(bs="not_in_template", tpl=True) == (
+        "BLANK",
+        "not_in_template_but_in_template",
+    )
+    assert k(tm="not_in_template", tpl=True)[0] == "BLANK"
+    assert k(bs="not_in_template", tpl=False)[0] == "REASON"
+    assert k(bs="not_in_template", tpl=None)[0] == "REASON"
+    assert k(bs="not_presented", tpl=True)[0] == "REASON"

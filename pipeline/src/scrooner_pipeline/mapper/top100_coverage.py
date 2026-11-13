@@ -5,8 +5,12 @@ doc/data-moat/team/top1000/shards.csv. Each cell is exactly one class:
 
   PROVEN     served value and the latest analytics.cell_proof verdict (basis='latest') is PROVEN for that value
   REASON     no served value and an evidenced reason is stored (cell_proof NOT_PRESENTED, cell_blank_reason
-             not_presented / not_in_template / evidenced_zero / undefined_by_math / history_horizon, a held_/hold_ code,
+             not_presented / not_in_template / evidenced_zero / undefined_by_math / history_horizon,
              or an analytics.company_tag_map not_presented / not_in_template decision covering the period)
+  HELD       no served value, withheld on purpose: a defect row that is a held_/hold_ code or whose defect_class is
+             guard_hidden / finding_open / filer_error (guard-held wrong value, scale error, open finding). Not a reason
+             (nothing proves the line is absent), not BLANK (the work queue knows why it is empty); it is not counted in
+             pct_proven_plus_reason
   DISAGREE   latest cell_proof verdict is DISAGREE
   UNCHECKED  a value is served but no PROVEN verdict covers it (no proof row, verdict UNCHECKED, or the proof was for
              another value)
@@ -32,7 +36,7 @@ from typing import Any
 
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
-CLASSES = ("PROVEN", "REASON", "DISAGREE", "UNCHECKED", "BLANK")
+CLASSES = ("PROVEN", "REASON", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
 REASON_STATES = {
     "not_presented",
     "not_in_template",
@@ -41,6 +45,9 @@ REASON_STATES = {
     "history_horizon",
 }
 HELD_RE = re.compile(r"^(held|hold)_")
+# A defect of these classes means a value (or a candidate) exists and a guard or an open finding withholds it:
+# the cell is held, not blank and not a verified reason.
+HELD_DEFECT_CLASSES = {"guard_hidden", "finding_open", "filer_error"}
 # Point-in-time (balance sheet / cover) data points: the FY cell is the instant at fiscal year end.
 INSTANT_DPS = {
     "cash_and_equivalents",
@@ -60,6 +67,7 @@ INSTANT_DPS = {
     "loans_net",
 }
 FIRST_FY = 2015
+UNMAPPED = "era_unmapped"
 # docmap data point -> concept names looked up in order (resolved concept first: it is what is served).
 SPECIAL_CANDIDATES = {"revenue": ["revenue_sanity_resolved", "revenue"]}
 
@@ -97,6 +105,9 @@ def classify(
     blank_reason: str | None,
     tagmap_decision: str | None,
     docmap_status: str | None,
+    blank_defect_class: str | None = None,
+    tagmap_reason_class: str | None = None,
+    in_template: bool | None = None,
 ) -> tuple[str, str | None]:
     """(class, reason_code). Pure. Precedence: proof verdict, served-but-unproven value, stored reason, blank."""
     if proof_verdict == "PROVEN":
@@ -113,10 +124,23 @@ def classify(
         return "UNCHECKED", "no_proof_row"
     if proof_verdict == "NOT_PRESENTED":
         return "REASON", proof_reason or "not_presented"
+    # era_unmapped: the era guard found no filing-checked mapping for that year. A gap in the map, not a reason.
+    if blank_reason == UNMAPPED or (
+        tagmap_decision and tagmap_reason_class == UNMAPPED and not blank_state
+    ):
+        return "BLANK", UNMAPPED
+    # not_in_template on a data point the company's current template includes is a contradiction, never a reason
+    if in_template and (
+        blank_state == "not_in_template" or tagmap_decision == "not_in_template"
+    ):
+        return "BLANK", "not_in_template_but_in_template"
     if blank_state in REASON_STATES:
         return "REASON", blank_reason or blank_state
-    if blank_state == "defect" and blank_reason and HELD_RE.match(blank_reason):
-        return "REASON", blank_reason
+    if blank_state == "defect" and (
+        (blank_reason and HELD_RE.match(blank_reason))
+        or blank_defect_class in HELD_DEFECT_CLASSES
+    ):
+        return "HELD", blank_reason or blank_defect_class
     if tagmap_decision in ("not_presented", "not_in_template"):
         return "REASON", f"company_tag_map:{tagmap_decision}"
     if blank_state == "defect":
@@ -229,7 +253,8 @@ def build_rows(
     blanks: dict[tuple[int, str, date, date], tuple] = {}
     for row in conn.execute(
         """select distinct on (company_id, data_point_name, period_start, period_end)
-                  company_id, data_point_name, period_start, period_end, state, reason_code, reason_text
+                  company_id, data_point_name, period_start, period_end, state, reason_code, reason_text,
+                  defect_class
            from analytics.cell_blank_reason
            where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
              and period_grain in ('FY', 'I') and period_end >= %s
@@ -238,13 +263,24 @@ def build_rows(
     ).fetchall():
         blanks[(row[0], row[1], row[2], row[3])] = row[4:]
     tagmap: dict[tuple[int, str], list[tuple]] = defaultdict(list)
-    for cid, name, dec, ef, et, reason in conn.execute(
-        """select m.company_id, c.name, m.decision, m.era_from, m.era_to, m.reason
+    for cid, name, dec, ef, et, reason, rclass in conn.execute(
+        """select m.company_id, c.name, m.decision, m.era_from, m.era_to, m.reason, m.reason_class
            from analytics.company_tag_map m join analytics.canonical_concept c on c.id = m.canonical_concept_id
            where m.company_id = any(%s) and m.decision in ('not_presented', 'not_in_template')""",
         (ids,),
     ).fetchall():
-        tagmap[(cid, name)].append((dec, ef, et, reason))
+        tagmap[(cid, name)].append((dec, ef, et, reason, rclass))
+
+    # the company's CURRENT sector template (latest effective_from <= today): data point -> in_template
+    in_tpl: dict[tuple[int, str], bool] = {}
+    for cid, dp, inn in conn.execute(
+        """select t.company_id, t.data_point, t.in_template from analytics.company_data_point_template t
+           where t.company_id = any(%s) and t.effective_from = (
+             select max(effective_from) from analytics.company_data_point_template x
+             where x.company_id = t.company_id and x.effective_from <= %s)""",
+        (ids, today),
+    ).fetchall():
+        in_tpl[(cid, dp)] = bool(inn)
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -274,9 +310,9 @@ def build_rows(
                         brow = blanks[(c.company_id, n, s, e)]
                 tm = None
                 for n in cand:
-                    for dec, ef, et, why in tagmap.get((c.company_id, n), []):
+                    for dec, ef, et, why, rcl in tagmap.get((c.company_id, n), []):
                         if (ef is None or ef <= e) and (et is None or et >= e):
-                            tm = (dec, why)
+                            tm = (dec, why, rcl)
                 verdict, preason, ptext, pval, ptag, pacc, psrc, pface = (
                     prow if prow else (None,) * 8
                 )
@@ -289,6 +325,9 @@ def build_rows(
                     brow[1] if brow else None,
                     tm[0] if tm else None,
                     dm["status"],
+                    brow[3] if brow else None,
+                    tm[2] if tm else None,
+                    in_tpl.get((c.company_id, dp)),
                 )
                 reason_text = (
                     ptext or (brow[2] if brow else None) or (tm[1] if tm else None)

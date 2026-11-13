@@ -94,14 +94,20 @@ def read_rows(path: Path) -> list[dict]:
 
 # Instants are never derived (doc 02): a component sum is allowed for DURATION concepts only; the one instant
 # exception is total debt (founder definition, doc 02 2026-11-04 item 5).
-INSTANT_SUM_ALLOWED = {"total_debt", "total_debt_resolved"}
+# Second exception (Dhairya ruling (c) 2026-11-13, rule per_share.shares_outstanding.multi_class_sum): the BS/EQ face
+# prints the share count only per class member (>= 2 members); the data point is the sum of the class members at the date.
+INSTANT_SUM_ALLOWED = {
+    "total_debt",
+    "total_debt_resolved",
+    "shares_outstanding",
+    "shares_outstanding_resolved",
+}
 
 
 def instant_sum_refused(parent_name: str | None, statement: str | None) -> bool:
-    return (
-        statement == "balance_sheet"
-        and (parent_name or "").removesuffix("_resolved") != "total_debt"
-    )
+    return statement == "balance_sheet" and (parent_name or "").removesuffix(
+        "_resolved"
+    ) not in {"total_debt", "shares_outstanding"}
 
 
 OPEN_PERIOD_RULE_ID = "tagmap.open_period@1"

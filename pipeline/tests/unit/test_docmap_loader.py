@@ -275,3 +275,12 @@ def test_comparative_start_without_a_named_prior_tag_changes_nothing():
         '"era from the FY2017 10-K\'s comparative year to FY2026; value_source sec_api | accn 0000000001-26-000001 period 2025-07-01..2026-06-30"'
     )
     assert not row.comparative_start and row.era_from == date(2015, 7, 1)
+
+
+def test_instant_component_sum_allowed_for_total_debt_and_multi_class_shares_only():
+    from scrooner_pipeline.mapper.company_tag_map_seed import instant_sum_refused
+
+    assert not instant_sum_refused("total_debt", "balance_sheet")
+    assert not instant_sum_refused("shares_outstanding_resolved", "balance_sheet")
+    assert instant_sum_refused("inventory", "balance_sheet")
+    assert not instant_sum_refused("operating_expenses", "income_statement")
