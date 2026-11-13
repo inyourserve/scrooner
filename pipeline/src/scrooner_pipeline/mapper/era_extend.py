@@ -92,7 +92,7 @@ def fetch(
     with conn.cursor() as cur:
         cur.execute(
             """select accession, period from fsn.filing
-               where company_id = %s and form in ('10-K', '10-K/A') and period is not null""",
+               where company_id = %s and form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and period is not null""",
             (company_id,),
         )
         for acc, period in cur.fetchall():
@@ -105,7 +105,7 @@ def fetch(
                join fsn.tag t on t.id = l.tag_id
                left join fsn.calc_arc a on a.filing_id = f.id and a.child_tag_id = l.tag_id
                left join fsn.tag pt on pt.id = a.parent_tag_id
-               where f.company_id = %s and f.form in ('10-K', '10-K/A')
+               where f.company_id = %s and f.form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A')
                group by f.accession, t.tag, l.stmt, l.prole, l.plabel, l.report, l.line""",
             (company_id,),
         )
@@ -121,7 +121,7 @@ def fetch(
                from fsn.filing f
                join fsn.value v on v.filing_id = f.id and v.ddate = f.period and v.dim_id = 0
                join fsn.tag t on t.id = v.tag_id
-               where f.company_id = %s and f.form in ('10-K', '10-K/A') and t.tag = any(%s)
+               where f.company_id = %s and f.form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and t.tag = any(%s)
                group by f.accession, t.tag, v.qtrs, v.uom""",
             (company_id, sorted(tags)),
         )
@@ -138,7 +138,7 @@ def fetch(
                    join fsn.line_map lm on lm.filing_id = f.id
                    join fsn.line l on l.filing_id = lm.filing_id and l.report = lm.report and l.line = lm.line
                    join fsn.tag t on t.id = l.tag_id
-                   where f.company_id = %s and f.form in ('10-K', '10-K/A') and lm.status = 'mapped'
+                   where f.company_id = %s and f.form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and lm.status = 'mapped'
                      and lm.canonical_concept_id = any(%s)""",
                 (company_id, sorted(concept_ids)),
             )
@@ -343,7 +343,7 @@ def fetch_facts(
     with conn.cursor() as cur:
         cur.execute(
             """select fl.accession_number from core.fact f join core.filing fl on fl.id = f.filing_id
-               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')
                  and fl.filing_date >= '2015-01-01' group by 1""",
             (company_id,),
         )
@@ -351,7 +351,7 @@ def fetch_facts(
         cur.execute(
             """select distinct fl.accession_number, c.tag from core.fact f
                join core.filing fl on fl.id = f.filing_id join core.concept c on c.id = f.concept_id
-               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')
                  and fl.filing_date >= '2015-01-01' and c.tag = any(%s)""",
             (company_id, sorted(tags)),
         )
@@ -428,6 +428,10 @@ YEAR_BACK = (
     350,
     385,
 )  # days from a 10-K's period end to its prior-year column's end (52/53-week years)
+YEAR_BACK2 = (
+    715,
+    750,
+)  # the second prior column of a 10-K's income and cash-flow statements (three printed years; balance sheets print two)
 
 
 @dataclass(frozen=True)
@@ -466,7 +470,7 @@ def fetch_printed(
     with conn.cursor() as cur:
         cur.execute(
             """select accession, period from fsn.filing
-               where company_id = %s and form in ('10-K', '10-K/A') and period is not null""",
+               where company_id = %s and form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and period is not null""",
             (company_id,),
         )
         filings = {a: p for a, p in cur.fetchall()}
@@ -474,7 +478,7 @@ def fetch_printed(
             """select f.accession, t.tag, v.ddate, v.qtrs, f.period
                from fsn.filing f join fsn.value v on v.filing_id = f.id and v.dim_id = 0 and v.qtrs in (0, 4)
                join fsn.tag t on t.id = v.tag_id
-               where f.company_id = %s and f.form in ('10-K', '10-K/A') and t.tag = any(%s)
+               where f.company_id = %s and f.form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and t.tag = any(%s)
                group by 1, 2, 3, 4, 5""",
             (company_id, sorted(tags)),
         )
@@ -486,7 +490,7 @@ def fetch_printed(
         # the SEC company-facts store (core.fact, undimensioned) covers 10-Ks the FSN store lacks
         cur.execute(
             """select accession_number, period_of_report from core.filing
-               where company_id = %s and form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+               where company_id = %s and form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')
                  and period_of_report is not null and period_of_report >= '2014-01-01'""",
             (company_id,),
         )
@@ -498,7 +502,7 @@ def fetch_printed(
                join core.filing fl on fl.id = f.filing_id
                join core.concept c on c.id = f.concept_id
                join core.period p on p.id = f.period_id
-               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')
                  and fl.period_of_report >= '2014-01-01' and c.tag = any(%s)
                group by 1, 2, 3, 4, 5""",
             (company_id, sorted(tags)),
@@ -520,7 +524,7 @@ def fetch_printed(
                    join fsn.line_map lm on lm.filing_id = f.id
                    join fsn.line l on l.filing_id = lm.filing_id and l.report = lm.report and l.line = lm.line
                    join fsn.tag t on t.id = l.tag_id
-                   where f.company_id = %s and f.form in ('10-K', '10-K/A') and lm.status = 'mapped'
+                   where f.company_id = %s and f.form in ('10-K', '10-K/A', '20-F', '20-F/A', '40-F', '40-F/A') and lm.status = 'mapped'
                      and lm.canonical_concept_id = any(%s)""",
                 (company_id, sorted(concept_ids)),
             )
@@ -565,6 +569,13 @@ def comparative_slices(
                         if a == acc
                         for d in by
                         if YEAR_BACK[0] <= (n_period - d).days <= YEAR_BACK[1]
+                        or (
+                            YEAR_BACK2[0] <= (n_period - d).days <= YEAR_BACK2[1]
+                            and "annual"
+                            in by[
+                                d
+                            ]  # a duration only: instants are not printed three years back
+                        )
                     }
                 )
                 for p in ps:

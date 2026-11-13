@@ -132,7 +132,7 @@ def store_keys(filings: list[sel.Filing], concept: str) -> list[tuple[str, date]
             keys.add(("I", f.period))
             continue
         keys.add(("Q", f.period))
-        if f.form.startswith("10-K"):
+        if f.form.startswith(("10-K", "20-F", "40-F")):
             keys.add(("FY", f.period))
     return sorted(keys)
 

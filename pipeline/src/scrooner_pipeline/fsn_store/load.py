@@ -605,6 +605,93 @@ def run(
     return out
 
 
+def plan(
+    conn: psycopg.Connection,
+    companies_root: Path,
+    ciks: list[str] | None = None,
+    *,
+    predecessors: dict[str, str] | None = None,
+    increment: bool = False,
+    force: bool = False,
+) -> dict[str, Any]:
+    """Dry run of `run`: what loading these directories would write, with NO write (the connection is put in a
+    read-only transaction, so any write would raise; no rule_run row is started). Per company: the accessions
+    that would be inserted, those already in fsn.filing from the same bytes (unchanged), those held by an SEC
+    FSN set (the SEC set wins), and those an EDGAR-built copy would replace; plus the pre/num row counts of the
+    accessions that would be written."""
+    predecessors = predecessors or {}
+    dirs = sorted(
+        d
+        for d in companies_root.iterdir()
+        if d.is_dir() and (d / "manifest.json").exists()
+    )
+    if ciks:
+        want = {c.zfill(10) for c in ciks}
+        dirs = [d for d in dirs if d.name in want]
+    conn.rollback()
+    conn.read_only = True
+    out: dict[str, Any] = {"mode": "dry_run", "increment": increment, "companies": {}}
+    totals: dict[str, int] = defaultdict(int)
+    try:
+        for d in dirs:
+            data = read(d)
+            m = data["manifest"]
+            cik = m["cik"]
+            row = conn.execute(
+                "select id from core.company where cik = %s",
+                (predecessors.get(cik, cik),),
+            ).fetchone()
+            if row is None:
+                out["companies"][cik] = {"error": f"no core.company for cik {cik}"}
+                totals["errors"] += 1
+                continue
+            subs = {r["adsh"]: r for r in data["sub"]}
+            acc_sha = m.get("accession_sha256") or {}
+            held = {
+                a: (fs, sha)
+                for a, fs, sha in conn.execute(
+                    "select accession, fsn_set, src_sha256 from fsn.filing where accession = any(%s)",
+                    (list(subs),),
+                ).fetchall()
+            }
+            insert, unchanged, sec_held, replace = [], [], [], []
+            for a in subs:
+                if a not in held:
+                    insert.append(a)
+                    continue
+                fs, sha = held[a]
+                if not increment:
+                    replace.append(
+                        a
+                    )  # a full load deletes and reinserts the company's own
+                elif not fs.startswith(EDGAR_SET_PREFIX):
+                    sec_held.append(a)
+                elif sha == acc_sha.get(a) and not force:
+                    unchanged.append(a)
+                else:
+                    replace.append(a)
+            new = set(insert) | set(replace)
+            out["companies"][cik] = {
+                "company_id": row[0],
+                "insert": sorted(insert),
+                "replace": sorted(replace),
+                "unchanged": len(unchanged),
+                "held_by_sec_set": sorted(sec_held),
+                "forms": sorted({subs[a]["form"] for a in new}),
+                "periods": sorted({subs[a].get("period", "") for a in new}),
+                "num_rows": sum(1 for r in data["num"] if r.get("adsh") in new),
+            }
+            totals["accessions_inserted"] += len(insert)
+            totals["accessions_replaced"] += len(replace)
+            totals["accessions_held_by_sec_set"] += len(sec_held)
+            totals["companies"] += 1
+    finally:
+        conn.rollback()
+        conn.read_only = False
+    out["totals"] = dict(totals)
+    return out
+
+
 def _alive(conn: psycopg.Connection) -> bool:
     """False when the connection is gone (closed or broken), so rollback() itself would raise."""
     return not (conn.closed or conn.broken)
