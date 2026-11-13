@@ -1,0 +1,3 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+comprehensive_income,2016,2016-12-31,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,0000753308-17-000060,R3.htm,3009000000,"red cell (value in filing, not served): R3.htm 'COMPREHENSIVE INCOME ATTRIBUTABLE TO NEE' read from the filing (FY0 column), printed value = red-cell evidence; companyfacts 3009000000; check: machine read of the R page"
+comprehensive_income,2017,2017-12-31,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,0000753308-18-000013,R3.htm,5559000000,"red cell (value in filing, not served): R3.htm 'COMPREHENSIVE INCOME ATTRIBUTABLE TO NEE' read from the filing (FY0 column), printed value = red-cell evidence; companyfacts 5559000000; check: machine read of the R page"
