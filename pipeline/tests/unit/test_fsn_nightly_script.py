@@ -1,5 +1,5 @@
 """pipeline/scripts/fsn_nightly_incremental.sh as the refresh workflow runs it, with stand-in `uv` and `psql`
-(no database, no network): the stages stop where FSN_NIGHTLY_STAGE says, and `write` hands only the night's
+(no database, no network, no GNU `timeout`): the stages stop where FSN_NIGHTLY_STAGE says, and `write` hands only the night's
 companies that have a company_tag_map to the tag-map writer (rule company_tag_map.select@1), with the rule
 enabled for that call alone. The script never fails the night."""
 
@@ -39,11 +39,19 @@ case "$q" in
 esac
 """
 
+# macOS has no `timeout` (GNU coreutils), so the script's first `timeout ... scrooner-fsn nightly` failed there,
+# the script warned and exited 0, and no scrooner- call was logged (6 tests failed on the Mac with IndexError).
+# The stand-in drops the duration and runs the command, like the real one does on a call that finishes in time.
+FAKE_TIMEOUT = """#!/usr/bin/env bash
+shift
+exec "$@"
+"""
+
 
 def run(tmp_path: Path, **env_extra: str) -> tuple[subprocess.CompletedProcess, list[str]]:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir(exist_ok=True)
-    for name, body in (("uv", FAKE_UV), ("psql", FAKE_PSQL)):
+    for name, body in (("uv", FAKE_UV), ("psql", FAKE_PSQL), ("timeout", FAKE_TIMEOUT)):
         p = bin_dir / name
         p.write_text(body)
         p.chmod(p.stat().st_mode | stat.S_IEXEC)
