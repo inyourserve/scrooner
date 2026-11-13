@@ -1,0 +1,98 @@
+# ZTS document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.
+
+## Filings opened
+- 10-K 0001555280-26-000011 (CIK 0001555280, filed 2026-02-12): COVER R1.htm, IS R3.htm, CI R4.htm, BS R6.htm, BSP R7.htm, CF R9.htm
+- 10-K 0001555280-16-000344 (CIK 0001555280, filed FY2015 era): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R8.htm
+- 10-K 0001555280-18-000053 (CIK 0001555280, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R8.htm
+- companyfacts CIK0001555280.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:Revenues | R3.htm | Revenues | 9467000000 | 9467000000 | 9256000000 | 9256000000 | Y | FILING-CHECKED | accn 0001555280-26-000011 R3.htm period ..2025-12-31 / check: hand R3.htm agree |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R3.htm | Cost of Sales | 2666000000 | 2666000000 | 2719000000 | 2719000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| gross_profit | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | no consolidated gross profit printed; R103 GrossProfit rows are segment-only (U.S. / International) and do not sum to the whole / check: hand R103.htm corrected: R103 GrossProfit appears only as segment rows (U.S. 4,255, International 2,942; sum 7,197 is not the consolidated figure 9,467 - 2,666 = 6,801); R3 prints no gross profit line; values were blank. |
+| operating_expenses | component sum | us-gaap:SellingGeneralAndAdministrativeExpense+us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost+zts:AmortizationOfIntangibleAssetsNotAssociatedWithSingleFunction+zts:RestructuringChargesAndAcquisitionAndDivestitureRelatedCosts | R3.htm | SG&A + R&D + amortization + restructuring | 3255000000 |  | 3198000000 |  |  | FILING-CHECKED | no total opex or operating income line on R3; sum of every operating line after cost of sales; revenue - COGS - sum - interest 222 + other 36 = pre-tax 3,360 / check: hand R3.htm corrected: R103 OperatingExpenses rows are segment-only (817, 677). R3 prints the operating lines after Cost of Sales: SG&A 2,378 + R&D 698 + Amortization of intangibles 128 + Restructuring/acquisition costs 51 = 3,255 (FY24 2,318+686+141+53 = 3,198); with interest 222 and other (36) it ties pre-tax 3,360. |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R3.htm | Selling, general and administrative expenses | 2378000000 | 2378000000 | 2318000000 | 2318000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost | R3.htm | Research and development expenses | 698000000 | 698000000 | 686000000 | 686000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| operating_income | not_presented |  | R3.htm |  |  |  |  |  |  | FILING-CHECKED | whole-filing check: none of OperatingIncomeLoss in MetaLinks.json (1084 tags across all 104 R pages, face and notes) of 0001555280-26-000011; no face row matched / check: hand R3.htm agree |
+| interest_expense | combined | us-gaap:InterestExpense | R3.htm | Interest expense, net of capitalized interest | 222000000 | 222000000 | 225000000 | 225000000 | Y | FILING-CHECKED | check: machine-full-filing / net interest line: interest_expense is the gross charge only, a net line is combined (Dhairya 2026-11-12) / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| income_before_tax | mapped | us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest | R3.htm | Income before provision for taxes on income | 3360000000 | 3360000000 | 3133000000 | 3133000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R3.htm | Provision for taxes on income | 687000000 | 687000000 | 637000000 | 637000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R3.htm | Net income attributable to Zoetis Inc. | 2673000000 | 2673000000 | 2486000000 | 2486000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R3.htm | Basic (in dollars per share) | 6.03 | 6.03 | 5.47 | 5.47 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R3.htm | Diluted (in dollars per share) | 6.02 | 6.02 | 5.47 | 5.47 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R3.htm | Basic (in shares) | 443443000 | 443443000 | 454200000 | 454200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R3.htm | Diluted (in shares) | 443835000 | 443835000 | 454848000 | 454848000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R3.htm period ..2025-12-31 |
+| cash_and_equivalents | mapped | us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents | R6.htm | Cash and cash equivalents | 2312000000 | 2312000000 | 1987000000 | 1987000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R6.htm | Accounts receivable, less allowance for doubtful accounts of $16 in 2025 and $18 in 2024 | 1590000000 | 1590000000 | 1316000000 | 1316000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| inventory | mapped | us-gaap:InventoryNet | R6.htm | Inventories | 2430000000 | 2430000000 | 2306000000 | 2306000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R6.htm | Total current assets | 6768000000 | 6768000000 | 5986000000 | 5986000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R6.htm | Property, plant and equipment, less accumulated depreciation of $2,925 in 2025 and $2,635 in 2024 | 3681000000 | 3681000000 | 3391000000 | 3391000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| goodwill | mapped | us-gaap:Goodwill | R6.htm | Goodwill | 2767000000 | 2767000000 | 2724000000 | 2724000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| total_assets | mapped | us-gaap:Assets | R6.htm | Total assets | 15467000000 | 15467000000 | 14237000000 | 14237000000 | Y | FILING-CHECKED | accn 0001555280-26-000011 R6.htm period ..2025-12-31 / check: hand R6.htm agree |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R6.htm | Accounts payable | 487000000 | 487000000 | 433000000 | 433000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R6.htm | Total current liabilities | 2235000000 | 2235000000 | 3412000000 | 3412000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| total_liabilities | mapped | us-gaap:Liabilities | R6.htm | Total liabilities | 12136000000 | 12136000000 | 9467000000 | 9467000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R6.htm | Total Zoetis Inc. equity | 3331000000 | 3331000000 | 4770000000 | 4770000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R6.htm period ..2025-12-31 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R9.htm | Net cash provided by operating activities | 2904000000 | 2904000000 |  | 2953000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R9.htm | Net cash used in investing activities | -748000000 | -748000000 |  | -315000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R9.htm | Net cash used in financing activities | -1870000000 | -1870000000 |  | -2660000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| capex | mapped | us-gaap:PaymentsToAcquirePropertyPlantAndEquipment | R9.htm | Capital expenditures | -621000000 | 621000000 |  | 655000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R9.htm | Depreciation and amortization expense | 487000000 | 487000000 |  | 497000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R9.htm | Share-based compensation expense | 83000000 | 83000000 | 74000000 | 74000000 | Y | FILING-CHECKED | accn 0001555280-26-000011 R9.htm period ..2025-12-31 / check: hand R9.htm corrected: R9 'Share-based compensation expense' 83 / 74; FY24 value was missed because the page has blank spacer columns. |
+| dividends_paid | mapped | us-gaap:PaymentsOfOrdinaryDividends | R9.htm | Cash dividends paid | -889000000 | 889000000 | -786000000 | 786000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | matched by printed label (tag outside the usual set) / accn 0001555280-26-000011 R9.htm period ..2025-12-31 / check: hand R9.htm corrected: R9 'Cash dividends paid' (889) / (786) under PaymentsOfOrdinaryDividends; no preferred stock, so common dividends; FY24 was blank. |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R9.htm | Purchases of treasury stock, including excise taxes paid | -3235000000 | 3235000000 |  | 1858000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| cash_paid_for_interest | mapped | us-gaap:InterestPaidNet | R9.htm | Interest, net of capitalized interest | 261000000 | 261000000 |  | 274000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R9.htm | Income Taxes Paid, Net | 715000000 | 715000000 |  | 892000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001555280-26-000011 R9.htm period ..2025-12-31 |
+| total_debt | component_in_note | us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiabilityCurrent+us-gaap:FinanceLeaseLiabilityNoncurrent | R6.htm | Current portion of long-term debt + Long-term debt, net of discount and issuance costs | 9049000000 |  | 6578000000 |  |  | FILING-CHECKED | face debt lines on R6 plus finance lease liabilities from R78 leases note (1 / 1 in other current liabilities, 6 / 7 in other noncurrent liabilities) / check: hand R78.htm corrected: R6 Current portion of LTD 0 + LTD 9,042 = 9,042; finance lease liabilities 1 current + 6 noncurrent sit in other liabilities per R78 and must be added: 9,049 (FY24 1,350 + 5,220 + 1 + 7 = 6,578). |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R7.htm | Common stock, shares outstanding | 424927535 | 424927535 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-31; single row |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- revenue: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Revenue' on us-gaap:SalesRevenueNet = 4765000000 (FILING-CHECKED)
+- cost_of_revenue: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Cost of Sales' on us-gaap:CostOfGoodsAndServicesSold = 1738000000 (FILING-CHECKED)
+- gross_profit: FY2015 10-K 0001555280-16-000344 R2.htm read; no row matched (auto)
+- operating_expenses: FY2015 10-K 0001555280-16-000344 R2.htm read; no row matched (auto)
+- sga_expense: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Selling, general and administrative expenses' on us-gaap:SellingGeneralAndAdministrativeExpense = 1532000000 (FILING-CHECKED)
+- research_and_development: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Research and development expenses' on us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost = 364000000 (FILING-CHECKED)
+- interest_expense: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Interest expense, net of capitalized interest' on us-gaap:InterestExpense = 124000000 (FILING-CHECKED)
+- income_before_tax: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Income before provision for taxes on income' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = 545000000 (FILING-CHECKED)
+- income_tax_expense: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Provision for taxes on income' on us-gaap:IncomeTaxExpenseBenefit = 206000000 (FILING-CHECKED)
+- net_income: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Net income attributable to Zoetis' on us-gaap:NetIncomeLoss = 339000000 (FILING-CHECKED)
+- basic_eps: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Basic (in dollars per share)' on us-gaap:EarningsPerShareBasic = 0.68 (FILING-CHECKED)
+- diluted_eps: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Earnings per common share--diluted' on us-gaap:EarningsPerShareDiluted = 0.68 (FILING-CHECKED)
+- weighted_basic_shares: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Basic (in shares)' on us-gaap:WeightedAverageNumberOfSharesOutstandingBasic = 499707000 (FILING-CHECKED)
+- weighted_diluted_shares: FY2015 10-K 0001555280-16-000344 R2.htm prints 'Diluted (in shares)' on us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding = 502019000 (FILING-CHECKED)
+- cash_and_equivalents: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 1154000000 (FILING-CHECKED)
+- accounts_receivable: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Accounts receivable, less allowance for doubtful accounts of $34 in 2015 and $32' on us-gaap:AccountsReceivableNetCurrent = 937000000 (FILING-CHECKED)
+- inventory: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Inventories' on us-gaap:InventoryNet = 1467000000 (FILING-CHECKED)
+- current_assets: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Total current assets' on us-gaap:AssetsCurrent = 3830000000 (FILING-CHECKED)
+- ppe_net: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Property, plant and equipment, less accumulated depreciation of $1,208 in 2015 a' on us-gaap:PropertyPlantAndEquipmentNet = 1307000000 (FILING-CHECKED)
+- goodwill: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Goodwill' on us-gaap:Goodwill = 1455000000 (FILING-CHECKED)
+- total_assets: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Total assets' on us-gaap:Assets = 7913000000 (FILING-CHECKED)
+- accounts_payable: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Accounts payable' on us-gaap:AccountsPayableCurrent = 293000000 (FILING-CHECKED)
+- current_liabilities: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Total current liabilities' on us-gaap:LiabilitiesCurrent = 1781000000 (FILING-CHECKED)
+- total_liabilities: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Total liabilities' on us-gaap:Liabilities = 6822000000 (FILING-CHECKED)
+- stockholders_equity: FY2015 10-K 0001555280-16-000344 R4.htm prints 'Total Zoetis Inc. equity' on us-gaap:StockholdersEquity = 1068000000 (FILING-CHECKED)
+- cfo: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Net cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 664000000 (FILING-CHECKED)
+- cash_flow_investing: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Net cash used in investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivities = -1115000000 (FILING-CHECKED)
+- cash_flow_financing: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Net cash provided by/(used in) financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivities = 755000000 (FILING-CHECKED)
+- capex: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Purchases of property, plant and equipment' on us-gaap:PaymentsToAcquirePropertyPlantAndEquipment = -224000000 (FILING-CHECKED)
+- depreciation_and_amortization: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Depreciation and amortization expense' on us-gaap:DepreciationDepletionAndAmortization = 199000000 (FILING-CHECKED)
+- sbc: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Share-based compensation expense' on us-gaap:ShareBasedCompensation = 43000000 (FILING-CHECKED)
+- dividends_paid: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Cash dividends paid' on us-gaap:PaymentsOfOrdinaryDividends = -168000000 (FILING-CHECKED)
+- share_buybacks: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Purchases of treasury stock' on us-gaap:PaymentsForRepurchaseOfCommonStock = -203000000 (FILING-CHECKED)
+- cash_paid_for_interest: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Interest, net of capitalized interest' on us-gaap:InterestPaidNet = 117000000 (FILING-CHECKED)
+- cash_paid_for_income_taxes: FY2015 10-K 0001555280-16-000344 R8.htm prints 'Income taxes' on us-gaap:IncomeTaxesPaidNet = 224000000 (FILING-CHECKED)
+- revenue: era 10-K 0001555280-18-000053 R2.htm prints 'Revenue' on us-gaap:SalesRevenueNet = 5307000000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+- gross_profit: API missing (us-gaap:GrossProfit)
+- operating_expenses: API missing (us-gaap:OperatingExpenses)
+
+## Hand check (Dhairya 2026-11-12)
+- Rows hand-checked against their R pages: 8 of 38 (every not_presented, combined, component and NOTE row; mapped rows the machine flagged: no API value, extension tag, label match; and a seeded random 10% of the other mapped rows). All other rows: check: machine-full-filing.
+- Corrected by hand: 5.
+- Random mapped sample: 3 rows, 1 disagreements (33.3%).
