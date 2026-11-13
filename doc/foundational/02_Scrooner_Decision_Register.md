@@ -79,6 +79,10 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 | Stripe for billing                      | Selected direction    | Implement when paid plan enters the build.                                                  |
 | GitHub Actions + lightweight monitoring | Selected direction    | Automated checks/deployments; Sentry and simple analytics when needed.                      |
 
+- **Founder decision of 2026-11-13: connection budget raised** (typed by the founder in Dhairya's session: "use more connection i think we can use 90 connections").
+  1. Data loads may use up to **70 connections** in company-disjoint shards; the preflight and in-run pause threshold moves from 60 to **80** backends. This supersedes item 2 of 2026-11-12.
+  2. Measured 2026-11-13: `max_connections` = 90, `superuser_reserved_connections` = 3, 19 in use. The remaining headroom (about 10) stays free for the app, backend, Supabase services and other sessions; a job never targets all 90.
+
 - **Founder decision of 2026-11-12: connection rules replaced** (typed by the founder in Dhairya's session: "We have 60+ connections please note that. So change all old rules please").
   1. The root `CLAUDE.md` line "at most 4 shards, never beside the nightly refresh" is retired. This is the founder's OK that item 7 of the 2026-11-01 entry asked for.
   2. Data loads use up to 40 connections in company-disjoint shards, with no fixed shard count. The 60-backend preflight and in-run pause (items 4 and 5 of 2026-11-01) stay.

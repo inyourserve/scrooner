@@ -22,7 +22,7 @@ Python 3.12 exactly (`.python-version`, `uv sync`, scoped to this folder) — ht
 
 Schemas: `raw` (Collector, append-only), `core` (Normalizer: company/listing/filing/period/unit/concept/fact), `analytics` (Mapper: canonical_concept/concept_mapping/canonical_fact/metric_definition/metric_value + many data-quality tables), `app` (backend: saved screens, entitlements, usage). Raw payloads go to Supabase Storage under `raw/sec/...`; Postgres holds metadata + storage pointer only.
 
-**Connections (founder, 2026-11-12):** `max_connections` = 90, shared across every service (pipeline jobs, `apps/backend`, `apps/app`). Data loads may use up to 40, in company-disjoint shards, and pause while `pg_stat_activity` exceeds 60 (root CLAUDE.md, doc 02). Connections get TCP keepalives from `common/config.py`.
+**Connections (founder, 2026-11-13):** `max_connections` = 90, shared across every service (pipeline jobs, `apps/backend`, `apps/app`). Data loads may use up to 70, in company-disjoint shards, and pause while `pg_stat_activity` exceeds 80 (root CLAUDE.md, doc 02). Connections get TCP keepalives from `common/config.py`.
 
 **SEC fair access:** declared User-Agent, aggregate rate ≤8 req/s (SEC's own ceiling is 10/s — this is a deliberate buffer).
 
