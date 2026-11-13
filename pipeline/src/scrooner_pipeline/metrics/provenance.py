@@ -274,7 +274,9 @@ def to_cell_proof_row(rec: CellRecord, company_id: int, m: Metric) -> dict:
         "rule_id": RULE_ID,
         "detector_version": detector_version(m, rec.registry_version),
     }
-    if verdict in ("DISAGREE", "NOT_PRESENTED") or (verdict == "UNCHECKED" and rec.value is None):
+    if verdict in ("DISAGREE", "NOT_PRESENTED") or (
+        verdict == "UNCHECKED" and rec.value is None
+    ):
         reason = rec.reason or "metric_recompute_mismatch"
         row["reason_code"] = reason.split(":", 1)[0]
         row["reason_text"] = reason
