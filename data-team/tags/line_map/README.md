@@ -100,3 +100,38 @@ These are structure-only candidates. Per the xbrl-structure rules they are never
 | no_structural_node | 4 | |
 
 Each row carries the nodes (tag=value [R page, why]), the tags, the sum, the accession, the column, the R pages and the flags.
+
+## Update 2026-11-13 (late): Dhairya's rulings applied, resolver defects fixed
+**Rulings applied:**
+- **1. Opex, BKNG test.** Cost of sales by nature means a CostOf* tag, a label starting "cost(s) of", or "food & paper".
+  - Leading cost-of-sales lines: the block up to the last one is cost of sales, and opex is the lines after it.
+  - Cost-of-sales lines scattered through the band (UNH): only those lines are excluded.
+  - Cost of sales by label only (MCD food & paper): it shapes the opex band but gives no cost_of_revenue value.
+  - No cost-of-sales line in the band (BLK, ORCL, SBUX, UNP): the printed total is opex.
+- **3. Revenue.** The operating top line; an "and other income" total is demoted to its sales child (CVX, COP, PSX, MPC).
+- **5. Parent equity.** When only the total including NCI is printed, parent equity is DERIVED as total − NCI from the same filing (VZ, T, UNH, PG, CAT).
+
+**Defects fixed:**
+- AXP: revenue after provisions descends to RevenuesNetOfInterestExpense.
+- ORCL 2024: no calc arcs; the first printed total equal to the sum above it is used.
+- COF: no revenue total, so net interest income + noninterest income.
+- VLO: the printed cost-of-sales subtotal is used.
+- BAC: pretax +1 child before the bank parts.
+- MO vs PM: excise is a revenue deduction only when a net-revenue line follows it.
+
+**Gate now** (agreement where both sides resolve):
+
+| Key | Agreement |
+|---|---|
+| PROVEN own-filing | **99.68%** (10,428 / 10,461) |
+| Docmap FY0 | **99.92%** (1,276 / 1,277) |
+| Fix files | 95.14% (176 / 185) |
+| Hand rows | 93.09% (229 / 246) |
+
+**What remains:**
+- 21 stale "combined" opex keys: ruling 1 says re-key.
+- 33 PROVEN cells that are wrong under rulings 2 and 3: CVX 11, COP 5, goods-only COR 13 (ORCL 3 goes to a reader), CAT opex 2, AVGO NI 1, MO COR 2018 1.
+- VZ equity 2025: ruling 5; both keys are wrong.
+- **Open, needs a ruling:**
+  - **PM 2015–16 vs MO.** Both print excise taxes between net revenues and gross profit. MO's docmap puts excise in cost_of_revenue; PM's fix rows leave it out.
+  - **RTX opex.** RTX's key leaves OtherOperatingIncomeExpenseNet out of opex; MU's key includes it.

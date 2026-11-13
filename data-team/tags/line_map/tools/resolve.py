@@ -43,10 +43,20 @@ def unit(v):
 
 def tol(*vs): return sum((unit(v) / 2 for v in vs if v is not None), D(0)) or D(1)
 
+def cor_top(cn, iby, kids_fn, onis):
+    """If the cost-of-revenue nodes found are the children of one printed cost-of-revenue subtotal, use the subtotal."""
+    for p in onis:
+        if COR_HINT.search(p) and p not in cn:
+            ks = {c for c, w in kids_fn(p)}
+            if ks and set(cn) <= ks: return [p]
+    return cn
+
 def node(l, why): return dict(tag=l['tag'], val=l['val'], ln=l['ln'], rep=l['rep'], lb=l['lb'], why=why)
 
 REV_HINT = re.compile(r'Revenue|Sales')
 COR_HINT = re.compile(r'^CostOf|CostOfRevenue|CostOfGoods|CostOfServices|CostDirect')
+COS_LABEL = re.compile(r'(?i)^(total )?costs? of|^food (and|&) paper')
+def cos_nature(tag, lb): return bool(COR_HINT.search(tag) or COS_LABEL.search(lb or ''))
 
 def resolve(f):
     L, arcs = parse(f)
@@ -94,7 +104,13 @@ def resolve(f):
             eqc = [c for c, w in chf if is_eq(c) and subtotal(c) and c != eq_incl]
             eqp = eqc[0] if eqc else None
         if eq_combined:
-            put('stockholders_equity', 'combined', [], None, f"parent equity not printed: only {eq_incl} (includes NCI) on the face")
+            ncis = [c for c in by if re.search(r'Noncontrolling|MinorityInterest', c) and c != eq_incl and by[c]['val'] and 'Redeemable' not in c and 'Temporary' not in c and by[c]['ln'] < by[eq_incl]['ln']]
+            if ncis:
+                v = by[eq_incl]['val'] - sum(by[c]['val'] for c in ncis)
+                put('stockholders_equity', 'derived', [dict(node(by[eq_incl], ''), st='BS')] + [dict(node(by[c], ''), st='BS') for c in ncis], v,
+                    f"parent equity not printed: {eq_incl} {by[eq_incl]['val']} - {'+'.join(ncis)} (same filing; Dhairya ruling 2026-11-13: parent equity excludes NCI)", 'DERIVED')
+            else:
+                put('stockholders_equity', 'combined', [], None, f"parent equity not printed: only {eq_incl} (includes NCI) on the face")
         if eqp:
             e = by[eqp]; put('stockholders_equity', 'mapped', [dict(node(e, 'parent equity'), st='BS')], e['val'], f"BS R{e['rep']} line {e['ln']}: parent-equity node{' under ' + eq_incl if eq_incl in by else ' under ' + lse['tag']}")
         if liab:
@@ -147,11 +163,11 @@ def resolve(f):
         k = kids(gp['tag']); plus = [c for c, w in k if w > 0]; minus = [c for c, w in k if w < 0]
         if len(plus) == 1: rev = iby[plus[0]]
         tax = [c for c in minus if re.search(r'(?i)excise|salestax|taxes', c + ' ' + iby[c]['lb'])]
-        minus = [c for c in minus if c not in tax]
         if tax and rev is not None:
             net = rev['val'] - sum(iby[c]['val'] for c in tax)
             nl = next((l for l in is_ if l['val'] is not None and abs(l['val'] - net) <= tol(net, l['val']) and l['ln'] > rev['ln']), None)
-            if nl: rev = nl
+            if nl:  # a net-revenue line is printed after the tax: the tax is a revenue deduction (PM); else it sits in the COR span (MO)
+                rev = nl; minus = [c for c in minus if c not in tax]
         if minus:
             cn = [iby[c] for c in minus]
             put('cost_of_revenue', 'mapped' if len(cn) == 1 else 'component_sum', [dict(node(n, ''), st='IS') for n in cn], sum(n['val'] for n in cn),
@@ -172,12 +188,17 @@ def resolve(f):
             k = kids(p)
             if len(k) >= 2 and all(w > 0 for _, w in k) and any(re.search(r'(?i)noninterest', c + iby[c]['lb']) for c, _ in k) and any(any(w2 < 0 for _, w2 in kids(c)) and re.search(r'(?i)interest', c) for c, _ in k):
                 rev = iby[p]; break
+    bank_parts = None
+    if rev is None:
+        nii = next((p for p in onis if any(w > 0 and re.search(r'(?i)interest', c) for c, w in kids(p)) and any(w < 0 and re.search(r'(?i)interestexpense', c) for c, w in kids(p))), None)
+        nonint = next((p for p in onis if re.match(r'(?i)^NoninterestIncome$', p) or re.match(r'(?i)^total non-?interest income', iby[p]['lb'])), None)
+        if nii and nonint: bank_parts = [iby[nii], iby[nonint]]   # used only when no revenue total is found below
     if rev is None and oi is None:
         ptn = next((t for t in onis if re.search(r'BeforeIncomeTax', t) and kids(t)), None)
         if ptn:
             plus = sorted([iby[c] for c, w in kids(ptn) if w > 0 and not re.search(r'(?i)equity method|other income|nonoperating|gain', c + iby[c]['lb'])], key=lambda l: l['ln'])
-            if plus and any(w < 0 for _, w in kids(ptn)): rev = plus[0]
-    if rev is None:
+            if plus and any(w < 0 for _, w in kids(ptn)) and (len(plus) == 1 or bank_parts is None): rev = plus[0]
+    if rev is None and bank_parts is None:
         first = next((l for l in is_ if l['val'] is not None and not re.search(r'PerShare|Shares', l['tag'])), None)
         rev = first; seen = set()
         while rev is not None and rev['tag'] not in seen:
@@ -185,10 +206,31 @@ def resolve(f):
             up = [(p, w) for p, w in parents.get(rev['tag'], []) if w > 0 and iby[p]['ln'] > rev['ln'] and not any(w2 < 0 and re.search(r'(?i)cost|expense', c2 + iby[c2]['lb']) for c2, w2 in kids(p))]
             if not up: break
             rev = iby[up[0][0]]
+    # filing without a calc arc for the top line: the first printed total that equals the sum of the lines above it
+    if rev is not None and not parents.get(rev['tag']) and not kids(rev['tag']):
+        acc = D(0); seen_lines = [l for l in is_ if l['val'] is not None and l['ln'] >= rev['ln']]
+        for l in seen_lines:
+            if 'total' in (l['prole'] or '').lower() and l['ln'] > rev['ln'] and abs(l['val'] - acc) <= tol(l['val'], acc):
+                rev = l; break
+            acc += l['val']
     # label demotes, never promotes: a 'revenues and other income' total is not revenue; take its sales child
     if rev is not None and re.search(r'(?i)and other income', rev['lb']):
         sub = [iby[c] for c, w in kids(rev['tag']) if w > 0 and not re.search(r'(?i)equity|other income|interest income|dividend|gain|investment|EquityMethod|OtherIncome|Nonoperating', c + ' ' + iby[c]['lb'])]
         if len(sub) == 1: rev = sub[0]
+    # revenue after provisions is not revenue: descend to its +1 child (AXP)
+    if rev is not None and any(w < 0 and re.search(r'(?i)provision|creditloss', c + iby[c]['lb']) for c, w in kids(rev['tag'])):
+        pl = [iby[c] for c, w in kids(rev['tag']) if w > 0]
+        if len(pl) == 1: rev = pl[0]
+    # a revenue line that is a +1 child of a printed all-additive revenue total climbs to it (ORCL)
+    if rev is not None:
+        seen = set()
+        while rev['tag'] not in seen:
+            seen.add(rev['tag'])
+            up = [p for p, w in parents.get(rev['tag'], []) if w > 0 and all(ww > 0 for _, ww in kids(p)) and REV_HINT.search(p + iby[p]['lb']) and not re.search(r'(?i)and other income', iby[p]['lb']) and p not in ((gp or {}).get('tag'), (oi or {}).get('tag'))]
+            if not up: break
+            rev = iby[up[0]]
+    if rev is None and bank_parts:
+        put('revenue', 'component_sum', [dict(node(n, ''), st='IS') for n in bank_parts], sum(n['val'] for n in bank_parts), 'bank IS without a revenue total: net interest income + noninterest income')
     if rev is not None:
         put('revenue', 'mapped', [dict(node(rev, ''), st='IS')], rev['val'], f"IS line {rev['ln']}: top line" + (f", +1 child of {gp['tag']}" if gp is not None else (f", +1 child of {oi['tag']}" if oi is not None else '')))
     if oi is not None:
@@ -197,18 +239,35 @@ def resolve(f):
         cor_tags = set(out.get('cost_of_revenue', {}).get('tags', '').split('+')) - {''}
         rest = [(c, w) for c, w in k if c not in top and c not in cor_tags]
         holder = oi['tag']; opened = []
+        if gp is None and not cor_tags:
+            cn = [c for c, w in rest if w < 0 and cos_nature(c, iby[c]['lb']) and kids(c) and all(cos_nature(x, iby[x]['lb']) or True for x, _ in kids(c)) and COS_LABEL.search(iby[c]['lb'] or '')]
+            if len(cn) == 1:
+                put('cost_of_revenue', 'mapped', [dict(node(iby[cn[0]], ''), st='IS')], iby[cn[0]]['val'], f"IS line {iby[cn[0]]['ln']}: the cost-of-sales subtotal in the band", 'hint_ranked')
+                cor_tags = set(cn); rest = [(c, w) for c, w in rest if c not in cor_tags]
         for c, w in list(rest):
             inner = kids(c)
-            if w < 0 and inner and (cor_tags & {x for x, _ in inner} or (gp is None and not cor_tags and any(COR_HINT.search(x) for x, _ in inner)) or any(COR_HINT.search(x) for x in novalue(c))):
+            if w < 0 and inner and (cor_tags & {x for x, _ in inner} or (gp is None and not cor_tags and any(cos_nature(x, iby[x]['lb']) for x, _ in inner)) or any(COR_HINT.search(x) for x in novalue(c))):
                 if gp is None and not cor_tags:
-                    cn = [x for x, ww in inner if ww > 0 and COR_HINT.search(x)]
+                    # BKNG test (Dhairya 2026-11-13): the cost-of-sales lines are every band line up to the last one that is cost of sales by nature
+                    order = sorted(inner, key=lambda xw: iby[xw[0]]['ln'])
+                    idx = [i for i, (x, ww) in enumerate(order) if cos_nature(x, iby[x]['lb'])]
+                    if idx and idx[0] == 0:   # cost-of-sales lines lead the band: the block up to the last one is cost of sales
+                        cn = [x for x, ww in order[:idx[-1] + 1] if ww > 0]
+                    else:                     # scattered (UNH): only the lines that are cost of sales by nature
+                        cn = [order[i][0] for i in idx if order[i][1] > 0]
+                    cn = cor_top(cn, iby, kids, onis) if cn else cn
+                    cn = cor_top(cn, iby, kids, onis) if cn else cn
+                    if cn and not any(COR_HINT.search(x) for x in cn):
+                        cor_tags |= set(cn); cn = []   # cost of sales by label only (MCD food & paper): shapes the opex band, no COR value
                     if cn:
                         put('cost_of_revenue', 'mapped' if len(cn) == 1 else 'component_sum', [dict(node(iby[x], ''), st='IS') for x in cn], sum(iby[x]['val'] for x in cn), f"IS: cost-of-revenue child(ren) of {c} (role: costs under OI; tag ranks)", 'hint_ranked')
                         cor_tags |= set(cn)
                 rest.remove((c, w)); rest += [(x, -ww) for x, ww in inner if x not in cor_tags]; opened.append(c)
         if gp is None and not cor_tags:
             cn = [c for c, w in rest if w < 0 and COR_HINT.search(c)]
+            cn = cor_top(cn, iby, kids, onis) if cn else cn
             if cn:
+                rest = [(c, w) for c, w in rest if c not in set(cn) | {x for p in cn for x, _ in kids(p)}]
                 put('cost_of_revenue', 'mapped' if len(cn) == 1 else 'component_sum', [dict(node(iby[c], ''), st='IS') for c in cn], sum(iby[c]['val'] for c in cn), f"IS: cost-of-revenue -1 child(ren) of {oi['tag']} (role: costs under OI; tag ranks)", 'hint_ranked')
                 cor_tags = set(cn); rest = [(c, w) for c, w in rest if c not in cor_tags]
         if top & {c for c, _ in k} and rest:
