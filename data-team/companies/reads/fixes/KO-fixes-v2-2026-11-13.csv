@@ -1,0 +1,4 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+cost_of_revenue,2015,2015-12-31,mapped,us-gaap:CostOfGoodsSold,IS,0000021344-16-000050,R2.htm,17482000000,the face prints 'Cost of goods sold'/'Cost of sales' on CostOfGoodsSold in this year's own 10-K: the claim extends to this era (same line as the nearest year's CostOfGoodsAndServicesSold) | value_source sec_api
+cost_of_revenue,2016,2016-12-31,mapped,us-gaap:CostOfGoodsSold,IS,0000021344-17-000009,R2.htm,16465000000,the face prints 'Cost of goods sold'/'Cost of sales' on CostOfGoodsSold in this year's own 10-K: the claim extends to this era (same line as the nearest year's CostOfGoodsAndServicesSold) | value_source sec_api
+revenue,2016,2016-12-31,mapped,us-gaap:SalesRevenueGoodsNet,IS,0000021344-17-000009,R2.htm,41863000000,the face IS R2 prints 'NET OPERATING REVENUES' on SalesRevenueGoodsNet in this year's 10-K | value_source sec_api
