@@ -67,6 +67,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         if l.get('val') == '': l['val'] = None
     cik = L[0]['cik'] if L else ''
     NF = None  # note facts of this filing: tag -> {qtrs: value}
+    DSER = [None]  # interest expense by debt-instrument series (no undimensioned total): {sum, n, only_series}
     FLLOC = ['']  # finance-lease balance-sheet location from FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList: in/out/none
     LOC = {}  # IncomeStatementLocationAxis member facts (exam/tools/LOCATION.sql): tag -> {undim, msum, mtot, nm, dc}
     if notes_path:
@@ -80,6 +81,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 NF.setdefault(t_, {})[int(q_)] = v_
             LOC.update(o_.get('loc') or {})
             FLLOC[0] = o_.get('fl_loc') or FLLOC[0]
+            if o_.get('debt_series'): DSER[0] = o_['debt_series']
     tags = {l['tag'] for l in L}
     def det(g):
         w = KB['DETECT'][g][0]
@@ -367,6 +369,20 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         else:
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='', stmt='', sign='', scale='', era_break='', prior_tag='',
                             value_source='', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
+    PDS = KB['P'].get('notes.interest_expense.debt_series_sum')
+    if PDS and DSER[0]:
+        # Dhairya 2026-11-13 (NTNX): interest printed only per debt series, no consolidated total -> component_sum of the series
+        # (fsn_xbrl) ONLY when the series are the company's only interest-bearing debt (no term loan, revolver draw or finance-lease
+        # interest in the period); otherwise component_in_note (a partial sum is never served as the total)
+        x = DSER[0]
+        for o in out:
+            if o['data_point'] == 'interest_expense' and o['status'] == 'not_presented' and (x.get('n') or 0) >= 1:
+                if x.get('only_series'):
+                    o.update(status='component_sum', tags='us-gaap:InterestExpenseDebt{DebtInstrument members}', stmt='NOTE', sign='+', value_source='fsn_xbrl',
+                             fy0_value='%.4f' % x['sum'], rule='sum of per-series interest; series are the only interest-bearing debt (NTNX ruling 2026-11-13)', rule_ids='notes.interest_expense.debt_series_sum')
+                else:
+                    o.update(status='component_in_note', tags='us-gaap:InterestExpenseDebt', stmt='NOTE', value_source='fsn_xbrl',
+                             rule='per-series interest but other interest-bearing debt exists (NTNX ruling 2026-11-13)', rule_ids='notes.interest_expense.debt_series_sum')
     PLm = KB['P'].get('notes.location_member_total')
     if PLm and LOC:
         # Dhairya 2026-11-13 (CSCO): an undimensioned fact that is only an income-statement-location slice (the location members

@@ -264,3 +264,9 @@ The predictor (v7 engine, rules as of ee1a40ec) already gets each case right. Th
   - NTNX: no undimensioned FY fact in FSN, undecided.
 - **(e)** A dividend paid to a former parent before a spin is not dividends_paid. It is not_presented, reason pre_spin_parent_distribution, unless public common dividends were also paid (FDXF).
 - **Opex.** When the printed band between GP and OI ties, the key is component_sum, not combined. grade.py marks the combined keys as key errors (16), plus the bank keys (5).
+- **(f) Interest printed only per debt series** (NTNX ruling 2026-11-13; rule notes.interest_expense.debt_series_sum; input notes.jsonl `debt_series` built by exam/tools/fetch_debt_series.py from each filing instance, because FSN does not hold the two-dimension series contexts).
+  - When there is no undimensioned interest-expense total, interest_expense = component_sum of the per-series InterestExpenseDebt facts, value_source fsn_xbrl.
+  - This applies ONLY when the series are the company's only interest-bearing debt: no FinanceLeaseInterestExpense, no credit facility, revolver, term-loan or line-of-credit member, and no other undimensioned interest-expense element.
+  - Otherwise component_in_note.
+  - An aggregate member that equals the sum of the others is a tie, not a component (VRNS).
+  - Cohort scan of 83 filers: NTNX 10,467k, VRNS 9,533k and PRU 1,967M qualify; RGLD (facility) and EG (other interest) are component_in_note.
