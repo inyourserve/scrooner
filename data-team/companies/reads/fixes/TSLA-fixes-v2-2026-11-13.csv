@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+goodwill,2016,2016-12-31,not_presented,,BS,0001564590-17-003118,,,no Goodwill fact for 2016-12-31 in any Tesla 10-K (SEC companyfacts) and no goodwill line on the FY2016 balance sheet; a Goodwill fact first appears at 2017-12-31: not_presented

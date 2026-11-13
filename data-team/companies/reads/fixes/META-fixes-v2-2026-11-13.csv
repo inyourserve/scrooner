@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+dividends_per_share,2023,2023-12-31,not_presented,,EQ,0001326801-24-000012,,,"no dividend per share for FY2023: the FY2023 10-K files no CommonStockDividendsPerShare fact and Meta declared its first dividend in 2024; later 10-Ks print dividends paid 0 for 2023 (PaymentsOfDividends 0 in 0001326801-25-000017, 0001628280-26-003942). not_presented (no dividend that year)"
