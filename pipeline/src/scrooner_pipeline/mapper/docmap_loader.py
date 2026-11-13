@@ -598,9 +598,9 @@ def _signature_lib(rows: list[dict]) -> frozenset:
 @dataclass
 class CompanyPlan:
     insert: list[DocmapRow] = field(default_factory=list)
-    cut: list[tuple[int, date]] = field(
+    cut: list[tuple[int, date | None]] = field(
         default_factory=list
-    )  # (library row id, new era_to)
+    )  # (library row id, new era_to; None = open)
     edits: list[tuple[int, date, date | None]] = field(
         default_factory=list
     )  # reader fixes: (row id, new era_from, new era_to)
@@ -690,6 +690,14 @@ def plan_company(
             lib_from = min(r["era_from"] for r in current)
             if d.era_from < lib_from:
                 plan.insert.append(replace(d, era_to=lib_from - timedelta(days=1)))
+            # ... and its later era is not lost either: the docmap reads the same tags through the present (open
+            # era), the agreeing library row was cut at the FY the Tag Expert read (MSFT cash_paid_*: era_to
+            # 2026-06-30), which left the 2026-09-30 10-Q period uncovered, so the tagmap-plan concept gate skipped
+            # the whole concept and FY2015-FY2024 never served. The last library row is opened to the docmap's end.
+            if d.era_to is None:
+                last = max(current, key=lambda r: r["era_to"] or date.max)
+                if last["era_to"] is not None:
+                    plan.cut.append((last["id"], None))
             continue
         has_combined = any(r["decision"] == "combined" for r in current)
         winner = "docmap" if d.cites_page and not has_combined else "library"

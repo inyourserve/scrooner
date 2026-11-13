@@ -180,7 +180,8 @@ def test_agreeing_library_row_does_not_lose_the_docmaps_earlier_era():
     ids = {"revenue_sanity_resolved": 1}
     lib = {**LIB, "era_from": date(2025, 6, 30), "era_to": date(2026, 6, 30)}
     plan = dl.plan_company([lib], [_doc("us-gaap:Revenues")], ids)  # docmap era from 2021-01-01
-    assert plan.agree == 1 and plan.conflicts == [] and plan.cut == []
+    assert plan.agree == 1 and plan.conflicts == []
+    assert plan.cut == [(7, None)]  # and the library row's closed tail is opened (see the test at the end)
     assert [(d.era_from, d.era_to) for d in plan.insert] == [(date(2021, 1, 1), date(2025, 6, 29))]
     (row,) = dl.table_rows(plan.insert[0], 5, "0000000001", {"revenue_sanity_resolved": "income_statement"})
     assert (row["era_from"], row["era_to"]) == (date(2021, 1, 1), date(2025, 6, 29))
@@ -217,3 +218,17 @@ def test_every_decided_status_yields_a_row_covering_its_era():
             r["era_from"] == date(2021, 1, 1) and r["era_to"] is None for r in rows
         ), status
         assert {r.get("reason_class") for r in rows} == {reason_class}, status
+
+
+def test_agreeing_library_row_cut_at_the_read_fy_is_opened_to_the_docmaps_open_era():
+    # MSFT cash_paid_*: the library row (read_verified) ended at FY2026 (2026-06-30); the docmap reads the same tag
+    # through the present. The 2026-09-30 10-Q period stayed uncovered, the tagmap-plan concept gate skipped the
+    # concept and FY2015-FY2024 never served.
+    ids = {"revenue_sanity_resolved": 1}
+    cut = {**LIB, "era_from": date(2025, 6, 30), "era_to": date(2026, 6, 30)}
+    plan = dl.plan_company([cut], [_doc("us-gaap:Revenues")], ids)
+    assert plan.agree == 1 and plan.cut == [(7, None)]
+    # an open library row, or a docmap era that itself ends, is left alone
+    assert dl.plan_company([LIB], [_doc("us-gaap:Revenues")], ids).cut == []
+    closed = dl.replace(_doc("us-gaap:Revenues"), era_to=date(2025, 6, 30))
+    assert dl.plan_company([cut], [closed], ids).cut == []
