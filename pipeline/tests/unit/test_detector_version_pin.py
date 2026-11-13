@@ -30,8 +30,8 @@ VERDICT_SOURCES = (
     "common/tag_aliases.py",
 )
 
-PINNED_VERSION = "cell_proof_v9_2026-11-14"
-PINNED_HASH = "dd34012c56f2a2b4db5f6bbf71913e3666cc2bffdcdf211117e344a60cb8a7dd"
+PINNED_VERSION = "cell_proof_v10_2026-11-14"
+PINNED_HASH = "0352a60953cb2e59c52ce1c98695fbbab6bc2466f4785e19225a11aa4a1d701d"
 
 
 def source_hash() -> str:

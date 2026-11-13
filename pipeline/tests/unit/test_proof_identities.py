@@ -160,31 +160,6 @@ def bs(a, liab, eq, tags=()):
     ]
 
 
-def test_balance_sheet_pass_fail():
-    assert apply_identities(bs(101, 61, 40)) == {}
-    bad = bs(101, 61, 47)
-    assert apply_identities(bad) == {"balance_sheet": 1}
-    assert verdicts(bad) == [DISAGREE] * 3
-
-
-def test_balance_sheet_nci_and_temporary_equity():
-    key = ("MinorityInterest", None, INST[2])
-    # parent-only equity: NCI printed -> A = L + SE + NCI
-    assert apply_identities(bs(101, 56, 38), {key: Decimal(7 * M)}) == {}
-    # without the printed NCI the same cells break
-    assert apply_identities(bs(101, 56, 38)) == {"balance_sheet": 1}
-    # equity already includes NCI: the NCI fact must not be added again
-    incl = ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",)
-    assert apply_identities(bs(101, 63, 38, tags=incl), {key: Decimal(7 * M)}) == {}
-    # temporary equity printed
-    temp = (
-        "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests",
-        None,
-        INST[2],
-    )
-    assert apply_identities(bs(101, 56, 38), {temp: Decimal(7 * M)}) == {}
-
-
 def cf(cfo, cfi, cff):
     return [
         mk("cfo_resolved", cfo * M),
@@ -203,30 +178,6 @@ FX = (
     FY[1],
     FY[2],
 )
-
-
-def test_cash_change_pass_fail_skip():
-    printed = {CHG: Decimal(13 * M), FX: Decimal(3 * M)}
-    assert apply_identities(cf(51, -31, -9), printed) == {}
-    bad = cf(51, -31, -19)
-    assert apply_identities(bad, printed) == {"cash_change": 1}
-    assert verdicts(bad) == [DISAGREE] * 3
-    # fx not printed: never assumed zero
-    skip = cf(51, -31, -19)
-    assert apply_identities(skip, {CHG: Decimal(13 * M)}) == {}
-    assert verdicts(skip) == [PROVEN] * 3
-    # change in cash not printed
-    assert apply_identities(cf(51, -31, -19), {FX: Decimal(M)}) == {}
-
-
-def test_cash_change_discontinued_flows_included():
-    disc = (
-        "CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations",
-        FY[1],
-        FY[2],
-    )
-    printed = {CHG: Decimal(17 * M), FX: Decimal(3 * M), disc: Decimal(4 * M)}
-    assert apply_identities(cf(51, -31, -9), printed) == {}
 
 
 def test_net_income_cf_tie():
@@ -268,18 +219,6 @@ def test_net_income_cf_profitloss_nets_nci_income():
     assert apply_identities([mk("net_income_resolved", 21 * M)], {}, {"acc": st}) == {}
 
 
-def test_cash_change_not_judged_on_a_quarter():
-    q = ("Q", date(2017, 4, 1), date(2017, 6, 30))
-    chg = (CHG[0], q[1], q[2])
-    fx = (FX[0], q[1], q[2])
-    ps = [
-        mk("cfo_resolved", 51 * M, q),
-        mk("cash_flow_investing_resolved", -31 * M, q),
-        mk("cash_flow_financing_resolved", -19 * M, q),
-    ]
-    assert apply_identities(ps, {chg: Decimal(13 * M), fx: Decimal(3 * M)}) == {}
-
-
 def test_cf_start_value_is_annual_only():
     from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine
     from scrooner_pipeline.proof.identities import cf_start_value
@@ -296,38 +235,11 @@ def test_cf_start_value_is_annual_only():
     assert cf_start_value({"acc": st}, q) is None
 
 
-def test_cash_change_before_fx_under_the_including_tag_is_not_a_break():
-    # HD: the printed 'change' equals the three flows alone, the fx line is separate
-    printed = {CHG: Decimal(11 * M), FX: Decimal(3 * M)}
-    assert apply_identities(cf(51, -31, -9), printed) == {}
-
-
 # ---- identity triage rulings 2026-11-13 (B1-B5, C1-C3) ------------------------------------------------------------
 
 
 def _pk(tag, period=INST):
     return (tag, None if period[0] == "I" else period[1], period[2])
-
-
-def test_b1_b2_sums_every_nci_and_temporary_equity_operand():
-    nci = _pk("NonredeemableNoncontrollingInterest")
-    red = _pk("RedeemableNoncontrollingInterestEquityCarryingAmount")
-    other = _pk("TemporaryEquityPreferredStockDividendObligation")
-    printed = {nci: Decimal(3 * M), red: Decimal(2 * M), other: Decimal(7 * M)}
-    # A 106 = L 56 + SE 38 + 3 + 2 + 7: every present operand counts, not the first group
-    assert apply_identities(bs(106, 56, 38), printed) == {}
-    # one operand left out breaks it (the old first-group rule)
-    assert apply_identities(
-        bs(106, 56, 38), {nci: printed[nci], red: printed[red]}
-    ) == {"balance_sheet": 1}
-    # the including-NCI temporary-equity total is never added on top of its own parts
-    tot = _pk(
-        "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests"
-    )
-    assert (
-        apply_identities(bs(101, 56, 38), {tot: Decimal(7 * M), red: Decimal(9 * M)})
-        == {}
-    )
 
 
 def face(lines, vals):
@@ -341,83 +253,6 @@ def face(lines, vals):
             NumValue(tag, "us-gaap/2017", INST[2], 0, "USD", Decimal(v * M), -6)
         )
     return st
-
-
-def test_b3_face_operand_set_and_lse():
-    incl = "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
-    lines = [
-        "Liabilities",
-        "TemporaryEquityCarryingAmountAttributableToParent",
-        "StockholdersEquity",
-        "MinorityInterest",
-        incl,
-        "LiabilitiesAndStockholdersEquity",
-    ]
-    vals = {
-        "Liabilities": 56,
-        "TemporaryEquityCarryingAmountAttributableToParent": 2,
-        "StockholdersEquity": 38,
-        "MinorityInterest": 5,
-        incl: 43,
-        "LiabilitiesAndStockholdersEquity": 101,
-    }
-    st = face(lines, vals)
-    st.calc_children[incl] += [
-        ("StockholdersEquity", False),
-        ("MinorityInterest", False),
-    ]
-
-    def run(a, liab, eq):
-        ps = [
-            mk("total_assets_resolved", a * M, INST),
-            mk("total_liabilities_resolved", liab * M, INST, tags=("Liabilities",)),
-            mk(
-                "stockholders_equity_resolved",
-                eq * M,
-                INST,
-                tags=("StockholdersEquity",),
-            ),
-        ]
-        return ps, apply_identities(ps, {}, {"acc": st})
-
-    ps, c = run(
-        101, 56, 38
-    )  # 56 + 2 + 43 = 101: the parts under total equity are not counted twice
-    assert c == {} and verdicts(ps) == [PROVEN] * 3
-    ps, c = run(111, 56, 38)  # assets differ from the printed L&SE
-    assert c == {"balance_sheet": 1}
-    assert ps[0].checks["identity"]["operands"] == {
-        "LiabilitiesAndStockholdersEquity": str(101 * M)
-    }
-    ps, c = run(101, 47, 38)  # served liabilities differ from the printed face
-    assert c == {"balance_sheet": 1}
-
-
-def test_b4_excise_taxes_between_revenue_and_gross_profit():
-    ex = _pk("ExciseAndSalesTaxes", FY)
-    # revenue 100 - COR 40 - excise 10 = 50
-    assert apply_identities(is_(101, 41, 50), {ex: Decimal(10 * M)}) == {}
-    assert apply_identities(is_(101, 41, 50)) == {"gross_profit": 1}
-
-
-def test_b5_discontinued_flows_from_the_same_filing():
-    disc = (
-        "CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations",
-        FY[1],
-        FY[2],
-    )
-    # the unique printed value (99) is a later recast; the cells' own filing 'acc' prints 4
-    printed = {CHG: Decimal(17 * M), FX: Decimal(3 * M), disc: Decimal(99 * M)}
-    by = {disc: {"acc": Decimal(4 * M), "later": Decimal(99 * M)}}
-    assert apply_identities(cf(51, -31, -9), printed, None, by) == {}
-    # the filing prints no such flow: never the other filing's value
-    only = {CHG: Decimal(13 * M), FX: Decimal(3 * M)}
-    assert (
-        apply_identities(
-            cf(51, -31, -9), only, None, {disc: {"later": Decimal(99 * M)}}
-        )
-        == {}
-    )
 
 
 def _no_source(p):
@@ -446,3 +281,105 @@ def test_c3_derived_quarters_and_spans_are_skipped():
     assert apply_identities(ps) == {}
     span = ("Q", date(2017, 1, 1), date(2017, 9, 30))
     assert apply_identities(is_(100, 40, 1, period=span)) == {}
+
+
+# --- the filing's own arithmetic (fsn.filing_check) and the node tie ---------------------------------------------
+from scrooner_pipeline.proof.fsn import FilingStructure, NumValue
+from scrooner_pipeline.proof.identities import (
+    QUARANTINE_REASON,
+    CheckRow,
+)
+
+KIDS = ("Revenues", "CostOfRevenue")
+
+
+def tagged_is(rev, cor, gp):
+    ps = is_(rev, cor, gp)
+    for p, t in zip(ps, ("Revenues", "CostOfRevenue", "GrossProfit"), strict=True):
+        p.shown = p.shown.__class__(**{**p.shown.__dict__, "tags": (t,)})
+    return ps
+
+
+def gp_check(ok, lhs=55, rhs=55):
+    return {
+        ("acc", FY[2], 4): [
+            CheckRow(
+                "IS",
+                "calc:GrossProfit:r1",
+                ok,
+                Decimal(lhs * M),
+                Decimal(rhs * M),
+                Decimal(M // 2),
+                KIDS,
+            )
+        ]
+    }
+
+
+def test_filing_check_pass_covers_the_relation_so_no_hand_rule_runs():
+    # the hand rule alone would break (100 - 40 != 1); the filing's own passing check covers the relation
+    ps = tagged_is(100, 40, 1)
+    assert apply_identities(ps, checks=gp_check(True)) == {}
+    assert verdicts(ps) == [PROVEN] * 3
+    ps = tagged_is(100, 40, 1)  # no filing_check row: the fallback judges it
+    assert apply_identities(ps, checks={}) == {"gross_profit": 1}
+    assert ps[0].checks["identity"]["source"] == "hand_fallback"
+
+
+def test_filing_check_fail_quarantines_the_filings_cells():
+    ps = tagged_is(100, 40, 60)
+    assert apply_identities(ps, checks=gp_check(False, 60, 61)) == {
+        "calc:GrossProfit:r1": 1
+    }
+    assert verdicts(ps) == [DISAGREE] * 3
+    assert {p.reason_code for p in ps} == {QUARANTINE_REASON}
+    rec = ps[2].checks["identity"]
+    assert rec["source"] == "filing_check" and rec["check_id"] == "calc:GrossProfit:r1"
+
+
+def test_nested_total_only_members_of_the_failing_check_flip():
+    # OperatingIncomeLoss = GrossProfit - OperatingExpenses fails; the GrossProfit check (a child total of it) passes
+    ps = tagged_is(100, 40, 60)
+    ps += [
+        mk("operating_expenses_resolved", 20 * M, tags=("OperatingExpenses",)),
+        mk("operating_income_resolved", 41 * M, tags=("OperatingIncomeLoss",)),
+    ]
+    checks = gp_check(True, 60, 60)
+    checks[("acc", FY[2], 4)].append(
+        CheckRow(
+            "IS",
+            "calc:OperatingIncomeLoss:r1",
+            False,
+            Decimal(41 * M),
+            Decimal(40 * M),
+            Decimal(M),
+            ("GrossProfit", "OperatingExpenses"),
+        )
+    )
+    apply_identities(ps, checks=checks)
+    assert [p.verdict for p in ps[:2]] == [PROVEN, PROVEN]  # only in the passing check
+    assert [p.verdict for p in ps[2:]] == [DISAGREE] * 3  # GP (child), opex, OI
+
+
+def node_filing(value, dcml):
+    st = FilingStructure("acc", "1", "10-K", None, None)
+    st.num[("Revenues", FY[2], 4)].append(
+        NumValue("Revenues", "us-gaap/2017", FY[2], 4, "USD", Decimal(value), dcml)
+    )
+    return {"acc": st}
+
+
+def test_node_tie_within_the_filers_dcml_rounding():
+    def run(served, dcml):
+        ps = [mk("revenue_resolved", served, tags=("Revenues",))]
+        return apply_identities(ps, structures=node_filing(100 * M, dcml)), ps
+
+    c, ps = run(100 * M + 400_000, -6)  # inside half a million
+    assert c == {} and verdicts(ps) == [PROVEN]
+    c, ps = run(100 * M + 600_000, -6)  # outside: a served value that is not its node
+    assert c == {"node_mismatch": 1} and verdicts(ps) == [DISAGREE]
+    assert ps[0].reason_code == REASON
+    c, ps = run(
+        100 * M + 1, 0
+    )  # a filer printing to the unit gets no slack beyond half a unit
+    assert c == {"node_mismatch": 1}

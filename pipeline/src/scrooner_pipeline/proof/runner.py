@@ -33,8 +33,8 @@ from scrooner_pipeline.proof.fsn import (
 from scrooner_pipeline.proof.fsn_db import load_filings
 from scrooner_pipeline.proof.identities import (
     apply_identities,
+    load_filing_checks,
     load_printed,
-    load_printed_by_filing,
 )
 from scrooner_pipeline.proof.perimeter import apply_perimeter
 from scrooner_pipeline.proof.prove import Proof, prove_cell
@@ -346,7 +346,7 @@ def run(
                     proofs,
                     load_printed(conn, company_id, floor or HISTORY_FLOOR),
                     structures,
-                    load_printed_by_filing(conn, company_id, floor or HISTORY_FLOOR),
+                    load_filing_checks(conn, company_id),
                 )
                 identity_breaks.update(id_counts)
                 apply_perimeter(proofs, structures)  # total_debt perimeter (audit R07)
