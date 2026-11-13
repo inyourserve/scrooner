@@ -308,3 +308,17 @@ def test_era_shortfall_unread_tail_after_reader_fix_is_unchecked_not_short():
     assert got[3] == date(2025, 12, 31)  # a hole inside the read years still counts
     open_end = [(1, date(2015, 7, 1), None, fix)]
     assert plan.unread_tail_concepts(open_end) == set()
+
+
+def test_total_debt_component_sum_keeps_each_part_statement_face_and_note():
+    # 'BS+BS+NOTE': face debt lines on BS, the note finance-lease total on UN (audit R06); one stmt = all parts
+    tags = "us-gaap:LongTermDebtCurrent+us-gaap:LongTermDebtNoncurrent+us-gaap:FinanceLeaseLiability"
+
+    def mk(stmt):
+        return dl.DocmapRow("T", "total_debt", "component sum", dl.parse_parts(tags), stmt, "R4.htm+R4.htm+R92.htm",
+                            "", date(2021, 1, 1), "0000000001-26-000001", "", "T-docmap.csv")
+
+    cs = {"total_debt": "balance_sheet"}
+    rows = dl.table_rows(mk("BS+BS+NOTE"), 5, "0000000001", cs)
+    assert [r["stmt"] for r in rows] == ["BS", "BS", "UN"]
+    assert {r["stmt"] for r in dl.table_rows(mk("BS"), 5, "0000000001", cs)} == {"BS"}

@@ -575,6 +575,10 @@ def table_rows(
         else stmt_code(d.stmt_raw, d.data_point, st, value_row=True)
     )
     if d.status == "component sum":
+        # a mixed claim keeps each part's own statement ('BS+BS+NOTE': face debt lines plus a note finance-lease
+        # total, audit R06); one value, or a count that is not the part count, applies to every part as before
+        raws = [x.strip() for x in d.stmt_raw.split("+")]
+        per = raws if len(raws) == len(d.parts) and len(set(raws)) > 1 else None
         return [
             {
                 **base,
@@ -583,9 +587,11 @@ def table_rows(
                 "taxonomy": tax,
                 "tag": tag,
                 "sign": sign,
-                "stmt": stmt,
+                "stmt": stmt_code(per[i], d.data_point, st, value_row=True)
+                if per
+                else stmt,
             }
-            for sign, tax, tag in d.parts
+            for i, (sign, tax, tag) in enumerate(d.parts)
         ]
     ((sign, tax, tag),) = d.parts
     return [

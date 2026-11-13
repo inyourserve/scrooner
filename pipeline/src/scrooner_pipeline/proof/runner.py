@@ -36,6 +36,7 @@ from scrooner_pipeline.proof.identities import (
     load_printed,
     load_printed_by_filing,
 )
+from scrooner_pipeline.proof.perimeter import apply_perimeter
 from scrooner_pipeline.proof.prove import Proof, prove_cell
 from scrooner_pipeline.proof.shown import (
     HISTORY_FLOOR,
@@ -348,6 +349,7 @@ def run(
                     load_printed_by_filing(conn, company_id, floor or HISTORY_FLOOR),
                 )
                 identity_breaks.update(id_counts)
+                apply_perimeter(proofs, structures)  # total_debt perimeter (audit R07)
                 if write and proofs:
                     write_proofs(conn, proofs)
                 if write:
