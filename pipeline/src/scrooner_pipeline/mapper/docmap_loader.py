@@ -37,6 +37,7 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.mapper import era_extend
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
@@ -47,6 +48,7 @@ from scrooner_pipeline.mapper.company_tag_map_seed import (
 
 RULE_ID = "company_tag_map.docmap@1"
 DECIDED_BY = "docmap"
+OWN_RULES = (RULE_ID, era_extend.EXT_RULE_ID)  # rows this loader replaces per company
 STATUSES = {
     "mapped",
     "combined",
@@ -89,6 +91,10 @@ class DocmapRow:
     fy0_end: date | None = (
         None  # the read 10-K's fiscal year end (FY0); FY-1 ends a year earlier
     )
+    # --extend-eras: era_from is the extended start; base_era the read's own (docmap@1 covers base_era onward, the
+    # era_extend@1 row base_era-1 back to era_from); ext_note is the audit text on the extension row
+    base_era: date | None = None
+    ext_note: str = ""
 
     @property
     def cites_page(self) -> bool:
@@ -301,6 +307,25 @@ def table_rows(
         "decided_by": DECIDED_BY,
         "rule_id": RULE_ID,
     }
+    if d.base_era is not None and d.base_era > d.era_from:
+        main = table_rows(
+            replace(d, era_from=d.base_era, base_era=None, ext_note=""),
+            company_id,
+            cik,
+            concept_statement,
+        )
+        ext = [
+            {
+                **r,
+                "era_from": d.era_from,
+                "era_to": d.base_era - timedelta(days=1),
+                "rule_id": era_extend.EXT_RULE_ID,
+                "decided_by": "era_extend",
+                "serve_note": d.ext_note,
+            }
+            for r in main
+        ]
+        return main + ext
     st = concept_statement[d.data_point]
     if d.status in TAGLESS_STATUS:
         reason = d.reason or "not printed in the latest 10-K"
@@ -544,7 +569,65 @@ def companies_by_ticker(conn: psycopg.Connection) -> dict[str, set[tuple[int, st
     return by_ticker
 
 
-def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) -> dict:
+def extend_company(
+    conn: psycopg.Connection,
+    cid: int,
+    rows: list[DocmapRow],
+    concept_ids: dict[str, int],
+    log: list[dict],
+) -> list[DocmapRow]:
+    """--extend-eras: each value row's era walked back through the company's earlier 10-Ks (era_extend.extend)."""
+    value_rows = [d for d in rows if d.status in VALUE_STATUSES]
+    if not value_rows:
+        return rows
+    tags = {tag for d in value_rows for _, _, tag in d.parts}
+    cids = {
+        concept_ids[n]
+        for d in value_rows
+        for n in (d.data_point, d.data_point.removesuffix("_resolved"))
+        if n in concept_ids
+    }
+    data = era_extend.fetch(conn, cid, tags, cids)
+    out = []
+    for d in rows:
+        if d.status not in VALUE_STATUSES:
+            out.append(d)
+            continue
+        dp_ids = {
+            concept_ids[n]
+            for n in (d.data_point, d.data_point.removesuffix("_resolved"))
+            if n in concept_ids
+        }
+        era, adsh, rlog = era_extend.extend(
+            [tag for _, _, tag in d.parts], dp_ids, d.era_from, d.accession, data
+        )
+        for r in rlog:
+            log.append(
+                {
+                    "ticker": d.ticker,
+                    "data_point": d.data_point,
+                    "read_adsh": d.accession,
+                    **r,
+                }
+            )
+        if adsh is not None and era < d.era_from:
+            note = (
+                f"{era_extend.EXT_MARK}: same tag on the same line (stmt, role/label, calc parent) in each 10-K "
+                f"back to {adsh} (FY from {era}); docmap read {d.accession}"
+            )
+            d = replace(d, era_from=era, base_era=d.era_from, ext_note=note)
+        out.append(d)
+    return out
+
+
+def load(
+    conn: psycopg.Connection,
+    paths: list[Path],
+    *,
+    apply: bool = False,
+    extend_eras: bool = False,
+    era_log: Path | None = None,
+) -> dict:
     """Plan (and with apply, write) every docmap in `paths`. One transaction per company; a company whose rows fail
     validation or era overlap is skipped whole and listed."""
     files = latest_docmaps(paths)
@@ -564,6 +647,8 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
         "applied": False,
     }
     docs: dict[int, tuple[str, list[DocmapRow]]] = {}
+    era_log_rows: list[dict] = []
+    stats["extended"] = []
     for p in files:
         md = p.with_suffix(".md")
         rows, rejects = parse_docmap(
@@ -623,6 +708,18 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
                     )
                     continue
                 ok.append(d)
+        if extend_eras:
+            ok = extend_company(conn, cid, ok, concept_ids, era_log_rows)
+            stats["extended"] += [
+                {
+                    "ticker": d.ticker,
+                    "data_point": d.data_point,
+                    "era_from": d.era_from,
+                    "base_era": d.base_era,
+                }
+                for d in ok
+                if d.base_era is not None
+            ]
         stats["rows"] += len(ok)
         docs[cid] = (cik, ok)
     with conn.cursor() as cur:
@@ -635,8 +732,8 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
     names = {i: n for n, i in concept_ids.items()}
     writes = []
     for cid, (cik, rows) in sorted(docs.items()):
-        mine = [r for r in existing[cid] if r["rule_id"] == RULE_ID]
-        library = [r for r in existing[cid] if r["rule_id"] != RULE_ID]
+        mine = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]
+        library = [r for r in existing[cid] if r["rule_id"] not in OWN_RULES]
         plan = plan_company(library, rows, concept_ids)
         stats["conflicts"] += plan.conflicts
         warnings: list[str] = []
@@ -672,13 +769,15 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
             "conflicts": len(plan.conflicts),
         }
         writes.append((cid, new, plan))
+    if era_log is not None:
+        write_listing(era_log, era_log_rows)
     if not apply:
         return stats
     for cid, new, plan in writes:
         with conn.transaction():
             conn.execute(
-                "delete from analytics.company_tag_map where company_id = %s and rule_id = %s",
-                (cid, RULE_ID),
+                "delete from analytics.company_tag_map where company_id = %s and rule_id = any(%s)",
+                (cid, list(OWN_RULES)),
             )
             if plan.delete:
                 conn.execute(

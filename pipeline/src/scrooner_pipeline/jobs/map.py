@@ -184,13 +184,27 @@ def docmap_load_cmd(
     apply: bool = typer.Option(
         False, "--apply", help="Write (one transaction per company). Default: dry run."
     ),
+    extend_eras: bool = typer.Option(
+        False,
+        "--extend-eras",
+        help="Walk each value row back through earlier 10-Ks (FSN: same tag, same line) -> company_tag_map.era_extend@1 rows.",
+    ),
+    era_log: Path = typer.Option(
+        None, "--era-log", help="CSV of every per-filing era check (pass/fail)."
+    ),
 ) -> None:
     """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
     default: plans, validates and lists conflicts, writes nothing."""
     from scrooner_pipeline.mapper.docmap_loader import load, write_listing
 
     with get_connection() as conn:
-        stats = load(conn, sorted(reads.glob("*-docmap-*.csv")), apply=apply)
+        stats = load(
+            conn,
+            sorted(reads.glob("*-docmap-*.csv")),
+            apply=apply,
+            extend_eras=extend_eras,
+            era_log=era_log,
+        )
     write_listing(conflicts_out, stats["conflicts"])
     if rejects_out:
         write_listing(rejects_out, stats["rejects"])
@@ -201,7 +215,7 @@ def docmap_load_cmd(
         f"library_cut={sum(c['library_cut'] for c in comps.values())} "
         f"library_deleted={sum(c['library_deleted'] for c in comps.values())} "
         f"conflicts={len(stats['conflicts'])} rejects={len(stats['rejects'])} blocked={len(stats['blocked'])} "
-        f"applied={stats['applied']}"
+        f"extended={len(stats['extended'])} applied={stats['applied']}"
     )
     for key, why in sorted(stats["blocked"].items()):
         typer.echo(f"  blocked {key}: {why}")
