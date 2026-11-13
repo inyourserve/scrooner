@@ -1804,7 +1804,7 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
         )
         return
     # a total that already contains a part on the same page (LongTermDebt beside Current+Noncurrent) is not double added
-    names = {h.elem.split(":")[1] for h in hits}
+    names = {h.elem.split(":")[-1] for h in hits}
     drop = set()
     if {
         "LongTermDebtCurrent",
@@ -1812,7 +1812,7 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
     } <= names and "LongTermDebt" in names:
         drop.add("LongTermDebt")
     use = [
-        h for h in hits if h.elem.split(":")[1] not in drop | DEBT_NOTE_ONLY
+        h for h in hits if h.elem.split(":")[-1] not in drop | DEBT_NOTE_ONLY
     ] + customs
     vs = [R.values(h, "money") for h in use]
     p0 = sum((v[0] or 0 for v in vs), Decimal(0)) if use else None
@@ -1826,7 +1826,7 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
     notes = [
         "face borrowing lines summed (finance leases and current maturities in the notes not read)"
     ]
-    if any(h.elem.split(":")[1] in BANK_PERIMETER for h in use):
+    if any(h.elem.split(":")[-1] in BANK_PERIMETER for h in use):
         notes.append(
             "bank-perimeter lines (FHLB/repo/fed funds/other borrowings) included: bank debt perimeter pending (Standardization Lead)"
         )
@@ -1846,7 +1846,7 @@ def read_debt(R: Reader, dp: DP, add, quirks) -> None:
                     "where": h.page.file,
                 }
             )
-    if any(h.elem.split(":")[1] in DEBT_NOTE_ONLY for h in hits):
+    if any(h.elem.split(":")[-1] in DEBT_NOTE_ONLY for h in hits):
         notes.append("note-only debt tag printed on the face, not summed")
     status = "component sum" if len(use) > 1 else "mapped"
     add(
