@@ -35,7 +35,7 @@ def prove_dims_cell(
     the parts' printed values is PROVEN."""
     ddate = fsn_ddate(period_end)
     total = Decimal(0)
-    seen = []
+    seen: list[dict] = []
     for part in parts:
         nv = structure.value_dim(part.tag, ddate, qtrs, part.dims)
         if nv is None:

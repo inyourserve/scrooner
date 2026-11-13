@@ -442,7 +442,7 @@ def _load_fsn_vintages(
               and ({seg_filter}) and v.coreg = '' and v.iprx = 0 and v.value is not null
             order by f.accepted desc nulls last, v.id desc
             """,
-            (company_id, custom_only, sorted(tax_of))
+            (company_id, custom_only, sorted(str(t) for t in tax_of))
             + ((want_segs,) if want_segs != [""] else ()),
         )
         rows = cur.fetchall()

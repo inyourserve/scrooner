@@ -250,7 +250,7 @@ def normalize(
 
 
 def check_overlaps(rows: list[dict]) -> list[str]:
-    by_key = defaultdict(list)
+    by_key: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
         if r["tag"] is None:
             by_key[
