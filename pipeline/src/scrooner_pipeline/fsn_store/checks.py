@@ -40,6 +40,7 @@ CF_PARTS = (
 CF_FX = (
     "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
     "EffectOfExchangeRateOnCashAndCashEquivalents",
+    "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations",
 )
 IS_GP = ("is_gross_profit", "GrossProfit", "Revenues", "CostOfRevenue")
 
@@ -189,7 +190,13 @@ def check_column(
                 )
     if stmt == "CF":
         parts = [p for (t, _v), p in col.items() if t in CF_PARTS]
-        change = [p for (t, _v), p in col.items() if t in CF_CHANGE_TAGS]
+        # several change or FX tags can sit in one column: order change candidates by CF_CHANGE_TAGS
+        # priority and try every (change, form, fx) pairing; the column passes if any ties, and the
+        # detail records which pairing did. Failing columns report the first-priority pairing.
+        change = sorted(
+            (p for (t, _v), p in col.items() if t in CF_CHANGE_TAGS),
+            key=lambda p: CF_CHANGE_TAGS.index(p.tag),
+        )
         if len(parts) == 3 and change:
             fx = [p for (t, _v), p in col.items() if t in CF_FX]
             # Whether the change line includes the FX line is the filer's layout, not the tag's name:
@@ -197,26 +204,29 @@ def check_column(
             # includes FX, HD prints the change before FX). The column ties if it ties either way;
             # the "Excluding" tag never includes FX. The detail records which form tied.
             base = sum((p.value for p in parts), Decimal(0))
-            tol_no = tol_of([change[0].dcml, *(p.dcml for p in parts)])
-            forms = [("without_fx", base, tol_no)]
-            if fx and "Excluding" not in change[0].tag:
-                forms.insert(
-                    0, ("with_fx", base + fx[0].value, tol_no + tol_of([fx[0].dcml]))
-                )
-            form, rhs, tol = next(
-                (f for f in forms if abs(change[0].value - f[1]) <= f[2]), forms[0]
+            cands: list[tuple[Print, Print | None, Decimal, Decimal]] = []
+            for c in change:
+                tol_no = tol_of([c.dcml, *(p.dcml for p in parts)])
+                if "Excluding" not in c.tag:
+                    for fxp in fx:
+                        cands.append(
+                            (c, fxp, base + fxp.value, tol_no + tol_of([fxp.dcml]))
+                        )
+                cands.append((c, None, base, tol_no))
+            c, fx_used, rhs, tol = next(
+                (x for x in cands if abs(x[0].value - x[2]) <= x[3]), cands[0]
             )
-            with_fx = form == "with_fx"
             out.append(
                 {
                     "check_id": "cf_parts_eq_change",
-                    "ok": abs(change[0].value - rhs) <= tol,
-                    "lhs": change[0].value,
+                    "ok": abs(c.value - rhs) <= tol,
+                    "lhs": c.value,
                     "rhs": rhs,
                     "tol": tol,
                     "detail": {
-                        "change_tag": change[0].tag,
-                        "fx_included": with_fx,
+                        "change_tag": c.tag,
+                        "fx_included": fx_used is not None,
+                        "fx_tag": fx_used.tag if fx_used is not None else None,
                     },
                 }
             )
