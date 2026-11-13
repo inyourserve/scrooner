@@ -223,6 +223,26 @@ def load_current_proofs(
     return proofs
 
 
+def _statement_pages(
+    conn: Any, ids: list[int]
+) -> dict[tuple[int, date, str], tuple[str, str]]:
+    """(company, fiscal year end, statement code) -> (accession, 'R<n>.htm') of that year's own 10-K: the report that
+    carries most of the statement's lines (fsn.line.stmt) in the filing whose period is the year end."""
+    best: dict[tuple[int, date, str], tuple[int, str, str]] = {}
+    for cid, period, acc, stmt, report, n in conn.execute(
+        """select f.company_id, f.period, f.accession, l.stmt, l.report, count(*)
+           from fsn.filing f join fsn.line l on l.filing_id = f.id
+           where f.company_id = any(%s) and f.form in ('10-K', '10-K/A', '10-KT') and f.period is not null
+             and l.stmt in ('IS', 'BS', 'CF', 'CI', 'EQ')
+           group by f.company_id, f.period, f.accession, l.stmt, l.report""",
+        (ids,),
+    ).fetchall():
+        k = (cid, period, stmt)
+        if k not in best or (n, acc) > (best[k][0], best[k][1]):
+            best[k] = (n, acc, f"R{report}.htm")
+    return {k: (v[1], v[2]) for k, v in best.items()}
+
+
 def build_rows(
     conn: Any, companies: list[Company], reads_dir: Path, today: date
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
@@ -282,6 +302,8 @@ def build_rows(
     ).fetchall():
         in_tpl[(cid, dp)] = bool(inn)
 
+    stmt_pages = _statement_pages(conn, ids)
+
     rows: list[dict[str, Any]] = []
     for c in live:
         years = sorted({fy for (cid, fy, _t) in periods if cid == c.company_id})
@@ -329,6 +351,11 @@ def build_rows(
                     tm[2] if tm else None,
                     in_tpl.get((c.company_id, dp)),
                 )
+                # The docmap's r_page is the page in the read (latest) 10-K only: wrong for every earlier year.
+                # The page comes from the proof (face_report) or from the fsn report of THAT year's own 10-K.
+                fsn_acc, fsn_page = stmt_pages.get(
+                    (c.company_id, e, dm.get("stmt", "")), ("", "")
+                )
                 reason_text = (
                     ptext or (brow[2] if brow else None) or (tm[1] if tm else None)
                 )
@@ -351,8 +378,8 @@ def build_rows(
                         "shown_value": "" if shown is None else format(shown, "f"),
                         "proof_verdict": verdict or "",
                         "verdict": verdict or "",
-                        "accession": pacc or "",
-                        "r_page": pface or dm.get("r_page") or "",
+                        "accession": pacc or fsn_acc,
+                        "r_page": pface or fsn_page,
                         "tag": ptag or "",
                         "value_source": psrc
                         or ("canonical_fact" if svalue is not None else ""),

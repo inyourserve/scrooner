@@ -122,3 +122,48 @@ def test_not_in_template_on_an_in_template_point_is_blank():
     assert k(bs="not_in_template", tpl=False)[0] == "REASON"
     assert k(bs="not_in_template", tpl=None)[0] == "REASON"
     assert k(bs="not_presented", tpl=True)[0] == "REASON"
+
+
+def test_r_page_comes_from_the_years_own_filing_not_the_docmap_read():
+    from datetime import date
+
+    from scrooner_pipeline.mapper.top100_coverage import _statement_pages
+
+    class Cur:
+        def fetchall(self):
+            d15, d24 = date(2015, 6, 30), date(2024, 6, 30)
+            return [
+                (
+                    4,
+                    d15,
+                    "0001193125-15-272806",
+                    "BS",
+                    4,
+                    2,
+                ),  # a parenthetical with few BS lines
+                (
+                    4,
+                    d15,
+                    "0001193125-15-272806",
+                    "BS",
+                    5,
+                    40,
+                ),  # the balance sheet itself
+                (4, d15, "0001193125-15-272806", "CF", 7, 30),
+                (4, d24, "0000950170-24-087843", "CF", 6, 30),
+            ]
+
+    class Conn:
+        def execute(self, sql, params):
+            assert "fsn.line" in sql
+            return Cur()
+
+    pages = _statement_pages(Conn(), [4])
+    assert pages[(4, date(2015, 6, 30), "BS")] == ("0001193125-15-272806", "R5.htm")
+    assert pages[(4, date(2015, 6, 30), "CF")][1] == "R7.htm"
+    assert pages[(4, date(2024, 6, 30), "CF")][1] == "R6.htm"
+    assert (
+        4,
+        date(2015, 6, 30),
+        "IS",
+    ) not in pages  # no guess where the filing prints nothing
