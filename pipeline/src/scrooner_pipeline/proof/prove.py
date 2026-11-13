@@ -184,6 +184,9 @@ SHARE_COUNTS = {
 }
 # claim statements with no printed face statement: a note (UN) or the cover/parenthetical (CP)
 NOTE_STMTS = frozenset({"UN", "CP", "NOTE"})
+# dei cover facts: dated after the balance sheet, never the balance-sheet-date shares outstanding
+# (Dhairya shares ruling 2026-11-12; audit R12)
+DEI_COVER_TAGS = frozenset({"EntityCommonStockSharesOutstanding"})
 
 
 def unit_class(data_point: str) -> str:
@@ -823,6 +826,18 @@ def prove_cell(
             "nothing to prove it against"
         )
         return p
+    if shown.data_point_name == "shares_outstanding_resolved":
+        cover = sorted(
+            DEI_COVER_TAGS
+            & {*shown.tags, *(shown.claim.tags if shown.claim else ())}
+        )
+        if cover:
+            p.verdict, p.reason_code = DISAGREE, "dei_cover_count_is_not_shares_outstanding"
+            p.reason_text = (
+                f"shares outstanding rests on the dei cover fact {cover}; the cover count is dated "
+                "after the balance sheet and is never the balance-sheet-date shares outstanding"
+            )
+            return p
     if shown.copies_disagree:
         p.verdict, p.reason_code = DISAGREE, "restated_copies_disagree"
         others = "; ".join(f"{v} in {acc}" for acc, v in shown.copies_disagree[:4])
