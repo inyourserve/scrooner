@@ -73,7 +73,7 @@ Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filin
 - accounts_payable: FY2015 10-K 0001376139-16-000084 R2.htm prints 'Accounts payable' on us-gaap:AccountsPayableCurrent = 261500000 (FILING-CHECKED)
 - current_liabilities: FY2015 10-K 0001376139-16-000084 R2.htm prints 'Total current liabilities' on us-gaap:LiabilitiesCurrent = 484800000 (FILING-CHECKED)
 - stockholders_equity: FY2015 10-K 0001376139-16-000084 R2.htm prints 'Total CVR stockholders' equity' on us-gaap:StockholdersEquity = 984100000 (FILING-CHECKED)
-- cfo: FY2015 10-K 0001376139-16-000084 R9.htm prints 'Net cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations = 5.368e+08 (FILING-CHECKED)
+- cfo: FY2015 10-K 0001376139-16-000084 R9.htm prints 'Net cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations = 536800000 (FILING-CHECKED)
 - cash_flow_investing: FY2015 10-K 0001376139-16-000084 R9.htm prints 'Net cash used in investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations = -150600000 (FILING-CHECKED)
 - cash_flow_financing: FY2015 10-K 0001376139-16-000084 R9.htm prints 'Net cash used in financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations = -374800000 (FILING-CHECKED)
 - capex: FY2015 10-K 0001376139-16-000084 R9.htm prints 'Capital expenditures' on us-gaap:PaymentsToAcquireProductiveAssets = -218700000 (FILING-CHECKED)
