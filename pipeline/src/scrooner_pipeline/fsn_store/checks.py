@@ -297,8 +297,9 @@ def _cf_tree(
         for (ptag, _pver, _grp), children in groups.items():
             if ptag != change.tag or len(children) < 2:
                 continue
-            terms = [(col.get((c, v)), w) for c, v, w in children]
-            if any(t is None for t, _ in terms):
+            maybe = [(col.get((c, v)), w) for c, v, w in children]
+            terms = [(t, w) for t, w in maybe if t is not None]
+            if len(terms) != len(maybe):
                 continue
             rhs = sum((t.value * w for t, w in terms), Decimal(0))
             tol = tol_of([change, *(t for t, _ in terms)])
