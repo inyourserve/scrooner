@@ -1697,6 +1697,9 @@ def resolve_for_company(
     from scrooner_pipeline.mapper.derived_cells import (
         add_derived_cells,
     )  # circular via dqc_checks
+    from scrooner_pipeline.mapper.derived_quarters import add_derived_quarters
+
+    add_derived_quarters(cells, stats, concept_info, periods)
 
     add_derived_cells(conn, company_id, cells, stats, concept_info, periods)
     targets = set(managed_concept_ids)
