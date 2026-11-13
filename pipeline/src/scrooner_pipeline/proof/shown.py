@@ -16,7 +16,10 @@ from decimal import Decimal
 
 import psycopg
 
-from scrooner_pipeline.common.authority import face_column_eligible
+from scrooner_pipeline.common.authority import (
+    face_column_eligible,
+    latest_complete_filing,
+)
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
 from scrooner_pipeline.proof.prove import EXPECTED, Claim, Shown
 
@@ -145,6 +148,7 @@ def _periodic_copies(
 ) -> tuple[
     dict[tuple[str, int], list[tuple[str, Decimal, str]]],
     dict[tuple[str, int], set[str]],
+    dict[str, date | None],
 ]:
     """(base canonical name, period_id) -> every periodic-form copy (accession,
     value, xbrl tag) of the cell in core.fact, authoritative or not: the resolver keeps
@@ -152,11 +156,12 @@ def _periodic_copies(
     founder ruling)."""
     out: dict[tuple[str, int], list[tuple[str, Decimal, str]]] = defaultdict(list)
     auth: dict[tuple[str, int], set[str]] = defaultdict(set)
+    filed: dict[str, date | None] = {}
     with conn.cursor() as cur:
         cur.execute(
             """
             select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
-                   fl.period_of_report, c.tag, f.is_authoritative, fl.form
+                   fl.period_of_report, c.tag, f.is_authoritative, fl.form, fl.filing_date
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
@@ -178,6 +183,7 @@ def _periodic_copies(
             tag,
             is_auth,
             form,
+            fdate,
         ) in cur.fetchall():
             # a copy counts only where its filing can print the period as a face column (shared
             # authority rule, common/authority.py): older instants are cash-flow/equity opening
@@ -187,9 +193,43 @@ def _periodic_copies(
             if not face_column_eligible(form, por, end, ptype):
                 continue
             out[(name, pid)].append((acc, Decimal(value), tag))
+            filed[acc] = fdate
             if is_auth:
                 auth[(name, pid)].add(acc)
-    return out, auth
+    return out, auth, filed
+
+
+def _same_number(a: Decimal, b: Decimal, scale: int) -> bool:
+    from scrooner_pipeline.common.presentation_scale import same_number
+
+    return same_number(a, b, scale)
+
+
+def component_sum_authority(
+    copies: list[tuple[str, Decimal, str]],
+    parts: tuple[tuple[int, str], ...],
+    filed: dict[str, date | None],
+) -> tuple[str, Decimal] | None:
+    """(accession, sum) a component-sum cell is authoritatively read from: the latest face-column-eligible filing
+    that prints EVERY part (common/authority.latest_complete_filing, the function the mapper picks its parts with).
+    `copies` are the eligible per-part facts, `parts` the claim's (sign, tag). A part's own per-tag authoritative
+    flag says nothing about the sum: SG&A parts live in different filings (MSFT FY2016: G&A kept its original copy,
+    S&M restated in the FY2018 10-K), and comparing one part with the total is a category error. None when no
+    filing prints every part or a part is printed twice with different values in that filing."""
+    by_part: list[dict[str, Decimal]] = []
+    for _sign, tag in parts:
+        prints: dict[str, set[Decimal]] = defaultdict(set)
+        for acc, v, t in copies:
+            if t == tag:
+                prints[acc].add(v)
+        if any(len(vs) > 1 for vs in prints.values()):
+            return None
+        by_part.append({a: next(iter(vs)) for a, vs in prints.items()})
+    best = latest_complete_filing([{a: filed.get(a) for a in p} for p in by_part])
+    if best is None:
+        return None
+    total = sum((s * p[best] for (s, _t), p in zip(parts, by_part)), Decimal(0))
+    return str(best), total
 
 
 def matching_copies(
@@ -264,7 +304,7 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
-    copies_by, auth_by = _periodic_copies(conn, company_id, floor)
+    copies_by, auth_by, filed_by = _periodic_copies(conn, company_id, floor)
     for name, ptype, fp, start, end, value, src, period_id in rows:
         if name not in names:
             continue
@@ -292,6 +332,21 @@ def load_shown(
         copies = matching_copies(copies_by.get((_base_name(name), period_id), []), tags)
         disagreeing = disagreeing_copies(copies, shown_value, scale)
         auth_accs = auth_by.get((_base_name(name), period_id), set())
+        claim = claim_for(map_rows, name, end)
+        if claim is not None and claim.kind == "component" and len(claim.parts) > 1:
+            # a component sum is judged as a sum, never part against total
+            win = component_sum_authority(
+                copies_by.get((_base_name(name), period_id), []),
+                tuple((s, t) for s, t in claim.parts),
+                filed_by,
+            )
+            disagreeing = []
+            auth_accs = set()
+            if win is not None:
+                acc_w, total_w = win
+                auth_accs = {acc_w}
+                if not _same_number(total_w, shown_value, scale):
+                    disagreeing = [(acc_w, str(total_w))]
         # the authoritative (latest accepted periodic filing) copy is what the cell must show; an
         # earlier copy that differs is restated history (audit R13)
         # a differing fact of the SAME filing the value was taken from is no other vintage: the
@@ -315,7 +370,7 @@ def load_shown(
                 copies_disagree=tuple(disagreeing) or None,
                 authoritative_disagrees=tuple(auth_differs) or None,
                 copies=len(copies),
-                claim=claim_for(map_rows, name, end),
+                claim=claim,
                 combined=combined_for(combined_rows, name, end),
             )
         )

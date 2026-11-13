@@ -49,6 +49,10 @@ from typing import Any
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.authority import (
+    face_column_eligible,
+    latest_complete_filing,
+)
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
@@ -232,10 +236,12 @@ def _load_fact_vintages(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select taxonomy, tag, period_id, value, id, end_date, is_derived, filing_id, accession_number, filing_date
+            select taxonomy, tag, period_id, value, id, end_date, is_derived, filing_id, accession_number, filing_date,
+                   is_authoritative, form, period_of_report, period_type
             from (
                 select c.taxonomy, c.tag, f.period_id, f.value, f.id, p.end_date, f.is_derived, f.filing_id,
-                       fl.accession_number, fl.filing_date,
+                       fl.accession_number, fl.filing_date, f.is_authoritative, fl.form, fl.period_of_report,
+                       p.period_type,
                        rank() over (partition by c.taxonomy, c.tag, f.period_id
                                     order by fl.filing_date desc nulls last, f.filing_id desc) as rk
                 from core.fact f
@@ -278,6 +284,10 @@ def _load_fact_vintages(
     # filing can only come from two units. Never pick one: mark the fact ambiguous (blank downstream).
     grouped: dict[tuple, list[tuple]] = defaultdict(list)
     for r in rows:
+        # a same-value copy in a filing that does not print the period as a face column (common/authority) is no
+        # vintage: the sum's source filing is chosen among eligible prints only, as the proof's authority does
+        if not r[10] and not face_column_eligible(r[11], r[12], r[5], r[13]):
+            continue
         grouped[(r[0], r[1], r[2], r[7])].append(r)
     for (taxonomy, tag, period_id, _), rs in grouped.items():
         if (taxonomy, tag) not in tags:
@@ -725,10 +735,11 @@ def _one_filing_parts(
         if not prints:
             return None
         by_filing.append(prints)
-    common = set.intersection(*(set(p) for p in by_filing))
-    if not common:
+    best = latest_complete_filing(
+        [{fid: v.filed for fid, v in prints.items()} for prints in by_filing]
+    )
+    if best is None:
         return None
-    best = max(common, key=lambda fid: (by_filing[0][fid].filed or date.min, fid))
     return [(row, prints[best]) for (row, _), prints in zip(comps, by_filing)]
 
 

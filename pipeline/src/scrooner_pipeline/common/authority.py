@@ -20,11 +20,14 @@ Eligible copies compete (latest filed wins, ties to the lower accession); an ine
 from __future__ import annotations
 
 from datetime import date
+from typing import TypeVar
 
 from scrooner_pipeline.common.periodic_forms import (
     ANNUAL_FORMS_ALL,
     PERIODIC_FORMS_ALL,
 )
+
+K = TypeVar("K", int, str)
 
 ORIGINAL_WINDOW_DAYS = 10
 INSTANT_WINDOW_DAYS = 400
@@ -51,3 +54,17 @@ def face_column_eligible(
     if form in ANNUAL_FORMS_ALL:
         return days <= ANNUAL_DURATION_WINDOW_DAYS
     return days <= QUARTERLY_DURATION_WINDOW_DAYS
+
+
+def latest_complete_filing(prints_by_part: list[dict[K, date | None]]) -> K | None:
+    """The filing a component sum (SG&A = S&M + G&A, opex = R&D + ...) is read from: among the filings that print
+    EVERY part, the latest filed, ties to the higher key. ONE definition: the mapper (_one_filing_parts, keys are
+    filing ids) and the proof (shown.py, keys are accessions) both call it, so what is shown and what the proof
+    treats as authoritative cannot drift. Each element maps filing key -> filing date (None sorts first); the caller
+    passes only face-column-eligible prints (face_column_eligible). None when no filing prints every part."""
+    if not prints_by_part:
+        return None
+    common = set.intersection(*(set(p) for p in prints_by_part))
+    if not common:
+        return None
+    return max(common, key=lambda k: (prints_by_part[0][k] or date.min, k))
