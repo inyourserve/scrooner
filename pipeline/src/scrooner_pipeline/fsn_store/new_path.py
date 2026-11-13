@@ -138,6 +138,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "seed-company-tag-map",
             "docmap-load",
             "tagmap-plan",
+            "dqc-check",  # read-only DQC report over served cells
             # derived metrics, recomputed from canonical_fact for every company
             "calculate",
             "growth",
