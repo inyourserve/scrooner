@@ -187,3 +187,26 @@ def test_concept_gate_scope_leaves_a_concept_that_would_lose_a_value(isolated_da
         assert rep[co]["coverage"]["skipped_concepts"] == {"tm_opex": "no map row", "tm_rev": "would lose a value"}
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["out"]) == Decimal("9")
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co, per["in"]) == Decimal("1")
+
+
+@pytest.mark.integration
+def test_concept_without_any_concept_mapping_row_is_served_by_the_tag_map(isolated_database_url, monkeypatch):
+    """Weighted shares, cash paid for interest/taxes have no concept_mapping row (the old path never served them): a
+    map row must still serve them in the company's rewrite."""
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001601", True)
+        fact("Revenues", "in", "new", "110")
+        fact("OtherOpex", "in", "new", "44")
+        shares = _one(conn, "select id from analytics.canonical_concept where name = 'weighted_diluted_shares'")
+        assert _one(conn, "select count(*) from analytics.concept_mapping where canonical_concept_id = %s", shares) == 0
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap',%s,'IS','concept',%s,'2015-01-01','t','tm.r@1')"
+        conn.execute(ins, (co, "Revenues", x["rev"]))
+        conn.execute(ins, (co, "OtherOpex", x["opex"]))
+        conn.execute(ins, (co, "OpA", shares))
+        fact("OpA", "in", "new", "7")
+        conn.commit()
+        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        assert "error" not in rep[co], rep[co]
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, shares) == Decimal("7")
