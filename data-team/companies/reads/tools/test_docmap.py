@@ -228,7 +228,8 @@ def test_12_coregistrant_blocks_with_other_values_are_not_members(tmp_path):
 # ---------------------------------------------------------------- fixes 17-21: direct unit fixtures (no page fetch)
 
 def _r(tag, label, *vals):
-    return {"tag": tag, "label": label, "vals": list(vals)}
+    from decimal import Decimal
+    return {"tag": tag, "label": label, "vals": [None if v is None else Decimal(str(v)) for v in vals]}
 
 
 def test_13_entity_blocks_dropped_member_blocks_kept_whole():
@@ -258,7 +259,7 @@ def test_14_total_with_member_cogs_is_component_sum_of_face_lines():
                      _r("us-gaap:CostOfGoodsAndServicesSold", "Cost of goods sold", 5.0)]}
     row, status, _ = docmap.opex_row(page)
     assert status == "component sum" and row["vals"][0] == 2938.0
-    page["rows"][3]["vals"] = [350.0]  # no longer ties: the total still includes COGS -> combined, never opex
+    page["rows"][3]["vals"] = [docmap.Decimal("350")]  # no longer ties: the total still includes COGS -> combined, never opex
     row, status, _ = docmap.opex_row(page)
     assert status == "combined"
 
@@ -291,3 +292,20 @@ def test_18_face_row_beats_overlapping_member_blocks():
     page2 = {"rows": docmap.dedupe_coreg(rows[1:5])}
     first = next(x for x in page2["rows"] if x["tag"] == "us-gaap:Revenues")
     assert docmap.member_sum(page2, first)["vals"][0] == 100.0
+
+
+def test_19_printed_values_stay_exact_decimals():
+    from decimal import Decimal
+    page = docmap.parse_r(_page("CONSOLIDATED STATEMENTS OF INCOME", [_row("us-gaap:Revenues", "Revenues", "8,518.123", "(0.35)")]))
+    v = page["rows"][0]["vals"]
+    assert v == [Decimal("8518.123"), Decimal("-0.35")] and all(isinstance(x, Decimal) for x in v)
+    assert docmap.fmt(v[0] * 1_000_000) == "8518123000" and docmap.fmt(v[1]) == "-0.35"
+    assert docmap.fmt(Decimal("8518000000")) == "8518000000"  # never 8.518e+09
+    assert "e" not in docmap.fmt(Decimal("12345.6789")).lower() and docmap.fmt(Decimal("12345.6789")) == "12345.6789"
+
+
+def test_20_unicode_spaces_in_statement_titles():
+    fs = ("<FilingSummary><MyReports>"
+          "<Report><ShortName>CONSOLIDATED STATEMENTS OF INCOME</ShortName><HtmlFileName>R4.htm</HtmlFileName><MenuCategory>Statements</MenuCategory></Report>"
+          "</MyReports></FilingSummary>")
+    assert docmap.find_reports(fs).get("IS", ("", ""))[1] == "R4.htm"

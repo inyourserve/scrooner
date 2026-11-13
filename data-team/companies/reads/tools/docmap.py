@@ -14,7 +14,9 @@ from __future__ import annotations
 
 import csv
 import datetime as dt
+from decimal import Decimal, InvalidOperation
 import html
+import unicodedata
 import json
 import os
 import re
@@ -69,8 +71,15 @@ def parse_date(s: str) -> dt.date | None:
     return dt.date(int(m.group(3)), MONTHS[m.group(1).lower()[:3]], int(m.group(2)))
 
 
+def norm_space(t: str) -> str:
+    """NFKC, zero-width characters removed, every Unicode space (U+00A0, U+2009, U+202F, ...) as one plain space."""
+    t = unicodedata.normalize("NFKC", t)
+    t = re.sub(r"[\u200b-\u200d\u2060\ufeff]", "", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def cell_text(c: str) -> str:
-    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", c))).strip()
+    return norm_space(html.unescape(re.sub(r"<[^>]+>", "", c)))
 
 
 def parse_r(page: str) -> dict:
@@ -117,9 +126,9 @@ def parse_r(page: str) -> dict:
             neg = t.startswith("(") and t.endswith(")")
             t = t.strip("()").strip()
             try:
-                x = float(t)
+                x = Decimal(t)  # the exact printed string as a Decimal, never a float (Decimal rule)
                 vals.append(-x if neg else x)
-            except ValueError:
+            except (InvalidOperation, ValueError):
                 vals.append(None)
         rows.append({"tag": tag, "label": label, "vals": vals})
     return {"title": title, "scale": scale, "shares_scale": sh, "cols": cols, "rows": rows}
@@ -212,7 +221,7 @@ def find_reports(fs: str) -> dict[str, tuple[str, str]]:
     reps = re.findall(r"<Report[^>]*>(.*?)</Report>", fs, re.S)
     out: dict[str, tuple[str, str]] = {}
     for r in reps:
-        name = html.unescape((re.search(r"<ShortName>(.*?)</ShortName>", r, re.S) or [None, ""])[1])
+        name = norm_space(html.unescape((re.search(r"<ShortName>(.*?)</ShortName>", r, re.S) or [None, ""])[1]))  # fix 24 (SHW)
         fn = (re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", r, re.S) or [None, ""])[1]
         cat = (re.search(r"<MenuCategory>(.*?)</MenuCategory>", r, re.S) or [None, ""])[1]
         n = name.lower()
@@ -241,7 +250,7 @@ def find_reports(fs: str) -> dict[str, tuple[str, str]]:
 
 # ---------------------------------------------------------------- companyfacts lookup
 
-def api_value(cf: dict, tag: str, accn: str, end: dt.date, months: int | None) -> float | None:
+def api_value(cf: dict, tag: str, accn: str, end: dt.date, months: int | None) -> Decimal | None:
     ns, local = tag.split(":", 1) if ":" in tag else ("us-gaap", tag)
     node = cf.get("facts", {}).get(ns, {}).get(local)
     if not node:
@@ -256,7 +265,7 @@ def api_value(cf: dict, tag: str, accn: str, end: dt.date, months: int | None) -
                     continue
             if months and not f.get("start"):
                 continue
-            return float(f["val"])
+            return Decimal(str(f["val"]))
     return None
 
 
@@ -281,7 +290,7 @@ def annual_tag_history(cf: dict, tags: list[str]) -> dict[str, dict[str, str]]:
 
 # ---------------------------------------------------------------- one company
 
-def scaled(v: float | None, dp: str, page: dict) -> float | None:
+def scaled(v: Decimal | None, dp: str, page: dict) -> Decimal | None:
     if v is None:
         return None
     if dp in ("basic_eps", "diluted_eps"):
@@ -291,10 +300,15 @@ def scaled(v: float | None, dp: str, page: dict) -> float | None:
     return v * page["scale"]
 
 
-def fmt(x: float | None) -> str:
+def fmt(x) -> str:
+    """Exact plain decimal string (no exponent, no rounding): 8518000000, 6.97, -0.35."""
     if x is None:
         return ""
-    return str(int(x)) if abs(x - round(x)) < 1e-9 else f"{x:.4g}"
+    d = x if isinstance(x, Decimal) else Decimal(str(x))
+    s = format(d, "f")
+    if "." in s:
+        s = s.rstrip("0").rstrip(".")
+    return "0" if s in ("-0", "") else s
 
 
 def pick_cols(page: dict, stmt: str) -> list[int]:
@@ -368,7 +382,7 @@ def member_sum(page: dict, r: dict) -> dict:
         return r
     for i, x in enumerate(same):
         rest = sum(v for j, v in enumerate(v0) if j != i)
-        if abs(v0[i] - rest) <= max(1.0, abs(rest) * 1e-6):
+        if abs(v0[i] - rest) <= max(Decimal(1), abs(rest) * Decimal("1e-6")):
             return x  # the printed total ties to its members
     n = max(len(x["vals"]) for x in same)
     return {"tag": "+".join(f"{x['tag']}[member: {x['label'][:40]}]" for x in same),
@@ -540,7 +554,7 @@ def resolve_by_filing(out: list[dict], cf: dict, accn: str, cik: str, cache: str
         for r in todo:
             r["note"] = "MetaLinks.json not available for this filing: whole-filing check could not run; " + r["note"]
         return
-    role2r = {v.get("role"): (k, v.get("groupType", ""), v.get("shortName", "")) for k, v in inst.get("report", {}).items()}
+    role2r = {v.get("role"): (k, v.get("groupType", ""), norm_space(v.get("shortName", ""))) for k, v in inst.get("report", {}).items()}
     tags = inst.get("tag", {})
     ntags = len(tags)
     end = None
@@ -627,7 +641,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     cik = row["cik"].zfill(10)
     tic = row["ticker"]
     cf_txt = get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json", cache)
-    cf = json.loads(cf_txt) if cf_txt.startswith("{") else {}
+    cf = json.loads(cf_txt, parse_float=Decimal) if cf_txt.startswith("{") else {}
     tenks = sorted({(f["filed"], f["accn"]) for n in cf.get("facts", {}).values() for c in n.values()
                     for fs in c.get("units", {}).values() for f in fs if f.get("form") == "10-K"}, reverse=True)
     meta = {"ticker": tic, "cik": cik, "name": row["name"], "accn": "", "filings": [], "quirks": []}
@@ -769,7 +783,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                 verdicts.append("")
             elif av is None:
                 verdicts.append("API missing")
-            elif abs(pv - av) < 0.5 or abs(pv - av) <= abs(av) * 1e-9:
+            elif abs(pv - av) < Decimal("0.5") or abs(pv - av) <= abs(av) * Decimal("1e-9"):
                 verdicts.append("Y")
             elif abs(abs(pv) - abs(av)) < 0.5:
                 verdicts.append("Y (sign differs: printed in parentheses/negated label)")
@@ -804,7 +818,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         if len(parts) > 2 and cols:
             vv = [(p["vals"][cols[0]] or 0) if cols[0] < len(p["vals"]) else 0 for p in parts]
             for i, p in enumerate(parts):
-                if abs(vv[i] - (sum(vv) - vv[i])) <= max(1.0, abs(vv[i]) * 1e-6):
+                if abs(vv[i] - (sum(vv) - vv[i])) <= max(Decimal(1), abs(vv[i]) * Decimal("1e-6")):
                     parts = [p]  # a printed total that ties to the other debt lines: never add both (PNC)
                     break
         lease_in_debt = any(re.search(r"Lease", p["tag"]) or re.search(r"finance lease|capital lease|lease obligations", p["label"], re.I)
