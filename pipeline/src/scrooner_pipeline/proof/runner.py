@@ -23,7 +23,13 @@ from typing import Any
 import psycopg
 import structlog
 
-from scrooner_pipeline.proof.fsn import FilingStructure, load_quarter, quarter_of
+from scrooner_pipeline.proof.fsn import (
+    DecompressError,
+    FilingStructure,
+    load_quarter,
+    quarter_of,
+    require_zstd,
+)
 from scrooner_pipeline.proof.prove import Proof, Shown, prove_cell
 from scrooner_pipeline.proof.shown import group_by_accession, load_shown
 
@@ -195,6 +201,7 @@ def run(
 ) -> dict[str, Any]:
     # reads run in autocommit: one transaction across companies and FSN downloads held
     # AccessShareLocks on canonical_fact for 19 min and blocked a migration ALTER (2026-11-01)
+    require_zstd()  # fail before any work; a missing tool must not degrade to UNCHECKED
     conn.commit()
     conn.autocommit = True
     conn.execute("set idle_in_transaction_session_timeout = '2min'")
@@ -223,6 +230,8 @@ def run(
                 proofs = prove_company(conn, company_id, cache, floor)
                 if write and proofs:
                     write_proofs(conn, proofs)
+            except DecompressError:
+                raise  # abort the whole run; never mark cells UNCHECKED for a broken tool
             except Exception as exc:  # noqa: BLE001
                 totals["errored"] += 1
                 logger.error(

@@ -9,6 +9,7 @@ from pathlib import Path
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
+from scrooner_pipeline.proof.fsn import DecompressError, require_zstd
 from scrooner_pipeline.proof.runner import run
 
 app = typer.Typer(
@@ -46,16 +47,21 @@ def run_cmd(
 ) -> None:
     """Dry run by default (report only). --write stores the proofs; the website
     reads them only behind proof.serve_proven_only@1 (OFF)."""
-    with get_connection() as conn:
-        conn.execute(f"set statement_timeout = '{statement_timeout}'")
-        totals = run(
-            conn,
-            _parse_ciks(ciks),
-            fsn_root=Path(fsn_root),
-            report_path=Path(report) if report else None,
-            write=write,
-            floor=date.fromisoformat(floor) if floor else None,
-        )
+    try:
+        require_zstd()
+        with get_connection() as conn:
+            conn.execute(f"set statement_timeout = '{statement_timeout}'")
+            totals = run(
+                conn,
+                _parse_ciks(ciks),
+                fsn_root=Path(fsn_root),
+                report_path=Path(report) if report else None,
+                write=write,
+                floor=date.fromisoformat(floor) if floor else None,
+            )
+    except DecompressError as exc:
+        typer.echo(f"cell-proof ABORTED, nothing written: {exc}", err=True)
+        raise typer.Exit(2) from exc
     per_company = totals.pop("per_company")
     typer.echo(f"cell-proof: {json.dumps(totals, default=str)}")
     for cik, v in sorted(per_company.items()):
