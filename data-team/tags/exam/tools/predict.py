@@ -117,6 +117,9 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
                 dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
         elif l['tag'] in nd:
             dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
+        elif l['cu'] and l['st'] == 'BS' and KB['P'].get('bs.total_debt.custom_debt_line') and re.search(KB['P']['bs.total_debt.custom_debt_line']['tag_regex'], l['tag']) \
+                and not re.search(KB['P']['bs.total_debt.custom_debt_line']['exclude_regex'], l['tag'] + ' ' + (l['lab'] or '')):
+            dec, dp = 'component', 'total_debt'; rids.append('bs.total_debt.custom_debt_line')
         else:
             continue
         if l['tag'] in nd and nd[l['tag']][0] in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('data_points', []) and (not dp or dp not in cand or (dp in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('bank_only_data_points', []) and not bank)):
@@ -126,6 +129,10 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         if l['val'] in (None, ''):
             # Dhairya 2026-11-13 (STZ): a face line printed only under the single class-of-stock member is still the face line
             PC = KB['P'].get('per_share.class_member_face_line')
+            PDm = KB['P'].get('bs.total_debt.member_only_line')
+            if PDm and dp == 'total_debt' and l['st'] == 'BS' and not l['pth'] and dec == 'component' and any(x['r'] == l['r'] and x['tag'].endswith('Member') for x in L):
+                l['cm'] = 1; rids.append('bs.total_debt.member_only_line')
+                RID[(dp, id(l))] = rids; cand[dp].append((dec, l)); continue
             PM = KB['P'].get('per_share.shares_outstanding.multi_class_sum')
             if PM and dp == 'shares_outstanding' and l['st'] in ('BS', 'EQ') and multi_class.get(l['r']):
                 l['cm'] = 1; l['mcs'] = 1; rids.append('per_share.shares_outstanding.multi_class_sum')
