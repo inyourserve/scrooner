@@ -1,0 +1,102 @@
+# ATI document-first map 2026-11-12 (read-only, bottom-up)
+
+Evidence label: FILING-CHECKED unless a row says otherwise (R pages of the filing; tags from the R-page element references; API = SEC companyfacts, same accession, same period). Built with data-team/companies/reads/tools/docmap.py: status vocabulary mapped / combined / component sum / component_in_note / not_presented / OUT (Dhairya 2026-11-12). Every face miss is resolved against the whole filing (MetaLinks.json: every tag in the filing with the R pages, face and notes, that present it): stmt NOTE = found only outside the face statements; not_presented cites that whole-filing check.
+
+## Filings opened
+- 10-K 0001628280-26-010140 (CIK 0001018963, filed 2026-02-20): COVER R1.htm, IS R3.htm, CI R4.htm, BS R5.htm, BSP R6.htm, CF R7.htm
+- 10-K 0001018963-16-000049 (CIK 0001018963, filed FY2015 era): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R6.htm
+- 10-K 0001018963-18-000004 (CIK 0001018963, era filing): COVER R1.htm, IS R2.htm, CI R3.htm, BS R4.htm, BSP R5.htm, CF R6.htm
+- 10-K 0001628280-25-007092 (CIK 0001018963, era filing): COVER R1.htm, IS R3.htm, CI R4.htm, BS R5.htm, BSP R6.htm, CF R7.htm
+- companyfacts CIK0001018963.json (one call).
+
+## Data points
+| data point | status | tag(s) | stmt R | printed label | FY0 printed | FY0 API | FY1 printed | FY1 API | match | evidence | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| revenue | mapped | us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax | R3.htm | Sales | 4587400000 | 4587400000 | 4362100000 | 4362100000 | Y | FILING-CHECKED | accn 0001628280-26-010140 R3.htm period ..2025-12-28 / check: hand R3.htm agree |
+| cost_of_revenue | mapped | us-gaap:CostOfGoodsAndServicesSold | R3.htm | Cost of sales | 3580400000 | 3580400000 | 3463900000 | 3463900000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| gross_profit | mapped | us-gaap:GrossProfit | R3.htm | Gross profit | 1007000000 | 1007000000 | 898200000 | 898200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| operating_expenses | component sum | us-gaap:SellingGeneralAndAdministrativeExpense+ati:RestructuringSettlementAndImpairmentProvisionsExcludingGoodwillImpairmentLoss+ati:GainLossOnAssetAndBusinessSalesNet | R3.htm | Selling and administrative expenses + Restructuring (credits) charges + Loss (gain) on asset sales and sales of business | 366100000 |  | 289300000 |  | API missing | FILING-CHECKED | every face line between gross profit and operating income; ties to GP - OI / accn 0001628280-26-010140 R3.htm period ..2025-12-28 / check: hand R3.htm agree |
+| sga_expense | mapped | us-gaap:SellingGeneralAndAdministrativeExpense | R3.htm | Selling and administrative expenses | 365100000 | 365100000 | 342300000 | 342300000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| research_and_development | mapped | us-gaap:ResearchAndDevelopmentExpense | R55.htm | Summary of Significant Accounting Policies - Research and Development (Details) | 21300000 | 21300000 | 19600000 |  | Y | FILING-CHECKED | not on the face statement; shown in R55.htm 'Summary of Significant Accounting Policies - Research and Development (Details)' (MetaLinks.json presentation); value from companyfacts same accession / check: hand R55.htm corrected: Note R55 prints Research and development expense 21.3M (FY1 19.6M); not on face. |
+| operating_income | mapped | us-gaap:OperatingIncomeLoss | R3.htm | Operating income | 640900000 | 640900000 | 608900000 | 608900000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| interest_expense | combined | us-gaap:InterestIncomeExpenseNonoperatingNet | R3.htm | Interest expense, net | -98600000 | -98600000 | -108200000 | -108200000 | Y | FILING-CHECKED | net interest line 'Interest expense, net' (98.6M); gross InterestExpenseDebt 110.7M only in debt note R77 / check: hand R3.htm corrected: Face line is 'Interest expense, net' (98.6) tagged InterestIncomeExpenseNonoperatingNet, net of 12.1M interest income (R77); rule 6 -> combined. |
+| income_before_tax | mapped | us-gaap:IncomeLossIncludingPortionAttributableToNoncontrollingInterest | R3.htm | Income before income taxes | 522300000 | 522300000 | 486100000 | 486100000 | Y | FILING-CHECKED | matched by printed label (tag outside the usual set) / accn 0001628280-26-010140 R3.htm period ..2025-12-28 / check: hand R3.htm agree |
+| income_tax_expense | mapped | us-gaap:IncomeTaxExpenseBenefit | R3.htm | Income tax provision (benefit) | 103700000 | 103700000 | 103400000 | 103400000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| net_income | mapped | us-gaap:NetIncomeLoss | R3.htm | Net income attributable to ATI | 404300000 | 404300000 | 367800000 | 367800000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| basic_eps | mapped | us-gaap:EarningsPerShareBasic | R3.htm | Basic net income attributable to ATI per common share (in dollars per share) | 2.92 | 2.92 | 2.82 | 2.82 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| diluted_eps | mapped | us-gaap:EarningsPerShareDiluted | R3.htm | Diluted net income attributable to ATI per common share (in dollars per share) | 2.85 | 2.85 | 2.55 | 2.55 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R3.htm period ..2025-12-28 |
+| weighted_basic_shares | mapped | us-gaap:WeightedAverageNumberOfSharesOutstandingBasic | R131.htm | Per Share Information - Schedule of Basic and Diluted Income Per Common Share (Details) | 138600000 | 138600000 | 130400000 |  | Y | FILING-CHECKED | not on the face statement; shown in R131.htm 'Per Share Information - Schedule of Basic and Diluted Income Per Common Share (D' (MetaLinks.json presentation); value from companyfacts same accession / check: hand R131.htm corrected: EPS note R131 prints basic weighted average shares 138.6M (FY1 130.4M). |
+| weighted_diluted_shares | mapped | us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding | R131.htm | Per Share Information - Schedule of Basic and Diluted Income Per Common Share (Details) | 141800000 | 141800000 | 146600000 |  | Y | FILING-CHECKED | not on the face statement; shown in R131.htm 'Per Share Information - Schedule of Basic and Diluted Income Per Common Share (D' (MetaLinks.json presentation); value from companyfacts same accession / check: hand R131.htm corrected: EPS note R131 prints diluted adjusted weighted average shares 141.8M (FY1 146.6M). |
+| cash_and_equivalents | mapped | us-gaap:CashAndCashEquivalentsAtCarryingValue | R5.htm | Cash and cash equivalents | 416700000 | 416700000 | 721200000 | 721200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| accounts_receivable | mapped | us-gaap:AccountsReceivableNetCurrent | R5.htm | Accounts receivable, net | 686100000 | 686100000 | 709200000 | 709200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| inventory | mapped | us-gaap:InventoryNet | R5.htm | Inventories, net | 1403200000 | 1403200000 | 1353000000 | 1353000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| current_assets | mapped | us-gaap:AssetsCurrent | R5.htm | Total Current Assets | 2680000000 | 2680000000 | 2945000000 | 2945000000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| ppe_net | mapped | us-gaap:PropertyPlantAndEquipmentNet | R5.htm | Property, plant and equipment, net | 1940600000 | 1940600000 | 1776900000 | 1776900000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| goodwill | mapped | us-gaap:Goodwill | R5.htm | Goodwill | 225200000 | 225200000 | 227200000 | 227200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| total_assets | mapped | us-gaap:Assets | R5.htm | Total Assets | 5099600000 | 5099600000 | 5230600000 | 5230600000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| accounts_payable | mapped | us-gaap:AccountsPayableCurrent | R5.htm | Accounts payable | 568200000 | 568200000 | 609100000 | 609100000 | Y | FILING-CHECKED | accn 0001628280-26-010140 R5.htm period ..2025-12-28 / check: hand R5.htm agree |
+| current_liabilities | mapped | us-gaap:LiabilitiesCurrent | R5.htm | Total Current Liabilities | 1006300000 | 1006300000 | 1208500000 | 1208500000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| total_liabilities | mapped | us-gaap:Liabilities | R5.htm | Total Liabilities | 3182900000 | 3182900000 | 3275400000 | 3275400000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| stockholders_equity | mapped | us-gaap:StockholdersEquity | R5.htm | Total ATI Stockholders’ Equity | 1804500000 | 1804500000 | 1850400000 | 1850400000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R5.htm period ..2025-12-28 |
+| cfo | mapped | us-gaap:NetCashProvidedByUsedInOperatingActivities | R7.htm | Cash provided by operating activities | 614300000 | 614300000 | 407200000 | 407200000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| cash_flow_investing | mapped | us-gaap:NetCashProvidedByUsedInInvestingActivities | R7.htm | Cash used in investing activities | -234500000 | -234500000 | -159600000 | -159600000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| cash_flow_financing | mapped | us-gaap:NetCashProvidedByUsedInFinancingActivities | R7.htm | Cash provided by (used in) financing activities | -699900000 | -699900000 | -260400000 | -260400000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| capex | mapped | us-gaap:PaymentsToAcquireProductiveAssets | R7.htm | Purchases of property, plant and equipment | -280600000 | 280600000 | -239100000 | 239100000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| depreciation_and_amortization | mapped | us-gaap:DepreciationDepletionAndAmortization | R7.htm | Depreciation and amortization | 168100000 | 168100000 | 151500000 | 151500000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| sbc | mapped | us-gaap:ShareBasedCompensation | R7.htm | Share-based compensation | 29000000 | 29000000 | 34100000 | 34100000 | Y | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| dividends_paid | not_presented |  |  |  |  |  |  |  |  | FILING-CHECKED | only PaymentsOfDividendsMinorityInterest (dividends to NCI) printed on CF R7; no common dividends paid / check: hand R7.htm corrected: Only dividend line is 'Dividends paid to noncontrolling interests' (13.2); rule 13: never common dividends; no common dividend line in filing. |
+| share_buybacks | mapped | us-gaap:PaymentsForRepurchaseOfCommonStock | R7.htm | Purchase of treasury stock | -470000000 | 470000000 | -260000000 | 260000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED | check: machine-full-filing / accn 0001628280-26-010140 R7.htm period ..2025-12-28 |
+| cash_paid_for_interest | combined | us-gaap:InterestPaid | R77.htm | Debt - Narrative (Details) | 117800000 | 117800000 | 131400000 |  | Y | FILING-CHECKED | InterestPaid 'Interest and commitment fees paid' in debt note R77 includes commitment fees, not net of capitalized interest (10.6M); no InterestPaidNet printed / check: hand R77.htm corrected: Debt note prints 'Interest and commitment fees paid' 117.8M (InterestPaid, gross; 10.6M capitalized not netted); no InterestPaidNet line -> combined. |
+| cash_paid_for_income_taxes | mapped | us-gaap:IncomeTaxesPaidNet | R120.htm | Income Taxes - Schedule of Cash Flow, Supplemental Disclosures (Details) | 76700000 | 76700000 | 15000000 |  | Y | FILING-CHECKED | not on the face statement; shown in R120.htm 'Income Taxes - Schedule of Cash Flow, Supplemental Disclosures (Details)' (MetaLinks.json presentation); value from companyfacts same accession / check: hand R120.htm corrected: Tax note R120 prints Income taxes paid, net 76.7M (FY1 15.0M). |
+| total_debt | component sum | us-gaap:DebtCurrent+us-gaap:LongTermDebtAndCapitalLeaseObligations | R5.htm | Short-term debt and current portion of long-term debt + Long-term debt | 1749400000 | 1749400000 |  |  | Y | FILING-CHECKED | sum of printed BS debt lines (auto; leases and other borrowings need a by-hand check) / check: hand R5.htm agree |
+| shares_outstanding | mapped | us-gaap:CommonStockSharesOutstanding | R6.htm | Common stock, shares outstanding (in shares) | 135934852 | 135934852 |  |  | Y | FILING-CHECKED | check: machine-full-filing / balance-sheet date 2025-12-28; single row |
+
+## Era coverage FY2015 to latest (runs from companyfacts; FY2015 10-K opened)
+- revenue: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Sales' on us-gaap:SalesRevenueGoodsNet = 3719600000 (FILING-CHECKED)
+- cost_of_revenue: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Cost of sales' on us-gaap:CostOfGoodsSold = 3659300000 (FILING-CHECKED)
+- gross_profit: FY2015 10-K 0001018963-16-000049 R2.htm read; no row matched (auto)
+- operating_expenses: FY2015 10-K 0001018963-16-000049 R2.htm read; no row matched (auto)
+- sga_expense: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Selling and administrative expenses' on us-gaap:SellingGeneralAndAdministrativeExpense = 238800000 (FILING-CHECKED)
+- research_and_development: FY2015 10-K 0001018963-16-000049 R2.htm read; no row matched (auto)
+- operating_income: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Income (loss) before interest, other income and income taxes' on us-gaap:OperatingIncomeLoss = -369400000 (FILING-CHECKED)
+- interest_expense: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Interest expense, net' on ati:InterestExpenseNet = -110200000 (FILING-CHECKED)
+- income_before_tax: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Income (loss) from continuing operations before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = -478000000 (FILING-CHECKED)
+- income_tax_expense: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Income tax benefit' on us-gaap:IncomeTaxExpenseBenefit = -112100000 (FILING-CHECKED)
+- net_income: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Net income (loss) attributable to ATI' on us-gaap:NetIncomeLoss = -377900000 (FILING-CHECKED)
+- basic_eps: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Basic net income attributable to ATI per common share (in dollars per share)' on us-gaap:EarningsPerShareBasic = -3.53 (FILING-CHECKED)
+- diluted_eps: FY2015 10-K 0001018963-16-000049 R2.htm prints 'Diluted net income attributable to ATI per common share (in dollars per share)' on us-gaap:EarningsPerShareDiluted = -3.53 (FILING-CHECKED)
+- weighted_basic_shares: FY2015 10-K 0001018963-16-000049 R2.htm read; no row matched (auto)
+- weighted_diluted_shares: FY2015 10-K 0001018963-16-000049 R2.htm read; no row matched (auto)
+- cash_and_equivalents: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 149800000 (FILING-CHECKED)
+- accounts_receivable: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Accounts receivable, net' on us-gaap:AccountsReceivableNetCurrent = 400300000 (FILING-CHECKED)
+- inventory: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Inventories, net' on us-gaap:InventoryNet = 1271600000 (FILING-CHECKED)
+- current_assets: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Total Current Assets' on us-gaap:AssetsCurrent = 1867600000 (FILING-CHECKED)
+- ppe_net: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Property, plant and equipment, net' on us-gaap:PropertyPlantAndEquipmentNet = 2928200000 (FILING-CHECKED)
+- goodwill: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Goodwill' on us-gaap:Goodwill = 651400000 (FILING-CHECKED)
+- total_assets: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Total Assets' on us-gaap:Assets = 5751700000 (FILING-CHECKED)
+- accounts_payable: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Accounts payable' on us-gaap:AccountsPayableCurrent = 380800000 (FILING-CHECKED)
+- current_liabilities: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Total Current Liabilities' on us-gaap:LiabilitiesCurrent = 686500000 (FILING-CHECKED)
+- total_liabilities: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Total Liabilities' on us-gaap:Liabilities = 3555200000 (FILING-CHECKED)
+- stockholders_equity: FY2015 10-K 0001018963-16-000049 R4.htm prints 'Total ATI Stockholders’ Equity' on us-gaap:StockholdersEquity = 2.083e+09 (FILING-CHECKED)
+- cfo: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Cash provided by operating activities' on us-gaap:NetCashProvidedByUsedInOperatingActivities = 131400000 (FILING-CHECKED)
+- cash_flow_investing: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Cash flows provided by (used in) investing activities' on us-gaap:NetCashProvidedByUsedInInvestingActivities = -145100000 (FILING-CHECKED)
+- cash_flow_financing: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Cash provided by (used in) financing activities' on us-gaap:NetCashProvidedByUsedInFinancingActivities = -106000000 (FILING-CHECKED)
+- capex: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Purchases of property, plant and equipment' on us-gaap:PaymentsToAcquireProductiveAssets = -144500000 (FILING-CHECKED)
+- depreciation_and_amortization: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Depreciation and amortization' on us-gaap:DepreciationDepletionAndAmortization = 189900000 (FILING-CHECKED)
+- sbc: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Shares repurchased for income tax withholding on share-based compensation' on us-gaap:PaymentsForRepurchaseOfOtherEquity = -1400000 (FILING-CHECKED)
+- dividends_paid: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Dividends paid to shareholders' on us-gaap:PaymentsOfDividendsCommonStock = -66500000 (FILING-CHECKED)
+- share_buybacks: FY2015 10-K 0001018963-16-000049 R6.htm prints 'Shares repurchased for income tax withholding on share-based compensation' on us-gaap:PaymentsForRepurchaseOfOtherEquity = -1400000 (FILING-CHECKED)
+- cash_paid_for_interest: FY2015 10-K 0001018963-16-000049 R6.htm read; no row matched (auto)
+- cash_paid_for_income_taxes: FY2015 10-K 0001018963-16-000049 R6.htm read; no row matched (auto)
+- cost_of_revenue: era 10-K 0001018963-18-000004 R2.htm prints 'Cost of sales' on us-gaap:CostOfGoodsSold = 3076100000 (FILING-CHECKED)
+- interest_expense: era 10-K 0001628280-25-007092 R3.htm prints 'Interest expense, net' on us-gaap:InterestExpenseNonoperating = -108200000 (FILING-CHECKED)
+- income_before_tax: era 10-K 0001628280-25-007092 R3.htm prints 'Income before income taxes' on us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest = 486100000 (FILING-CHECKED)
+- cash_and_equivalents: era 10-K 0001628280-25-007092 R5.htm prints 'Cash and cash equivalents' on us-gaap:CashAndCashEquivalentsAtCarryingValue = 721200000 (FILING-CHECKED)
+
+## Mismatches (printed vs API)
+- operating_expenses: API missing (us-gaap:SellingGeneralAndAdministrativeExpense+ati:RestructuringSettlementAndImpairmentProvisionsExcludingGoodwillImpairmentLoss+ati:GainLossOnAssetAndBusinessSalesNet)
+
+## Hand check (Dhairya 2026-11-12)
+- Rows hand-checked against their R pages: 12 of 38 (every not_presented, combined, component and NOTE row; mapped rows the machine flagged: no API value, extension tag, label match; and a seeded random 10% of the other mapped rows). All other rows: check: machine-full-filing.
+- Corrected by hand: 7.
+- Random mapped sample: 3 rows, 1 disagreements (33.3%).
