@@ -76,6 +76,14 @@ def test_a_filing_whose_own_period_is_outside_the_tag_era_is_not_a_candidate():
     assert [c["value"] for c in cells] == [Decimal("85320")]
 
 
+def test_the_filing_era_never_extends_the_maps_coverage_to_earlier_periods():
+    early = Fact(Decimal("5"), 3, D(2014, 6, 30), False, 11, "A-18", D(2018, 8, 3), por=D(2018, 6, 30))
+    facts = {("us-gaap", NEW): {8: early}}
+    periods = {8: (D(2013, 7, 1), D(2014, 6, 30), "duration")}
+    cells, _ = build_cells(_rows(), facts, INFO, {}, {}, periods)
+    assert cells == []
+
+
 def test_claim_for_follows_the_filing_era_and_keeps_other_statements():
     rows = [
         (1, "concept", "IS", OLD, "x", None, 1, D(2015, 3, 31), D(2017, 6, 30)),

@@ -630,7 +630,9 @@ def _filing_in_era(row: MapRow, fact: Fact) -> bool:
     uses (MSFT revenue: FY2016 SalesRevenueNet in the FY2017 10-K, RevenueFromContractWithCustomerExcludingAssessedTax
     in the FY2018 10-K, whose own period lies in the new tag's era). The fact is a candidate for the row when the
     filing it was printed in sits in the row's era, although the fact's own period does not. The newest-filing rule
-    in build_cells then serves the latest eligible filing's print (facts are loaded face-column eligible only)."""
+    in build_cells then serves the latest eligible filing's print (facts are loaded face-column eligible only). Only a
+    period that some concept row of the same concept already covers (any tag): the rule picks the tag, it never
+    extends the map's coverage to earlier periods."""
     return fact.por is not None and _in_era(row, fact.por)
 
 
@@ -1015,7 +1017,16 @@ def build_cells(
         for period_id, fact in facts.get((row.taxonomy, row.tag), {}).items():
             if not (
                 _in_era(row, fact.end)
-                or (row.decision == "concept" and _filing_in_era(row, fact))
+                or (
+                    row.decision == "concept"
+                    and _filing_in_era(row, fact)
+                    and any(
+                        o.decision == "concept"
+                        and o.canonical_concept_id == row.canonical_concept_id
+                        and _in_era(o, fact.end)
+                        for o in rows
+                    )
+                )
             ):
                 continue
             if fact.derived and concept_info[target][0] in NEVER_DERIVED:
