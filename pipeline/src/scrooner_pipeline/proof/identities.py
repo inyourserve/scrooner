@@ -5,11 +5,14 @@ TOGETHER, over what production serves, so a wrong filing choice or a wrong membe
 agrees with its own filing (MSFT FY2017: revenue 89,950 - cost of revenue 34,261 = 55,689, served gross profit
 62,310). Identities:
 
-  gross_profit     revenue - cost_of_revenue = gross_profit
+  gross_profit     revenue - cost_of_revenue (- printed excise taxes between revenue and gross profit) =
+                   gross_profit
   operating_income gross_profit - operating_expenses = operating_income; revenue - cost_of_revenue -
                    operating_expenses = operating_income when gross profit is not served
   balance_sheet    total_assets = total_liabilities + stockholders_equity (+ the printed non-controlling
-                   interest when the served equity excludes it, + printed temporary equity); the DQC4-05 tag set
+                   interest when the served equity excludes it, + EVERY printed temporary-equity operand); where
+                   the face prints LiabilitiesAndStockholdersEquity: total_assets = that total, and total_liabilities
+                   + every top-level face line between it and that total = that total (the face operand set)
   cash_change      cfo + cfi + cff (+ printed discontinued flows, + the printed exchange-rate effect) = the printed
                    change in cash (annual only: the printed change line exists for years)
   net_income_cf    served net_income = the first line of the filing's cash-flow statement (annual), net of the
@@ -17,8 +20,9 @@ agrees with its own filing (MSFT FY2017: revenue 89,950 - cost of revenue 34,261
 
 Tolerance is the members' rounding slack, half a unit per member (mapper/dqc_checks.tolerance: trailing zeros).
 An identity is SKIPPED, never derived, when a member is not served, the filing does not present it
-(NOT_PRESENTED), the company's map calls its line combined, or a printed operand (fx, change in cash, NCI) is
-absent. A failed identity marks each member cell that would otherwise be PROVEN as DISAGREE, reason
+(NOT_PRESENTED), the company's map calls its line combined, a printed operand (fx, change in cash, NCI) is
+absent, a member is itself derived and not printed (gross profit or total liabilities served as derived_not_printed,
+mapper/derived_cells.py), or the period is a derived Q4 or a 6M/9M span (not a filed column). A failed identity marks each member cell that would otherwise be PROVEN as DISAGREE, reason
 identity_break, with checks.identity = {name, members, lhs, rhs, diff, tolerance}.
 """
 
@@ -40,19 +44,41 @@ REASON = "identity_break"
 PeriodKey = tuple[str, date, date]  # (grain, start, end)
 PrintedKey = tuple[str, date | None, date]  # (tag, start for durations, end)
 
-NCI_EQUITY_TAG = "MinorityInterest"
+NCI_EQUITY_TAGS: tuple[str, ...] = (
+    "MinorityInterest",
+    "NonredeemableNoncontrollingInterest",
+    "StockholdersEquityAttributableToNoncontrollingInterestContinuingOperations",
+)
 EQUITY_INCL_NCI_TAG = (
     "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
 )
-TEMP_EQUITY_GROUPS: tuple[tuple[str, ...], ...] = (
-    (
-        "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests",
-    ),
-    (
-        "TemporaryEquityCarryingAmountAttributableToParent",
-        "RedeemableNoncontrollingInterestEquityCarryingAmount",
-    ),
+# mezzanine / temporary-equity operands (triage 2026-11-13, data-team/tags/red-cells/identity-breaks-2026-11-13.csv):
+# ALL present are summed. The including-NCI total already holds the redeemable-NCI and parent lines, so those parts
+# are dropped when it is printed (never counted twice).
+TEMP_EQUITY_TOTAL_TAG = (
+    "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests"
 )
+TEMP_EQUITY_PART_TAGS: tuple[str, ...] = (
+    "TemporaryEquityCarryingAmountAttributableToParent",
+    "RedeemableNoncontrollingInterestEquityCarryingAmount",
+    "RedeemableNoncontrollingInterestEquityOtherFairValue",
+    "RedeemableNoncontrollingInterestEquityFairValue",
+    "RedeemableNoncontrollingInterestEquityPreferredCarryingAmount",
+)
+TEMP_EQUITY_OTHER_TAGS: tuple[str, ...] = (
+    "TemporaryEquityPreferredStockDividendObligation",
+    "TemporaryEquityValueExcludingAdditionalPaidInCapital",
+    "ConvertibleDebtEquity",
+    "DebtInstrumentConvertibleCarryingAmountOfTheEquityComponent",
+)
+TEMP_EQUITY_TAGS: tuple[str, ...] = (
+    TEMP_EQUITY_TOTAL_TAG,
+    *TEMP_EQUITY_PART_TAGS,
+    *TEMP_EQUITY_OTHER_TAGS,
+)
+LSE_TAGS = ("LiabilitiesAndStockholdersEquity", "LiabilitiesAndEquity")
+# excise taxes printed between revenue and gross profit (MO, PM): deducted in the gross-profit identity
+EXCISE_TAGS = ("ExciseAndSalesTaxes", "ExciseTax")
 DISCONTINUED_CF_TAGS = (
     "CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations",
     "CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations",
@@ -80,8 +106,9 @@ NCI_INCOME_TAGS = (
 PRINTED_TAGS: tuple[str, ...] = tuple(
     dict.fromkeys(
         [
-            NCI_EQUITY_TAG,
-            *[t for g in TEMP_EQUITY_GROUPS for t in g],
+            *NCI_EQUITY_TAGS,
+            *TEMP_EQUITY_TAGS,
+            *EXCISE_TAGS,
             *DISCONTINUED_CF_TAGS,
             *FX_TAGS,
             *CHANGE_TAGS,
@@ -128,6 +155,112 @@ def load_printed(
         for tag, ptype, start, end, value in cur.fetchall():
             out[(tag, start if ptype == "duration" else None, end)].add(Decimal(value))
     return {k: next(iter(v)) for k, v in out.items() if len(v) == 1}
+
+
+FilingKey = tuple[
+    str, date | None, date
+]  # same as PrintedKey; values are per accession
+
+
+def load_printed_by_filing(
+    conn: psycopg.Connection, company_id: int, floor: date
+) -> dict[PrintedKey, dict[str, Decimal]]:
+    """Discontinued-operations cash flows per FILING (accession -> value): the flows of one identity come from the
+    SAME filing as the cfo/cfi/cff cells (a later filing may recast them: B5). Every copy counts here, not only the
+    authoritative one; a filing with two distinct values for one key is dropped (never guess)."""
+    out: dict[PrintedKey, dict[str, set[Decimal]]] = defaultdict(
+        lambda: defaultdict(set)
+    )
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select c.tag, p.period_type, p.start_date, p.end_date, fl.accession_number, f.value
+            from core.fact f
+            join core.concept c on c.id = f.concept_id
+            join core.period p on p.id = f.period_id
+            join core.filing fl on fl.id = f.filing_id
+            where f.company_id = %s and not f.is_derived
+              and c.taxonomy = 'us-gaap' and c.tag = any(%s) and p.end_date >= %s
+            """,
+            (company_id, list(DISCONTINUED_CF_TAGS), floor),
+        )
+        for tag, ptype, start, end, acc, value in cur.fetchall():
+            out[(tag, start if ptype == "duration" else None, end)][acc].add(
+                Decimal(value)
+            )
+    return {
+        k: {a: next(iter(v)) for a, v in by.items() if len(v) == 1}
+        for k, by in out.items()
+    }
+
+
+def not_printed(p: Proof) -> bool:
+    """A cell that is no printed line: derived (a Q4 or a sum from a derived fact), or served with no source fact
+    at all (mapper/derived_cells.py: gross profit = revenue - cost of revenue, total liabilities = L&SE - equity,
+    family company_tag_map:derived_not_printed). An identity over it would only restate its own derivation."""
+    s = p.shown
+    return s.is_derived or (not s.source_fact_ids and not s.tags)
+
+
+def _descendants(st: FilingStructure, tag: str) -> set[str]:
+    seen: set[str] = set()
+    todo = [tag]
+    while todo:
+        for child, _neg in st.calc_children.get(todo.pop(), []):
+            if child not in seen:
+                seen.add(child)
+                todo.append(child)
+    return seen
+
+
+def face_between(
+    structures: dict[str, FilingStructure] | None,
+    members: dict[str, Proof],
+    end: date,
+) -> tuple[Decimal, list[tuple[str, Decimal]]] | None:
+    """The balance sheet's own face operand set (B3): (printed LiabilitiesAndStockholdersEquity, [(tag, value) of
+    the top-level face lines between total liabilities and that total]) in the column of `end`, from the filing the
+    total_assets cell came from. A line that is a calc descendant of another line in the range (or of total
+    liabilities) is a part of it, not an operand. None when the filing's face, the liabilities line or the total is
+    not there (the identity falls back to the printed-fact operands)."""
+    ta, tl = members["total_assets"], members["total_liabilities"]
+    st = (structures or {}).get(ta.shown.accession or "")
+    if st is None or len(tl.shown.tags) != 1:
+        return None
+    ddate = fsn_ddate(end)
+    lines = st.lines_on("BS")
+    ltag = tl.shown.tags[0]
+    li = next((i for i, ln in enumerate(lines) if ln.tag == ltag), None)
+    lse_i = next(
+        (
+            i
+            for i, ln in enumerate(lines)
+            if ln.tag in LSE_TAGS and li is not None and i > li
+        ),
+        None,
+    )
+    if li is None or lse_i is None:
+        return None
+    lse = st.value(lines[lse_i].tag, ddate, 0)
+    if lse is None:
+        return None
+    tags = [
+        t for t in dict.fromkeys(ln.tag for ln in lines[li + 1 : lse_i]) if t != ltag
+    ]
+    parts = set(_descendants(st, ltag))
+    for t in tags:
+        parts |= _descendants(st, t)
+    equity = members["stockholders_equity"]
+    out: list[tuple[str, Decimal]] = []
+    for t in tags:
+        if t in parts:
+            continue
+        v = st.value(t, ddate, 0)
+        if v is None:
+            continue
+        # the served equity stands in for its own face line, so a wrong served equity is caught
+        out.append((t, equity.shown.value if t in equity.shown.tags else v.value))
+    return lse.value, out
 
 
 def cf_start_value(
@@ -189,6 +322,110 @@ def _evaluate(
     return rec
 
 
+def _disc_flow(
+    printed: dict[PrintedKey, Decimal],
+    by_filing: dict[PrintedKey, dict[str, Decimal]] | None,
+    tag: str,
+    accession: str,
+    grain: str,
+    start: date,
+    end: date,
+) -> Decimal | None:
+    """A discontinued-operations cash flow from the SAME filing as the cfo/cfi/cff cells (B5): a later filing may
+    recast it. A filing that does not print the flow gives none (never the other filing's value). Without per-filing
+    data the unique printed value stands."""
+    key = (tag, None if grain == "I" else start, end)
+    if by_filing is not None and key in by_filing:
+        return by_filing[key].get(accession)
+    if by_filing:
+        return None  # per-filing data loaded and this flow is in no filing
+    return printed.get(key)
+
+
+def _fact_operands(
+    printed: dict[PrintedKey, Decimal],
+    m: dict[str, Proof],
+    grain: str,
+    start: date,
+    end: date,
+) -> tuple[list[Decimal], dict[str, str]]:
+    """Printed-fact operands of the balance sheet beyond total liabilities + equity: the non-controlling interest
+    (unless the served equity already includes it) and EVERY temporary-equity operand present (B1/B2)."""
+    extra: list[Decimal] = []
+    detail: dict[str, str] = {}
+    if EQUITY_INCL_NCI_TAG not in m["stockholders_equity"].shown.tags:
+        for t in NCI_EQUITY_TAGS:
+            x = _printed(printed, t, grain, start, end)
+            if x is not None:
+                extra.append(x)
+                detail[t] = str(x)
+    temp = [
+        (t, x)
+        for t in TEMP_EQUITY_TAGS
+        if (x := _printed(printed, t, grain, start, end)) is not None
+    ]
+    if any(t == TEMP_EQUITY_TOTAL_TAG for t, _ in temp):
+        temp = [(t, x) for t, x in temp if t not in TEMP_EQUITY_PART_TAGS]
+    for t, x in temp:
+        extra.append(x)
+        detail[t] = str(x)
+    return extra, detail
+
+
+def _balance_sheet(
+    m: dict[str, Proof],
+    printed: dict[PrintedKey, Decimal],
+    structures: dict[str, FilingStructure] | None,
+    grain: str,
+    start: date,
+    end: date,
+) -> tuple[dict[str, Any] | None, dict[str, Proof]]:
+    """total_assets = L&SE where the face prints it, and L + the face operand set = L&SE (B3); otherwise (or when
+    the face operand set does not tie but the printed-fact operands do) A = L + SE + every printed NCI and
+    temporary-equity operand."""
+    ta, tl, se = (
+        m[k].shown.value
+        for k in ("total_assets", "total_liabilities", "stockholders_equity")
+    )
+    extra, detail = _fact_operands(printed, m, grain, start, end)
+    fact_rhs = tl + se + sum(extra, Decimal(0))
+    face = face_between(structures, m, end)
+    if face is None:
+        return _evaluate("balance_sheet", m, ta, fact_rhs, extra, detail), m
+    lse, lines = face
+    rec = _evaluate(
+        "balance_sheet",
+        m,
+        ta,
+        lse,
+        [lse],
+        {"LiabilitiesAndStockholdersEquity": str(lse)},
+    )
+    if rec is not None:
+        return rec, m
+    face_detail = {
+        "LiabilitiesAndStockholdersEquity": str(lse),
+        **{t: str(x) for t, x in lines},
+    }
+    rec = _evaluate(
+        "balance_sheet",
+        m,
+        tl + sum((x for _t, x in lines), Decimal(0)),
+        lse,
+        [x for _t, x in lines] + [lse],
+        face_detail,
+    )
+    if (
+        rec is not None
+        and _evaluate("balance_sheet", m, ta, fact_rhs, extra, detail) is None
+    ):
+        return (
+            None,
+            m,
+        )  # the printed-fact operands tie (a face without calc arcs may double count a part)
+    return rec, m
+
+
 def _check_period(
     cells: dict[str, Proof],
     grain: str,
@@ -196,14 +433,26 @@ def _check_period(
     end: date,
     printed: dict[PrintedKey, Decimal],
     cf_start: tuple[str, Decimal] | None,
+    printed_by_filing: dict[PrintedKey, dict[str, Decimal]] | None = None,
+    structures: dict[str, FilingStructure] | None = None,
 ) -> list[tuple[dict[str, Any], dict[str, Proof]]]:
     """Every failed identity of one company period: (record, member proofs)."""
     out: list[tuple[dict[str, Any], dict[str, Proof]]] = []
+    if grain == "Q" and (end - start).days > 100:
+        return out  # a 6M/9M span is no filed column (C3)
 
     def get(*dps: str) -> dict[str, Proof] | None:
         got = {d: cells.get(d) for d in dps}
         if all(_usable(p) for p in got.values()):
-            return got  # type: ignore[return-value]
+            members: dict[str, Proof] = got  # type: ignore[assignment]
+            # a derived Q4 is no filed column (C3); a derived-not-printed member would only restate its derivation
+            if any(
+                (grain == "Q" and p.shown.is_derived)
+                or (d in ("gross_profit", "total_liabilities") and not_printed(p))
+                for d, p in members.items()
+            ):
+                return None
+            return members
         return None
 
     def v(m: dict[str, Proof], dp: str) -> Decimal:
@@ -215,13 +464,22 @@ def _check_period(
 
     if grain in ("FY", "Q"):
         m = get("revenue", "cost_of_revenue", "gross_profit")
+        # excise taxes printed between revenue and gross profit (B4: MO, PM) are part of the face subtraction
+        excise_by_tag = {
+            t: x
+            for t in EXCISE_TAGS
+            if (x := _printed(printed, t, grain, start, end)) is not None
+        }
+        excise = sum(excise_by_tag.values(), Decimal(0))
         if m:
             add(
                 _evaluate(
                     "gross_profit",
                     m,
-                    v(m, "revenue") - v(m, "cost_of_revenue"),
+                    v(m, "revenue") - v(m, "cost_of_revenue") - excise,
                     v(m, "gross_profit"),
+                    [excise] if excise else None,
+                    {t: str(x) for t, x in excise_by_tag.items()} or None,
                 ),
                 m,
             )
@@ -255,33 +513,7 @@ def _check_period(
     if grain == "I":
         m = get("total_assets", "total_liabilities", "stockholders_equity")
         if m:
-            extra: list[Decimal] = []
-            detail: dict[str, str] = {}
-            if EQUITY_INCL_NCI_TAG not in m["stockholders_equity"].shown.tags:
-                nci = _printed(printed, NCI_EQUITY_TAG, grain, start, end)
-                if nci is not None:
-                    extra.append(nci)
-                    detail[NCI_EQUITY_TAG] = str(nci)
-            for group in TEMP_EQUITY_GROUPS:
-                got = [
-                    (t, x)
-                    for t in group
-                    if (x := _printed(printed, t, grain, start, end)) is not None
-                ]
-                if got:
-                    for t, x in got:
-                        extra.append(x)
-                        detail[t] = str(x)
-                    break
-            rhs = (
-                v(m, "total_liabilities")
-                + v(m, "stockholders_equity")
-                + sum(extra, Decimal(0))
-            )
-            add(
-                _evaluate("balance_sheet", m, v(m, "total_assets"), rhs, extra, detail),
-                m,
-            )
+            add(*_balance_sheet(m, printed, structures, grain, start, end))
     if grain == "FY":
         m = get("cfo", "cash_flow_investing", "cash_flow_financing")
         if m:
@@ -305,8 +537,11 @@ def _check_period(
             if change is not None and fx is not None:
                 extra = [fx[1]]
                 detail = {change[0]: str(change[1]), fx[0]: str(fx[1])}
+                acc = (m["cfo"].shown.accession or "") if m else ""
                 for t in DISCONTINUED_CF_TAGS:
-                    x = _printed(printed, t, grain, start, end)
+                    x = _disc_flow(
+                        printed, printed_by_filing, t, acc, grain, start, end
+                    )
                     if x is not None:
                         extra.append(x)
                         detail[t] = str(x)
@@ -365,6 +600,7 @@ def apply_identities(
     proofs: list[Proof],
     printed: dict[PrintedKey, Decimal] | None = None,
     structures: dict[str, FilingStructure] | None = None,
+    printed_by_filing: dict[PrintedKey, dict[str, Decimal]] | None = None,
 ) -> dict[str, int]:
     """Post-pass over a company's proofs (in place). Returns {identity name: failed identities}."""
     printed = printed or {}
@@ -383,7 +619,9 @@ def apply_identities(
     for (grain, start, end), cells in by_period.items():
         ni = cells.get("net_income")
         cf_start = cf_start_value(structures, ni) if structures and ni else None
-        for rec, members in _check_period(cells, grain, start, end, printed, cf_start):
+        for rec, members in _check_period(
+            cells, grain, start, end, printed, cf_start, printed_by_filing, structures
+        ):
             counts[rec["name"]] += 1
             for p in members.values():
                 p.checks.setdefault("identity", rec)

@@ -31,7 +31,11 @@ from scrooner_pipeline.proof.fsn import (
     require_zstd,
 )
 from scrooner_pipeline.proof.fsn_db import load_filings
-from scrooner_pipeline.proof.identities import apply_identities, load_printed
+from scrooner_pipeline.proof.identities import (
+    apply_identities,
+    load_printed,
+    load_printed_by_filing,
+)
 from scrooner_pipeline.proof.prove import Proof, prove_cell
 from scrooner_pipeline.proof.shown import (
     HISTORY_FLOOR,
@@ -341,6 +345,7 @@ def run(
                     proofs,
                     load_printed(conn, company_id, floor or HISTORY_FLOOR),
                     structures,
+                    load_printed_by_filing(conn, company_id, floor or HISTORY_FLOOR),
                 )
                 identity_breaks.update(id_counts)
                 if write and proofs:

@@ -1683,6 +1683,11 @@ def resolve_for_company(
         _load_proof_disagree(conn, company_id),
         face,
     )
+    from scrooner_pipeline.mapper.derived_cells import (
+        add_derived_cells,
+    )  # circular via dqc_checks
+
+    add_derived_cells(conn, company_id, cells, stats, concept_info, periods)
     targets = set(managed_concept_ids)
     for r in rows:
         targets.update(
@@ -1718,7 +1723,7 @@ def resolve_for_company(
                         c["source_value_ids"],
                         FAMILY
                         if c["value_source"] == "sec_api"
-                        else FAMILY + ":fsn_xbrl",
+                        else f"{FAMILY}:{c['value_source']}",
                         run_id,
                     )
                     for c in cells
