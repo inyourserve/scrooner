@@ -33,7 +33,9 @@ mkdir -p "$OUT"
 MAX_MIN="${FSN_NIGHTLY_MAX_MINUTES:-25}"
 SINCE_ARGS=()
 [ -n "${FSN_NIGHTLY_SINCE:-}" ] && SINCE_ARGS=(--since "$FSN_NIGHTLY_SINCE")
-if ! timeout $((MAX_MIN + 5))m $FSN nightly --out "$OUT/companies" --report "$OUT/nightly.json" --max-minutes "$MAX_MIN" "${SINCE_ARGS[@]}"; then
+# ${arr[@]+"${arr[@]}"}: bash before 4.4 (macOS /bin/bash 3.2) treats an empty array as unset under
+# set -u and aborts with "SINCE_ARGS[@]: unbound variable"; this form expands to nothing instead.
+if ! timeout $((MAX_MIN + 5))m $FSN nightly --out "$OUT/companies" --report "$OUT/nightly.json" --max-minutes "$MAX_MIN" ${SINCE_ARGS[@]+"${SINCE_ARGS[@]}"}; then
   warn "build failed (see the step log); the old mapper runs as before"
   exit 0
 fi
