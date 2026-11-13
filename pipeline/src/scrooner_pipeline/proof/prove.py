@@ -27,7 +27,7 @@ the components sum and the printed-page sample, never two numeric feeds.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
@@ -200,6 +200,15 @@ def unit_class(data_point: str) -> str:
     if data_point in PER_SHARE:
         return "per_share"
     return "money"
+
+
+def never_derived(data_point: str) -> bool:
+    """EPS is never derived (founder, standing: a per-share ratio of two quarters is not the quarter's EPS) and a
+    share count is not additive. Dividends per share by subtraction is allowed (founder 2026-11-04)."""
+    return data_point in SHARE_COUNTS or data_point in (
+        "basic_eps_resolved",
+        "diluted_eps_resolved",
+    )
 
 
 def find_value(
@@ -1003,6 +1012,25 @@ def prove_cell(
     face, why_face = on_statement_face(structure, stmt, nv)
     p.checks["statement_face"] = {"status": "pass" if face else "fail", "why": why_face}
     if not face:
+        if shown.period_grain == "Q" and not never_derived(shown.data_point_name):
+            d = prove_derived(
+                replace(shown, is_derived=True),
+                structure,
+                prior_structure,
+                fsn_set,
+                require_face=True,
+            )
+            if d.verdict == PROVEN:
+                d.checks["statement_face"] = {
+                    "status": "derived",
+                    "why": why_face,
+                    "rule": "quarter_column_by_subtraction",
+                }
+                return d
+            p.checks["derivation_attempt"] = {
+                "status": d.verdict,
+                "why": d.reason_text or d.reason_code,
+            }
         p.verdict, p.reason_code = NOT_PRESENTED, "value_in_note_not_on_statement_face"
         p.reason_text = f"{line.tag} = {nv.value} exists in {structure.adsh} but {why_face}; the statement face proves nothing here"
         return p
@@ -1033,6 +1061,7 @@ def prove_derived(
     structure: FilingStructure | None,
     prior_structure: FilingStructure | None,
     fsn_set: str | None,
+    require_face: bool = False,
 ) -> Proof:
     """A derived quarter has no printed line. It is PROVEN when its two
     inputs are printed lines of the filings they come from and the arithmetic
@@ -1103,10 +1132,12 @@ def prove_derived(
     prior_dd = fsn_ddate(prior_end)
     sources = [s for s in (prior_structure, structure) if s is not None]
     ytd_prev = None
+    prev_src: FilingStructure = structure
     for s in sources:
         ytd_prev = s.value(line.tag, prior_dd, ytd_n.qtrs - 1, "USD")
         if ytd_prev is not None:
             prev_adsh = s.adsh
+            prev_src = s
             break
     if ytd_prev is None:
         p.reason_text = (
@@ -1114,6 +1145,14 @@ def prove_derived(
             f"in the prior quarter's filing{'' if prior_structure else ' (prior filing not loaded)'}"
         )
         return p
+    if require_face:
+        # a quarter column the statement face does not print (Q4 of a 10-K, Q2/Q3 cash flow of a 10-Q) is proven
+        # only through inputs that are themselves printed on a statement face of their own filings
+        for nv, src in ((ytd_n, structure), (ytd_prev, prev_src)):
+            on, why_on = on_statement_face(src, stmt, nv)
+            if not on:
+                p.reason_text = f"derivation input {line.tag} {nv.value} ({src.adsh}) is not printed on the face: {why_on}"
+                return p
     q = sign * (ytd_n.value - ytd_prev.value)
     tol = slack(ytd_n.dcml, shown.presentation_scale)
     p.position_value = q
@@ -1136,6 +1175,12 @@ def prove_derived(
         "dcml": ytd_n.dcml,
     }
     p.checks["identity_tie"] = {"status": "n/a"}
+    if require_face:
+        p.checks["derivation"] = {
+            "status": "pass",
+            "source": "face_inputs",
+            "formula": "year-to-date minus prior year-to-date",
+        }
     p.checks["components_sum"] = {
         "status": "n/a",
         "why": "derived by subtraction of two printed year-to-date lines",

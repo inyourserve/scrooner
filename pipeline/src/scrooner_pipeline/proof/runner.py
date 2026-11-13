@@ -175,9 +175,10 @@ def prove_company(
     for a in accs:
         if a in fdates:
             by_quarter[quarter_of(fdates[a])].add(a)
-    # derived quarters need the PRIOR quarter's filing too (its year-to-date line)
+    # derived quarters need the PRIOR quarter's filing too (its year-to-date line), and so does every quarter cell:
+    # a quarter column the face does not print is proven by subtraction from the printed year-to-date inputs
     prior_for: dict[tuple[str, date], str] = {}
-    if any(s.is_derived and s.period_grain == "Q" for s in shown):
+    if any(s.period_grain == "Q" for s in shown):
         with conn.cursor() as cur:
             cur.execute(
                 "select accession_number, period_of_report, filing_date from core.filing "
@@ -186,7 +187,7 @@ def prove_company(
             )
             periodic = cur.fetchall()
         for s in shown:
-            if not (s.is_derived and s.period_grain == "Q"):
+            if s.period_grain != "Q":
                 continue
             prior_end = s.period_start - timedelta(days=1)
             best = None
@@ -217,7 +218,7 @@ def prove_company(
         for s in cells:
             prior = (
                 structures.get(prior_for.get((acc, s.period_start), ""))
-                if s.is_derived
+                if s.period_grain == "Q"
                 else None
             )
             p = prove_cell(s, structure, q, prior)
