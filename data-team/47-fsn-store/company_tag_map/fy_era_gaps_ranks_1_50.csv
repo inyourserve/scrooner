@@ -14,12 +14,12 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2733,NVDA,amortization_of_intangibles,2025-01-26,note_fact,0001045810-25-000023,,,fact,AmortizationOfIntangibleAssets,
 2733,NVDA,amortization_of_intangibles,2026-01-25,note_fact,0001045810-26-000021,,,fact,AmortizationOfIntangibleAssets,
 2733,NVDA,basic_eps,2015-01-25,served_value,0001045810-15-000036,,,,,1.14
-2733,NVDA,capex,2015-01-25,review,0001045810-15-000036,H,25,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
-2733,NVDA,capex,2016-01-31,review,0001045810-16-000205,H,26,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
-2733,NVDA,capex,2017-01-29,review,0001045810-17-000027,H,30,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
-2733,NVDA,capex,2018-01-28,review,0001045810-18-000010,H,28,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
-2733,NVDA,capex,2019-01-27,review,0001045810-19-000023,H,21,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
-2733,NVDA,capex,2020-01-26,review,0001045810-20-000010,H,21,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2015-01-25,review,0001045810-15-000036,9,25,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2016-01-31,review,0001045810-16-000205,7,26,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2017-01-29,review,0001045810-17-000027,7,30,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2018-01-28,review,0001045810-18-000010,7,28,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2019-01-27,review,0001045810-19-000023,8,21,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
+2733,NVDA,capex,2020-01-26,review,0001045810-20-000010,8,21,CF,PurchasesOfPropertyAndEquipmentAndIntangibleAssets,Purchases of property and equipment and intangible assets
 2733,NVDA,cash_and_equivalents,2015-01-25,served_value,0001045810-15-000036,,,,CashAndCashEquivalentsAtCarryingValue,496654000
 2733,NVDA,cash_flow_financing,2015-01-25,served_value,0001045810-15-000036,,,,NetCashProvidedByUsedInFinancingActivities,-834000000
 2733,NVDA,cash_flow_investing,2015-01-25,served_value,0001045810-15-000036,,,,NetCashProvidedByUsedInInvestingActivities,-727000000
@@ -75,7 +75,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2733,NVDA,sbc,2015-01-25,served_value,0001045810-15-000036,,,,,157841000
 2733,NVDA,sga_expense,2015-01-25,served_value,0001045810-15-000036,,,,,480000000
 2733,NVDA,share_buybacks,2015-01-25,served_value,0001045810-15-000036,,,,PaymentsForRepurchaseOfCommonStock,813600000
-2733,NVDA,share_buybacks,2022-01-30,review,0001045810-22-000036,H,6,EQ,TreasuryStockMember,Treasury Stock
+2733,NVDA,share_buybacks,2022-01-30,review,0001045810-22-000036,7,6,EQ,TreasuryStockMember,Treasury Stock
 2733,NVDA,shares_outstanding,2015-01-25,served_value,0001045810-15-000036,,,,,544913000
 2733,NVDA,shares_outstanding,2017-01-29,served_value,0001045810-17-000027,,,,,585000000
 2733,NVDA,shares_outstanding,2018-01-28,served_value,0001045810-18-000010,,,,,606000000
@@ -88,7 +88,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2733,NVDA,shares_outstanding,2026-01-25,served_value,0001045810-26-000021,,,,,24304000000
 2733,NVDA,stockholders_equity,2015-01-25,served_value,0001045810-15-000036,,,,StockholdersEquity,4417982000
 2733,NVDA,total_assets,2015-01-25,served_value,0001045810-15-000036,,,,Assets,7201368000
-2733,NVDA,total_liabilities,2015-01-25,review,0001045810-15-000036,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and shareholders' equity
+2733,NVDA,total_liabilities,2015-01-25,review,0001045810-15-000036,5,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and shareholders' equity
 2733,NVDA,weighted_basic_shares,2015-01-25,served_value,0001045810-15-000036,,,,,552319000
 2733,NVDA,weighted_diluted_shares,2015-01-25,served_value,0001045810-15-000036,,,,,563068000
 3,AAPL,amortization_of_intangibles,2015-09-26,note_fact,0001193125-15-356351,,,fact,AmortizationOfIntangibleAssets,
@@ -163,9 +163,9 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2328,AMZN,cash_paid_for_income_taxes,2021-12-31,note_fact,0001018724-22-000005,,,fact,IncomeTaxesPaidNet,
 2328,AMZN,cash_paid_for_income_taxes,2022-12-31,note_fact,0001018724-23-000004,,,fact,IncomeTaxesPaidNet,
 2328,AMZN,cash_paid_for_income_taxes,2023-12-31,note_fact,0001018724-24-000008,,,fact,IncomeTaxesPaidNet,
-2328,AMZN,cash_paid_for_interest,2017-12-31,review,0001018724-18-000005,H,35,CF,InterestPaidOnCapitalAndFinanceLeaseObligations,Cash paid for interest on capital and finance lease obligations
-2328,AMZN,cash_paid_for_interest,2018-12-31,review,0001018724-19-000004,H,35,CF,InterestPaidOnCapitalAndFinanceLeaseObligations,Cash paid for interest on capital and finance lease obligations
-2328,AMZN,cash_paid_for_interest,2019-12-31,review,0001018724-20-000004,H,38,CF,InterestPaidFinancingObligations,Cash paid for interest on financing obligations
+2328,AMZN,cash_paid_for_interest,2017-12-31,review,0001018724-18-000005,2,35,CF,InterestPaidOnCapitalAndFinanceLeaseObligations,Cash paid for interest on capital and finance lease obligations
+2328,AMZN,cash_paid_for_interest,2018-12-31,review,0001018724-19-000004,2,35,CF,InterestPaidOnCapitalAndFinanceLeaseObligations,Cash paid for interest on capital and finance lease obligations
+2328,AMZN,cash_paid_for_interest,2019-12-31,review,0001018724-20-000004,2,38,CF,InterestPaidFinancingObligations,Cash paid for interest on financing obligations
 2328,AMZN,operating_expenses,2015-12-31,served_value,0001018724-16-000172,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,SalesRevenueNet",33122000000
 2328,AMZN,operating_expenses,2016-12-31,served_value,0001018724-17-000011,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",43536000000
 2328,AMZN,operating_expenses,2017-12-31,served_value,0001018724-18-000005,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",61826000000
@@ -175,7 +175,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2328,AMZN,operating_expenses,2021-12-31,served_value,0001018724-22-000005,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",172599000000
 2328,AMZN,operating_expenses,2022-12-31,served_value,0001018724-23-000004,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",212904000000
 2328,AMZN,operating_expenses,2023-12-31,served_value,0001018724-24-000008,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",233194000000
-2328,AMZN,share_buybacks,2015-12-31,review,0001018724-16-000172,H,5,EQ,TreasuryStockMember,Treasury Stock
+2328,AMZN,share_buybacks,2015-12-31,review,0001018724-16-000172,9,5,EQ,TreasuryStockMember,Treasury Stock
 2328,AMZN,share_buybacks,2016-12-31,served_value,0001018724-17-000011,,,,StockRepurchasedDuringPeriodValue,0
 2328,AMZN,share_buybacks,2017-12-31,served_value,0001018724-18-000005,,,,StockRepurchasedDuringPeriodValue,0
 2328,AMZN,share_buybacks,2018-12-31,served_value,0001018724-19-000004,,,,StockRepurchasedDuringPeriodValue,0
@@ -200,37 +200,37 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5050,META,amortization_of_intangibles,2021-12-31,note_fact,0001326801-22-000018,,,fact,AmortizationOfIntangibleAssets,
 5050,META,amortization_of_intangibles,2022-12-31,note_fact,0001326801-23-000013,,,fact,AmortizationOfIntangibleAssets,
 5050,META,amortization_of_intangibles,2023-12-31,note_fact,0001326801-24-000012,,,fact,AmortizationOfIntangibleAssets,
-5050,META,operating_expenses,2015-12-31,GAP,0001326801-16-000043,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2016-12-31,GAP,0001326801-17-000007,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2017-12-31,GAP,0001326801-18-000009,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2018-12-31,GAP,0001326801-19-000009,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2019-12-31,GAP,0001326801-20-000013,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2020-12-31,GAP,0001326801-21-000014,H,13,IS,SellingAndMarketingExpense,Marketing and sales
-5050,META,operating_expenses,2021-12-31,GAP,0001326801-22-000018,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2022-12-31,GAP,0001326801-23-000013,H,14,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,operating_expenses,2023-12-31,GAP,0001326801-24-000012,H,6,IS,GeneralAndAdministrativeExpense,General and administrative
-5050,META,share_buybacks,2015-12-31,review,0001326801-16-000043,H,14,BS,OutstandingSharesSubjectToRepurchase,"Common stock, outstanding shares subject to repurchase"
-5050,META,share_buybacks,2016-12-31,review,0001326801-17-000007,H,14,BS,OutstandingSharesSubjectToRepurchase,"Common stock, outstanding shares subject to repurchase"
-5116,AVGO,cash_paid_for_income_taxes,2015-11-01,GAP,0001441634-15-000089,H,48,CF,IncomeTaxesPaidNet,"Cash paid for income taxes, net of refunds"
-5116,AVGO,cash_paid_for_income_taxes,2016-10-30,GAP,0001649338-16-000151,H,53,CF,IncomeTaxesPaidNet,"Cash paid for income taxes, net of refunds"
-5116,AVGO,cash_paid_for_income_taxes,2017-10-29,GAP,0001649338-17-000158,H,52,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2018-11-04,GAP,0001730168-18-000084,H,47,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2019-11-03,GAP,0001730168-19-000144,H,47,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2020-11-01,GAP,0001730168-20-000226,H,46,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2022-10-30,GAP,0001730168-22-000118,H,43,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2023-10-29,GAP,0001730168-23-000096,H,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2024-11-03,GAP,0001730168-24-000139,H,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_income_taxes,2025-11-02,GAP,0001730168-25-000121,H,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
-5116,AVGO,cash_paid_for_interest,2015-11-01,GAP,0001441634-15-000089,H,47,CF,InterestPaid,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2016-10-30,GAP,0001649338-16-000151,H,52,CF,InterestPaid,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2017-10-29,GAP,0001649338-17-000158,H,51,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2018-11-04,GAP,0001730168-18-000084,H,46,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2019-11-03,GAP,0001730168-19-000144,H,46,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2020-11-01,GAP,0001730168-20-000226,H,45,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2022-10-30,GAP,0001730168-22-000118,H,42,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2023-10-29,GAP,0001730168-23-000096,H,40,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2024-11-03,GAP,0001730168-24-000139,H,40,CF,InterestPaidNet,Cash paid for interest
-5116,AVGO,cash_paid_for_interest,2025-11-02,GAP,0001730168-25-000121,H,40,CF,InterestPaidNet,Cash paid for interest
+5050,META,operating_expenses,2015-12-31,GAP,0001326801-16-000043,4,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2016-12-31,GAP,0001326801-17-000007,4,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2017-12-31,GAP,0001326801-18-000009,4,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2018-12-31,GAP,0001326801-19-000009,4,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2019-12-31,GAP,0001326801-20-000013,4,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2020-12-31,GAP,0001326801-21-000014,4,13,IS,SellingAndMarketingExpense,Marketing and sales
+5050,META,operating_expenses,2021-12-31,GAP,0001326801-22-000018,5,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2022-12-31,GAP,0001326801-23-000013,5,14,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,operating_expenses,2023-12-31,GAP,0001326801-24-000012,5,6,IS,GeneralAndAdministrativeExpense,General and administrative
+5050,META,share_buybacks,2015-12-31,review,0001326801-16-000043,3,14,BS,OutstandingSharesSubjectToRepurchase,"Common stock, outstanding shares subject to repurchase"
+5050,META,share_buybacks,2016-12-31,review,0001326801-17-000007,3,14,BS,OutstandingSharesSubjectToRepurchase,"Common stock, outstanding shares subject to repurchase"
+5116,AVGO,cash_paid_for_income_taxes,2015-11-01,GAP,0001441634-15-000089,6,48,CF,IncomeTaxesPaidNet,"Cash paid for income taxes, net of refunds"
+5116,AVGO,cash_paid_for_income_taxes,2016-10-30,GAP,0001649338-16-000151,6,53,CF,IncomeTaxesPaidNet,"Cash paid for income taxes, net of refunds"
+5116,AVGO,cash_paid_for_income_taxes,2017-10-29,GAP,0001649338-17-000158,6,52,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2018-11-04,GAP,0001730168-18-000084,6,47,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2019-11-03,GAP,0001730168-19-000144,6,47,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2020-11-01,GAP,0001730168-20-000226,6,46,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2022-10-30,GAP,0001730168-22-000118,7,43,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2023-10-29,GAP,0001730168-23-000096,7,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2024-11-03,GAP,0001730168-24-000139,7,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_income_taxes,2025-11-02,GAP,0001730168-25-000121,7,41,CF,IncomeTaxesPaidNet,Cash paid for income taxes
+5116,AVGO,cash_paid_for_interest,2015-11-01,GAP,0001441634-15-000089,6,47,CF,InterestPaid,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2016-10-30,GAP,0001649338-16-000151,6,52,CF,InterestPaid,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2017-10-29,GAP,0001649338-17-000158,6,51,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2018-11-04,GAP,0001730168-18-000084,6,46,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2019-11-03,GAP,0001730168-19-000144,6,46,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2020-11-01,GAP,0001730168-20-000226,6,45,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2022-10-30,GAP,0001730168-22-000118,7,42,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2023-10-29,GAP,0001730168-23-000096,7,40,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2024-11-03,GAP,0001730168-24-000139,7,40,CF,InterestPaidNet,Cash paid for interest
+5116,AVGO,cash_paid_for_interest,2025-11-02,GAP,0001730168-25-000121,7,40,CF,InterestPaidNet,Cash paid for interest
 5116,AVGO,cost_of_revenue,2018-11-04,served_value,0001730168-18-000084,,,,CostOfGoodsAndServicesSold,10115000000
 5116,AVGO,dividends_per_share,2018-11-04,served_value,0001730168-18-000084,,,,,0.7
 5116,AVGO,dividends_per_share,2019-11-03,served_value,0001730168-19-000144,,,,,1.06
@@ -239,21 +239,21 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5116,AVGO,dividends_per_share,2022-10-30,served_value,0001730168-22-000118,,,,,16.4
 5116,AVGO,dividends_per_share,2023-10-29,served_value,0001730168-23-000096,,,,,1.84
 5116,AVGO,dividends_per_share,2025-11-02,served_value,0001730168-25-000121,,,,,2.36
-5116,AVGO,income_before_tax,2015-11-01,GAP,0001441634-15-000089,H,18,IS,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,Income from continuing operations before income taxes
-5116,AVGO,interest_expense,2025-11-02,GAP,0001730168-25-000121,H,21,IS,InterestExpenseNonoperating,Interest expense
+5116,AVGO,income_before_tax,2015-11-01,GAP,0001441634-15-000089,4,18,IS,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,Income from continuing operations before income taxes
+5116,AVGO,interest_expense,2025-11-02,GAP,0001730168-25-000121,5,21,IS,InterestExpenseNonoperating,Interest expense
 5116,AVGO,revenue,2018-11-04,served_value,0001730168-18-000084,,,,Revenues,20848000000
-5116,AVGO,share_buybacks,2015-11-01,GAP,0001441634-15-000089,H,40,CF,PaymentsForRepurchaseOfCommonStock,Repurchase of ordinary shares
+5116,AVGO,share_buybacks,2015-11-01,GAP,0001441634-15-000089,6,40,CF,PaymentsForRepurchaseOfCommonStock,Repurchase of ordinary shares
 5116,AVGO,share_buybacks,2016-10-30,served_value,0001649338-16-000151,,,,PaymentsForRepurchaseOfCommonStock,0
 5116,AVGO,share_buybacks,2017-10-29,served_value,0001649338-17-000158,,,,PaymentsForRepurchaseOfCommonStock,0
 5116,AVGO,share_buybacks,2020-11-01,served_value,0001730168-20-000226,,,,PaymentsForRepurchaseOfCommonStock,0
 5116,AVGO,stockholders_equity,2018-11-04,served_value,0001730168-18-000084,,,,StockholdersEquity,26657000000
-5116,AVGO,weighted_basic_shares,2025-11-02,GAP,0001730168-25-000121,H,34,IS,WeightedAverageNumberOfSharesOutstandingBasic,Basic
-5116,AVGO,weighted_diluted_shares,2025-11-02,GAP,0001730168-25-000121,H,35,IS,WeightedAverageNumberOfDilutedSharesOutstanding,Diluted
+5116,AVGO,weighted_basic_shares,2025-11-02,GAP,0001730168-25-000121,5,34,IS,WeightedAverageNumberOfSharesOutstandingBasic,Basic
+5116,AVGO,weighted_diluted_shares,2025-11-02,GAP,0001730168-25-000121,5,35,IS,WeightedAverageNumberOfDilutedSharesOutstanding,Diluted
 4945,TSLA,amortization_of_intangibles,2019-12-31,note_fact,0001564590-20-004475,,,fact,AmortizationOfIntangibleAssets,
 4945,TSLA,amortization_of_intangibles,2020-12-31,note_fact,0001564590-21-004599,,,fact,AmortizationOfIntangibleAssets,
 4945,TSLA,amortization_of_intangibles,2021-12-31,note_fact,0000950170-22-000796,,,fact,AmortizationOfIntangibleAssets,
-4945,TSLA,cf_inventory_change,2015-12-31,review,0001564590-16-013195,H,7,CF,InventoryWriteDown,Inventory write-downs
-4945,TSLA,cf_inventory_change,2016-12-31,review,0001564590-17-003118,H,7,CF,InventoryWriteDown,Inventory write-downs
+4945,TSLA,cf_inventory_change,2015-12-31,review,0001564590-16-013195,8,7,CF,InventoryWriteDown,Inventory write-downs
+4945,TSLA,cf_inventory_change,2016-12-31,review,0001564590-17-003118,8,7,CF,InventoryWriteDown,Inventory write-downs
 4945,TSLA,depreciation_and_amortization,2018-12-31,note_fact,0001564590-19-003165,,,fact,Depreciation,
 4945,TSLA,depreciation_and_amortization,2019-12-31,note_fact,0001564590-20-004475,,,fact,AmortizationOfIntangibleAssets,
 4945,TSLA,depreciation_and_amortization,2020-12-31,note_fact,0001564590-21-004599,,,fact,AmortizationOfIntangibleAssets,
@@ -261,8 +261,8 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 4945,TSLA,depreciation_and_amortization,2022-12-31,note_fact,0000950170-23-001409,,,fact,Depreciation,
 4945,TSLA,depreciation_and_amortization,2023-12-31,note_fact,0001628280-24-002390,,,fact,Depreciation,
 4945,TSLA,net_income,2016-12-31,served_value,0001564590-17-003118,,,,NetIncomeLossAvailableToCommonStockholdersBasic,-674914000
-4945,TSLA,net_income,2017-12-31,GAP,0001564590-18-002956,H,1,CI,NetIncomeLoss,Net loss attributable to common stockholders
-4945,TSLA,share_buybacks,2015-12-31,review,0001564590-16-013195,H,20,EQ,StockIssuedDuringPeriodSharesStockOptionsExercised,"Issuance of common stock upon exercise of stock options, net of repurchases, shares"
+4945,TSLA,net_income,2017-12-31,GAP,0001564590-18-002956,5,1,CI,NetIncomeLoss,Net loss attributable to common stockholders
+4945,TSLA,share_buybacks,2015-12-31,review,0001564590-16-013195,6,20,EQ,StockIssuedDuringPeriodSharesStockOptionsExercised,"Issuance of common stock upon exercise of stock options, net of repurchases, shares"
 666,LLY,amortization_of_intangibles,2015-12-31,served_value,0000059478-16-000321,,,,,631800000
 666,LLY,amortization_of_intangibles,2016-12-31,note_fact,0000059478-17-000098,,,fact,AmortizationOfIntangibleAssets,
 666,LLY,amortization_of_intangibles,2017-12-31,note_fact,0000059478-18-000089,,,fact,AmortizationOfIntangibleAssets,
@@ -293,15 +293,15 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 666,LLY,dividends_per_share,2015-12-31,note_fact,0000059478-16-000321,,,fact,CommonStockDividendsPerShareCashPaid,
 666,LLY,dividends_per_share,2016-12-31,served_value,0000059478-17-000098,,,,,2.05
 666,LLY,dividends_per_share,2017-12-31,served_value,0000059478-18-000089,,,,,2.12
-666,LLY,operating_expenses,2015-12-31,GAP,0000059478-16-000321,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-666,LLY,operating_expenses,2016-12-31,GAP,0000059478-17-000098,H,6,IS,ResearchAndDevelopmentExpense,Research and development
-666,LLY,operating_expenses,2017-12-31,GAP,0000059478-18-000089,H,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
-666,LLY,operating_expenses,2018-12-31,GAP,0000059478-19-000082,H,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
-666,LLY,operating_expenses,2019-12-31,GAP,0000059478-20-000057,H,4,IS,ResearchAndDevelopmentExpense,Research and development
-666,LLY,operating_expenses,2020-12-31,GAP,0000059478-21-000083,H,5,IS,SellingGeneralAndAdministrativeExpense,"Marketing, selling, and administrative"
-666,LLY,operating_expenses,2021-12-31,GAP,0000059478-22-000068,H,4,IS,ResearchAndDevelopmentExpense,Research and development
-666,LLY,operating_expenses,2022-12-31,GAP,0000059478-23-000082,H,4,IS,ResearchAndDevelopmentExpense,Research and development
-666,LLY,operating_expenses,2023-12-31,GAP,0000059478-24-000065,H,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
+666,LLY,operating_expenses,2015-12-31,GAP,0000059478-16-000321,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+666,LLY,operating_expenses,2016-12-31,GAP,0000059478-17-000098,2,6,IS,ResearchAndDevelopmentExpense,Research and development
+666,LLY,operating_expenses,2017-12-31,GAP,0000059478-18-000089,2,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
+666,LLY,operating_expenses,2018-12-31,GAP,0000059478-19-000082,2,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
+666,LLY,operating_expenses,2019-12-31,GAP,0000059478-20-000057,2,4,IS,ResearchAndDevelopmentExpense,Research and development
+666,LLY,operating_expenses,2020-12-31,GAP,0000059478-21-000083,2,5,IS,SellingGeneralAndAdministrativeExpense,"Marketing, selling, and administrative"
+666,LLY,operating_expenses,2021-12-31,GAP,0000059478-22-000068,3,4,IS,ResearchAndDevelopmentExpense,Research and development
+666,LLY,operating_expenses,2022-12-31,GAP,0000059478-23-000082,3,4,IS,ResearchAndDevelopmentExpense,Research and development
+666,LLY,operating_expenses,2023-12-31,GAP,0000059478-24-000065,3,7,IS,RestructuringSettlementAndImpairmentProvisions,"Asset impairment, restructuring, and other special charges (Note 5)"
 666,LLY,total_liabilities,2015-12-31,served_value,0000059478-16-000321,,,,"Assets,MinorityInterest,StockholdersEquity",21016600000
 666,LLY,total_liabilities,2016-12-31,served_value,0000059478-17-000098,,,,"Assets,MinorityInterest,StockholdersEquity",24871000000
 666,LLY,total_liabilities,2017-12-31,served_value,0000059478-18-000089,,,,"Assets,MinorityInterest,StockholdersEquity",33464500000
@@ -324,28 +324,28 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1321,MU,capex,2026-09-03,served_value,0000723125-26-000023,,,,,30712000000
 1321,MU,cash_flow_financing,2026-09-03,served_value,0000723125-26-000023,,,,NetCashProvidedByUsedInFinancingActivities,630000000
 1321,MU,cash_flow_investing,2026-09-03,served_value,0000723125-26-000023,,,,NetCashProvidedByUsedInInvestingActivities,-61641000000
-1321,MU,cash_paid_for_income_taxes,2015-09-03,GAP,0000723125-15-000112,H,47,CF,IncomeTaxesPaidNet,"Income taxes refunded (paid), net"
-1321,MU,cash_paid_for_income_taxes,2016-09-01,GAP,0000723125-16-000269,H,46,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2018-08-30,GAP,0000723125-18-000092,H,41,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2019-08-29,GAP,0000723125-19-000094,H,39,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2020-09-03,GAP,0000723125-20-000082,H,37,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2021-09-02,GAP,0000723125-21-000065,H,37,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2022-09-01,GAP,0000723125-22-000048,H,38,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2024-08-29,GAP,0000723125-24-000027,H,36,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2025-08-28,GAP,0000723125-25-000028,H,35,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_income_taxes,2026-09-03,GAP,0000723125-26-000023,H,36,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
-1321,MU,cash_paid_for_interest,2015-09-03,GAP,0000723125-15-000112,H,48,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2016-09-01,GAP,0000723125-16-000269,H,47,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2018-08-30,GAP,0000723125-18-000092,H,42,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2019-08-29,GAP,0000723125-19-000094,H,40,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2020-09-03,GAP,0000723125-20-000082,H,38,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2021-09-02,GAP,0000723125-21-000065,H,38,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2022-09-01,GAP,0000723125-22-000048,H,39,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2024-08-29,GAP,0000723125-24-000027,H,37,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2025-08-28,GAP,0000723125-25-000028,H,36,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cash_paid_for_interest,2026-09-03,GAP,0000723125-26-000023,H,37,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
-1321,MU,cf_ap_change,2015-09-03,review,0000723125-15-000112,H,18,CF,IncreaseDecreaseInOtherAccountsPayableAndAccruedLiabilities,Accounts payable and accrued expenses
-1321,MU,cf_ar_change,2026-09-03,GAP,0000723125-26-000023,H,7,CF,IncreaseDecreaseInReceivables,Receivables
+1321,MU,cash_paid_for_income_taxes,2015-09-03,GAP,0000723125-15-000112,7,47,CF,IncomeTaxesPaidNet,"Income taxes refunded (paid), net"
+1321,MU,cash_paid_for_income_taxes,2016-09-01,GAP,0000723125-16-000269,7,46,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2018-08-30,GAP,0000723125-18-000092,7,41,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2019-08-29,GAP,0000723125-19-000094,7,39,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2020-09-03,GAP,0000723125-20-000082,7,37,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2021-09-02,GAP,0000723125-21-000065,7,37,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2022-09-01,GAP,0000723125-22-000048,8,38,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2024-08-29,GAP,0000723125-24-000027,8,36,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2025-08-28,GAP,0000723125-25-000028,8,35,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_income_taxes,2026-09-03,GAP,0000723125-26-000023,7,36,CF,IncomeTaxesPaidNet,"Income taxes paid, net"
+1321,MU,cash_paid_for_interest,2015-09-03,GAP,0000723125-15-000112,7,48,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2016-09-01,GAP,0000723125-16-000269,7,47,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2018-08-30,GAP,0000723125-18-000092,7,42,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2019-08-29,GAP,0000723125-19-000094,7,40,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2020-09-03,GAP,0000723125-20-000082,7,38,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2021-09-02,GAP,0000723125-21-000065,7,38,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2022-09-01,GAP,0000723125-22-000048,8,39,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2024-08-29,GAP,0000723125-24-000027,8,37,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2025-08-28,GAP,0000723125-25-000028,8,36,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cash_paid_for_interest,2026-09-03,GAP,0000723125-26-000023,7,37,CF,InterestPaidNet,"Interest paid, net of amounts capitalized"
+1321,MU,cf_ap_change,2015-09-03,review,0000723125-15-000112,7,18,CF,IncreaseDecreaseInOtherAccountsPayableAndAccruedLiabilities,Accounts payable and accrued expenses
+1321,MU,cf_ar_change,2026-09-03,GAP,0000723125-26-000023,7,7,CF,IncreaseDecreaseInReceivables,Receivables
 1321,MU,cf_inventory_change,2026-09-03,served_value,0000723125-26-000023,,,,,2017000000
 1321,MU,cfo,2026-09-03,served_value,0000723125-26-000023,,,,NetCashProvidedByUsedInOperatingActivities,89675000000
 1321,MU,cost_of_revenue,2026-09-03,served_value,0000723125-26-000023,,,,,25684000000
@@ -363,13 +363,13 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1321,MU,gross_profit,2026-09-03,served_value,0000723125-26-000023,,,,,107504000000
 1321,MU,income_before_tax,2026-09-03,served_value,0000723125-26-000023,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,99671000000
 1321,MU,income_tax_expense,2026-09-03,served_value,0000723125-26-000023,,,,IncomeTaxExpenseBenefit,14761000000
-1321,MU,interest_expense,2024-08-29,GAP,0000723125-24-000027,H,10,IS,InterestExpenseNonoperating,Interest expense
-1321,MU,interest_expense,2026-09-03,GAP,0000723125-26-000023,H,9,IS,InterestExpenseNonoperating,Interest expense
-1321,MU,interest_income,2026-09-03,GAP,0000723125-26-000023,H,8,IS,InvestmentIncomeNet,Interest income
+1321,MU,interest_expense,2024-08-29,GAP,0000723125-24-000027,3,10,IS,InterestExpenseNonoperating,Interest expense
+1321,MU,interest_expense,2026-09-03,GAP,0000723125-26-000023,3,9,IS,InterestExpenseNonoperating,Interest expense
+1321,MU,interest_income,2026-09-03,GAP,0000723125-26-000023,3,8,IS,InvestmentIncomeNet,Interest income
 1321,MU,net_income,2026-09-03,served_value,0000723125-26-000023,,,,,84969000000
 1321,MU,operating_expenses,2026-09-03,served_value,0000723125-26-000023,,,,"GrossProfit,OperatingIncomeLoss",8164000000
 1321,MU,operating_income,2026-09-03,served_value,0000723125-26-000023,,,,,99340000000
-1321,MU,other_income_expense_net,2026-09-03,GAP,0000723125-26-000023,H,10,IS,OtherNonoperatingIncomeExpense,"Other non-operating income (expense), net"
+1321,MU,other_income_expense_net,2026-09-03,GAP,0000723125-26-000023,3,10,IS,OtherNonoperatingIncomeExpense,"Other non-operating income (expense), net"
 1321,MU,research_and_development,2026-09-03,served_value,0000723125-26-000023,,,,,5650000000
 1321,MU,revenue,2018-08-30,served_value,0000723125-18-000092,,,,Revenues,30391000000
 1321,MU,revenue,2026-09-03,served_value,0000723125-26-000023,,,,,133188000000
@@ -379,8 +379,8 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1321,MU,share_buybacks,2020-09-03,served_value,0000723125-20-000082,,,,PaymentsForRepurchaseOfCommonStock,176000000
 1321,MU,share_buybacks,2025-08-28,served_value,0000723125-25-000028,,,,PaymentsForRepurchaseOfCommonStock,0
 1321,MU,share_buybacks,2026-09-03,served_value,0000723125-26-000023,,,,PaymentsForRepurchaseOfCommonStock,650000000
-1321,MU,weighted_basic_shares,2026-09-03,GAP,0000723125-26-000023,H,21,IS,WeightedAverageNumberOfSharesOutstandingBasic,Basic (in shares)
-1321,MU,weighted_diluted_shares,2026-09-03,GAP,0000723125-26-000023,H,22,IS,WeightedAverageNumberOfDilutedSharesOutstanding,Diluted (in shares)
+1321,MU,weighted_basic_shares,2026-09-03,GAP,0000723125-26-000023,3,21,IS,WeightedAverageNumberOfSharesOutstandingBasic,Basic (in shares)
+1321,MU,weighted_diluted_shares,2026-09-03,GAP,0000723125-26-000023,3,22,IS,WeightedAverageNumberOfDilutedSharesOutstanding,Diluted (in shares)
 1134,WMT,operating_expenses,2015-01-31,served_value,0000104169-15-000011,,,,"CostOfRevenue,OperatingIncomeLoss,Revenues",93418000000
 1134,WMT,operating_expenses,2016-01-31,served_value,0000104169-16-000079,,,,"CostOfRevenue,OperatingIncomeLoss,Revenues",97041000000
 1134,WMT,operating_expenses,2017-01-31,served_value,0000104169-17-000021,,,,"CostOfRevenue,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",97297000000
@@ -417,28 +417,28 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1134,WMT,total_liabilities,2024-01-31,served_value,0000104169-24-000056,,,,"Assets,MinorityInterest,RedeemableNoncontrollingInterestEquityCarryingAmount,StockholdersEquity",175248000000
 1,JPM,amortization_of_intangibles,2022-12-31,served_value,0000019617-23-000231,,,,,145000000
 1,JPM,amortization_of_intangibles,2023-12-31,served_value,0000019617-24-000225,,,,,315000000
-1,JPM,cf_ap_change,2015-12-31,review,0000019617-16-000902,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2016-12-31,review,0000019617-17-000314,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2017-12-31,review,0000019617-18-000057,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2018-12-31,review,0000019617-19-000054,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2019-12-31,review,0000019617-20-000257,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2020-12-31,review,0000019617-21-000236,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2021-12-31,review,0000019617-22-000272,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2022-12-31,review,0000019617-23-000231,H,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2023-12-31,review,0000019617-24-000225,H,17,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2024-12-31,review,0000019617-25-000270,H,18,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ap_change,2025-12-31,review,0001628280-26-008131,H,18,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
-1,JPM,cf_ar_change,2015-12-31,review,0000019617-16-000902,H,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2016-12-31,review,0000019617-17-000314,H,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2017-12-31,review,0000019617-18-000057,H,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2018-12-31,review,0000019617-19-000054,H,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2019-12-31,review,0000019617-20-000257,H,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2020-12-31,review,0000019617-21-000236,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2021-12-31,review,0000019617-22-000272,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2022-12-31,review,0000019617-23-000231,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2023-12-31,review,0000019617-24-000225,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2024-12-31,review,0000019617-25-000270,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
-1,JPM,cf_ar_change,2025-12-31,review,0001628280-26-008131,H,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ap_change,2015-12-31,review,0000019617-16-000902,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2016-12-31,review,0000019617-17-000314,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2017-12-31,review,0000019617-18-000057,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2018-12-31,review,0000019617-19-000054,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2019-12-31,review,0000019617-20-000257,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2020-12-31,review,0000019617-21-000236,8,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2021-12-31,review,0000019617-22-000272,9,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2022-12-31,review,0000019617-23-000231,9,16,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2023-12-31,review,0000019617-24-000225,9,17,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2024-12-31,review,0000019617-25-000270,9,18,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ap_change,2025-12-31,review,0001628280-26-008131,9,18,CF,IncreaseDecreaseInAccountsPayableAndOtherLiabilities,Accounts payable and other liabilities
+1,JPM,cf_ar_change,2015-12-31,review,0000019617-16-000902,4,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2016-12-31,review,0000019617-17-000314,4,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2017-12-31,review,0000019617-18-000057,4,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2018-12-31,review,0000019617-19-000054,4,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2019-12-31,review,0000019617-20-000257,4,16,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2020-12-31,review,0000019617-21-000236,4,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2021-12-31,review,0000019617-22-000272,5,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2022-12-31,review,0000019617-23-000231,5,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2023-12-31,review,0000019617-24-000225,5,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2024-12-31,review,0000019617-25-000270,5,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
+1,JPM,cf_ar_change,2025-12-31,review,0001628280-26-008131,5,18,BS,AccruedInterestAndAccountsReceivable,Accrued interest and accounts receivable
 1,JPM,goodwill,2017-12-31,served_value,0000019617-18-000057,,,,,47507000000
 1,JPM,goodwill,2018-12-31,served_value,0000019617-19-000054,,,,,47471000000
 1,JPM,goodwill,2019-12-31,served_value,0000019617-20-000257,,,,,47823000000
@@ -446,17 +446,17 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1,JPM,goodwill,2021-12-31,served_value,0000019617-22-000272,,,,,50315000000
 1,JPM,goodwill,2022-12-31,served_value,0000019617-23-000231,,,,,51662000000
 1,JPM,goodwill,2023-12-31,served_value,0000019617-24-000225,,,,,52634000000
-1,JPM,operating_expenses,2015-12-31,GAP,0000019617-16-000902,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2016-12-31,GAP,0000019617-17-000314,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2017-12-31,GAP,0000019617-18-000057,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2018-12-31,GAP,0000019617-19-000054,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2019-12-31,GAP,0000019617-20-000257,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2020-12-31,GAP,0000019617-21-000236,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2021-12-31,GAP,0000019617-22-000272,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2022-12-31,GAP,0000019617-23-000231,H,23,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2023-12-31,GAP,0000019617-24-000225,H,24,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2024-12-31,GAP,0000019617-25-000270,H,24,IS,NoninterestExpense,Total noninterest expense
-1,JPM,operating_expenses,2025-12-31,GAP,0001628280-26-008131,H,24,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2015-12-31,GAP,0000019617-16-000902,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2016-12-31,GAP,0000019617-17-000314,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2017-12-31,GAP,0000019617-18-000057,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2018-12-31,GAP,0000019617-19-000054,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2019-12-31,GAP,0000019617-20-000257,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2020-12-31,GAP,0000019617-21-000236,2,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2021-12-31,GAP,0000019617-22-000272,3,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2022-12-31,GAP,0000019617-23-000231,3,23,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2023-12-31,GAP,0000019617-24-000225,3,24,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2024-12-31,GAP,0000019617-25-000270,3,24,IS,NoninterestExpense,Total noninterest expense
+1,JPM,operating_expenses,2025-12-31,GAP,0001628280-26-008131,3,24,IS,NoninterestExpense,Total noninterest expense
 1,JPM,other_income_expense_net,2015-12-31,served_value,0000019617-16-000902,,,,,43510000000
 1,JPM,other_income_expense_net,2016-12-31,served_value,0000019617-17-000314,,,,,46083000000
 1,JPM,other_income_expense_net,2017-12-31,served_value,0000019617-18-000057,,,,,50097000000
@@ -466,7 +466,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1,JPM,other_income_expense_net,2021-12-31,served_value,0000019617-22-000272,,,,,52311000000
 1,JPM,other_income_expense_net,2022-12-31,served_value,0000019617-23-000231,,,,,66710000000
 1,JPM,other_income_expense_net,2023-12-31,served_value,0000019617-24-000225,,,,,89267000000
-1,JPM,ppe_net,2023-12-31,review,0000019617-24-000225,H,19,BS,PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,Premises and equipment
+1,JPM,ppe_net,2023-12-31,review,0000019617-24-000225,5,19,BS,PropertyPlantAndEquipmentAndOperatingLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,Premises and equipment
 1,JPM,sbc,2015-12-31,served_value,0000019617-16-000902,,,,,1987000000
 1,JPM,sbc,2016-12-31,served_value,0000019617-17-000314,,,,,1940000000
 1,JPM,sbc,2017-12-31,served_value,0000019617-18-000057,,,,,2070000000
@@ -488,30 +488,30 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1,JPM,shares_outstanding,2022-12-31,served_value,0000019617-23-000231,,,,,2934200000
 1,JPM,shares_outstanding,2023-12-31,served_value,0000019617-24-000225,,,,,2876600000
 85,AMD,amortization_of_intangibles,2017-12-30,served_value,0000002488-18-000042,,,,,0
-85,AMD,amortization_of_intangibles,2022-12-31,review,0000002488-23-000047,H,3,IS,AmortizationOfAcquisitionRelatedIntangibles,Amortization of acquisition-related intangibles
+85,AMD,amortization_of_intangibles,2022-12-31,review,0000002488-23-000047,3,3,IS,AmortizationOfAcquisitionRelatedIntangibles,Amortization of acquisition-related intangibles
 85,AMD,amortization_of_intangibles,2023-12-30,served_value,0000002488-24-000012,,,,,2800000000
 85,AMD,amortization_of_intangibles,2024-12-28,served_value,0000002488-25-000012,,,,,2400000000
-85,AMD,cash_paid_for_income_taxes,2015-12-26,GAP,0000002488-16-000111,H,41,CF,IncomeTaxesPaidNet,Cash paid during the year for income taxes
-85,AMD,cash_paid_for_income_taxes,2017-12-30,GAP,0000002488-18-000042,H,43,CF,IncomeTaxesPaidNet,Income taxes
-85,AMD,cash_paid_for_income_taxes,2018-12-29,GAP,0000002488-19-000011,H,44,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
-85,AMD,cash_paid_for_income_taxes,2019-12-28,GAP,0000002488-20-000008,H,41,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
-85,AMD,cash_paid_for_income_taxes,2020-12-26,GAP,0001628280-21-001185,H,43,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
-85,AMD,cash_paid_for_income_taxes,2021-12-25,GAP,0000002488-22-000016,H,44,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
-85,AMD,cash_paid_for_interest,2015-12-26,GAP,0000002488-16-000111,H,40,CF,InterestPaidNet,Cash paid during the year for interest
-85,AMD,cash_paid_for_interest,2017-12-30,GAP,0000002488-18-000042,H,42,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2018-12-29,GAP,0000002488-19-000011,H,43,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2019-12-28,GAP,0000002488-20-000008,H,40,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2020-12-26,GAP,0001628280-21-001185,H,42,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2021-12-25,GAP,0000002488-22-000016,H,43,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2023-12-30,GAP,0000002488-24-000012,H,44,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2024-12-28,GAP,0000002488-25-000012,H,45,CF,InterestPaidNet,Interest
-85,AMD,cash_paid_for_interest,2025-12-27,GAP,0000002488-26-000018,H,50,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_income_taxes,2015-12-26,GAP,0000002488-16-000111,8,41,CF,IncomeTaxesPaidNet,Cash paid during the year for income taxes
+85,AMD,cash_paid_for_income_taxes,2017-12-30,GAP,0000002488-18-000042,9,43,CF,IncomeTaxesPaidNet,Income taxes
+85,AMD,cash_paid_for_income_taxes,2018-12-29,GAP,0000002488-19-000011,9,44,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
+85,AMD,cash_paid_for_income_taxes,2019-12-28,GAP,0000002488-20-000008,7,41,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
+85,AMD,cash_paid_for_income_taxes,2020-12-26,GAP,0001628280-21-001185,7,43,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
+85,AMD,cash_paid_for_income_taxes,2021-12-25,GAP,0000002488-22-000016,8,44,CF,IncomeTaxesPaidNet,"Income taxes, net of refund"
+85,AMD,cash_paid_for_interest,2015-12-26,GAP,0000002488-16-000111,8,40,CF,InterestPaidNet,Cash paid during the year for interest
+85,AMD,cash_paid_for_interest,2017-12-30,GAP,0000002488-18-000042,9,42,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2018-12-29,GAP,0000002488-19-000011,9,43,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2019-12-28,GAP,0000002488-20-000008,7,40,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2020-12-26,GAP,0001628280-21-001185,7,42,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2021-12-25,GAP,0000002488-22-000016,8,43,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2023-12-30,GAP,0000002488-24-000012,8,44,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2024-12-28,GAP,0000002488-25-000012,8,45,CF,InterestPaidNet,Interest
+85,AMD,cash_paid_for_interest,2025-12-27,GAP,0000002488-26-000018,8,50,CF,InterestPaidNet,Interest
 85,AMD,cf_ap_change,2020-12-26,served_value,0001628280-21-001185,,,,,-513000000
 85,AMD,depreciation_and_amortization,2020-12-26,served_value,0001628280-21-001185,,,,OtherDepreciationAndAmortization,312000000.0000
 85,AMD,depreciation_and_amortization,2021-12-25,served_value,0000002488-22-000016,,,,OtherDepreciationAndAmortization,407000000.0000
 85,AMD,depreciation_and_amortization,2022-12-31,served_value,0000002488-23-000047,,,,OtherDepreciationAndAmortization,4174000000.0000
-85,AMD,depreciation_and_amortization,2023-12-30,GAP,0000002488-24-000012,H,4,CF,OtherDepreciationAndAmortization,Depreciation and amortization
-85,AMD,depreciation_and_amortization,2024-12-28,GAP,0000002488-25-000012,H,5,CF,AdjustmentForAmortization,Amortization of operating lease right-of-use assets
+85,AMD,depreciation_and_amortization,2023-12-30,GAP,0000002488-24-000012,8,4,CF,OtherDepreciationAndAmortization,Depreciation and amortization
+85,AMD,depreciation_and_amortization,2024-12-28,GAP,0000002488-25-000012,8,5,CF,AdjustmentForAmortization,Amortization of operating lease right-of-use assets
 85,AMD,interest_income,2016-12-31,note_fact,0000002488-17-000043,,,fact,InterestIncomeExpenseNet,
 85,AMD,interest_income,2017-12-30,note_fact,0000002488-18-000042,,,fact,InterestIncomeExpenseNet,
 85,AMD,interest_income,2018-12-29,note_fact,0000002488-19-000011,,,fact,InterestIncomeExpenseNet,
@@ -531,10 +531,10 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 85,AMD,operating_expenses,2022-12-31,served_value,0000002488-23-000047,,,,"GrossProfit,OperatingIncomeLoss",9339000000
 85,AMD,operating_expenses,2023-12-30,served_value,0000002488-24-000012,,,,OperatingExpenses,10059000000
 85,AMD,operating_expenses,2024-12-28,served_value,0000002488-25-000012,,,,OperatingExpenses,10825000000
-85,AMD,share_buybacks,2015-12-26,review,0000002488-16-000111,H,20,EQ,TreasuryStockValueAcquiredCostMethod,Treasury stock acquired
-85,AMD,share_buybacks,2016-12-31,review,0000002488-17-000043,H,21,EQ,AdjustmentsToAdditionalPaidInCapitalEquityComponentOfConvertibleDebtSubsequentAdjustments,Adjustment to equity component of the 6.00% Notes resulting from debt buyback
-85,AMD,share_buybacks,2017-12-30,review,0000002488-18-000042,H,6,EQ,TreasuryStockMember,Treasury stock
-85,AMD,share_buybacks,2018-12-29,review,0000002488-19-000011,H,10,EQ,TreasuryStockMember,Treasury stock
+85,AMD,share_buybacks,2015-12-26,review,0000002488-16-000111,7,20,EQ,TreasuryStockValueAcquiredCostMethod,Treasury stock acquired
+85,AMD,share_buybacks,2016-12-31,review,0000002488-17-000043,7,21,EQ,AdjustmentsToAdditionalPaidInCapitalEquityComponentOfConvertibleDebtSubsequentAdjustments,Adjustment to equity component of the 6.00% Notes resulting from debt buyback
+85,AMD,share_buybacks,2017-12-30,review,0000002488-18-000042,7,6,EQ,TreasuryStockMember,Treasury stock
+85,AMD,share_buybacks,2018-12-29,review,0000002488-19-000011,7,10,EQ,TreasuryStockMember,Treasury stock
 85,AMD,share_buybacks,2019-12-28,served_value,0000002488-20-000008,,,,,0
 85,AMD,share_buybacks,2020-12-26,served_value,0001628280-21-001185,,,,,0
 85,AMD,total_liabilities,2015-12-26,served_value,0000002488-16-000111,,,,"Assets,StockholdersEquity",3496000000
@@ -548,24 +548,24 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 85,AMD,total_liabilities,2023-12-30,served_value,0000002488-24-000012,,,,"Assets,StockholdersEquity",11993000000
 85,AMD,total_liabilities,2024-12-28,served_value,0000002488-25-000012,,,,"Assets,StockholdersEquity",11658000000
 85,AMD,total_liabilities,2025-12-27,served_value,0000002488-26-000018,,,,"Assets,StockholdersEquity",13927000000
-5351,XOM,operating_expenses,2015-12-31,GAP,0000034088-16-000065,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2016-12-31,GAP,0000034088-17-000017,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2017-12-31,GAP,0000034088-18-000015,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2018-12-31,GAP,0000034088-19-000010,H,3,IS,IncomeLossFromEquityMethodInvestments,Income from equity affiliates
-5351,XOM,operating_expenses,2019-12-31,GAP,0000034088-20-000016,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2020-12-31,GAP,0000034088-21-000012,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2021-12-31,GAP,0000034088-22-000011,H,3,IS,IncomeLossFromEquityMethodInvestments,Income from equity affiliates
-5351,XOM,operating_expenses,2022-12-31,GAP,0000034088-23-000020,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,operating_expenses,2023-12-31,GAP,0000034088-24-000018,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-5351,XOM,shares_outstanding,2015-12-31,GAP,0000034088-16-000065,H,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2016-12-31,GAP,0000034088-17-000017,H,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2017-12-31,GAP,0000034088-18-000015,H,34,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2018-12-31,GAP,0000034088-19-000010,H,35,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2019-12-31,GAP,0000034088-20-000016,H,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2020-12-31,GAP,0000034088-21-000012,H,32,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2021-12-31,GAP,0000034088-22-000011,H,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2022-12-31,GAP,0000034088-23-000020,H,33,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
-5351,XOM,shares_outstanding,2023-12-31,GAP,0000034088-24-000018,H,15,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,operating_expenses,2015-12-31,GAP,0000034088-16-000065,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2016-12-31,GAP,0000034088-17-000017,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2017-12-31,GAP,0000034088-18-000015,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2018-12-31,GAP,0000034088-19-000010,2,3,IS,IncomeLossFromEquityMethodInvestments,Income from equity affiliates
+5351,XOM,operating_expenses,2019-12-31,GAP,0000034088-20-000016,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2020-12-31,GAP,0000034088-21-000012,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2021-12-31,GAP,0000034088-22-000011,2,3,IS,IncomeLossFromEquityMethodInvestments,Income from equity affiliates
+5351,XOM,operating_expenses,2022-12-31,GAP,0000034088-23-000020,3,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,operating_expenses,2023-12-31,GAP,0000034088-24-000018,3,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+5351,XOM,shares_outstanding,2015-12-31,GAP,0000034088-16-000065,8,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2016-12-31,GAP,0000034088-17-000017,8,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2017-12-31,GAP,0000034088-18-000015,8,34,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2018-12-31,GAP,0000034088-19-000010,7,35,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2019-12-31,GAP,0000034088-20-000016,7,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2020-12-31,GAP,0000034088-21-000012,7,32,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2021-12-31,GAP,0000034088-22-000011,7,14,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2022-12-31,GAP,0000034088-23-000020,8,33,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
+5351,XOM,shares_outstanding,2023-12-31,GAP,0000034088-24-000018,9,15,EQ,CommonStockSharesOutstanding,Balance (in shares) - outstanding
 5718,V,amortization_of_intangibles,2015-09-30,served_value,0001403161-15-000013,,,,,63000000
 5718,V,amortization_of_intangibles,2016-09-30,served_value,0001403161-16-000058,,,,,50000000
 5718,V,amortization_of_intangibles,2017-09-30,served_value,0001403161-17-000044,,,,,56000000
@@ -579,24 +579,24 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5718,V,dividends_per_share,2017-09-30,served_value,0001403161-17-000044,,,,,0.165
 5718,V,dividends_per_share,2018-09-30,note_fact,0001403161-18-000055,,,fact,CommonStockDividendsPerShareCashPaid,
 5718,V,dividends_per_share,2019-09-30,served_value,0001403161-19-000050,,,,,0.25
-5718,V,operating_expenses,2015-09-30,GAP,0001403161-15-000013,H,21,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2016-09-30,GAP,0001403161-16-000058,H,21,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2017-09-30,GAP,0001403161-17-000044,H,21,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2018-09-30,GAP,0001403161-18-000055,H,21,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2019-09-30,GAP,0001403161-19-000050,H,15,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2020-09-30,GAP,0001403161-20-000070,H,15,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2021-09-30,GAP,0001403161-21-000060,H,15,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2022-09-30,GAP,0001403161-22-000081,H,15,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,operating_expenses,2023-09-30,GAP,0001403161-23-000099,H,15,IS,GeneralAndAdministrativeExpense,General and administrative
-5718,V,shares_outstanding,2015-09-30,GAP,0001403161-15-000013,H,15,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
-5718,V,shares_outstanding,2016-09-30,GAP,0001403161-16-000058,H,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
-5718,V,shares_outstanding,2017-09-30,GAP,0001403161-17-000044,H,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
-5718,V,shares_outstanding,2018-09-30,GAP,0001403161-18-000055,H,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
-5718,V,shares_outstanding,2019-09-30,GAP,0001403161-19-000050,H,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
-5718,V,shares_outstanding,2020-09-30,GAP,0001403161-20-000070,H,19,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
-5718,V,shares_outstanding,2021-09-30,GAP,0001403161-21-000060,H,19,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
-5718,V,shares_outstanding,2022-09-30,GAP,0001403161-22-000081,H,19,EQ,CommonStockSharesOutstanding,Beginning Balance (in shares)
-5718,V,shares_outstanding,2023-09-30,GAP,0001403161-23-000099,H,20,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
+5718,V,operating_expenses,2015-09-30,GAP,0001403161-15-000013,4,21,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2016-09-30,GAP,0001403161-16-000058,4,21,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2017-09-30,GAP,0001403161-17-000044,4,21,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2018-09-30,GAP,0001403161-18-000055,4,21,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2019-09-30,GAP,0001403161-19-000050,4,15,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2020-09-30,GAP,0001403161-20-000070,4,15,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2021-09-30,GAP,0001403161-21-000060,4,15,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2022-09-30,GAP,0001403161-22-000081,5,15,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,operating_expenses,2023-09-30,GAP,0001403161-23-000099,5,15,IS,GeneralAndAdministrativeExpense,General and administrative
+5718,V,shares_outstanding,2015-09-30,GAP,0001403161-15-000013,3,15,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
+5718,V,shares_outstanding,2016-09-30,GAP,0001403161-16-000058,3,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
+5718,V,shares_outstanding,2017-09-30,GAP,0001403161-17-000044,3,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
+5718,V,shares_outstanding,2018-09-30,GAP,0001403161-18-000055,3,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding"
+5718,V,shares_outstanding,2019-09-30,GAP,0001403161-19-000050,3,21,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
+5718,V,shares_outstanding,2020-09-30,GAP,0001403161-20-000070,3,19,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
+5718,V,shares_outstanding,2021-09-30,GAP,0001403161-21-000060,3,19,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
+5718,V,shares_outstanding,2022-09-30,GAP,0001403161-22-000081,7,19,EQ,CommonStockSharesOutstanding,Beginning Balance (in shares)
+5718,V,shares_outstanding,2023-09-30,GAP,0001403161-23-000099,4,20,BS,CommonStockSharesOutstanding,"Common stock, shares, outstanding (in shares)"
 1164,JNJ,amortization_of_intangibles,2016-01-03,served_value,0000200406-16-000071,,,,,1200000000
 1164,JNJ,amortization_of_intangibles,2017-01-01,served_value,0000200406-17-000006,,,,,1200000000
 1164,JNJ,amortization_of_intangibles,2017-12-31,served_value,0000200406-18-000005,,,,,3000000000
@@ -608,37 +608,37 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1164,JNJ,amortization_of_intangibles,2023-12-31,served_value,0000200406-24-000013,,,,,4500000000
 1164,JNJ,amortization_of_intangibles,2024-12-29,served_value,0000200406-25-000038,,,,,4500000000
 1164,JNJ,amortization_of_intangibles,2025-12-28,served_value,0000200406-26-000016,,,,,4600000000
-1164,JNJ,cash_paid_for_income_taxes,2016-01-03,GAP,0000200406-16-000071,H,44,CF,IncomeTaxesPaid,Income taxes paid
-1164,JNJ,cash_paid_for_income_taxes,2017-01-01,GAP,0000200406-17-000006,H,43,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2018-12-30,GAP,0000200406-19-000009,H,43,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2019-12-29,GAP,0000200406-20-000010,H,44,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2021-01-03,GAP,0000200406-21-000008,H,46,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2022-01-02,GAP,0000200406-22-000022,H,46,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2023-01-01,GAP,0000200406-23-000016,H,46,CF,IncomeTaxesPaid,Income taxes
-1164,JNJ,cash_paid_for_income_taxes,2024-12-29,GAP,0000200406-25-000038,H,56,CF,IncomeTaxesPaid,"Income taxes, inclusive of discontinued operations"
-1164,JNJ,cash_paid_for_income_taxes,2025-12-28,GAP,0000200406-26-000016,H,56,CF,IncomeTaxesPaid,"Income taxes, inclusive of discontinued operations"
-1164,JNJ,cash_paid_for_interest,2016-01-03,GAP,0000200406-16-000071,H,43,CF,InterestPaidNet,"Interest paid, net of amount capitalized"
-1164,JNJ,cash_paid_for_interest,2017-01-01,GAP,0000200406-17-000006,H,42,CF,InterestPaidNet,"Interest, net of amount capitalized"
-1164,JNJ,cash_paid_for_interest,2018-12-30,GAP,0000200406-19-000009,H,41,CF,InterestPaid,Interest
-1164,JNJ,cash_paid_for_interest,2019-12-29,GAP,0000200406-20-000010,H,42,CF,InterestPaid,Interest
-1164,JNJ,cash_paid_for_interest,2021-01-03,GAP,0000200406-21-000008,H,45,CF,InterestPaidNet,"Interest, net of amount capitalized"
-1164,JNJ,cash_paid_for_interest,2022-01-02,GAP,0000200406-22-000022,H,44,CF,InterestPaid,Interest
-1164,JNJ,cash_paid_for_interest,2023-01-01,GAP,0000200406-23-000016,H,44,CF,InterestPaid,Interest
-1164,JNJ,cash_paid_for_interest,2024-12-29,GAP,0000200406-25-000038,H,54,CF,InterestPaid,Interest
-1164,JNJ,cash_paid_for_interest,2025-12-28,GAP,0000200406-26-000016,H,54,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_income_taxes,2016-01-03,GAP,0000200406-16-000071,8,44,CF,IncomeTaxesPaid,Income taxes paid
+1164,JNJ,cash_paid_for_income_taxes,2017-01-01,GAP,0000200406-17-000006,8,43,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2018-12-30,GAP,0000200406-19-000009,9,43,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2019-12-29,GAP,0000200406-20-000010,9,44,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2021-01-03,GAP,0000200406-21-000008,9,46,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2022-01-02,GAP,0000200406-22-000022,10,46,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2023-01-01,GAP,0000200406-23-000016,10,46,CF,IncomeTaxesPaid,Income taxes
+1164,JNJ,cash_paid_for_income_taxes,2024-12-29,GAP,0000200406-25-000038,10,56,CF,IncomeTaxesPaid,"Income taxes, inclusive of discontinued operations"
+1164,JNJ,cash_paid_for_income_taxes,2025-12-28,GAP,0000200406-26-000016,10,56,CF,IncomeTaxesPaid,"Income taxes, inclusive of discontinued operations"
+1164,JNJ,cash_paid_for_interest,2016-01-03,GAP,0000200406-16-000071,8,43,CF,InterestPaidNet,"Interest paid, net of amount capitalized"
+1164,JNJ,cash_paid_for_interest,2017-01-01,GAP,0000200406-17-000006,8,42,CF,InterestPaidNet,"Interest, net of amount capitalized"
+1164,JNJ,cash_paid_for_interest,2018-12-30,GAP,0000200406-19-000009,9,41,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_interest,2019-12-29,GAP,0000200406-20-000010,9,42,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_interest,2021-01-03,GAP,0000200406-21-000008,9,45,CF,InterestPaidNet,"Interest, net of amount capitalized"
+1164,JNJ,cash_paid_for_interest,2022-01-02,GAP,0000200406-22-000022,10,44,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_interest,2023-01-01,GAP,0000200406-23-000016,10,44,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_interest,2024-12-29,GAP,0000200406-25-000038,10,54,CF,InterestPaid,Interest
+1164,JNJ,cash_paid_for_interest,2025-12-28,GAP,0000200406-26-000016,10,54,CF,InterestPaid,Interest
 1164,JNJ,cost_of_revenue,2018-12-30,served_value,0000200406-19-000009,,,,CostOfGoodsSold,27091000000
 1164,JNJ,dividends_per_share,2018-12-30,served_value,0000200406-19-000009,,,,,3.54
-1164,JNJ,operating_expenses,2016-01-03,GAP,0000200406-16-000071,H,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, marketing and administrative expenses"
-1164,JNJ,operating_expenses,2017-01-01,GAP,0000200406-17-000006,H,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, marketing and administrative expenses"
-1164,JNJ,operating_expenses,2017-12-31,GAP,0000200406-18-000005,H,10,IS,RestructuringCharges,Restructuring (Note 22)
-1164,JNJ,operating_expenses,2018-12-30,GAP,0000200406-19-000009,H,10,IS,RestructuringCharges,Restructuring (Note 22)
-1164,JNJ,operating_expenses,2019-12-29,GAP,0000200406-20-000010,H,10,IS,RestructuringCharges,Restructuring (Note 22)
-1164,JNJ,operating_expenses,2021-01-03,GAP,0000200406-21-000008,H,10,IS,RestructuringCharges,Restructuring (Note 20)
-1164,JNJ,operating_expenses,2022-01-02,GAP,0000200406-22-000022,H,10,IS,RestructuringCharges,Restructuring (Note 20)
-1164,JNJ,operating_expenses,2023-01-01,GAP,0000200406-23-000016,H,10,IS,RestructuringCharges,Restructuring (Note 20)
-1164,JNJ,operating_expenses,2023-12-31,GAP,0000200406-24-000013,H,7,CF,ResearchAndDevelopmentExpense,Charge for purchase of in-process research and development assets
-1164,JNJ,operating_expenses,2024-12-29,GAP,0000200406-25-000038,H,7,CF,ResearchAndDevelopmentExpense,Charges for acquired in-process research and development assets
-1164,JNJ,operating_expenses,2025-12-28,GAP,0000200406-26-000016,H,7,CF,ResearchAndDevelopmentExpense,Charges for acquired in-process research and development
+1164,JNJ,operating_expenses,2016-01-03,GAP,0000200406-16-000071,4,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, marketing and administrative expenses"
+1164,JNJ,operating_expenses,2017-01-01,GAP,0000200406-17-000006,4,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, marketing and administrative expenses"
+1164,JNJ,operating_expenses,2017-12-31,GAP,0000200406-18-000005,4,10,IS,RestructuringCharges,Restructuring (Note 22)
+1164,JNJ,operating_expenses,2018-12-30,GAP,0000200406-19-000009,4,10,IS,RestructuringCharges,Restructuring (Note 22)
+1164,JNJ,operating_expenses,2019-12-29,GAP,0000200406-20-000010,4,10,IS,RestructuringCharges,Restructuring (Note 22)
+1164,JNJ,operating_expenses,2021-01-03,GAP,0000200406-21-000008,4,10,IS,RestructuringCharges,Restructuring (Note 20)
+1164,JNJ,operating_expenses,2022-01-02,GAP,0000200406-22-000022,5,10,IS,RestructuringCharges,Restructuring (Note 20)
+1164,JNJ,operating_expenses,2023-01-01,GAP,0000200406-23-000016,5,10,IS,RestructuringCharges,Restructuring (Note 20)
+1164,JNJ,operating_expenses,2023-12-31,GAP,0000200406-24-000013,10,7,CF,ResearchAndDevelopmentExpense,Charge for purchase of in-process research and development assets
+1164,JNJ,operating_expenses,2024-12-29,GAP,0000200406-25-000038,10,7,CF,ResearchAndDevelopmentExpense,Charges for acquired in-process research and development assets
+1164,JNJ,operating_expenses,2025-12-28,GAP,0000200406-26-000016,10,7,CF,ResearchAndDevelopmentExpense,Charges for acquired in-process research and development
 3932,MA,amortization_of_intangibles,2015-12-31,note_fact,0001141391-16-000085,,,fact,AmortizationOfIntangibleAssets,
 3932,MA,amortization_of_intangibles,2016-12-31,note_fact,0001141391-17-000014,,,fact,AmortizationOfIntangibleAssets,
 3932,MA,amortization_of_intangibles,2017-12-31,note_fact,0001141391-18-000009,,,fact,AmortizationOfIntangibleAssets,
@@ -668,9 +668,9 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 3932,MA,cash_paid_for_interest,2023-12-31,note_fact,0001141391-24-000022,,,fact,InterestPaidNet,
 3932,MA,cash_paid_for_interest,2024-12-31,note_fact,0001141391-25-000011,,,fact,InterestPaidNet,
 3932,MA,dividends_per_share,2019-12-31,note_fact,0001141391-20-000032,,,fact,CommonStockDividendsPerShareDeclared,
-2848,ABBV,accounts_receivable,2015-12-31,review,0001047469-16-010239,H,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts and other receivables, net"
-2848,ABBV,accounts_receivable,2016-12-31,review,0001551152-17-000004,H,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts receivable, net"
-2848,ABBV,accounts_receivable,2017-12-31,review,0001551152-18-000014,H,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts receivable, net"
+2848,ABBV,accounts_receivable,2015-12-31,review,0001047469-16-010239,6,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts and other receivables, net"
+2848,ABBV,accounts_receivable,2016-12-31,review,0001551152-17-000004,5,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts receivable, net"
+2848,ABBV,accounts_receivable,2017-12-31,review,0001551152-18-000014,5,5,BS,AccountsAndOtherReceivablesNetCurrent,"Accounts receivable, net"
 2848,ABBV,dividends_per_share,2018-12-31,note_fact,0001551152-19-000008,,,fact,CommonStockDividendsPerShareCashPaid,
 2848,ABBV,dividends_per_share,2019-12-31,note_fact,0001551152-20-000007,,,fact,CommonStockDividendsPerShareDeclared,
 2848,ABBV,dividends_per_share,2020-12-31,note_fact,0001551152-21-000008,,,fact,CommonStockDividendsPerShareDeclared,
@@ -686,29 +686,29 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 2848,ABBV,gross_profit,2021-12-31,note_fact,0001551152-22-000007,,,fact,GrossProfit,
 2848,ABBV,gross_profit,2022-12-31,note_fact,0001551152-23-000011,,,fact,GrossProfit,
 2848,ABBV,gross_profit,2023-12-31,note_fact,0001551152-24-000011,,,fact,GrossProfit,
-2848,ABBV,operating_expenses,2015-12-31,GAP,0001047469-16-010239,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2848,ABBV,operating_expenses,2016-12-31,GAP,0001551152-17-000004,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2848,ABBV,operating_expenses,2017-12-31,GAP,0001551152-18-000014,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2848,ABBV,operating_expenses,2018-12-31,GAP,0001551152-19-000008,H,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-2848,ABBV,operating_expenses,2019-12-31,GAP,0001551152-20-000007,H,6,IS,OtherOperatingIncomeExpenseNet,Other operating expense (income)
-2848,ABBV,operating_expenses,2020-12-31,GAP,0001551152-21-000008,H,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-2848,ABBV,operating_expenses,2021-12-31,GAP,0001551152-22-000007,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2848,ABBV,operating_expenses,2022-12-31,GAP,0001551152-23-000011,H,6,IS,OtherOperatingIncomeExpenseNet,"Other operating expense, net"
-2848,ABBV,operating_expenses,2023-12-31,GAP,0001551152-24-000011,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2848,ABBV,total_liabilities,2015-12-31,review,0001047469-16-010239,H,33,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2016-12-31,review,0001551152-17-000004,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2017-12-31,review,0001551152-18-000014,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2018-12-31,review,0001551152-19-000008,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2019-12-31,review,0001551152-20-000007,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2020-12-31,review,0001551152-21-000008,H,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2021-12-31,review,0001551152-22-000007,H,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2022-12-31,review,0001551152-23-000011,H,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
-2848,ABBV,total_liabilities,2023-12-31,review,0001551152-24-000011,H,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,operating_expenses,2015-12-31,GAP,0001047469-16-010239,9,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2848,ABBV,operating_expenses,2016-12-31,GAP,0001551152-17-000004,8,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2848,ABBV,operating_expenses,2017-12-31,GAP,0001551152-18-000014,8,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2848,ABBV,operating_expenses,2018-12-31,GAP,0001551152-19-000008,2,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+2848,ABBV,operating_expenses,2019-12-31,GAP,0001551152-20-000007,2,6,IS,OtherOperatingIncomeExpenseNet,Other operating expense (income)
+2848,ABBV,operating_expenses,2020-12-31,GAP,0001551152-21-000008,2,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+2848,ABBV,operating_expenses,2021-12-31,GAP,0001551152-22-000007,9,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2848,ABBV,operating_expenses,2022-12-31,GAP,0001551152-23-000011,3,6,IS,OtherOperatingIncomeExpenseNet,"Other operating expense, net"
+2848,ABBV,operating_expenses,2023-12-31,GAP,0001551152-24-000011,9,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2848,ABBV,total_liabilities,2015-12-31,review,0001047469-16-010239,6,33,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2016-12-31,review,0001551152-17-000004,5,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2017-12-31,review,0001551152-18-000014,5,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2018-12-31,review,0001551152-19-000008,5,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2019-12-31,review,0001551152-20-000007,5,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2020-12-31,review,0001551152-21-000008,5,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2021-12-31,review,0001551152-22-000007,6,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2022-12-31,review,0001551152-23-000011,6,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
+2848,ABBV,total_liabilities,2023-12-31,review,0001551152-24-000011,6,34,BS,LiabilitiesAndStockholdersEquity,Total liabilities and equity
 643,INTC,cash_and_equivalents,2019-12-28,served_value,0000050863-20-000011,,,,,4194000000
 643,INTC,cash_and_equivalents,2020-12-26,served_value,0000050863-21-000010,,,,,5865000000
 643,INTC,cash_and_equivalents,2021-12-25,served_value,0000050863-22-000007,,,,,4827000000
 643,INTC,cash_paid_for_income_taxes,2025-12-27,note_fact,0000050863-26-000011,,,fact,IncomeTaxesPaidNet,
-643,INTC,dividends_per_share,2015-12-26,GAP,0000050863-16-000105,H,6,EQ,CommonStockDividendsPerShareDeclared,Cash dividends declared per common share (in dollars per share)
+643,INTC,dividends_per_share,2015-12-26,GAP,0000050863-16-000105,8,6,EQ,CommonStockDividendsPerShareDeclared,Cash dividends declared per common share (in dollars per share)
 643,INTC,interest_expense,2015-12-26,served_value,0000050863-16-000105,,,,InterestExpense,337000000
 643,INTC,interest_income,2015-12-26,served_value,0000050863-16-000105,,,,,124000000
 643,INTC,other_income_expense_net,2015-12-26,served_value,0000050863-16-000105,,,,,-105000000
@@ -745,15 +745,15 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1086,CVX,cash_paid_for_interest,2023-12-31,note_fact,0000093410-24-000013,,,fact,InterestPaidNet,
 1086,CVX,cash_paid_for_interest,2024-12-31,note_fact,0000093410-25-000009,,,fact,InterestPaidNet,
 1086,CVX,cash_paid_for_interest,2025-12-31,note_fact,0000093410-26-000078,,,fact,InterestPaidNet,
-1086,CVX,cf_ar_change,2015-12-31,review,0000093410-16-000049,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,(Increase) decrease in long-term receivables
-1086,CVX,cf_ar_change,2016-12-31,review,0000093410-17-000013,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,(Increase) in long-term receivables
-1086,CVX,cf_ar_change,2017-12-31,review,0000093410-18-000010,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Increase in long-term receivables
-1086,CVX,cf_ar_change,2018-12-31,review,0000093410-19-000008,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
-1086,CVX,cf_ar_change,2019-12-31,review,0000093410-20-000010,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
-1086,CVX,cf_ar_change,2020-12-31,review,0000093410-21-000009,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
-1086,CVX,cf_ar_change,2021-12-31,review,0000093410-22-000019,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
-1086,CVX,cf_ar_change,2022-12-31,review,0000093410-23-000009,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
-1086,CVX,cf_ar_change,2023-12-31,review,0000093410-24-000013,H,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2015-12-31,review,0000093410-16-000049,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,(Increase) decrease in long-term receivables
+1086,CVX,cf_ar_change,2016-12-31,review,0000093410-17-000013,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,(Increase) in long-term receivables
+1086,CVX,cf_ar_change,2017-12-31,review,0000093410-18-000010,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Increase in long-term receivables
+1086,CVX,cf_ar_change,2018-12-31,review,0000093410-19-000008,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2019-12-31,review,0000093410-20-000010,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2020-12-31,review,0000093410-21-000009,6,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2021-12-31,review,0000093410-22-000019,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2022-12-31,review,0000093410-23-000009,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
+1086,CVX,cf_ar_change,2023-12-31,review,0000093410-24-000013,7,11,CF,IncreaseDecreaseInLongTermReceivablesCurrent,Decrease (increase) in long-term receivables
 1086,CVX,cf_inventory_change,2015-12-31,served_value,0000093410-16-000049,,,,,-85000000
 1086,CVX,cf_inventory_change,2016-12-31,served_value,0000093410-17-000013,,,,,-603000000
 1086,CVX,cf_inventory_change,2017-12-31,served_value,0000093410-18-000010,,,,,267000000
@@ -768,20 +768,20 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1086,CVX,dividends_per_share,2019-12-31,served_value,0000093410-20-000010,,,,,4.76
 1086,CVX,dividends_per_share,2020-12-31,served_value,0000093410-21-000009,,,,,5.16
 1086,CVX,interest_expense,2015-12-31,served_value,0000093410-16-000049,,,,InterestExpenseDebt,0
-1086,CVX,operating_expenses,2015-12-31,GAP,0000093410-16-000049,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2016-12-31,GAP,0000093410-17-000013,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2017-12-31,GAP,0000093410-18-000010,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2018-12-31,GAP,0000093410-19-000008,H,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2019-12-31,GAP,0000093410-20-000010,H,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2020-12-31,GAP,0000093410-21-000009,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2021-12-31,GAP,0000093410-22-000019,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2022-12-31,GAP,0000093410-23-000009,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,operating_expenses,2023-12-31,GAP,0000093410-24-000013,H,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1086,CVX,other_income_expense_net,2015-12-31,review,0000093410-16-000049,H,5,IS,Revenues,Total Revenues and Other Income
+1086,CVX,operating_expenses,2015-12-31,GAP,0000093410-16-000049,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2016-12-31,GAP,0000093410-17-000013,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2017-12-31,GAP,0000093410-18-000010,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2018-12-31,GAP,0000093410-19-000008,2,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2019-12-31,GAP,0000093410-20-000010,2,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2020-12-31,GAP,0000093410-21-000009,2,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2021-12-31,GAP,0000093410-22-000019,3,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2022-12-31,GAP,0000093410-23-000009,3,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,operating_expenses,2023-12-31,GAP,0000093410-24-000013,3,9,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1086,CVX,other_income_expense_net,2015-12-31,review,0000093410-16-000049,2,5,IS,Revenues,Total Revenues and Other Income
 1086,CVX,ppe_net,2020-12-31,served_value,0000093410-21-000009,,,,PropertyPlantAndEquipmentNet,156618000000
 1086,CVX,ppe_net,2021-12-31,served_value,0000093410-22-000019,,,,PropertyPlantAndEquipmentNet,146961000000
 1086,CVX,ppe_net,2022-12-31,served_value,0000093410-23-000009,,,,PropertyPlantAndEquipmentNet,143591000000
-1086,CVX,ppe_net,2023-12-31,GAP,0000093410-24-000013,H,16,BS,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,"Properties, plant and equipment, net"
+1086,CVX,ppe_net,2023-12-31,GAP,0000093410-24-000013,5,16,BS,PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,"Properties, plant and equipment, net"
 1086,CVX,research_and_development,2015-12-31,served_value,0000093410-16-000049,,,,,601000000
 1086,CVX,research_and_development,2016-12-31,served_value,0000093410-17-000013,,,,,476000000
 1086,CVX,research_and_development,2017-12-31,served_value,0000093410-18-000010,,,,,433000000
@@ -800,12 +800,12 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1086,CVX,share_buybacks,2021-12-31,served_value,0000093410-22-000019,,,,PaymentsForRepurchaseOfCommonStock,1383000000
 1086,CVX,share_buybacks,2022-12-31,served_value,0000093410-23-000009,,,,PaymentsForRepurchaseOfCommonStock,11255000000
 1086,CVX,share_buybacks,2023-12-31,served_value,0000093410-24-000013,,,,PaymentsForRepurchaseOfCommonStock,14939000000
-1086,CVX,shares_outstanding,2018-12-31,review,0000093410-19-000008,H,29,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
-1086,CVX,shares_outstanding,2019-12-31,review,0000093410-20-000010,H,29,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
-1086,CVX,shares_outstanding,2020-12-31,review,0000093410-21-000009,H,33,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
-1086,CVX,shares_outstanding,2021-12-31,review,0000093410-22-000019,H,28,EQ,SharesOutstanding,"Beginning balance, shares outstanding (in shares)"
-1086,CVX,shares_outstanding,2022-12-31,GAP,0000093410-23-000009,H,25,EQ,CommonStockSharesOutstanding,"Beginning balance, shares outstanding (in shares)"
-1086,CVX,shares_outstanding,2023-12-31,GAP,0000093410-24-000013,H,30,EQ,CommonStockSharesOutstanding,"Ending balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2018-12-31,review,0000093410-19-000008,8,29,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2019-12-31,review,0000093410-20-000010,8,29,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2020-12-31,review,0000093410-21-000009,7,33,EQ,SharesOutstanding,"Ending balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2021-12-31,review,0000093410-22-000019,8,28,EQ,SharesOutstanding,"Beginning balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2022-12-31,GAP,0000093410-23-000009,8,25,EQ,CommonStockSharesOutstanding,"Beginning balance, shares outstanding (in shares)"
+1086,CVX,shares_outstanding,2023-12-31,GAP,0000093410-24-000013,8,30,EQ,CommonStockSharesOutstanding,"Ending balance, shares outstanding (in shares)"
 1086,CVX,weighted_basic_shares,2015-12-31,note_fact,0000093410-16-000049,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
 1086,CVX,weighted_basic_shares,2016-12-31,note_fact,0000093410-17-000013,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
 1086,CVX,weighted_basic_shares,2017-12-31,note_fact,0000093410-18-000010,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
@@ -830,7 +830,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1086,CVX,weighted_diluted_shares,2025-12-31,note_fact,0000093410-26-000078,,,fact,WeightedAverageNumberOfDilutedSharesOutstanding,
 4969,PLTR,amortization_of_intangibles,2023-12-31,note_fact,0001321655-24-000022,,,fact,AmortizationOfIntangibleAssets,
 4969,PLTR,goodwill,2022-12-31,note_fact,0001321655-23-000011,,,fact,Goodwill,
-4969,PLTR,share_buybacks,2022-12-31,review,0001321655-23-000011,H,15,EQ,TreasuryStockCommonMember,Treasury Stock
+4969,PLTR,share_buybacks,2022-12-31,review,0001321655-23-000011,7,15,EQ,TreasuryStockCommonMember,Treasury Stock
 1857,COST,cash_flow_financing,2015-08-30,served_value,0000909832-15-000014,,,,NetCashProvidedByUsedInFinancingActivitiesContinuingOperations,-2324000000
 1857,COST,cash_flow_investing,2015-08-30,served_value,0000909832-15-000014,,,,NetCashProvidedByUsedInInvestingActivitiesContinuingOperations,-2480000000
 1857,COST,cfo,2015-08-30,served_value,0000909832-15-000014,,,,NetCashProvidedByUsedInOperatingActivitiesContinuingOperations,4285000000
@@ -849,17 +849,17 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1857,COST,goodwill,2026-08-30,note_fact,0000909832-26-000093,,,fact,Goodwill,
 1857,COST,gross_profit,2019-09-01,note_fact,0000909832-19-000019,,,fact,GrossProfit,
 1857,COST,income_before_tax,2024-09-01,served_value,0000909832-24-000049,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,9740000000
-1857,COST,operating_expenses,2015-08-30,GAP,0000909832-15-000014,H,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2016-08-28,GAP,0000909832-16-000032,H,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2017-09-03,GAP,0000909832-17-000014,H,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2018-09-02,GAP,0000909832-18-000013,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2019-09-01,GAP,0000909832-19-000019,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2020-08-30,GAP,0000909832-20-000017,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2021-08-29,GAP,0000909832-21-000014,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2022-08-28,GAP,0000909832-22-000021,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2023-09-03,GAP,0000909832-23-000042,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2024-09-01,GAP,0000909832-24-000049,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1857,COST,operating_expenses,2026-08-30,GAP,0000909832-26-000093,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2015-08-30,GAP,0000909832-15-000014,4,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2016-08-28,GAP,0000909832-16-000032,4,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2017-09-03,GAP,0000909832-17-000014,4,7,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2018-09-02,GAP,0000909832-18-000013,4,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2019-09-01,GAP,0000909832-19-000019,4,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2020-08-30,GAP,0000909832-20-000017,2,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2021-08-29,GAP,0000909832-21-000014,2,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2022-08-28,GAP,0000909832-22-000021,3,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2023-09-03,GAP,0000909832-23-000042,3,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2024-09-01,GAP,0000909832-24-000049,3,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1857,COST,operating_expenses,2026-08-30,GAP,0000909832-26-000093,3,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
 1857,COST,shares_outstanding,2018-09-02,served_value,0000909832-18-000013,,,,,438189000
 1649,CSCO,cash_flow_financing,2017-07-29,served_value,0000858877-17-000016,,,,NetCashProvidedByUsedInFinancingActivities,-3806000000
 1649,CSCO,cash_flow_investing,2017-07-29,served_value,0000858877-17-000016,,,,NetCashProvidedByUsedInInvestingActivities,-6036000000
@@ -908,10 +908,10 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 279,KO,cash_paid_for_interest,2023-12-31,note_fact,0000021344-24-000009,,,fact,InterestPaid,
 279,KO,cash_paid_for_interest,2024-12-31,note_fact,0000021344-25-000011,,,fact,InterestPaid,
 279,KO,cash_paid_for_interest,2025-12-31,note_fact,0001628280-26-010047,,,fact,InterestPaid,
-279,KO,cf_ap_change,2015-12-31,review,0000021344-16-000050,H,28,BS,LoansAndNotesPayable,Loans and notes payable
-279,KO,cf_ap_change,2016-12-31,review,0000021344-17-000009,H,28,BS,LoansAndNotesPayable,Loans and notes payable
-279,KO,cf_ap_change,2017-12-31,review,0000021344-18-000008,H,29,BS,LoansAndNotesPayable,Loans and notes payable
-279,KO,cf_ap_change,2023-12-31,review,0000021344-24-000009,H,26,CF,ProceedsFromIssuanceOfDebt,"Issuances of loans, notes payable and long-term debt"
+279,KO,cf_ap_change,2015-12-31,review,0000021344-16-000050,4,28,BS,LoansAndNotesPayable,Loans and notes payable
+279,KO,cf_ap_change,2016-12-31,review,0000021344-17-000009,4,28,BS,LoansAndNotesPayable,Loans and notes payable
+279,KO,cf_ap_change,2017-12-31,review,0000021344-18-000008,5,29,BS,LoansAndNotesPayable,Loans and notes payable
+279,KO,cf_ap_change,2023-12-31,review,0000021344-24-000009,7,26,CF,ProceedsFromIssuanceOfDebt,"Issuances of loans, notes payable and long-term debt"
 279,KO,cf_ar_change,2015-12-31,served_value,0000021344-16-000050,,,,,212000000
 279,KO,cf_ar_change,2016-12-31,served_value,0000021344-17-000009,,,,,28000000
 279,KO,cf_ar_change,2017-12-31,note_fact,0000021344-18-000008,,,fact,IncreaseDecreaseInAccountsReceivable,
@@ -931,15 +931,15 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 279,KO,cf_inventory_change,2022-12-31,served_value,0000021344-23-000011,,,,,960000000
 279,KO,cf_inventory_change,2023-12-31,served_value,0000021344-24-000009,,,,,597000000
 279,KO,dividends_per_share,2016-12-31,served_value,0000021344-17-000009,,,,,1.4
-279,KO,shares_outstanding,2015-12-31,GAP,0000021344-16-000050,H,14,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
-279,KO,shares_outstanding,2016-12-31,GAP,0000021344-17-000009,H,14,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
-279,KO,shares_outstanding,2017-12-31,GAP,0000021344-18-000008,H,17,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
-279,KO,shares_outstanding,2018-12-31,GAP,0000021344-19-000014,H,19,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
-279,KO,shares_outstanding,2019-12-31,GAP,0000021344-20-000006,H,22,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
-279,KO,shares_outstanding,2020-12-31,GAP,0000021344-21-000008,H,23,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
-279,KO,shares_outstanding,2021-12-31,GAP,0000021344-22-000009,H,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
-279,KO,shares_outstanding,2022-12-31,GAP,0000021344-23-000011,H,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
-279,KO,shares_outstanding,2023-12-31,GAP,0000021344-24-000009,H,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2015-12-31,GAP,0000021344-16-000050,7,14,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2016-12-31,GAP,0000021344-17-000009,7,14,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2017-12-31,GAP,0000021344-18-000008,8,17,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
+279,KO,shares_outstanding,2018-12-31,GAP,0000021344-19-000014,8,19,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2019-12-31,GAP,0000021344-20-000006,7,22,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
+279,KO,shares_outstanding,2020-12-31,GAP,0000021344-21-000008,7,23,EQ,CommonStockSharesOutstanding,Balance at end of year (in shares)
+279,KO,shares_outstanding,2021-12-31,GAP,0000021344-22-000009,8,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2022-12-31,GAP,0000021344-23-000011,8,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
+279,KO,shares_outstanding,2023-12-31,GAP,0000021344-24-000009,8,17,EQ,CommonStockSharesOutstanding,Balance at beginning of year (in shares)
 279,KO,total_liabilities,2015-12-31,served_value,0000021344-16-000050,,,,"Assets,MinorityInterest,StockholdersEquity",64652000000
 279,KO,total_liabilities,2016-12-31,served_value,0000021344-17-000009,,,,"Assets,MinorityInterest,StockholdersEquity",64366000000
 279,KO,total_liabilities,2017-12-31,served_value,0000021344-18-000008,,,,"Assets,MinorityInterest,StockholdersEquity",72729000000
@@ -978,12 +978,12 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5203,ORCL,operating_expenses,2016-05-31,served_value,0001193125-16-628942,,,,"GrossProfit,OperatingIncomeLoss",9806000000
 5203,ORCL,operating_expenses,2017-05-31,served_value,0001193125-17-214833,,,,"GrossProfit,OperatingIncomeLoss",10104000000
 5203,ORCL,operating_expenses,2018-05-31,served_value,0001193125-18-201034,,,,"GrossProfit,OperatingIncomeLoss",11023000000
-5203,ORCL,operating_expenses,2019-05-31,GAP,0001564590-19-023119,H,16,IS,RestructuringCharges,Restructuring
-5203,ORCL,operating_expenses,2020-05-31,GAP,0001564590-20-030125,H,13,IS,GeneralAndAdministrativeExpense,General and administrative
-5203,ORCL,operating_expenses,2021-05-31,GAP,0001564590-21-033616,H,11,IS,SellingAndMarketingExpense,Sales and marketing
-5203,ORCL,operating_expenses,2022-05-31,GAP,0001564590-22-023675,H,14,IS,AmortizationOfIntangibleAssets,Amortization of intangible assets
-5203,ORCL,operating_expenses,2023-05-31,GAP,0000950170-23-028914,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-5203,ORCL,operating_expenses,2024-05-31,GAP,0000950170-24-075605,H,13,IS,GeneralAndAdministrativeExpense,General and administrative
+5203,ORCL,operating_expenses,2019-05-31,GAP,0001564590-19-023119,4,16,IS,RestructuringCharges,Restructuring
+5203,ORCL,operating_expenses,2020-05-31,GAP,0001564590-20-030125,4,13,IS,GeneralAndAdministrativeExpense,General and administrative
+5203,ORCL,operating_expenses,2021-05-31,GAP,0001564590-21-033616,4,11,IS,SellingAndMarketingExpense,Sales and marketing
+5203,ORCL,operating_expenses,2022-05-31,GAP,0001564590-22-023675,4,14,IS,AmortizationOfIntangibleAssets,Amortization of intangible assets
+5203,ORCL,operating_expenses,2023-05-31,GAP,0000950170-23-028914,8,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+5203,ORCL,operating_expenses,2024-05-31,GAP,0000950170-24-075605,4,13,IS,GeneralAndAdministrativeExpense,General and administrative
 5203,ORCL,other_income_expense_net,2018-05-31,served_value,0001193125-18-201034,,,,,1237000000
 5203,ORCL,other_income_expense_net,2019-05-31,note_fact,0001564590-19-023119,,,fact,OtherNonoperatingIncomeExpense,
 5203,ORCL,other_income_expense_net,2020-05-31,note_fact,0001564590-20-030125,,,fact,OtherNonoperatingIncomeExpense,
@@ -1010,7 +1010,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1042,PG,amortization_of_intangibles,2021-06-30,served_value,0000080424-21-000100,,,,,318000000
 1042,PG,amortization_of_intangibles,2022-06-30,served_value,0000080424-22-000064,,,,,312000000
 1042,PG,amortization_of_intangibles,2023-06-30,served_value,0000080424-23-000073,,,,,327000000
-1042,PG,operating_expenses,2015-06-30,GAP,0000080424-15-000070,H,5,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expense"
+1042,PG,operating_expenses,2015-06-30,GAP,0000080424-15-000070,2,5,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expense"
 1042,PG,operating_expenses,2016-06-30,served_value,0000080424-16-000212,,,,"CostOfGoodsSold,OperatingIncomeLoss,SalesRevenueNet",19017000000
 1042,PG,operating_expenses,2017-06-30,served_value,0000080424-17-000047,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,Revenues",18654000000
 1042,PG,operating_expenses,2018-06-30,served_value,0000080424-18-000055,,,,"CostOfGoodsAndServicesSold,OperatingIncomeLoss,Revenues",19037000000
@@ -1028,16 +1028,16 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1042,PG,research_and_development,2021-06-30,served_value,0000080424-21-000100,,,,,1900000000
 1042,PG,research_and_development,2022-06-30,served_value,0000080424-22-000064,,,,,2000000000
 1042,PG,research_and_development,2023-06-30,served_value,0000080424-23-000073,,,,,2000000000
-1042,PG,shares_outstanding,2015-06-30,GAP,0000080424-15-000070,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2016-06-30,GAP,0000080424-16-000212,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2017-06-30,GAP,0000080424-17-000047,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2018-06-30,GAP,0000080424-18-000055,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2015-06-30,GAP,0000080424-15-000070,7,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2016-06-30,GAP,0000080424-16-000212,7,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2017-06-30,GAP,0000080424-17-000047,7,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2018-06-30,GAP,0000080424-18-000055,7,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
 1042,PG,shares_outstanding,2019-06-30,served_value,0000080424-19-000050,,,,,2502259668
-1042,PG,shares_outstanding,2020-06-30,GAP,0000080424-20-000059,H,15,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2021-06-30,GAP,0000080424-21-000100,H,17,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2022-06-30,GAP,0000080424-22-000064,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2023-06-30,GAP,0000080424-23-000073,H,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
-1042,PG,shares_outstanding,2024-06-30,GAP,0000080424-24-000083,H,14,EQ,CommonStockSharesOutstanding,Beginning balance (in shares)
+1042,PG,shares_outstanding,2020-06-30,GAP,0000080424-20-000059,7,15,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2021-06-30,GAP,0000080424-21-000100,5,17,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2022-06-30,GAP,0000080424-22-000064,6,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2023-06-30,GAP,0000080424-23-000073,6,14,EQ,CommonStockSharesOutstanding,BEGINNING BALANCE (in shares)
+1042,PG,shares_outstanding,2024-06-30,GAP,0000080424-24-000083,8,14,EQ,CommonStockSharesOutstanding,Beginning balance (in shares)
 1042,PG,stockholders_equity,2015-06-30,served_value,0000080424-15-000070,,,,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,63050000000
 1042,PG,stockholders_equity,2016-06-30,served_value,0000080424-16-000212,,,,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,57983000000
 1042,PG,stockholders_equity,2017-06-30,served_value,0000080424-17-000047,,,,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,55778000000
@@ -1137,28 +1137,28 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1182,MRK,cash_paid_for_interest,2021-12-31,note_fact,0000310158-22-000003,,,fact,InterestPaid,
 1182,MRK,cash_paid_for_interest,2022-12-31,note_fact,0001628280-23-005061,,,fact,InterestPaid,
 1182,MRK,cash_paid_for_interest,2023-12-31,note_fact,0001628280-24-006850,,,fact,InterestPaidNet,
-1182,MRK,depreciation_and_amortization,2020-12-31,GAP,0000310158-21-000004,H,5,CF,Depreciation,Depreciation
-1182,MRK,depreciation_and_amortization,2021-12-31,GAP,0000310158-22-000003,H,4,CF,AdjustmentForAmortization,Amortization
-1182,MRK,depreciation_and_amortization,2022-12-31,GAP,0001628280-23-005061,H,4,CF,AdjustmentForAmortization,Amortization
-1182,MRK,depreciation_and_amortization,2023-12-31,GAP,0001628280-24-006850,H,5,CF,Depreciation,Depreciation
-1182,MRK,operating_expenses,2015-12-31,GAP,0000310158-16-000063,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,operating_expenses,2016-12-31,GAP,0000310158-17-000010,H,12,CF,IncomeLossFromEquityMethodInvestments,Equity income from affiliates
-1182,MRK,operating_expenses,2017-12-31,GAP,0000310158-18-000005,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,operating_expenses,2018-12-31,GAP,0000310158-19-000014,H,6,IS,RestructuringCharges,Restructuring costs
-1182,MRK,operating_expenses,2019-12-31,GAP,0000310158-20-000005,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,operating_expenses,2020-12-31,GAP,0000310158-21-000004,H,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1182,MRK,operating_expenses,2021-12-31,GAP,0000310158-22-000003,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,operating_expenses,2022-12-31,GAP,0001628280-23-005061,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,operating_expenses,2023-12-31,GAP,0001628280-24-006850,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-1182,MRK,total_liabilities,2015-12-31,review,0000310158-16-000063,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2016-12-31,review,0000310158-17-000010,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2017-12-31,review,0000310158-18-000005,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2018-12-31,review,0000310158-19-000014,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2019-12-31,review,0000310158-20-000005,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2020-12-31,review,0000310158-21-000004,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2021-12-31,review,0000310158-22-000003,H,46,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2022-12-31,review,0001628280-23-005061,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
-1182,MRK,total_liabilities,2023-12-31,review,0001628280-24-006850,H,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,depreciation_and_amortization,2020-12-31,GAP,0000310158-21-000004,8,5,CF,Depreciation,Depreciation
+1182,MRK,depreciation_and_amortization,2021-12-31,GAP,0000310158-22-000003,9,4,CF,AdjustmentForAmortization,Amortization
+1182,MRK,depreciation_and_amortization,2022-12-31,GAP,0001628280-23-005061,9,4,CF,AdjustmentForAmortization,Amortization
+1182,MRK,depreciation_and_amortization,2023-12-31,GAP,0001628280-24-006850,9,5,CF,Depreciation,Depreciation
+1182,MRK,operating_expenses,2015-12-31,GAP,0000310158-16-000063,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,operating_expenses,2016-12-31,GAP,0000310158-17-000010,8,12,CF,IncomeLossFromEquityMethodInvestments,Equity income from affiliates
+1182,MRK,operating_expenses,2017-12-31,GAP,0000310158-18-000005,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,operating_expenses,2018-12-31,GAP,0000310158-19-000014,2,6,IS,RestructuringCharges,Restructuring costs
+1182,MRK,operating_expenses,2019-12-31,GAP,0000310158-20-000005,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,operating_expenses,2020-12-31,GAP,0000310158-21-000004,2,4,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1182,MRK,operating_expenses,2021-12-31,GAP,0000310158-22-000003,3,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,operating_expenses,2022-12-31,GAP,0001628280-23-005061,3,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,operating_expenses,2023-12-31,GAP,0001628280-24-006850,3,5,IS,ResearchAndDevelopmentExpense,Research and development
+1182,MRK,total_liabilities,2015-12-31,review,0000310158-16-000063,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2016-12-31,review,0000310158-17-000010,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2017-12-31,review,0000310158-18-000005,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2018-12-31,review,0000310158-19-000014,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2019-12-31,review,0000310158-20-000005,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2020-12-31,review,0000310158-21-000004,4,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2021-12-31,review,0000310158-22-000003,5,46,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2022-12-31,review,0001628280-23-005061,5,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
+1182,MRK,total_liabilities,2023-12-31,review,0001628280-24-006850,5,43,BS,LiabilitiesAndStockholdersEquity,Total Liabilities and Equity
 1182,MRK,weighted_basic_shares,2015-12-31,note_fact,0000310158-16-000063,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
 1182,MRK,weighted_basic_shares,2016-12-31,note_fact,0000310158-17-000010,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
 1182,MRK,weighted_basic_shares,2017-12-31,note_fact,0000310158-18-000005,,,fact,WeightedAverageNumberOfSharesOutstandingBasic,
@@ -1185,36 +1185,36 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 716,BAC,amortization_of_intangibles,2022-12-31,note_fact,0000070858-23-000092,,,fact,AmortizationOfIntangibleAssets,
 716,BAC,amortization_of_intangibles,2023-12-31,note_fact,0000070858-24-000122,,,fact,AmortizationOfIntangibleAssets,
 716,BAC,cash_paid_for_income_taxes,2025-12-31,note_fact,0000070858-26-000157,,,fact,IncomeTaxesPaidNet,
-716,BAC,depreciation_and_amortization,2015-12-31,GAP,0000070858-16-000137,H,34,IS,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,depreciation_and_amortization,2016-12-31,GAP,0000070858-17-000013,H,8,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,depreciation_and_amortization,2017-12-31,GAP,0000070858-18-000009,H,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,depreciation_and_amortization,2018-12-31,GAP,0000070858-19-000012,H,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,depreciation_and_amortization,2015-12-31,GAP,0000070858-16-000137,2,34,IS,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,depreciation_and_amortization,2016-12-31,GAP,0000070858-17-000013,7,8,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,depreciation_and_amortization,2017-12-31,GAP,0000070858-18-000009,7,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,depreciation_and_amortization,2018-12-31,GAP,0000070858-19-000012,7,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
 716,BAC,dividends_per_share,2018-12-31,note_fact,0000070858-19-000012,,,fact,CommonStockDividendsPerShareDeclared,
 716,BAC,dividends_per_share,2019-12-31,note_fact,0000070858-20-000011,,,fact,CommonStockDividendsPerShareCashPaid,
 716,BAC,dividends_per_share,2020-12-31,note_fact,0000070858-21-000023,,,fact,CommonStockDividendsPerShareCashPaid,
 716,BAC,dividends_per_share,2021-12-31,note_fact,0000070858-22-000062,,,fact,CommonStockDividendsPerShareCashPaid,
 716,BAC,dividends_per_share,2022-12-31,note_fact,0000070858-23-000092,,,fact,CommonStockDividendsPerShareCashPaid,
 716,BAC,dividends_per_share,2023-12-31,note_fact,0000070858-24-000122,,,fact,CommonStockDividendsPerShareCashPaid,
-716,BAC,operating_expenses,2015-12-31,GAP,0000070858-16-000137,H,34,IS,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,operating_expenses,2016-12-31,GAP,0000070858-17-000013,H,8,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,operating_expenses,2017-12-31,GAP,0000070858-18-000009,H,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,operating_expenses,2018-12-31,GAP,0000070858-19-000012,H,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
-716,BAC,operating_expenses,2019-12-31,GAP,0000070858-20-000011,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,operating_expenses,2020-12-31,GAP,0000070858-21-000023,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,operating_expenses,2021-12-31,GAP,0000070858-22-000062,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,operating_expenses,2022-12-31,GAP,0000070858-23-000092,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,operating_expenses,2023-12-31,GAP,0000070858-24-000122,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,operating_expenses,2024-12-31,GAP,0000070858-25-000139,H,19,IS,OtherCostAndExpenseOperating,Other general operating
-716,BAC,operating_expenses,2025-12-31,GAP,0000070858-26-000157,H,20,IS,NoninterestExpense,Total noninterest expense
-716,BAC,other_income_expense_net,2015-12-31,review,0000070858-16-000137,H,24,IS,NoninterestIncomeOtherOperatingIncome,Other income (loss)
-716,BAC,other_income_expense_net,2016-12-31,review,0000070858-17-000013,H,23,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2017-12-31,review,0000070858-18-000009,H,23,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2018-12-31,review,0000070858-19-000012,H,21,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2019-12-31,review,0000070858-20-000011,H,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2020-12-31,review,0000070858-21-000023,H,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2021-12-31,review,0000070858-22-000062,H,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2022-12-31,review,0000070858-23-000092,H,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
-716,BAC,other_income_expense_net,2023-12-31,review,0000070858-24-000122,H,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,operating_expenses,2015-12-31,GAP,0000070858-16-000137,2,34,IS,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,operating_expenses,2016-12-31,GAP,0000070858-17-000013,7,8,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,operating_expenses,2017-12-31,GAP,0000070858-18-000009,7,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,operating_expenses,2018-12-31,GAP,0000070858-19-000012,7,7,CF,AmortizationOfIntangibleAssets,Amortization of intangibles
+716,BAC,operating_expenses,2019-12-31,GAP,0000070858-20-000011,2,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,operating_expenses,2020-12-31,GAP,0000070858-21-000023,2,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,operating_expenses,2021-12-31,GAP,0000070858-22-000062,3,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,operating_expenses,2022-12-31,GAP,0000070858-23-000092,3,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,operating_expenses,2023-12-31,GAP,0000070858-24-000122,3,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,operating_expenses,2024-12-31,GAP,0000070858-25-000139,3,19,IS,OtherCostAndExpenseOperating,Other general operating
+716,BAC,operating_expenses,2025-12-31,GAP,0000070858-26-000157,3,20,IS,NoninterestExpense,Total noninterest expense
+716,BAC,other_income_expense_net,2015-12-31,review,0000070858-16-000137,2,24,IS,NoninterestIncomeOtherOperatingIncome,Other income (loss)
+716,BAC,other_income_expense_net,2016-12-31,review,0000070858-17-000013,2,23,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2017-12-31,review,0000070858-18-000009,2,23,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2018-12-31,review,0000070858-19-000012,2,21,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2019-12-31,review,0000070858-20-000011,2,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2020-12-31,review,0000070858-21-000023,2,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2021-12-31,review,0000070858-22-000062,3,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2022-12-31,review,0000070858-23-000092,3,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
+716,BAC,other_income_expense_net,2023-12-31,review,0000070858-24-000122,3,8,IS,NoninterestIncomeOtherOperatingIncome,Other income
 716,BAC,revenue,2019-12-31,note_fact,0000070858-20-000011,,,fact,Revenues,
 716,BAC,sbc,2015-12-31,note_fact,0000070858-16-000137,,,fact,AllocatedShareBasedCompensationExpense,
 251,CAT,amortization_of_intangibles,2015-12-31,note_fact,0000018230-16-000410,,,fact,AmortizationOfIntangibleAssets,
@@ -1226,9 +1226,9 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 251,CAT,amortization_of_intangibles,2021-12-31,note_fact,0000018230-22-000050,,,fact,AmortizationOfIntangibleAssets,
 251,CAT,amortization_of_intangibles,2022-12-31,note_fact,0000018230-23-000011,,,fact,AmortizationOfIntangibleAssets,
 251,CAT,amortization_of_intangibles,2023-12-31,note_fact,0000018230-24-000009,,,fact,AmortizationOfIntangibleAssets,
-251,CAT,cash_and_equivalents,2018-12-31,GAP,0000018230-19-000034,H,49,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
-251,CAT,cash_and_equivalents,2019-12-31,GAP,0000018230-20-000056,H,48,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
-251,CAT,cash_and_equivalents,2020-12-31,GAP,0000018230-21-000063,H,46,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
+251,CAT,cash_and_equivalents,2018-12-31,GAP,0000018230-19-000034,9,49,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
+251,CAT,cash_and_equivalents,2019-12-31,GAP,0000018230-20-000056,9,48,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
+251,CAT,cash_and_equivalents,2020-12-31,GAP,0000018230-21-000063,6,46,CF,CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,Cash and short- term investments and restricted cash at beginning of period
 251,CAT,cash_paid_for_income_taxes,2015-12-31,note_fact,0000018230-16-000410,,,fact,IncomeTaxesPaid,
 251,CAT,cash_paid_for_income_taxes,2016-12-31,note_fact,0000018230-17-000041,,,fact,IncomeTaxesPaid,
 251,CAT,cash_paid_for_income_taxes,2017-12-31,note_fact,0000018230-18-000042,,,fact,IncomeTaxesPaid,
@@ -1266,10 +1266,10 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 251,CAT,interest_income,2021-12-31,note_fact,0000018230-22-000050,,,fact,InvestmentIncomeNet,
 251,CAT,interest_income,2022-12-31,note_fact,0000018230-23-000011,,,fact,InvestmentIncomeNet,
 251,CAT,interest_income,2023-12-31,note_fact,0000018230-24-000009,,,fact,InvestmentIncomeNet,
-251,CAT,operating_expenses,2020-12-31,GAP,0000018230-21-000063,H,22,IS,IncomeLossFromEquityMethodInvestments,Equity in profit (loss) of unconsolidated affiliated companies
-251,CAT,operating_expenses,2021-12-31,GAP,0000018230-22-000050,H,13,IS,ResearchAndDevelopmentExpense,Research and development expenses
-251,CAT,operating_expenses,2022-12-31,GAP,0000018230-23-000011,H,13,CF,GoodwillImpairmentLoss,Goodwill impairment charge
-251,CAT,operating_expenses,2023-12-31,GAP,0000018230-24-000009,H,13,IS,ResearchAndDevelopmentExpense,Research and development expenses
+251,CAT,operating_expenses,2020-12-31,GAP,0000018230-21-000063,2,22,IS,IncomeLossFromEquityMethodInvestments,Equity in profit (loss) of unconsolidated affiliated companies
+251,CAT,operating_expenses,2021-12-31,GAP,0000018230-22-000050,3,13,IS,ResearchAndDevelopmentExpense,Research and development expenses
+251,CAT,operating_expenses,2022-12-31,GAP,0000018230-23-000011,7,13,CF,GoodwillImpairmentLoss,Goodwill impairment charge
+251,CAT,operating_expenses,2023-12-31,GAP,0000018230-24-000009,3,13,IS,ResearchAndDevelopmentExpense,Research and development expenses
 251,CAT,sbc,2015-12-31,note_fact,0000018230-16-000410,,,fact,AllocatedShareBasedCompensationExpense,
 251,CAT,sbc,2016-12-31,note_fact,0000018230-17-000041,,,fact,AllocatedShareBasedCompensationExpense,
 251,CAT,sbc,2017-12-31,note_fact,0000018230-18-000042,,,fact,AllocatedShareBasedCompensationExpense,
@@ -1288,15 +1288,15 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 251,CAT,shares_outstanding,2021-12-31,note_fact,0000018230-22-000050,,,fact,CommonStockSharesOutstanding,
 251,CAT,shares_outstanding,2022-12-31,note_fact,0000018230-23-000011,,,fact,CommonStockSharesOutstanding,
 251,CAT,shares_outstanding,2023-12-31,note_fact,0000018230-24-000009,,,fact,CommonStockSharesOutstanding,
-251,CAT,stockholders_equity,2015-12-31,GAP,0000018230-16-000410,H,49,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2016-12-31,GAP,0000018230-17-000041,H,50,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2017-12-31,GAP,0000018230-18-000042,H,47,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2018-12-31,GAP,0000018230-19-000034,H,17,EQ,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Balance
-251,CAT,stockholders_equity,2019-12-31,GAP,0000018230-20-000056,H,46,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2020-12-31,GAP,0000018230-21-000063,H,46,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2021-12-31,GAP,0000018230-22-000050,H,33,EQ,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Balance
-251,CAT,stockholders_equity,2022-12-31,GAP,0000018230-23-000011,H,47,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
-251,CAT,stockholders_equity,2023-12-31,GAP,0000018230-24-000009,H,49,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total shareholders equity
+251,CAT,stockholders_equity,2015-12-31,GAP,0000018230-16-000410,5,49,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2016-12-31,GAP,0000018230-17-000041,5,50,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2017-12-31,GAP,0000018230-18-000042,5,47,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2018-12-31,GAP,0000018230-19-000034,7,17,EQ,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Balance
+251,CAT,stockholders_equity,2019-12-31,GAP,0000018230-20-000056,5,46,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2020-12-31,GAP,0000018230-21-000063,4,46,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2021-12-31,GAP,0000018230-22-000050,6,33,EQ,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Balance
+251,CAT,stockholders_equity,2022-12-31,GAP,0000018230-23-000011,5,47,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total stockholders' equity
+251,CAT,stockholders_equity,2023-12-31,GAP,0000018230-24-000009,5,49,BS,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,Total shareholders equity
 1263,LRCX,amortization_of_intangibles,2015-06-28,served_value,0001193125-15-290023,,,,,157700000
 1263,LRCX,amortization_of_intangibles,2016-06-26,served_value,0000707549-16-000050,,,,,156300000
 1263,LRCX,amortization_of_intangibles,2017-06-25,served_value,0000707549-17-000100,,,,,154600000
@@ -1307,25 +1307,25 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1263,LRCX,amortization_of_intangibles,2022-06-26,served_value,0000707549-22-000107,,,,,78000000
 1263,LRCX,amortization_of_intangibles,2023-06-25,served_value,0000707549-23-000102,,,,,51500000
 1263,LRCX,amortization_of_intangibles,2024-06-30,served_value,0000707549-24-000106,,,,,56300000
-1263,LRCX,cash_paid_for_income_taxes,2015-06-28,GAP,0001193125-15-290023,H,55,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2016-06-26,GAP,0000707549-16-000050,H,55,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2017-06-25,GAP,0000707549-17-000100,H,56,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2018-06-24,GAP,0000707549-18-000115,H,56,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2020-06-28,GAP,0000707549-20-000138,H,52,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2021-06-27,GAP,0000707549-21-000136,H,46,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2022-06-26,GAP,0000707549-22-000107,H,45,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2023-06-25,GAP,0000707549-23-000102,H,43,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_income_taxes,2025-06-29,GAP,0000707549-25-000075,H,42,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
-1263,LRCX,cash_paid_for_interest,2015-06-28,GAP,0001193125-15-290023,H,54,CF,InterestPaid,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2016-06-26,GAP,0000707549-16-000050,H,54,CF,InterestPaid,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2017-06-25,GAP,0000707549-17-000100,H,55,CF,InterestPaid,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2018-06-24,GAP,0000707549-18-000115,H,55,CF,InterestPaid,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2020-06-28,GAP,0000707549-20-000138,H,51,CF,InterestPaidNet,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2021-06-27,GAP,0000707549-21-000136,H,45,CF,InterestPaidNet,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2022-06-26,GAP,0000707549-22-000107,H,44,CF,InterestPaidNet,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2023-06-25,GAP,0000707549-23-000102,H,42,CF,InterestPaidNet,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2025-06-29,GAP,0000707549-25-000075,H,41,CF,InterestPaidNet,Cash payments for interest
-1263,LRCX,cash_paid_for_interest,2026-06-28,GAP,0000707549-26-000037,H,40,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_income_taxes,2015-06-28,GAP,0001193125-15-290023,6,55,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2016-06-26,GAP,0000707549-16-000050,6,55,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2017-06-25,GAP,0000707549-17-000100,6,56,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2018-06-24,GAP,0000707549-18-000115,6,56,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2020-06-28,GAP,0000707549-20-000138,6,52,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2021-06-27,GAP,0000707549-21-000136,6,46,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2022-06-26,GAP,0000707549-22-000107,7,45,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2023-06-25,GAP,0000707549-23-000102,7,43,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_income_taxes,2025-06-29,GAP,0000707549-25-000075,7,42,CF,IncomeTaxesPaidNet,"Cash payments for income taxes, net"
+1263,LRCX,cash_paid_for_interest,2015-06-28,GAP,0001193125-15-290023,6,54,CF,InterestPaid,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2016-06-26,GAP,0000707549-16-000050,6,54,CF,InterestPaid,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2017-06-25,GAP,0000707549-17-000100,6,55,CF,InterestPaid,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2018-06-24,GAP,0000707549-18-000115,6,55,CF,InterestPaid,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2020-06-28,GAP,0000707549-20-000138,6,51,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2021-06-27,GAP,0000707549-21-000136,6,45,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2022-06-26,GAP,0000707549-22-000107,7,44,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2023-06-25,GAP,0000707549-23-000102,7,42,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2025-06-29,GAP,0000707549-25-000075,7,41,CF,InterestPaidNet,Cash payments for interest
+1263,LRCX,cash_paid_for_interest,2026-06-28,GAP,0000707549-26-000037,7,40,CF,InterestPaidNet,Cash payments for interest
 1263,LRCX,cf_ap_change,2015-06-28,served_value,0001193125-15-290023,,,,,76617000
 1263,LRCX,cf_ap_change,2016-06-26,served_value,0000707549-16-000050,,,,,41645000
 1263,LRCX,cf_ap_change,2017-06-25,served_value,0000707549-17-000100,,,,,126819000
@@ -1358,7 +1358,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1263,LRCX,cf_inventory_change,2026-06-28,served_value,0000707549-26-000037,,,,,93860000
 1263,LRCX,cost_of_revenue,2026-06-28,served_value,0000707549-26-000037,,,,CostOfGoodsAndServicesSold,11507382000
 1263,LRCX,dividends_per_share,2015-06-28,served_value,0001193125-15-290023,,,,,0.084
-1263,LRCX,goodwill,2025-06-29,GAP,0000707549-25-000075,H,8,BS,IntangibleAssetsNetIncludingGoodwill,"Goodwill and intangible assets, net"
+1263,LRCX,goodwill,2025-06-29,GAP,0000707549-25-000075,5,8,BS,IntangibleAssetsNetIncludingGoodwill,"Goodwill and intangible assets, net"
 1263,LRCX,income_before_tax,2016-06-26,served_value,0000707549-16-000050,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,960117000
 1263,LRCX,income_before_tax,2017-06-25,served_value,0000707549-17-000100,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,1811673000
 1263,LRCX,income_before_tax,2018-06-24,served_value,0000707549-18-000115,,,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,3151789000
@@ -1381,18 +1381,18 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 608,GE,dividends_per_share,2022-12-31,served_value,0000040545-23-000023,,,,,0.32
 608,GE,dividends_per_share,2023-12-31,served_value,0000040545-24-000027,,,,,0.32
 608,GE,gross_profit,2016-12-31,note_fact,0000040545-17-000010,,,fact,GrossProfit,
-608,GE,operating_expenses,2015-12-31,GAP,0000040545-16-000145,H,18,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-608,GE,operating_expenses,2016-12-31,GAP,0000040545-17-000010,H,21,IS,OtherCostAndExpenseOperating,Other costs and expenses
-608,GE,operating_expenses,2017-12-31,GAP,0000040545-18-000014,H,22,IS,OtherCostAndExpenseOperating,Other costs and expenses
-608,GE,operating_expenses,2018-12-31,GAP,0000040545-19-000014,H,19,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-608,GE,operating_expenses,2019-12-31,GAP,0000040545-20-000009,H,17,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-608,GE,operating_expenses,2020-12-31,GAP,0000040545-21-000011,H,17,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-608,GE,operating_expenses,2021-12-31,GAP,0000040545-22-000008,H,6,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-608,GE,operating_expenses,2022-12-31,GAP,0000040545-23-000023,H,19,IS,GoodwillImpairmentLoss,Goodwill impairments (Note 7)
-608,GE,operating_expenses,2023-12-31,GAP,0000040545-24-000027,H,15,IS,ResearchAndDevelopmentExpense,Research and development
-608,GE,ppe_net,2021-12-31,review,0000040545-22-000008,H,18,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project accruals
-608,GE,ppe_net,2022-12-31,review,0000040545-23-000023,H,19,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project payables (Note 11)
-608,GE,ppe_net,2023-12-31,review,0000040545-24-000027,H,19,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project payables (Note 11)
+608,GE,operating_expenses,2015-12-31,GAP,0000040545-16-000145,2,18,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+608,GE,operating_expenses,2016-12-31,GAP,0000040545-17-000010,2,21,IS,OtherCostAndExpenseOperating,Other costs and expenses
+608,GE,operating_expenses,2017-12-31,GAP,0000040545-18-000014,2,22,IS,OtherCostAndExpenseOperating,Other costs and expenses
+608,GE,operating_expenses,2018-12-31,GAP,0000040545-19-000014,2,19,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+608,GE,operating_expenses,2019-12-31,GAP,0000040545-20-000009,2,17,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+608,GE,operating_expenses,2020-12-31,GAP,0000040545-21-000011,2,17,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+608,GE,operating_expenses,2021-12-31,GAP,0000040545-22-000008,6,6,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+608,GE,operating_expenses,2022-12-31,GAP,0000040545-23-000023,3,19,IS,GoodwillImpairmentLoss,Goodwill impairments (Note 7)
+608,GE,operating_expenses,2023-12-31,GAP,0000040545-24-000027,3,15,IS,ResearchAndDevelopmentExpense,Research and development
+608,GE,ppe_net,2021-12-31,review,0000040545-22-000008,4,18,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project accruals
+608,GE,ppe_net,2022-12-31,review,0000040545-23-000023,4,19,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project payables (Note 11)
+608,GE,ppe_net,2023-12-31,review,0000040545-24-000027,4,19,BS,AccountsPayableAndOtherAccruedLiabilitiesCurrent,Accounts payable and equipment project payables (Note 11)
 608,GE,research_and_development,2015-12-31,served_value,0000040545-16-000145,,,,,5278000000
 608,GE,research_and_development,2016-12-31,note_fact,0000040545-17-000010,,,fact,ResearchAndDevelopmentExpense,
 608,GE,research_and_development,2017-12-31,served_value,0000040545-18-000014,,,,,5504000000
@@ -1406,9 +1406,9 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 608,GE,sbc,2023-12-31,note_fact,0000040545-24-000027,,,fact,AllocatedShareBasedCompensationExpense,
 608,GE,share_buybacks,2015-12-31,served_value,0000040545-16-000145,,,,PaymentsForRepurchaseOfCommonStock,-2709000000
 608,GE,share_buybacks,2016-12-31,served_value,0000040545-17-000010,,,,PaymentsForRepurchaseOfCommonStock,-22581000000
-608,GE,share_buybacks,2017-12-31,review,0000040545-18-000014,H,40,CF,ProceedsFromRepurchaseOfEquity,Net dispositions (purchases) of GE shares for treasury
-608,GE,share_buybacks,2018-12-31,review,0000040545-19-000014,H,46,CF,ProceedsFromRepurchaseOfEquity,Net dispositions (purchases) of GE shares for treasury
-608,GE,share_buybacks,2019-12-31,review,0000040545-20-000009,H,15,EQ,TreasuryStockMember,Common stock held in treasury
+608,GE,share_buybacks,2017-12-31,review,0000040545-18-000014,6,40,CF,ProceedsFromRepurchaseOfEquity,Net dispositions (purchases) of GE shares for treasury
+608,GE,share_buybacks,2018-12-31,review,0000040545-19-000014,6,46,CF,ProceedsFromRepurchaseOfEquity,Net dispositions (purchases) of GE shares for treasury
+608,GE,share_buybacks,2019-12-31,review,0000040545-20-000009,7,15,EQ,TreasuryStockMember,Common stock held in treasury
 608,GE,share_buybacks,2020-12-31,served_value,0000040545-21-000011,,,,StockRepurchasedDuringPeriodValue,15300000
 608,GE,share_buybacks,2021-12-31,served_value,0000040545-22-000008,,,,PaymentsForRepurchaseOfCommonStock,107000000
 608,GE,share_buybacks,2022-12-31,served_value,0000040545-23-000023,,,,PaymentsForRepurchaseOfCommonStock,1048000000
@@ -1454,7 +1454,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 134,AMAT,interest_income,2023-10-29,note_fact,0000006951-23-000041,,,fact,InvestmentIncomeNet,
 134,AMAT,interest_income,2024-10-27,note_fact,0000006951-24-000044,,,fact,InvestmentIncomeNet,
 134,AMAT,interest_income,2025-10-26,note_fact,0001628280-25-056742,,,fact,InvestmentIncomeInterest,
-134,AMAT,other_income_expense_net,2015-10-25,review,0000006951-15-000034,H,14,IS,OtherNonoperatingIncome,"Interest and other income, net"
+134,AMAT,other_income_expense_net,2015-10-25,review,0000006951-15-000034,2,14,IS,OtherNonoperatingIncome,"Interest and other income, net"
 134,AMAT,revenue,2020-10-25,served_value,0000006951-20-000048,,,,RevenueFromContractWithCustomerExcludingAssessedTax,17202000000
 134,AMAT,shares_outstanding,2015-10-25,served_value,0000006951-15-000034,,,,,1160000000
 134,AMAT,shares_outstanding,2016-10-30,served_value,0000006951-16-000068,,,,,1078000000
@@ -1507,7 +1507,7 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5761,PM,sga_expense,2015-12-31,served_value,0001413329-16-000076,,,,,162000000
 5761,PM,sga_expense,2016-12-31,served_value,0001413329-17-000014,,,,,161000000
 5761,PM,sga_expense,2017-12-31,served_value,0001413329-18-000007,,,,,164000000
-5761,PM,share_buybacks,2018-12-31,review,0001413329-19-000007,H,8,EQ,TreasuryStockMember,Cost of Repurchased Stock [Member]
+5761,PM,share_buybacks,2018-12-31,review,0001413329-19-000007,9,8,EQ,TreasuryStockMember,Cost of Repurchased Stock [Member]
 5761,PM,share_buybacks,2019-12-31,served_value,0001413329-20-000007,,,,PaymentsForRepurchaseOfCommonStock,0
 5761,PM,share_buybacks,2020-12-31,served_value,0001413329-21-000007,,,,PaymentsForRepurchaseOfCommonStock,0
 5761,PM,weighted_basic_shares,2015-12-31,note_fact,0001413329-16-000076,,,fact,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,
@@ -1530,13 +1530,13 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5761,PM,weighted_diluted_shares,2023-12-31,note_fact,0001413329-24-000013,,,fact,WeightedAverageNumberOfDilutedSharesOutstanding,
 1236,HD,amortization_of_intangibles,2023-01-29,served_value,0000354950-23-000059,,,,,179000000
 1236,HD,amortization_of_intangibles,2024-01-28,served_value,0000354950-24-000062,,,,,186000000
-1236,HD,cash_paid_for_income_taxes,2015-02-01,GAP,0000354950-15-000008,H,41,CF,IncomeTaxesPaid,Income Taxes
-1236,HD,cash_paid_for_income_taxes,2017-01-29,GAP,0000354950-17-000005,H,38,CF,IncomeTaxesPaid,Income Taxes
-1236,HD,cash_paid_for_income_taxes,2018-01-28,GAP,0000354950-18-000019,H,39,CF,IncomeTaxesPaid,Cash paid for income taxes
+1236,HD,cash_paid_for_income_taxes,2015-02-01,GAP,0000354950-15-000008,8,41,CF,IncomeTaxesPaid,Income Taxes
+1236,HD,cash_paid_for_income_taxes,2017-01-29,GAP,0000354950-17-000005,8,38,CF,IncomeTaxesPaid,Income Taxes
+1236,HD,cash_paid_for_income_taxes,2018-01-28,GAP,0000354950-18-000019,8,39,CF,IncomeTaxesPaid,Cash paid for income taxes
 1236,HD,cash_paid_for_income_taxes,2026-02-01,note_fact,0001628280-26-019436,,,fact,IncomeTaxesPaidNet,
-1236,HD,cash_paid_for_interest,2015-02-01,GAP,0000354950-15-000008,H,40,CF,InterestPaidNet,"Interest, net of interest capitalized"
-1236,HD,cash_paid_for_interest,2017-01-29,GAP,0000354950-17-000005,H,37,CF,InterestPaidNet,"Interest, net of interest capitalized"
-1236,HD,cash_paid_for_interest,2018-01-28,GAP,0000354950-18-000019,H,38,CF,InterestPaidNet,"Cash paid for interest, net of interest capitalized"
+1236,HD,cash_paid_for_interest,2015-02-01,GAP,0000354950-15-000008,8,40,CF,InterestPaidNet,"Interest, net of interest capitalized"
+1236,HD,cash_paid_for_interest,2017-01-29,GAP,0000354950-17-000005,8,37,CF,InterestPaidNet,"Interest, net of interest capitalized"
+1236,HD,cash_paid_for_interest,2018-01-28,GAP,0000354950-18-000019,8,38,CF,InterestPaidNet,"Cash paid for interest, net of interest capitalized"
 1236,HD,dividends_per_share,2019-02-03,served_value,0000354950-19-000010,,,,,4.12
 1236,HD,dividends_per_share,2020-02-02,served_value,0000354950-20-000015,,,,,5.44
 1236,HD,dividends_per_share,2021-01-31,served_value,0000354950-21-000089,,,,,6
@@ -1558,15 +1558,15 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 3007,NFLX,gross_profit,2018-12-31,note_fact,0001065280-19-000043,,,fact,GrossProfit,
 3007,NFLX,gross_profit,2019-12-31,note_fact,0001065280-20-000040,,,fact,GrossProfit,
 3007,NFLX,gross_profit,2020-12-31,note_fact,0001065280-21-000040,,,fact,GrossProfit,
-3007,NFLX,operating_expenses,2015-12-31,GAP,0001065280-16-000047,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2016-12-31,GAP,0001628280-17-000496,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2017-12-31,GAP,0001628280-18-000941,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2018-12-31,GAP,0001065280-19-000043,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2019-12-31,GAP,0001065280-20-000040,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2020-12-31,GAP,0001065280-21-000040,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2021-12-31,GAP,0001065280-22-000036,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2022-12-31,GAP,0001065280-23-000035,H,5,IS,GeneralAndAdministrativeExpense,General and administrative
-3007,NFLX,operating_expenses,2023-12-31,GAP,0001065280-24-000030,H,4,IS,ResearchAndDevelopmentExpense,Technology and development
+3007,NFLX,operating_expenses,2015-12-31,GAP,0001065280-16-000047,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2016-12-31,GAP,0001628280-17-000496,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2017-12-31,GAP,0001628280-18-000941,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2018-12-31,GAP,0001065280-19-000043,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2019-12-31,GAP,0001065280-20-000040,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2020-12-31,GAP,0001065280-21-000040,2,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2021-12-31,GAP,0001065280-22-000036,3,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2022-12-31,GAP,0001065280-23-000035,3,5,IS,GeneralAndAdministrativeExpense,General and administrative
+3007,NFLX,operating_expenses,2023-12-31,GAP,0001065280-24-000030,3,4,IS,ResearchAndDevelopmentExpense,Technology and development
 3007,NFLX,research_and_development,2016-12-31,note_fact,0001628280-17-000496,,,fact,ResearchAndDevelopmentExpense,
 3007,NFLX,research_and_development,2017-12-31,note_fact,0001628280-18-000941,,,fact,ResearchAndDevelopmentExpense,
 3007,NFLX,research_and_development,2018-12-31,note_fact,0001065280-19-000043,,,fact,ResearchAndDevelopmentExpense,
@@ -1581,28 +1581,28 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 3083,DELL,amortization_of_intangibles,2023-02-03,served_value,0001571996-23-000007,,,,,1000000000
 3083,DELL,amortization_of_intangibles,2024-02-02,served_value,0001571996-24-000036,,,,,800000000
 3083,DELL,amortization_of_intangibles,2026-01-30,served_value,0001571996-26-000008,,,,,500000000
-3083,DELL,basic_eps,2019-02-01,GAP,0001571996-19-000008,H,30,IS,IncomeLossFromContinuingOperationsPerBasicShare,Continuing operations - basic (in dollars per share)
-3083,DELL,basic_eps,2022-01-28,GAP,0001571996-22-000009,H,27,IS,IncomeLossFromContinuingOperationsPerBasicShare,Continuing operations - basic (in dollars per share)
+3083,DELL,basic_eps,2019-02-01,GAP,0001571996-19-000008,4,30,IS,IncomeLossFromContinuingOperationsPerBasicShare,Continuing operations - basic (in dollars per share)
+3083,DELL,basic_eps,2022-01-28,GAP,0001571996-22-000009,5,27,IS,IncomeLossFromContinuingOperationsPerBasicShare,Continuing operations - basic (in dollars per share)
 3083,DELL,basic_eps,2023-02-03,served_value,0001571996-23-000007,,,,,3.33
 3083,DELL,basic_eps,2024-02-02,served_value,0001571996-24-000036,,,,,4.71
-3083,DELL,cash_paid_for_income_taxes,2017-02-03,GAP,0001571996-17-000004,H,57,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2018-02-02,GAP,0001571996-18-000004,H,59,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2019-02-01,GAP,0001571996-19-000008,H,55,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2021-01-29,GAP,0001571996-21-000007,H,37,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2022-01-28,GAP,0001571996-22-000009,H,41,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2023-02-03,GAP,0001571996-23-000007,H,43,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2024-02-02,GAP,0001571996-24-000036,H,40,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_income_taxes,2026-01-30,GAP,0001571996-26-000008,H,38,CF,IncomeTaxesPaid,Income tax paid
-3083,DELL,cash_paid_for_interest,2017-02-03,GAP,0001571996-17-000004,H,58,CF,InterestPaid,Interest paid
-3083,DELL,cash_paid_for_interest,2018-02-02,GAP,0001571996-18-000004,H,60,CF,InterestPaid,Interest paid
-3083,DELL,cash_paid_for_interest,2019-02-01,GAP,0001571996-19-000008,H,56,CF,InterestPaidNet,Interest paid
-3083,DELL,cash_paid_for_interest,2021-01-29,GAP,0001571996-21-000007,H,38,CF,InterestPaidNet,Interest paid
-3083,DELL,cash_paid_for_interest,2022-01-28,GAP,0001571996-22-000009,H,42,CF,InterestPaidNet,Interest paid
-3083,DELL,cash_paid_for_interest,2023-02-03,GAP,0001571996-23-000007,H,44,CF,InterestPaidNet,Interest paid
-3083,DELL,cash_paid_for_interest,2024-02-02,GAP,0001571996-24-000036,H,41,CF,InterestPaidNet,Interest paid
-3083,DELL,cash_paid_for_interest,2026-01-30,GAP,0001571996-26-000008,H,39,CF,InterestPaidNet,Interest paid
-3083,DELL,diluted_eps,2019-02-01,GAP,0001571996-19-000008,H,33,IS,IncomeLossFromContinuingOperationsPerDilutedShare,Continuing operations - basic (in dollars per share)
-3083,DELL,diluted_eps,2022-01-28,GAP,0001571996-22-000009,H,30,IS,IncomeLossFromContinuingOperationsPerDilutedShare,Continuing operations - diluted (in dollars per share)
+3083,DELL,cash_paid_for_income_taxes,2017-02-03,GAP,0001571996-17-000004,7,57,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2018-02-02,GAP,0001571996-18-000004,7,59,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2019-02-01,GAP,0001571996-19-000008,7,55,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2021-01-29,GAP,0001571996-21-000007,7,37,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2022-01-28,GAP,0001571996-22-000009,9,41,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2023-02-03,GAP,0001571996-23-000007,9,43,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2024-02-02,GAP,0001571996-24-000036,9,40,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_income_taxes,2026-01-30,GAP,0001571996-26-000008,9,38,CF,IncomeTaxesPaid,Income tax paid
+3083,DELL,cash_paid_for_interest,2017-02-03,GAP,0001571996-17-000004,7,58,CF,InterestPaid,Interest paid
+3083,DELL,cash_paid_for_interest,2018-02-02,GAP,0001571996-18-000004,7,60,CF,InterestPaid,Interest paid
+3083,DELL,cash_paid_for_interest,2019-02-01,GAP,0001571996-19-000008,7,56,CF,InterestPaidNet,Interest paid
+3083,DELL,cash_paid_for_interest,2021-01-29,GAP,0001571996-21-000007,7,38,CF,InterestPaidNet,Interest paid
+3083,DELL,cash_paid_for_interest,2022-01-28,GAP,0001571996-22-000009,9,42,CF,InterestPaidNet,Interest paid
+3083,DELL,cash_paid_for_interest,2023-02-03,GAP,0001571996-23-000007,9,44,CF,InterestPaidNet,Interest paid
+3083,DELL,cash_paid_for_interest,2024-02-02,GAP,0001571996-24-000036,9,41,CF,InterestPaidNet,Interest paid
+3083,DELL,cash_paid_for_interest,2026-01-30,GAP,0001571996-26-000008,9,39,CF,InterestPaidNet,Interest paid
+3083,DELL,diluted_eps,2019-02-01,GAP,0001571996-19-000008,4,33,IS,IncomeLossFromContinuingOperationsPerDilutedShare,Continuing operations - basic (in dollars per share)
+3083,DELL,diluted_eps,2022-01-28,GAP,0001571996-22-000009,5,30,IS,IncomeLossFromContinuingOperationsPerDilutedShare,Continuing operations - diluted (in dollars per share)
 3083,DELL,diluted_eps,2023-02-03,served_value,0001571996-23-000007,,,,EarningsPerShareDiluted,3.24
 3083,DELL,diluted_eps,2024-02-02,served_value,0001571996-24-000036,,,,EarningsPerShareDiluted,4.6
 3083,DELL,dividends_paid,2017-02-03,served_value,0001571996-17-000004,,,,PaymentsOfDividends,0
@@ -1672,25 +1672,25 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 5058,PANW,amortization_of_intangibles,2022-07-31,note_fact,0001327567-22-000028,,,fact,AmortizationOfIntangibleAssets,
 5058,PANW,amortization_of_intangibles,2023-07-31,note_fact,0001327567-23-000024,,,fact,AmortizationOfIntangibleAssets,
 5058,PANW,amortization_of_intangibles,2024-07-31,note_fact,0001327567-24-000029,,,fact,AmortizationOfIntangibleAssets,
-5058,PANW,cash_paid_for_interest,2019-07-31,GAP,0001327567-19-000032,H,46,CF,InterestPaidContractualInterest,Cash paid for contractual interest
-5058,PANW,cash_paid_for_interest,2020-07-31,GAP,0001327567-20-000032,H,47,CF,InterestPaidContractualInterest,Cash paid for contractual interest
-5058,PANW,cash_paid_for_interest,2021-07-31,GAP,0001327567-21-000029,H,47,CF,InterestPaidContractualInterest,Cash paid for contractual interest
-5058,PANW,cash_paid_for_interest,2022-07-31,GAP,0001327567-22-000028,H,46,CF,InterestPaidContractualInterest,Cash paid for contractual interest
-5058,PANW,cash_paid_for_interest,2023-07-31,GAP,0001327567-23-000024,H,44,CF,InterestPaidContractualInterest,Cash paid for contractual interest
-5058,PANW,cash_paid_for_interest,2024-07-31,GAP,0001327567-24-000029,H,45,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2019-07-31,GAP,0001327567-19-000032,7,46,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2020-07-31,GAP,0001327567-20-000032,7,47,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2021-07-31,GAP,0001327567-21-000029,7,47,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2022-07-31,GAP,0001327567-22-000028,8,46,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2023-07-31,GAP,0001327567-23-000024,8,44,CF,InterestPaidContractualInterest,Cash paid for contractual interest
+5058,PANW,cash_paid_for_interest,2024-07-31,GAP,0001327567-24-000029,8,45,CF,InterestPaidContractualInterest,Cash paid for contractual interest
 5058,PANW,other_income_expense_net,2019-07-31,note_fact,0001327567-19-000032,,,fact,OtherNonoperatingIncomeExpense,
 5058,PANW,other_income_expense_net,2020-07-31,note_fact,0001327567-20-000032,,,fact,OtherNonoperatingIncomeExpense,
 5058,PANW,other_income_expense_net,2021-07-31,note_fact,0001327567-21-000029,,,fact,OtherNonoperatingIncomeExpense,
 5058,PANW,other_income_expense_net,2022-07-31,note_fact,0001327567-22-000028,,,fact,OtherNonoperatingIncomeExpense,
 5058,PANW,other_income_expense_net,2023-07-31,note_fact,0001327567-23-000024,,,fact,OtherNonoperatingIncomeExpense,
 5058,PANW,other_income_expense_net,2024-07-31,note_fact,0001327567-24-000029,,,fact,OtherNonoperatingIncomeExpense,
-5058,PANW,total_liabilities,2015-07-31,review,0001327567-15-000027,H,36,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
-5058,PANW,total_liabilities,2016-07-31,review,0001327567-16-000064,H,35,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
-5058,PANW,total_liabilities,2017-07-31,review,0001327567-17-000027,H,35,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-5058,PANW,total_liabilities,2018-07-31,review,0001327567-18-000024,H,37,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
-5058,PANW,total_liabilities,2019-07-31,review,0001327567-19-000032,H,33,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
-5058,PANW,total_liabilities,2020-07-31,review,0001327567-20-000032,H,33,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-5058,PANW,total_liabilities,2021-07-31,review,0001327567-21-000029,H,37,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity and stockholders equity"
+5058,PANW,total_liabilities,2015-07-31,review,0001327567-15-000027,2,36,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
+5058,PANW,total_liabilities,2016-07-31,review,0001327567-16-000064,2,35,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
+5058,PANW,total_liabilities,2017-07-31,review,0001327567-17-000027,2,35,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+5058,PANW,total_liabilities,2018-07-31,review,0001327567-18-000024,2,37,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
+5058,PANW,total_liabilities,2019-07-31,review,0001327567-19-000032,2,33,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity, and stockholders equity"
+5058,PANW,total_liabilities,2020-07-31,review,0001327567-20-000032,2,33,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+5058,PANW,total_liabilities,2021-07-31,review,0001327567-21-000029,2,37,BS,LiabilitiesAndStockholdersEquity,"Total liabilities, temporary equity and stockholders equity"
 1123,RTX,amortization_of_intangibles,2015-12-31,served_value,0000101829-16-000050,,,,,722000000
 1123,RTX,amortization_of_intangibles,2016-12-31,served_value,0000101829-17-000007,,,,,778000000
 1123,RTX,amortization_of_intangibles,2017-12-31,note_fact,0000101829-18-000005,,,fact,AmortizationOfIntangibleAssets,
@@ -1709,21 +1709,21 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1123,RTX,operating_expenses,2015-12-31,served_value,0000101829-16-000050,,,,"CostOfGoodsSold,OperatingIncomeLoss,SalesRevenueNet",19036000000
 1123,RTX,operating_expenses,2016-12-31,served_value,0000101829-17-000007,,,,"CostOfGoodsSold,OperatingIncomeLoss,Revenues",18698000000
 1123,RTX,operating_expenses,2017-12-31,served_value,0000101829-18-000005,,,,"CostOfGoodsSold,OperatingIncomeLoss,Revenues",-4303000000
-1123,RTX,operating_expenses,2018-12-31,GAP,0000101829-19-000007,H,14,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1123,RTX,operating_expenses,2019-12-31,GAP,0000101829-20-000013,H,13,IS,ResearchAndDevelopmentExpense,Research and development
-1123,RTX,operating_expenses,2020-12-31,GAP,0000101829-21-000008,H,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1123,RTX,operating_expenses,2021-12-31,GAP,0000101829-22-000005,H,11,IS,ResearchAndDevelopmentExpense,Research and development
-1123,RTX,operating_expenses,2022-12-31,GAP,0000101829-23-000009,H,9,CF,GoodwillImpairmentLoss,Goodwill impairment charge
-1123,RTX,operating_expenses,2023-12-31,GAP,0000101829-24-000008,H,11,IS,ResearchAndDevelopmentExpense,Research and development
+1123,RTX,operating_expenses,2018-12-31,GAP,0000101829-19-000007,2,14,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1123,RTX,operating_expenses,2019-12-31,GAP,0000101829-20-000013,2,13,IS,ResearchAndDevelopmentExpense,Research and development
+1123,RTX,operating_expenses,2020-12-31,GAP,0000101829-21-000008,2,10,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1123,RTX,operating_expenses,2021-12-31,GAP,0000101829-22-000005,2,11,IS,ResearchAndDevelopmentExpense,Research and development
+1123,RTX,operating_expenses,2022-12-31,GAP,0000101829-23-000009,5,9,CF,GoodwillImpairmentLoss,Goodwill impairment charge
+1123,RTX,operating_expenses,2023-12-31,GAP,0000101829-24-000008,2,11,IS,ResearchAndDevelopmentExpense,Research and development
 1123,RTX,other_income_expense_net,2015-12-31,served_value,0000101829-16-000050,,,,,-824000000
-1123,RTX,other_income_expense_net,2016-12-31,review,0000101829-17-000007,H,19,CI,OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesBeforeTax,"Reclassification adjustments for gain included in Other income, net"
-1123,RTX,other_income_expense_net,2017-12-31,review,0000101829-18-000005,H,19,CI,OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesBeforeTax,"Reclassification adjustments for gain included in Other income, net"
+1123,RTX,other_income_expense_net,2016-12-31,review,0000101829-17-000007,3,19,CI,OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesBeforeTax,"Reclassification adjustments for gain included in Other income, net"
+1123,RTX,other_income_expense_net,2017-12-31,review,0000101829-18-000005,3,19,CI,OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesBeforeTax,"Reclassification adjustments for gain included in Other income, net"
 1123,RTX,other_income_expense_net,2018-12-31,served_value,0000101829-19-000007,,,,,373000000
 1123,RTX,other_income_expense_net,2019-12-31,served_value,0000101829-20-000013,,,,,762000000
-1123,RTX,shares_outstanding,2020-12-31,review,0000101829-21-000008,H,37,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
-1123,RTX,shares_outstanding,2021-12-31,review,0000101829-22-000005,H,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
-1123,RTX,shares_outstanding,2022-12-31,review,0000101829-23-000009,H,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
-1123,RTX,shares_outstanding,2023-12-31,review,0000101829-24-000008,H,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
+1123,RTX,shares_outstanding,2020-12-31,review,0000101829-21-000008,4,37,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
+1123,RTX,shares_outstanding,2021-12-31,review,0000101829-22-000005,4,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
+1123,RTX,shares_outstanding,2022-12-31,review,0000101829-23-000009,4,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
+1123,RTX,shares_outstanding,2023-12-31,review,0000101829-24-000008,4,35,BS,PreferredStockSharesOutstanding,"Preferred Stock, Shares Outstanding"
 1767,GS,amortization_of_intangibles,2015-12-31,served_value,0001193125-16-488753,,,,,132000000
 1767,GS,amortization_of_intangibles,2016-12-31,served_value,0001193125-17-056804,,,,,162000000
 1767,GS,amortization_of_intangibles,2017-12-31,served_value,0001193125-18-056383,,,,,150000000
@@ -1733,24 +1733,24 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1767,GS,amortization_of_intangibles,2021-12-31,served_value,0001193125-22-052682,,,,,120000000
 1767,GS,amortization_of_intangibles,2022-12-31,served_value,0000886982-23-000003,,,,,174000000
 1767,GS,amortization_of_intangibles,2023-12-31,served_value,0000886982-24-000006,,,,,681000000
-1767,GS,cf_ap_change,2015-12-31,review,0001193125-16-488753,H,11,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
-1767,GS,cf_ap_change,2016-12-31,review,0001193125-17-056804,H,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
-1767,GS,cf_ap_change,2017-12-31,review,0001193125-18-056383,H,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
-1767,GS,cf_ap_change,2018-12-31,review,0001193125-19-050198,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ap_change,2019-12-31,review,0001193125-20-043853,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ap_change,2020-12-31,review,0001193125-21-049380,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ap_change,2021-12-31,review,0001193125-22-052682,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ap_change,2022-12-31,review,0000886982-23-000003,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ap_change,2023-12-31,review,0000886982-24-000006,H,18,BS,CustomerAndOtherPayables,Customer and other payables
-1767,GS,cf_ar_change,2015-12-31,review,0001193125-16-488753,H,10,CF,NoncashOrPartNoncashDivestitureAmountOfConsiderationReceived1,Non-cash increase to loans receivable due to seller financing provided for the sale of certain consolidated investments
-1767,GS,cf_ar_change,2016-12-31,review,0001193125-17-056804,H,20,CF,PaymentsForProceedsFromLoansAndLeases,"Loans receivable, net"
-1767,GS,cf_ar_change,2017-12-31,review,0001193125-18-056383,H,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
-1767,GS,cf_ar_change,2018-12-31,review,0001193125-19-050198,H,22,CF,PaymentsForProceedsFromLoansAndLeases,"Loans receivable, net"
-1767,GS,cf_ar_change,2019-12-31,review,0001193125-20-043853,H,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $53 and $160 at fair value)
-1767,GS,cf_ar_change,2020-12-31,review,0001193125-21-049380,H,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $82 and $53 at fair value)
-1767,GS,cf_ar_change,2021-12-31,review,0001193125-22-052682,H,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $42 and $82 at fair value)
-1767,GS,cf_ar_change,2022-12-31,review,0000886982-23-000003,H,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $25 and $42 at fair value)
-1767,GS,cf_ar_change,2023-12-31,review,0000886982-24-000006,H,9,CF,IncreaseDecreaseInCustomerAndOtherReceivablesAndPayablesNet,"Customer and other receivables and payables, net"
+1767,GS,cf_ap_change,2015-12-31,review,0001193125-16-488753,7,11,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
+1767,GS,cf_ap_change,2016-12-31,review,0001193125-17-056804,7,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
+1767,GS,cf_ap_change,2017-12-31,review,0001193125-18-056383,7,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
+1767,GS,cf_ap_change,2018-12-31,review,0001193125-19-050198,4,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ap_change,2019-12-31,review,0001193125-20-043853,4,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ap_change,2020-12-31,review,0001193125-21-049380,4,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ap_change,2021-12-31,review,0001193125-22-052682,4,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ap_change,2022-12-31,review,0000886982-23-000003,5,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ap_change,2023-12-31,review,0000886982-24-000006,5,18,BS,CustomerAndOtherPayables,Customer and other payables
+1767,GS,cf_ar_change,2015-12-31,review,0001193125-16-488753,8,10,CF,NoncashOrPartNoncashDivestitureAmountOfConsiderationReceived1,Non-cash increase to loans receivable due to seller financing provided for the sale of certain consolidated investments
+1767,GS,cf_ar_change,2016-12-31,review,0001193125-17-056804,7,20,CF,PaymentsForProceedsFromLoansAndLeases,"Loans receivable, net"
+1767,GS,cf_ar_change,2017-12-31,review,0001193125-18-056383,7,9,CF,IncreaseDecreaseInReceivablesAndPayablesNetExcludingLoansReceivableNet,"Receivables and payables (excluding loans receivable), net"
+1767,GS,cf_ar_change,2018-12-31,review,0001193125-19-050198,7,22,CF,PaymentsForProceedsFromLoansAndLeases,"Loans receivable, net"
+1767,GS,cf_ar_change,2019-12-31,review,0001193125-20-043853,4,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $53 and $160 at fair value)
+1767,GS,cf_ar_change,2020-12-31,review,0001193125-21-049380,4,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $82 and $53 at fair value)
+1767,GS,cf_ar_change,2021-12-31,review,0001193125-22-052682,4,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $42 and $82 at fair value)
+1767,GS,cf_ar_change,2022-12-31,review,0000886982-23-000003,5,6,BS,CustomerAndOtherReceivables,Customer and other receivables (includes $25 and $42 at fair value)
+1767,GS,cf_ar_change,2023-12-31,review,0000886982-24-000006,8,9,CF,IncreaseDecreaseInCustomerAndOtherReceivablesAndPayablesNet,"Customer and other receivables and payables, net"
 1767,GS,dividends_per_share,2015-12-31,served_value,0001193125-16-488753,,,,,2.55
 1767,GS,dividends_per_share,2016-12-31,served_value,0001193125-17-056804,,,,,2.6
 1767,GS,dividends_per_share,2017-12-31,served_value,0001193125-18-056383,,,,,2.9
@@ -1818,18 +1818,18 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1105,TMO,operating_expenses,2015-12-31,served_value,0000097745-16-000043,,,,"CostOfGoodsSold,OperatingIncomeLoss,Revenues",7045000000
 1105,TMO,operating_expenses,2016-12-31,served_value,0000097745-17-000007,,,,"CostOfGoodsSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",7602000000
 1105,TMO,operating_expenses,2017-12-31,served_value,0000097745-18-000006,,,,"CostOfGoodsSold,OperatingIncomeLoss,RevenueFromContractWithCustomerExcludingAssessedTax",8982000000
-1105,TMO,operating_expenses,2018-12-31,GAP,0000097745-19-000007,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1105,TMO,operating_expenses,2019-12-31,GAP,0000097745-20-000009,H,12,IS,ResearchAndDevelopmentExpense,Research and development expenses
-1105,TMO,operating_expenses,2020-12-31,GAP,0000097745-21-000011,H,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
-1105,TMO,operating_expenses,2021-12-31,GAP,0000097745-22-000011,H,21,IS,IncomeLossFromEquityMethodInvestments,Equity in (losses) earnings of unconsolidated entities
-1105,TMO,operating_expenses,2022-12-31,GAP,0000097745-23-000008,H,21,IS,IncomeLossFromEquityMethodInvestments,Equity in earnings/(losses) of unconsolidated entities
-1105,TMO,operating_expenses,2023-12-31,GAP,0000097745-24-000007,H,12,IS,ResearchAndDevelopmentExpense,Research and development expenses
+1105,TMO,operating_expenses,2018-12-31,GAP,0000097745-19-000007,4,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1105,TMO,operating_expenses,2019-12-31,GAP,0000097745-20-000009,4,12,IS,ResearchAndDevelopmentExpense,Research and development expenses
+1105,TMO,operating_expenses,2020-12-31,GAP,0000097745-21-000011,4,11,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative expenses"
+1105,TMO,operating_expenses,2021-12-31,GAP,0000097745-22-000011,4,21,IS,IncomeLossFromEquityMethodInvestments,Equity in (losses) earnings of unconsolidated entities
+1105,TMO,operating_expenses,2022-12-31,GAP,0000097745-23-000008,5,21,IS,IncomeLossFromEquityMethodInvestments,Equity in earnings/(losses) of unconsolidated entities
+1105,TMO,operating_expenses,2023-12-31,GAP,0000097745-24-000007,5,12,IS,ResearchAndDevelopmentExpense,Research and development expenses
 1105,TMO,other_income_expense_net,2015-12-31,note_fact,0000097745-16-000043,,,fact,OtherNonoperatingIncomeExpense,
 1105,TMO,other_income_expense_net,2016-12-31,note_fact,0000097745-17-000007,,,fact,OtherNonoperatingIncomeExpense,
 1105,TMO,other_income_expense_net,2017-12-31,note_fact,0000097745-18-000006,,,fact,OtherNonoperatingIncomeExpense,
 1105,TMO,other_income_expense_net,2018-12-31,note_fact,0000097745-19-000007,,,fact,OtherNonoperatingIncomeExpense,
-1105,TMO,shares_outstanding,2022-12-31,GAP,0000097745-23-000008,H,36,EQ,CommonStockSharesOutstanding,Balance (in shares)
-1105,TMO,shares_outstanding,2023-12-31,GAP,0000097745-24-000007,H,20,EQ,CommonStockSharesOutstanding,Balance (in shares)
+1105,TMO,shares_outstanding,2022-12-31,GAP,0000097745-23-000008,9,36,EQ,CommonStockSharesOutstanding,Balance (in shares)
+1105,TMO,shares_outstanding,2023-12-31,GAP,0000097745-24-000007,9,20,EQ,CommonStockSharesOutstanding,Balance (in shares)
 1105,TMO,total_liabilities,2015-12-31,served_value,0000097745-16-000043,,,,"Assets,StockholdersEquity",19538800000
 1105,TMO,total_liabilities,2016-12-31,served_value,0000097745-17-000007,,,,"Assets,StockholdersEquity",24368200000
 1105,TMO,total_liabilities,2017-12-31,served_value,0000097745-18-000006,,,,"Assets,StockholdersEquity",31256000000
@@ -1842,25 +1842,25 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1010,WFC,amortization_of_intangibles,2020-12-31,served_value,0000072971-21-000197,,,,,403000000
 1010,WFC,amortization_of_intangibles,2021-12-31,served_value,0000072971-22-000096,,,,,305000000
 1010,WFC,amortization_of_intangibles,2022-12-31,served_value,0000072971-23-000071,,,,,306000000
-1010,WFC,cf_ap_change,2015-12-31,review,0000072971-16-001045,H,18,CF,IncreaseDecreaseInInterestPayableNet,Accrued interest payable
-1010,WFC,cf_ar_change,2015-12-31,review,0000072971-16-001045,H,17,CF,IncreaseDecreaseInAccruedInterestReceivableNet,Accrued interest receivable
+1010,WFC,cf_ap_change,2015-12-31,review,0000072971-16-001045,9,18,CF,IncreaseDecreaseInInterestPayableNet,Accrued interest payable
+1010,WFC,cf_ar_change,2015-12-31,review,0000072971-16-001045,9,17,CF,IncreaseDecreaseInAccruedInterestReceivableNet,Accrued interest receivable
 1010,WFC,dividends_per_share,2018-12-31,served_value,0000072971-19-000227,,,,,1.64
 1010,WFC,dividends_per_share,2019-12-31,served_value,0000072971-20-000217,,,,,1.92
 1010,WFC,dividends_per_share,2020-12-31,served_value,0000072971-21-000197,,,,,1.22
 1010,WFC,dividends_per_share,2021-12-31,served_value,0000072971-22-000096,,,,,0.6
 1010,WFC,dividends_per_share,2022-12-31,served_value,0000072971-23-000071,,,,,1.1
 1010,WFC,dividends_per_share,2023-12-31,served_value,0000072971-24-000064,,,,,1.3
-1010,WFC,operating_expenses,2015-12-31,GAP,0000072971-16-001045,H,37,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
-1010,WFC,operating_expenses,2016-12-31,GAP,0000072971-17-000278,H,40,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2017-12-31,GAP,0000072971-18-000272,H,37,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
-1010,WFC,operating_expenses,2018-12-31,GAP,0000072971-19-000227,H,47,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2019-12-31,GAP,0000072971-20-000217,H,44,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
-1010,WFC,operating_expenses,2020-12-31,GAP,0000072971-21-000197,H,42,IS,RestructuringCharges,Restructuring charges
-1010,WFC,operating_expenses,2021-12-31,GAP,0000072971-22-000096,H,44,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2022-12-31,GAP,0000072971-23-000071,H,44,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2023-12-31,GAP,0000072971-24-000064,H,41,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2024-12-31,GAP,0000072971-25-000066,H,41,IS,NoninterestExpense,Total noninterest expense
-1010,WFC,operating_expenses,2025-12-31,GAP,0000072971-26-000133,H,42,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2015-12-31,GAP,0000072971-16-001045,2,37,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
+1010,WFC,operating_expenses,2016-12-31,GAP,0000072971-17-000278,2,40,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2017-12-31,GAP,0000072971-18-000272,2,37,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
+1010,WFC,operating_expenses,2018-12-31,GAP,0000072971-19-000227,2,47,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2019-12-31,GAP,0000072971-20-000217,2,44,IS,AmortizationOfIntangibleAssets,Core deposit and other intangibles
+1010,WFC,operating_expenses,2020-12-31,GAP,0000072971-21-000197,2,42,IS,RestructuringCharges,Restructuring charges
+1010,WFC,operating_expenses,2021-12-31,GAP,0000072971-22-000096,3,44,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2022-12-31,GAP,0000072971-23-000071,3,44,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2023-12-31,GAP,0000072971-24-000064,3,41,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2024-12-31,GAP,0000072971-25-000066,3,41,IS,NoninterestExpense,Total noninterest expense
+1010,WFC,operating_expenses,2025-12-31,GAP,0000072971-26-000133,3,42,IS,NoninterestExpense,Total noninterest expense
 1010,WFC,other_income_expense_net,2015-12-31,served_value,0000072971-16-001045,,,,,45301000000
 1010,WFC,other_income_expense_net,2016-12-31,served_value,0000072971-17-000278,,,,,47754000000
 1010,WFC,other_income_expense_net,2017-12-31,served_value,0000072971-18-000272,,,,,49557000000
@@ -1942,37 +1942,37 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 1207,AMGN,gross_profit,2018-12-31,note_fact,0000318154-19-000008,,,fact,GrossProfit,
 1207,AMGN,gross_profit,2019-12-31,note_fact,0000318154-20-000017,,,fact,GrossProfit,
 1207,AMGN,gross_profit,2020-12-31,note_fact,0000318154-21-000010,,,fact,GrossProfit,
-1207,AMGN,operating_expenses,2015-12-31,GAP,0000318154-16-000031,H,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2016-12-31,GAP,0000318154-17-000004,H,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2017-12-31,GAP,0000318154-18-000004,H,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2018-12-31,GAP,0000318154-19-000008,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2019-12-31,GAP,0000318154-20-000017,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2020-12-31,GAP,0000318154-21-000010,H,14,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2021-12-31,GAP,0000318154-22-000010,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2022-12-31,GAP,0000318154-23-000017,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,operating_expenses,2023-12-31,GAP,0000318154-24-000011,H,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-1207,AMGN,total_liabilities,2015-12-31,review,0000318154-16-000031,H,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2016-12-31,review,0000318154-17-000004,H,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2017-12-31,review,0000318154-18-000004,H,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2018-12-31,review,0000318154-19-000008,H,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2019-12-31,review,0000318154-20-000017,H,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2020-12-31,review,0000318154-21-000010,H,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2021-12-31,review,0000318154-22-000010,H,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2022-12-31,review,0000318154-23-000017,H,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-1207,AMGN,total_liabilities,2023-12-31,review,0000318154-24-000011,H,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
-2726,CRWD,depreciation_and_amortization,2020-01-31,GAP,0001535527-20-000006,H,6,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2726,CRWD,depreciation_and_amortization,2021-01-31,GAP,0001535527-21-000007,H,4,CF,DepreciationAndAmortizationExcludingIntangibleAssetsAndDeferredContractAcquisitionCosts,Depreciation and amortization
-2726,CRWD,depreciation_and_amortization,2022-01-31,GAP,0001535527-22-000006,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2726,CRWD,depreciation_and_amortization,2023-01-31,GAP,0001535527-23-000008,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2726,CRWD,depreciation_and_amortization,2024-01-31,GAP,0001535527-24-000007,H,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
-2726,CRWD,interest_income,2023-01-31,GAP,0001535527-23-000008,H,19,IS,InterestIncomeOperating,Interest income
-2726,CRWD,interest_income,2024-01-31,GAP,0001535527-24-000007,H,19,IS,InterestIncomeOperating,Interest income
-2726,CRWD,net_income,2021-01-31,GAP,0001535527-21-000007,H,22,IS,ProfitLoss,Net loss attributable to Class A and Class B common stockholders
-2726,CRWD,shares_outstanding,2020-01-31,GAP,0001535527-20-000006,H,18,UN,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
-2726,CRWD,shares_outstanding,2021-01-31,GAP,0001535527-21-000007,H,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
-2726,CRWD,shares_outstanding,2022-01-31,GAP,0001535527-22-000006,H,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
-2726,CRWD,shares_outstanding,2023-01-31,GAP,0001535527-23-000008,H,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
-2726,CRWD,shares_outstanding,2024-01-31,GAP,0001535527-24-000007,H,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
+1207,AMGN,operating_expenses,2015-12-31,GAP,0000318154-16-000031,2,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2016-12-31,GAP,0000318154-17-000004,2,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2017-12-31,GAP,0000318154-18-000004,2,8,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2018-12-31,GAP,0000318154-19-000008,2,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2019-12-31,GAP,0000318154-20-000017,2,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2020-12-31,GAP,0000318154-21-000010,2,14,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2021-12-31,GAP,0000318154-22-000010,3,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2022-12-31,GAP,0000318154-23-000017,3,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,operating_expenses,2023-12-31,GAP,0000318154-24-000011,3,13,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+1207,AMGN,total_liabilities,2015-12-31,review,0000318154-16-000031,4,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2016-12-31,review,0000318154-17-000004,4,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2017-12-31,review,0000318154-18-000004,4,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2018-12-31,review,0000318154-19-000008,4,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2019-12-31,review,0000318154-20-000017,4,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2020-12-31,review,0000318154-21-000010,4,32,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2021-12-31,review,0000318154-22-000010,5,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2022-12-31,review,0000318154-23-000017,5,29,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+1207,AMGN,total_liabilities,2023-12-31,review,0000318154-24-000011,5,30,BS,LiabilitiesAndStockholdersEquity,Total liabilities and stockholders equity
+2726,CRWD,depreciation_and_amortization,2020-01-31,GAP,0001535527-20-000006,8,6,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2726,CRWD,depreciation_and_amortization,2021-01-31,GAP,0001535527-21-000007,8,4,CF,DepreciationAndAmortizationExcludingIntangibleAssetsAndDeferredContractAcquisitionCosts,Depreciation and amortization
+2726,CRWD,depreciation_and_amortization,2022-01-31,GAP,0001535527-22-000006,9,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2726,CRWD,depreciation_and_amortization,2023-01-31,GAP,0001535527-23-000008,8,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2726,CRWD,depreciation_and_amortization,2024-01-31,GAP,0001535527-24-000007,8,5,CF,AmortizationOfIntangibleAssets,Amortization of intangible assets
+2726,CRWD,interest_income,2023-01-31,GAP,0001535527-23-000008,5,19,IS,InterestIncomeOperating,Interest income
+2726,CRWD,interest_income,2024-01-31,GAP,0001535527-24-000007,5,19,IS,InterestIncomeOperating,Interest income
+2726,CRWD,net_income,2021-01-31,GAP,0001535527-21-000007,4,22,IS,ProfitLoss,Net loss attributable to Class A and Class B common stockholders
+2726,CRWD,shares_outstanding,2020-01-31,GAP,0001535527-20-000006,3,18,UN,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
+2726,CRWD,shares_outstanding,2021-01-31,GAP,0001535527-21-000007,3,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
+2726,CRWD,shares_outstanding,2022-01-31,GAP,0001535527-22-000006,4,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
+2726,CRWD,shares_outstanding,2023-01-31,GAP,0001535527-23-000008,4,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
+2726,CRWD,shares_outstanding,2024-01-31,GAP,0001535527-24-000007,4,15,BS,CommonStockSharesOutstanding,"Common stock, shares outstanding (in shares)"
 4841,LIN,amortization_of_intangibles,2016-12-31,served_value,0000884905-17-000007,,,,,94000000
 4841,LIN,amortization_of_intangibles,2017-12-31,served_value,0000884905-18-000014,,,,,91000000
 4841,LIN,amortization_of_intangibles,2018-12-31,served_value,0001628280-19-003050,,,,,215000000
@@ -1981,22 +1981,22 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 4841,LIN,amortization_of_intangibles,2021-12-31,served_value,0001628280-22-004180,,,,,723000000
 4841,LIN,amortization_of_intangibles,2022-12-31,served_value,0001628280-23-005434,,,,,571000000
 4841,LIN,amortization_of_intangibles,2023-12-31,served_value,0001628280-24-007424,,,,,550000000
-4841,LIN,cost_of_revenue,2018-12-31,review,0001628280-19-003050,H,2,IS,CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,"Cost of sales, exclusive of depreciation and amortization"
+4841,LIN,cost_of_revenue,2018-12-31,review,0001628280-19-003050,2,2,IS,CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,"Cost of sales, exclusive of depreciation and amortization"
 4841,LIN,interest_expense,2022-12-31,served_value,0001628280-23-005434,,,,InterestExpenseDebt,277000000
 4841,LIN,interest_expense,2023-12-31,served_value,0001628280-24-007424,,,,InterestExpenseDebt,480000000
-4841,LIN,interest_income,2022-12-31,GAP,0001628280-23-005434,H,9,IS,InterestIncomeExpenseNet,Interest expense  net
-4841,LIN,interest_income,2023-12-31,GAP,0001628280-24-007424,H,9,IS,InterestIncomeExpenseNet,Interest expense  net
-4841,LIN,operating_expenses,2015-12-31,GAP,0000884905-16-000108,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-4841,LIN,operating_expenses,2016-12-31,GAP,0000884905-17-000007,H,13,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
-4841,LIN,operating_expenses,2017-12-31,GAP,0000884905-18-000014,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-4841,LIN,operating_expenses,2018-12-31,GAP,0001628280-19-003050,H,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
-4841,LIN,operating_expenses,2019-12-31,GAP,0001707925-20-000015,H,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
-4841,LIN,operating_expenses,2020-12-31,GAP,0001628280-21-003574,H,15,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
-4841,LIN,operating_expenses,2021-12-31,GAP,0001628280-22-004180,H,15,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
-4841,LIN,operating_expenses,2022-12-31,GAP,0001628280-23-005434,H,14,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
-4841,LIN,operating_expenses,2023-12-31,GAP,0001628280-24-007424,H,5,IS,ResearchAndDevelopmentExpense,Research and development
-4841,LIN,other_income_expense_net,2018-12-31,review,0001628280-19-003050,H,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
-4841,LIN,other_income_expense_net,2019-12-31,review,0001707925-20-000015,H,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
+4841,LIN,interest_income,2022-12-31,GAP,0001628280-23-005434,3,9,IS,InterestIncomeExpenseNet,Interest expense  net
+4841,LIN,interest_income,2023-12-31,GAP,0001628280-24-007424,3,9,IS,InterestIncomeExpenseNet,Interest expense  net
+4841,LIN,operating_expenses,2015-12-31,GAP,0000884905-16-000108,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+4841,LIN,operating_expenses,2016-12-31,GAP,0000884905-17-000007,2,13,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
+4841,LIN,operating_expenses,2017-12-31,GAP,0000884905-18-000014,2,5,IS,ResearchAndDevelopmentExpense,Research and development
+4841,LIN,operating_expenses,2018-12-31,GAP,0001628280-19-003050,2,3,IS,SellingGeneralAndAdministrativeExpense,"Selling, general and administrative"
+4841,LIN,operating_expenses,2019-12-31,GAP,0001707925-20-000015,2,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
+4841,LIN,operating_expenses,2020-12-31,GAP,0001628280-21-003574,2,15,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
+4841,LIN,operating_expenses,2021-12-31,GAP,0001628280-22-004180,3,15,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
+4841,LIN,operating_expenses,2022-12-31,GAP,0001628280-23-005434,3,14,IS,IncomeLossFromEquityMethodInvestments,Income from equity investments
+4841,LIN,operating_expenses,2023-12-31,GAP,0001628280-24-007424,3,5,IS,ResearchAndDevelopmentExpense,Research and development
+4841,LIN,other_income_expense_net,2018-12-31,review,0001628280-19-003050,2,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
+4841,LIN,other_income_expense_net,2019-12-31,review,0001707925-20-000015,2,8,IS,OtherOperatingIncomeExpenseNet,Other income (expenses)  net
 4841,LIN,other_income_expense_net,2020-12-31,served_value,0001628280-21-003574,,,,,-115000000
 4841,LIN,other_income_expense_net,2021-12-31,served_value,0001628280-22-004180,,,,,-77000000
 4841,LIN,other_income_expense_net,2022-12-31,served_value,0001628280-23-005434,,,,,-63000000
@@ -2011,12 +2011,12 @@ company_id,ticker,data_point,period,kind,accession,report,line,stmt,tag,plabel
 3418,ANET,amortization_of_intangibles,2021-12-31,note_fact,0001596532-22-000026,,,fact,AmortizationOfIntangibleAssets,
 3418,ANET,amortization_of_intangibles,2022-12-31,note_fact,0001596532-23-000016,,,fact,AmortizationOfIntangibleAssets,
 3418,ANET,amortization_of_intangibles,2023-12-31,note_fact,0001596532-24-000043,,,fact,AmortizationOfIntangibleAssets,
-3418,ANET,cash_paid_for_interest,2015-12-31,review,0001596532-16-000244,H,56,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest lease financing obligation
-3418,ANET,cash_paid_for_interest,2016-12-31,review,0001596532-17-000019,H,56,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest lease financing obligation
-3418,ANET,cash_paid_for_interest,2017-12-31,review,0001596532-18-000018,H,39,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
-3418,ANET,cash_paid_for_interest,2018-12-31,review,0001596532-19-000027,H,40,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
-3418,ANET,cash_paid_for_interest,2019-12-31,review,0001596532-20-000024,H,42,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
-3418,ANET,cash_paid_for_interest,2020-12-31,review,0001596532-21-000049,H,42,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
-3418,ANET,goodwill,2024-12-31,GAP,0001596532-25-000028,H,10,BS,IntangibleAssetsNetIncludingGoodwill,"Goodwill and acquisition-related intangible assets, net"
-3418,ANET,share_buybacks,2015-12-31,review,0001596532-16-000244,H,47,CF,ProceedsFromStockOptionsExercised,"Proceeds from issuance of common stock upon exercising options, net of repurchases"
-3418,ANET,share_buybacks,2016-12-31,review,0001596532-17-000019,H,43,CF,ProceedsFromStockOptionsExercised,"Proceeds from issuance of common stock upon exercising options, net of repurchases"
+3418,ANET,cash_paid_for_interest,2015-12-31,review,0001596532-16-000244,7,56,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest lease financing obligation
+3418,ANET,cash_paid_for_interest,2016-12-31,review,0001596532-17-000019,7,56,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest lease financing obligation
+3418,ANET,cash_paid_for_interest,2017-12-31,review,0001596532-18-000018,7,39,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
+3418,ANET,cash_paid_for_interest,2018-12-31,review,0001596532-19-000027,7,40,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
+3418,ANET,cash_paid_for_interest,2019-12-31,review,0001596532-20-000024,7,42,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
+3418,ANET,cash_paid_for_interest,2020-12-31,review,0001596532-21-000049,7,42,CF,InterestPaidLeaseFinancingObligation,Cash paid for interest  lease financing obligation
+3418,ANET,goodwill,2024-12-31,GAP,0001596532-25-000028,3,10,BS,IntangibleAssetsNetIncludingGoodwill,"Goodwill and acquisition-related intangible assets, net"
+3418,ANET,share_buybacks,2015-12-31,review,0001596532-16-000244,7,47,CF,ProceedsFromStockOptionsExercised,"Proceeds from issuance of common stock upon exercising options, net of repurchases"
+3418,ANET,share_buybacks,2016-12-31,review,0001596532-17-000019,7,43,CF,ProceedsFromStockOptionsExercised,"Proceeds from issuance of common stock upon exercising options, net of repurchases"

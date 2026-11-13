@@ -10,6 +10,11 @@ evidence_line, evidence_plabel, evidence_cal_parent, decided_by, rule_id. Extra 
     components are warnings (the mapper writes the blank by name), listed in the output.
 Per company: validate every row against the table's own checks (and era overlap), then in ONE transaction replace
 that company's rows. Dry run by default (reads only); --apply writes. One bad row blocks the whole file.
+
+only_rule (--only-rule family.rule@N): load only the file's rows of that rule and replace only that rule's rows, so the
+rows other writers own (docmap@1, era_extend@1, a rewritten map) stay. A tagless status row of the rule is dropped (listed
+in 'superseded_by_live') where a live row of another rule already decides the same concept in an overlapping era: a
+served value or an earlier decision is never covered by a second reason. Overlaps are checked against those live rows.
 """
 
 from __future__ import annotations
@@ -330,6 +335,7 @@ def seed(
     apply: bool = False,
     default_rule_id: str = DEFAULT_RULE_ID,
     open_periods: Path | None = None,
+    only_rule: str | None = None,
 ) -> dict:
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company")
@@ -391,9 +397,63 @@ def seed(
                     f"row {i}: instant component sum refused: {pname} <- {n['tag']} (instants are never derived; only total_debt)"
                 )
                 continue
+        if only_rule is not None and n["rule_id"] != only_rule:
+            continue  # another writer's row: neither loaded nor replaced
         by_company[n["company_id"]].append(n)
-    for rows in by_company.values():
-        errors.extend(check_overlaps(rows))
+    superseded: list[dict] = []
+    if only_rule is not None and by_company:
+        live: dict[int, list[dict]] = defaultdict(list)
+        with conn.cursor() as cur:
+            cur.execute(
+                "select company_id, taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, era_from, era_to, rule_id "
+                "from analytics.company_tag_map where company_id = any(%s) and rule_id <> %s",
+                (sorted(by_company), only_rule),
+            )
+            cols = [d.name for d in cur.description]
+            for t in cur.fetchall():
+                live[t[0]].append(dict(zip(cols, t)))
+
+        def clash(a, b):
+            return (a["era_to"] is None or a["era_to"] >= b["era_from"]) and (
+                b["era_to"] is None or b["era_to"] >= a["era_from"]
+            )
+
+        for company_id, rows in by_company.items():
+            kept = []
+            for n in rows:
+                hit = None
+                if n["decision"] in TAGLESS:
+                    hit = next(
+                        (
+                            x
+                            for x in live[company_id]
+                            if x["decision"] in ("concept", "component", *TAGLESS)
+                            and (x["canonical_concept_id"] or x["parent_concept_id"])
+                            == n["canonical_concept_id"]
+                            and clash(x, n)
+                        ),
+                        None,
+                    )
+                if hit:
+                    superseded.append(
+                        {
+                            "company_id": company_id,
+                            "canonical_concept_id": n["canonical_concept_id"],
+                            "era_from": n["era_from"],
+                            "by_rule": hit["rule_id"],
+                            "by_decision": hit["decision"],
+                        }
+                    )
+                else:
+                    kept.append(n)
+            by_company[company_id] = kept
+            before = set(check_overlaps(live[company_id]))
+            errors.extend(
+                e for e in check_overlaps(kept + live[company_id]) if e not in before
+            )
+    else:
+        for rows in by_company.values():
+            errors.extend(check_overlaps(rows))
     stats: dict[str, Any] = {
         "companies": len(by_company),
         "rows": sum(map(len, by_company.values())),
@@ -406,6 +466,8 @@ def seed(
         "warnings": sorted(set(warnings)),
         "errors": errors,
         "applied": False,
+        "only_rule": only_rule,
+        "superseded_by_live": superseded,
     }
     stats["winner_tag_gaps"], stats["winner_tag_gap_details"] = winner_tag_gaps(
         conn,
@@ -416,10 +478,16 @@ def seed(
         return stats  # all-or-nothing on validation
     for company_id, rows in sorted(by_company.items()):
         with conn.transaction():
-            conn.execute(
-                "delete from analytics.company_tag_map where company_id = %s",
-                (company_id,),
-            )
+            if only_rule is not None:
+                conn.execute(
+                    "delete from analytics.company_tag_map where company_id = %s and rule_id = %s",
+                    (company_id, only_rule),
+                )
+            else:
+                conn.execute(
+                    "delete from analytics.company_tag_map where company_id = %s",
+                    (company_id,),
+                )
             with conn.cursor() as cur:
                 cur.executemany(INSERT, rows)
     stats["applied"] = True

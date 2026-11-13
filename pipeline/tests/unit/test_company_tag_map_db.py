@@ -282,3 +282,36 @@ def test_seeder_refuses_instant_component_rows_except_total_debt(isolated_databa
         assert [r["parent_concept"] for r in st["refused_instant_components"]] == ["tm_inventory"]
         assert len(st["errors"]) == 1 and "instant component sum refused" in st["errors"][0]
         assert inv
+
+
+@pytest.mark.integration
+def test_seeder_only_rule_replaces_only_that_rules_rows_and_never_reasons_over_a_live_decision(isolated_database_url, tmp_path):
+    from scrooner_pipeline.mapper.company_tag_map_seed import seed
+
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, *_ = x["company"]("0000000901", True)
+        ins = ("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, reason, era_from, era_to, "
+               "decided_by, rule_id) values (%s,%s,%s,'IS',%s,%s,%s,%s,%s,'t',%s)")
+        # another writer's rows (docmap loader, era extension): must survive
+        conn.execute(ins, (co, "us-gaap", "Revenues", "concept", x["rev"], None, "2015-01-01", "2017-12-31", "tm.docmap@1"))
+        conn.execute(ins, (co, None, None, "not_presented", x["opex"], "docmap read", "2016-12-31", "2016-12-31", "tm.docmap@1"))
+        # an earlier run of the rule being reloaded: must be replaced
+        conn.execute(ins, (co, None, None, "not_presented", x["rev"], "old run", "2019-12-31", "2019-12-31", "tm.status@1"))
+        conn.commit()
+        f = tmp_path / "m.csv"
+        head = "company_id,taxonomy,tag,stmt,decision,canonical_concept,reason,era_from,era_to,decided_by,rule_id\n"
+        f.write_text(head
+                     + f"{co},,,IS,not_presented,tm_rev,covered by the live concept row,2016-12-31,2016-12-31,t,tm.status@1\n"
+                     + f"{co},,,IS,not_presented,tm_rev,a year no one decided,2018-12-31,2018-12-31,t,tm.status@1\n"
+                     + f"{co},,,IS,not_presented,tm_opex,decided by the docmap already,2016-12-31,2016-12-31,t,tm.status@1\n"
+                     + f"{co},us-gaap,OtherOpex,IS,concept,tm_opex,,2015-01-01,,t,tm.other@1\n")  # another rule in the file: ignored
+        st = seed(conn, f, apply=True, only_rule="tm.status@1")
+        assert st["errors"] == [] and st["applied"] and st["rows"] == 1
+        assert sorted((s["era_from"].isoformat(), s["by_rule"]) for s in st["superseded_by_live"]) == [
+            ("2016-12-31", "tm.docmap@1"), ("2016-12-31", "tm.docmap@1")]
+        rows = conn.execute("select decision, tag, rule_id, reason, era_from::text from analytics.company_tag_map where company_id = %s "
+                            "order by rule_id, era_from", (co,)).fetchall()
+        assert rows == [("concept", "Revenues", "tm.docmap@1", None, "2015-01-01"),
+                        ("not_presented", None, "tm.docmap@1", "docmap read", "2016-12-31"),
+                        ("not_presented", None, "tm.status@1", "a year no one decided", "2018-12-31")]

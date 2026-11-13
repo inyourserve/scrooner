@@ -90,14 +90,14 @@ def test_a_candidate_tag_anywhere_in_the_years_filing_is_a_gap_never_a_reason(tm
     lines = [_line("A2020", "AmortizationOfIntangibleAssets", "Amortization expense", stmt="UN")]  # a note page, not the face
     new, gaps = _run(tmp_path, [_cell("amortization_of_intangibles", "2020-12-31")], lines)
     assert new == []
-    assert [(g["kind"], g["tag"], g["report"]) for g in gaps] == [("GAP", "AmortizationOfIntangibleAssets", "R4.htm")]
+    assert [(g["kind"], g["tag"], g["report"]) for g in gaps] == [("GAP", "AmortizationOfIntangibleAssets", "4")]
 
 
 def test_a_combined_tag_spanning_the_data_point_is_not_in_template_with_the_line_as_evidence(tmp_path):
     lines = [_line("A2020", "AccountsPayableAndAccruedLiabilitiesCurrent", "Accounts payable and accrued liabilities", stmt="BS")]
     new, gaps = _run(tmp_path, [_cell("accounts_payable", "2020-12-31")], lines)
     assert [(r["decision"], r["reason_class"], r["evidence_report"]) for r in new] == \
-        [("not_in_template", "line_presented_combined_with_others", "R4.htm")]
+        [("not_in_template", "line_presented_combined_with_others", "4")]  # the report number, never the R-file code
     assert gaps == []
 
 

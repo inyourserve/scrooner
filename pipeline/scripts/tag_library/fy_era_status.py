@@ -169,7 +169,7 @@ def main(tm, cells, fil, lin, fct, cc, out, gaps_out):
             continue
         if kind in ("GAP", "note_fact", "review"):
             gaps.append({"company_id": cid, "ticker": m.get("ticker", ""), "data_point": dp, "period": p, "kind": kind,
-                         "accession": f["accession"], "report": x["rfile"] or x["report"], "line": x["line"], "stmt": x["stmt"],
+                         "accession": f["accession"], "report": x["report"], "line": x["line"], "stmt": x["stmt"],
                          "tag": x["tag"], "plabel": x["plabel"]})
             continue
         e = {k: "" for k in cols}
@@ -178,7 +178,7 @@ def main(tm, cells, fil, lin, fct, cc, out, gaps_out):
                  era_from=p, era_to=p, decided_by="fy_era_status", rule_id="tagmap.fy_era_status@1", evidence_adsh=f["accession"],
                  lines="0", filings="1")
         if kind == "combined":
-            e.update(decision="not_in_template", reason_class="line_presented_combined_with_others", evidence_report=x["rfile"] or x["report"],
+            e.update(decision="not_in_template", reason_class="line_presented_combined_with_others", evidence_report=x["report"],
                      evidence_line=x["line"], evidence_plabel=x["plabel"],
                      reason=f"{p}: the period's own 10-K {f['accession']} prints {dp} only inside {x['tag']} ('{x['plabel']}')")
         else:

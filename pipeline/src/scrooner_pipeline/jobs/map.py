@@ -290,13 +290,21 @@ def seed_company_tag_map_cmd(
         "--apply",
         help="Write (one transaction per company, replacing its rows). Default: dry run.",
     ),
+    only_rule: str = typer.Option(
+        None,
+        "--only-rule",
+        help="Load and replace only this rule_id's rows (family.rule@N); other writers' rows stay. "
+        "A tagless row of the rule that a live row of another rule already decides is dropped (superseded_by_live).",
+    ),
 ) -> None:
     """Load a company's FSN-learned tag map (migration 0122). Dry run by default: validates every row
     against the table's constraints and prints counts, writes nothing."""
     from scrooner_pipeline.mapper.company_tag_map_seed import seed as seed_tag_map
 
     with get_connection() as conn:
-        stats = seed_tag_map(conn, path, apply=apply, open_periods=open_periods)
+        stats = seed_tag_map(
+            conn, path, apply=apply, open_periods=open_periods, only_rule=only_rule
+        )
     typer.echo(
         f"seed-company-tag-map: companies={stats['companies']} rows={stats['rows']} "
         f"undecided_skipped={stats['undecided_skipped']} held_verifier_sample_failed={stats['held_verifier_sample_failed']} applied={stats['applied']}"
@@ -311,6 +319,10 @@ def seed_company_tag_map_cmd(
     ):
         typer.echo(
             f"  winner-tag gap: company {company_id} {concept} {winner}: {n} period(s) only under {alt}"
+        )
+    if only_rule:
+        typer.echo(
+            f"  only rule {only_rule}: superseded_by_live={len(stats['superseded_by_live'])}"
         )
     for w in stats["warnings"]:
         typer.echo(f"  warning: {w}")
