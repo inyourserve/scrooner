@@ -159,6 +159,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "seed-expanded-concepts",
             "seed-expanded-definitions",
             "seed-sector-templates",
+            "seed-templates-from-catalog",
             "coverage",
             "unmapped-tags",
             "balance-identity-dry-run",
