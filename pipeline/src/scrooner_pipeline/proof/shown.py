@@ -133,17 +133,21 @@ PERIODIC_FORMS = (
 
 def _periodic_copies(
     conn: psycopg.Connection, company_id: int, floor: date
-) -> dict[tuple[str, int], list[tuple[str, Decimal, str]]]:
+) -> tuple[
+    dict[tuple[str, int], list[tuple[str, Decimal, str]]],
+    dict[tuple[str, int], set[str]],
+]:
     """(base canonical name, period_id) -> every periodic-form copy (accession,
     value, xbrl tag) of the cell in core.fact, authoritative or not: the resolver keeps
     one, the proof must see them all (restated copies that disagree are hidden,
     founder ruling)."""
     out: dict[tuple[str, int], list[tuple[str, Decimal, str]]] = defaultdict(list)
+    auth: dict[tuple[str, int], set[str]] = defaultdict(set)
     with conn.cursor() as cur:
         cur.execute(
             """
             select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
-                   fl.period_of_report, c.tag
+                   fl.period_of_report, c.tag, f.is_authoritative
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
@@ -154,7 +158,7 @@ def _periodic_copies(
             """,
             (company_id, list(PERIODIC_FORMS), floor),
         )
-        for name, pid, acc, value, ptype, end, por, tag in cur.fetchall():
+        for name, pid, acc, value, ptype, end, por, tag, is_auth in cur.fetchall():
             # an instant copy counts only where the filing's balance sheet can print it (its own
             # date or the prior year end): older instants are cash-flow/equity opening balances,
             # and a filer that misdates one (HD 0000354950-19-000010 files the 2016-01-31 cash
@@ -166,7 +170,9 @@ def _periodic_copies(
             ):
                 continue
             out[(name, pid)].append((acc, Decimal(value), tag))
-    return out
+            if is_auth:
+                auth[(name, pid)].add(acc)
+    return out, auth
 
 
 def matching_copies(
@@ -241,7 +247,7 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
-    copies_by = _periodic_copies(conn, company_id, floor)
+    copies_by, auth_by = _periodic_copies(conn, company_id, floor)
     for name, ptype, fp, start, end, value, src, period_id in rows:
         if name not in names:
             continue
@@ -268,6 +274,10 @@ def load_shown(
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
         copies = matching_copies(copies_by.get((_base_name(name), period_id), []), tags)
         disagreeing = disagreeing_copies(copies, shown_value, scale)
+        auth_accs = auth_by.get((_base_name(name), period_id), set())
+        # the authoritative (latest accepted periodic filing) copy is what the cell must show; an
+        # earlier copy that differs is restated history (audit R13)
+        auth_differs = [d for d in disagreeing if d[0] in auth_accs]
         out.append(
             Shown(
                 company_id=company_id,
@@ -282,6 +292,7 @@ def load_shown(
                 is_derived=derived,
                 presentation_scale=scale,
                 copies_disagree=tuple(disagreeing) or None,
+                authoritative_disagrees=tuple(auth_differs) or None,
                 copies=len(copies),
                 claim=claim_for(map_rows, name, end),
                 combined=combined_for(combined_rows, name, end),
