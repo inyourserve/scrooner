@@ -25,10 +25,11 @@ VERDICT_SOURCES = (
     "proof/dims.py",
     "common/authority.py",
     "common/presentation_scale.py",
+    "common/tag_aliases.py",
 )
 
-PINNED_VERSION = "cell_proof_v3_2026-11-13"
-PINNED_HASH = "d0f3b864fe8fadea8451d0d97bf665aa1a5d1d1c58bd7c09b7ad36d6d47fe843"
+PINNED_VERSION = "cell_proof_v4_2026-11-13"
+PINNED_HASH = "3557700b7b6d5c12a00fac7b603ba7c860bf9064366850afa4dcd4c370f379be"
 
 
 def source_hash() -> str:

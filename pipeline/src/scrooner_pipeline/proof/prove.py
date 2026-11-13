@@ -32,6 +32,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
+from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
 
@@ -42,7 +43,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v3_2026-11-13"
+DETECTOR_VERSION = "cell_proof_v4_2026-11-13"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -454,6 +455,11 @@ def same(a: Decimal, b: Decimal, tol: Decimal) -> bool:
     return abs(a - b) <= tol
 
 
+def _revenue_like(tag: str) -> bool:
+    t = tag.lower()
+    return "revenue" in t or t.startswith("sales")
+
+
 def select_position(
     structure: FilingStructure, data_point: str, claim: Claim | None = None
 ) -> tuple[PreLine | None, str | None]:
@@ -485,6 +491,18 @@ def select_position(
         # a filer extension: a custom "total revenues" with the standard revenue tag
         # beneath it means the printed total is not the standard line.
         custom = structure.custom_parents.get(chosen.tag, set()) - candidate_tags
+        if data_point == "revenue_sanity_resolved":
+            # S4: the top line is a component only of a custom parent that is itself a revenue total (every
+            # calc child a revenue/sales line). A roll-up that also sums costs, other income or equity income
+            # (EBITDA, contribution profit, revenues-and-other-income) is not a higher revenue total.
+            custom = {
+                c
+                for c in custom
+                if not structure.calc_children.get(c)
+                or all(
+                    _revenue_like(t) for t, _neg in structure.calc_children.get(c, ())
+                )
+            }
         # a line that is itself a calc parent is a printed total, whatever a filer
         # rolls it up into (AMZN cash from operations under a custom cash roll-up,
         # PG operating income under a custom pre-tax line): never a component
@@ -711,6 +729,14 @@ def _finish(
         "class": cls,
     }
     failed = [k for k, v in p.checks.items() if v.get("status") == "fail"]
+    if (
+        "components_sum" in failed
+        and p.checks.get("statement_face", {}).get("status") == "pass"
+    ):
+        # S1: a total the face prints proves itself. Its calc children may sit on another statement or in a
+        # note (JPM interest income, MCD cash from operations), so a failed components_sum is advisory.
+        failed.remove("components_sum")
+        p.checks["components_sum"]["advisory"] = True
     if same(shown.value, expect, tol) and not failed:
         p.verdict = PROVEN
         return p
@@ -831,8 +857,13 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
             continue
         if segs:  # member claim: ONLY the value under exactly these members, never the total (proof/dims.py)
             nv = find_value_dim(structure, base, ddate, qtrs, cls, segs)
-        else:  # plain claim: the non-dimensional value only
-            nv = find_value(structure, tag, ddate, qtrs, cls)
+        else:  # plain claim: the non-dimensional value only; a renamed extension tag is the same line
+            nv = None
+            for alt in with_aliases(tag):
+                nv = find_value(structure, alt, ddate, qtrs, cls)
+                if nv is not None:
+                    tag = alt
+                    break
         if nv is None:
             missing.append(tag)
             continue

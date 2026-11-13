@@ -561,6 +561,65 @@ def test_components_sum_allows_sum_of_rounded_children_and_ignores_single_arc_gr
 
 
 @pytest.mark.unit
+def test_s4_revenue_under_a_custom_rollup_that_is_not_a_revenue_total_is_the_top_line():
+    # MPC (revenues and other income), T/UBER (EBITDA), NFLX (contribution profit): the roll-up sums non-revenue
+    s = structure()
+    rev = "RevenueFromContractWithCustomerExcludingAssessedTax"
+    s.calc_parents[rev] = {"xyz_RevenuesAndOtherIncome"}
+    s.custom_parents[rev] = {"xyz_RevenuesAndOtherIncome"}
+    s.calc_children["xyz_RevenuesAndOtherIncome"] = [
+        (rev, False),
+        ("IncomeLossFromEquityMethodInvestments", False),
+    ]
+    line, why = pv.select_position(s, "revenue_sanity_resolved")
+    assert line is not None and line.tag == rev
+    # a roll-up whose children are all revenue lines IS a higher revenue total: the line is a component
+    s.calc_children["xyz_RevenuesAndOtherIncome"] = [
+        (rev, False),
+        ("SalesRevenueServicesNet", False),
+    ]
+    line, why = pv.select_position(s, "revenue_sanity_resolved")
+    assert line is None and why == "component_only"
+
+
+def test_component_sum_reads_a_renamed_extension_tag_as_the_same_line():
+    s = structure()
+    for tag, v in (("OpA", "40000000000"), ("ImpairmentAndRestructuringExpenses", "2000000000")):
+        s.pre.append(PreLine(2, 20, "IS", tag, "us-gaap/2025", tag, tag.startswith("Impair")))
+        s.num[(tag, DDATE, 4)].append(NumValue(tag, "us-gaap/2025", DDATE, 4, "USD", Decimal(v), -6))
+    claim = pv.Claim(
+        "component",
+        "IS",
+        (),
+        (
+            (1, "OpA"),
+            (1, "ImpairmentIntegrationAndRestructuringExpenses"),
+        ),
+    )
+    sh = shown("operating_expenses_resolved", "42000000000")
+    sh = pv.replace(sh, claim=claim) if hasattr(pv, "replace") else sh
+    p = pv.prove_cell(sh, s, "2025q4")
+    assert p.verdict == pv.PROVEN, p.reason_text
+
+
+def test_s1_a_printed_total_proves_itself_when_its_components_are_elsewhere():
+    s = structure()
+    # operating income's calc children do not tie (components live in a note or another statement)
+    s.calc_children["OperatingIncomeLoss"] = [
+        ("GrossProfit", False),
+        ("OperatingExpenses", True),
+        ("SomethingElse", False),
+    ]
+    s.num[("SomethingElse", DDATE, 4)].append(
+        NumValue("SomethingElse", "us-gaap/2025", DDATE, 4, "USD", Decimal("5000000000"), -6)
+    )
+    p = pv.prove_cell(shown("operating_income_resolved", "134161000000"), s, "2025q4")
+    assert p.checks["components_sum"]["status"] == "fail"
+    assert p.verdict == pv.PROVEN and p.checks["components_sum"]["advisory"] is True
+    p = pv.prove_cell(shown("operating_income_resolved", "134000000000"), s, "2025q4")
+    assert p.verdict == pv.DISAGREE  # a value that is not the printed line still disagrees
+
+
 def test_a_calc_parent_line_is_a_total_even_under_a_custom_roll_up():
     s = structure()
     # operating income has children (gross profit - opex) and sits under a custom pre-tax line
