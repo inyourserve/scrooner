@@ -11,11 +11,12 @@ structure (proof/fsn.py), so a and b are tied to the same document.
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
 import psycopg
 
+from scrooner_pipeline.common.authority import face_column_eligible
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
 from scrooner_pipeline.proof.prove import EXPECTED, Claim, Shown
 
@@ -155,7 +156,7 @@ def _periodic_copies(
         cur.execute(
             """
             select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
-                   fl.period_of_report, c.tag, f.is_authoritative
+                   fl.period_of_report, c.tag, f.is_authoritative, fl.form
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
@@ -166,16 +167,24 @@ def _periodic_copies(
             """,
             (company_id, list(PERIODIC_FORMS), floor),
         )
-        for name, pid, acc, value, ptype, end, por, tag, is_auth in cur.fetchall():
-            # an instant copy counts only where the filing's balance sheet can print it (its own
-            # date or the prior year end): older instants are cash-flow/equity opening balances,
-            # and a filer that misdates one (HD 0000354950-19-000010 files the 2016-01-31 cash
-            # at 2015-01-31) must not make a shown cell "restated copies disagree"
-            if (
-                ptype == "instant"
-                and por is not None
-                and end < por - timedelta(days=375)
-            ):
+        for (
+            name,
+            pid,
+            acc,
+            value,
+            ptype,
+            end,
+            por,
+            tag,
+            is_auth,
+            form,
+        ) in cur.fetchall():
+            # a copy counts only where its filing can print the period as a face column (shared
+            # authority rule, common/authority.py): older instants are cash-flow/equity opening
+            # balances, and a filer that misdates one (HD 0000354950-19-000010 files the 2018
+            # goodwill at 2015-02-01) must neither make a shown cell "restated" nor be its
+            # authoritative copy. The filing of the period itself is always eligible.
+            if not face_column_eligible(form, por, end, ptype):
                 continue
             out[(name, pid)].append((acc, Decimal(value), tag))
             if is_auth:
