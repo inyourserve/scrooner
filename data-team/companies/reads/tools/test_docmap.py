@@ -275,3 +275,19 @@ def test_16_affiliate_summarized_pages_are_rejected_notes():
 def test_17_financial_group_from_the_group_file(monkeypatch):
     monkeypatch.setattr(docmap, "_GROUPS", {"CACC": "lender_nonbank", "AAPL": "corporate"})
     assert docmap.template_group("CACC") in docmap.FIN_GROUPS and docmap.template_group("AAPL") not in docmap.FIN_GROUPS
+
+
+def test_18_face_row_beats_overlapping_member_blocks():
+    # CVLT: 'Total revenues' on the face, then two axes (product and segment) each repeating it by member
+    rows = [_r("us-gaap:Revenues", "Total revenues", 100.0),
+            _r("srt:ProductOrServiceAxis", "Subscription", None), _r("us-gaap:Revenues", "Total revenues", 60.0),
+            _r("srt:ProductOrServiceAxis", "Services", None), _r("us-gaap:Revenues", "Total revenues", 40.0),
+            _r("us-gaap:StatementBusinessSegmentsAxis", "Americas", None), _r("us-gaap:Revenues", "Total revenues", 70.0),
+            _r("us-gaap:StatementBusinessSegmentsAxis", "Intl", None), _r("us-gaap:Revenues", "Total revenues", 30.0)]
+    page = {"rows": docmap.dedupe_coreg(rows)}
+    got = docmap.member_sum(page, page["rows"][0])
+    assert got["vals"][0] == 100.0 and "parts" not in got
+    # members only (no face row of the tag): still summed as before (fix 13)
+    page2 = {"rows": docmap.dedupe_coreg(rows[1:5])}
+    first = next(x for x in page2["rows"] if x["tag"] == "us-gaap:Revenues")
+    assert docmap.member_sum(page2, first)["vals"][0] == 100.0

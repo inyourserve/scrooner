@@ -358,8 +358,11 @@ def member_sum(page: dict, r: dict) -> dict:
     of ALL printed member rows, as tag[member: label] (Dhairya 2026-11-12, INTU 4,253, AMT, WMB, REGN, CDNS).
     A row equal to the sum of the others is the printed total and is used alone."""
     same = [x for x in page["rows"] if x["tag"] == r["tag"] and _has(x)]
+    face = [x for x in same if not x.get("member_block")]
+    if face:
+        same = face  # fix 22: rows of the face block decide; member-block rows only when the face block lacks the tag
     if len(same) < 2:
-        return r
+        return same[0] if same else r
     v0 = [x["vals"][0] if x["vals"] else None for x in same]
     if None in v0:
         return r
@@ -793,7 +796,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
     # (by tag or label); the note total is used only when no face line carries finance leases.
     bs = pages.get("BS")
     if bs and bs["rows"]:
-        parts = [x for x in bs["rows"] if x["tag"].split(":")[-1] in DEBT_TAGS and x["tag"].startswith("us-gaap")
+        parts = [x for x in bs["rows"] if not x.get("member_block") and x["tag"].split(":")[-1] in DEBT_TAGS and x["tag"].startswith("us-gaap")
                  and any(v is not None for v in x["vals"])]
         cols = pick_cols(bs, "BS")
         rec = {"ticker": tic, "data_point": "total_debt", "stmt": "BS", "r_page": reps["BS"][1],
@@ -806,7 +809,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
                     break
         lease_in_debt = any(re.search(r"Lease", p["tag"]) or re.search(r"finance lease|capital lease|lease obligations", p["label"], re.I)
                             for p in parts)
-        fl_face = [x for x in bs["rows"] if _has(x) and x["tag"].split(":")[-1] in FIN_LEASE_TAGS
+        fl_face = [x for x in bs["rows"] if not x.get("member_block") and _has(x) and x["tag"].split(":")[-1] in FIN_LEASE_TAGS
                    and not re.search(r"operating", x["label"], re.I)]
         lease_note = ""
         if (parts or fl_face) and cols:  # face debt carried only on finance-lease tags (LSTR) is total debt too (fix 21)
@@ -850,7 +853,7 @@ def read_company(row: dict, cache: str) -> tuple[list[dict], list[str], dict]:
         pg = pages.get(key)
         if not pg:
             continue
-        sh = [x for x in pg["rows"] if x["tag"] == "us-gaap:CommonStockSharesOutstanding"
+        sh = [x for x in pg["rows"] if not x.get("member_block") and x["tag"] == "us-gaap:CommonStockSharesOutstanding"
               and any(v is not None for v in x["vals"])]
         if sh:
             found = (key, pg, sh)
