@@ -570,48 +570,78 @@ def companies_by_ticker(conn: psycopg.Connection) -> dict[str, set[tuple[int, st
     return by_ticker
 
 
+def _base(name: str) -> str:
+    return {"revenue_sanity_resolved": "revenue"}.get(
+        name, name.removesuffix("_resolved")
+    )
+
+
+def global_candidates(conn: psycopg.Connection) -> dict[str, set[str]]:
+    """Base concept name -> every tag the map serves it with, for any company (the candidate set an absence check
+    must rule out; same idea as fy_era_status.candidates)."""
+    out: dict[str, set[str]] = defaultdict(set)
+    with conn.cursor() as cur:
+        cur.execute(
+            """select coalesce(cc.name, pc.name), m.tag
+               from analytics.company_tag_map m
+               left join analytics.canonical_concept cc on cc.id = m.canonical_concept_id
+               left join analytics.canonical_concept pc on pc.id = m.parent_concept_id
+               where m.decision in ('concept', 'component') and m.tag is not null
+               group by 1, 2"""
+        )
+        for name, tag in cur.fetchall():
+            if name:
+                out[_base(name)].add(tag)
+    return out
+
+
 def extend_company(
     conn: psycopg.Connection,
     cid: int,
     rows: list[DocmapRow],
     concept_ids: dict[str, int],
     log: list[dict],
+    global_cands: dict[str, set[str]] | None = None,
 ) -> list[DocmapRow]:
-    """--extend-eras: each value row's era walked back through the company's earlier 10-Ks (era_extend.extend)."""
+    """--extend-eras: each row's era walked back through the company's earlier 10-Ks. Value rows: same tag, same
+    line or value (era_extend.extend). Reason rows (not_presented, combined, OUT): while no candidate tag of the concept
+    is on a statement line or in the filing's facts (era_extend.extend_absent)."""
+    global_cands = global_cands or {}
     value_rows = [d for d in rows if d.status in VALUE_STATUSES]
-    if not value_rows:
+    reason_rows = [d for d in rows if d.status in TAGLESS_STATUS]
+    if not value_rows and not reason_rows:
         return rows
-    tags = {tag for d in value_rows for _, _, tag in d.parts}
-    cids = {
-        concept_ids[n]
-        for d in value_rows
-        for n in (d.data_point, d.data_point.removesuffix("_resolved"))
-        if n in concept_ids
-    }
-    data = era_extend.fetch(conn, cid, tags, cids)
-    out = []
-    for d in rows:
-        if d.status not in VALUE_STATUSES:
-            out.append(d)
-            continue
-        dp_ids = {
+
+    def ids_of(d: DocmapRow) -> set[int]:
+        return {
             concept_ids[n]
             for n in (d.data_point, d.data_point.removesuffix("_resolved"))
             if n in concept_ids
         }
-        era, adsh, rlog, by_value = era_extend.extend(
-            [tag for _, _, tag in d.parts], dp_ids, d.era_from, d.accession, data
+
+    own: dict[str, set[str]] = defaultdict(
+        set
+    )  # the docmap's own value tags per base concept
+    for d in value_rows:
+        own[_base(d.data_point)] |= {tag for _, _, tag in d.parts}
+    tags = {tag for d in value_rows for _, _, tag in d.parts}
+    cids = {c for d in value_rows + reason_rows for c in ids_of(d)}
+    cand_tags: set[str] = set()
+    for d in reason_rows:
+        cand_tags |= (
+            global_cands.get(_base(d.data_point), set()) | own[_base(d.data_point)]
         )
-        for r in rlog:
-            log.append(
-                {
-                    "ticker": d.ticker,
-                    "data_point": d.data_point,
-                    "read_adsh": d.accession,
-                    **r,
-                }
+        cand_tags |= {tag for _, _, tag in d.parts}
+    data = era_extend.fetch(conn, cid, tags | cand_tags, cids)
+    with_facts, present = (
+        era_extend.fetch_facts(conn, cid, cand_tags) if reason_rows else (set(), {})
+    )
+    out = []
+    for d in rows:
+        if d.status in VALUE_STATUSES:
+            era, adsh, rlog, by_value = era_extend.extend(
+                [tag for _, _, tag in d.parts], ids_of(d), d.era_from, d.accession, data
             )
-        if adsh is not None and era < d.era_from:
             if by_value:
                 note = (
                     f"{era_extend.EXT_MARK_VALUE}: same tag carried non-dimensionally, same period type and unit "
@@ -623,6 +653,49 @@ def extend_company(
                     f"{era_extend.EXT_MARK}: same tag on the same line (stmt, role/label, calc parent) in each "
                     f"10-K back to {adsh} (FY from {era}); docmap read {d.accession}"
                 )
+        elif d.status in TAGLESS_STATUS:
+            cands = (
+                global_cands.get(_base(d.data_point), set())
+                | own[_base(d.data_point)]
+                | {
+                    t
+                    for c in ids_of(d)
+                    for acc_map in data.mapped.values()
+                    for t in acc_map.get(c, ())
+                }
+            )
+            era, adsh, rlog = era_extend.extend_absent(
+                cands,
+                [tag for _, _, tag in d.parts] if d.status == "combined" else [],
+                d.era_from,
+                data,
+                with_facts,
+                present,
+            )
+            note = (
+                f"{era_extend.EXT_MARK_ABSENT}: in each 10-K back to {adsh} (FY from {era}) no candidate tag of the "
+                f"concept on a statement line or in the facts"
+                + (
+                    "; the combined line still printed"
+                    if d.status == "combined"
+                    else ""
+                )
+                + f"; docmap read {d.accession}"
+            )
+        else:
+            out.append(d)
+            continue
+        for r in rlog:
+            log.append(
+                {
+                    "ticker": d.ticker,
+                    "data_point": d.data_point,
+                    "kind": d.status,
+                    "read_adsh": d.accession,
+                    **r,
+                }
+            )
+        if adsh is not None and era < d.era_from:
             d = replace(d, era_from=era, base_era=d.era_from, ext_note=note)
         out.append(d)
     return out
@@ -656,6 +729,7 @@ def load(
     }
     docs: dict[int, tuple[str, list[DocmapRow]]] = {}
     era_log_rows: list[dict] = []
+    global_cands = global_candidates(conn) if extend_eras else {}
     stats["extended"] = []
     for p in files:
         md = p.with_suffix(".md")
@@ -717,7 +791,7 @@ def load(
                     continue
                 ok.append(d)
         if extend_eras:
-            ok = extend_company(conn, cid, ok, concept_ids, era_log_rows)
+            ok = extend_company(conn, cid, ok, concept_ids, era_log_rows, global_cands)
             stats["extended"] += [
                 {
                     "ticker": d.ticker,
