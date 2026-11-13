@@ -30,7 +30,7 @@ VERDICT_SOURCES = (
 )
 
 PINNED_VERSION = "cell_proof_v5_2026-11-13"
-PINNED_HASH = "3557700b7b6d5c12a00fac7b603ba7c860bf9064366850afa4dcd4c370f379be"
+PINNED_HASH = "691db54361da0318cd46212b1bd53245c414f62a09f8eabf812dcc50b51dca2f"
 
 
 def source_hash() -> str:

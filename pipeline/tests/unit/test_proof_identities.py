@@ -89,7 +89,9 @@ def test_only_proven_members_flip():
     ps[1].verdict = UNCHECKED
     apply_identities(ps)
     assert verdicts(ps) == [DISAGREE, UNCHECKED, DISAGREE]
-    assert ps[1].checks["identity"]["name"] == "gross_profit"  # recorded, verdict untouched
+    assert (
+        ps[1].checks["identity"]["name"] == "gross_profit"
+    )  # recorded, verdict untouched
 
 
 def test_tolerance_edge():
@@ -231,7 +233,9 @@ def test_net_income_cf_tie():
     from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine
 
     st = FilingStructure("acc", "1", "10-K", None, None)
-    st.pre.append(PreLine(6, 1, "CF", "NetIncomeLoss", "us-gaap/2017", "Net income", False))
+    st.pre.append(
+        PreLine(6, 1, "CF", "NetIncomeLoss", "us-gaap/2017", "Net income", False)
+    )
     st.num[("NetIncomeLoss", FY[2], 4)].append(
         NumValue("NetIncomeLoss", "us-gaap/2017", FY[2], 4, "USD", Decimal(21 * M), -6)
     )
@@ -251,7 +255,9 @@ def test_net_income_cf_profitloss_nets_nci_income():
     from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine
 
     st = FilingStructure("acc", "1", "10-K", None, None)
-    st.pre.append(PreLine(6, 1, "CF", "ProfitLoss", "us-gaap/2017", "Net income", False))
+    st.pre.append(
+        PreLine(6, 1, "CF", "ProfitLoss", "us-gaap/2017", "Net income", False)
+    )
     st.num[("ProfitLoss", FY[2], 4)].append(
         NumValue("ProfitLoss", "us-gaap/2017", FY[2], 4, "USD", Decimal(25 * M), -6)
     )
@@ -279,7 +285,9 @@ def test_cf_start_value_is_annual_only():
     from scrooner_pipeline.proof.identities import cf_start_value
 
     st = FilingStructure("acc", "1", "10-K", None, None)
-    st.pre.append(PreLine(6, 1, "CF", "NetIncomeLoss", "us-gaap/2017", "Net income", False))
+    st.pre.append(
+        PreLine(6, 1, "CF", "NetIncomeLoss", "us-gaap/2017", "Net income", False)
+    )
     st.num[("NetIncomeLoss", FY[2], 4)].append(
         NumValue("NetIncomeLoss", "us-gaap/2017", FY[2], 4, "USD", Decimal(21 * M), -6)
     )

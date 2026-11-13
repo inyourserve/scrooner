@@ -321,7 +321,9 @@ def _check_period(
                     # breaks): equal to the flows alone is then the same printed line, not a break
                     rhs0 = rhs - fx[1]
                     if (
-                        _evaluate("cash_change", m, change[1], rhs0, [*extra, change[1]])
+                        _evaluate(
+                            "cash_change", m, change[1], rhs0, [*extra, change[1]]
+                        )
                         is None
                     ):
                         rec = None
@@ -345,7 +347,9 @@ def _check_period(
                 )
                 if nci_inc is None and ni == start_v:
                     nci_inc = Decimal(0)
-            if nci_inc is not None:  # NCI income not printed: parent vs total cannot be told apart
+            if (
+                nci_inc is not None
+            ):  # NCI income not printed: parent vs total cannot be told apart
                 rhs = start_v - nci_inc
                 if tag == "ProfitLoss":
                     extra.append(nci_inc)
