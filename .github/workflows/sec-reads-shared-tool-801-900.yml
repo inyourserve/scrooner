@@ -1,0 +1,45 @@
+name: Shared reader machine pass (ranks 801-900)
+
+# Dhairya 2026-11-13: lane 801-900 resumes from rank 811 with the shared tool data-team/companies/reads/tools/docmap.py
+# (copied unchanged from origin/work/reads/401-500 @de14aace). The tool sends its own SEC requests, so it runs in
+# Actions with the repo's SEC_USER_AGENT secret (founder's choice: no session sends a contact address). sec.gov only,
+# 0.4 requests per second (the tool's own limit); the concurrency group serializes it with every other reads fetch.
+# Range: pipeline/scripts/reads/shared_request_801_900.txt (first line "lo hi").
+on:
+  push:
+    branches: [work/reads/801-900]
+    paths: [pipeline/scripts/reads/shared_request_801_900.txt]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sec-reads-fetch
+  cancel-in-progress: false
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Machine pass (0.4 requests per second)
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          umask 077
+          printf '%s' "${SEC_USER_AGENT#Scrooner research }" > "$RUNNER_TEMP/sec_contact"
+          export SEC_CONTACT_FILE="$RUNNER_TEMP/sec_contact"
+          read lo hi < pipeline/scripts/reads/shared_request_801_900.txt
+          mkdir -p reads_out tool_cache
+          python3 -I data-team/companies/reads/tools/docmap.py data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv \
+            "$lo" "$hi" reads_out tool_cache reads_out/inbox.md
+          rm -f "$RUNNER_TEMP/sec_contact"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shared-reads-801-900-${{ github.sha }}
+          path: |
+            reads_out/
+            tool_cache/
+          retention-days: 30
