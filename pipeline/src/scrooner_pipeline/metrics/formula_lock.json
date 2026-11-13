@@ -1,0 +1,338 @@
+{
+ "ap_change_reconciliation_gap": {
+  "fingerprint": "a3ce5598911b",
+  "version": 1
+ },
+ "ar_change_reconciliation_gap": {
+  "fingerprint": "94531092bbba",
+  "version": 1
+ },
+ "book_value_per_share": {
+  "fingerprint": "bc7cb9cbd00f",
+  "version": 1
+ },
+ "buyback_yield": {
+  "fingerprint": "57e66ffe14ff",
+  "version": 1
+ },
+ "capex_pct_revenue": {
+  "fingerprint": "77aacd82de71",
+  "version": 1
+ },
+ "cash_conversion_cycle": {
+  "fingerprint": "460f3e3ac1fb",
+  "version": 1
+ },
+ "cash_returned_to_shareholders": {
+  "fingerprint": "4b7317b42711",
+  "version": 1
+ },
+ "combined_ratio": {
+  "fingerprint": "9ecb2d2fe8b3",
+  "version": 1
+ },
+ "current_ratio": {
+  "fingerprint": "439359d4d98f",
+  "version": 1
+ },
+ "debt_to_ebitda": {
+  "fingerprint": "de1add9265f0",
+  "version": 1
+ },
+ "debt_to_equity": {
+  "fingerprint": "4d47ba7a8c6c",
+  "version": 1
+ },
+ "debtor_days": {
+  "fingerprint": "bac04eafa828",
+  "version": 1
+ },
+ "diluted_shares_growth_3y_cagr": {
+  "fingerprint": "b13dd4b60cba",
+  "version": 1
+ },
+ "diluted_shares_growth_5y_cagr": {
+  "fingerprint": "19b0f94a508a",
+  "version": 1
+ },
+ "diluted_shares_growth_yoy": {
+  "fingerprint": "3409952ea5fc",
+  "version": 1
+ },
+ "dividend_growth_streak_years": {
+  "fingerprint": "fd561a1e131b",
+  "version": 1
+ },
+ "dividend_yield": {
+  "fingerprint": "91e25bbd51f3",
+  "version": 1
+ },
+ "dividends_pct_fcf": {
+  "fingerprint": "c3d1f3a3c52e",
+  "version": 1
+ },
+ "dps_growth_3y_cagr": {
+  "fingerprint": "638871100133",
+  "version": 1
+ },
+ "dps_growth_yoy": {
+  "fingerprint": "35ba273a04ae",
+  "version": 1
+ },
+ "ebitda": {
+  "fingerprint": "57497e4ac223",
+  "version": 1
+ },
+ "ebitda_margin": {
+  "fingerprint": "d03483943e11",
+  "version": 1
+ },
+ "effective_tax_rate_gap": {
+  "fingerprint": "567a5875758d",
+  "version": 1
+ },
+ "efficiency_ratio": {
+  "fingerprint": "353c95fedeae",
+  "version": 1
+ },
+ "eps_dilution_spread": {
+  "fingerprint": "4da98a395cef",
+  "version": 1
+ },
+ "eps_growth_10y_cagr": {
+  "fingerprint": "989d45ef07a6",
+  "version": 1
+ },
+ "eps_growth_3y_cagr": {
+  "fingerprint": "d3121481aef1",
+  "version": 1
+ },
+ "eps_growth_5y_cagr": {
+  "fingerprint": "fda80e8d94b9",
+  "version": 1
+ },
+ "eps_growth_yoy": {
+  "fingerprint": "a4dd2635706b",
+  "version": 1
+ },
+ "ev_ebitda": {
+  "fingerprint": "b643c4c2877b",
+  "version": 1
+ },
+ "ev_sales": {
+  "fingerprint": "808b14ee9da0",
+  "version": 1
+ },
+ "fcf": {
+  "fingerprint": "930ffafbb732",
+  "version": 1
+ },
+ "fcf_growth_3y_cagr": {
+  "fingerprint": "b72e9c9855ce",
+  "version": 1
+ },
+ "fcf_growth_5y_cagr": {
+  "fingerprint": "88c85bf908f6",
+  "version": 1
+ },
+ "fcf_growth_yoy": {
+  "fingerprint": "cdcb0efbe44c",
+  "version": 1
+ },
+ "fcf_gt_net_income": {
+  "fingerprint": "a2ffae4f784c",
+  "version": 1
+ },
+ "fcf_margin": {
+  "fingerprint": "a54d9ba75930",
+  "version": 1
+ },
+ "fcf_per_share": {
+  "fingerprint": "40933f0bd2ea",
+  "version": 1
+ },
+ "fcf_yield": {
+  "fingerprint": "b02aec13354d",
+  "version": 1
+ },
+ "goodwill_pct_assets": {
+  "fingerprint": "3a5d42008e57",
+  "version": 1
+ },
+ "gross_margin": {
+  "fingerprint": "2480e0ac11a4",
+  "version": 1
+ },
+ "institutional_ownership_pct": {
+  "fingerprint": "9180532787fa",
+  "version": 1
+ },
+ "interest_coverage_ratio": {
+  "fingerprint": "7880ffec056f",
+  "version": 1
+ },
+ "inventory_change_reconciliation_gap": {
+  "fingerprint": "1f2a82a1cfe0",
+  "version": 1
+ },
+ "inventory_days": {
+  "fingerprint": "05bfb4e4c8f0",
+  "version": 1
+ },
+ "margin_expanding_3yr": {
+  "fingerprint": "adb2465e3cd8",
+  "version": 1
+ },
+ "market_cap": {
+  "fingerprint": "f274919ca289",
+  "version": 1
+ },
+ "net_cash": {
+  "fingerprint": "b11be432adce",
+  "version": 1
+ },
+ "net_cash_per_share": {
+  "fingerprint": "42f6019a9269",
+  "version": 1
+ },
+ "net_change_in_cash": {
+  "fingerprint": "6bdc4ff95d3e",
+  "version": 1
+ },
+ "net_debt_ebitda": {
+  "fingerprint": "6e3aa20e4927",
+  "version": 1
+ },
+ "net_income_growth_10y_cagr": {
+  "fingerprint": "d16bfc4cddf6",
+  "version": 1
+ },
+ "net_income_growth_3y_cagr": {
+  "fingerprint": "0fae46f2a709",
+  "version": 1
+ },
+ "net_income_growth_5y_cagr": {
+  "fingerprint": "21b43dbe6833",
+  "version": 1
+ },
+ "net_income_growth_yoy": {
+  "fingerprint": "db031072ccd8",
+  "version": 1
+ },
+ "net_interest_income": {
+  "fingerprint": "ccbae2bcfb3e",
+  "version": 1
+ },
+ "net_margin": {
+  "fingerprint": "3ce72fbd0aad",
+  "version": 1
+ },
+ "ocf_to_net_income": {
+  "fingerprint": "660fe6e14c14",
+  "version": 1
+ },
+ "operating_margin": {
+  "fingerprint": "2943f3988bff",
+  "version": 1
+ },
+ "payables_days": {
+  "fingerprint": "6e344893f906",
+  "version": 1
+ },
+ "payout_ratio": {
+  "fingerprint": "f044ea3dc784",
+  "version": 1
+ },
+ "peg_ratio": {
+  "fingerprint": "dcf8c88dce2f",
+  "version": 1
+ },
+ "piotroski_f_score": {
+  "fingerprint": "120e19e1e14c",
+  "version": 1
+ },
+ "pretax_margin": {
+  "fingerprint": "068177258744",
+  "version": 1
+ },
+ "price_to_book": {
+  "fingerprint": "8e93feb37a5b",
+  "version": 1
+ },
+ "price_to_sales": {
+  "fingerprint": "6dadaa2c8ac2",
+  "version": 1
+ },
+ "profitable_streak_years": {
+  "fingerprint": "ec101f266ea7",
+  "version": 1
+ },
+ "quick_ratio": {
+  "fingerprint": "3261c26b7886",
+  "version": 1
+ },
+ "revenue_growth_10y_cagr": {
+  "fingerprint": "9baa34de8f52",
+  "version": 1
+ },
+ "revenue_growth_3y_cagr": {
+  "fingerprint": "a6e156bedd12",
+  "version": 1
+ },
+ "revenue_growth_5y_cagr": {
+  "fingerprint": "6afd7dfbed25",
+  "version": 1
+ },
+ "revenue_growth_yoy": {
+  "fingerprint": "6f4baca557e9",
+  "version": 1
+ },
+ "rnd_intensity": {
+  "fingerprint": "54e419fb2041",
+  "version": 1
+ },
+ "roa": {
+  "fingerprint": "38742fa55b5a",
+  "version": 1
+ },
+ "roe": {
+  "fingerprint": "f5d3e3f1972f",
+  "version": 1
+ },
+ "roic": {
+  "fingerprint": "e3826da873f3",
+  "version": 1
+ },
+ "sbc_pct_revenue": {
+  "fingerprint": "c05c376b5799",
+  "version": 1
+ },
+ "sga_pct_revenue": {
+  "fingerprint": "f825e31c58fd",
+  "version": 1
+ },
+ "share_dilution_trend": {
+  "fingerprint": "271b137bcb91",
+  "version": 1
+ },
+ "share_repurchases_pct_fcf": {
+  "fingerprint": "372c76816d1d",
+  "version": 1
+ },
+ "total_shareholder_yield": {
+  "fingerprint": "1f5c42ee58e8",
+  "version": 1
+ },
+ "trailing_pe": {
+  "fingerprint": "da33357c5fc4",
+  "version": 1
+ },
+ "working_capital": {
+  "fingerprint": "77500d1f4b66",
+  "version": 1
+ },
+ "zero_debt": {
+  "fingerprint": "edbcf7af4d6e",
+  "version": 1
+ }
+}

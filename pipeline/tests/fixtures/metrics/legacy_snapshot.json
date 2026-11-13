@@ -1,0 +1,1607 @@
+{
+ "expanded": [
+  [
+   "roa",
+   "Net Income / Total Assets",
+   false,
+   [
+    [
+     "net_income",
+     "numerator"
+    ],
+    [
+     "total_assets",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "quick_ratio",
+   "(Current Assets - Inventory) / Current Liabilities",
+   false,
+   [
+    [
+     "current_assets",
+     "add"
+    ],
+    [
+     "inventory",
+     "subtract"
+    ],
+    [
+     "current_liabilities",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "sbc_pct_revenue",
+   "Stock-Based Compensation / Revenue",
+   false,
+   [
+    [
+     "sbc",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "ebitda",
+   "Operating Income + Depreciation & Amortization",
+   false,
+   [
+    [
+     "operating_income_resolved",
+     "add"
+    ],
+    [
+     "depreciation_and_amortization_resolved",
+     "add"
+    ]
+   ]
+  ],
+  [
+   "net_debt_ebitda",
+   "(Total Debt - Cash & Equivalents) / EBITDA (TTM). Computed in expanded_metrics.py -- EBITDA lives in metric_value, not canonical_fact, so calculate.py's generic engine can't reach it.",
+   false,
+   []
+  ],
+  [
+   "ev_ebitda",
+   "(Market Cap + Total Debt - Cash & Equivalents) / EBITDA (TTM)",
+   true,
+   []
+  ],
+  [
+   "ev_sales",
+   "(Market Cap + Total Debt - Cash & Equivalents) / Revenue (TTM)",
+   true,
+   []
+  ],
+  [
+   "peg_ratio",
+   "Trailing P/E / EPS Growth Rate (YoY, as a percentage number, e.g. 15 not 0.15)",
+   true,
+   []
+  ],
+  [
+   "buyback_yield",
+   "Share Buybacks (TTM) / Market Cap",
+   true,
+   []
+  ],
+  [
+   "total_shareholder_yield",
+   "Dividend Yield + Buyback Yield - Dilution (share-count growth, TTM)",
+   true,
+   []
+  ],
+  [
+   "institutional_ownership_pct",
+   "Sum of Form 13F-reported institutional holdings (deduped per filer, amendment preferred over original -- same dedup as apps/site's getTopInstitutionalHolders) / Shares Outstanding. Does NOT require price -- computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "share_dilution_trend",
+   "(Shares Outstanding now - Shares Outstanding ~1yr ago) / Shares Outstanding ~1yr ago. Same dilution figure already folded into total_shareholder_yield, exposed here as its own visible data point -- e.g. a buyback-yield-positive company can still be net-diluting via SBC issuance, which total_shareholder_yield alone hides. Does NOT require price -- computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "debtor_days",
+   "(Accounts Receivable / Revenue) x 365, FY only",
+   false,
+   [
+    [
+     "accounts_receivable",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "inventory_days",
+   "(Inventory / Cost of Revenue) x 365, FY only",
+   false,
+   [
+    [
+     "inventory",
+     "numerator"
+    ],
+    [
+     "cost_of_revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "payables_days",
+   "(Accounts Payable / Cost of Revenue) x 365, FY only",
+   false,
+   [
+    [
+     "accounts_payable",
+     "numerator"
+    ],
+    [
+     "cost_of_revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "cash_conversion_cycle",
+   "Debtor Days + Inventory Days - Payables Days, most recent FY each. Computed in expanded_metrics.py -- combines three METRIC outputs, not raw concepts, same pattern as net_debt_ebitda.",
+   false,
+   []
+  ],
+  [
+   "piotroski_f_score",
+   "Standard 9-test Piotroski F-Score (0-9), FY vs prior FY. Computed in mapper/quality_score.py -- a composite requiring 9 raw concepts across 2 fiscal years each, doesn't fit this engine's single-period per-role model. Null for financial institutions by design (Piotroski's own methodology needs a classified current/non-current balance sheet + gross margin, which banks don't report).",
+   false,
+   []
+  ],
+  [
+   "fcf_gt_net_income",
+   "1 if (CFO - CapEx) > Net Income for the fiscal year, else 0. Computed in mapper/quality_flags.py, per FY year.",
+   false,
+   []
+  ],
+  [
+   "zero_debt",
+   "1 if total_debt == 0 for the fiscal year, else 0; null (not 0) if total_debt wasn't reported at all that year -- absence is not evidence of debt-free status. Computed in mapper/quality_flags.py, per FY year.",
+   false,
+   []
+  ],
+  [
+   "profitable_streak_years",
+   "Consecutive most-recent FY years with positive net income, counted backward from the latest year until a non-positive or missing year breaks the streak. Computed in mapper/quality_flags.py, one value as of the latest FY only (not a per-year series).",
+   false,
+   []
+  ],
+  [
+   "margin_expanding_3yr",
+   "1 if gross margin strictly increased across the 3 most recent CONSECUTIVE FY years, else 0; null if fewer than 3 consecutive years of data exist. Computed in mapper/quality_flags.py, one value as of the latest FY only.",
+   false,
+   []
+  ],
+  [
+   "revenue_growth_5y_cagr",
+   "(Revenue[t] / Revenue[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in mapper/ttm.py -- a purely additive GROWTH_METRICS entry, same mechanism as the locked 3Y CAGR.",
+   false,
+   []
+  ],
+  [
+   "revenue_growth_10y_cagr",
+   "(Revenue[t] / Revenue[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "eps_growth_5y_cagr",
+   "(Diluted EPS[t] / Diluted EPS[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "eps_growth_10y_cagr",
+   "(Diluted EPS[t] / Diluted EPS[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "goodwill_pct_assets",
+   "Goodwill / Total Assets",
+   false,
+   [
+    [
+     "goodwill",
+     "numerator"
+    ],
+    [
+     "total_assets",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "eps_dilution_spread",
+   "(Basic EPS - Diluted EPS) / Basic EPS -- a dilution-quality signal distinct from share_dilution_trend (which tracks share-COUNT change, not the basic-vs-diluted EPS gap itself)",
+   false,
+   [
+    [
+     "basic_eps",
+     "add"
+    ],
+    [
+     "diluted_eps",
+     "subtract"
+    ],
+    [
+     "basic_eps",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "ar_change_reconciliation_gap",
+   "(Accounts Receivable[FY] - Accounts Receivable[FY-1]) - the company's own reported cash-flow-statement IncreaseDecreaseInAccountsReceivable[FY]. A quality-of-earnings cross-check, not a locked ratio -- a large gap flags AR movement the cash-flow statement's own adjustment doesn't explain (e.g. an acquisition/divestiture, reclassification), not necessarily an error. Computed in mapper/reconciliation.py -- needs a prior-FY balance-sheet lookup this engine's single-period model can't express.",
+   false,
+   []
+  ],
+  [
+   "inventory_change_reconciliation_gap",
+   "Same cross-check as ar_change_reconciliation_gap, for Inventory. Computed in mapper/reconciliation.py.",
+   false,
+   []
+  ],
+  [
+   "ap_change_reconciliation_gap",
+   "Same cross-check as ar_change_reconciliation_gap, for Accounts Payable. Computed in mapper/reconciliation.py.",
+   false,
+   []
+  ],
+  [
+   "rnd_intensity",
+   "R&D Expense / Revenue",
+   false,
+   [
+    [
+     "research_and_development",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "net_interest_income",
+   "Interest Income - Interest Expense",
+   false,
+   [
+    [
+     "interest_income",
+     "add"
+    ],
+    [
+     "interest_expense",
+     "subtract"
+    ]
+   ]
+  ],
+  [
+   "capex_pct_revenue",
+   "CapEx / Revenue",
+   false,
+   [
+    [
+     "capex",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "sga_pct_revenue",
+   "SG&A Expense / Revenue",
+   false,
+   [
+    [
+     "sga_expense",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "effective_tax_rate_gap",
+   "Reported Effective Tax Rate - (Income Tax Expense / Income Before Tax). A cross-validation signal for ROIC's own internally-derived tax rate -- a large gap flags a company with material discrete tax items (one-time credits/charges) that year, not necessarily an error in either figure. Computed in mapper/tax_reconciliation.py.",
+   false,
+   []
+  ],
+  [
+   "fcf_growth_3y_cagr",
+   "(FCF[t] / FCF[t-3]) ^ (1/3) - 1, FY only. Computed in mapper/fcf_growth.py -- FCF is a computed metric_value, not a raw canonical_fact, so ttm.py's generic growth engine can't reach it directly.",
+   false,
+   []
+  ],
+  [
+   "fcf_growth_5y_cagr",
+   "Same as fcf_growth_3y_cagr, 5-year lag. Computed in mapper/fcf_growth.py.",
+   false,
+   []
+  ],
+  [
+   "dividend_growth_streak_years",
+   "Consecutive most-recent FY years with dividends_per_share strictly increasing, counted backward from the latest year until a flat/decreasing year breaks the streak. Null (not 0) for a company with no dividend history at all. Computed in mapper/dividend_streak.py, one value as of the latest FY only.",
+   false,
+   []
+  ],
+  [
+   "payout_ratio",
+   "Dividends per Share / Diluted EPS",
+   false,
+   [
+    [
+     "dividends_per_share",
+     "numerator"
+    ],
+    [
+     "diluted_eps",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "pretax_margin",
+   "Income Before Tax / Revenue",
+   false,
+   [
+    [
+     "income_before_tax",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "net_cash",
+   "Cash & Equivalents - Total Debt",
+   false,
+   [
+    [
+     "cash_and_equivalents",
+     "add"
+    ],
+    [
+     "total_debt_resolved",
+     "subtract"
+    ]
+   ]
+  ],
+  [
+   "net_cash_per_share",
+   "(Cash & Equivalents - Total Debt) / Shares Outstanding",
+   false,
+   [
+    [
+     "cash_and_equivalents",
+     "add"
+    ],
+    [
+     "total_debt_resolved",
+     "subtract"
+    ],
+    [
+     "shares_outstanding",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "dps_growth_yoy",
+   "(Dividends per Share[t] - Dividends per Share[t-1]) / Dividends per Share[t-1], same fiscal_period year over year. Computed in mapper/ttm.py -- a purely additive GROWTH_METRICS entry, same mechanism as the locked revenue/EPS growth metrics.",
+   false,
+   []
+  ],
+  [
+   "dps_growth_3y_cagr",
+   "(Dividends per Share[t] / Dividends per Share[t-3]) ^ (1/3) - 1, FY periods. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "book_value_per_share",
+   "Stockholders' Equity / Shares Outstanding",
+   false,
+   [
+    [
+     "stockholders_equity",
+     "numerator"
+    ],
+    [
+     "shares_outstanding",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "working_capital",
+   "Current Assets - Current Liabilities",
+   false,
+   [
+    [
+     "current_assets",
+     "add"
+    ],
+    [
+     "current_liabilities",
+     "subtract"
+    ]
+   ]
+  ],
+  [
+   "net_change_in_cash",
+   "Cash from Operations + Cash from Investing + Cash from Financing -- the period's own bottom-line cash movement, distinct from net_cash (a balance-sheet POSITION: Cash - Total Debt).",
+   false,
+   [
+    [
+     "cfo",
+     "add"
+    ],
+    [
+     "cash_flow_investing",
+     "add"
+    ],
+    [
+     "cash_flow_financing",
+     "add"
+    ]
+   ]
+  ],
+  [
+   "ocf_to_net_income",
+   "Cash from Operations / Net Income -- an earnings-quality signal (a real, cash-backed profit should track CFO closely; a large or growing gap flags aggressive accrual accounting).",
+   false,
+   [
+    [
+     "cfo",
+     "numerator"
+    ],
+    [
+     "net_income",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "cash_returned_to_shareholders",
+   "Dividends Paid + Share Buybacks -- the total cash actually distributed to shareholders in the period, before relating it to Market Cap (that ratio is total_shareholder_yield's job) or to Free Cash Flow (see share_repurchases_pct_fcf/dividends_pct_fcf, computed in expanded_metrics.py).",
+   false,
+   [
+    [
+     "dividends_paid",
+     "add"
+    ],
+    [
+     "share_buybacks",
+     "add"
+    ]
+   ]
+  ],
+  [
+   "ebitda_margin",
+   "EBITDA (TTM) / Revenue (TTM). Computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "debt_to_ebitda",
+   "Total Debt / EBITDA (TTM) -- gross leverage, distinct from net_debt_ebitda (which nets out Cash & Equivalents first). Computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "fcf_per_share",
+   "Free Cash Flow (TTM) / Shares Outstanding. Computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "share_repurchases_pct_fcf",
+   "Share Buybacks (TTM) / Free Cash Flow (TTM) -- what fraction of real cash generation went to buybacks, distinct from buyback_yield (which relates buybacks to Market Cap, not FCF). Computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "dividends_pct_fcf",
+   "Dividends Paid (TTM) / Free Cash Flow (TTM) -- a cash-based payout coverage check, distinct from payout_ratio (Dividends per Share / Diluted EPS, an earnings-based payout ratio -- the two can diverge meaningfully whenever CFO and Net Income diverge). Computed in expanded_metrics.py.",
+   false,
+   []
+  ],
+  [
+   "net_income_growth_yoy",
+   "(Net Income[t] - Net Income[t-1]) / Net Income[t-1], same fiscal_period year over year. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "net_income_growth_3y_cagr",
+   "(Net Income[t] / Net Income[t-3]) ^ (1/3) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "net_income_growth_5y_cagr",
+   "(Net Income[t] / Net Income[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "net_income_growth_10y_cagr",
+   "(Net Income[t] / Net Income[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "diluted_shares_growth_yoy",
+   "(Shares Outstanding[t] - Shares Outstanding[t-1]) / Shares Outstanding[t-1]. Uses the same shares_outstanding concept as share_dilution_trend (this project has no separate diluted-weighted-average-shares concept yet -- see doc/learnings/2026-09-05-financials-spec-gap-plan.md); unlike share_dilution_trend (a rolling ~1yr comparison anchored on 'today'), this is a real FY-vs-prior-FY series. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "diluted_shares_growth_3y_cagr",
+   "(Shares Outstanding[t] / Shares Outstanding[t-3]) ^ (1/3) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "diluted_shares_growth_5y_cagr",
+   "(Shares Outstanding[t] / Shares Outstanding[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in mapper/ttm.py.",
+   false,
+   []
+  ],
+  [
+   "fcf_growth_yoy",
+   "(FCF[t] - FCF[t-1]) / FCF[t-1], FY only. Computed in mapper/fcf_growth.py -- same reasoning as fcf_growth_3y_cagr/5y_cagr (FCF is a computed metric_value, not a raw canonical_fact).",
+   false,
+   []
+  ]
+ ],
+ "formula_shapes": {
+  "book_value_per_share": "ratio",
+  "capex_pct_revenue": "ratio",
+  "cash_returned_to_shareholders": "additive",
+  "current_ratio": "ratio",
+  "debt_to_equity": "ratio",
+  "debtor_days": "days",
+  "ebitda": "additive",
+  "eps_dilution_spread": "sum_diff_ratio",
+  "fcf": "sum_diff",
+  "fcf_margin": "sum_diff_ratio",
+  "goodwill_pct_assets": "ratio",
+  "gross_margin": "sum_diff_ratio",
+  "interest_coverage_ratio": "ratio",
+  "inventory_days": "days",
+  "net_cash": "sum_diff",
+  "net_cash_per_share": "sum_diff_ratio",
+  "net_change_in_cash": "additive",
+  "net_interest_income": "sum_diff",
+  "net_margin": "ratio",
+  "ocf_to_net_income": "ratio",
+  "operating_margin": "ratio",
+  "payables_days": "days",
+  "payout_ratio": "ratio",
+  "pretax_margin": "ratio",
+  "quick_ratio": "sum_diff_ratio",
+  "rnd_intensity": "ratio",
+  "roa": "ratio",
+  "roe": "ratio",
+  "roic": "roic",
+  "sbc_pct_revenue": "ratio",
+  "sga_pct_revenue": "ratio",
+  "working_capital": "sum_diff"
+ },
+ "fy_only": [
+  "debtor_days",
+  "inventory_days",
+  "payables_days",
+  "roa",
+  "roe",
+  "roic"
+ ],
+ "growth_metrics": {
+  "diluted_shares_growth_3y_cagr": [
+   "shares_outstanding",
+   3
+  ],
+  "diluted_shares_growth_5y_cagr": [
+   "shares_outstanding",
+   5
+  ],
+  "diluted_shares_growth_yoy": [
+   "shares_outstanding",
+   1
+  ],
+  "dps_growth_3y_cagr": [
+   "dividends_per_share",
+   3
+  ],
+  "dps_growth_yoy": [
+   "dividends_per_share",
+   1
+  ],
+  "eps_growth_10y_cagr": [
+   "diluted_eps",
+   10
+  ],
+  "eps_growth_3y_cagr": [
+   "diluted_eps",
+   3
+  ],
+  "eps_growth_5y_cagr": [
+   "diluted_eps",
+   5
+  ],
+  "eps_growth_yoy": [
+   "diluted_eps",
+   1
+  ],
+  "net_income_growth_10y_cagr": [
+   "net_income",
+   10
+  ],
+  "net_income_growth_3y_cagr": [
+   "net_income",
+   3
+  ],
+  "net_income_growth_5y_cagr": [
+   "net_income",
+   5
+  ],
+  "net_income_growth_yoy": [
+   "net_income",
+   1
+  ],
+  "revenue_growth_10y_cagr": [
+   "revenue",
+   10
+  ],
+  "revenue_growth_3y_cagr": [
+   "revenue",
+   3
+  ],
+  "revenue_growth_5y_cagr": [
+   "revenue",
+   5
+  ],
+  "revenue_growth_yoy": [
+   "revenue",
+   1
+  ]
+ },
+ "order": [
+  "gross_margin",
+  "operating_margin",
+  "net_margin",
+  "roe",
+  "roic",
+  "revenue_growth_yoy",
+  "revenue_growth_3y_cagr",
+  "eps_growth_yoy",
+  "eps_growth_3y_cagr",
+  "fcf",
+  "fcf_margin",
+  "debt_to_equity",
+  "current_ratio",
+  "interest_coverage_ratio",
+  "market_cap",
+  "trailing_pe",
+  "price_to_sales",
+  "price_to_book",
+  "dividend_yield",
+  "fcf_yield",
+  "roa",
+  "quick_ratio",
+  "sbc_pct_revenue",
+  "ebitda",
+  "net_debt_ebitda",
+  "ev_ebitda",
+  "ev_sales",
+  "peg_ratio",
+  "buyback_yield",
+  "total_shareholder_yield",
+  "institutional_ownership_pct",
+  "share_dilution_trend",
+  "debtor_days",
+  "inventory_days",
+  "payables_days",
+  "cash_conversion_cycle",
+  "piotroski_f_score",
+  "fcf_gt_net_income",
+  "zero_debt",
+  "profitable_streak_years",
+  "margin_expanding_3yr",
+  "revenue_growth_5y_cagr",
+  "revenue_growth_10y_cagr",
+  "eps_growth_5y_cagr",
+  "eps_growth_10y_cagr",
+  "goodwill_pct_assets",
+  "eps_dilution_spread",
+  "ar_change_reconciliation_gap",
+  "inventory_change_reconciliation_gap",
+  "ap_change_reconciliation_gap",
+  "rnd_intensity",
+  "net_interest_income",
+  "capex_pct_revenue",
+  "sga_pct_revenue",
+  "effective_tax_rate_gap",
+  "fcf_growth_3y_cagr",
+  "fcf_growth_5y_cagr",
+  "dividend_growth_streak_years",
+  "payout_ratio",
+  "pretax_margin",
+  "net_cash",
+  "net_cash_per_share",
+  "dps_growth_yoy",
+  "dps_growth_3y_cagr",
+  "book_value_per_share",
+  "working_capital",
+  "net_change_in_cash",
+  "ocf_to_net_income",
+  "cash_returned_to_shareholders",
+  "ebitda_margin",
+  "debt_to_ebitda",
+  "fcf_per_share",
+  "share_repurchases_pct_fcf",
+  "dividends_pct_fcf",
+  "net_income_growth_yoy",
+  "net_income_growth_3y_cagr",
+  "net_income_growth_5y_cagr",
+  "net_income_growth_10y_cagr",
+  "diluted_shares_growth_yoy",
+  "diluted_shares_growth_3y_cagr",
+  "diluted_shares_growth_5y_cagr",
+  "fcf_growth_yoy"
+ ],
+ "presentation": {
+  "ap_change_reconciliation_gap": [
+   "Payables reconciliation gap",
+   "Difference between the balance-sheet payables movement and the cash-flow disclosure.",
+   "Accounting quality",
+   "currency"
+  ],
+  "ar_change_reconciliation_gap": [
+   "Receivables reconciliation gap",
+   "Difference between the balance-sheet receivables movement and the cash-flow disclosure.",
+   "Accounting quality",
+   "currency"
+  ],
+  "book_value_per_share": [
+   "Book value per share",
+   "Stockholders' equity divided by shares outstanding.",
+   "Financial strength",
+   "currency"
+  ],
+  "buyback_yield": [
+   "Buyback yield",
+   "Trailing twelve-month share buybacks relative to market cap.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "capex_pct_revenue": [
+   "Capital expenditure as % of revenue",
+   "Capital expenditure relative to revenue.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "cash_conversion_cycle": [
+   "Cash conversion cycle",
+   "Debtor days plus inventory days less payables days.",
+   "Operating efficiency",
+   "number"
+  ],
+  "cash_returned_to_shareholders": [
+   "Cash returned to shareholders",
+   "Dividends paid plus share buybacks for the period.",
+   "Shareholder returns",
+   "currency"
+  ],
+  "current_ratio": [
+   "Current ratio",
+   "Current assets relative to current liabilities.",
+   "Financial strength",
+   "multiple"
+  ],
+  "debt_to_ebitda": [
+   "Debt / EBITDA",
+   "Total debt relative to trailing twelve-month EBITDA.",
+   "Financial strength",
+   "multiple"
+  ],
+  "debt_to_equity": [
+   "Debt to equity",
+   "Total debt relative to stockholders' equity.",
+   "Financial strength",
+   "multiple"
+  ],
+  "debtor_days": [
+   "Debtor days",
+   "Accounts receivable relative to annual revenue, expressed in days.",
+   "Operating efficiency",
+   "number"
+  ],
+  "diluted_shares_growth_3y_cagr": [
+   "Share count growth (3Y CAGR)",
+   "Compound annual growth in diluted shares outstanding over three fiscal years.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "diluted_shares_growth_5y_cagr": [
+   "Share count growth (5Y CAGR)",
+   "Compound annual growth in diluted shares outstanding over five fiscal years.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "diluted_shares_growth_yoy": [
+   "Share count growth (YoY)",
+   "Change in diluted shares outstanding versus the same fiscal period one year earlier.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "dividend_growth_streak_years": [
+   "Dividend-growth streak",
+   "Consecutive latest fiscal years with increasing dividends per share.",
+   "Capital allocation",
+   "number"
+  ],
+  "dividend_yield": [
+   "Dividend yield",
+   "Trailing twelve-month dividends per share divided by price.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "dividends_pct_fcf": [
+   "Dividends as % of FCF",
+   "Dividends paid relative to trailing twelve-month free cash flow.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "dps_growth_3y_cagr": [
+   "Dividend growth (3Y CAGR)",
+   "Compound annual growth in dividends per share over three fiscal years.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "dps_growth_yoy": [
+   "Dividend growth (YoY)",
+   "Change in dividends per share versus the same fiscal period one year earlier.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "ebitda": [
+   "EBITDA",
+   "Operating income plus depreciation and amortization.",
+   "Profitability",
+   "currency"
+  ],
+  "ebitda_margin": [
+   "EBITDA margin",
+   "Trailing twelve-month EBITDA as a share of revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "effective_tax_rate_gap": [
+   "Effective tax-rate gap",
+   "Difference between the reported effective tax rate and the rate derived from tax expense.",
+   "Accounting quality",
+   "percentage"
+  ],
+  "eps_dilution_spread": [
+   "EPS dilution spread",
+   "Difference between basic and diluted EPS relative to basic EPS.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "eps_growth_10y_cagr": [
+   "EPS growth (10Y CAGR)",
+   "Compound annual diluted EPS growth over ten fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "eps_growth_3y_cagr": [
+   "EPS growth (3Y CAGR)",
+   "Compound annual diluted EPS growth over three fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "eps_growth_5y_cagr": [
+   "EPS growth (5Y CAGR)",
+   "Compound annual diluted EPS growth over five fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "eps_growth_yoy": [
+   "EPS growth (YoY)",
+   "Diluted EPS growth versus the same fiscal period one year earlier.",
+   "Growth",
+   "percentage"
+  ],
+  "ev_ebitda": [
+   "EV / EBITDA",
+   "Enterprise value relative to trailing twelve-month EBITDA.",
+   "Valuation",
+   "multiple"
+  ],
+  "ev_sales": [
+   "EV / Sales",
+   "Enterprise value relative to trailing twelve-month revenue.",
+   "Valuation",
+   "multiple"
+  ],
+  "fcf": [
+   "Free cash flow (FCF)",
+   "Cash from operations less capital expenditure.",
+   "Cash flow",
+   "currency"
+  ],
+  "fcf_growth_3y_cagr": [
+   "FCF growth (3Y CAGR)",
+   "Compound annual free-cash-flow growth over three fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "fcf_growth_5y_cagr": [
+   "FCF growth (5Y CAGR)",
+   "Compound annual free-cash-flow growth over five fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "fcf_growth_yoy": [
+   "FCF growth (YoY)",
+   "Change in free cash flow versus the same fiscal year one year earlier.",
+   "Growth",
+   "percentage"
+  ],
+  "fcf_gt_net_income": [
+   "FCF exceeds net income",
+   "Binary flag: 1 when free cash flow exceeds net income; otherwise 0.",
+   "Accounting quality",
+   "number"
+  ],
+  "fcf_margin": [
+   "Free cash flow margin",
+   "Free cash flow as a share of revenue.",
+   "Cash flow",
+   "percentage"
+  ],
+  "fcf_per_share": [
+   "Free cash flow per share",
+   "Trailing twelve-month free cash flow divided by shares outstanding.",
+   "Cash flow",
+   "currency"
+  ],
+  "fcf_yield": [
+   "FCF yield",
+   "Trailing twelve-month free cash flow relative to market cap.",
+   "Valuation",
+   "percentage"
+  ],
+  "goodwill_pct_assets": [
+   "Goodwill as % of assets",
+   "Goodwill relative to total assets.",
+   "Financial strength",
+   "percentage"
+  ],
+  "gross_margin": [
+   "Gross margin",
+   "Gross profit as a share of revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "institutional_ownership_pct": [
+   "Institutional ownership",
+   "Recent Form 13F-reported holdings relative to shares outstanding.",
+   "Ownership",
+   "percentage"
+  ],
+  "interest_coverage_ratio": [
+   "Interest coverage",
+   "Operating income relative to interest expense.",
+   "Financial strength",
+   "multiple"
+  ],
+  "inventory_change_reconciliation_gap": [
+   "Inventory reconciliation gap",
+   "Difference between the balance-sheet inventory movement and the cash-flow disclosure.",
+   "Accounting quality",
+   "currency"
+  ],
+  "inventory_days": [
+   "Inventory days",
+   "Inventory relative to annual cost of revenue, expressed in days.",
+   "Operating efficiency",
+   "number"
+  ],
+  "margin_expanding_3yr": [
+   "Gross margin expanding (3Y)",
+   "Binary flag: 1 when gross margin increased across three consecutive fiscal years.",
+   "Accounting quality",
+   "number"
+  ],
+  "market_cap": [
+   "Market cap",
+   "Shares outstanding multiplied by price.",
+   "Valuation",
+   "currency"
+  ],
+  "net_cash": [
+   "Net cash",
+   "Cash and equivalents less total debt.",
+   "Financial strength",
+   "currency"
+  ],
+  "net_cash_per_share": [
+   "Net cash per share",
+   "Net cash divided by shares outstanding.",
+   "Financial strength",
+   "currency"
+  ],
+  "net_change_in_cash": [
+   "Net change in cash",
+   "The period's total cash movement across operating, investing, and financing activities.",
+   "Cash flow",
+   "currency"
+  ],
+  "net_debt_ebitda": [
+   "Net debt / EBITDA",
+   "Debt less cash relative to trailing EBITDA.",
+   "Financial strength",
+   "multiple"
+  ],
+  "net_income_growth_10y_cagr": [
+   "Net income growth (10Y CAGR)",
+   "Compound annual net income growth over ten fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "net_income_growth_3y_cagr": [
+   "Net income growth (3Y CAGR)",
+   "Compound annual net income growth over three fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "net_income_growth_5y_cagr": [
+   "Net income growth (5Y CAGR)",
+   "Compound annual net income growth over five fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "net_income_growth_yoy": [
+   "Net income growth (YoY)",
+   "Change in net income versus the same fiscal period one year earlier.",
+   "Growth",
+   "percentage"
+  ],
+  "net_interest_income": [
+   "Net interest income",
+   "Interest income less interest expense.",
+   "Profitability",
+   "currency"
+  ],
+  "net_margin": [
+   "Net margin",
+   "Net income as a share of revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "ocf_to_net_income": [
+   "Cash conversion (CFO / Net income)",
+   "Cash from operations relative to net income -- an earnings-quality signal.",
+   "Accounting quality",
+   "multiple"
+  ],
+  "operating_margin": [
+   "Operating margin",
+   "Operating income as a share of revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "payables_days": [
+   "Payables days",
+   "Accounts payable relative to annual cost of revenue, expressed in days.",
+   "Operating efficiency",
+   "number"
+  ],
+  "payout_ratio": [
+   "Dividend payout ratio",
+   "Dividends per share relative to diluted EPS.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "peg_ratio": [
+   "PEG ratio",
+   "Trailing P/E divided by year-over-year EPS growth.",
+   "Valuation",
+   "multiple"
+  ],
+  "piotroski_f_score": [
+   "Piotroski F-Score",
+   "Nine-test financial-strength and operating-quality score from 0 to 9.",
+   "Accounting quality",
+   "number"
+  ],
+  "pretax_margin": [
+   "Pretax margin",
+   "Income before tax as a share of revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "price_to_book": [
+   "Price / Book",
+   "Market cap relative to stockholders' equity.",
+   "Valuation",
+   "multiple"
+  ],
+  "price_to_sales": [
+   "Price / Sales",
+   "Market cap relative to trailing twelve-month revenue.",
+   "Valuation",
+   "multiple"
+  ],
+  "profitable_streak_years": [
+   "Profitable-year streak",
+   "Consecutive latest fiscal years with positive net income.",
+   "Profitability",
+   "number"
+  ],
+  "quick_ratio": [
+   "Quick ratio",
+   "Current assets excluding inventory relative to current liabilities.",
+   "Financial strength",
+   "multiple"
+  ],
+  "revenue_growth_10y_cagr": [
+   "Revenue growth (10Y CAGR)",
+   "Compound annual revenue growth over ten fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "revenue_growth_3y_cagr": [
+   "Revenue growth (3Y CAGR)",
+   "Compound annual revenue growth over three fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "revenue_growth_5y_cagr": [
+   "Revenue growth (5Y CAGR)",
+   "Compound annual revenue growth over five fiscal years.",
+   "Growth",
+   "percentage"
+  ],
+  "revenue_growth_yoy": [
+   "Revenue growth (YoY)",
+   "Revenue growth versus the same fiscal period one year earlier.",
+   "Growth",
+   "percentage"
+  ],
+  "rnd_intensity": [
+   "R&D as % of revenue",
+   "Research and development expense relative to revenue.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "roa": [
+   "Return on assets (ROA)",
+   "Net income relative to total assets.",
+   "Returns",
+   "percentage"
+  ],
+  "roe": [
+   "Return on equity (ROE)",
+   "Net income relative to stockholders' equity.",
+   "Returns",
+   "percentage"
+  ],
+  "roic": [
+   "Return on invested capital (ROIC)",
+   "After-tax operating return on invested capital.",
+   "Returns",
+   "percentage"
+  ],
+  "sbc_pct_revenue": [
+   "SBC as % of revenue",
+   "Stock-based compensation as a share of revenue.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "sga_pct_revenue": [
+   "SG&A as % of revenue",
+   "Selling, general and administrative expense relative to revenue.",
+   "Profitability",
+   "percentage"
+  ],
+  "share_dilution_trend": [
+   "Share-count change (YoY)",
+   "Change in shares outstanding over approximately one year.",
+   "Capital allocation",
+   "percentage"
+  ],
+  "share_repurchases_pct_fcf": [
+   "Buybacks as % of FCF",
+   "Share buybacks relative to trailing twelve-month free cash flow.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "total_shareholder_yield": [
+   "Total shareholder yield",
+   "Dividend yield plus buyback yield, less share-count dilution.",
+   "Shareholder returns",
+   "percentage"
+  ],
+  "trailing_pe": [
+   "Price / Earnings (P/E)",
+   "Price divided by trailing twelve-month diluted EPS.",
+   "Valuation",
+   "multiple"
+  ],
+  "working_capital": [
+   "Working capital",
+   "Current assets less current liabilities.",
+   "Financial strength",
+   "currency"
+  ],
+  "zero_debt": [
+   "Zero debt",
+   "Binary flag: 1 when reported total debt is zero; otherwise 0.",
+   "Financial strength",
+   "number"
+  ]
+ },
+ "v1": [
+  [
+   "gross_margin",
+   "(Revenue - Cost of Revenue) / Revenue",
+   false,
+   false,
+   [
+    [
+     "revenue",
+     "add"
+    ],
+    [
+     "cost_of_revenue",
+     "subtract"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "operating_margin",
+   "Operating Income / Revenue",
+   false,
+   false,
+   [
+    [
+     "operating_income",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "net_margin",
+   "Net Income / Revenue",
+   false,
+   false,
+   [
+    [
+     "net_income",
+     "numerator"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "roe",
+   "Net Income / Stockholders' Equity",
+   false,
+   true,
+   [
+    [
+     "net_income",
+     "numerator"
+    ],
+    [
+     "stockholders_equity",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "roic",
+   "NOPAT / Invested Capital, where NOPAT = Operating Income x (1 - Income Tax Expense / Income Before Tax) and Invested Capital = Total Debt + Stockholders' Equity - Cash & Equivalents. v1 formula, pinned 2026-08-16 with real evidence -- see module docstring.",
+   false,
+   true,
+   [
+    [
+     "operating_income",
+     "nopat_base"
+    ],
+    [
+     "income_tax_expense",
+     "tax_rate_numerator"
+    ],
+    [
+     "income_before_tax",
+     "tax_rate_denominator"
+    ],
+    [
+     "total_debt_resolved",
+     "invested_capital_add"
+    ],
+    [
+     "stockholders_equity",
+     "invested_capital_add"
+    ],
+    [
+     "cash_and_equivalents",
+     "invested_capital_subtract"
+    ]
+   ]
+  ],
+  [
+   "revenue_growth_yoy",
+   "(Revenue[t] - Revenue[t-1]) / Revenue[t-1], same fiscal_period year over year",
+   false,
+   false,
+   [
+    [
+     "revenue",
+     "base"
+    ]
+   ]
+  ],
+  [
+   "revenue_growth_3y_cagr",
+   "(Revenue[t] / Revenue[t-3]) ^ (1/3) - 1, FY periods",
+   false,
+   false,
+   [
+    [
+     "revenue",
+     "base"
+    ]
+   ]
+  ],
+  [
+   "eps_growth_yoy",
+   "(Diluted EPS[t] - Diluted EPS[t-1]) / Diluted EPS[t-1], same fiscal_period year over year",
+   false,
+   false,
+   [
+    [
+     "diluted_eps",
+     "base"
+    ]
+   ]
+  ],
+  [
+   "eps_growth_3y_cagr",
+   "(Diluted EPS[t] / Diluted EPS[t-3]) ^ (1/3) - 1, FY periods",
+   false,
+   false,
+   [
+    [
+     "diluted_eps",
+     "base"
+    ]
+   ]
+  ],
+  [
+   "fcf",
+   "Cash from Operations - CapEx",
+   false,
+   false,
+   [
+    [
+     "cfo",
+     "add"
+    ],
+    [
+     "capex",
+     "subtract"
+    ]
+   ]
+  ],
+  [
+   "fcf_margin",
+   "(Cash from Operations - CapEx) / Revenue",
+   false,
+   false,
+   [
+    [
+     "cfo",
+     "add"
+    ],
+    [
+     "capex",
+     "subtract"
+    ],
+    [
+     "revenue",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "debt_to_equity",
+   "Total Debt / Stockholders' Equity",
+   false,
+   false,
+   [
+    [
+     "total_debt_resolved",
+     "numerator"
+    ],
+    [
+     "stockholders_equity",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "current_ratio",
+   "Current Assets / Current Liabilities",
+   false,
+   false,
+   [
+    [
+     "current_assets",
+     "numerator"
+    ],
+    [
+     "current_liabilities",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "interest_coverage_ratio",
+   "Operating Income / Interest Expense",
+   false,
+   false,
+   [
+    [
+     "operating_income",
+     "numerator"
+    ],
+    [
+     "interest_expense",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "market_cap",
+   "Shares Outstanding x Price",
+   true,
+   false,
+   [
+    [
+     "shares_outstanding",
+     "multiplicand"
+    ]
+   ]
+  ],
+  [
+   "trailing_pe",
+   "Price / Diluted EPS (TTM)",
+   true,
+   false,
+   [
+    [
+     "diluted_eps",
+     "denominator_ttm"
+    ]
+   ]
+  ],
+  [
+   "price_to_sales",
+   "Market Cap / Revenue (TTM)",
+   true,
+   false,
+   [
+    [
+     "shares_outstanding",
+     "market_cap_component"
+    ],
+    [
+     "revenue",
+     "denominator_ttm"
+    ]
+   ]
+  ],
+  [
+   "price_to_book",
+   "Market Cap / Stockholders' Equity",
+   true,
+   false,
+   [
+    [
+     "shares_outstanding",
+     "market_cap_component"
+    ],
+    [
+     "stockholders_equity",
+     "denominator"
+    ]
+   ]
+  ],
+  [
+   "dividend_yield",
+   "Dividends per Share (TTM) / Price",
+   true,
+   false,
+   [
+    [
+     "dividends_per_share",
+     "numerator_ttm"
+    ]
+   ]
+  ],
+  [
+   "fcf_yield",
+   "FCF (TTM) / Market Cap",
+   true,
+   false,
+   [
+    [
+     "cfo",
+     "add"
+    ],
+    [
+     "capex",
+     "subtract"
+    ],
+    [
+     "shares_outstanding",
+     "market_cap_component"
+    ]
+   ]
+  ]
+ ],
+ "zero_when_absent": {
+  "quick_ratio": [
+   "inventory"
+  ]
+ }
+}

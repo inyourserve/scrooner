@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0126.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0127.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -79,6 +79,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0123 | Engineering (scrooner-87) | `company_value_owner` accepts owner/writer `company_tag_map`: the tag-map write path (`scrooner-map tagmap-plan --apply`) may write owned companies, other stages stay blocked | file `0123_company_value_owner_tag_map_writer.sql` on branch work/mapper/tagmap-write-path (takes 0123 because main ends at 0122 and numbers must be contiguous); apply needs the founder's typed words |
 | 0124 | certification lead (verifier_check) | `analytics.verifier_check`, renumber on landing (currently `0122_verifier_check.sql` on work/certification-lead/promote) | renumber on landing; apply needs the founder's typed words |
 | 0125 | Engineering (scrooner-87) | `analytics.company_tag_map.dims` (FSN segment string, e.g. `ProductOrService=Product;`; part of the tag key; dimensioned rows are component or excluded only) for printed member-only lines (Dhairya ruling 2026-11-13); replaces the held `fsn.concept_rule.stmt` EQ item, which is released | file `0125_company_tag_map_dims.sql` on branch work/engineering/tagmap-dims; renumber on landing to the next contiguous number; apply needs the founder's typed words |
+| 0126 | Data Engineer (metric calculation library) | `analytics.metric_value.formula_fingerprint` and `registry_version` (nullable, metadata-only) plus read-only views `v_company_metric_inputs` (company x metric x input: company_tag_map tag, era, rule_id, evidence filing, latest input proof verdict) and `v_company_metric_status` (computed, blank with reason, or OUT) | file on main at `pipeline/db/pending/0126_metric_lineage_view.sql`, NOT in `pipeline/db/migrations/` because 0124 and 0125 are not on main yet and the contiguity check would fail; move it into `migrations/` once both land; apply needs the founder's typed words |
 
 ## scrooner-98 queue (lane A)
 
