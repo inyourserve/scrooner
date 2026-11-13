@@ -66,3 +66,37 @@ The 12 failures are quarantine candidates.
 - REASON 48 where the resolver finds a node: these are conflicts to check.
 
 These are structure-only candidates. Per the xbrl-structure rules they are never auto-published: they need a Verifier filing sample with zero wrong rows.
+
+## total_debt (2026-11-13): `total_debt-2026-11-13.csv`
+**Rule (`tools/total_debt.py`).** total_debt = every debt-role node under the BS liabilities (between the asset total and the equity section), deduplicated through the filer's calc tree, plus the lease nodes the filing locates outside those lines.
+- **Debt-role nodes:** the face lines with a debt-role element, or a custom line whose label (or section header) names debt or borrowings. A node whose calc parent is also a debt node is inside that parent and is dropped.
+- **Leases already inside a debt line:** a face line whose tag or label names leases (e.g. LongTermDebtAndCapitalLeaseObligations) already contains them, so nothing is added.
+- **Note finance lease:** added when the ExtensibleList says it sits outside the debt lines. It is not added when the ExtensibleList, a calc arc, or a debt-note total that ties says it is inside.
+- **No ExtensibleList and no containing line:** the note finance lease is added as "location by absence: CHECK". This is the MSFT pattern: finance leases sit in other liabilities. It applies in 34 replace/fill rows.
+- **Pre-842 capital lease:** added when its calc parent on the face is not a debt line.
+
+**Which copy.** The latest-filed copy: the next 10-K's comparative column, else the year's own 10-K.
+
+**Backtest.**
+- MSFT hand fix rows: **12 of 12**. Two years come from the next 10-K's comparative column (FY2016 53,461; FY2017 88,732).
+- Other hand keys: fix files 49 of 56, docmap FY0 57 of 59.
+- The disagreements:
+  - DIS FY2023–25 and TJX FY2017: the readers left out a lease that sits outside the debt lines, which is the perimeter_incomplete defect;
+  - ORCL and MSFT docmap FY0: docmaps older than the fix rows;
+  - AMZN 2015: capital-lease current/noncurrent split, ±35M;
+  - DIS FY2018: comparative under the new CIK;
+  - NEE 2017: a comparative column with no value;
+  - MS: no face debt node.
+
+**Rows** (62 companies, every year with a served cell):
+
+| Action | Rows | Meaning |
+|---|---|---|
+| keep | 246 | the served value equals the structural sum |
+| replace | 184 | served UNCHECKED 120, DISAGREE 37, PROVEN 27 |
+| fill | 114 | served blank |
+| review_missing_column_value | 29 | a debt node has no value in the chosen column |
+| reason_not_presented | 29 | |
+| no_structural_node | 4 | |
+
+Each row carries the nodes (tag=value [R page, why]), the tags, the sum, the accession, the column, the R pages and the flags.
