@@ -474,7 +474,7 @@ tool,AIT,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 tool,AKAM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax
 tool,AKAM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,AKAM,gross_profit,correct,,not_presented,not_presented,,
-tool,AKAM,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringAndRelatedCostIncurredCost
+,AKAM,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringAndRelatedCostIncurredCost
 tool,AKAM,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,AKAM,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,AKAM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -626,7 +626,7 @@ tool,ALGN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 tool,ALLY,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,ALLY,cost_of_revenue,correct,,OUT,OUT,,
 tool,ALLY,gross_profit,correct,,OUT,OUT,,
-tool,ALLY,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,ALLY,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,ALLY,sga_expense,correct,,not_presented,not_presented,,
 tool,ALLY,research_and_development,correct,,OUT,OUT,,
 tool,ALLY,operating_income,correct,,not_presented,not_presented,,
@@ -1135,7 +1135,7 @@ hand,APG,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStoc
 machine,APTV,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,APTV,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,APTV,gross_profit,correct,,not_presented,not_presented,,
-hand,APTV,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GoodwillImpairmentLoss
+,APTV,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GoodwillImpairmentLoss
 machine,APTV,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,APTV,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
 machine,APTV,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -1295,7 +1295,7 @@ tool,ARWR,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesP
 machine,ASB,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
 machine,ASB,cost_of_revenue,correct,,OUT,OUT,,
 machine,ASB,gross_profit,correct,,OUT,OUT,,
-tool,ASB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,ASB,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,ASB,sga_expense,correct,,not_presented,not_presented,,
 machine,ASB,research_and_development,correct,,OUT,OUT,,
 tool,ASB,operating_income,correct,,not_presented,not_presented,,
@@ -1531,7 +1531,7 @@ tool,AVTR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,AXSM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,AXSM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,AXSM,gross_profit,correct,,not_presented,not_presented,,
-hand,AXSM,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:ChangeInFairValueOfContingentConsiderations;us-gaap:AmortizationOfIntangibleAssets
+,AXSM,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;custom:ChangeInFairValueOfContingentConsiderations;us-gaap:AmortizationOfIntangibleAssets
 hand,AXSM,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,AXSM,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,AXSM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -1607,7 +1607,7 @@ hand,AYI,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStoc
 hand,BAH,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,BAH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,BAH,gross_profit,correct,,not_presented,not_presented,,
-hand,BAH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,custom:BillableExpenses;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
+,BAH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,custom:BillableExpenses;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
 machine,BAH,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 hand,BAH,research_and_development,correct,,not_presented,not_presented,,
 machine,BAH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -1987,7 +1987,7 @@ machine,BLDR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 tool,BMRN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,BMRN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,BMRN,gross_profit,correct,,not_presented,not_presented,,
-tool,BMRN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnDispositionOfAssets1
+,BMRN,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnDispositionOfAssets1
 tool,BMRN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,BMRN,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,BMRN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -2063,7 +2063,7 @@ tool,BPOP,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,BR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,BR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,BR,gross_profit,correct,,not_presented,not_presented,,
-hand,BR,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
+,BR,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,BR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,BR,research_and_development,correct,,not_presented,not_presented,,
 machine,BR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -2405,7 +2405,7 @@ tool,BWA,shares_outstanding,wrong,status,component sum,mapped,us-gaap:CommonStoc
 tool,BWXT,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,BWXT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,BWXT,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
-tool,BWXT,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments
+,BWXT,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments
 tool,BWXT,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,BWXT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,BWXT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -3179,7 +3179,7 @@ tool,COO,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 tool,CORT,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,CORT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,CORT,gross_profit,correct,,not_presented,not_presented,,
-tool,CORT,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
+,CORT,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
 tool,CORT,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,CORT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,CORT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -3217,7 +3217,7 @@ tool,CORT,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,CPB,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,CPB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,CPB,gross_profit,correct,,not_presented,not_presented,,
-machine,CPB,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:OtherNonoperatingIncomeExpense;us-gaap:RestructuringCharges
+,CPB,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:OtherNonoperatingIncomeExpense;us-gaap:RestructuringCharges
 machine,CPB,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,CPB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost
 machine,CPB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -3757,7 +3757,7 @@ machine,CWEN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 machine,CWST,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,CWST,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,CWST,gross_profit,correct,,not_presented,not_presented,,
-machine,CWST,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringSettlementAndImpairmentProvisions;custom:LandfillClosureCreditChargeNet;custom:LandfillCappingChargeRecovery;us-gaap:GainLossRelatedToLitigationSettlement
+,CWST,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts;us-gaap:RestructuringSettlementAndImpairmentProvisions;custom:LandfillClosureCreditChargeNet;custom:LandfillCappingChargeRecovery;us-gaap:GainLossRelatedToLitigationSettlement
 machine,CWST,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,CWST,research_and_development,correct,,not_presented,not_presented,,
 machine,CWST,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -4076,7 +4076,7 @@ tool,DECK,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,DINO,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,DINO,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,DINO,gross_profit,correct,,not_presented,not_presented,,
-hand,DINO,operating_expenses,wrong,status,combined,component_sum,us-gaap:OperatingCostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet
+,DINO,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:OperatingCostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet
 machine,DINO,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,DINO,research_and_development,correct,,not_presented,not_presented,,
 machine,DINO,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -4494,7 +4494,7 @@ tool,DVA,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 hand,EAT,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,EAT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,EAT,gross_profit,correct,,not_presented,not_presented,,
-hand,EAT,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,custom:RestaurantLabor;custom:RestaurantExpenses;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:GeneralAndAdministrativeExpense;custom:OtherGainsAndCharges
+,EAT,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,custom:RestaurantLabor;custom:RestaurantExpenses;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:GeneralAndAdministrativeExpense;custom:OtherGainsAndCharges
 hand,EAT,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 hand,EAT,research_and_development,correct,,not_presented,not_presented,,
 hand,EAT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -4570,7 +4570,7 @@ machine,ECG,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,EFX,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,EFX,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,EFX,gross_profit,correct,,not_presented,not_presented,,
-hand,EFX,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
+,EFX,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
 machine,EFX,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,EFX,research_and_development,correct,,not_presented,not_presented,,
 machine,EFX,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -4836,7 +4836,7 @@ machine,ENS,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 tool,ENSG,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,ENSG,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,ENSG,gross_profit,correct,,not_presented,not_presented,,
-tool,ENSG,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,custom:RentCostOfServices;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization
+,ENSG,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,custom:RentCostOfServices;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization
 tool,ENSG,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,ENSG,research_and_development,correct,,not_presented,not_presented,,
 tool,ENSG,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -5391,7 +5391,7 @@ hand,EVRG,shares_outstanding,correct,,not_presented,not_presented,,
 hand,EWBC,revenue,wrong,status,not_presented,component_sum,,us-gaap:NoninterestIncomeOther;us-gaap:NoninterestIncomeOtherOperatingIncome
 hand,EWBC,cost_of_revenue,correct,,OUT,OUT,,
 hand,EWBC,gross_profit,correct,,OUT,OUT,,
-hand,EWBC,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,EWBC,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 hand,EWBC,sga_expense,correct,,not_presented,not_presented,,
 hand,EWBC,research_and_development,correct,,OUT,OUT,,
 hand,EWBC,operating_income,correct,,not_presented,not_presented,,
@@ -5543,7 +5543,7 @@ machine,FCFS,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 tool,FDS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,FDS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,FDS,gross_profit,correct,,not_presented,not_presented,,
-tool,FDS,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
+,FDS,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,FDS,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,FDS,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
 tool,FDS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -5619,7 +5619,7 @@ machine,FDXF,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 tool,FHN,revenue,wrong,status,mapped,not_presented,us-gaap:Revenues,
 tool,FHN,cost_of_revenue,correct,,OUT,OUT,,
 tool,FHN,gross_profit,correct,,OUT,OUT,,
-tool,FHN,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,FHN,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,FHN,sga_expense,correct,,not_presented,not_presented,,
 tool,FHN,research_and_development,correct,,OUT,OUT,,
 tool,FHN,operating_income,correct,,not_presented,not_presented,,
@@ -5657,7 +5657,7 @@ tool,FHN,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStoc
 machine,FICO,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 hand,FICO,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,FICO,gross_profit,correct,,not_presented,not_presented,,
-hand,FICO,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GainLossOnSaleOfBusiness
+,FICO,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:RestructuringCharges;us-gaap:GainLossOnSaleOfBusiness
 hand,FICO,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,FICO,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,FICO,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -5885,7 +5885,7 @@ hand,FLS,shares_outstanding,correct,,not_presented,not_presented,,
 tool,FNB,revenue,correct,,not_presented,not_presented,,
 machine,FNB,cost_of_revenue,correct,,OUT,OUT,,
 machine,FNB,gross_profit,correct,,OUT,OUT,,
-tool,FNB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,FNB,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,FNB,sga_expense,correct,,not_presented,not_presented,,
 machine,FNB,research_and_development,correct,,OUT,OUT,,
 tool,FNB,operating_income,correct,,not_presented,not_presented,,
@@ -6387,7 +6387,7 @@ machine,GATX,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 tool,GBCI,revenue,correct,,not_presented,not_presented,,
 machine,GBCI,cost_of_revenue,wrong,status,OUT,not_presented,,
 machine,GBCI,gross_profit,wrong,status,OUT,not_presented,,
-tool,GBCI,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,GBCI,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,GBCI,sga_expense,correct,,not_presented,not_presented,,
 machine,GBCI,research_and_development,wrong,status,OUT,not_presented,,
 tool,GBCI,operating_income,correct,,not_presented,not_presented,,
@@ -6425,7 +6425,7 @@ machine,GBCI,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 machine,GH,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,GH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,GH,gross_profit,correct,,not_presented,not_presented,,
-hand,GH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating
+,GH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating
 hand,GH,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,GH,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,GH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -6737,11 +6737,11 @@ hand,GPC,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 machine,GPN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,GPN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,GPN,gross_profit,correct,,not_presented,not_presented,,
-hand,GPN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:GainLossOnSaleOfBusiness
+,GPN,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:GoodwillImpairmentLoss;us-gaap:GainLossOnSaleOfBusiness
 machine,GPN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,GPN,research_and_development,correct,,not_presented,not_presented,,
 machine,GPN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
-hand,GPN,interest_expense,wrong,status,mapped,not_presented,us-gaap:InterestExpenseDebt,
+,GPN,interest_expense,key_error,key: Dhairya ruling (d) 2026-11-13: note InterestExpenseDebt 633.5M is a component (FinanceLeaseInterestExpense 0.7M and face InterestAndOtherExpense 649.6M exist) -> component_in_note; key mapped is a key error,mapped,not_presented,us-gaap:InterestExpenseDebt,
 machine,GPN,income_before_tax,correct,,mapped,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments
 machine,GPN,income_tax_expense,correct,,mapped,mapped,us-gaap:IncomeTaxExpenseBenefit,us-gaap:IncomeTaxExpenseBenefit
 machine,GPN,net_income,correct,,mapped,mapped,us-gaap:NetIncomeLoss,us-gaap:NetIncomeLoss
@@ -6851,7 +6851,7 @@ hand,GTLB,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:Co
 machine,HEI,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,HEI,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,HEI,gross_profit,correct,,not_presented,not_presented,,
-hand,HEI,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
+,HEI,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,HEI,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,HEI,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
 machine,HEI,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -7003,7 +7003,7 @@ hand,HLI,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:Com
 machine,HOMB,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
 machine,HOMB,cost_of_revenue,correct,,OUT,OUT,,
 machine,HOMB,gross_profit,correct,,OUT,OUT,,
-tool,HOMB,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,HOMB,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,HOMB,sga_expense,correct,,not_presented,not_presented,,
 machine,HOMB,research_and_development,correct,,OUT,OUT,,
 tool,HOMB,operating_income,correct,,not_presented,not_presented,,
@@ -7322,7 +7322,7 @@ machine,HUT,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,HWC,revenue,wrong,status,mapped,not_presented,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,
 machine,HWC,cost_of_revenue,correct,,OUT,OUT,,
 machine,HWC,gross_profit,correct,,OUT,OUT,,
-tool,HWC,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,HWC,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,HWC,sga_expense,correct,,not_presented,not_presented,,
 machine,HWC,research_and_development,correct,,OUT,OUT,,
 tool,HWC,operating_income,correct,,not_presented,not_presented,,
@@ -7512,7 +7512,7 @@ machine,IFF,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,INCY,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,INCY,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,INCY,gross_profit,correct,,not_presented,not_presented,,
-hand,INCY,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GainLossRelatedToLitigationSettlement;us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1;custom:CollaborationLossProfitSharingExpense
+,INCY,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GainLossRelatedToLitigationSettlement;us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AssetImpairmentCharges;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1;custom:CollaborationLossProfitSharingExpense
 machine,INCY,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,INCY,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,INCY,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -7626,7 +7626,7 @@ hand,INGR,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonSto
 machine,INSM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 hand,INSM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,INSM,gross_profit,correct,,not_presented,not_presented,,
-hand,INSM,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1
+,INSM,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:BusinessCombinationContingentConsiderationArrangementsChangeInAmountOfContingentConsiderationLiability1
 machine,INSM,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,INSM,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 hand,INSM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -7702,7 +7702,7 @@ machine,INSW,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 tool,IONQ,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,IONQ,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 tool,IONQ,gross_profit,correct,,not_presented,not_presented,,
-tool,IONQ,operating_expenses,wrong,status,combined,component_sum,us-gaap:OperatingCostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
+,IONQ,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:OperatingCostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
 tool,IONQ,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,IONQ,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,IONQ,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -8097,7 +8097,7 @@ tool,JEF,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:Com
 tool,JKHY,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,JKHY,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,JKHY,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
-tool,JKHY,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
+,JKHY,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
 tool,JKHY,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,JKHY,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,JKHY,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -8173,7 +8173,7 @@ hand,JXN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 hand,KEY,revenue,wrong,status,mapped,not_presented,us-gaap:Revenues,
 hand,KEY,cost_of_revenue,correct,,OUT,OUT,,
 hand,KEY,gross_profit,correct,,OUT,OUT,,
-hand,KEY,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,KEY,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 hand,KEY,sga_expense,correct,,not_presented,not_presented,,
 hand,KEY,research_and_development,correct,,OUT,OUT,,
 hand,KEY,operating_income,correct,,not_presented,not_presented,,
@@ -8842,7 +8842,7 @@ tool,LSTR,shares_outstanding,correct,,not_presented,not_presented,,
 hand,LTH,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,LTH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,LTH,gross_profit,correct,,not_presented,not_presented,,
-hand,LTH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:OperatingLeaseExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet
+,LTH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:OperatingLeaseExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:OtherOperatingIncomeExpenseNet
 machine,LTH,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,LTH,research_and_development,correct,,not_presented,not_presented,,
 machine,LTH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -8956,7 +8956,7 @@ hand,LUV,shares_outstanding,correct,,not_presented,not_presented,,
 machine,LYB,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,LYB,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,LYB,gross_profit,correct,,not_presented,not_presented,,
-hand,LYB,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GoodwillImpairmentLoss;us-gaap:OtherAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense
+,LYB,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GoodwillImpairmentLoss;us-gaap:OtherAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense
 machine,LYB,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,LYB,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,LYB,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -9504,7 +9504,7 @@ tool,MOG-A,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:C
 tool,MOH,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,MOH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,MOH,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
-tool,MOH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;custom:PremiumTaxExpenses;us-gaap:DepreciationAndAmortization;us-gaap:OtherCostAndExpenseOperating
+,MOH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;custom:PremiumTaxExpenses;us-gaap:DepreciationAndAmortization;us-gaap:OtherCostAndExpenseOperating
 tool,MOH,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,MOH,research_and_development,correct,,not_presented,not_presented,,
 tool,MOH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -9580,7 +9580,7 @@ machine,MOS,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,MTCH,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,MTCH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,MTCH,gross_profit,correct,,not_presented,not_presented,,
-hand,MTCH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:Depreciation;custom:ImpairmentAndAmortizationOfIntangibleAssets
+,MTCH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:Depreciation;custom:ImpairmentAndAmortizationOfIntangibleAssets
 hand,MTCH,sga_expense,correct,,component sum,component_sum,us-gaap:SellingAndMarketingExpense+us-gaap:GeneralAndAdministrativeExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,MTCH,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,MTCH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -9808,7 +9808,7 @@ machine,NAVN,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:Common
 machine,NDSN,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,NDSN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,NDSN,gross_profit,correct,,not_presented,not_presented,,
-hand,NDSN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf
+,NDSN,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ImpairmentOfLongLivedAssetsToBeDisposedOf
 hand,NDSN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,NDSN,research_and_development,wrong,status,mapped,not_presented,us-gaap:ResearchAndDevelopmentExpense,
 machine,NDSN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -9884,7 +9884,7 @@ machine,NI,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOu
 machine,NIQ,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,NIQ,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 tool,NIQ,gross_profit,correct,,not_presented,not_presented,,
-machine,NIQ,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:RestructuringCharges;us-gaap:OtherOperatingIncomeExpenseNet
+,NIQ,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:RestructuringCharges;us-gaap:OtherOperatingIncomeExpenseNet
 machine,NIQ,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,NIQ,research_and_development,correct,,not_presented,not_presented,,
 machine,NIQ,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -9960,7 +9960,7 @@ tool,NPO,shares_outstanding,correct,,not_presented,not_presented,,
 machine,NRG,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 hand,NRG,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,NRG,gross_profit,correct,,not_presented,not_presented,,
-hand,NRG,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;custom:BusinessCombinationAcquisitionAndIntegrationCosts;us-gaap:GainLossOnSaleOfOtherAssets
+,NRG,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;custom:BusinessCombinationAcquisitionAndIntegrationCosts;us-gaap:GainLossOnSaleOfOtherAssets
 machine,NRG,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,NRG,research_and_development,correct,,not_presented,not_presented,,
 machine,NRG,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -10112,7 +10112,7 @@ tool,NXT,shares_outstanding,wrong,status,mapped,not_presented,us-gaap:CommonStoc
 tool,NYT,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,NYT,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 tool,NYT,gross_profit,correct,,not_presented,not_presented,,
-tool,NYT,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:CostDepreciationAmortizationAndDepletion;us-gaap:LegalFees;us-gaap:AssetImpairmentCharges;custom:MultiemployerPlansGainLossOnWithdrawalObligation
+,NYT,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense;us-gaap:CostDepreciationAmortizationAndDepletion;us-gaap:LegalFees;us-gaap:AssetImpairmentCharges;custom:MultiemployerPlansGainLossOnWithdrawalObligation
 tool,NYT,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,NYT,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,NYT,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -10264,7 +10264,7 @@ tool,OLLI,shares_outstanding,correct,,not_presented,not_presented,,
 machine,OMC,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,OMC,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,OMC,gross_profit,correct,,not_presented,not_presented,,
-hand,OMC,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
+,OMC,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationAndAmortization
 machine,OMC,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,OMC,research_and_development,correct,,not_presented,not_presented,,
 machine,OMC,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -11184,7 +11184,7 @@ hand,PNR,shares_outstanding,correct,,not_presented,not_presented,,
 tool,PNW,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,PNW,cost_of_revenue,wrong,status,not_presented,mapped,,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 tool,PNW,gross_profit,correct,,not_presented,not_presented,,
-tool,PNW,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:UtilitiesOperatingExpenseMaintenanceAndOperations;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:OtherCostAndExpenseOperating
+,PNW,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:UtilitiesOperatingExpenseMaintenanceAndOperations;us-gaap:CostOfGoodsAndServicesSoldDepreciationAndAmortization;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:OtherCostAndExpenseOperating
 tool,PNW,sga_expense,correct,,not_presented,not_presented,,
 tool,PNW,research_and_development,correct,,not_presented,not_presented,,
 tool,PNW,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -11800,7 +11800,7 @@ machine,REXR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 hand,RF,revenue,correct,,not_presented,not_presented,,
 hand,RF,cost_of_revenue,correct,,OUT,OUT,,
 hand,RF,gross_profit,correct,,OUT,OUT,,
-hand,RF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,RF,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 hand,RF,sga_expense,correct,,not_presented,not_presented,,
 hand,RF,research_and_development,correct,,OUT,OUT,,
 hand,RF,operating_income,correct,,not_presented,not_presented,,
@@ -11914,7 +11914,7 @@ tool,RGEN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,RGLD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,RGLD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,RGLD,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
-hand,RGLD,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts
+,RGLD,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:TaxesExcludingIncomeAndExciseTaxes;us-gaap:DepreciationDepletionAndAmortization;us-gaap:BusinessCombinationAcquisitionRelatedCosts
 machine,RGLD,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 hand,RGLD,research_and_development,correct,,not_presented,not_presented,,
 hand,RGLD,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -12302,7 +12302,7 @@ tool,RRX,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 machine,RS,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,RS,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization,us-gaap:CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization
 hand,RS,gross_profit,correct,,not_presented,not_presented,,
-hand,RS,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges
+,RS,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:DepreciationDepletionAndAmortization;us-gaap:AssetImpairmentCharges
 machine,RS,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,RS,research_and_development,correct,,not_presented,not_presented,,
 machine,RS,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -12416,7 +12416,7 @@ tool,RYAN,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:Co
 machine,RYN,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,RYN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,RYN,gross_profit,correct,,not_presented,not_presented,,
-machine,RYN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet
+,RYN,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:OtherOperatingIncomeExpenseNet
 machine,RYN,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 tool,RYN,research_and_development,correct,,not_presented,not_presented,,
 machine,RYN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -12454,7 +12454,7 @@ machine,RYN,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,RYTM,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,RYTM,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,RYTM,gross_profit,correct,,not_presented,not_presented,,
-machine,RYTM,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
+,RYTM,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
 machine,RYTM,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,RYTM,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,RYTM,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -12804,7 +12804,7 @@ tool,SEIC,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 tool,SF,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 ,SF,cost_of_revenue,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 ,SF,gross_profit,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
-tool,SF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,SF,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,SF,sga_expense,correct,,not_presented,not_presented,,
 ,SF,research_and_development,key_error,"key: data point outside the template group is OUT, not not_presented (Dhairya ruling 2026-11-13: SYF CA/CL; bank/insurer COGS, GP, R&D, inventory)",not_presented,OUT,,
 tool,SF,operating_income,correct,,not_presented,not_presented,,
@@ -13108,7 +13108,7 @@ hand,SNA,shares_outstanding,correct,,not_presented,not_presented,,
 tool,SNAP,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 tool,SNAP,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,SNAP,gross_profit,correct,,not_presented,not_presented,,
-tool,SNAP,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
+,SNAP,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,SNAP,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 tool,SNAP,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 tool,SNAP,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -13222,7 +13222,7 @@ tool,SO,shares_outstanding,correct,,not_presented,not_presented,,
 hand,SOFI,revenue,correct,,mapped,mapped,us-gaap:RevenuesNetOfInterestExpense,us-gaap:RevenuesNetOfInterestExpense
 machine,SOFI,cost_of_revenue,wrong,status,mapped,OUT,us-gaap:CostOfRevenue,
 hand,SOFI,gross_profit,correct,,OUT,OUT,,
-hand,SOFI,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,SOFI,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 hand,SOFI,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,SOFI,research_and_development,wrong,status,mapped,OUT,us-gaap:ResearchAndDevelopmentExpense,
 hand,SOFI,operating_income,correct,,not_presented,not_presented,,
@@ -13450,7 +13450,7 @@ hand,SSNC,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,ST,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,ST,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 tool,ST,gross_profit,correct,,not_presented,not_presented,,
-machine,ST,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;custom:RestructuringAndOtherChargesNet
+,ST,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GoodwillImpairmentLoss;custom:RestructuringAndOtherChargesNet
 machine,ST,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,ST,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,ST,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -13564,7 +13564,7 @@ hand,STZ,shares_outstanding,correct,,not_presented,not_presented,,
 machine,SUN,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,SUN,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,SUN,gross_profit,correct,,not_presented,not_presented,,
-machine,SUN,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating;us-gaap:OperatingLeaseExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:DepreciationAmortizationAndAccretionNet
+,SUN,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:GeneralAndAdministrativeExpense;us-gaap:OtherCostAndExpenseOperating;us-gaap:OperatingLeaseExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:DepreciationAmortizationAndAccretionNet
 machine,SUN,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,SUN,research_and_development,correct,,not_presented,not_presented,,
 machine,SUN,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -13754,7 +13754,7 @@ tool,SXT,shares_outstanding,correct,,not_presented,not_presented,,
 hand,SYF,revenue,correct,,not_presented,not_presented,,
 hand,SYF,cost_of_revenue,correct,,OUT,OUT,,
 hand,SYF,gross_profit,correct,,OUT,OUT,,
-hand,SYF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,SYF,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 hand,SYF,sga_expense,correct,,not_presented,not_presented,,
 hand,SYF,research_and_development,correct,,OUT,OUT,,
 hand,SYF,operating_income,correct,,not_presented,not_presented,,
@@ -14370,7 +14370,7 @@ hand,TTC,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOuts
 machine,TTD,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,TTD,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,TTD,gross_profit,correct,,not_presented,not_presented,,
-machine,TTD,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense
+,TTD,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingAndMarketingExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,TTD,sga_expense,correct,,component sum,component_sum,us-gaap:GeneralAndAdministrativeExpense+us-gaap:SellingAndMarketingExpense,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense
 machine,TTD,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,TTD,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -14484,7 +14484,7 @@ machine,TTMI,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 machine,TWST,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax,us-gaap:RevenueFromContractWithCustomerIncludingAssessedTax
 machine,TWST,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfRevenue,us-gaap:CostOfRevenue
 hand,TWST,gross_profit,correct,,not_presented,not_presented,,
-hand,TWST,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCosts;custom:ChangeInFairValueOfContingentConsiderationAndIndemnityHoldback;us-gaap:AssetImpairmentCharges
+,TWST,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringCosts;custom:ChangeInFairValueOfContingentConsiderationAndIndemnityHoldback;us-gaap:AssetImpairmentCharges
 machine,TWST,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,TWST,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 hand,TWST,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -14674,7 +14674,7 @@ machine,U,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 tool,UDR,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 tool,UDR,cost_of_revenue,wrong,status,not_presented,combined,,us-gaap:DirectCostsOfLeasedAndRentedPropertyOrEquipment
 tool,UDR,gross_profit,correct,,not_presented,not_presented,,
-tool,UDR,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:RealEstateTaxesAndInsurance;custom:PropertyManagementCostsOperating;us-gaap:OtherCostAndExpenseOperating;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;custom:CasualtyRelatedRecoveriesChargesNet;us-gaap:OtherDepreciationAndAmortization;us-gaap:GainsLossesOnSalesOfInvestmentRealEstate
+,UDR,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:RealEstateTaxesAndInsurance;custom:PropertyManagementCostsOperating;us-gaap:OtherCostAndExpenseOperating;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;custom:CasualtyRelatedRecoveriesChargesNet;us-gaap:OtherDepreciationAndAmortization;us-gaap:GainsLossesOnSalesOfInvestmentRealEstate
 tool,UDR,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,UDR,research_and_development,correct,,not_presented,not_presented,,
 tool,UDR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -14826,7 +14826,7 @@ tool,UHS,shares_outstanding,wrong,status,component sum,not_presented,us-gaap:Com
 tool,UMBF,revenue,wrong,status,mapped,not_presented,us-gaap:Revenues,
 tool,UMBF,cost_of_revenue,correct,,OUT,OUT,,
 tool,UMBF,gross_profit,correct,,OUT,OUT,,
-tool,UMBF,operating_expenses,wrong,status,not_presented,mapped,,us-gaap:NoninterestExpense
+,UMBF,operating_expenses,key_error,"key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)",not_presented,mapped,,us-gaap:NoninterestExpense
 tool,UMBF,sga_expense,correct,,not_presented,not_presented,,
 tool,UMBF,research_and_development,correct,,OUT,OUT,,
 tool,UMBF,operating_income,correct,,not_presented,not_presented,,
@@ -14902,7 +14902,7 @@ hand,USFD,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesOut
 machine,UTHR,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,UTHR,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,UTHR,gross_profit,wrong,status,mapped,not_presented,us-gaap:GrossProfit,
-hand,UTHR,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
+,UTHR,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense
 machine,UTHR,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,UTHR,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpense,us-gaap:ResearchAndDevelopmentExpense
 machine,UTHR,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -14940,7 +14940,7 @@ machine,UTHR,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockShares
 machine,VAL,revenue,correct,,mapped,mapped,us-gaap:Revenues,us-gaap:Revenues
 machine,VAL,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 tool,VAL,gross_profit,correct,,not_presented,not_presented,,
-machine,VAL,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:AssetImpairmentCharges;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments
+,VAL,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:AssetImpairmentCharges;us-gaap:DepreciationNonproduction;us-gaap:GeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments
 machine,VAL,sga_expense,correct,,mapped,mapped,us-gaap:GeneralAndAdministrativeExpense,us-gaap:GeneralAndAdministrativeExpense
 tool,VAL,research_and_development,correct,,not_presented,not_presented,,
 machine,VAL,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -15349,7 +15349,7 @@ machine,VTRS,cash_flow_financing,correct,,mapped,mapped,us-gaap:NetCashProvidedB
 machine,VTRS,capex,correct,,mapped,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment
 machine,VTRS,depreciation_and_amortization,correct,,mapped,mapped,us-gaap:DepreciationDepletionAndAmortization,us-gaap:DepreciationDepletionAndAmortization
 hand,VTRS,sbc,correct,,mapped,mapped,us-gaap:ShareBasedCompensation,us-gaap:ShareBasedCompensation
-hand,VTRS,dividends_paid,wrong,status,mapped,not_presented,us-gaap:PaymentsToMinorityShareholders,
+,VTRS,dividends_paid,key_error,key: NCI or preferred dividends keyed as common dividends (shareholder-returns card),mapped,not_presented,us-gaap:PaymentsToMinorityShareholders,
 machine,VTRS,share_buybacks,correct,,mapped,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,us-gaap:PaymentsForRepurchaseOfCommonStock
 machine,VTRS,cash_paid_for_interest,correct,,mapped,mapped,us-gaap:InterestPaidNet,us-gaap:InterestPaidNet
 hand,VTRS,cash_paid_for_income_taxes,correct,,mapped,mapped,us-gaap:IncomeTaxesPaidNet,us-gaap:IncomeTaxesPaidNet
@@ -15670,7 +15670,7 @@ tool,WH,shares_outstanding,correct,,not_presented,not_presented,,
 machine,WMG,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,WMG,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,WMG,gross_profit,correct,,not_presented,not_presented,,
-hand,WMG,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnSaleOfBusiness
+,WMG,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions;us-gaap:AmortizationOfIntangibleAssets;us-gaap:GainLossOnSaleOfBusiness
 hand,WMG,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 hand,WMG,research_and_development,correct,,not_presented,not_presented,,
 machine,WMG,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss
@@ -16073,7 +16073,7 @@ machine,XPO,shares_outstanding,correct,,mapped,mapped,us-gaap:CommonStockSharesO
 machine,ZBH,revenue,correct,,mapped,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
 machine,ZBH,cost_of_revenue,correct,,mapped,mapped,us-gaap:CostOfGoodsAndServicesSold,us-gaap:CostOfGoodsAndServicesSold
 hand,ZBH,gross_profit,correct,,not_presented,not_presented,,
-hand,ZBH,operating_expenses,wrong,status,combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCostReductionInitiatives;custom:AcquisitionIntegrationDivestitureAndRelatedExpenses
+,ZBH,operating_expenses,key_error,"key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)",combined,component_sum,us-gaap:CostsAndExpenses,us-gaap:AmortizationOfIntangibleAssets;us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost;us-gaap:SellingGeneralAndAdministrativeExpense;custom:RestructuringAndOtherCostReductionInitiatives;custom:AcquisitionIntegrationDivestitureAndRelatedExpenses
 machine,ZBH,sga_expense,correct,,mapped,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,us-gaap:SellingGeneralAndAdministrativeExpense
 machine,ZBH,research_and_development,correct,,mapped,mapped,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost,us-gaap:ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost
 machine,ZBH,operating_income,correct,,mapped,mapped,us-gaap:OperatingIncomeLoss,us-gaap:OperatingIncomeLoss

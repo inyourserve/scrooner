@@ -87,6 +87,11 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
     bank, insurer, classified = det('bank'), det('insurer'), det('classified_bs')
     cand = {d: [] for d in DPS}
     single_class = {}
+    multi_class = {}
+    for _r in {l['r'] for l in L if l['st'] in ('BS', 'EQ')}:
+        _rl = [l for l in L if l['r'] == _r and l['st'] in ('BS', 'EQ')]
+        if any(l['tag'] == 'StatementClassOfStockAxis' for l in _rl):
+            multi_class[_r] = len({l['tag'] for l in _rl if l['tag'].endswith('Member') and re.search(r'Common|Class', l['tag']) and not re.search(r'Treasury|Preferred|AdditionalPaidIn|Retained|AccumulatedOther|Noncontrolling', l['tag'])}) >= 2
     _PC = KB['P'].get('per_share.class_member_face_line')
     if _PC:
         for _r in {l['r'] for l in L if l['st'] == 'IS'}:
@@ -114,15 +119,19 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
         else:
             continue
-        if (not dp or dp not in cand) and l['tag'] in nd and nd[l['tag']][0] in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('data_points', []):
+        if l['tag'] in nd and nd[l['tag']][0] in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('data_points', []) and (not dp or dp not in cand or (dp in (KB['P'].get('engine.nd_when_lib_outside_exam') or {}).get('bank_only_data_points', []) and not bank)):
             dec, dp = 'combined', nd[l['tag']][0]; rids.append(nd[l['tag']][1])
         if not dp or dp not in cand: continue
         if l['pth'] and dp not in KB['PTH_OK']: continue
         if l['val'] in (None, ''):
             # Dhairya 2026-11-13 (STZ): a face line printed only under the single class-of-stock member is still the face line
             PC = KB['P'].get('per_share.class_member_face_line')
-            if not (PC and dp in PC['data_points'] and l['st'] == 'IS' and not l['pth'] and single_class.get(l['r'])): continue
-            l['cm'] = 1; rids.append('per_share.class_member_face_line')
+            PM = KB['P'].get('per_share.shares_outstanding.multi_class_sum')
+            if PM and dp == 'shares_outstanding' and l['st'] in ('BS', 'EQ') and multi_class.get(l['r']):
+                l['cm'] = 1; l['mcs'] = 1; rids.append('per_share.shares_outstanding.multi_class_sum')
+            elif not (PC and dp in PC['data_points'] and l['st'] == 'IS' and not l['pth'] and single_class.get(l['r'])): continue
+            else:
+                l['cm'] = 1; rids.append('per_share.class_member_face_line')
         if dec == 'map' and dp in DEMOTE and re.search(DEMOTE[dp][0], l['lab'] or ''):
             dec = 'combined'; rids.append(DEMOTE[dp][1])
         if dec == 'map' and r is not None and r.get('decision') == 'map' and dp == 'shares_outstanding' and l['st'] not in KB['SHR_STMTS'][0]: continue
@@ -315,6 +324,11 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
             emit(dict(ticker=ticker, rank=rank, data_point=dp, status=status, tags='us-gaap:' + NOTE[dp][0], stmt='NOTE', sign='', scale='',
                             era_break='', prior_tag='', value_source='sec_api', acc=L[0]['acc'] if L else '', r_page='', label='', fy0_value='', rule=rule))
             continue
+        if dp == 'shares_outstanding' and chosen and any(l.get('mcs') for l in chosen) and status == 'mapped':
+            status = 'component_sum'; rule = 'sum of the class-of-stock members at the BS date (Dhairya ruling (c) 2026-11-13; fsn_xbrl)'
+        PIO = P.get('is.operating_expenses.insurer_total_combined')
+        if PIO and dp == 'operating_expenses' and insurer and status == 'mapped' and chosen and chosen[0]['tag'] in PIO['tags']:
+            status = 'combined'; rule = 'insurer total includes benefits/losses -> combined (Dhairya ruling (b) 2026-11-13)'; fired.append('is.operating_expenses.insurer_total_combined')
         PFL = P.get('bs.total_debt.finance_leases')
         if PFL and dp == 'total_debt' and chosen and status in ('component_sum', 'mapped'):
             # founder 2026-11-04 item 5 (total debt includes finance leases); Dhairya 2026-11-13 guards: (1) a debt line whose tag or

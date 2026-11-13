@@ -23,6 +23,20 @@ def cp_upper_one(k, n, a=0.05):
     """One-sided 95% Clopper-Pearson upper bound on the error rate (graduation bar, Dhairya/NOW.md 2026-11-12)."""
     return cp_upper(k, n, 2 * a)
 def ks_raw(k): return norm_status(k.get('status'))
+def multi_class_shares(tk):
+    """True when a BS/EQ face page carries CommonStockSharesOutstanding by >=2 common class members (needs GRADE_LINES_DIR)."""
+    import json, re
+    d = os.environ.get('GRADE_LINES_DIR')
+    p = os.path.join(d or '', f'{tk}.jsonl')
+    if not d or not os.path.exists(p): return False
+    pages = {}
+    for ln in open(p):
+        l = json.loads(ln)
+        if l.get('st') not in ('BS', 'EQ'): continue
+        pg = pages.setdefault(l['r'], [set(), False])
+        if l['tag'].endswith('Member') and re.search(r'Common|Class', l['tag']) and not re.search(r'Treasury|Preferred|AdditionalPaidIn|Retained|AccumulatedOther|Noncontrolling', l['tag']): pg[0].add(l['tag'])
+        if l['tag'] == 'CommonStockSharesOutstanding': pg[1] = True
+    return any(len(m) >= 2 and has for m, has in pages.values())
 _NFL = None
 def note_fin_lease_outside_debt(tk):
     """True when no BS line carries leases, the note FinanceLeaseLiability > 0 and the filing's
@@ -123,6 +137,12 @@ def main(pdir, ddir, *only):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: DepreciationAmortizationAndAccretionNet includes accretion -> combined; a label never promotes (DUK ruling; doc 02)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if dp == 'total_debt' and ks in ('mapped', 'component_sum', 'component sum') and 'lease' not in (k['tags'] or '').lower() and (face_fin_lease(tk) or note_fin_lease_outside_debt(tk)):
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: total_debt omits finance lease liabilities (printed, or in the notes with the XBRL location outside debt; founder 2026-11-04 item 5; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'operating_expenses' and ks == 'not_presented' and norm_status(p['status']) == 'mapped' and tagset(p['tags']) == {'noninterestexpense'}:
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: bank operating_expenses = NoninterestExpense, mapped (Dhairya ruling (a) 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'operating_expenses' and ks == 'combined' and norm_status(p['status']) == 'component_sum' and 'ties to GP - OI' in (p.get('rule') or ''):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: printed band between GP and OI ties -> component_sum, not combined (opex rulings; Dhairya 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
+            if dp == 'shares_outstanding' and ks == 'not_presented' and norm_status(p['status']) == 'component_sum' and multi_class_shares(tk):
+                rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: multi-class shares outstanding = sum of the class members at the BS date (Dhairya ruling (c) 2026-11-13)', key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if rk and norm_status(p['status']) != 'mapped':
                 rows.append(dict(ticker=tk, data_point=dp, result='key_error', error_class='key: ' + rk, key_status=k['status'], pred_status=p['status'], key_tags=k['tags'], pred_tags=p['tags'])); continue
             if (tk, dp) in adj and norm_status(k['status']) != norm_status(p['status']):

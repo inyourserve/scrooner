@@ -251,3 +251,16 @@ The predictor (v7 engine, rules as of ee1a40ec) already gets each case right. Th
    - Operating leases never count.
    - The deterministic location signal is FinanceLeaseLiability(Current|Noncurrent)StatementOfFinancialPositionExtensibleList. For IBM it points to ShortTermBorrowings/LongTermDebtNoncurrent, so leases are already in debt and nothing is added. For AAPL and COST it points to OtherLiabilitiesCurrent/Noncurrent, so the leases are added (AAPL 538 + 692 = 1,230M; COST 94 + 1,319 = 1,413M).
    - exam/tools/grade.py (with GRADE_LINES_DIR) grades a total_debt key that omits a printed finance-lease line as a key error.
+
+## AG. Rulings 2026-11-13, third batch (Dhairya; binding)
+
+- **(a)** Bank operating_expenses = NoninterestExpense, mapped. Interest expense and the credit-loss provision stay out (EWBC KEY RF SOFI SYF keys were wrong).
+- **(b)** Insurer: a total that includes benefits, losses or policyholder charges (BenefitsLossesAndExpenses, or CostsAndExpenses with benefits) is combined. Exception: printed expense lines that exclude benefits and tie are component_sum (MKL, RGA). The engine rule is is.operating_expenses.insurer_total_combined.
+- **(c)** Multi-class shares_outstanding = the sum of the class members at the BS date, value_source fsn_xbrl, never the dei count (per_share.shares_outstanding.multi_class_sum; keys CRWD MA META SCHW SHOP V wrong).
+- **(d)** A note-only InterestExpenseDebt is mapped (stmt NOTE) when it is the gross charge and no broader total exists. It is component_in_note when a broader gross total exists anywhere (finance-lease interest, other interest).
+  - APA: mapped (key right).
+  - GPN: component_in_note (key wrong; FinanceLeaseInterestExpense 0.7M + face InterestAndOtherExpense 649.6M).
+  - RGLD: component_in_note (key right).
+  - NTNX: no undimensioned FY fact in FSN, undecided.
+- **(e)** A dividend paid to a former parent before a spin is not dividends_paid. It is not_presented, reason pre_spin_parent_distribution, unless public common dividends were also paid (FDXF).
+- **Opex.** When the printed band between GP and OI ties, the key is component_sum, not combined. grade.py marks the combined keys as key errors (16), plus the bank keys (5).
