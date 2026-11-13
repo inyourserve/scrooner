@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+sga_expense,2020,2020-12-26,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,0000077476-21-000007,R2.htm,28495000000,"red cell (value in filing, not served): R2.htm 'Selling, general and administrative expenses' read from the filing (FY0 column), printed value = red-cell evidence; companyfacts 28495000000; check: machine read of the R page"
