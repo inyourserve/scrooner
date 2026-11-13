@@ -1,0 +1,2 @@
+data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
+revenue,2016,2016-12-31,mapped,us-gaap:SalesRevenueNet,IS,0000313616-17-000066,R4.htm,16882400000,"red cell v2 (served value is the predictor candidate; the tag-map has no ): R4.htm 'Sales' read from 0000313616-17-000066 (FY0 column), printed 16882400000 = store value 16882400000; companyfacts 16882400000; check: machine read of the R page"
