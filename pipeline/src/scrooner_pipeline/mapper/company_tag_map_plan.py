@@ -25,6 +25,7 @@ import psycopg
 from scrooner_pipeline.common import cell_store as cs
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.mapper import company_tag_map as ctm
+from scrooner_pipeline.mapper import dqc_checks as dqc
 from scrooner_pipeline.mapper import resolve as resolve_mod
 
 BEFORE_TABLES = ("canonical_fact", "cell_blank_reason", "slot_protected_cell")
@@ -310,6 +311,64 @@ def library_status_blanks(
     return out
 
 
+def hold_dqc_cells(
+    conn: psycopg.Connection,
+    cid: int,
+    run_id: str,
+    hits: list[dqc.Hit],
+    stats: dict,
+    concept_info,
+) -> int:
+    """DQC hold (explicit flag only): every served cell named by a HOLD hit is removed from canonical_fact and
+    written as a visible defect reason (identity, owner verifier) of this run. A value is never derived."""
+    by_cell: dict[tuple[int, int], list[dqc.Hit]] = defaultdict(list)
+    for h in hits:
+        if h.hold:
+            by_cell[(h.canonical_concept_id, h.period_id)].append(h)
+    if not by_cell:
+        return 0
+    blanks: list[dict] = []
+    for (concept_id, period_id), hs in by_cell.items():
+        h = hs[0]
+        conn.execute(
+            "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s and period_id = %s",
+            (cid, concept_id, period_id),
+        )
+        blanks.append(
+            {
+                "canonical_concept_id": concept_id,
+                "concept_name": h.data_point,
+                "period_id": period_id,
+                "state": "defect",
+                "defect_class": "identity",
+                "owner": "verifier",
+                "reason_code": "dqc_" + h.check_id.lower().replace("-", "_"),
+                "reason": "held by DQC check "
+                + "; ".join(
+                    sorted(
+                        {
+                            f"{x.check_id} {x.values.get('identity', '')}".strip()
+                            for x in hs
+                        }
+                    )
+                ),
+                "rule_id": dqc.RULE_ID,
+                "period_start": h.period_start,
+                "period_end": h.period_end,
+                "grain": ctm._proof_grain(h.period_start, h.period_end, h.period_type),
+            }
+        )
+    held = set(by_cell)
+    stats["cells"] = [
+        c
+        for c in stats["cells"]
+        if (c["canonical_concept_id"], c["period_id"]) not in held
+    ]
+    stats["blanks"] = stats["blanks"] + blanks
+    ctm._write_blanks(conn, cid, run_id, blanks, concept_info)
+    return len(blanks)
+
+
 def _report(
     conn,
     cid: int,
@@ -492,6 +551,8 @@ def run(
     *,
     apply: bool,
     gate: bool = False,
+    dqc_checks: list[dqc.Check] | None = None,
+    dqc_hold: bool = False,
 ) -> dict[int, dict]:
     managed = resolve_mod._load_managed_concept_ids(conn)
     concept_info = ctm.load_concept_info(conn)
@@ -524,6 +585,14 @@ def run(
                 )
                 ctm._write_blanks(conn, cid, run_id, lib, concept_info)
                 stats["blanks"] = stats["blanks"] + lib
+                dqc_hits: list[dqc.Hit] = []
+                dqc_held = 0
+                if dqc_checks:  # report-only unless dqc_hold: then HOLD hits remove their served cells
+                    dqc_hits = dqc.check_company(conn, cid, dqc_checks)
+                    if dqc_hold:
+                        dqc_held = hold_dqc_cells(
+                            conn, cid, run_id, dqc_hits, stats, concept_info
+                        )
                 scope = sorted(
                     set(managed)
                     | {c["canonical_concept_id"] for c in stats["cells"]}
@@ -546,6 +615,8 @@ def run(
                     conn, cid, run_id, stats, expected.get(cid, []), concept_info
                 )
                 rep["protected_keys"] = protected
+                rep["dqc_hits"] = dqc_hits
+                rep["dqc_held"] = dqc_held
                 rep["coverage"] = coverage(
                     conn,
                     cid,
@@ -563,7 +634,11 @@ def run(
                     cs.finish_rule_run(
                         conn,
                         run_id,
-                        {k: v for k, v in rep.items() if k != "neither_by_data_point"},
+                        {
+                            k: v
+                            for k, v in rep.items()
+                            if k not in ("neither_by_data_point", "dqc_hits")
+                        },
                     )
                 else:
                     raise _PlanRollback
