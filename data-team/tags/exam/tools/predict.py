@@ -25,7 +25,7 @@ def load_kb(d):
         K['lib'][(r['W']['stmt'], r['W']['tag'])] = dict(r['T'], rid=r['rule_id'])
     K['ov'] = {}
     for r in by('override'):
-        K['ov'][(r['W']['cik'], r['W']['tag'])] = dict(concept=r['T']['concept'], rid=r['rule_id'])
+        K['ov'][(r['W']['cik'], r['W']['tag'])] = dict(concept=r['T']['concept'], rid=r['rule_id'], decision=r['T'].get('decision', 'map'))
     K['nd'] = {}
     for r in by('combined_concept'):
         K['nd'].setdefault(r['W']['tag'], (r['T']['data_point'], r['rule_id']))
@@ -110,7 +110,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         if o is not None:
             c = o['concept']
             if c.startswith('('): continue
-            dec, dp = 'map', dp_of(c); rids.append(o['rid'])
+            dec, dp = o.get('decision', 'map'), dp_of(c); rids.append(o['rid'])
         elif r is not None:
             dec = r['decision']; dp = dp_of(r['concept']) or dp_of(r['parent_concept']); rids.append(r['rid'])
             if not dp and (dec == 'combined' or 'combined' in (r.get('reason_class') or '')) and l['tag'] in nd:
