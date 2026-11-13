@@ -128,6 +128,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "instance-fallback",
             # the new system's own stage, and a read-only report
             "tagmap-authority",
+            "tagmap-dedupe",
             "errors",
         }
     ),
@@ -135,6 +136,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
         {
             # the new system (tag map seed and write path)
             "seed-company-tag-map",
+            "docmap-load",
             "tagmap-plan",
             # derived metrics, recomputed from canonical_fact for every company
             "calculate",
