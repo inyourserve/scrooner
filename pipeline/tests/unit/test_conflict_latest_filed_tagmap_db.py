@@ -161,6 +161,7 @@ def test_mapper_vintages_carry_same_value_copies_never_a_different_value(isolate
 @pytest.mark.integration
 def test_proof_guard_keeps_a_cells_last_disagree_whichever_run_wrote_it(isolated_database_url):
     from scrooner_pipeline.mapper import company_tag_map as ctm
+    from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
     with psycopg.connect(isolated_database_url) as conn:
         cid = conn.execute("insert into core.company (cik, company_name) values ('0000000017', 'T') returning id").fetchone()[0]
@@ -172,11 +173,23 @@ def test_proof_guard_keeps_a_cells_last_disagree_whichever_run_wrote_it(isolated
             conn.execute(
                 """insert into analytics.cell_proof (company_id, data_point_name, period_grain, period_start, period_end,
                    shown_value, position_value, position_is_expected_line, verdict, reason_code, detector_version, proved_at)
-                   values (%s, %s, 'FY', (%s::date - 364), %s, 5, 5, true, %s, %s, 'v', %s)""",
-                (cid, name, end, end, verdict, "x" if verdict == "DISAGREE" else None, at),
+                   values (%s, %s, 'FY', (%s::date - 364), %s, 5, 5, true, %s, %s, %s, %s)""",
+                (cid, name, end, end, verdict, "x" if verdict == "DISAGREE" else None, DETECTOR_VERSION, at),
             )
         got = ctm._load_proof_disagree(conn, cid)
         assert sorted((k[0], k[3].isoformat()) for k in got) == [("revenue", "2019-12-31"), ("revenue", "2020-12-31")]
+        # a row of an older detector is history: it never holds a cell (it would hold it for ever, a held cell is
+        # not re-proved), and the coverage read never takes it as the verdict
+        conn.execute("update analytics.cell_proof set detector_version = 'cell_proof_v1_old' where period_end = '2019-12-31'")
+        got = ctm._load_proof_disagree(conn, cid)
+        assert sorted((k[0], k[3].isoformat()) for k in got) == [("revenue", "2020-12-31")]
+        from scrooner_pipeline.mapper.top100_coverage import load_current_proofs
+
+        v = load_current_proofs(conn, [cid], ["revenue", "cfo"])
+        assert sorted((k[1], k[3].isoformat(), r[0]) for k, r in v.items()) == [
+            ("cfo", "2020-12-31", "PROVEN"),
+            ("revenue", "2020-12-31", "DISAGREE"),
+        ]
 
 
 @pytest.mark.integration

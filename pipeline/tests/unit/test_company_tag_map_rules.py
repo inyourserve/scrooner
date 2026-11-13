@@ -645,12 +645,12 @@ SGA_ID = 14
 SGA_INFO = {**OPEX_INFO, SGA_ID: ("sga_expense", "income_statement")}
 
 
-def _no_arcs(gp, oi):
+def _no_arcs(gp, oi, arcs=None, parents=None):
     # MSFT FY2024 10-K: no calculation arcs at all; the face ties GP - (R&D + S&M + G&A) = OI
     rows = [
         MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
         MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
-        *(MapRow("us-gaap", t, "IS", "component", None, OPEX_ID, 1, ERA, None, "OperatingIncomeLoss") for t in "RSG"),
+        *(MapRow("us-gaap", t, "IS", "component", None, OPEX_ID, 1, ERA, None, (parents or {}).get(t, "OperatingIncomeLoss")) for t in "RSG"),
         *(MapRow("us-gaap", t, "IS", "component", None, SGA_ID, 1, ERA, None, "SellingGeneralAndAdministrativeExpense") for t in "SG"),
     ]
     facts = {
@@ -660,7 +660,20 @@ def _no_arcs(gp, oi):
         ("us-gaap", "S"): {7: fact("24456", 4)},
         ("us-gaap", "G"): {7: fact("7609", 5)},
     }
-    return build_cells(rows, facts, SGA_INFO, {}, {})
+    return build_cells(rows, facts, SGA_INFO, arcs or {}, {})
+
+
+def test_calc_arcs_without_one_shared_parent_opex_stands_on_the_face_tie_not_held():
+    # MSFT FY2019-FY2026: arcs exist, but R&D, S&M and G&A carry different calc parents, so no single parent
+    # lists them. The face tie GP - sum(lines) = OI replaces calc evidence.
+    arcs = {"A-10": {("OperatingIncomeLoss", "R"), ("Other", "S"), ("Other", "G")}}
+    parents = {"R": "OperatingIncomeLoss", "S": "Other", "G": "Other"}
+    cells, stats = _no_arcs("171008", "109433", arcs, parents)
+    got = {c["canonical_concept_id"]: c["value"] for c in cells}
+    assert got[OPEX_ID] == Decimal("61575")
+    cells, stats = _no_arcs("171008", "109000", arcs, parents)  # no tie: held, and the reason says why
+    assert OPEX_ID not in {c["canonical_concept_id"] for c in cells}
+    assert "opex_components_do_not_tie_gross_profit_to_operating_income" in {h["reason"] for h in stats["held"]}
 
 
 def test_no_calc_arcs_opex_and_sga_stand_on_the_face_tie_only():

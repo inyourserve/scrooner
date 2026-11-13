@@ -30,6 +30,8 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.proof.prove import DETECTOR_VERSION
+
 CLASSES = ("PROVEN", "REASON", "DISAGREE", "UNCHECKED", "BLANK")
 REASON_STATES = {
     "not_presented",
@@ -175,6 +177,28 @@ def _fy_periods(
     return best
 
 
+def load_current_proofs(
+    conn: Any, ids: list[int], names: list[str]
+) -> dict[tuple[int, str, date, date], tuple]:
+    """The verdict of each cell key: its newest analytics.cell_proof row written by the CURRENT detector version.
+    A row of an older detector is history, never the verdict (a held cell is not re-proved, so a pre-R13
+    restated_copies_disagree row outlived its rule for 48 MSFT cells)."""
+    proofs: dict[tuple[int, str, date, date], tuple] = {}
+    for row in conn.execute(
+        """select distinct on (company_id, data_point_name, period_start, period_end)
+                  company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
+                  shown_value, shown_tag, shown_accession, position_source, face_report
+           from analytics.cell_proof
+           where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
+             and detector_version = %s
+             and period_grain in ('FY', 'I') and period_end >= %s
+           order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
+        (ids, names, DETECTOR_VERSION, date(FIRST_FY - 1, 1, 1)),
+    ).fetchall():
+        proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+    return proofs
+
+
 def build_rows(
     conn: Any, companies: list[Company], reads_dir: Path, today: date
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
@@ -201,18 +225,7 @@ def build_rows(
         (ids, names, FIRST_FY),
     ).fetchall():
         served[(cid, name, s, e)] = v
-    proofs: dict[tuple[int, str, date, date], tuple] = {}
-    for row in conn.execute(
-        """select distinct on (company_id, data_point_name, period_start, period_end)
-                  company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
-                  shown_value, shown_tag, shown_accession, position_source, face_report
-           from analytics.cell_proof
-           where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
-             and period_grain in ('FY', 'I') and period_end >= %s
-           order by company_id, data_point_name, period_start, period_end, proved_at desc, id desc""",
-        (ids, names, date(FIRST_FY - 1, 1, 1)),
-    ).fetchall():
-        proofs[(row[0], row[1], row[2], row[3])] = row[4:]
+    proofs = load_current_proofs(conn, ids, names)
     blanks: dict[tuple[int, str, date, date], tuple] = {}
     for row in conn.execute(
         """select distinct on (company_id, data_point_name, period_start, period_end)

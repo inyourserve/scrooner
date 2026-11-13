@@ -52,6 +52,7 @@ import structlog
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches, nearest_month_ends
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
 from scrooner_pipeline.fsn_store.checks import tol_of
+from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
 logger = structlog.get_logger()
 
@@ -451,8 +452,10 @@ def _load_proof_disagree(
     keeps one row per cell key, upserted, so that row is the cell's latest verdict whichever run wrote it). A held
     cell is not served, so no later run re-proves it: its DISAGREE row is still the evidence. The hold applies only
     while the mapper would serve that same value (_proof_guard), so a corrected value is never hidden. (A latest-run
-    window released the cells step 3 held and step 4 never saw: 358 served DISAGREE on 2026-11-12.) Empty when the
-    table is absent."""
+    window released the cells step 3 held and step 4 never saw: 358 served DISAGREE on 2026-11-12.) Only rows of the
+    CURRENT detector version count: a held cell is never re-proved, so a row of an older detector would hold the
+    cell for ever (48 MSFT DISAGREEs of the pre-R13 logic); once released the cell is served and the proof re-judges
+    it, and a real disagreement is written at the current version and holds it again. Empty when the table is absent."""
     if conn.execute("select to_regclass('analytics.cell_proof')").fetchone()[0] is None:
         return {}
     return {
@@ -462,8 +465,9 @@ def _load_proof_disagree(
             select data_point_name, period_grain, period_start, period_end, shown_value
             from analytics.cell_proof
             where company_id = %s and basis = 'latest' and verdict = 'DISAGREE' and shown_value is not null
+              and detector_version = %s
             """,
-            (company_id,),
+            (company_id, DETECTOR_VERSION),
         ).fetchall()
     }
 
@@ -693,6 +697,14 @@ def _grain(start: date, end: date, ptype: str) -> str | None:
 # The statement face still proves it: operating expenses must tie gross profit - opex = operating income of the
 # same filing (_opex_tie), and an SG&A sum is accepted only when all its lines are parts of that tied opex.
 TIE_EVIDENCE = {"operating_expenses", "sga_expense"}
+# Calc evidence that is absent (no arcs) or does not isolate one parent for the printed lines (MSFT: R&D, S&M and
+# G&A hang off different calc parents across filings, so no single parent lists them) is replaced by the face tie
+# for these concepts: the printed lines between gross profit and operating income must sum to GP - OI.
+TIE_REASONS = {
+    "no_calc_evidence",
+    "components_without_single_calc_parent",
+    "component_not_direct_child_of_parent",
+}
 
 
 def _one_filing_parts(
@@ -857,7 +869,7 @@ def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[
                 {
                     "canonical_concept_id": c["canonical_concept_id"],
                     "period_id": c["period_id"],
-                    "reason": "no_calc_evidence",
+                    "reason": c.get("_tie_reason") or "no_calc_evidence",
                 }
             )
             continue
@@ -1015,7 +1027,7 @@ def build_cells(
         if len({f.filing_id for _, f in c}) > 1:
             c = _one_filing_parts(c, vintages, key[1]) or c
         reason = _check_components(c, arcs, _base(pname) == "total_debt")
-        needs_tie = reason == "no_calc_evidence" and _base(pname) in TIE_EVIDENCE
+        needs_tie = reason in TIE_REASONS and _base(pname) in TIE_EVIDENCE
         if reason and not needs_tie:
             hold(key, reason)
             continue
@@ -1031,6 +1043,7 @@ def build_cells(
                 "_accession": c[0][1].accession,
                 "_from_components": True,
                 "_needs_tie": needs_tie,
+                "_tie_reason": reason if needs_tie else None,
                 "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
             }
         )
