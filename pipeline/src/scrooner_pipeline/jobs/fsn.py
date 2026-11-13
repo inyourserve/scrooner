@@ -150,6 +150,11 @@ def load_cmd(
     input_sha: str = typer.Option(
         "", help="sha256 of the dispatched CIK list, recorded in the rule_run stats."
     ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Write nothing (read-only transaction, no rule_run): report what would be inserted, replaced or held.",
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -159,6 +164,20 @@ def load_cmd(
 
     from scrooner_pipeline.common.config import settings
 
+    if dry_run:
+        with get_connection() as conn:
+            plan = load.plan(
+                conn,
+                Path(companies),
+                [c for c in ciks.split(",") if c] or None,
+                predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
+                increment=increment,
+                force=force,
+            )
+        if report:
+            Path(report).write_text(json.dumps(plan, indent=1, default=str))
+        typer.echo(f"fsn load --dry-run: {json.dumps(plan['totals'])}")
+        return
     res = None
     try:
         with get_connection() as conn:

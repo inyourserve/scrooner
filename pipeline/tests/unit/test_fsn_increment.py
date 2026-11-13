@@ -328,3 +328,36 @@ def test_window_reaches_back_to_the_day_after_the_latest_fsn_set(conn, tmp_path)
     conn.commit()
     # the EDGAR-built filing does not move the window; the SEC set does
     assert increment.since_last_set(conn) == date(2026, 8, 1)
+
+
+@pytest.mark.integration
+def test_load_plan_is_a_dry_run_that_writes_nothing(conn, tmp_path):
+    cid = _one(
+        conn,
+        "insert into core.company (cik, company_name) values (%s, 'META PLAN') returning id",
+        (CIK,),
+    )
+    conn.commit()
+    inc = _increment_dir(tmp_path, cid)
+    before = _one(conn, "select count(*) from fsn.filing")
+    runs = _one(conn, "select count(*) from analytics.rule_run")
+    p = load.plan(conn, inc.parent, [CIK], increment=True)
+    assert p["totals"]["accessions_inserted"] == 1 and p["companies"][CIK][
+        "insert"
+    ] == [META]
+    assert p["companies"][CIK]["num_rows"] > 500
+    # nothing was written, no rule_run, and the connection is usable and writable again
+    assert _one(conn, "select count(*) from fsn.filing") == before
+    assert _one(conn, "select count(*) from analytics.rule_run") == runs
+    assert conn.read_only is False
+    # after the real load the same plan reports it unchanged
+    load.load_company(conn, inc, loader_commit="c1", increment=True)
+    conn.commit()
+    p2 = load.plan(conn, inc.parent, [CIK], increment=True)
+    assert (
+        p2["totals"].get("accessions_inserted", 0) == 0
+        and p2["companies"][CIK]["unchanged"] == 1
+    )
+    # a company outside the master is reported, not raised
+    p3 = load.plan(conn, inc.parent, [CIK], predecessors={}, increment=True)
+    assert p3["totals"]["companies"] == 1

@@ -14,8 +14,11 @@ csv.field_size_limit(1 << 24)
 TABLES = ("sub", "pre", "num", "cal", "ren", "tag", "dim")
 NO_DIM = "0x00000000"
 STATEMENT_STMTS = frozenset({"BS", "IS", "CF", "CI", "EQ", "CP", "UN"})
+# Domestic 10-K/10-Q family plus the foreign private issuers' annual reports (20-F, 40-F): a 40-F filer in the
+# cohort (SHOP, FY2016-FY2023) has no 10-K for those years, and its own annual statements are its history.
 PERIODIC_FORMS = frozenset(
     {"10-K", "10-K/A", "10-KT", "10-KT/A", "10-Q", "10-Q/A", "10-QT", "10-QT/A"}
+    | {"20-F", "20-F/A", "40-F", "40-F/A"}
 )
 
 

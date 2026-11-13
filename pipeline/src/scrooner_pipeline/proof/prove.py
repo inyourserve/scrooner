@@ -515,9 +515,9 @@ def on_statement_face(
         if nv.ddate in dates or not dates:
             return True, "balance sheet date"
         return False, f"the balance sheet prints no column dated {nv.ddate}"
-    if form.startswith("10-K"):
+    if form.startswith(("10-K", "20-F", "40-F")):
         if nv.qtrs == 4:
-            return True, "annual column of a 10-K"
+            return True, f"annual column of a {form.split('/')[0]}"
         return (
             False,
             f"a 10-K {stmt} prints annual columns; a {nv.qtrs}-quarter value comes from a note",
