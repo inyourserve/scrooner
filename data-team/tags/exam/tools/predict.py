@@ -52,7 +52,7 @@ def sign(v):
     try: x = float(v)
     except (TypeError, ValueError): return ''
     return '+' if x > 0 else '-' if x < 0 else '0'
-def main(lines_path, ticker, rank, rulesdir, notes_path=None):
+def main(lines_path, ticker, rank, rulesdir, notes_path=None, accession=None):
     global KB
     KB = load_kb(os.environ.get('TAG_RULES_DIR') or rulesdir)  # backtest.py passes the rules dir by env, library dir as argv
     lib, ov, nd = KB['lib'], KB['ov'], KB['nd']
@@ -60,6 +60,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
     P = KB['P']; RID = {}; memcos = []
     L = [json.loads(l) for l in open(lines_path) if l.strip()]
     L = [l for l in L if not l.get('missing')]
+    if accession: L = [l for l in L if l.get('acc') == accession]  # --accession: predict an earlier 10-K (era extension)
     for l in L:
         for k in ('pth', 'cu', 'neg', 'r', 'ln'):
             try: l[k] = int(l.get(k) or 0)
@@ -75,6 +76,7 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         for ln_ in open(notes_path):
             o_ = json.loads(ln_)
             if o_['cik'] != cik: continue
+            if o_.get('acc') and L and o_['acc'] != L[0]['acc']: continue  # note facts of this filing only
             for kv in (o_.get('facts') or '').split('|'):
                 if '=' not in kv: continue
                 t_, rest = kv.split('=', 1); q_, v_ = rest.split(':', 1)
@@ -413,4 +415,8 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None):
         o['evidence_class'] = 'PREDICTED (predict.py %s)' % KB['version']
     w = csv.DictWriter(sys.stdout, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
 if __name__ == '__main__':
-    main(*sys.argv[1:6])
+    a = sys.argv[1:]
+    acc = None
+    if '--accession' in a:
+        i = a.index('--accession'); acc = a[i + 1]; del a[i:i + 2]
+    main(*a[:5], accession=acc)
