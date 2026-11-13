@@ -31,8 +31,13 @@ from scrooner_pipeline.proof.fsn import (
     require_zstd,
 )
 from scrooner_pipeline.proof.fsn_db import load_filings
+from scrooner_pipeline.proof.identities import apply_identities, load_printed
 from scrooner_pipeline.proof.prove import Proof, prove_cell
-from scrooner_pipeline.proof.shown import group_by_accession, load_shown
+from scrooner_pipeline.proof.shown import (
+    HISTORY_FLOOR,
+    group_by_accession,
+    load_shown,
+)
 
 logger = structlog.get_logger()
 
@@ -162,6 +167,7 @@ def prove_company(
     company_id: int,
     cache: StructureCache,
     floor: date | None = None,
+    structures_out: dict[str, FilingStructure] | None = None,
 ) -> list[Proof]:
     shown = (
         load_shown(conn, company_id, floor=floor)
@@ -211,6 +217,8 @@ def prove_company(
         s.claim is not None and any("[" in t for _sg, t in s.claim.parts) for s in shown
     )
     structures = cache.get_many(by_quarter, dims=wants_dims)
+    if structures_out is not None:
+        structures_out.update(structures)
     proofs: list[Proof] = []
     for acc, cells in groups.items():
         structure = structures.get(acc) if acc else None
@@ -273,6 +281,7 @@ def run(
     cache = StructureCache(fsn_root, conn, fsn_source)
     totals: dict[str, Any] = {"companies": 0, "cells": 0, "errored": 0}
     verdicts: Counter = Counter()
+    identity_breaks: Counter = Counter()
     reasons: Counter = Counter()
     per_company: dict[str, dict[str, int]] = {}
     report = report_path.open("a") if report_path else None
@@ -284,7 +293,15 @@ def run(
             totals["companies"] += 1
             cache.company = cik
             try:
-                proofs = prove_company(conn, company_id, cache, floor)
+                structures: dict[str, FilingStructure] = {}
+                proofs = prove_company(conn, company_id, cache, floor, structures)
+                # identities over the served values, after the per-cell proof and before the upsert
+                id_counts = apply_identities(
+                    proofs,
+                    load_printed(conn, company_id, floor or HISTORY_FLOOR),
+                    structures,
+                )
+                identity_breaks.update(id_counts)
                 if write and proofs:
                     write_proofs(conn, proofs)
             except DecompressError:
@@ -311,6 +328,7 @@ def run(
         if report is not None:
             report.close()
     totals["verdicts"] = dict(verdicts)
+    totals["identity_breaks"] = dict(identity_breaks)
     totals["reasons"] = dict(reasons.most_common())
     totals["fsn_source"] = fsn_source
     totals["fsn_db_fallbacks"] = len(cache.fallbacks)
