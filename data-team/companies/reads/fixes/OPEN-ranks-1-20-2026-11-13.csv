@@ -18,3 +18,4 @@ XOM,shares_outstanding,2020,2020-12-31,b,us-gaap:CommonStockSharesOutstanding no
 XOM,shares_outstanding,2021,2021-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-22-000011
 XOM,shares_outstanding,2022,2022-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-23-000020
 XOM,shares_outstanding,2023,2023-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-24-000018
+JNJ,interest_expense,2024,2024-12-29,b,mapped us-gaap:InterestExpense: no 10-K fact at 2024-12-29 in companyfacts
