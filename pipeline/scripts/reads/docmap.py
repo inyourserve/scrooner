@@ -664,7 +664,15 @@ def parse_page(path: Path, kind: str | None) -> Page:
             if m:
                 elem = f"{m.group(1)}:{m.group(2)}"
         label = " ".join(tds[0].get_text(" ").split())
-        raw = [" ".join(td.get_text(" ").split()) for td in tds[1:]]
+        cells = [
+            td for td in tds[1:] if "th" not in (td.get("class") or [])
+        ]  # skip the footnote column
+        for td in (
+            cells
+        ):  # older renderer: a hidden span with the tag name inside each value cell
+            for sp in td.find_all("span", style=re.compile(r"display:\s*none")):
+                sp.decompose()
+        raw = [" ".join(td.get_text(" ").split()) for td in cells]
         vals = [parse_num(x) for x in raw]
         rows.append(
             Row(elem, label, vals, raw, is_header=not any(v is not None for v in vals))
