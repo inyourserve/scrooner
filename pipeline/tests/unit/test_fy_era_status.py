@@ -43,14 +43,18 @@ FILINGS = [
 CATALOG = [{"name": "amortization_of_intangibles", "statement": "cash_flow"}, {"name": "accounts_payable", "statement": "balance_sheet"}]
 
 
-def _run(tmp_path, cells, lines, extra_map=()):
-    p = {k: tmp_path / f"{k}.csv" for k in ("map", "cells", "filings", "lines", "cat", "out", "gaps")}
+ALL_FACTS = [{"accession": f["accession"].replace("A", "A-"), "tag": "*"} for f in FILINGS]  # dashed, as core.filing prints it
+
+
+def _run(tmp_path, cells, lines, extra_map=(), facts=ALL_FACTS):
+    p = {k: tmp_path / f"{k}.csv" for k in ("map", "cells", "filings", "lines", "facts", "cat", "out", "gaps")}
     _w(p["map"], MAP_COLS, BASE_MAP + list(extra_map))
     _w(p["cells"], ["company_id", "data_point", "period_end"], cells)
     _w(p["filings"], list(FILINGS[0]), FILINGS)
     _w(p["lines"], ["accession", "report", "rfile", "line", "stmt", "tag", "custom", "plabel"], lines)
+    _w(p["facts"], ["accession", "tag"], facts)
     _w(p["cat"], ["name", "statement"], CATALOG)
-    subprocess.run([sys.executable, "-I", str(SCRIPT), *(str(p[k]) for k in ("map", "cells", "filings", "lines", "cat", "out", "gaps"))],
+    subprocess.run([sys.executable, "-I", str(SCRIPT), *(str(p[k]) for k in ("map", "cells", "filings", "lines", "facts", "cat", "out", "gaps"))],
                    check=True, capture_output=True)
     new = [r for r in csv.DictReader(open(p["out"])) if r["decided_by"] == "fy_era_status"]
     return new, list(csv.DictReader(open(p["gaps"])))
@@ -64,10 +68,22 @@ def _line(acc, tag, plabel, stmt="CF", custom="f"):
     return {"accession": acc, "report": "4", "rfile": "R4.htm", "line": "3", "stmt": stmt, "tag": tag, "custom": custom, "plabel": plabel}
 
 
-def test_an_older_year_is_not_presented_only_when_its_own_10k_carries_no_tag_and_no_label(tmp_path):
+def test_an_older_year_is_not_presented_only_when_its_own_10k_carries_no_tag_no_fact_and_no_label(tmp_path):
     new, gaps = _run(tmp_path, [_cell("amortization_of_intangibles", "2020-12-31")], [_line("A2020", "Revenues", "Revenue", stmt="IS")])
     assert [(r["decision"], r["era_from"], r["era_to"], r["evidence_adsh"]) for r in new] == [("not_presented", "2020-12-31", "2020-12-31", "A2020")]
-    assert new[0]["reason_class"] == "not_presented_whole_filing" and gaps == []
+    assert new[0]["reason_class"] == "not_presented_statements_and_xbrl_facts" and gaps == []
+
+
+def test_a_candidate_tag_among_the_years_xbrl_facts_is_a_note_gap_never_not_presented(tmp_path):
+    facts = ALL_FACTS + [{"accession": "A-2020", "tag": "AmortizationOfIntangibleAssets"}]  # printed in a note, not on a statement
+    new, gaps = _run(tmp_path, [_cell("amortization_of_intangibles", "2020-12-31")], [], facts=facts)
+    assert new == [] and [(g["kind"], g["tag"]) for g in gaps] == [("note_fact", "AmortizationOfIntangibleAssets")]
+
+
+def test_a_filing_without_xbrl_facts_cannot_prove_absence(tmp_path):
+    facts = [x for x in ALL_FACTS if x["accession"] != "A-2020"]
+    new, gaps = _run(tmp_path, [_cell("amortization_of_intangibles", "2020-12-31")], [], facts=facts)
+    assert new == [] and gaps == []
 
 
 def test_a_candidate_tag_anywhere_in_the_years_filing_is_a_gap_never_a_reason(tmp_path):
