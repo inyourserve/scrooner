@@ -38,8 +38,8 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.mapper import era_extend
-from scrooner_pipeline.mapper.company_tag_map_plan import era_shortfall
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
+from scrooner_pipeline.mapper.company_tag_map_plan import era_shortfall
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
     check_overlaps,
@@ -96,6 +96,8 @@ class DocmapRow:
     # era_extend@1 row base_era-1 back to era_from); ext_note is the audit text on the extension row
     base_era: date | None = None
     ext_note: str = ""
+    # closed end of the row's era (None = open-ended); set when an agreeing library row already covers the later years
+    era_to: date | None = None
 
     @property
     def cites_page(self) -> bool:
@@ -301,7 +303,7 @@ def table_rows(
         "company_id": company_id,
         "cik": cik,
         "era_from": d.era_from,
-        "era_to": None,
+        "era_to": d.era_to,
         "evidence_adsh": d.accession,
         "evidence_report": d.report,
         "evidence_plabel": d.label or None,
@@ -309,8 +311,21 @@ def table_rows(
         "rule_id": RULE_ID,
     }
     if d.base_era is not None and d.base_era > d.era_from:
-        main = table_rows(
-            replace(d, era_from=d.base_era, base_era=None, ext_note=""),
+        main = (
+            table_rows(
+                replace(d, era_from=d.base_era, base_era=None, ext_note=""),
+                company_id,
+                cik,
+                concept_statement,
+            )
+            if d.era_to is None or d.base_era <= d.era_to
+            else []
+        )
+        ext_to = d.base_era - timedelta(days=1)
+        if d.era_to is not None:
+            ext_to = min(ext_to, d.era_to)
+        ref = main or table_rows(
+            replace(d, base_era=None, ext_note=""),
             company_id,
             cik,
             concept_statement,
@@ -319,12 +334,12 @@ def table_rows(
             {
                 **r,
                 "era_from": d.era_from,
-                "era_to": d.base_era - timedelta(days=1),
+                "era_to": ext_to,
                 "rule_id": era_extend.EXT_RULE_ID,
                 "decided_by": "era_extend",
                 "serve_note": d.ext_note,
             }
-            for r in main
+            for r in ref
         ]
         return main + ext
     st = concept_statement[d.data_point]
@@ -490,6 +505,11 @@ def plan_company(
             continue
         if _signature_lib(current) == _signature_doc(d):
             plan.agree += 1
+            # same decision and tags: the library row stands, but the docmap's earlier era is not lost; the docmap
+            # row is written for the years before the library row starts
+            lib_from = min(r["era_from"] for r in current)
+            if d.era_from < lib_from:
+                plan.insert.append(replace(d, era_to=lib_from - timedelta(days=1)))
             continue
         has_combined = any(r["decision"] == "combined" for r in current)
         winner = "docmap" if d.cites_page and not has_combined else "library"

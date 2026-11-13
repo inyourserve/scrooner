@@ -174,3 +174,24 @@ def test_member_qualified_tags_are_rejected_row_by_row():
     assert [r.data_point for r in rows] == ["revenue"]
     assert [(r["data_point"], r["why"]) for r in rejects] == [
         ("cost_of_revenue", "member_not_supported"), ("amortization_of_intangibles", "member_not_supported")]
+
+
+def test_agreeing_library_row_does_not_lose_the_docmaps_earlier_era():
+    ids = {"revenue_sanity_resolved": 1}
+    lib = {**LIB, "era_from": date(2025, 6, 30), "era_to": date(2026, 6, 30)}
+    plan = dl.plan_company([lib], [_doc("us-gaap:Revenues")], ids)  # docmap era from 2021-01-01
+    assert plan.agree == 1 and plan.conflicts == [] and plan.cut == []
+    assert [(d.era_from, d.era_to) for d in plan.insert] == [(date(2021, 1, 1), date(2025, 6, 29))]
+    (row,) = dl.table_rows(plan.insert[0], 5, "0000000001", {"revenue_sanity_resolved": "income_statement"})
+    assert (row["era_from"], row["era_to"]) == (date(2021, 1, 1), date(2025, 6, 29))
+    # a docmap era that starts with or after the library row adds nothing
+    same = dl.plan_company([{**lib, "era_from": date(2021, 1, 1)}], [_doc("us-gaap:Revenues")], ids)
+    assert same.insert == []
+
+
+def test_closed_era_with_an_extension_stays_inside_the_end():
+    d = dl.replace(_doc("us-gaap:Revenues"), era_from=date(2018, 1, 1), base_era=date(2021, 1, 1),
+                   ext_note="n", era_to=date(2019, 12, 31))
+    rows = dl.table_rows(d, 5, "0000000001", {"revenue_sanity_resolved": "income_statement"})
+    assert [(r["era_from"], r["era_to"], r["rule_id"][-12:]) for r in rows] == [
+        (date(2018, 1, 1), date(2019, 12, 31), "era_extend@1")]
