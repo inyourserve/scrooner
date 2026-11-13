@@ -195,3 +195,25 @@ def test_closed_era_with_an_extension_stays_inside_the_end():
     rows = dl.table_rows(d, 5, "0000000001", {"revenue_sanity_resolved": "income_statement"})
     assert [(r["era_from"], r["era_to"], r["rule_id"][-12:]) for r in rows] == [
         (date(2018, 1, 1), date(2019, 12, 31), "era_extend@1")]
+
+
+def test_every_decided_status_yields_a_row_covering_its_era():
+    cs = {"revenue_sanity_resolved": "income_statement"}
+    expect = {
+        "not_presented": ("not_presented", "docmap_not_presented"),
+        "combined": ("not_in_template", "docmap_combined"),
+        "OUT": ("not_in_template", "docmap_out"),
+        "mapped": ("concept", None),
+        "component_in_note": ("concept", None),
+        "component sum": ("component", None),
+    }
+    for status, (decision, reason_class) in expect.items():
+        tags = "us-gaap:Revenues" + (
+            "+us-gaap:SalesRevenueNet" if status == "component sum" else ""
+        )
+        rows = dl.table_rows(_doc(tags, status=status), 5, "0000000001", cs)
+        assert rows and {r["decision"] for r in rows} == {decision}, status
+        assert all(
+            r["era_from"] == date(2021, 1, 1) and r["era_to"] is None for r in rows
+        ), status
+        assert {r.get("reason_class") for r in rows} == {reason_class}, status

@@ -877,6 +877,32 @@ def load(
             for r in library
             if r["id"] not in plan.delete
         ]
+        # comparative-column extension: a year no row covers takes the next 10-K's prior-year column when that 10-K
+        # prints the same tag(s) as the nearest covered year (predictor/guard rows are not evidence and do not cover)
+        comp: list[dict] = []
+        if extend_eras and cik not in no_filing:
+            comp = comparative_rows(
+                conn,
+                cid,
+                cik,
+                kept + new,
+                concept_ids,
+                stats.setdefault("comparative_log", []),
+            )
+            stats.setdefault("comparative", []).extend(
+                {
+                    "cik": cik,
+                    "concept": names.get(
+                        r["canonical_concept_id"] or r["parent_concept_id"]
+                    ),
+                    "tag": r["tag"],
+                    "era_from": r["era_from"],
+                    "era_to": r["era_to"],
+                    "adsh": r["evidence_adsh"],
+                }
+                for r in comp
+            )
+            new = new + comp
         # predictor candidates / no-public-filing reasons for the years still uncovered; the predictor and guard rows
         # of the reloaded concepts are replaced, the others stay unless a new row now covers their years
         pnew: list[dict] = []
@@ -931,6 +957,12 @@ def load(
                 for r in pred_old
                 if (scope_ids is None or key(r) in scope_ids)
                 or any(overlaps(r, n) for n in new)
+            ]
+        if comp:  # filing evidence beats a predictor candidate for the same years
+            pred_delete += [
+                r["id"]
+                for r in pred_old
+                if r["id"] not in set(pred_delete) and any(overlaps(r, n) for n in comp)
             ]
         keep_pred = [r for r in pred_old if r["id"] not in set(pred_delete)]
         # a candidate never overlaps a row that already covers its years (library, docmap, extension, kept predictor)
@@ -1015,6 +1047,95 @@ def load(
                 cur.executemany(INSERT, new)
     stats["applied"] = True
     return stats
+
+
+def comparative_groups(rows: list[dict]) -> dict:
+    """Map rows -> {concept key: [era_extend.Covered]}: one group per (era_from, era_to) of value rows (concept /
+    component; payload = those rows), a reason group for every other row. Predictor and guard rows are no evidence:
+    they neither cover nor serve as a neighbor."""
+    by: dict = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        k = r["canonical_concept_id"] or r["parent_concept_id"]
+        if k is None or r.get("decided_by") in era_predictor_by():
+            continue
+        by[k][(r["era_from"], r["era_to"])].append(r)
+    out: dict = {}
+    for k, eras in by.items():
+        gs = []
+        for (a, b), rs in eras.items():
+            vals = [r for r in rs if r["decision"] in ("concept", "component")]
+            gs.append(
+                era_extend.Covered(
+                    a, b, frozenset(r["tag"] for r in vals) if vals else None, vals
+                )
+            )
+        out[k] = gs
+    return out
+
+
+def era_predictor_by() -> tuple[str, ...]:
+    from scrooner_pipeline.mapper import era_predictor
+
+    return era_predictor.PRED_BY
+
+
+def comparative_rows(
+    conn: psycopg.Connection,
+    cid: int,
+    cik: str,
+    rows: list[dict],
+    concept_ids: dict[str, int],
+    log: list[dict],
+) -> list[dict]:
+    """The comparative-column extension rows (era_extend@1, decided_by era_comparative) for one company's merged map.
+    Evidence: the next 10-K's accession (the year is its prior-year column)."""
+    groups = comparative_groups(rows)
+    tags = {t for gs in groups.values() for g in gs if g.tags for t in g.tags}
+    if not tags:
+        return []
+    ids = set(groups)
+    base_ids: dict[int, set[int]] = {}
+    names = {i: n for n, i in concept_ids.items()}
+    for k in ids:
+        nm = names.get(k, "")
+        base = {k}
+        for alias in (nm.removesuffix("_resolved"), nm + "_resolved"):
+            if alias in concept_ids:
+                base.add(concept_ids[alias])
+        base_ids[k] = base
+    filings, printed, own, mapped = era_extend.fetch_printed(
+        conn, cid, tags, {i for s in base_ids.values() for i in s}
+    )
+
+    def other(acc: str, key: int) -> set[str]:
+        return {t for i in base_ids[key] for t in mapped.get(acc, {}).get(i, ())}
+
+    slices, clog = era_extend.comparative_slices(groups, filings, printed, own, other)
+    log.extend({"cik": cik, **x} for x in clog)
+    out = []
+    for s in slices:
+        note = (
+            f"{era_extend.COMP_MARK}: the 10-K {s.adsh} prints the year as its prior-year column with the same "
+            f"tag(s) {'+'.join(sorted(s.tags))} as the nearest covered year"
+        )
+        for r in s.source.payload:
+            n = {
+                **r,
+                "company_id": cid,
+                "cik": cik,
+                "era_from": s.era_from,
+                "era_to": s.era_to,
+                "evidence_adsh": s.adsh,
+                "evidence_report": None,
+                "evidence_line": None,
+                "evidence_plabel": None,
+                "evidence_cal_parent": None,
+                "rule_id": era_extend.EXT_RULE_ID,
+                "decided_by": era_extend.COMP_BY,
+                "serve_note": note,
+            }
+            out.append(normalize(n, {}, concept_ids, era_extend.EXT_RULE_ID, []))
+    return out
 
 
 def _content(r: dict, names: dict[int, str]) -> tuple:

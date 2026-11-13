@@ -363,3 +363,173 @@ def test_loader_value_fallback_for_a_note_tag(isolated_database_url, tmp_path: P
         (dl.RULE_ID, "2024-01-01", None),
     ]
     assert rows[0][3].startswith(ee.EXT_MARK_VALUE)
+
+
+# --- comparative-column extension -------------------------------------------------------------------------------------
+
+
+def _dec(y):
+    return date(y if y > 100 else 2000 + y, 12, 31)
+
+
+def _cmp(
+    start_year,
+    prints,
+    own_years=None,
+    kinds=None,
+    filings=None,
+    tags=("Rev",),
+    other=None,
+):
+    """A concept covered from `start_year` (open); prints: {filing year: [ddate years it prints for every tag]}."""
+    g = {
+        1: [ee.Covered(date(start_year, 1, 1), None, frozenset(tags), payload=["row"])]
+    }
+    fl = {acc(y): _dec(y) for y in (filings if filings is not None else prints)}
+    printed = {}
+    own = {}
+    for y, cols in prints.items():
+        for t in tags:
+            printed[(acc(y), t)] = {
+                _dec(c): {(kinds or {}).get(c, "annual")} for c in cols
+            }
+            own[(acc(y), t)] = {(kinds or {}).get(y, "annual")} if y in cols else set()
+    return ee.comparative_slices(g, fl, printed, own, other)[0]
+
+
+def _span(slices):
+    return sorted(
+        (s.era_from.isoformat(), s.era_to.isoformat(), s.adsh) for s in slices
+    )
+
+
+def test_comparative_extends_year_by_year_on_each_next_10k():
+    s = _cmp(2024, {2024: [2024, 2023], 2023: [2023, 2022], 2022: [2022, 2021]})
+    assert _span(s) == [
+        ("2021-01-01", "2021-12-31", acc(22)),
+        ("2022-01-01", "2022-12-31", acc(23)),
+        ("2023-01-01", "2023-12-31", acc(24)),
+    ]
+
+
+def test_comparative_needs_the_next_10k_to_print_the_same_tag_for_that_year():
+    # FY2023 10-K does not print FY2022: FY2022 stays open, and FY2021 (printed by the FY2022 10-K) is NOT bridged
+    s = _cmp(2024, {2024: [2024, 2023], 2023: [2023], 2022: [2022, 2021]})
+    assert _span(s) == [("2023-01-01", "2023-12-31", acc(24))]
+    # the tag is printed under another tag only: nothing
+    assert _cmp(2024, {2024: [2024, 2023]}, tags=("Rev",), other=None) != []
+    g = {1: [ee.Covered(date(2024, 1, 1), None, frozenset({"Rev"}))]}
+    printed = {(acc(24), "Other"): {_dec(24): {"annual"}, _dec(23): {"annual"}}}
+    assert (
+        ee.comparative_slices(
+            g, {acc(24): _dec(24)}, printed, {(acc(24), "Other"): {"annual"}}
+        )[0]
+        == []
+    )
+
+
+def test_comparative_needs_the_next_10k_to_exist_and_the_same_kind():
+    assert (
+        _cmp(2024, {2024: [2024, 2023]}, filings=[]) == []
+    )  # the 10-K is not in the store
+    assert (
+        _cmp(2024, {2024: [2024, 2023]}, kinds={2023: "instant"}) == []
+    )  # prior column of another kind
+    assert (
+        _cmp(2024, {2024: [2024, 2023]}, other=lambda a, k: {"Rev2"}) == []
+    )  # another tag mapped to the concept
+
+
+def test_comparative_never_extends_past_the_latest_year_or_a_reason_group():
+    # nothing covers 2025 and no 10-K follows it; a reason-only neighbor carries no tag
+    g = {1: [ee.Covered(date(2022, 1, 1), date(2024, 12, 31), frozenset({"Rev"}))]}
+    printed = {(acc(26), "Rev"): {_dec(25): {"annual"}, _dec(26): {"annual"}}}
+    s = ee.comparative_slices(
+        g, {acc(26): _dec(26)}, printed, {(acc(26), "Rev"): {"annual"}}
+    )[0]
+    assert _span(s) == [
+        ("2025-01-01", "2025-12-31", acc(26))
+    ]  # forward by one year; FY2026 itself has no next 10-K
+    reason = {1: [ee.Covered(date(2024, 1, 1), None, None)]}
+    printed = {(acc(24), "Rev"): {_dec(24): {"annual"}, _dec(23): {"annual"}}}
+    assert (
+        ee.comparative_slices(
+            reason, {acc(24): _dec(24)}, printed, {(acc(24), "Rev"): {"annual"}}
+        )[0]
+        == []
+    )
+
+
+def test_comparative_stays_after_a_row_ending_inside_the_year_and_at_the_floor():
+    g = {
+        1: [
+            ee.Covered(date(2024, 1, 1), None, frozenset({"Rev"})),
+            ee.Covered(date(2015, 1, 1), date(2022, 6, 30), None),
+        ]
+    }
+    printed = {
+        (acc(24), "Rev"): {_dec(24): {"annual"}, _dec(23): {"annual"}},
+        (acc(23), "Rev"): {_dec(23): {"annual"}, _dec(22): {"annual"}},
+    }
+    own = {(acc(24), "Rev"): {"annual"}, (acc(23), "Rev"): {"annual"}}
+    s = ee.comparative_slices(g, {acc(24): _dec(24), acc(23): _dec(23)}, printed, own)[
+        0
+    ]
+    # FY2022 starts after the reason row ended (2022-06-30): the slice does not overlap it
+    assert _span(s) == [
+        ("2022-07-01", "2022-12-31", acc(23)),
+        ("2023-01-01", "2023-12-31", acc(24)),
+    ]
+    s2 = _cmp(2016, {2016: [2016, 2015], 2015: [2015, 2014]})
+    assert _span(s2) == [
+        ("2015-01-01", "2015-12-31", acc(16))
+    ]  # FY2014 is before the data window
+
+
+CSV_CMP = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
+ZZE,revenue,mapped,us-gaap:Revenues,IS,R3.htm,Net sales,,FILING-CHECKED,
+"""
+
+
+@pytest.mark.integration
+def test_loader_comparative_extension_from_the_next_10k(
+    isolated_database_url, tmp_path: Path
+):
+    (tmp_path / "ZZE-docmap-2026-11-12.csv").write_text(CSV_CMP)
+    (tmp_path / "ZZE-docmap-2026-11-12.md").write_text(MD)
+    paths = sorted(tmp_path.glob("*-docmap-*.csv"))
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _seed(conn, {2024, 2025})  # the FSN line walk reaches FY2023 and stops
+        tid = conn.execute("select id from fsn.tag where tag = 'Revenues'").fetchone()[
+            0
+        ]
+        for y, cols in {
+            2025: [2025, 2024],
+            2024: [2024, 2023],
+            2023: [2023, 2022],
+            2022: [2022],
+        }.items():
+            fid = conn.execute(
+                "select id from fsn.filing where accession = %s", (acc(y),)
+            ).fetchone()[0]
+            for c in cols:
+                conn.execute(
+                    "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, value) "
+                    "values (%s, %s, %s, %s, 4, 'USD', 0, 5)",
+                    (fid, cid, tid, _dec(c)),
+                )
+        conn.commit()
+        dl.load(conn, paths, apply=True, extend_eras=True)
+        q = (
+            "select rule_id, decided_by, era_from::text, era_to::text, evidence_adsh, serve_note "
+            "from analytics.company_tag_map where company_id = %s order by era_from"
+        )
+        rows = conn.execute(q, (cid,)).fetchall()
+        assert [(r[0], r[1], r[2], r[3], r[4]) for r in rows] == [
+            (ee.EXT_RULE_ID, ee.COMP_BY, "2022-01-01", "2022-12-31", acc(23)),
+            (ee.EXT_RULE_ID, "era_extend", "2023-01-01", "2023-12-31", REF),
+            (dl.RULE_ID, "docmap", "2024-01-01", None, REF),
+        ]
+        assert rows[0][5].startswith(ee.COMP_MARK)
+        dl.load(conn, paths, apply=True, extend_eras=True)  # idempotent
+        assert conn.execute(q, (cid,)).fetchall() == rows

@@ -22,6 +22,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from datetime import date, timedelta
+from typing import Any
 
 import psycopg
 
@@ -412,3 +413,217 @@ def extend_absent(
         log,
     )
     return era, earliest, log
+
+
+# --- comparative-column extension (founder-approved rule, 2026-11-13) -------------------------------------------------
+# A fiscal year the map does not cover (FY-1 of a read, a year outside the era set) takes the value from the NEXT
+# 10-K's comparative column when that 10-K prints the SAME tag(s) for that year as the nearest covered year. The next
+# 10-K prints the year as its prior-year column, so the nearest value row's era extends by one year, justified by it.
+# One year at a time, only next to a covered year (the chain is contiguous: nothing bridges a gap), only when that 10-K
+# exists in the FSN store and prints every tag non-dimensionally at the year's end with the kind (instant / annual) the
+# tag has in its own year.
+COMP_MARK = "ERA-EXT(comparative)"
+COMP_BY = "era_comparative"
+YEAR_BACK = (
+    350,
+    385,
+)  # days from a 10-K's period end to its prior-year column's end (52/53-week years)
+
+
+@dataclass(frozen=True)
+class Covered:
+    """One map row group of a concept: era and, for a value group, its tags (None for a reason group)."""
+
+    era_from: date
+    era_to: date | None
+    tags: frozenset | None
+    payload: Any = None  # the caller's rows, copied into the extension
+
+
+@dataclass(frozen=True)
+class CompSlice:
+    key: object
+    era_from: date
+    era_to: date
+    adsh: str  # the next 10-K whose prior-year column is the evidence
+    tags: frozenset
+    source: Covered  # the nearest covered group whose tags were carried
+
+
+def fetch_printed(
+    conn: psycopg.Connection,
+    company_id: int,
+    tags: set[str],
+    concept_ids: set[int] | None = None,
+) -> tuple[dict, dict, dict, dict]:
+    """(filings {accession: period end}, printed {(accession, tag): {ddate: {kind}}}, own {(accession, tag): {kind}},
+    mapped {accession: {concept id: {tag}}} from fsn.line_map): the company's 10-K / 10-K/A non-dimensional annual
+    (qtrs 4) and instant (qtrs 0) values of `tags` in FSN."""
+    filings: dict = {}
+    printed: dict = {}
+    own: dict = {}
+    mapped: dict = {}
+    with conn.cursor() as cur:
+        cur.execute(
+            """select accession, period from fsn.filing
+               where company_id = %s and form in ('10-K', '10-K/A') and period is not null""",
+            (company_id,),
+        )
+        filings = {a: p for a, p in cur.fetchall()}
+        cur.execute(
+            """select f.accession, t.tag, v.ddate, v.qtrs, f.period
+               from fsn.filing f join fsn.value v on v.filing_id = f.id and v.dim_id = 0 and v.qtrs in (0, 4)
+               join fsn.tag t on t.id = v.tag_id
+               where f.company_id = %s and f.form in ('10-K', '10-K/A') and t.tag = any(%s)
+               group by 1, 2, 3, 4, 5""",
+            (company_id, sorted(tags)),
+        )
+        for acc, tag, ddate, qtrs, period in cur.fetchall():
+            kind = "instant" if qtrs == 0 else "annual"
+            printed.setdefault((acc, tag), {}).setdefault(ddate, set()).add(kind)
+            if ddate == period:
+                own.setdefault((acc, tag), set()).add(kind)
+        # the SEC company-facts store (core.fact, undimensioned) covers 10-Ks the FSN store lacks
+        cur.execute(
+            """select accession_number, period_of_report from core.filing
+               where company_id = %s and form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+                 and period_of_report is not null and period_of_report >= '2014-01-01'""",
+            (company_id,),
+        )
+        for acc, period in cur.fetchall():
+            filings.setdefault(acc, period)
+        cur.execute(
+            """select fl.accession_number, c.tag, p.end_date, p.period_type, p.end_date - p.start_date
+               from core.fact f
+               join core.filing fl on fl.id = f.filing_id
+               join core.concept c on c.id = f.concept_id
+               join core.period p on p.id = f.period_id
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+                 and fl.period_of_report >= '2014-01-01' and c.tag = any(%s)
+               group by 1, 2, 3, 4, 5""",
+            (company_id, sorted(tags)),
+        )
+        for acc, tag, end, ptype, days in cur.fetchall():
+            if ptype == "instant":
+                kind = "instant"
+            elif 350 <= days <= 380:
+                kind = "annual"
+            else:
+                continue
+            printed.setdefault((acc, tag), {}).setdefault(end, set()).add(kind)
+            if end == filings.get(acc):
+                own.setdefault((acc, tag), set()).add(kind)
+        if concept_ids:
+            cur.execute(
+                """select f.accession, lm.canonical_concept_id, t.tag
+                   from fsn.filing f
+                   join fsn.line_map lm on lm.filing_id = f.id
+                   join fsn.line l on l.filing_id = lm.filing_id and l.report = lm.report and l.line = lm.line
+                   join fsn.tag t on t.id = l.tag_id
+                   where f.company_id = %s and f.form in ('10-K', '10-K/A') and lm.status = 'mapped'
+                     and lm.canonical_concept_id = any(%s)""",
+                (company_id, sorted(concept_ids)),
+            )
+            for acc, cid, tag in cur.fetchall():
+                mapped.setdefault(acc, {}).setdefault(cid, set()).add(tag)
+    return filings, printed, own, mapped
+
+
+def comparative_slices(
+    groups: dict,
+    filings: dict,
+    printed: dict,
+    own: dict,
+    other_mapped=None,
+    floor: date = FLOOR,
+) -> tuple[list[CompSlice], list[dict]]:
+    """groups: key -> [Covered] (every map row group of the concept, value and reason; a reason group only covers).
+    filings / printed / own: fetch_printed. other_mapped(accession, key) -> tags mapped to the concept in that filing
+    (fsn.line_map), a tag outside the carried tags stops the extension. Returns (slices, log). Pure.
+
+    For each 10-K N and its prior-year column P (printed within YEAR_BACK days before N's period): if no group covers P
+    and a value group covers N's own period (back-extension) or the year before P (forward), and N prints every tag of
+    that group at P as the kind it has at N's own period, P becomes a slice [P minus a year plus a day (clipped after
+    any row ending inside), P] on N's evidence. Repeats until nothing changes (a new slice is itself a neighbor)."""
+    log: list[dict] = []
+    out: list[CompSlice] = []
+    cur = {k: list(v) for k, v in groups.items()}
+
+    def covers(g: Covered, d: date) -> bool:
+        return g.era_from <= d and (g.era_to is None or d <= g.era_to)
+
+    changed = True
+    while changed:
+        changed = False
+        for key in sorted(cur, key=repr):
+            for acc in sorted(filings):
+                n_period = filings[acc]
+                ps = sorted(
+                    {
+                        d
+                        for (a, _t), by in printed.items()
+                        if a == acc
+                        for d in by
+                        if YEAR_BACK[0] <= (n_period - d).days <= YEAR_BACK[1]
+                    }
+                )
+                for p in ps:
+                    if p < floor or any(covers(g, p) for g in cur[key]):
+                        continue
+                    nbrs = [
+                        g
+                        for g in cur[key]
+                        if g.tags
+                        and (covers(g, n_period) or covers(g, p - timedelta(days=400)))
+                    ]
+                    for g in nbrs:
+                        why = _comparative_check(
+                            g, acc, p, printed, own, other_mapped, key
+                        )
+                        if why:
+                            log.append(
+                                {
+                                    "adsh": acc,
+                                    "period": p,
+                                    "check": "fail",
+                                    "detail": why,
+                                }
+                            )
+                            continue
+                        win_from = max(floor, _shift(p, -1) + timedelta(days=1))
+                        ends = [
+                            x.era_to + timedelta(days=1)
+                            for x in cur[key]
+                            if x.era_to is not None
+                            and x.era_to < p
+                            and x.era_to >= win_from
+                        ]
+                        era_from = max([win_from, *ends])
+                        if era_from > p:
+                            continue
+                        sl = CompSlice(key, era_from, p, acc, g.tags, g)
+                        out.append(sl)
+                        cur[key].append(Covered(era_from, p, g.tags, g.payload))
+                        log.append(
+                            {"adsh": acc, "period": p, "check": "pass", "detail": ""}
+                        )
+                        changed = True
+                        break
+    return out, log
+
+
+def _comparative_check(g, acc, p, printed, own, other_mapped, key) -> str:
+    for tag in sorted(g.tags):
+        at = printed.get((acc, tag), {}).get(p)
+        mine = own.get((acc, tag))
+        if not at:
+            return f"{tag} not printed for the prior-year column"
+        if not mine:
+            return f"{tag} has no value for the 10-K's own year"
+        if not (at & mine):
+            return f"{tag} prior-year column has a different kind than its own year"
+    if other_mapped is not None:
+        om = other_mapped(acc, key)
+        if om and not (om & set(g.tags)):
+            return "another tag is mapped to the concept in this filing"
+    return ""
