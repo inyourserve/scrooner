@@ -182,11 +182,14 @@ def build_rows(
     live = [c for c in companies if templates[c.company_id]]
     ids = [c.company_id for c in live]
     periods = _fy_periods(conn, ids, today)
-    names = sorted({n for c in live for dp in templates[c.company_id] for n in candidates(dp)})
+    names = sorted(
+        {n for c in live for dp in templates[c.company_id] for n in candidates(dp)}
+    )
     concept_id = {
         n: i
         for i, n in conn.execute(
-            "select id, name from analytics.canonical_concept where name = any(%s)", (names,)
+            "select id, name from analytics.canonical_concept where name = any(%s)",
+            (names,),
         ).fetchall()
     }
     served: dict[tuple[int, str, date, date], Decimal] = {}
@@ -274,8 +277,14 @@ def build_rows(
                     tm[0] if tm else None,
                     dm["status"],
                 )
-                reason_text = ptext or (brow[2] if brow else None) or (tm[1] if tm else None)
-                shown = svalue if svalue is not None else (pval if cls == "DISAGREE" else None)
+                reason_text = (
+                    ptext or (brow[2] if brow else None) or (tm[1] if tm else None)
+                )
+                shown = (
+                    svalue
+                    if svalue is not None
+                    else (pval if cls == "DISAGREE" else None)
+                )
                 rows.append(
                     {
                         "rank": c.rank,
@@ -300,7 +309,8 @@ def build_rows(
                 )
     note = {
         c.company_id: (
-            "TEMPLATE_UNAVAILABLE" + (f" (excluded: {c.excluded})" if c.excluded else " (no docmap)")
+            "TEMPLATE_UNAVAILABLE"
+            + (f" (excluded: {c.excluded})" if c.excluded else " (no docmap)")
         )
         for c in companies
         if not templates[c.company_id]
@@ -309,7 +319,10 @@ def build_rows(
 
 
 def summarize(
-    rows: list[dict[str, Any]], companies: list[Company], notes: dict[int, str], as_of: str
+    rows: list[dict[str, Any]],
+    companies: list[Company],
+    notes: dict[int, str],
+    as_of: str,
 ) -> list[dict[str, Any]]:
     by: dict[int, dict[str, int]] = defaultdict(lambda: dict.fromkeys(CLASSES, 0))
     for r in rows:
@@ -354,7 +367,16 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
     summary = summarize(rows, companies, notes, as_of)
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
-    scols = ["rank", "ticker", "company_id", "cells", *CLASSES, "pct_proven_plus_reason", "note", "as_of"]
+    scols = [
+        "rank",
+        "ticker",
+        "company_id",
+        "cells",
+        *CLASSES,
+        "pct_proven_plus_reason",
+        "note",
+        "as_of",
+    ]
     write_csv(out_dir / "top100-coverage-summary.csv", summary, scols)
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     print(f"top100 coverage as of {as_of}: {len(rows)} cells {tot}")

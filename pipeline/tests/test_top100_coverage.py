@@ -10,7 +10,10 @@ def c(pv=None, pr=None, pval=None, sv=None, bs=None, br=None, tm=None, dm="mappe
 def test_proven_needs_matching_served_value():
     assert c("PROVEN", None, D(5), D(5)) == ("PROVEN", None)
     assert c("PROVEN", None, D(5), D(6)) == ("UNCHECKED", "proof_is_for_another_value")
-    assert c("PROVEN", None, D(5), None) == ("BLANK", "proof_proven_but_no_served_value")
+    assert c("PROVEN", None, D(5), None) == (
+        "BLANK",
+        "proof_proven_but_no_served_value",
+    )
 
 
 def test_disagree_and_unchecked():
@@ -22,7 +25,10 @@ def test_disagree_and_unchecked():
 def test_reasons_only_without_a_served_value():
     assert c("NOT_PRESENTED", "np") == ("REASON", "np")
     assert c(bs="not_in_template", br="not_in_template")[0] == "REASON"
-    assert c(bs="defect", br="held_pending_verifier") == ("REASON", "held_pending_verifier")
+    assert c(bs="defect", br="held_pending_verifier") == (
+        "REASON",
+        "held_pending_verifier",
+    )
     assert c(bs="not_presented", sv=D(1))[0] == "UNCHECKED"
     assert c(tm="not_presented")[0] == "REASON"
 
