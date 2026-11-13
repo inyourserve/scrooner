@@ -10,6 +10,7 @@ The numbers only, updated at each 10-company commit. Per-company files are `data
 | ranks 121-130 (shared tool + hand checks) | 10 | 380 | 0 | 11 corrections (8 checked rows + 3 sample disagreements), 0 rows left as review | 0 | 0 new |
 | ranks 131-140 (shared tool + hand checks) | 10 | 380 | 0 | 21 corrections (16 tool errors + 4 sample disagreements + FCX debt held), 0 rows left as review | 0 | 0 new |
 | ranks 141-150 (shared tool + hand checks) | 10 | 380 | 0 | 27 corrections (25 tool errors + 2 sample disagreements), 0 rows left as review | 0 | 1 new class (cost of revenue split across member rows) |
+| ranks 151-160 (shared tool + hand checks) | 10 | 380 | 0 | 36 corrections (35 tool errors incl. 6 OUT + 1 sample disagreement), 3 definition calls (EPD MLP) | 0 | 2 new classes (IS title with non-breaking spaces; float-formatted printed values) |
 
 Hand checks on ranks 101-110:
 - 67 rows hand-checked: every non-mapped row and every NOTE row.
@@ -91,4 +92,31 @@ Hand checks on ranks 141-150 (INTU PNC DDOG AMT MRNA WMB MMM CTAS MCO REGN), car
   - AMT GP and PNC SG&A are component_in_note (segment-only values).
 - WMB cash interest = 1,404 (R95 consolidated row).
 - MCO net interest: combined.
+- blind-grade.csv: 0 key_error rows for these tickers.
+
+Hand checks on ranks 151-160 (EOG UPS MDLZ DASH SHW ECL BX TRV CI EPD), carrying sentence read for every NOTE fact:
+- 110 rows hand-checked, 54 mapped rows sampled (20%).
+- Disagreements: 1/54 = 1.9%. EPD 'Depreciation and accretion' is now combined.
+- New tool error: SHW's income-statement title uses non-breaking spaces. The tool missed the whole IS and took 12 data points from notes; all 12 are re-keyed to the R3 face.
+- New tool error: the tool writes some printed values as floats with 4 significant digits (e.g. 8.518e+09). This violates the Decimal rule.
+  - 18 CSV cells in ranks 101-200 are replaced with the exact printed value from the cached R page (scripts/fixfloat.py).
+  - 8 era-evidence strings in md prose (older filings) still carry floats; they are flagged for the docmap.py owner.
+- Opex:
+  - mapped totals where no cost of revenue is printed: EOG, UPS;
+  - component sums tying to revenue - COR - OI: DASH, ECL;
+  - EPD 'Total operating costs and expenses' includes cost of sales: combined.
+- total_debt:
+  - finance leases added at SHW (+195.4, R83) and EPD (+16, R119);
+  - leases already inside the debt lines: EOG (R84), UPS (R82), MDLZ (R59), CI (R84);
+  - BX = BS 'Loans Payable' (the tool used scheduled principal);
+  - TRV and DASH on the BS face.
+- Other fixes:
+  - EOG capex = O&G additions + other PP&E additions;
+  - CI capex 'purchases, net': combined;
+  - ECL D&A adds amortization;
+  - ECL net interest: combined;
+  - MDLZ shares 1,281,576,414 (R101 printed ending balance).
+- EOG interest: mapped through an override (condition (1): R3 face prints incurred 321 - capitalized 86 = 235).
+- TRV (insurer): 6 template rows OUT.
+- EPD (MLP): definition calls for Dhairya on partners' equity as stockholders_equity, distributions as dividends_paid, and units as shares_outstanding.
 - blind-grade.csv: 0 key_error rows for these tickers.
