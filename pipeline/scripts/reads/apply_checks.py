@@ -65,10 +65,18 @@ def apply(src: Path, vdir: Path, dst: Path, tic: str) -> dict:
     for r in rows:
         x = v.get(r["data_point"])
         if not x:
-            r["note"] = (
-                r["note"] + " | " if r["note"] else ""
-            ) + "check: machine-full-filing"
+            if (
+                "check:" not in r["note"]
+            ):  # the shared tool (de14aace) already marks its rows
+                r["note"] = (
+                    r["note"] + " | " if r["note"] else ""
+                ) + "check: machine-full-filing"
             continue
+        r["note"] = (
+            r["note"]
+            .replace("check: machine-full-filing | ", "")
+            .replace("check: machine-full-filing", "")
+        )
         if x["verdict"] not in ("agree", "corrected") or not x.get("page"):
             raise SystemExit(
                 f"{tic} {r['data_point']}: verdict needs agree|corrected and the R page"
