@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-PCAR,210,accounts_payable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,accounts_receivable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
-PCAR,210,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-057025,R2,Basic,4.5200,library map
-PCAR,210,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,"Payments for property, plant and equipment",743000000.0000,library map
-PCAR,210,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash (Used in) Provided by Financing Activities,-3082400000.0000,library map
-PCAR,210,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Used in Investing Activities,-2267200000.0000,library map
-PCAR,210,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
-PCAR,210,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-057025,,,,note-sourced default tag (no face line)
-PCAR,210,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Accounts payable and accrued expenses,-432600000.0000,combined line (library or label demote)
-PCAR,210,cf_ar_change,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Inventories,-296400000.0000,library map
-PCAR,210,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Provided by Operating Activities,4415800000.0000,library map
-PCAR,210,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-057025,R3,Comprehensive Income,3152400000.0000,library map
-PCAR,210,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Cost of sales and revenues,22736700000.0000,library map
-PCAR,210,current_assets,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,current_liabilities,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,deposits,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,"Depreciation and amortization, Property, plant and equipment",398200000.0000,library map
-PCAR,210,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-057025,R2,Diluted,4.5100,library map
-PCAR,210,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Payments of cash dividends,2267100000.0000,library map
-PCAR,210,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-057025,R8,"Cash dividends declared on common stock, per share",2.7200,library map
-PCAR,210,goodwill,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,gross_profit,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Total Income Before Income Taxes,3023500000.0000,library map
-PCAR,210,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Income taxes,647700000.0000,library map
-PCAR,210,interest_expense,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,interest_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,inventory,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,loans_net,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Net Income,2375800000.0000,library map
-PCAR,210,net_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,noninterest_expense,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,noninterest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,printed opex lines (duration sum)
-PCAR,210,operating_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-057025,R2,"Interest and other expenses (income), net",-284300000.0000,combined line (library or label demote)
-PCAR,210,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,"Property, plant and equipment, net",4505300000.0000,library map
-PCAR,210,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,library map
-PCAR,210,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Revenues,28444800000.0000,library map
-PCAR,210,sbc,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,"Selling, general and administrative",735800000.0000,library map
-PCAR,210,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Purchases of treasury stock,36100000.0000,library map
-PCAR,210,shares_outstanding,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,Total Stockholders' Equity,19264000000.0000,library map
-PCAR,210,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,Total Assets,44336200000.0000,library map
-PCAR,210,total_debt,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,total_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank
-PCAR,210,total_liabilities,not_presented,,,,,,,,0001193125-26-057025,,,,no face line
-PCAR,210,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,Y,EarningsPerShareBasic,sec_api,0001193125-26-057025,R2,Basic,525900000.0000,library map
-PCAR,210,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,Y,EarningsPerShareDiluted,sec_api,0001193125-26-057025,R2,Diluted,526800000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+PCAR,210,accounts_payable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,accounts_receivable,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,amortization_of_intangibles,not_presented,,,,,,,,0001193125-26-057025,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-057025,R2,Basic,4.5200,library map,lib.is.EarningsPerShareBasic,4.5200,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,capex,component_sum,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment;us-gaap:PaymentsToAcquireEquipmentOnLease,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,"Payments for property, plant and equipment",743000000.0000,capex = sum of printed CF capex lines (founder 2026-11-04 item 3),cf.capex.sum_lines;lib.cf.PaymentsToAcquirePropertyPlantAndEquipment;lib.cf.PaymentsToAcquireEquipmentOnLease,743000000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cash_and_equivalents,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash (Used in) Provided by Financing Activities,-3082400000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-3082400000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Used in Investing Activities,-2267200000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-2267200000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-057025,,,646300000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_income_taxes.fact.IncomeTaxesPaidNet,646300000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cash_paid_for_interest,mapped,us-gaap:InterestPaid,NOTE,+,,,,sec_api,0001193125-26-057025,,,692800000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_interest.fact.InterestPaid,692800000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Accounts payable and accrued expenses,-432600000.0000,combined line (library or label demote),lib.cf.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities;nd.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,-432600000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cf_ar_change,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-5,N,,sec_api,0001193125-26-057025,R6,Inventories,-296400000.0000,library map,lib.cf.IncreaseDecreaseInInventories,-296400000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Net Cash Provided by Operating Activities,4415800000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,4415800000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-5,N,,sec_api,0001193125-26-057025,R3,Comprehensive Income,3152400000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,3152400000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Cost of sales and revenues,22736700000.0000,library map,lib.is.CostOfGoodsAndServicesSold,22736700000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,current_assets,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,current_liabilities,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,deposits,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,"Depreciation and amortization, Property, plant and equipment",398200000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,398200000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-057025,R2,Diluted,4.5100,library map,lib.is.EarningsPerShareDiluted,4.5100,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Payments of cash dividends,2267100000.0000,library map,lib.cf.PaymentsOfDividends,2267100000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001193125-26-057025,R8,"Cash dividends declared on common stock, per share",2.7200,library map,lib.eq.CommonStockDividendsPerShareDeclared,2.7200,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,goodwill,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,gross_profit,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Total Income Before Income Taxes,3023500000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,3023500000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Income taxes,647700000.0000,library map,lib.is.IncomeTaxExpenseBenefit,647700000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,interest_expense,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,interest_income,combined,custom:InterestAndOtherBorrowingExpense,IS,+,-5,N,,fsn_xbrl,0001193125-26-057025,R2,Interest and other borrowing expenses,783000000.0000,interest income only inside a net/other face line between OI and pretax,notes.interest_income.inside_net_line,783000000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,inventory,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,loans_net,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Net Income,2375800000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,2375800000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,net_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,noninterest_expense,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,noninterest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,operating_expenses,not_presented,,,,,,,,0001193125-26-057025,,,,no opex total and no GP/COR anchor,is.operating_expenses.procedure,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,operating_income,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-5,N,,sec_api,0001193125-26-057025,R2,"Interest and other expenses (income), net",-284300000.0000,combined line (library or label demote),lib.is.OtherNonoperatingIncomeExpense;is.other_income_expense_net.label_demote,-284300000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,"Property, plant and equipment, net",4505300000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,4505300000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Research and development,445500000.0000,library map,lib.is.ResearchAndDevelopmentExpense,445500000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,Revenues,28444800000.0000,library map,lib.is.Revenues,28444800000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,sbc,mapped,us-gaap:AllocatedShareBasedCompensationExpense,NOTE,+,,,,sec_api,0001193125-26-057025,,,24100000.0000,note fact present in the filing (FSN value),notes.sbc.fact.AllocatedShareBasedCompensationExpense,24100000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-5,N,,sec_api,0001193125-26-057025,R2,"Selling, general and administrative",735800000.0000,library map,lib.is.SellingGeneralAndAdministrativeExpense,735800000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001193125-26-057025,R6,Purchases of treasury stock,36100000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,36100000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,shares_outstanding,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,Total Stockholders' Equity,19264000000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,19264000000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001193125-26-057025,R4,Total Assets,44336200000.0000,library map,lib.bs.Assets,44336200000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,total_debt,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,total_interest_income,OUT,,,,,,,,0001193125-26-057025,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,total_liabilities,not_presented,,,,,,,,0001193125-26-057025,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-5,Y,EarningsPerShareBasic,sec_api,0001193125-26-057025,R2,Basic,525900000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,525900000.0000,PREDICTED (predict.py v7-2e1340384f)
+PCAR,210,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-5,Y,EarningsPerShareDiluted,sec_api,0001193125-26-057025,R2,Diluted,526800000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,526800000.0000,PREDICTED (predict.py v7-2e1340384f)

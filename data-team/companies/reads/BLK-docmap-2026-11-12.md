@@ -14,7 +14,7 @@ FY0 = 2025-12-31; FY1 = prior year. Values in full USD (printed value x the R-pa
 | revenue | mapped | RevenueFromContractWithCustomerExcludingAssessedTax | IS R4.htm | Total revenue | 24216000000 | 24216000000 | 20407000000 | 20407000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
 | cost_of_revenue | OUT |  | IS R4.htm |  |  |  |  |  |  | FILING-CHECKED | asset manager: no cost of revenue line |
 | gross_profit | OUT |  | IS R4.htm |  |  |  |  |  |  | FILING-CHECKED | no gross profit line |
-| operating_expenses | mapped | OperatingExpenses | IS R4.htm | Total expense | 17171000000 | 17171000000 | 12833000000 | 12833000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
+| operating_expenses | combined | OperatingExpenses | IS R4.htm | Total expense | 17171000000 | 17171000000 | 12833000000 | 12833000000 | Y | FILING-CHECKED | check: hand R4: 'Total expense' 17,171 (OperatingExpenses) is an asset manager's full expense base (distribution and direct fund expense included); no gross profit line: combined; the template decides (Dhairya per-ticker list) | 2026-11-12 |
 | sga_expense | not_presented |  | IS R4.htm |  |  |  |  |  |  | FILING-CHECKED | only 'General and administration expense' 2,731 (G&A component, never SG&A); no selling line |
 | research_and_development | OUT |  | IS R4.htm |  |  |  |  |  |  | FILING-CHECKED | no R&D |
 | operating_income | mapped | OperatingIncomeLoss | IS R4.htm | Operating income | 7045000000 | 7045000000 | 7574000000 | 7574000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
@@ -47,7 +47,7 @@ FY0 = 2025-12-31; FY1 = prior year. Values in full USD (printed value x the R-pa
 | cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | CF R9.htm | Net cash provided by/(used in) investing activities | -4418000000 | -4418000000 | -3004000000 | -3004000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
 | cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | CF R9.htm | Net cash provided by/(used in) financing activities | -1127000000 | -1127000000 | 2236000000 | 2236000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
 | capex | mapped | PaymentsToAcquirePropertyPlantAndEquipment | CF R9.htm | Purchases of property and equipment | -375000000 | 375000000 | -255000000 | 255000000 | Y (sign differs: printed in parentheses/negated label) | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
-| depreciation_and_amortization | mapped | DepreciationAmortizationAndAccretionNet | CF R9.htm | Depreciation and amortization | 1126000000 | 1126000000 | 529000000 | 529000000 | Y | FILING-CHECKED | CF 'Depreciation and amortization' 1,126 (tag includes accretion by name; label is plain D&A) | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
+| depreciation_and_amortization | combined | DepreciationAmortizationAndAccretionNet | CF R9.htm | Depreciation and amortization | 1126000000 | 1126000000 | 529000000 | 529000000 | Y | FILING-CHECKED | D&A that includes accretion: combined (Dhairya ruling 2026-11-12) | FIX 2026-11-12
 | amortization_of_intangibles | combined | blk:AmortizationAndImpairmentOfIntangibleAssets | IS R4.htm | Amortization and impairment of intangible assets | 775000000 |  | 291000000 |  | n/a (custom tag: companyfacts carries no extension facts; printed = the filing XBRL value) | FILING-CHECKED | R4 own line 'Amortization and impairment of intangible assets' 775 (custom): amortization combined with impairment; no pure amortization line on the face |
 | sbc | mapped | ShareBasedCompensation | CF R9.htm | Stock-based compensation | 1307000000 | 1307000000 | 753000000 | 753000000 | Y | FILING-CHECKED |  | accn 0001193125-26-071966 period 2025-01-01..2025-12-31 |
 | dividends_paid | combined | blk:DividendsOrSubcoDistributionsPaid | CF R9.htm | Dividends/Subco distributions paid | -3347000000 |  | -3101000000 |  | n/a (custom tag: companyfacts carries no extension facts; printed = the filing XBRL value) | FILING-CHECKED | 'Dividends/Subco distributions paid' (3,347)/(3,101): combined with Subco units distributions; note R138 aggregate dividends 3,265 / 3,101 not confirmed as the cash paid common-only amount |
@@ -69,3 +69,9 @@ The new CIK has few fiscal years in companyfacts, so the 5-year scan is thin; se
 
 ## Mismatches (printed vs API)
 none beyond sign differences.
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- operating_expenses: mapped us-gaap:OperatingExpenses -> mapped us-gaap:OperatingExpenses | opex never includes cost of revenue (Dhairya ruling 2026-11-12; expected combined); RE-READ SAYS mapped: read the R page
+- depreciation_and_amortization: mapped us-gaap:DepreciationAmortizationAndAccretionNet -> combined us-gaap:DepreciationAmortizationAndAccretionNet | D&A that includes accretion is combined (Dhairya ruling 2026-11-12)
+- operating_expenses: check: hand -> combined | check: hand R4: 'Total expense' 17,171 (OperatingExpenses) is an asset manager's full expense base (distribution and direct fund expense inc
+- 1 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

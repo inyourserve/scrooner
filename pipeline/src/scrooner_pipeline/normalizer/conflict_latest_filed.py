@@ -375,7 +375,7 @@ def plan_tag_map_promotions(
         return []
     rows = conn.execute(
         TAGMAP_CANDIDATES_SQL,
-        {"company_ids": company_ids, "forms": list(eligible_forms()[1])},
+        {"company_ids": company_ids, "forms": list(AUTHORITATIVE_FORMS)},
     ).fetchall()
     dcml = _tag_map_dcml(conn, rows)
     groups: dict[tuple, list] = defaultdict(list)
@@ -753,3 +753,121 @@ def write_winner_backup(
             )
             n += 1
     return n
+
+
+# Only periodic reports hold authoritative facts (Dhairya 2026-11-12): a proxy statement's pay-versus-performance
+# net income, an 8-K exhibit or a prospectus (424B) is a copy, never the source. 10-K / 10-Q, their amendments and
+# transition reports, and the foreign annual forms.
+AUTHORITATIVE_FORMS = tuple(sorted(set(ANNUAL_FORMS_ALL) | set(QUARTERLY_FORMS)))
+
+DUPLICATE_AUTHORITATIVE_SQL = """
+with g as (
+    select company_id, concept_id, unit_id, period_id
+    from core.fact
+    where company_id = any(%(company_ids)s) and is_authoritative
+    group by 1, 2, 3, 4 having count(*) > 1
+)
+select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.value, fl.accession_number,
+       coalesce(ff.accepted, fl.filing_date::timestamptz), fl.filing_date, fl.is_amendment,
+       fl.form = any(%(forms)s), c.tag, p.start_date, p.end_date, p.period_type
+from g
+join core.fact f using (company_id, concept_id, unit_id, period_id)
+join core.filing fl on fl.id = f.filing_id
+join core.concept c on c.id = f.concept_id
+join core.period p on p.id = f.period_id
+left join fsn.filing ff on ff.accession = fl.accession_number
+where f.is_authoritative
+order by f.company_id, f.concept_id, f.unit_id, f.period_id, f.id
+"""
+
+
+def demote_non_periodic(conn: psycopg.Connection, company_ids: list[int]) -> int:
+    """Authoritative facts whose filing is not a periodic report become non-authoritative ("no authoritative fact"
+    is a valid null; the row stays inspectable). Returns the count."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            update core.fact f set is_authoritative = false
+            from core.filing fl
+            where fl.id = f.filing_id and f.company_id = any(%s) and f.is_authoritative
+              and not (fl.form = any(%s))
+            """,
+            (company_ids, list(AUTHORITATIVE_FORMS)),
+        )
+        return cur.rowcount
+
+
+def plan_duplicate_authoritative(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> tuple[list[dict], list[int]]:
+    """Groups holding MORE than one authoritative copy: one winner by the tag-map authority rules (precision class,
+    else latest accepted; only periodic forms may win), every other copy demoted. A group with no eligible copy is
+    demoted whole. Returns (winners to audit, fact ids to demote). Read only."""
+    rows = conn.execute(
+        DUPLICATE_AUTHORITATIVE_SQL,
+        {"company_ids": company_ids, "forms": list(AUTHORITATIVE_FORMS)},
+    ).fetchall()
+    dcml = _tag_map_dcml(conn, rows)
+    groups: dict[tuple, list] = defaultdict(list)
+    for r in rows:
+        groups[(r[1], r[2], r[3], r[4])].append(r)
+    winners: list[dict] = []
+    demote: list[int] = []
+    for key, rs in groups.items():
+        copies = [
+            TagMapCopy(
+                r[0], Decimal(r[5]), r[6], r[7], r[8], r[9], r[10], dcml.get(r[0])
+            )
+            for r in rs
+        ]
+        chosen = choose_tag_map_winner(copies)
+        winner = chosen[0] if chosen else None
+        demote += [c.fact_id for c in copies if c.fact_id != winner]
+        if chosen:
+            values = [c.value for c in copies]
+            winners.append(
+                {
+                    "fact_id": winner,
+                    "rule": chosen[1],
+                    "company_id": key[0],
+                    "group_size": len(copies),
+                    "value_min": min(values),
+                    "value_max": max(values),
+                }
+            )
+    return winners, demote
+
+
+def resolve_duplicate_authoritative(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[str, int]:
+    """In the caller's transaction: periodic-only guard, then one authoritative copy per group (audited)."""
+    non_periodic = demote_non_periodic(conn, company_ids)
+    winners, demote = plan_duplicate_authoritative(conn, company_ids)
+    if demote:
+        conn.execute(
+            "update core.fact set is_authoritative = false where id = any(%s)",
+            (demote,),
+        )
+    if winners:
+        conn.execute(
+            """
+            insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max)
+            select * from unnest(%s::bigint[], %s::text[], %s::int[], %s::numeric[], %s::numeric[])
+            on conflict (fact_id) do update
+                set rule = excluded.rule, group_size = excluded.group_size, value_min = excluded.value_min,
+                    value_max = excluded.value_max, resolved_at = now()
+            """,
+            (
+                [w["fact_id"] for w in winners],
+                [w["rule"] for w in winners],
+                [w["group_size"] for w in winners],
+                [w["value_min"] for w in winners],
+                [w["value_max"] for w in winners],
+            ),
+        )
+    return {
+        "non_periodic_demoted": non_periodic,
+        "groups_resolved": len(winners),
+        "duplicates_demoted": len(demote),
+    }

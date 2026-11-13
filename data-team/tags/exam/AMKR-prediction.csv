@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-AMKR,681,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Trade accounts payable,912766000.0000,library map
-AMKR,681,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,"Accounts receivable, net of allowances of $1,028 and $1,318, respectively",1354825000.0000,library map
-AMKR,681,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001047127-26-000014,,,,note-sourced default tag (no face line)
-AMKR,681,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001047127-26-000014,R3,Basic (in dollars per share),1.5100,library map
-AMKR,681,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,"Payments for property, plant and equipment",904614000.0000,library map
-AMKR,681,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Cash and cash equivalents,1378347000.0000,library map
-AMKR,681,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Net cash provided by (used in) financing activities,98700000.0000,library map
-AMKR,681,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001047127-26-000014,R9,Net cash used in investing activities,-885044000.0000,library map
-AMKR,681,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Income taxes,75721000.0000,library map
-AMKR,681,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Interest,73598000.0000,library map
-AMKR,681,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Trade accounts payable,203353000.0000,library map
-AMKR,681,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Accounts receivable,296819000.0000,library map
-AMKR,681,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Inventories,126858000.0000,library map
-AMKR,681,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Net cash provided by operating activities,1095606000.0000,library map
-AMKR,681,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001047127-26-000014,R4,Comprehensive income attributable to Amkor,383218000.0000,library map
-AMKR,681,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Cost of sales,5769382000.0000,library map
-AMKR,681,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total current assets,3884761000.0000,library map
-AMKR,681,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total current liabilities,1711972000.0000,library map
-AMKR,681,deposits,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Depreciation and amortization,642008000.0000,library map
-AMKR,681,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001047127-26-000014,R3,Diluted (in dollars per share),1.5000,library map
-AMKR,681,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Payments of dividends,81946000.0000,library map
-AMKR,681,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,5,N,,sec_api,0001047127-26-000014,R8,Cash dividends declared per common share (in dollars per share),0.3316,library map
-AMKR,681,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Goodwill,18003000.0000,library map
-AMKR,681,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Gross profit,938599000.0000,library map
-AMKR,681,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Income before taxes,444619000.0000,library map
-AMKR,681,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Total tax provision and effective tax rate,68503000.0000,library map
-AMKR,681,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpenseOther,sec_api,0001047127-26-000014,R3,Interest expense,75444000.0000,library map
-AMKR,681,interest_income,not_presented,,,,,,,,0001047127-26-000014,,,,no face line
-AMKR,681,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Inventories,437797000.0000,library map
-AMKR,681,loans_net,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Net income attributable to Amkor,373895000.0000,library map
-AMKR,681,net_interest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,noninterest_expense,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,noninterest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Total operating expenses,471214000.0000,printed opex total tag
-AMKR,681,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Operating income,467385000.0000,library map
-AMKR,681,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,"Other (income) expense, net",52678000.0000,library map
-AMKR,681,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,"Property, plant and equipment, net",3870808000.0000,library map
-AMKR,681,provision_for_credit_losses,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Research and development,166743000.0000,library map
-AMKR,681,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Net sales,6707981000.0000,library map
-AMKR,681,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Share-based compensation,20099000.0000,library map
-AMKR,681,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,"Selling, general and administrative",304471000.0000,library map
-AMKR,681,share_buybacks,not_presented,,,,,,,,0001047127-26-000014,,,,no face line
-AMKR,681,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001047127-26-000014,R6,"Common stock, shares outstanding (in shares)",247303000.0000,library map
-AMKR,681,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total Amkor stockholders equity,4471106000.0000,library map
-AMKR,681,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total assets,8136309000.0000,library map
-AMKR,681,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Short-term borrowings and current portion of long-term debt,162430000.0000,printed face components (duration sum; total_debt founder sum)
-AMKR,681,total_interest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank
-AMKR,681,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total liabilities,3630022000.0000,library map
-AMKR,681,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Basic (in shares),247082000.0000,library map
-AMKR,681,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Diluted (in shares),248454000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+AMKR,681,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Trade accounts payable,912766000.0000,library map,lib.bs.AccountsPayableCurrent,912766000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,"Accounts receivable, net of allowances of $1,028 and $1,318, respectively",1354825000.0000,library map,lib.bs.AccountsReceivableNetCurrent,1354825000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,amortization_of_intangibles,not_presented,,,,,,,,0001047127-26-000014,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001047127-26-000014,R3,Basic (in dollars per share),1.5100,library map,lib.is.EarningsPerShareBasic,1.5100,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,"Payments for property, plant and equipment",904614000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,904614000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Cash and cash equivalents,1378347000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,1378347000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Net cash provided by (used in) financing activities,98700000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,98700000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001047127-26-000014,R9,Net cash used in investing activities,-885044000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-885044000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Income taxes,75721000.0000,library map,lib.cf.IncomeTaxesPaid,75721000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Interest,73598000.0000,library map,notes.cash_paid_for_interest.prefer.InterestPaidNet;lib.cf.InterestPaidNet,73598000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Trade accounts payable,203353000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,203353000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Accounts receivable,296819000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,296819000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Inventories,126858000.0000,library map,lib.cf.IncreaseDecreaseInInventories,126858000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Net cash provided by operating activities,1095606000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,1095606000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001047127-26-000014,R4,Comprehensive income attributable to Amkor,383218000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,383218000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Cost of sales,5769382000.0000,library map,lib.is.CostOfGoodsAndServicesSold,5769382000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total current assets,3884761000.0000,library map,lib.bs.AssetsCurrent,3884761000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total current liabilities,1711972000.0000,library map,lib.bs.LiabilitiesCurrent,1711972000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,deposits,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Depreciation and amortization,642008000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,642008000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001047127-26-000014,R3,Diluted (in dollars per share),1.5000,library map,lib.is.EarningsPerShareDiluted,1.5000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Payments of dividends,81946000.0000,library map,lib.cf.PaymentsOfDividendsCommonStock,81946000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,5,N,,sec_api,0001047127-26-000014,R8,Cash dividends declared per common share (in dollars per share),0.3316,library map,lib.eq.CommonStockDividendsPerShareDeclared,0.3316,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Goodwill,18003000.0000,library map,lib.bs.Goodwill,18003000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Gross profit,938599000.0000,library map,lib.is.GrossProfit,938599000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Income before taxes,444619000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,444619000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Total tax provision and effective tax rate,68503000.0000,library map,lib.is.IncomeTaxExpenseBenefit,68503000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpenseOther,sec_api,0001047127-26-000014,R3,Interest expense,75444000.0000,library map,lib.is.InterestExpenseNonoperating,75444000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,interest_income,not_presented,,,,,,,,0001047127-26-000014,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Inventories,437797000.0000,library map,lib.bs.InventoryNet,437797000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,loans_net,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Net income attributable to Amkor,373895000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,373895000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,net_interest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,noninterest_expense,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,noninterest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Total operating expenses,471214000.0000,printed opex total excluding cost of revenue (ties to GP - OI),is.operating_expenses.procedure;lib.is.OperatingExpenses,471214000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Operating income,467385000.0000,library map,lib.is.OperatingIncomeLoss,467385000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,"Other (income) expense, net",52678000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,52678000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,"Property, plant and equipment, net",3870808000.0000,library map,lib.bs.PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization,3870808000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,provision_for_credit_losses,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Research and development,166743000.0000,library map,lib.is.ResearchAndDevelopmentExpense,166743000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Net sales,6707981000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,6707981000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001047127-26-000014,R9,Share-based compensation,20099000.0000,library map,lib.cf.ShareBasedCompensation,20099000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,"Selling, general and administrative",304471000.0000,library map,lib.is.SellingGeneralAndAdministrativeExpense,304471000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,share_buybacks,not_presented,,,,,,,,0001047127-26-000014,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0001047127-26-000014,R6,"Common stock, shares outstanding (in shares)",247303000.0000,library map,lib.bs.CommonStockSharesOutstanding,247303000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total Amkor stockholders equity,4471106000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,4471106000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total assets,8136309000.0000,library map,lib.bs.Assets,8136309000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtNoncurrent;us-gaap:FinanceLeaseLiability,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Short-term borrowings and current portion of long-term debt,162430000.0000,"printed face components (duration sum; total_debt founder sum); + note finance lease liability, XBRL location outside debt (founder item 5)",bs.total_debt.finance_leases;lib.bs.DebtCurrent;lib.bs.LongTermDebtNoncurrent,162430000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,total_interest_income,OUT,,,,,,,,0001047127-26-000014,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001047127-26-000014,R5,Total liabilities,3630022000.0000,library map,lib.bs.Liabilities,3630022000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Basic (in shares),247082000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,247082000.0000,PREDICTED (predict.py v7-2e1340384f)
+AMKR,681,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001047127-26-000014,R3,Diluted (in shares),248454000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,248454000.0000,PREDICTED (predict.py v7-2e1340384f)

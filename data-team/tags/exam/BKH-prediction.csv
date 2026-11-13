@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 BKH,950,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Accounts payable,311700000.0000,library map
 BKH,950,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,"Accounts receivable, net",389000000.0000,library map
-BKH,950,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-046028,,,,note-sourced default tag (no face line)
+BKH,950,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-046028,,,1200000.0000,note fact present in the filing (FSN value)
 BKH,950,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-046028,R3,"Earnings per share, Basic (usd per share)",3.9900,library map
 BKH,950,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-5,N,,sec_api,0001193125-26-046028,R8,"Property, plant and equipment additions",819800000.0000,library map
 BKH,950,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,Cash and cash equivalents,182800000.0000,library map
@@ -34,7 +34,7 @@ BKH,950,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26
 BKH,950,net_interest_income,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
 BKH,950,noninterest_expense,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
 BKH,950,noninterest_income,OUT,,,,,,,,0001193125-26-046028,,,,not a bank
-BKH,950,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Total operating expenses,1772500000.0000,printed opex total tag
+BKH,950,operating_expenses,combined,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Total operating expenses,1772500000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 BKH,950,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,Operating income,537500000.0000,library map
 BKH,950,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001193125-26-046028,R3,"Other income (expense), net",6100000.0000,library map
 BKH,950,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001193125-26-046028,R6,"Total property, plant and equipment, net",8234200000.0000,library map

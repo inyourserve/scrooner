@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-TTEK,750,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Accounts payable,204725000.0000,library map
-TTEK,750,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Accounts receivable, net",1158928000.0000,library map
-TTEK,750,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000831641-25-000032,,,,note-sourced default tag (no face line)
-TTEK,750,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000831641-25-000032,R5,Basic (in dollars per share),0.9400,library map
-TTEK,750,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Capital expenditures,18633000.0000,library map
-TTEK,750,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Cash and cash equivalents,167459000.0000,library map
-TTEK,750,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000831641-25-000032,R7,Net cash (used in) provided by financing activities,-410244000.0000,library map
-TTEK,750,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000831641-25-000032,R7,Net cash used in investing activities,-106754000.0000,library map
-TTEK,750,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,"Income taxes, net of refunds received of $17.2 million, $4.2 million and $2.2 million",110830000.0000,library map
-TTEK,750,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Interest,34956000.0000,library map
-TTEK,750,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Accounts payable,2398000.0000,library map
-TTEK,750,cf_ar_change,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,cf_inventory_change,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Net cash provided by operating activities,457685000.0000,library map
-TTEK,750,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000831641-25-000032,R6,"Comprehensive income attributable to Tetra Tech, net of tax",230822000.0000,library map
-TTEK,750,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Costs of revenue,825230000.0000,library map
-TTEK,750,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total current assets,1620889000.0000,library map
-TTEK,750,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total current liabilities,1379044000.0000,library map
-TTEK,750,deposits,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Depreciation and amortization,58276000.0000,library map
-TTEK,750,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000831641-25-000032,R5,Diluted (in dollars per share),0.9300,library map
-TTEK,750,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Dividends paid,65039000.0000,library map
-TTEK,750,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,Y,CommonStockDividendsPerShareCashPaid,sec_api,0000831641-25-000032,R10,Cash dividends paid per share (in dollars per share),0.2460,library map
-TTEK,750,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Goodwill,2049874000.0000,library map
-TTEK,750,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Gross profit,961344000.0000,library map
-TTEK,750,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income before income tax expense,377617000.0000,library map
-TTEK,750,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income tax expense,129668000.0000,library map
-TTEK,750,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000831641-25-000032,R5,Interest expense,40639000.0000,library map
-TTEK,750,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Interest income,9837000.0000,library map
-TTEK,750,inventory,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,loans_net,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,net_income,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,net_interest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,noninterest_expense,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,noninterest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,operating_expenses,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income from operations,408419000.0000,library map
-TTEK,750,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,0,-3,N,,sec_api,0000831641-25-000032,R5,Other non-operating income,0.0000,library map
-TTEK,750,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Property and equipment, net",66148000.0000,library map
-TTEK,750,provision_for_credit_losses,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,research_and_development,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Revenue,5442590000.0000,library map
-TTEK,750,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Amortization of stock-based awards,33946000.0000,library map
-TTEK,750,sga_expense,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Repurchases of common stock,249984000.0000,library map
-TTEK,750,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0000831641-25-000032,R4,"Common stock, shares outstanding (in shares)",261418000.0000,library map
-TTEK,750,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Tetra Tech stockholders' equity,1779785000.0000,library map
-TTEK,750,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total assets,4282174000.0000,library map
-TTEK,750,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Long-term debt,763363000.0000,printed face components (duration sum; total_debt founder sum)
-TTEK,750,total_interest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank
-TTEK,750,total_liabilities,not_presented,,,,,,,,0000831641-25-000032,,,,no face line
-TTEK,750,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Basic (in shares),264713000.0000,library map
-TTEK,750,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Diluted (in shares),267123000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+TTEK,750,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Accounts payable,204725000.0000,library map,lib.bs.AccountsPayableCurrent,204725000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Accounts receivable, net",1158928000.0000,library map,lib.bs.AccountsReceivableNetCurrent,1158928000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000831641-25-000032,,,37100000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,37100000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000831641-25-000032,R5,Basic (in dollars per share),0.9400,library map,lib.is.EarningsPerShareBasic,0.9400,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Capital expenditures,18633000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,18633000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Cash and cash equivalents,167459000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,167459000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000831641-25-000032,R7,Net cash (used in) provided by financing activities,-410244000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-410244000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000831641-25-000032,R7,Net cash used in investing activities,-106754000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-106754000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,"Income taxes, net of refunds received of $17.2 million, $4.2 million and $2.2 million",110830000.0000,library map,notes.cash_paid_for_income_taxes.prefer.IncomeTaxesPaidNet;lib.cf.IncomeTaxesPaidNet,110830000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Interest,34956000.0000,library map,notes.cash_paid_for_interest.prefer.InterestPaidNet;lib.cf.InterestPaidNet,34956000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Accounts payable,2398000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,2398000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cf_ar_change,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cf_inventory_change,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Net cash provided by operating activities,457685000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,457685000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000831641-25-000032,R6,"Comprehensive income attributable to Tetra Tech, net of tax",230822000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,230822000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Costs of revenue,825230000.0000,library map,lib.is.CostOfGoodsAndServicesSold,825230000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total current assets,1620889000.0000,library map,lib.bs.AssetsCurrent,1620889000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total current liabilities,1379044000.0000,library map,lib.bs.LiabilitiesCurrent,1379044000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,deposits,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Depreciation and amortization,58276000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,58276000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000831641-25-000032,R5,Diluted (in dollars per share),0.9300,library map,lib.is.EarningsPerShareDiluted,0.9300,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Dividends paid,65039000.0000,library map,lib.cf.PaymentsOfDividendsCommonStock,65039000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,Y,CommonStockDividendsPerShareCashPaid,sec_api,0000831641-25-000032,R10,Cash dividends paid per share (in dollars per share),0.2460,library map,lib.eq.CommonStockDividendsPerShareDeclared,0.2460,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Goodwill,2049874000.0000,library map,lib.bs.Goodwill,2049874000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Gross profit,961344000.0000,library map,lib.is.GrossProfit,961344000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income before income tax expense,377617000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,377617000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income tax expense,129668000.0000,library map,lib.is.IncomeTaxExpenseBenefit,129668000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0000831641-25-000032,R5,Interest expense,40639000.0000,library map,lib.is.InterestExpenseNonoperating,40639000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Interest income,9837000.0000,library map,lib.is.InvestmentIncomeInterest,9837000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,inventory,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,loans_net,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,net_income,mapped,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Net income attributable to Tetra Tech,247724000.0000,available-to-common = NI with no NetIncomeLoss and no preferred line (net-income card),is.net_income.no_parent_line;lib.is.NetIncomeLossAvailableToCommonStockholdersBasic,247724000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,net_interest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,noninterest_expense,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,noninterest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,operating_expenses,component_sum,custom:SellingGeneralAndAdministrativeExpensesIncludingDepreciationAndAmortizationOfIntangibleAssets;us-gaap:LegalFees;us-gaap:GoodwillImpairmentLoss;custom:BusinessCombinationAcquisitionAndIntegrationRelatedExpenses;us-gaap:OperatingLeaseImpairmentLoss;custom:FairValueAdjustmentsToContingentConsideration,IS,+,-3,Y,BusinessCombinationAcquisitionAndIntegrationRelatedCosts,fsn_xbrl,0000831641-25-000032,R5,"Selling, general and administrative expenses",357737000.0000,every face line between GP/COR and OI; ties to GP - OI,is.operating_expenses.procedure,357737000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Income from operations,408419000.0000,library map,lib.is.OperatingIncomeLoss,408419000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,0,-3,N,,sec_api,0000831641-25-000032,R5,Other non-operating income,0.0000,library map,lib.is.OtherNonoperatingIncomeExpense,0.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,"Property and equipment, net",66148000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,66148000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,provision_for_credit_losses,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,research_and_development,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Revenue,5442590000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,5442590000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Amortization of stock-based awards,33946000.0000,library map,lib.cf.ShareBasedCompensation,33946000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,sga_expense,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000831641-25-000032,R7,Repurchases of common stock,249984000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,249984000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,-3,N,,sec_api,0000831641-25-000032,R4,"Common stock, shares outstanding (in shares)",261418000.0000,library map,lib.bs.CommonStockSharesOutstanding,261418000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Tetra Tech stockholders' equity,1779785000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,1779785000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Total assets,4282174000.0000,library map,lib.bs.Assets,4282174000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,total_debt,component_sum,us-gaap:LongTermDebtNoncurrent,BS,+,-3,N,,sec_api,0000831641-25-000032,R3,Long-term debt,763363000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.LongTermDebtNoncurrent,763363000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,total_interest_income,OUT,,,,,,,,0000831641-25-000032,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,total_liabilities,not_presented,,,,,,,,0000831641-25-000032,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Basic (in shares),264713000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,264713000.0000,PREDICTED (predict.py v7-2e1340384f)
+TTEK,750,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000831641-25-000032,R5,Diluted (in shares),267123000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,267123000.0000,PREDICTED (predict.py v7-2e1340384f)

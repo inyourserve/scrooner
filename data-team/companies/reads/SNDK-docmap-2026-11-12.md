@@ -67,3 +67,7 @@ Only two annual periods exist as a separate registrant (FY2025, FY2026; FY2024 v
 
 ## Mismatches (printed vs API)
 none beyond sign differences (interest expense printed (73,000,000) with positive fact).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

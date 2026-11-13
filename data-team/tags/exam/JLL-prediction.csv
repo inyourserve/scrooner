@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-JLL,554,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Accounts payable and accrued liabilities,1398100000.0000,combined line (library or label demote)
-JLL,554,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Accounts Receivable, after Allowance for Credit Loss, Current",2302800000.0000,library map
-JLL,554,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001037976-26-000037,,,,note-sourced default tag (no face line)
-JLL,554,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Basic earnings per common share (in dollars per share),16.7300,library map
-JLL,554,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Net capital additions - property and equipment,215600000.0000,combined line (library or label demote)
-JLL,554,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Cash and cash equivalents,599100000.0000,library map
-JLL,554,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001037976-26-000037,R7,Net cash provided by (used in) financing activities,-643200000.0000,library map
-JLL,554,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001037976-26-000037,R7,Net cash used in investing activities,-336600000.0000,library map
-JLL,554,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,"Income taxes, net of refunds",226000000.0000,library map
-JLL,554,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,"Interest Paid, Excluding Capitalized Interest, Operating Activity",118500000.0000,library map
-JLL,554,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Accounts payable and accrued liabilities,60900000.0000,combined line (library or label demote)
-JLL,554,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Receivables,148800000.0000,library map
-JLL,554,cf_inventory_change,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Net cash provided by operating activities,1194100000.0000,library map
-JLL,554,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Comprehensive income attributable to common shareholders,866500000.0000,library map
-JLL,554,cost_of_revenue,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total current assets,8179400000.0000,library map
-JLL,554,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total current liabilities,7386600000.0000,library map
-JLL,554,deposits,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Depreciation and amortization,252800000.0000,library map
-JLL,554,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Diluted earnings per common share (in dollars per share),16.4000,library map
-JLL,554,dividends_paid,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,dividends_per_share,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Goodwill, with indefinite useful lives",4707300000.0000,library map
-JLL,554,gross_profit,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income before income taxes and noncontrolling interest,981700000.0000,library map
-JLL,554,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income tax provision,189500000.0000,library map
-JLL,554,interest_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,interest_income,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,inventory,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,loans_net,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Net income attributable to the Company,792100000.0000,library map
-JLL,554,net_interest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,noninterest_expense,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,noninterest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Total operating expenses,25017600000.0000,printed opex total tag
-JLL,554,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Operating income,1098000000.0000,library map
-JLL,554,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Other Income,11700000.0000,library map
-JLL,554,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Property and equipment, net of accumulated depreciation",630600000.0000,library map
-JLL,554,provision_for_credit_losses,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,research_and_development,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Revenue,26115600000.0000,library map
-JLL,554,sbc,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,sga_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line
-JLL,554,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Payments for Repurchase of Common Stock,211500000.0000,library map
-JLL,554,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001037976-26-000037,R3,"Common stock, shares outstanding (in shares)",46945754.0000,library map
-JLL,554,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total Company shareholders' equity,7502800000.0000,library map
-JLL,554,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total assets,17801100000.0000,library map
-JLL,554,total_debt,component_sum,us-gaap:CommercialPaper,BS,-,-5,N,,sec_api,0001037976-26-000037,R2,Commercial Paper,-200000.0000,printed face components (duration sum; total_debt founder sum)
-JLL,554,total_interest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank
-JLL,554,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total liabilities,10178100000.0000,library map
-JLL,554,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001037976-26-000037,R4,Basic weighted average shares outstanding (in shares),47351000.0000,library map
-JLL,554,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001037976-26-000037,R4,Diluted weighted average shares outstanding (in shares),48312000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+JLL,554,accounts_payable,combined,us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Accounts payable and accrued liabilities,1398100000.0000,combined line (library or label demote),lib.bs.AccountsPayableAndAccruedLiabilitiesCurrent;nd.AccountsPayableAndAccruedLiabilitiesCurrent,1398100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Accounts Receivable, after Allowance for Credit Loss, Current",2302800000.0000,library map,lib.bs.AccountsReceivableNetCurrent,2302800000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001037976-26-000037,,,169000000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,169000000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Basic earnings per common share (in dollars per share),16.7300,library map,lib.is.EarningsPerShareBasic,16.7300,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,capex,combined,us-gaap:PaymentsForProceedsFromProductiveAssets,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Net capital additions - property and equipment,215600000.0000,combined line (library or label demote),lib.cf.PaymentsForProceedsFromProductiveAssets;nd.PaymentsForProceedsFromProductiveAssets,215600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Cash and cash equivalents,599100000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,599100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-5,N,,sec_api,0001037976-26-000037,R7,Net cash provided by (used in) financing activities,-643200000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-643200000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-5,N,,sec_api,0001037976-26-000037,R7,Net cash used in investing activities,-336600000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-336600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,"Income taxes, net of refunds",226000000.0000,library map,notes.cash_paid_for_income_taxes.prefer.IncomeTaxesPaidNet;lib.cf.IncomeTaxesPaidNet,226000000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,"Interest Paid, Excluding Capitalized Interest, Operating Activity",118500000.0000,library map,notes.cash_paid_for_interest.prefer.InterestPaidNet;lib.cf.InterestPaidNet,118500000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Accounts payable and accrued liabilities,60900000.0000,combined line (library or label demote),lib.cf.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities;nd.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,60900000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Receivables,148800000.0000,library map,lib.cf.IncreaseDecreaseInReceivables,148800000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cf_inventory_change,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Net cash provided by operating activities,1194100000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,1194100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Comprehensive income attributable to common shareholders,866500000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.is.ComprehensiveIncomeNetOfTax,866500000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,cost_of_revenue,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total current assets,8179400000.0000,library map,lib.bs.AssetsCurrent,8179400000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total current liabilities,7386600000.0000,library map,lib.bs.LiabilitiesCurrent,7386600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,deposits,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,depreciation_and_amortization,mapped,us-gaap:DepreciationAndAmortization,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Depreciation and amortization,252800000.0000,library map,lib.cf.DepreciationAndAmortization,252800000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001037976-26-000037,R4,Diluted earnings per common share (in dollars per share),16.4000,library map,lib.is.EarningsPerShareDiluted,16.4000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,dividends_paid,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,dividends_per_share,not_presented,,,,,,,,0001037976-26-000037,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,goodwill,mapped,us-gaap:Goodwill,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Goodwill, with indefinite useful lives",4707300000.0000,library map,lib.bs.Goodwill,4707300000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,gross_profit,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income before income taxes and noncontrolling interest,981700000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,981700000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Income tax provision,189500000.0000,library map,lib.is.IncomeTaxExpenseBenefit,189500000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,interest_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,interest_income,combined,us-gaap:InterestIncomeExpenseNet,IS,-,-5,N,,sec_api,0001037976-26-000037,R4,"Interest expense, net of interest income",-107300000.0000,interest income only inside a net/other face line between OI and pretax,notes.interest_income.inside_net_line,-107300000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,inventory,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,loans_net,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Net income attributable to the Company,792100000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,792100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,net_interest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,noninterest_expense,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,noninterest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Total operating expenses,25017600000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue),is.operating_expenses.procedure;lib.is.OperatingExpenses,25017600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Operating income,1098000000.0000,library map,lib.is.OperatingIncomeLoss,1098000000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Other Income,11700000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,11700000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,"Property and equipment, net of accumulated depreciation",630600000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,630600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,provision_for_credit_losses,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,research_and_development,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,revenue,mapped,us-gaap:Revenues,IS,+,-5,N,,sec_api,0001037976-26-000037,R4,Revenue,26115600000.0000,library map,lib.is.Revenues,26115600000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,sbc,mapped,us-gaap:ShareBasedCompensation,NOTE,+,,,,sec_api,0001037976-26-000037,,,2700000.0000,note fact present in the filing (FSN value),notes.sbc.fact.ShareBasedCompensation,2700000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,sga_expense,not_presented,,,,,,,,0001037976-26-000037,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-5,N,,sec_api,0001037976-26-000037,R7,Payments for Repurchase of Common Stock,211500000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,211500000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,0,N,,sec_api,0001037976-26-000037,R3,"Common stock, shares outstanding (in shares)",46945754.0000,library map,lib.bs.CommonStockSharesOutstanding,46945754.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total Company shareholders' equity,7502800000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,7502800000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,total_assets,mapped,us-gaap:Assets,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total assets,17801100000.0000,library map,lib.bs.Assets,17801100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,total_debt,component_sum,us-gaap:CommercialPaper,BS,-,-5,N,,sec_api,0001037976-26-000037,R2,Commercial Paper,-200000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.CommercialPaper,-200000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,total_interest_income,OUT,,,,,,,,0001037976-26-000037,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-5,N,,sec_api,0001037976-26-000037,R2,Total liabilities,10178100000.0000,library map,lib.bs.Liabilities,10178100000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001037976-26-000037,R4,Basic weighted average shares outstanding (in shares),47351000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,47351000.0000,PREDICTED (predict.py v7-2e1340384f)
+JLL,554,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001037976-26-000037,R4,Diluted weighted average shares outstanding (in shares),48312000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,48312000.0000,PREDICTED (predict.py v7-2e1340384f)

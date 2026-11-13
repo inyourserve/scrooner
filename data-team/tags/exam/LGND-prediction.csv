@@ -1,7 +1,7 @@
 ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
 LGND,943,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000886163-26-000006,R3,Accounts payable,3238000.0000,library map
 LGND,943,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000886163-26-000006,R3,"Accounts receivable, net",59601000.0000,library map
-LGND,943,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000886163-26-000006,,,,note-sourced default tag (no face line)
+LGND,943,amortization_of_intangibles,not_presented,,,,,,,,0000886163-26-000006,,,,no face line and no note fact
 LGND,943,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000886163-26-000006,R5,Basic net income (loss) per share (in USD per share),6.4400,library map
 LGND,943,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000886163-26-000006,R8,Purchases of property and equipment,452000.0000,library map
 LGND,943,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000886163-26-000006,R3,Cash and cash equivalents,174927000.0000,library map
@@ -21,7 +21,7 @@ LGND,943,deposits,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
 LGND,943,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000886163-26-000006,R8,Depreciation of fixed assets and amortization of intangible assets,33775000.0000,library map
 LGND,943,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000886163-26-000006,R5,Diluted net income (loss) per share (in USD per share),6.1300,library map
 LGND,943,dividends_paid,not_presented,,,,,,,,0000886163-26-000006,,,,no face line
-LGND,943,dividends_per_share,not_presented,,,,,,,,0000886163-26-000006,,,,no face line
+LGND,943,dividends_per_share,not_presented,,,,,,,,0000886163-26-000006,,,,no face line and no note fact
 LGND,943,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000886163-26-000006,R3,Goodwill,101541000.0000,library map
 LGND,943,gross_profit,not_presented,,,,,,,,0000886163-26-000006,,,,no face line
 LGND,943,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Income before income tax from continuing operations,158960000.0000,library map
@@ -34,7 +34,7 @@ LGND,943,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000886163-2
 LGND,943,net_interest_income,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
 LGND,943,noninterest_expense,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
 LGND,943,noninterest_income,OUT,,,,,,,,0000886163-26-000006,,,,not a bank
-LGND,943,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Research and development,81182000.0000,printed opex lines (duration sum)
+LGND,943,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Total operating costs and expenses,227085000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined)
 LGND,943,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000886163-26-000006,R5,Operating income (loss) from continuing operations,41002000.0000,library map
 LGND,943,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000886163-26-000006,R5,"Other non-operating expense, net",-89000.0000,library map
 LGND,943,ppe_net,not_presented,,,,,,,,0000886163-26-000006,,,,no face line

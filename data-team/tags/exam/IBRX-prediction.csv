@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-IBRX,710,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-3,Y,NotesPayableRelatedPartiesClassifiedCurrent,sec_api,0001326110-26-000030,R3,Related-party notes payable,46838000.0000,combined line (library or label demote)
-IBRX,710,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Accounts receivable, net",42571000.0000,library map
-IBRX,710,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001326110-26-000030,,,,note-sourced default tag (no face line)
-IBRX,710,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,32767,N,,sec_api,0001326110-26-000030,R5,Net loss per ImmunityBio common share - basic (in dollars per share),-0.3800,library map
-IBRX,710,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,"Purchases of property, plant and equipment",3846000.0000,library map
-IBRX,710,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Cash and cash equivalents,88334000.0000,library map
-IBRX,710,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Net cash provided by financing activities,400241000.0000,library map
-IBRX,710,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001326110-26-000030,R9,Net cash used in investing activities,-149801000.0000,library map
-IBRX,710,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,0,32767,N,,sec_api,0001326110-26-000030,R9,Income taxes,0.0000,library map
-IBRX,710,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Interest,71321000.0000,library map
-IBRX,710,cf_ap_change,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Accounts receivable,40211000.0000,library map
-IBRX,710,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Inventories,6325000.0000,library map
-IBRX,710,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001326110-26-000030,R9,Net cash used in operating activities,-304936000.0000,library map
-IBRX,710,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,Y,OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,sec_api,0001326110-26-000030,R6,Comprehensive loss attributable to ImmunityBio common stockholders,-323640000.0000,library map
-IBRX,710,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Cost of sales,753000.0000,library map
-IBRX,710,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total current assets,314875000.0000,library map
-IBRX,710,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Related-party convertible notes payable, less current portion",61754000.0000,library map
-IBRX,710,deposits,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Depreciation and amortization,15525000.0000,library map
-IBRX,710,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,32767,N,,sec_api,0001326110-26-000030,R5,Net loss per ImmunityBio common share - diluted (in dollars per share),-0.3800,library map
-IBRX,710,dividends_paid,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,dividends_per_share,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Goodwill and intangible assets, net",13953000.0000,combined line (library or label demote)
-IBRX,710,gross_profit,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Loss before income taxes and noncontrolling interests,-351607000.0000,library map
-IBRX,710,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Income tax benefit,-135000.0000,library map
-IBRX,710,interest_expense,combined,us-gaap:InterestExpenseOther,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Interest expense related to revenue interest liability,51540000.0000,combined line (library or label demote)
-IBRX,710,interest_income,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Inventories,910000.0000,library map
-IBRX,710,loans_net,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Net loss attributable to ImmunityBio common stockholders,-351398000.0000,library map
-IBRX,710,net_interest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,noninterest_expense,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,noninterest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,operating_expenses,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Loss from operations,-256027000.0000,library map
-IBRX,710,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,"Other expense, net",-2174000.0000,library map
-IBRX,710,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Property, plant and equipment, net",114264000.0000,library map
-IBRX,710,provision_for_credit_losses,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,research_and_development,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Total revenue,113288000.0000,library map
-IBRX,710,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Stock-based compensation expense,36809000.0000,library map
-IBRX,710,sga_expense,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,share_buybacks,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001326110-26-000030,R4,"Common stock, shares outstanding (in shares)",1011800008.0000,library map
-IBRX,710,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0001326110-26-000030,R3,Total ImmunityBio stockholders deficit,-500469000.0000,library map
-IBRX,710,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total assets,501898000.0000,library map
-IBRX,710,total_debt,not_presented,,,,,,,,0001326110-26-000030,,,,no face line
-IBRX,710,total_interest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank
-IBRX,710,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total liabilities,1001472000.0000,library map
-IBRX,710,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Weighted-average number of common shares used in computing net loss per share  basic (in shares),919863000.0000,library map
-IBRX,710,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Weighted-average number of common shares used in computing net loss per share  diluted (in shares),919863000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+IBRX,710,accounts_payable,combined,us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent,BS,+,-3,Y,NotesPayableRelatedPartiesClassifiedCurrent,sec_api,0001326110-26-000030,R3,Related-party notes payable,46838000.0000,combined line (library or label demote),46838000.0000,PREDICTED (predict.py v6)
+IBRX,710,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Accounts receivable, net",42571000.0000,library map,42571000.0000,PREDICTED (predict.py v6)
+IBRX,710,amortization_of_intangibles,not_presented,,,,,,,,0001326110-26-000030,,,,no face line and no note fact,,PREDICTED (predict.py v6)
+IBRX,710,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,32767,N,,sec_api,0001326110-26-000030,R5,Net loss per ImmunityBio common share - basic (in dollars per share),-0.3800,library map,-0.3800,PREDICTED (predict.py v6)
+IBRX,710,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,"Purchases of property, plant and equipment",3846000.0000,library map,3846000.0000,PREDICTED (predict.py v6)
+IBRX,710,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Cash and cash equivalents,88334000.0000,library map,88334000.0000,PREDICTED (predict.py v6)
+IBRX,710,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Net cash provided by financing activities,400241000.0000,library map,400241000.0000,PREDICTED (predict.py v6)
+IBRX,710,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001326110-26-000030,R9,Net cash used in investing activities,-149801000.0000,library map,-149801000.0000,PREDICTED (predict.py v6)
+IBRX,710,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,0,32767,N,,sec_api,0001326110-26-000030,R9,Income taxes,0.0000,library map,0.0000,PREDICTED (predict.py v6)
+IBRX,710,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Interest,71321000.0000,library map,71321000.0000,PREDICTED (predict.py v6)
+IBRX,710,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayableTrade,CF,-,-3,N,,sec_api,0001326110-26-000030,R9,Accounts payable,-190000.0000,library map,-190000.0000,PREDICTED (predict.py v6)
+IBRX,710,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Accounts receivable,40211000.0000,library map,40211000.0000,PREDICTED (predict.py v6)
+IBRX,710,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Inventories,6325000.0000,library map,6325000.0000,PREDICTED (predict.py v6)
+IBRX,710,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001326110-26-000030,R9,Net cash used in operating activities,-304936000.0000,library map,-304936000.0000,PREDICTED (predict.py v6)
+IBRX,710,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,Y,OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,sec_api,0001326110-26-000030,R6,Comprehensive loss attributable to ImmunityBio common stockholders,-323640000.0000,library map,-323640000.0000,PREDICTED (predict.py v6)
+IBRX,710,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Cost of sales,753000.0000,library map,753000.0000,PREDICTED (predict.py v6)
+IBRX,710,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total current assets,314875000.0000,library map,314875000.0000,PREDICTED (predict.py v6)
+IBRX,710,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Related-party convertible notes payable, less current portion",61754000.0000,library map,61754000.0000,PREDICTED (predict.py v6)
+IBRX,710,deposits,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Depreciation and amortization,15525000.0000,library map,15525000.0000,PREDICTED (predict.py v6)
+IBRX,710,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,32767,N,,sec_api,0001326110-26-000030,R5,Net loss per ImmunityBio common share - diluted (in dollars per share),-0.3800,library map,-0.3800,PREDICTED (predict.py v6)
+IBRX,710,dividends_paid,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,dividends_per_share,not_presented,,,,,,,,0001326110-26-000030,,,,no face line and no note fact,,PREDICTED (predict.py v6)
+IBRX,710,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Goodwill and intangible assets, net",13953000.0000,combined line (library or label demote),13953000.0000,PREDICTED (predict.py v6)
+IBRX,710,gross_profit,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Loss before income taxes and noncontrolling interests,-351607000.0000,library map,-351607000.0000,PREDICTED (predict.py v6)
+IBRX,710,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Income tax benefit,-135000.0000,library map,-135000.0000,PREDICTED (predict.py v6)
+IBRX,710,interest_expense,combined,us-gaap:InterestExpenseOther,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Interest expense related to revenue interest liability,51540000.0000,net or partial interest line,51540000.0000,PREDICTED (predict.py v6)
+IBRX,710,interest_income,combined,us-gaap:GainLossOnInvestments,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,"Interest and investment income, net",6405000.0000,interest income only inside a net/other face line between OI and pretax,6405000.0000,PREDICTED (predict.py v6)
+IBRX,710,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Inventories,910000.0000,library map,910000.0000,PREDICTED (predict.py v6)
+IBRX,710,loans_net,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Net loss attributable to ImmunityBio common stockholders,-351398000.0000,library map,-351398000.0000,PREDICTED (predict.py v6)
+IBRX,710,net_interest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,noninterest_expense,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,noninterest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Total operating costs and expenses,369315000.0000,"total includes cost of revenue: combined, never opex",369315000.0000,PREDICTED (predict.py v6)
+IBRX,710,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,Loss from operations,-256027000.0000,library map,-256027000.0000,PREDICTED (predict.py v6)
+IBRX,710,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001326110-26-000030,R5,"Other expense, net",-2174000.0000,library map,-2174000.0000,PREDICTED (predict.py v6)
+IBRX,710,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,"Property, plant and equipment, net",114264000.0000,library map,114264000.0000,PREDICTED (predict.py v6)
+IBRX,710,provision_for_credit_losses,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,research_and_development,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Total revenue,113288000.0000,library map,113288000.0000,PREDICTED (predict.py v6)
+IBRX,710,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001326110-26-000030,R9,Stock-based compensation expense,36809000.0000,library map,36809000.0000,PREDICTED (predict.py v6)
+IBRX,710,sga_expense,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,share_buybacks,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001326110-26-000030,R4,"Common stock, shares outstanding (in shares)",1011800008.0000,library map,1011800008.0000,PREDICTED (predict.py v6)
+IBRX,710,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0001326110-26-000030,R3,Total ImmunityBio stockholders deficit,-500469000.0000,library map,-500469000.0000,PREDICTED (predict.py v6)
+IBRX,710,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total assets,501898000.0000,library map,501898000.0000,PREDICTED (predict.py v6)
+IBRX,710,total_debt,not_presented,,,,,,,,0001326110-26-000030,,,,no face line,,PREDICTED (predict.py v6)
+IBRX,710,total_interest_income,OUT,,,,,,,,0001326110-26-000030,,,,not a bank,,PREDICTED (predict.py v6)
+IBRX,710,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001326110-26-000030,R3,Total liabilities,1001472000.0000,library map,1001472000.0000,PREDICTED (predict.py v6)
+IBRX,710,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Weighted-average number of common shares used in computing net loss per share  basic (in shares),919863000.0000,library map,919863000.0000,PREDICTED (predict.py v6)
+IBRX,710,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001326110-26-000030,R5,Weighted-average number of common shares used in computing net loss per share  diluted (in shares),919863000.0000,library map,919863000.0000,PREDICTED (predict.py v6)

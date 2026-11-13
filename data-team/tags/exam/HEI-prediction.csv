@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-HEI,496,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Trade accounts payable,231040000.0000,library map
-HEI,496,accounts_receivable,combined,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Accounts receivable, net",637615000.0000,combined line (library or label demote)
-HEI,496,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000046619-25-000082,,,,note-sourced default tag (no face line)
-HEI,496,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000046619-25-000082,R7,Basic (in dollars per share),4.9700,library map
-HEI,496,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Capital expenditures,72886000.0000,library map
-HEI,496,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000046619-25-000082,R5,Cash and cash equivalents,217781000.0000,combined line (library or label demote)
-HEI,496,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash (used in) provided by financing activities,-150677000.0000,library map
-HEI,496,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash used in investing activities,-731691000.0000,library map
-HEI,496,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,UN,+,-3,N,,sec_api,0000046619-25-000082,R14,Cash paid for income taxes,213665000.0000,library map
-HEI,496,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000046619-25-000082,,,,note-sourced default tag (no face line)
-HEI,496,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Trade accounts payable,27593000.0000,library map
-HEI,496,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Accounts receivable,75576000.0000,library map
-HEI,496,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Inventories,44850000.0000,library map
-HEI,496,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Net cash provided by operating activities,934266000.0000,library map
-HEI,496,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000046619-25-000082,R8,"Comprehensive income (loss), attributable to HEICO",722042000.0000,library map
-HEI,496,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Cost of sales,2698580000.0000,library map
-HEI,496,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total current assets,2356366000.0000,library map
-HEI,496,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total current liabilities,832004000.0000,library map
-HEI,496,deposits,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Depreciation and amortization,196076000.0000,library map
-HEI,496,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000046619-25-000082,R7,Diluted (in dollars per share),4.9000,library map
-HEI,496,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Cash dividends paid,31968000.0000,library map
-HEI,496,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,2,N,,sec_api,0000046619-25-000082,R10,Cash dividends per share (in dollars per share),0.2300,library map
-HEI,496,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Goodwill,3661624000.0000,library map
-HEI,496,gross_profit,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income before taxes and noncontrolling interests,893554000.0000,library map
-HEI,496,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income tax expense,148000000.0000,library map
-HEI,496,interest_expense,not_presented,,,,,,,,0000046619-25-000082,,,,single component only
-HEI,496,interest_income,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Inventories, net",1295336000.0000,library map
-HEI,496,loans_net,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Net income attributable to HEICO,690385000.0000,library map
-HEI,496,net_interest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,noninterest_expense,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,noninterest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,operating_expenses,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Operating income,1018998000.0000,library map
-HEI,496,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Other income,4433000.0000,library map
-HEI,496,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Property, plant and equipment, net",431710000.0000,library map
-HEI,496,provision_for_credit_losses,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,research_and_development,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Net sales,4485044000.0000,library map
-HEI,496,sbc,mapped,us-gaap:StockOptionPlanExpense,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Share-based compensation expense,34381000.0000,library map
-HEI,496,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,"Selling, general and administrative expenses",767466000.0000,library map
-HEI,496,share_buybacks,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,shares_outstanding,not_presented,,,,,,,,0000046619-25-000082,,,,no face line
-HEI,496,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total HEICO shareholders' equity,4305319000.0000,library map
-HEI,496,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total assets,8500434000.0000,library map
-HEI,496,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Current maturities of long-term debt,3358000.0000,printed face components (duration sum; total_debt founder sum)
-HEI,496,total_interest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank
-HEI,496,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total liabilities,3653901000.0000,library map
-HEI,496,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Basic (in shares),139048000.0000,library map
-HEI,496,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Diluted (in shares),140771000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+HEI,496,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Trade accounts payable,231040000.0000,library map,lib.bs.AccountsPayableCurrent,231040000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,accounts_receivable,mapped,us-gaap:ReceivablesNetCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Accounts receivable, net",637615000.0000,"single plain receivables line on the BS face (override rule, Dhairya 2026-11-12)",bs.accounts_receivable.single_line;lib.bs.ReceivablesNetCurrent;nd.ReceivablesNetCurrent,637615000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000046619-25-000082,,,137900000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,137900000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000046619-25-000082,R7,Basic (in dollars per share),4.9700,library map,lib.is.EarningsPerShareBasic,4.9700,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Capital expenditures,72886000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,72886000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cash_and_equivalents,combined,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,+,-3,Y,CashAndCashEquivalentsAtCarryingValue,sec_api,0000046619-25-000082,R5,Cash and cash equivalents,217781000.0000,combined line (library or label demote),lib.bs.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents;nd.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,217781000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash (used in) provided by financing activities,-150677000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-150677000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000046619-25-000082,R11,Net cash used in investing activities,-731691000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-731691000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,UN,+,-3,N,,sec_api,0000046619-25-000082,R14,Cash paid for income taxes,213665000.0000,library map,lib.cf.IncomeTaxesPaid,213665000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cash_paid_for_interest,not_presented,,,,,,,,0000046619-25-000082,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Trade accounts payable,27593000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,27593000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInReceivables,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Accounts receivable,75576000.0000,library map,lib.cf.IncreaseDecreaseInReceivables,75576000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Inventories,44850000.0000,library map,lib.cf.IncreaseDecreaseInInventories,44850000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Net cash provided by operating activities,934266000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,934266000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000046619-25-000082,R8,"Comprehensive income (loss), attributable to HEICO",722042000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,722042000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Cost of sales,2698580000.0000,library map,lib.is.CostOfRevenue,2698580000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total current assets,2356366000.0000,library map,lib.bs.AssetsCurrent,2356366000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total current liabilities,832004000.0000,library map,lib.bs.LiabilitiesCurrent,832004000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,deposits,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Depreciation and amortization,196076000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,196076000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000046619-25-000082,R7,Diluted (in dollars per share),4.9000,library map,lib.is.EarningsPerShareDiluted,4.9000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Cash dividends paid,31968000.0000,library map,lib.cf.PaymentsOfDividendsCommonStock,31968000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareCashPaid,EQ,+,2,N,,sec_api,0000046619-25-000082,R10,Cash dividends per share (in dollars per share),0.2300,library map,lib.is.CommonStockDividendsPerShareCashPaid,0.2300,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Goodwill,3661624000.0000,library map,lib.bs.Goodwill,3661624000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,gross_profit,not_presented,,,,,,,,0000046619-25-000082,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income before taxes and noncontrolling interests,893554000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,893554000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Income tax expense,148000000.0000,library map,lib.is.IncomeTaxExpenseBenefit,148000000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,interest_expense,combined,us-gaap:InterestExpenseDebt,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Interest expense,129877000.0000,net or partial interest line,lib.is.InterestExpenseDebt,129877000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,interest_income,not_presented,,,,,,,,0000046619-25-000082,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Inventories, net",1295336000.0000,library map,lib.bs.InventoryNet,1295336000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,loans_net,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Net income attributable to HEICO,690385000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,690385000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,net_interest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,noninterest_expense,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,noninterest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,"Selling, general and administrative expenses",767466000.0000,every face line between GP/COR and OI; ties to GP - OI,is.operating_expenses.procedure,767466000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Operating income,1018998000.0000,library map,lib.is.OperatingIncomeLoss,1018998000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Other income,4433000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,4433000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,"Property, plant and equipment, net",431710000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,431710000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,provision_for_credit_losses,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,research_and_development,not_presented,,,,,,,,0000046619-25-000082,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Net sales,4485044000.0000,library map,lib.is.Revenues,4485044000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,sbc,mapped,us-gaap:StockOptionPlanExpense,CF,+,-3,N,,sec_api,0000046619-25-000082,R11,Share-based compensation expense,34381000.0000,library map,lib.cf.StockOptionPlanExpense,34381000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,"Selling, general and administrative expenses",767466000.0000,library map,lib.is.SellingGeneralAndAdministrativeExpense,767466000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,share_buybacks,not_presented,,,,,,,,0000046619-25-000082,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,shares_outstanding,not_presented,,,,,,,,0000046619-25-000082,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total HEICO shareholders' equity,4305319000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,4305319000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total assets,8500434000.0000,library map,lib.bs.Assets,8500434000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Current maturities of long-term debt,3358000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.LongTermDebtAndCapitalLeaseObligationsCurrent;lib.bs.LongTermDebtAndCapitalLeaseObligations,3358000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,total_interest_income,OUT,,,,,,,,0000046619-25-000082,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000046619-25-000082,R5,Total liabilities,3653901000.0000,library map,lib.bs.Liabilities,3653901000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Basic (in shares),139048000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,139048000.0000,PREDICTED (predict.py v7-2e1340384f)
+HEI,496,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0000046619-25-000082,R7,Diluted (in shares),140771000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,140771000.0000,PREDICTED (predict.py v7-2e1340384f)

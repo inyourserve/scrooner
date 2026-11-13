@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-CMCSA,162,accounts_payable,combined,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Accounts payable and accrued expenses related to trade creditors,11058000000.0000,combined line (library or label demote)
-CMCSA,162,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,"Receivables, net",13869000000.0000,library map
-CMCSA,162,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Amortization,6884000000.0000,library map
-CMCSA,162,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-004994,R3,Basic earnings per common share attributable to Comcast Corporation shareholders (in dollars per share),5.4100,library map
-CMCSA,162,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Capital expenditures,11750000000.0000,library map
-CMCSA,162,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Cash and cash equivalents,9481000000.0000,library map
-CMCSA,162,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) financing activities,-14346000000.0000,library map
-CMCSA,162,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) investing activities,-16157000000.0000,library map
-CMCSA,162,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
-CMCSA,162,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
-CMCSA,162,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Accounts payable and accrued expenses related to trade creditors,-20000000.0000,combined line (library or label demote)
-CMCSA,162,cf_ar_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,cf_inventory_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by operating activities,33643000000.0000,library map
-CMCSA,162,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-004994,R4,Comprehensive income attributable to Comcast Corporation,22033000000.0000,library map
-CMCSA,162,cost_of_revenue,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total current assets,29567000000.0000,library map
-CMCSA,162,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total current liabilities,33524000000.0000,library map
-CMCSA,162,deposits,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Depreciation and amortization,16210000000.0000,library map
-CMCSA,162,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-004994,R3,Diluted earnings per common share attributable to Comcast Corporation shareholders (in dollars per share),5.3900,library map
-CMCSA,162,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Dividends paid,4894000000.0000,library map
-CMCSA,162,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001628280-26-004994,R9,Cash dividends declared per common share (in dollars per share),1.3200,library map
-CMCSA,162,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Goodwill,61502000000.0000,library map
-CMCSA,162,gross_profit,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income before income taxes,25766000000.0000,library map
-CMCSA,162,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income tax expense,6106000000.0000,library map
-CMCSA,162,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-004994,R3,Interest expense,4409000000.0000,library map
-CMCSA,162,interest_income,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,inventory,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,loans_net,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Net income attributable to Comcast Corporation,19998000000.0000,library map
-CMCSA,162,net_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,noninterest_expense,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,noninterest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Total costs and expenses,103035000000.0000,CostsAndExpenses value check (structural)
-CMCSA,162,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Operating income,20672000000.0000,library map
-CMCSA,162,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,"Investment and other income (loss), net",9503000000.0000,combined line (library or label demote)
-CMCSA,162,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,"Property and equipment, net",65680000000.0000,library map
-CMCSA,162,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,research_and_development,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,Y,Revenues,sec_api,0001628280-26-004994,R3,Revenue,123707000000.0000,library map
-CMCSA,162,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Share-based compensation,1288000000.0000,library map
-CMCSA,162,sga_expense,not_presented,,,,,,,,0001628280-26-004994,,,,single component only
-CMCSA,162,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Repurchases of common stock under repurchase program and employee plans,7155000000.0000,library map
-CMCSA,162,shares_outstanding,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total Comcast Corporation shareholders equity,96903000000.0000,library map
-CMCSA,162,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total assets,272631000000.0000,library map
-CMCSA,162,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Current portion of debt,5958000000.0000,printed face components (duration sum; total_debt founder sum)
-CMCSA,162,total_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank
-CMCSA,162,total_liabilities,not_presented,,,,,,,,0001628280-26-004994,,,,no face line
-CMCSA,162,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
-CMCSA,162,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,,,,,sec_api,0001628280-26-004994,,,,note-sourced default tag (no face line)
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+CMCSA,162,accounts_payable,combined,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Accounts payable and accrued expenses related to trade creditors,11058000000.0000,combined line (library or label demote),lib.bs.AccountsPayableCurrent;bs.accounts_payable.label_demote,11058000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,"Receivables, net",13869000000.0000,library map,lib.bs.AccountsReceivableNetCurrent,13869000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Amortization,6884000000.0000,library map,lib.is.AmortizationOfIntangibleAssets,6884000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001628280-26-004994,R3,Basic earnings per common share attributable to Comcast Corporation shareholders (in dollars per share),5.4100,library map,lib.is.EarningsPerShareBasic,5.4100,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Capital expenditures,11750000000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,11750000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Cash and cash equivalents,9481000000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,9481000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) financing activities,-14346000000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-14346000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by (used in) investing activities,-16157000000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-16157000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001628280-26-004994,,,755000000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_income_taxes.fact.IncomeTaxesPaidNet,755000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0001628280-26-004994,,,3871000000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_interest.fact.InterestPaidNet,3871000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cf_ap_change,combined,us-gaap:IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,CF,-,-6,N,,sec_api,0001628280-26-004994,R6,Accounts payable and accrued expenses related to trade creditors,-20000000.0000,combined line (library or label demote),lib.cf.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities;nd.IncreaseDecreaseInAccountsPayableAndAccruedLiabilities,-20000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cf_ar_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cf_inventory_change,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Net cash provided by operating activities,33643000000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,33643000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001628280-26-004994,R4,Comprehensive income attributable to Comcast Corporation,22033000000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,22033000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,cost_of_revenue,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total current assets,29567000000.0000,library map,lib.bs.AssetsCurrent,29567000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total current liabilities,33524000000.0000,library map,lib.bs.LiabilitiesCurrent,33524000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,deposits,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Depreciation and amortization,16210000000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,16210000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001628280-26-004994,R3,Diluted earnings per common share attributable to Comcast Corporation shareholders (in dollars per share),5.3900,library map,lib.is.EarningsPerShareDiluted,5.3900,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,dividends_paid,mapped,us-gaap:PaymentsOfDividends,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Dividends paid,4894000000.0000,library map,lib.cf.PaymentsOfDividends,4894000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,2,N,,sec_api,0001628280-26-004994,R9,Cash dividends declared per common share (in dollars per share),1.3200,library map,lib.eq.CommonStockDividendsPerShareDeclared,1.3200,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Goodwill,61502000000.0000,library map,lib.bs.Goodwill,61502000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,gross_profit,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income before income taxes,25766000000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,25766000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Income tax expense,6106000000.0000,library map,lib.is.IncomeTaxExpenseBenefit,6106000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001628280-26-004994,R3,Interest expense,4409000000.0000,library map,lib.is.InterestExpenseNonoperating,4409000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,interest_income,not_presented,,,,,,,,0001628280-26-004994,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,inventory,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,loans_net,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Net income attributable to Comcast Corporation,19998000000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,19998000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,net_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,noninterest_expense,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,noninterest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,operating_expenses,combined,us-gaap:CostsAndExpenses,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Total costs and expenses,103035000000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined),is.operating_expenses.procedure,103035000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,Operating income,20672000000.0000,library map,lib.is.OperatingIncomeLoss,20672000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001628280-26-004994,R3,"Investment and other income (loss), net",9503000000.0000,combined line (library or label demote),lib.is.NonoperatingIncomeExpense;nd.NonoperatingIncomeExpense,9503000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,"Property and equipment, net",65680000000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,65680000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,provision_for_credit_losses,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,research_and_development,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,Y,Revenues,sec_api,0001628280-26-004994,R3,Revenue,123707000000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,123707000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Share-based compensation,1288000000.0000,library map,lib.cf.ShareBasedCompensation,1288000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,sga_expense,not_presented,,,,,,,,0001628280-26-004994,,,,single component only,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001628280-26-004994,R6,Repurchases of common stock under repurchase program and employee plans,7155000000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,7155000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,shares_outstanding,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total Comcast Corporation shareholders equity,96903000000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,96903000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Total assets,272631000000.0000,library map,lib.bs.Assets,272631000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,total_debt,component_sum,us-gaap:DebtCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-6,N,,sec_api,0001628280-26-004994,R7,Current portion of debt,5958000000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.DebtCurrent;lib.bs.LongTermDebtAndCapitalLeaseObligations,5958000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,total_interest_income,OUT,,,,,,,,0001628280-26-004994,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,total_liabilities,not_presented,,,,,,,,0001628280-26-004994,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,NOTE,+,,,,sec_api,0001628280-26-004994,,,3699000000.0000,note fact present in the filing (FSN value),notes.weighted_basic_shares.fact.WeightedAverageNumberOfSharesOutstandingBasic,3699000000.0000,PREDICTED (predict.py v7-2e1340384f)
+CMCSA,162,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,NOTE,+,,,,sec_api,0001628280-26-004994,,,3709000000.0000,note fact present in the filing (FSN value),notes.weighted_diluted_shares.fact.WeightedAverageNumberOfDilutedSharesOutstanding,3709000000.0000,PREDICTED (predict.py v7-2e1340384f)

@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-VSAT,790,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Accounts payable,288154000.0000,library map
-VSAT,790,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Accounts receivable, net",753430000.0000,library map
-VSAT,790,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-248290,,,,note-sourced default tag (no face line)
-VSAT,790,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map
-VSAT,790,capex,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Cash and cash equivalents,1746835000.0000,library map
-VSAT,790,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) financing activities,-694421000.0000,library map
-VSAT,790,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) investing activities,-759046000.0000,library map
-VSAT,790,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,"Cash paid for income taxes, net",80701000.0000,library map
-VSAT,790,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Cash paid for interest (net of amounts capitalized),326548000.0000,library map
-VSAT,790,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Accounts payable,36840000.0000,library map
-VSAT,790,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Accounts receivable,58169000.0000,library map
-VSAT,790,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Inventories,-13050000.0000,library map
-VSAT,790,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) operating activities,1589885000.0000,library map
-VSAT,790,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,-,-3,N,,sec_api,0001193125-26-248290,R4,"Comprehensive income (loss) attributable to Viasat, Inc.",-11808000.0000,library map
-VSAT,790,cost_of_revenue,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total current assets,3124007000.0000,library map
-VSAT,790,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total current liabilities,1297099000.0000,library map
-VSAT,790,deposits,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Depreciation,1038515000.0000,printed face components (duration sum; total_debt founder sum)
-VSAT,790,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map
-VSAT,790,dividends_paid,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,dividends_per_share,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Goodwill,1625013000.0000,library map
-VSAT,790,gross_profit,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from continuing operations before income taxes,104801000.0000,library map
-VSAT,790,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,(Provision for) benefit from income taxes from continuing operations,116223000.0000,library map
-VSAT,790,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Interest expense,360250000.0000,library map
-VSAT,790,interest_income,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Inventories,281220000.0000,library map
-VSAT,790,loans_net,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-248290,R4,"Net income (loss) attributable to Viasat, Inc.",-34086000.0000,library map
-VSAT,790,net_interest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,noninterest_expense,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,noninterest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Selling, general and administrative (including ground network (FY25), satellite (FY24) impairment and related charges, net - see Note 1)",999476000.0000,printed opex lines (duration sum)
-VSAT,790,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from operations,108125000.0000,library map
-VSAT,790,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Other income (expense), net",163012000.0000,library map
-VSAT,790,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Property, equipment and satellites, net",7272637000.0000,library map
-VSAT,790,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Independent research and development,164908000.0000,library map
-VSAT,790,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Total revenues,4640280000.0000,library map
-VSAT,790,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Stock-based compensation expense,81070000.0000,library map
-VSAT,790,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Selling, general and administrative (including ground network (FY25), satellite (FY24) impairment and related charges, net - see Note 1)",999476000.0000,library map
-VSAT,790,share_buybacks,not_presented,,,,,,,,0001193125-26-248290,,,,no face line
-VSAT,790,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-248290,R3,"Common stock, shares outstanding",136557695.0000,library map
-VSAT,790,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Total Viasat, Inc. stockholders equity",4660301000.0000,library map
-VSAT,790,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total assets,15226596000.0000,library map
-VSAT,790,total_debt,component_sum,us-gaap:LongTermDebtCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Current portion of long-term debt,57753000.0000,printed face components (duration sum; total_debt founder sum)
-VSAT,790,total_interest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank
-VSAT,790,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total liabilities,10497334000.0000,library map
-VSAT,790,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Shares used in computing basic net income (loss) per share,134744000.0000,library map
-VSAT,790,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Shares used in computing diluted net income (loss) per share,134744000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+VSAT,790,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Accounts payable,288154000.0000,library map,lib.bs.AccountsPayableCurrent,288154000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Accounts receivable, net",753430000.0000,library map,lib.bs.AccountsReceivableNetCurrent,753430000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-248290,,,315950000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,315950000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map,lib.is.EarningsPerShareBasic,-0.2500,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,capex,not_presented,,,,,,,,0001193125-26-248290,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Cash and cash equivalents,1746835000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,1746835000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) financing activities,-694421000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-694421000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) investing activities,-759046000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-759046000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,"Cash paid for income taxes, net",80701000.0000,library map,notes.cash_paid_for_income_taxes.prefer.IncomeTaxesPaidNet;lib.cf.IncomeTaxesPaidNet,80701000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Cash paid for interest (net of amounts capitalized),326548000.0000,library map,notes.cash_paid_for_interest.prefer.InterestPaidNet;lib.cf.InterestPaidNet,326548000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Accounts payable,36840000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,36840000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Accounts receivable,58169000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,58169000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,-,-3,N,,sec_api,0001193125-26-248290,R5,Inventories,-13050000.0000,library map,lib.cf.IncreaseDecreaseInInventories,-13050000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Net cash provided by (used in) operating activities,1589885000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,1589885000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,IS,-,-3,N,,sec_api,0001193125-26-248290,R4,"Comprehensive income (loss) attributable to Viasat, Inc.",-11808000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.is.ComprehensiveIncomeNetOfTax,-11808000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,cost_of_revenue,not_presented,,,,,,,,0001193125-26-248290,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total current assets,3124007000.0000,library map,lib.bs.AssetsCurrent,3124007000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total current liabilities,1297099000.0000,library map,lib.bs.LiabilitiesCurrent,1297099000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,deposits,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,depreciation_and_amortization,component_sum,us-gaap:Depreciation;us-gaap:AmortizationOfIntangibleAssets,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Depreciation,1038515000.0000,CF D&A components (duration sum),cf.depreciation_and_amortization.lone_line;lib.cf.Depreciation;lib.cf.AmortizationOfIntangibleAssets,1038515000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001193125-26-248290,R4,Income (loss),-0.2500,library map,lib.is.EarningsPerShareDiluted,-0.2500,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,dividends_paid,not_presented,,,,,,,,0001193125-26-248290,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,dividends_per_share,not_presented,,,,,,,,0001193125-26-248290,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Goodwill,1625013000.0000,library map,lib.bs.Goodwill,1625013000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,gross_profit,not_presented,,,,,,,,0001193125-26-248290,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from continuing operations before income taxes,104801000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments,104801000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,(Provision for) benefit from income taxes from continuing operations,116223000.0000,library map,lib.is.IncomeTaxExpenseBenefit,116223000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,interest_expense,mapped,us-gaap:InterestExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Interest expense,360250000.0000,library map,lib.is.InterestExpense,360250000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,interest_income,combined,us-gaap:InterestAndOtherIncome,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Interest income,205849000.0000,interest income only inside a net/other face line between OI and pretax,notes.interest_income.inside_net_line,205849000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Inventories,281220000.0000,library map,lib.bs.InventoryNet,281220000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,loans_net,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001193125-26-248290,R4,"Net income (loss) attributable to Viasat, Inc.",-34086000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,-34086000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,net_interest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,noninterest_expense,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,noninterest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,operating_expenses,not_presented,,,,,,,,0001193125-26-248290,,,,no opex total and no GP/COR anchor,is.operating_expenses.procedure,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Income (loss) from operations,108125000.0000,library map,lib.is.OperatingIncomeLoss,108125000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Other income (expense), net",163012000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,163012000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Property, equipment and satellites, net",7272637000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,7272637000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Independent research and development,164908000.0000,library map,lib.is.ResearchAndDevelopmentExpense,164908000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Total revenues,4640280000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,4640280000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-248290,R5,Stock-based compensation expense,81070000.0000,library map,lib.cf.ShareBasedCompensation,81070000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,"Selling, general and administrative (including ground network (FY25), satellite (FY24) impairment and related charges, net - see Note 1)",999476000.0000,library map,lib.is.SellingGeneralAndAdministrativeExpense,999476000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,share_buybacks,not_presented,,,,,,,,0001193125-26-248290,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-248290,R3,"Common stock, shares outstanding",136557695.0000,library map,lib.bs.CommonStockSharesOutstanding,136557695.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,"Total Viasat, Inc. stockholders equity",4660301000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,4660301000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total assets,15226596000.0000,library map,lib.bs.Assets,15226596000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,total_debt,component_sum,us-gaap:LongTermDebtCurrent,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Current portion of long-term debt,57753000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.LongTermDebtCurrent,57753000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,total_interest_income,OUT,,,,,,,,0001193125-26-248290,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001193125-26-248290,R2,Total liabilities,10497334000.0000,library map,lib.bs.Liabilities,10497334000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Shares used in computing basic net income (loss) per share,134744000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,134744000.0000,PREDICTED (predict.py v7-2e1340384f)
+VSAT,790,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-248290,R4,Shares used in computing diluted net income (loss) per share,134744000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,134744000.0000,PREDICTED (predict.py v7-2e1340384f)

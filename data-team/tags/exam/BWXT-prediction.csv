@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-BWXT,606,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Accounts payable,141289000.0000,library map
-BWXT,606,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Accounts receivable  trade, net",220391000.0000,library map
-BWXT,606,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001486957-26-000007,,,,note-sourced default tag (no face line)
-BWXT,606,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc. (USD per share)",3.5900,library map
-BWXT,606,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,"Purchases of property, plant and equipment",184557000.0000,library map
-BWXT,606,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Cash and cash equivalents,499779000.0000,library map
-BWXT,606,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH PROVIDED BY (USED IN) FINANCING ACTIVITIES,693640000.0000,library map
-BWXT,606,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH USED IN INVESTING ACTIVITIES,-742109000.0000,library map
-BWXT,606,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Income taxes (net of refunds),47892000.0000,library map
-BWXT,606,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Interest,65163000.0000,library map
-BWXT,606,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001486957-26-000007,R10,Accounts payable,-23562000.0000,library map
-BWXT,606,cf_ar_change,not_presented,,,,,,,,0001486957-26-000007,,,,no face line
-BWXT,606,cf_inventory_change,not_presented,,,,,,,,0001486957-26-000007,,,,no face line
-BWXT,606,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH PROVIDED BY OPERATING ACTIVITIES,479848000.0000,library map
-BWXT,606,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001486957-26-000007,R4,"Comprehensive Income Attributable to BWX Technologies, Inc.",357784000.0000,library map
-BWXT,606,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Cost of operations,2465566000.0000,library map
-BWXT,606,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Current Assets,1560354000.0000,library map
-BWXT,606,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Current Liabilities,672017000.0000,library map
-BWXT,606,deposits,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Depreciation and amortization,109186000.0000,library map
-BWXT,606,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc. (USD per share)",3.5800,library map
-BWXT,606,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Dividends paid to common shareholders,92467000.0000,library map
-BWXT,606,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001486957-26-000007,R9,Dividends declared (usd per share),0.9600,library map
-BWXT,606,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Goodwill,500860000.0000,library map
-BWXT,606,gross_profit,not_presented,,,,,,,,0001486957-26-000007,,,,no face line
-BWXT,606,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Total before tax,398120000.0000,library map
-BWXT,606,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Provision for Income Taxes,68259000.0000,library map
-BWXT,606,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001486957-26-000007,R3,Interest expense,44207000.0000,library map
-BWXT,606,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Interest income,3893000.0000,library map
-BWXT,606,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Inventories,46537000.0000,library map
-BWXT,606,loans_net,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc.",328945000.0000,library map
-BWXT,606,net_interest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,noninterest_expense,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,noninterest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,printed opex lines (duration sum)
-BWXT,606,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Operating Income,404459000.0000,library map
-BWXT,606,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Other Income (Expense),33975000.0000,library map
-BWXT,606,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Property, Plant and Equipment, Net",1585136000.0000,library map
-BWXT,606,provision_for_credit_losses,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,library map
-BWXT,606,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Revenues,3198425000.0000,library map
-BWXT,606,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Stock-based compensation expense,26072000.0000,library map
-BWXT,606,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,"Selling, general and administrative expenses",394416000.0000,library map
-BWXT,606,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Repurchases of common stock,30000000.0000,library map
-BWXT,606,shares_outstanding,not_presented,,,,,,,,0001486957-26-000007,,,,no face line
-BWXT,606,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Stockholders' Equity  BWX Technologies, Inc.",1232487000.0000,library map
-BWXT,606,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,TOTAL ASSETS,4271495000.0000,library map
-BWXT,606,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0001486957-26-000007,R6,Current maturities of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum)
-BWXT,606,total_interest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank
-BWXT,606,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Liabilities,3038483000.0000,library map
-BWXT,606,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001486957-26-000007,R3,Basic (in shares),91566280.0000,library map
-BWXT,606,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001486957-26-000007,R3,Diluted (in shares),91856013.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,fy0_api,evidence_class
+BWXT,606,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Accounts payable,141289000.0000,library map,141289000.0000,PREDICTED (predict.py v6)
+BWXT,606,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Accounts receivable  trade, net",220391000.0000,library map,220391000.0000,PREDICTED (predict.py v6)
+BWXT,606,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001486957-26-000007,,,20581000.0000,note fact present in the filing (FSN value),20581000.0000,PREDICTED (predict.py v6)
+BWXT,606,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc. (USD per share)",3.5900,library map,3.5900,PREDICTED (predict.py v6)
+BWXT,606,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,"Purchases of property, plant and equipment",184557000.0000,library map,184557000.0000,PREDICTED (predict.py v6)
+BWXT,606,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Cash and cash equivalents,499779000.0000,library map,499779000.0000,PREDICTED (predict.py v6)
+BWXT,606,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH PROVIDED BY (USED IN) FINANCING ACTIVITIES,693640000.0000,library map,693640000.0000,PREDICTED (predict.py v6)
+BWXT,606,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH USED IN INVESTING ACTIVITIES,-742109000.0000,library map,-742109000.0000,PREDICTED (predict.py v6)
+BWXT,606,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Income taxes (net of refunds),47892000.0000,library map,47892000.0000,PREDICTED (predict.py v6)
+BWXT,606,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Interest,65163000.0000,library map,65163000.0000,PREDICTED (predict.py v6)
+BWXT,606,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-3,N,,sec_api,0001486957-26-000007,R10,Accounts payable,-23562000.0000,library map,-23562000.0000,PREDICTED (predict.py v6)
+BWXT,606,cf_ar_change,not_presented,,,,,,,,0001486957-26-000007,,,,no face line,,PREDICTED (predict.py v6)
+BWXT,606,cf_inventory_change,not_presented,,,,,,,,0001486957-26-000007,,,,no face line,,PREDICTED (predict.py v6)
+BWXT,606,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,NET CASH PROVIDED BY OPERATING ACTIVITIES,479848000.0000,library map,479848000.0000,PREDICTED (predict.py v6)
+BWXT,606,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0001486957-26-000007,R4,"Comprehensive Income Attributable to BWX Technologies, Inc.",357784000.0000,library map,357784000.0000,PREDICTED (predict.py v6)
+BWXT,606,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Cost of operations,2465566000.0000,library map,2465566000.0000,PREDICTED (predict.py v6)
+BWXT,606,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Current Assets,1560354000.0000,library map,1560354000.0000,PREDICTED (predict.py v6)
+BWXT,606,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Current Liabilities,672017000.0000,library map,672017000.0000,PREDICTED (predict.py v6)
+BWXT,606,deposits,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Depreciation and amortization,109186000.0000,library map,109186000.0000,PREDICTED (predict.py v6)
+BWXT,606,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,Y,EarningsPerShareBasic,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc. (USD per share)",3.5800,library map,3.5800,PREDICTED (predict.py v6)
+BWXT,606,dividends_paid,mapped,us-gaap:PaymentsOfDividendsCommonStock,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Dividends paid to common shareholders,92467000.0000,library map,92467000.0000,PREDICTED (predict.py v6)
+BWXT,606,dividends_per_share,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,+,32767,N,,sec_api,0001486957-26-000007,R9,Dividends declared (usd per share),0.9600,library map,0.9600,PREDICTED (predict.py v6)
+BWXT,606,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Goodwill,500860000.0000,library map,500860000.0000,PREDICTED (predict.py v6)
+BWXT,606,gross_profit,not_presented,,,,,,,,0001486957-26-000007,,,,no face line,,PREDICTED (predict.py v6)
+BWXT,606,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Total before tax,398120000.0000,library map,398120000.0000,PREDICTED (predict.py v6)
+BWXT,606,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Provision for Income Taxes,68259000.0000,library map,68259000.0000,PREDICTED (predict.py v6)
+BWXT,606,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001486957-26-000007,R3,Interest expense,44207000.0000,library map,44207000.0000,PREDICTED (predict.py v6)
+BWXT,606,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Interest income,3893000.0000,library map,3893000.0000,PREDICTED (predict.py v6)
+BWXT,606,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Inventories,46537000.0000,library map,46537000.0000,PREDICTED (predict.py v6)
+BWXT,606,loans_net,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,"Net Income Attributable to BWX Technologies, Inc.",328945000.0000,library map,328945000.0000,PREDICTED (predict.py v6)
+BWXT,606,net_interest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,noninterest_expense,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,noninterest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:GainLossOnSalesOfAssetsAndAssetImpairmentCharges;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:IncomeLossFromEquityMethodInvestments,IS,+,-3,Y,GainLossOnDispositionOfAssets,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,every face line between GP/COR and OI; ties to GP - OI,13867000.0000,PREDICTED (predict.py v6)
+BWXT,606,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Operating Income,404459000.0000,library map,404459000.0000,PREDICTED (predict.py v6)
+BWXT,606,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Other Income (Expense),33975000.0000,library map,33975000.0000,PREDICTED (predict.py v6)
+BWXT,606,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Property, Plant and Equipment, Net",1585136000.0000,library map,1585136000.0000,PREDICTED (predict.py v6)
+BWXT,606,provision_for_credit_losses,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Research and development costs,13867000.0000,library map,13867000.0000,PREDICTED (predict.py v6)
+BWXT,606,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,Revenues,3198425000.0000,library map,3198425000.0000,PREDICTED (predict.py v6)
+BWXT,606,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Stock-based compensation expense,26072000.0000,library map,26072000.0000,PREDICTED (predict.py v6)
+BWXT,606,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001486957-26-000007,R3,"Selling, general and administrative expenses",394416000.0000,library map,394416000.0000,PREDICTED (predict.py v6)
+BWXT,606,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001486957-26-000007,R10,Repurchases of common stock,30000000.0000,library map,30000000.0000,PREDICTED (predict.py v6)
+BWXT,606,shares_outstanding,not_presented,,,,,,,,0001486957-26-000007,,,,no face line,,PREDICTED (predict.py v6)
+BWXT,606,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,"Stockholders' Equity  BWX Technologies, Inc.",1232487000.0000,library map,1232487000.0000,PREDICTED (predict.py v6)
+BWXT,606,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,TOTAL ASSETS,4271495000.0000,library map,4271495000.0000,PREDICTED (predict.py v6)
+BWXT,606,total_debt,component_sum,us-gaap:LongTermDebtCurrent;us-gaap:LongTermDebtNoncurrent,BS,0,-3,N,,sec_api,0001486957-26-000007,R6,Current maturities of long-term debt,0.0000,printed face components (duration sum; total_debt founder sum),0.0000,PREDICTED (predict.py v6)
+BWXT,606,total_interest_income,OUT,,,,,,,,0001486957-26-000007,,,,not a bank,,PREDICTED (predict.py v6)
+BWXT,606,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001486957-26-000007,R6,Total Liabilities,3038483000.0000,library map,3038483000.0000,PREDICTED (predict.py v6)
+BWXT,606,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001486957-26-000007,R3,Basic (in shares),91566280.0000,library map,91566280.0000,PREDICTED (predict.py v6)
+BWXT,606,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001486957-26-000007,R3,Diluted (in shares),91856013.0000,library map,91856013.0000,PREDICTED (predict.py v6)

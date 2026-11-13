@@ -1,0 +1,21 @@
+ticker,data_point,ruling
+NEE,operating_expenses,Dhairya 2026-11-12 opex 5 refined: fuel/purchased power inside the total -> combined
+BLK,operating_expenses,Dhairya 2026-11-12 opex: asset_manager total incl. distribution/servicing and direct fund costs -> combined
+COP,operating_expenses,Dhairya 2026-11-12 opex: production and operating costs are cost of sales -> combined/not opex
+VLO,operating_expenses,Dhairya 2026-11-12 opex: CostOfGoodsAndServicesSoldOverhead is a cost-of-sales component -> not opex
+DHR,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+MDT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+LMT,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+BA,operating_expenses,Dhairya 2026-11-12 opex rule 3: component sum when the face lines tie to GP - OI (R page check pending)
+TMUS,operating_expenses,"Dhairya 2026-11-13: total contains member-only cost of services -> never opex; component_sum ties (0001283699-26-000010: 70,030,000k = printed lines 37,256,000k + COGS members 32,774,000k)"
+ASTS,operating_expenses,"Dhairya 2026-11-13: total contains member-only cost of revenues -> component_sum; tie 0001780312-26-000006: 358,631k = 323,415k + members 35,216k"
+BLCO,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001860742-26-000007: 4,988,000k = 2,938,000k + COGS members 2,050,000k"
+CZR,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001590895-26-000011: 9,628,000k = 3,885,000k + COGS members 5,743,000k"
+HST,operating_expenses,"Dhairya 2026-11-13: component_sum where lines after COGS tie; 0001070750-26-000054: 5,259,000k = 895,000k + COGS members 4,364,000k"
+DE,operating_expenses,"Dhairya 2026-11-13: Financial Services interest sits inside the total -> combined; component-sum key is a key error"
+RTX,cost_of_revenue,"Dhairya 2026-11-13 WYNN ruling: cost of sales printed by ProductOrServiceAxis member -> component_sum; 0000101829-26-000006: Products 53,780,000k + Services 17,034,000k; CostsAndExpenses 79,716,000k = 70,814,000k + R&D/SG&A 8,902,000k exactly"
+TMO,cost_of_revenue,"Dhairya 2026-11-13: tie within rounding (half printed unit x printed components; 3 lines in millions -> 1.5M); 0000097745-26-000018: CostsAndExpenses 36,810M vs SG&A/R&D/restructuring 10,491M + COGS Product 13,405M + Service 12,913M = 36,809M; residual 1M within tolerance -> component_sum"
+TMO,operating_expenses,"Dhairya 2026-11-13: lines after COGS tie within rounding (residual 1M <= 1.5M) -> component_sum"
+CSCO,amortization_of_intangibles,"Dhairya 2026-11-13: undimensioned AmortizationOfIntangibleAssets 916M is the opex location slice; location members CostOfGoodsAndServicesSold 947M + OperatingExpenses 916M = 1,863M = OperatingIncomeLoss-location total (0000858877-26-000132 instance, FY to 2026-07-25) -> component_sum, fsn_xbrl"
+HCA,sga_expense,"Dhairya 2026-11-13 lone-G&A rule; filing check 0001193125-26-044769: GeneralAndAdministrativeExpense 548M is undimensioned and consolidated, but the policy note (R40) says the majority of expenses are costs of revenues and only corporate office costs ""could be classified as general and administrative"" (548/421/353M FY25/24/23): a corporate-office slice, not consolidated SG&A; the face (salaries, supplies, other operating expenses) prints no SG&A -> not_presented"
+PBF,capex,"doc 02 founder 2026-11-04 item 3 (capex includes turnarounds); Dhairya 2026-11-13: PBF key (PP&E only) and the old prediction both wrong; R10 Expenditures for PP&E 705.2M + deferred turnaround costs 379.5M + other assets 77.1M"

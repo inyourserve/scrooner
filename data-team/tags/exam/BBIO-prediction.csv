@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-BBIO,590,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Accounts payable,36228000.0000,library map
-BBIO,590,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Accounts receivable, net",139444000.0000,library map
-BBIO,590,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001743881-26-000009,,,,note-sourced default tag (no face line)
-BBIO,590,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, basic (in dollars per share)",-3.7800,library map
-BBIO,590,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Purchases of property and equipment,1097000.0000,library map
-BBIO,590,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Cash and cash equivalents,570119000.0000,library map
-BBIO,590,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Net cash provided by financing activities,359293000.0000,library map
-BBIO,590,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001743881-26-000009,R9,Net cash provided by (used in) investing activities,-24487000.0000,library map
-BBIO,590,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Cash paid for income taxes,1198000.0000,library map
-BBIO,590,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Cash paid for interest,43670000.0000,library map
-BBIO,590,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Accounts payable,26609000.0000,library map
-BBIO,590,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,"Accounts receivable, net",134722000.0000,library map
-BBIO,590,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Inventories,25307000.0000,library map
-BBIO,590,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001743881-26-000009,R9,Net cash used in operating activities,-445910000.0000,library map
-BBIO,590,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001743881-26-000009,R7,Comprehensive loss attributable to common stockholders of BridgeBio,-724927000.0000,library map
-BBIO,590,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Total cost of revenues,20962000.0000,library map
-BBIO,590,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total current assets,797749000.0000,library map
-BBIO,590,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total current liabilities,287971000.0000,library map
-BBIO,590,deposits,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Depreciation and amortization,5434000.0000,library map
-BBIO,590,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, diluted (in dollars per share)",-3.7800,library map
-BBIO,590,dividends_paid,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,dividends_per_share,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,goodwill,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,gross_profit,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss before income taxes,-732503000.0000,library map
-BBIO,590,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Provision for income taxes,435000.0000,library map
-BBIO,590,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001743881-26-000009,R5,Interest expense,53103000.0000,library map
-BBIO,590,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Interest income,19854000.0000,library map
-BBIO,590,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Inventories,26753000.0000,library map
-BBIO,590,loans_net,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,net_income,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,net_interest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,noninterest_expense,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,noninterest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,printed opex lines (duration sum)
-BBIO,590,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss from operations,-523411000.0000,library map
-BBIO,590,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Other income, net",43058000.0000,library map
-BBIO,590,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Property and equipment, net",5366000.0000,library map
-BBIO,590,provision_for_credit_losses,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,library map
-BBIO,590,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Total revenues, net",502076000.0000,library map
-BBIO,590,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Stock-based compensation,133024000.0000,library map
-BBIO,590,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Selling, general and administrative",531225000.0000,library map
-BBIO,590,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Repurchase of common stock,48276000.0000,library map
-BBIO,590,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001743881-26-000009,R4,"Common stock, outstanding (in shares)",194771957.0000,library map
-BBIO,590,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0001743881-26-000009,R3,Total BridgeBio stockholders deficit,-2086610000.0000,library map
-BBIO,590,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total assets,936025000.0000,library map
-BBIO,590,total_debt,not_presented,,,,,,,,0001743881-26-000009,,,,no face line
-BBIO,590,total_interest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank
-BBIO,590,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total liabilities,3012606000.0000,library map
-BBIO,590,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001743881-26-000009,R5,"Weighted-average shares used in computing net loss per share attributable to common stockholders of BridgeBio, basic (in shares)",191527482.0000,library map
-BBIO,590,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001743881-26-000009,R5,"Weighted-average shares used in computing net loss per share attributable to common stockholders of BridgeBio, diluted (in shares)",191527482.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+BBIO,590,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Accounts payable,36228000.0000,library map,lib.bs.AccountsPayableCurrent,36228000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Accounts receivable, net",139444000.0000,library map,lib.bs.AccountsReceivableNetCurrent,139444000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001743881-26-000009,,,2700000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,2700000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, basic (in dollars per share)",-3.7800,library map,lib.is.EarningsPerShareBasic,-3.7800,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Purchases of property and equipment,1097000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,1097000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Cash and cash equivalents,570119000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,570119000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Net cash provided by financing activities,359293000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,359293000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001743881-26-000009,R9,Net cash provided by (used in) investing activities,-24487000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-24487000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaid,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Cash paid for income taxes,1198000.0000,library map,lib.cf.IncomeTaxesPaid,1198000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Cash paid for interest,43670000.0000,library map,notes.cash_paid_for_interest.prefer.InterestPaidNet;lib.cf.InterestPaidNet,43670000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Accounts payable,26609000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,26609000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,"Accounts receivable, net",134722000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,134722000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Inventories,25307000.0000,library map,lib.cf.IncreaseDecreaseInInventories,25307000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,-,-3,N,,sec_api,0001743881-26-000009,R9,Net cash used in operating activities,-445910000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,-445910000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,-,-3,N,,sec_api,0001743881-26-000009,R7,Comprehensive loss attributable to common stockholders of BridgeBio,-724927000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,-724927000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,cost_of_revenue,mapped,us-gaap:CostOfRevenue,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Total cost of revenues,20962000.0000,library map,lib.is.CostOfRevenue,20962000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total current assets,797749000.0000,library map,lib.bs.AssetsCurrent,797749000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total current liabilities,287971000.0000,library map,lib.bs.LiabilitiesCurrent,287971000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,deposits,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Depreciation and amortization,5434000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,5434000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,-,2,N,,sec_api,0001743881-26-000009,R5,"Net loss per share attributable to common stockholders of BridgeBio, diluted (in dollars per share)",-3.7800,library map,lib.is.EarningsPerShareDiluted,-3.7800,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,dividends_paid,not_presented,,,,,,,,0001743881-26-000009,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,dividends_per_share,not_presented,,,,,,,,0001743881-26-000009,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,goodwill,not_presented,,,,,,,,0001743881-26-000009,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,gross_profit,not_presented,,,,,,,,0001743881-26-000009,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss before income taxes,-732503000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,-732503000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Provision for income taxes,435000.0000,library map,lib.is.IncomeTaxExpenseBenefit,435000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001743881-26-000009,R5,Interest expense,53103000.0000,library map,lib.is.InterestExpenseNonoperating,53103000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,interest_income,mapped,us-gaap:InvestmentIncomeInterest,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Interest income,19854000.0000,library map,lib.is.InvestmentIncomeInterest,19854000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Inventories,26753000.0000,library map,lib.bs.InventoryNet,26753000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,loans_net,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,net_income,mapped,us-gaap:NetIncomeLossAvailableToCommonStockholdersBasic,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Net loss attributable to common stockholders of BridgeBio,-724931000.0000,available-to-common = NI with no NetIncomeLoss and no preferred line (net-income card),is.net_income.no_parent_line;lib.is.NetIncomeLossAvailableToCommonStockholdersBasic,-724931000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,net_interest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,noninterest_expense,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,noninterest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,operating_expenses,component_sum,us-gaap:ResearchAndDevelopmentExpense;us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:RestructuringSettlementAndImpairmentProvisions,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,every face line between GP/COR and OI; ties to GP - OI,is.operating_expenses.procedure,451953000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,-,-3,N,,sec_api,0001743881-26-000009,R5,Loss from operations,-523411000.0000,library map,lib.is.OperatingIncomeLoss,-523411000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Other income, net",43058000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,43058000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,"Property and equipment, net",5366000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,5366000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,provision_for_credit_losses,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,Research and development,451953000.0000,library map,lib.is.ResearchAndDevelopmentExpense,451953000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Total revenues, net",502076000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,502076000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Stock-based compensation,133024000.0000,library map,lib.cf.ShareBasedCompensation,133024000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,sga_expense,mapped,us-gaap:SellingGeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0001743881-26-000009,R5,"Selling, general and administrative",531225000.0000,library map,lib.is.SellingGeneralAndAdministrativeExpense,531225000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0001743881-26-000009,R9,Repurchase of common stock,48276000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,48276000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001743881-26-000009,R4,"Common stock, outstanding (in shares)",194771957.0000,library map,lib.bs.CommonStockSharesOutstanding,194771957.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0001743881-26-000009,R3,Total BridgeBio stockholders deficit,-2086610000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,-2086610000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total assets,936025000.0000,library map,lib.bs.Assets,936025000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,total_debt,not_presented,,,,,,,,0001743881-26-000009,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,total_interest_income,OUT,,,,,,,,0001743881-26-000009,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0001743881-26-000009,R3,Total liabilities,3012606000.0000,library map,lib.bs.Liabilities,3012606000.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0001743881-26-000009,R5,"Weighted-average shares used in computing net loss per share attributable to common stockholders of BridgeBio, basic (in shares)",191527482.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,191527482.0000,PREDICTED (predict.py v7-2e1340384f)
+BBIO,590,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0001743881-26-000009,R5,"Weighted-average shares used in computing net loss per share attributable to common stockholders of BridgeBio, diluted (in shares)",191527482.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,191527482.0000,PREDICTED (predict.py v7-2e1340384f)

@@ -114,3 +114,27 @@ def test_custom_tag_is_read_from_the_fsn_store_with_value_id_lineage(isolated_da
         rows = {r[0]: r[1:] for r in conn.execute("select canonical_concept_id, value, source_fact_ids, source_value_ids, family from analytics.canonical_fact where company_id = %s", (co,))}
         assert rows[opex] == (Decimal("40"), [], [vid], "company_tag_map:fsn_xbrl")  # filing's own XBRL, fsn lineage
         assert rows[x["rev"]][0] == Decimal("100") and rows[x["rev"]][3] == "company_tag_map" and rows[x["rev"]][2] == []
+
+
+@pytest.mark.integration
+def test_coverage_gate_applies_a_full_window_map_and_rolls_back_a_short_one(isolated_database_url, monkeypatch):
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x, co, per = _setup(conn)  # map era from 2015-01-01: covers the data window
+        co2, per2, _, fact2 = x["company"]("0000001002", True)
+        fact2("Revenues", "out", "new", "55")
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2019-01-01','docmap','company_tag_map.docmap@1')", (co2, x["rev"]))
+        conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co2, x["rev"], per2["in"], Decimal("7")))
+        conn.commit()
+        tpl = {c: [("tm_rev", date(2018, 12, 31), "served")] for c in (co, co2)}
+        rep = plan.run(conn, [co, co2], tpl, apply=True, gate=True)
+        assert "error" not in rep[co] and "error" not in rep[co2], rep
+        full, short = rep[co]["coverage"], rep[co2]["coverage"]
+        assert (full["era_short"], full["values_lost"], full["fy01_before"], full["fy01_after"]) == ({}, 0, 1, 1)
+        assert not rep[co].get("gated")
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s", co) == Decimal("110")
+        # the 2018 period ends before the 2019 era: the 2018 value would go, so the company is rolled back
+        assert short["era_short"] == {"tm_rev": "2018-12-31"} and short["fy01_after"] < short["fy01_before"]
+        assert rep[co2]["gated"] is True
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and period_id = %s", co2, per2["in"]) == Decimal("7")
+        assert _one(conn, "select count(*) from analytics.company_value_owner where company_id = %s", co2) == 0

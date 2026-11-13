@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-DVA,619,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Accounts payable,696148000.0000,library map
-DVA,619,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Accounts receivable,2414690000.0000,library map
-DVA,619,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0000927066-26-000012,,,,note-sourced default tag (no face line)
-DVA,619,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000927066-26-000012,R3,Basic net income,10.0600,library map
-DVA,619,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Additions of property and equipment,575864000.0000,library map
-DVA,619,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Cash and cash equivalents,676438000.0000,library map
-DVA,619,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000927066-26-000012,R7,Net cash used in financing activities,-1374780000.0000,library map
-DVA,619,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000927066-26-000012,R7,"Net Cash Provided by (Used in) Investing Activities, Total",-654949000.0000,library map
-DVA,619,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0000927066-26-000012,,,,note-sourced default tag (no face line)
-DVA,619,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0000927066-26-000012,,,,note-sourced default tag (no face line)
-DVA,619,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Accounts payable,128303000.0000,library map
-DVA,619,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Accounts receivable,210632000.0000,library map
-DVA,619,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Inventories,19950000.0000,library map
-DVA,619,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,"Net Cash Provided by (Used in) Operating Activities, Total",1886500000.0000,library map
-DVA,619,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000927066-26-000012,R4,Comprehensive income attributable to DaVita Inc.,934816000.0000,library map
-DVA,619,cost_of_revenue,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total current assets,4058003000.0000,library map
-DVA,619,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total current liabilities,3141634000.0000,library map
-DVA,619,deposits,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Depreciation and amortization,715348000.0000,library map
-DVA,619,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000927066-26-000012,R3,Diluted net income,9.8400,library map
-DVA,619,dividends_paid,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,dividends_per_share,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Goodwill,7545095000.0000,library map
-DVA,619,gross_profit,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Income from continuing operations before income taxes,1346823000.0000,library map
-DVA,619,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Income tax expense,293107000.0000,library map
-DVA,619,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Debt expense,579926000.0000,library map
-DVA,619,interest_income,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Inventories,160627000.0000,library map
-DVA,619,loans_net,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Net income attributable to DaVita Inc.,746803000.0000,library map
-DVA,619,net_interest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,noninterest_expense,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,noninterest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Total operating expenses,11599454000.0000,CostsAndExpenses value check (structural)
-DVA,619,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Operating income,2043615000.0000,library map
-DVA,619,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000927066-26-000012,R3,"Other loss, net",-102688000.0000,library map
-DVA,619,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,"Property and equipment, net of accumulated depreciation",2812966000.0000,library map
-DVA,619,provision_for_credit_losses,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,research_and_development,not_presented,,,,,,,,0000927066-26-000012,,,,no face line
-DVA,619,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Total revenues,13643069000.0000,library map
-DVA,619,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Stock-based compensation expense,139953000.0000,library map
-DVA,619,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,General and administrative,1673630000.0000,lone G&A line
-DVA,619,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Purchase of treasury stock,1308366000.0000,library map
-DVA,619,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000927066-26-000012,R6,"Common stock, shares outstanding (in shares)",68549000.0000,library map
-DVA,619,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0000927066-26-000012,R5,Total DaVita Inc. shareholders' equity (deficit),-651082000.0000,library map
-DVA,619,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,"Assets, Total",17480103000.0000,library map
-DVA,619,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Current portion of long-term debt,109201000.0000,printed face components (duration sum; total_debt founder sum)
-DVA,619,total_interest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank
-DVA,619,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total liabilities,16321665000.0000,library map
-DVA,619,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0000927066-26-000012,R3,Basic shares (in shares),74227000.0000,library map
-DVA,619,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0000927066-26-000012,R3,Diluted shares (in shares),75885000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+DVA,619,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Accounts payable,696148000.0000,library map,lib.bs.AccountsPayableCurrent,696148000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Accounts receivable,2414690000.0000,library map,lib.bs.AccountsReceivableNetCurrent,2414690000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0000927066-26-000012,,,7096000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,7096000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0000927066-26-000012,R3,Basic net income,10.0600,library map,lib.is.EarningsPerShareBasic,10.0600,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Additions of property and equipment,575864000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,575864000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Cash and cash equivalents,676438000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,676438000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0000927066-26-000012,R7,Net cash used in financing activities,-1374780000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-1374780000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0000927066-26-000012,R7,"Net Cash Provided by (Used in) Investing Activities, Total",-654949000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-654949000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0000927066-26-000012,,,176688000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_income_taxes.fact.IncomeTaxesPaidNet,176688000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,+,,,,sec_api,0000927066-26-000012,,,515497000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_interest.fact.InterestPaidNet,515497000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Accounts payable,128303000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,128303000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Accounts receivable,210632000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,210632000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cf_inventory_change,mapped,us-gaap:IncreaseDecreaseInInventories,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Inventories,19950000.0000,library map,lib.cf.IncreaseDecreaseInInventories,19950000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,"Net Cash Provided by (Used in) Operating Activities, Total",1886500000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,1886500000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-3,N,,sec_api,0000927066-26-000012,R4,Comprehensive income attributable to DaVita Inc.,934816000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,934816000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,cost_of_revenue,not_presented,,,,,,,,0000927066-26-000012,,,,no face line,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total current assets,4058003000.0000,library map,lib.bs.AssetsCurrent,4058003000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total current liabilities,3141634000.0000,library map,lib.bs.LiabilitiesCurrent,3141634000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,deposits,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,depreciation_and_amortization,mapped,us-gaap:DepreciationAmortizationAndAccretionNet,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Depreciation and amortization,715348000.0000,library map,lib.cf.DepreciationAmortizationAndAccretionNet,715348000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0000927066-26-000012,R3,Diluted net income,9.8400,library map,lib.is.EarningsPerShareDiluted,9.8400,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,dividends_paid,not_presented,,,,,,,,0000927066-26-000012,,,,no face line,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,dividends_per_share,not_presented,,,,,,,,0000927066-26-000012,,,,no face line and no note fact,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,goodwill,mapped,us-gaap:Goodwill,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Goodwill,7545095000.0000,library map,lib.bs.Goodwill,7545095000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,gross_profit,not_presented,,,,,,,,0000927066-26-000012,,,,no face line,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Income from continuing operations before income taxes,1346823000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,1346823000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Income tax expense,293107000.0000,library map,lib.is.IncomeTaxExpenseBenefit,293107000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,interest_expense,mapped,us-gaap:InterestAndDebtExpense,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Debt expense,579926000.0000,library map,lib.is.InterestAndDebtExpense,579926000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,interest_income,not_presented,,,,,,,,0000927066-26-000012,,,,no face line and no note fact,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,inventory,mapped,us-gaap:InventoryNet,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Inventories,160627000.0000,library map,lib.bs.InventoryNet,160627000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,loans_net,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Net income attributable to DaVita Inc.,746803000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,746803000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,net_interest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,noninterest_expense,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,noninterest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,operating_expenses,mapped,us-gaap:CostsAndExpenses,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Total operating expenses,11599454000.0000,one-step total with no cost-of-sales-type line (ruling 5 refined: GP = revenue),is.operating_expenses.procedure,11599454000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Operating income,2043615000.0000,library map,lib.is.OperatingIncomeLoss,2043615000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0000927066-26-000012,R3,"Other loss, net",-102688000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,-102688000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,"Property and equipment, net of accumulated depreciation",2812966000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,2812966000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,provision_for_credit_losses,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,research_and_development,not_presented,,,,,,,,0000927066-26-000012,,,,no face line,,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,revenue,mapped,us-gaap:Revenues,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,Total revenues,13643069000.0000,library map,lib.is.Revenues,13643069000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Stock-based compensation expense,139953000.0000,library map,lib.cf.ShareBasedCompensation,139953000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,sga_expense,mapped,us-gaap:GeneralAndAdministrativeExpense,IS,+,-3,N,,sec_api,0000927066-26-000012,R3,General and administrative,1673630000.0000,lone G&A line,is.sga_expense.lone_ga;lib.is.GeneralAndAdministrativeExpense,1673630000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-3,N,,sec_api,0000927066-26-000012,R7,Purchase of treasury stock,1308366000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,1308366000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0000927066-26-000012,R6,"Common stock, shares outstanding (in shares)",68549000.0000,library map,lib.bs.CommonStockSharesOutstanding,68549000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,-,-3,N,,sec_api,0000927066-26-000012,R5,Total DaVita Inc. shareholders' equity (deficit),-651082000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,-651082000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,"Assets, Total",17480103000.0000,library map,lib.bs.Assets,17480103000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Current portion of long-term debt,109201000.0000,printed face components (duration sum; total_debt founder sum),lib.bs.LongTermDebtAndCapitalLeaseObligationsCurrent;lib.bs.LongTermDebtAndCapitalLeaseObligations,109201000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,total_interest_income,OUT,,,,,,,,0000927066-26-000012,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-3,N,,sec_api,0000927066-26-000012,R5,Total liabilities,16321665000.0000,library map,lib.bs.Liabilities,16321665000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,0,N,,sec_api,0000927066-26-000012,R3,Basic shares (in shares),74227000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,74227000.0000,PREDICTED (predict.py v7-8794f40b82)
+DVA,619,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,0,N,,sec_api,0000927066-26-000012,R3,Diluted shares (in shares),75885000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,75885000.0000,PREDICTED (predict.py v7-8794f40b82)

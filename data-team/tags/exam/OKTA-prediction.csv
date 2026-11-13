@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-OKTA,320,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Accounts payable,12000000.0000,library map
-OKTA,320,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Accounts receivable, net",687000000.0000,library map
-OKTA,320,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001660134-26-000020,,,,note-sourced default tag (no face line)
-OKTA,320,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001660134-26-000020,R5,"Net income (loss) per share, basic (in dollars per share)",1.3300,library map
-OKTA,320,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Purchases of property and equipment,9000000.0000,library map
-OKTA,320,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Cash and cash equivalents,858000000.0000,library map
-OKTA,320,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001660134-26-000020,R8,Net cash used in financing activities,-720000000.0000,library map
-OKTA,320,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Net cash provided by (used in) investing activities,271000000.0000,library map
-OKTA,320,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001660134-26-000020,,,,note-sourced default tag (no face line)
-OKTA,320,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001660134-26-000020,,,,note-sourced default tag (no face line)
-OKTA,320,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001660134-26-000020,R8,Accounts payable,-2000000.0000,library map
-OKTA,320,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Accounts receivable,70000000.0000,library map
-OKTA,320,cf_inventory_change,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Net cash provided by operating activities,884000000.0000,library map
-OKTA,320,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001660134-26-000020,R6,Comprehensive income (loss),260000000.0000,library map
-OKTA,320,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total cost of revenue,661000000.0000,library map
-OKTA,320,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total current assets,3644000000.0000,library map
-OKTA,320,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total current liabilities,2554000000.0000,library map
-OKTA,320,deposits,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,depreciation_and_amortization,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001660134-26-000020,R5,"Net income (loss) per share, diluted (in dollars per share)",1.3100,library map
-OKTA,320,dividends_paid,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,dividends_per_share,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Goodwill,5487000000.0000,library map
-OKTA,320,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Gross profit,2258000000.0000,library map
-OKTA,320,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Income (loss) before provision for income taxes,255000000.0000,library map
-OKTA,320,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Provision for income taxes,20000000.0000,library map
-OKTA,320,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001660134-26-000020,R5,Interest expense,4000000.0000,library map
-OKTA,320,interest_income,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,inventory,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,loans_net,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Net income (loss),235000000.0000,library map
-OKTA,320,net_interest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,noninterest_expense,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,noninterest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total operating expenses,2109000000.0000,printed opex total tag
-OKTA,320,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Operating income (loss),149000000.0000,library map
-OKTA,320,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,"Interest income and other, net",110000000.0000,combined line (library or label demote)
-OKTA,320,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Property and equipment, net",38000000.0000,library map
-OKTA,320,provision_for_credit_losses,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Research and development,639000000.0000,library map
-OKTA,320,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total revenue,2919000000.0000,library map
-OKTA,320,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Stock-based compensation,544000000.0000,library map
-OKTA,320,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Sales and marketing,1018000000.0000,printed face components (duration sum; total_debt founder sum)
-OKTA,320,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Repurchases of common stock,73000000.0000,library map
-OKTA,320,shares_outstanding,not_presented,,,,,,,,0001660134-26-000020,,,,no face line
-OKTA,320,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total stockholders equity,6999000000.0000,library map
-OKTA,320,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total assets,9710000000.0000,library map
-OKTA,320,total_debt,combined,us-gaap:ConvertibleDebtCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Convertible senior notes, net",350000000.0000,combined line (library or label demote)
-OKTA,320,total_interest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank
-OKTA,320,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total liabilities,2711000000.0000,library map
-OKTA,320,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001660134-26-000020,R5,"Weighted-average shares used to compute net income (loss) per share, basic (in shares)",175882000.0000,library map
-OKTA,320,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001660134-26-000020,R5,"Weighted-average shares used to compute net income (loss) per share, diluted (in shares)",179290000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+OKTA,320,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Accounts payable,12000000.0000,library map,lib.bs.AccountsPayableCurrent,12000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Accounts receivable, net",687000000.0000,library map,lib.bs.AccountsReceivableNetCurrent,687000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001660134-26-000020,,,83000000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,83000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001660134-26-000020,R5,"Net income (loss) per share, basic (in dollars per share)",1.3300,library map,lib.is.EarningsPerShareBasic,1.3300,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Purchases of property and equipment,9000000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,9000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Cash and cash equivalents,858000000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,858000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-6,N,,sec_api,0001660134-26-000020,R8,Net cash used in financing activities,-720000000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-720000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Net cash provided by (used in) investing activities,271000000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,271000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001660134-26-000020,,,10000000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_income_taxes.fact.IncomeTaxesPaidNet,10000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cash_paid_for_interest,not_presented,,,,,,,,0001660134-26-000020,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,-,-6,N,,sec_api,0001660134-26-000020,R8,Accounts payable,-2000000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,-2000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Accounts receivable,70000000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,70000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cf_inventory_change,not_presented,,,,,,,,0001660134-26-000020,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Net cash provided by operating activities,884000000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,884000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,comprehensive_income,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,+,-6,N,,sec_api,0001660134-26-000020,R6,Comprehensive income (loss),260000000.0000,library map,is.comprehensive_income.prefer.ComprehensiveIncomeNetOfTax;lib.ci.ComprehensiveIncomeNetOfTax,260000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,cost_of_revenue,mapped,us-gaap:CostOfGoodsAndServicesSold,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total cost of revenue,661000000.0000,library map,lib.is.CostOfGoodsAndServicesSold,661000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total current assets,3644000000.0000,library map,lib.bs.AssetsCurrent,3644000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total current liabilities,2554000000.0000,library map,lib.bs.LiabilitiesCurrent,2554000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,deposits,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,depreciation_and_amortization,not_presented,,,,,,,,0001660134-26-000020,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001660134-26-000020,R5,"Net income (loss) per share, diluted (in dollars per share)",1.3100,library map,lib.is.EarningsPerShareDiluted,1.3100,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,dividends_paid,not_presented,,,,,,,,0001660134-26-000020,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,dividends_per_share,not_presented,,,,,,,,0001660134-26-000020,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,goodwill,mapped,us-gaap:Goodwill,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Goodwill,5487000000.0000,library map,lib.bs.Goodwill,5487000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,gross_profit,mapped,us-gaap:GrossProfit,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Gross profit,2258000000.0000,library map,lib.is.GrossProfit,2258000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Income (loss) before provision for income taxes,255000000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,255000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Provision for income taxes,20000000.0000,library map,lib.is.IncomeTaxExpenseBenefit,20000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-6,Y,InterestExpense,sec_api,0001660134-26-000020,R5,Interest expense,4000000.0000,library map,lib.is.InterestExpenseNonoperating,4000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,interest_income,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,"Interest income and other, net",110000000.0000,interest income only inside a net/other face line between OI and pretax,notes.interest_income.inside_net_line,110000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,inventory,not_presented,,,,,,,,0001660134-26-000020,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,loans_net,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Net income (loss),235000000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,235000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,net_interest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,noninterest_expense,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,noninterest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,operating_expenses,mapped,us-gaap:OperatingExpenses,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total operating expenses,2109000000.0000,printed opex total excluding cost of revenue (ties to GP - OI),is.operating_expenses.procedure;lib.is.OperatingExpenses,2109000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Operating income (loss),149000000.0000,library map,lib.is.OperatingIncomeLoss,149000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,other_income_expense_net,combined,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,"Interest income and other, net",110000000.0000,combined line (library or label demote),lib.is.OtherNonoperatingIncomeExpense;is.other_income_expense_net.label_demote,110000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Property and equipment, net",38000000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,38000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,provision_for_credit_losses,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,research_and_development,mapped,us-gaap:ResearchAndDevelopmentExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Research and development,639000000.0000,library map,lib.is.ResearchAndDevelopmentExpense,639000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Total revenue,2919000000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,2919000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Stock-based compensation,544000000.0000,library map,lib.cf.ShareBasedCompensation,544000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,sga_expense,component_sum,us-gaap:SellingAndMarketingExpense;us-gaap:GeneralAndAdministrativeExpense,IS,+,-6,N,,sec_api,0001660134-26-000020,R5,Sales and marketing,1018000000.0000,printed face components (duration sum; total_debt founder sum),lib.is.SellingAndMarketingExpense;lib.is.GeneralAndAdministrativeExpense,1018000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,share_buybacks,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,+,-6,N,,sec_api,0001660134-26-000020,R8,Repurchases of common stock,73000000.0000,library map,lib.cf.PaymentsForRepurchaseOfCommonStock,73000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,shares_outstanding,not_presented,,,,,,,,0001660134-26-000020,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total stockholders equity,6999000000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,6999000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,total_assets,mapped,us-gaap:Assets,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total assets,9710000000.0000,library map,lib.bs.Assets,9710000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,total_debt,combined,us-gaap:ConvertibleDebtCurrent,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,"Convertible senior notes, net",350000000.0000,combined line (library or label demote),nd.ConvertibleDebtCurrent,350000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,total_interest_income,OUT,,,,,,,,0001660134-26-000020,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,total_liabilities,mapped,us-gaap:Liabilities,BS,+,-6,N,,sec_api,0001660134-26-000020,R3,Total liabilities,2711000000.0000,library map,lib.bs.Liabilities,2711000000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001660134-26-000020,R5,"Weighted-average shares used to compute net income (loss) per share, basic (in shares)",175882000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,175882000.0000,PREDICTED (predict.py v7-2e1340384f)
+OKTA,320,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001660134-26-000020,R5,"Weighted-average shares used to compute net income (loss) per share, diluted (in shares)",179290000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,179290000.0000,PREDICTED (predict.py v7-2e1340384f)

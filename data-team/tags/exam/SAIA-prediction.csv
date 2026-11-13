@@ -1,54 +1,54 @@
-ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule
-SAIA,746,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Accounts payable,107424000.0000,library map
-SAIA,746,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,"Accounts receivable, less allowances of $5,094 in 2025 and $4,224 in 2024",332206000.0000,library map
-SAIA,746,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,,,,,sec_api,0001193125-26-067030,,,,note-sourced default tag (no face line)
-SAIA,746,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-067030,R4,Basic Earnings Per Share,9.5400,library map
-SAIA,746,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Acquisition of property and equipment,567639000.0000,library map
-SAIA,746,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Cash and cash equivalents,19720000.0000,library map
-SAIA,746,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-067030,R6,Net cash (used in) provided by financing activities,-42204000.0000,library map
-SAIA,746,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-067030,R6,Net cash used in investing activities,-552522000.0000,library map
-SAIA,746,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,,,,,sec_api,0001193125-26-067030,,,,note-sourced default tag (no face line)
-SAIA,746,cash_paid_for_interest,mapped,us-gaap:InterestPaidNet,NOTE,,,,,sec_api,0001193125-26-067030,,,,note-sourced default tag (no face line)
-SAIA,746,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Accounts payable,6692000.0000,library map
-SAIA,746,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Accounts receivable,16991000.0000,library map
-SAIA,746,cf_inventory_change,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Net cash provided by operating activities,594973000.0000,library map
-SAIA,746,comprehensive_income,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,cost_of_revenue,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total current assets,434556000.0000,library map
-SAIA,746,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total current liabilities,265384000.0000,library map
-SAIA,746,deposits,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Depreciation and amortization,248573000.0000,library map
-SAIA,746,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-067030,R4,Diluted Earnings Per Share,9.5200,library map
-SAIA,746,dividends_paid,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,dividends_per_share,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,"Goodwill and Identifiable Intangibles, net",15589000.0000,combined line (library or label demote)
-SAIA,746,gross_profit,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Income Before Income Taxes,337389000.0000,library map
-SAIA,746,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Income Tax Expense,82353000.0000,library map
-SAIA,746,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-067030,R4,Interest expense,16444000.0000,library map
-SAIA,746,interest_income,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,inventory,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,loans_net,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Net Income,255036000.0000,library map
-SAIA,746,net_interest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,noninterest_expense,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,noninterest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,operating_expenses,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Operating Income,352200000.0000,library map
-SAIA,746,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,"Other, net",1482000.0000,library map
-SAIA,746,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Net property and equipment,2844351000.0000,library map
-SAIA,746,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,research_and_development,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Operating Revenue,3234286000.0000,library map
-SAIA,746,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Stock-based compensation,17397000.0000,library map
-SAIA,746,sga_expense,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,share_buybacks,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-067030,R3,"Common stock, shares outstanding",26645402.0000,library map
-SAIA,746,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total stockholders equity,2577699000.0000,library map
-SAIA,746,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total assets,3482681000.0000,library map
-SAIA,746,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Current portion of long-term debt,980000.0000,printed face components (duration sum; total_debt founder sum)
-SAIA,746,total_interest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank
-SAIA,746,total_liabilities,not_presented,,,,,,,,0001193125-26-067030,,,,no face line
-SAIA,746,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Weighted average common shares outstanding  basic,26738000.0000,library map
-SAIA,746,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Weighted average common shares outstanding  diluted,26786000.0000,library map
+ticker,rank,data_point,status,tags,stmt,sign,scale,era_break,prior_tag,value_source,acc,r_page,label,fy0_value,rule,rule_ids,fy0_api,evidence_class
+SAIA,746,accounts_payable,mapped,us-gaap:AccountsPayableCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Accounts payable,107424000.0000,library map,lib.bs.AccountsPayableCurrent,107424000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,accounts_receivable,mapped,us-gaap:AccountsReceivableNetCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,"Accounts receivable, less allowances of $5,094 in 2025 and $4,224 in 2024",332206000.0000,library map,lib.bs.AccountsReceivableNetCurrent,332206000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,amortization_of_intangibles,mapped,us-gaap:AmortizationOfIntangibleAssets,NOTE,+,,,,sec_api,0001193125-26-067030,,,900000.0000,note fact present in the filing (FSN value),notes.amortization_of_intangibles.fact.AmortizationOfIntangibleAssets,900000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,basic_eps,mapped,us-gaap:EarningsPerShareBasic,IS,+,2,N,,sec_api,0001193125-26-067030,R4,Basic Earnings Per Share,9.5400,library map,lib.is.EarningsPerShareBasic,9.5400,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,capex,mapped,us-gaap:PaymentsToAcquirePropertyPlantAndEquipment,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Acquisition of property and equipment,567639000.0000,library map,lib.cf.PaymentsToAcquirePropertyPlantAndEquipment,567639000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cash_and_equivalents,mapped,us-gaap:CashAndCashEquivalentsAtCarryingValue,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Cash and cash equivalents,19720000.0000,library map,lib.bs.CashAndCashEquivalentsAtCarryingValue,19720000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cash_flow_financing,mapped,us-gaap:NetCashProvidedByUsedInFinancingActivities,CF,-,-3,N,,sec_api,0001193125-26-067030,R6,Net cash (used in) provided by financing activities,-42204000.0000,library map,lib.cf.NetCashProvidedByUsedInFinancingActivities,-42204000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cash_flow_investing,mapped,us-gaap:NetCashProvidedByUsedInInvestingActivities,CF,-,-3,N,,sec_api,0001193125-26-067030,R6,Net cash used in investing activities,-552522000.0000,library map,lib.cf.NetCashProvidedByUsedInInvestingActivities,-552522000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cash_paid_for_income_taxes,mapped,us-gaap:IncomeTaxesPaidNet,NOTE,+,,,,sec_api,0001193125-26-067030,,,6100000.0000,note fact present in the filing (FSN value),notes.cash_paid_for_income_taxes.fact.IncomeTaxesPaidNet,6100000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cash_paid_for_interest,not_presented,,,,,,,,0001193125-26-067030,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cf_ap_change,mapped,us-gaap:IncreaseDecreaseInAccountsPayable,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Accounts payable,6692000.0000,library map,lib.cf.IncreaseDecreaseInAccountsPayable,6692000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cf_ar_change,mapped,us-gaap:IncreaseDecreaseInAccountsReceivable,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Accounts receivable,16991000.0000,library map,lib.cf.IncreaseDecreaseInAccountsReceivable,16991000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cf_inventory_change,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cfo,mapped,us-gaap:NetCashProvidedByUsedInOperatingActivities,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Net cash provided by operating activities,594973000.0000,library map,lib.cf.NetCashProvidedByUsedInOperatingActivities,594973000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,comprehensive_income,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,cost_of_revenue,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,current_assets,mapped,us-gaap:AssetsCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total current assets,434556000.0000,library map,lib.bs.AssetsCurrent,434556000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,current_liabilities,mapped,us-gaap:LiabilitiesCurrent,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total current liabilities,265384000.0000,library map,lib.bs.LiabilitiesCurrent,265384000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,deposits,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.deposits.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,depreciation_and_amortization,mapped,us-gaap:DepreciationDepletionAndAmortization,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Depreciation and amortization,248573000.0000,library map,lib.cf.DepreciationDepletionAndAmortization,248573000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,diluted_eps,mapped,us-gaap:EarningsPerShareDiluted,IS,+,2,N,,sec_api,0001193125-26-067030,R4,Diluted Earnings Per Share,9.5200,library map,lib.is.EarningsPerShareDiluted,9.5200,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,dividends_paid,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,dividends_per_share,not_presented,,,,,,,,0001193125-26-067030,,,,no face line and no note fact,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,goodwill,combined,us-gaap:IntangibleAssetsNetIncludingGoodwill,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,"Goodwill and Identifiable Intangibles, net",15589000.0000,combined line (library or label demote),lib.bs.IntangibleAssetsNetIncludingGoodwill;nd.IntangibleAssetsNetIncludingGoodwill,15589000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,gross_profit,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,income_before_tax,mapped,us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Income Before Income Taxes,337389000.0000,library map,lib.is.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,337389000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,income_tax_expense,mapped,us-gaap:IncomeTaxExpenseBenefit,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Income Tax Expense,82353000.0000,library map,lib.is.IncomeTaxExpenseBenefit,82353000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,interest_expense,mapped,us-gaap:InterestExpenseNonoperating,IS,+,-3,Y,InterestExpense,sec_api,0001193125-26-067030,R4,Interest expense,16444000.0000,library map,lib.is.InterestExpenseNonoperating,16444000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,interest_income,component_in_note,us-gaap:InterestIncomeOther,NOTE,+,,,,sec_api,0001193125-26-067030,,,151000.0000,note fact present in the filing (FSN value),notes.interest_income.fact.InterestIncomeOther,151000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,inventory,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,loans_net,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.loans_net.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Net Income,255036000.0000,library map,is.net_income.prefer.NetIncomeLoss;lib.is.NetIncomeLoss,255036000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,net_interest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.net_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,noninterest_expense,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.noninterest_expense.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,noninterest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.noninterest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,operating_expenses,combined,us-gaap:OperatingCostsAndExpenses,IS,+,-3,Y,CostsAndExpenses,sec_api,0001193125-26-067030,R4,Total operating expenses,2882086000.0000,one-step total contains a cost-of-sales-type line (ruling 5 refined),is.operating_expenses.procedure,2882086000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Operating Income,352200000.0000,library map,lib.is.OperatingIncomeLoss,352200000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,other_income_expense_net,mapped,us-gaap:OtherNonoperatingIncomeExpense,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,"Other, net",1482000.0000,library map,lib.is.OtherNonoperatingIncomeExpense,1482000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Net property and equipment,2844351000.0000,library map,lib.bs.PropertyPlantAndEquipmentNet,2844351000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,provision_for_credit_losses,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.provision_for_credit_losses.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,research_and_development,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,revenue,mapped,us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Operating Revenue,3234286000.0000,library map,lib.is.RevenueFromContractWithCustomerExcludingAssessedTax,3234286000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,sbc,mapped,us-gaap:ShareBasedCompensation,CF,+,-3,N,,sec_api,0001193125-26-067030,R6,Stock-based compensation,17397000.0000,library map,lib.cf.ShareBasedCompensation,17397000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,sga_expense,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,share_buybacks,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,shares_outstanding,mapped,us-gaap:CommonStockSharesOutstanding,BS,+,32767,N,,sec_api,0001193125-26-067030,R3,"Common stock, shares outstanding",26645402.0000,library map,lib.bs.CommonStockSharesOutstanding,26645402.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,stockholders_equity,mapped,us-gaap:StockholdersEquity,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total stockholders equity,2577699000.0000,library map,bs.stockholders_equity.prefer.StockholdersEquity;lib.bs.StockholdersEquity,2577699000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,total_assets,mapped,us-gaap:Assets,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Total assets,3482681000.0000,library map,lib.bs.Assets,3482681000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,total_debt,component_sum,us-gaap:LongTermDebtAndCapitalLeaseObligationsCurrent;us-gaap:LongTermDebtAndCapitalLeaseObligations,BS,+,-3,N,,sec_api,0001193125-26-067030,R2,Current portion of long-term debt,980000.0000,printed face components (duration sum; total_debt founder sum),bs.total_debt.finance_leases;lib.bs.LongTermDebtAndCapitalLeaseObligationsCurrent;lib.bs.LongTermDebtAndCapitalLeaseObligations,980000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,total_interest_income,OUT,,,,,,,,0001193125-26-067030,,,,not a bank,bank.total_interest_income.tags,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,total_liabilities,not_presented,,,,,,,,0001193125-26-067030,,,,no face line,,,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,weighted_basic_shares,mapped,us-gaap:WeightedAverageNumberOfSharesOutstandingBasic,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Weighted average common shares outstanding  basic,26738000.0000,library map,lib.is.WeightedAverageNumberOfSharesOutstandingBasic,26738000.0000,PREDICTED (predict.py v7-2e1340384f)
+SAIA,746,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,IS,+,-3,N,,sec_api,0001193125-26-067030,R4,Weighted average common shares outstanding  diluted,26786000.0000,library map,lib.is.WeightedAverageNumberOfDilutedSharesOutstanding,26786000.0000,PREDICTED (predict.py v7-2e1340384f)

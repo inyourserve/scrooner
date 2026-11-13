@@ -53,7 +53,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2765,FANG,CF,us-gaap:PaymentsToExploreAndDevelopOilAndGasProperties,map,capex,,,51,"FILING-CHECKED 0001539838-26-000010 R6: 'Additions to oil and natural gas properties' (3,523) on PaymentsToExploreAndDevelopOilAndGasProperties; 'Property acquisitions' (5,938) excluded (rule 31)"
 2765,FANG,CF,c:DepreciationDepletionandAmortizationExcludingAmortizationofFinancingCosts,map,d_and_a,1612,2603,33,CF DD&A (custom)
 2765,FANG,CF,c:DepreciationDepletionAndAmortizationNetOfDepreciationReportedInOilAndNaturalGasServices,map,d_and_a,1312,1603,10,CF DD&A (custom)
-2765,FANG,CF,c:DepreciationDepletionAndAmortizationExcludingAmortizationOfFinancingCosts,map,d_and_a,2112,2606,6,"CF 'depreciation, depletion, amortization and accretion' (custom)"
+2765,FANG,CF,c:DepreciationDepletionAndAmortizationExcludingAmortizationOfFinancingCosts,combined,d_and_a,2112,2606,6,"Dhairya ruling 2026-11-12: D&A that includes accretion is combined. Was: CF 'depreciation, depletion, amortization and accretion' (custom)"
 2765,FANG,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1612,2606,39,"FILING-CHECKED 0001539838-26-000010 R3: face 'Interest expense, net' (244): net of interest income"
 2765,FANG,CF,c:Repurchasedsharesfortaxwithholding,exclude,share_buybacks,1812,1906,3,tax withholding
 2765,FANG,CF,us-gaap:ProceedsFromRepurchaseOfEquity,review,share_buybacks,1906,1906,1,"'repurchased as part of share buyback' under a proceeds tag: label-only, filing-check needed"
@@ -165,7 +165,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 2432,ROK,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1909,2006,4,Tag Expert: combined
 2432,ROK,IS,,not_presented,operating_income,,,51,no operating income line
 2432,ROK,BS,,not_presented,total_liabilities,,,51,no total liabilities line
-5779,KDP,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1903,2606,24,FILING-CHECKED 0001418135-20-000007 R2: face 'Interest expense' 157 on a net tag with no interest-income line; serve the face amount (rule 12 sign column). 'Interest expense - related party' is its own line: add it where valued (rule 13)
+5779,KDP,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1903,2606,24,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: FILING-CHECKED 0001418135-20-000007 R2: face 'Interest expense' 157 on a net tag with no interest-income line; serve the face amount (rule 12 sign column). 'Interest expense - related party' is its own line: add it where valued (rule 13)"
 5779,KDP,IS,us-gaap:InterestExpenseRelatedParty,component,interest_expense,1903,1912,4,second interest component (related party)
 5779,KDP,CF,us-gaap:PaymentsForRepurchaseOfEquity,review,share_buybacks,1812,1812,1,one filing: check the label
 5069,WDAY,CF,us-gaap:PaymentsToAcquireOtherProductiveAssets,map,capex,2001,2401,17,"'capital expenditures, excluding owned real estate projects' (the owned-real-estate line beside it is a capex component: check and add)"
@@ -286,8 +286,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1095,SYY,IS,us-gaap:CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,map,cost_of_revenue,1312,1812,21,face 'cost of sales' line above gross profit
 1095,SYY,CF,c:DepreciationandAmortizationExcludingAmortizationofFinancingCosts,map,d_and_a,1506,2506,38,custom CF 'depreciation and amortization' (financing-cost amortization on its own line)
 1095,SYY,CF,c:DepreciationAndAmortizationExcludingAmortizationOfFinancingCosts,map,d_and_a,2409,2606,7,same line with a respelled custom tag
-1095,SYY,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1312,2406,43,"sign -1. FILING-CHECKED 0000096021-24-000128 R5: face 'Interest expense' 607, value -607, no separate interest-income line (rule 12)"
-1095,SYY,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,map,interest_expense,2409,2606,8,sign -1; same face 'Interest expense' row respelled (rule 12; R check on the 2024 10-K above)
+1095,SYY,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1312,2406,43,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: sign -1. FILING-CHECKED 0000096021-24-000128 R5: face 'Interest expense' 607, value -607, no separate interest-income line (rule 12)"
+1095,SYY,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2409,2606,8,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: sign -1; same face 'Interest expense' row respelled (rule 12; R check on the 2024 10-K above)"
 1095,SYY,BS,,not_presented,total_liabilities,,,51,no total liabilities line
 3596,ILMN,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,1903,2606,30,restricted-cash total on the cash line (rule 9)
 3596,ILMN,CF,,not_presented,dividends_paid,,,51,no dividends

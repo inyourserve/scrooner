@@ -206,6 +206,36 @@ def errors(
         typer.echo(f"  {row}")
 
 
+@app.command("tagmap-dedupe")
+def tagmap_dedupe_cmd(
+    company_ids: str = typer.Option(..., help="Comma-separated core.company ids."),
+    apply: bool = typer.Option(False, help="Commit (default: dry run, rolled back)."),
+) -> None:
+    """Periodic-only guard (proxy, 8-K and prospectus facts are never authoritative), then one authoritative copy
+    per group that holds several (tag-map authority rules). One transaction; prints duplicate groups before/after."""
+    from scrooner_pipeline.normalizer.conflict_latest_filed import (
+        resolve_duplicate_authoritative,
+    )
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    dup = (
+        "select count(*) from (select 1 from core.fact where company_id = any(%s) and is_authoritative "
+        "group by company_id, concept_id, unit_id, period_id having count(*) > 1) d"
+    )
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '15min'")
+        before = conn.execute(dup, (ids,)).fetchone()[0]
+        stats = resolve_duplicate_authoritative(conn, ids)
+        after = conn.execute(dup, (ids,)).fetchone()[0]
+        if apply:
+            conn.commit()
+        else:
+            conn.rollback()
+    typer.echo(
+        f"tagmap-dedupe [{'apply' if apply else 'dry run'}]: duplicate groups {before} -> {after} {stats}"
+    )
+
+
 @app.command("tagmap-authority")
 def tagmap_authority_cmd(
     company_ids: str = typer.Option(

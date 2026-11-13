@@ -34,7 +34,7 @@ POWL,940,net_income,mapped,us-gaap:NetIncomeLoss,IS,+,-3,N,,sec_api,0000080420-2
 POWL,940,net_interest_income,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
 POWL,940,noninterest_expense,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
 POWL,940,noninterest_income,OUT,,,,,,,,0000080420-25-000152,,,,not a bank
-POWL,940,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,"Selling, general and administrative expenses",95401000.0000,printed opex lines (duration sum)
+POWL,940,operating_expenses,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:AmortizationOfIntangibleAssets,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,"Selling, general and administrative expenses",95401000.0000,every face line between GP/COR and OI; ties to GP - OI
 POWL,940,operating_income,mapped,us-gaap:OperatingIncomeLoss,IS,+,-3,N,,sec_api,0000080420-25-000152,R5,Operating income,217860000.0000,library map
 POWL,940,other_income_expense_net,not_presented,,,,,,,,0000080420-25-000152,,,,no face line
 POWL,940,ppe_net,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,+,-3,N,,sec_api,0000080420-25-000152,R3,"Property, plant and equipment, net",111049000.0000,library map

@@ -34,7 +34,7 @@ HR,932,net_income,mapped,us-gaap:NetIncomeLoss,IS,-,-3,N,,sec_api,0001360604-26-
 HR,932,net_interest_income,OUT,,,,,,,,0001360604-26-000018,,,,not a bank
 HR,932,noninterest_expense,OUT,,,,,,,,0001360604-26-000018,,,,not a bank
 HR,932,noninterest_income,OUT,,,,,,,,0001360604-26-000018,,,,not a bank
-HR,932,operating_expenses,not_presented,,,,,,,,0001360604-26-000018,,,,no face line
+HR,932,operating_expenses,not_presented,,,,,,,,0001360604-26-000018,,,,no opex total and no GP/COR anchor
 HR,932,operating_income,not_presented,,,,,,,,0001360604-26-000018,,,,no face line
 HR,932,other_income_expense_net,combined,us-gaap:NonoperatingIncomeExpense,IS,-,-3,N,,sec_api,0001360604-26-000018,R5,Total other income (expense),-342392000.0000,combined line (library or label demote)
 HR,932,ppe_net,not_presented,,,,,,,,0001360604-26-000018,,,,no face line

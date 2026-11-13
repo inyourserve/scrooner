@@ -1,0 +1,537 @@
+rule_id,kind,class,tag,stmt,filers_printing_on_stmt,class2,data_point,decision
+template.deposits,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",deposits,
+template.loans_net,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",loans_net,
+template.net_interest_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",net_interest_income,
+template.noninterest_expense,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",noninterest_expense,
+template.noninterest_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",noninterest_income,
+template.provision_for_credit_losses,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",provision_for_credit_losses,
+template.total_interest_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",total_interest_income,
+bank.detect,sector_detect,"non-tag rule, no fire",,,0,"non-tag rule, no fire",,
+lib.bs.LiabilitiesAndStockholdersEquity,tag,"shadowed (tag on that statement, rule never fired)",LiabilitiesAndStockholdersEquity,BS,997,library knowledge outside exam data points (keep),,excluded
+lib.bs.AccumulatedOtherComprehensiveIncomeLossNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",AccumulatedOtherComprehensiveIncomeLossNetOfTax,BS,924,SHADOWED exam rule,stockholders_equity,component
+lib.bs.RetainedEarningsAccumulatedDeficit,tag,"shadowed (tag on that statement, rule never fired)",RetainedEarningsAccumulatedDeficit,BS,963,SHADOWED exam rule,stockholders_equity,component
+lib.bs.OtherAssetsNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherAssetsNoncurrent,BS,765,library knowledge outside exam data points (keep),,excluded
+lib.bs.CommonStockValue,tag,"shadowed (tag on that statement, rule never fired)",CommonStockValue,BS,746,SHADOWED exam rule,stockholders_equity,component
+lib.bs.OtherLiabilitiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherLiabilitiesNoncurrent,BS,734,library knowledge outside exam data points (keep),,excluded
+lib.bs.CommitmentsAndContingencies,tag,"shadowed (tag on that statement, rule never fired)",CommitmentsAndContingencies,BS,17,library knowledge outside exam data points (keep),,excluded
+lib.bs.IntangibleAssetsNetExcludingGoodwill,tag,"shadowed (tag on that statement, rule never fired)",IntangibleAssetsNetExcludingGoodwill,BS,533,library knowledge outside exam data points (keep),,excluded
+lib.bs.MinorityInterest,tag,"shadowed (tag on that statement, rule never fired)",MinorityInterest,BS,433,library knowledge outside exam data points (keep),,component
+lib.bs.TreasuryStockValue,tag,"shadowed (tag on that statement, rule never fired)",TreasuryStockValue,BS,220,SHADOWED exam rule,stockholders_equity,component
+lib.bs.AdditionalPaidInCapitalCommonStock,tag,"shadowed (tag on that statement, rule never fired)",AdditionalPaidInCapitalCommonStock,BS,488,SHADOWED exam rule,stockholders_equity,component
+lib.bs.PreferredStockValue,tag,"shadowed (tag on that statement, rule never fired)",PreferredStockValue,BS,421,SHADOWED exam rule,stockholders_equity,component
+lib.bs.OtherAssetsCurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherAssetsCurrent,BS,372,library knowledge outside exam data points (keep),,excluded
+lib.bs.PrepaidExpenseAndOtherAssetsCurrent,tag,"shadowed (tag on that statement, rule never fired)",PrepaidExpenseAndOtherAssetsCurrent,BS,422,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherLiabilitiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherLiabilitiesCurrent,BS,334,library knowledge outside exam data points (keep),,excluded
+lib.bs.EmployeeRelatedLiabilitiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",EmployeeRelatedLiabilitiesCurrent,BS,259,library knowledge outside exam data points (keep),,excluded
+lib.bs.AccruedLiabilitiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",AccruedLiabilitiesCurrent,BS,362,library knowledge outside exam data points (keep),,excluded
+lib.bs.AdditionalPaidInCapital,tag,"shadowed (tag on that statement, rule never fired)",AdditionalPaidInCapital,BS,411,SHADOWED exam rule,stockholders_equity,component
+lib.bs.DeferredIncomeTaxLiabilitiesNet,tag,"shadowed (tag on that statement, rule never fired)",DeferredIncomeTaxLiabilitiesNet,BS,523,library knowledge outside exam data points (keep),,excluded
+lib.bs.DeferredIncomeTaxAssetsNet,tag,"shadowed (tag on that statement, rule never fired)",DeferredIncomeTaxAssetsNet,BS,400,library knowledge outside exam data points (keep),,excluded
+lib.bs.ShortTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",ShortTermInvestments,BS,130,library knowledge outside exam data points (keep),,excluded
+lib.bs.AccruedIncomeTaxesCurrent,tag,"shadowed (tag on that statement, rule never fired)",AccruedIncomeTaxesCurrent,BS,175,library knowledge outside exam data points (keep),,excluded
+lib.bs.OperatingLeaseRightOfUseAsset,tag,"shadowed (tag on that statement, rule never fired)",OperatingLeaseRightOfUseAsset,BS,535,library knowledge outside exam data points (keep),,excluded
+lib.bs.ContractWithCustomerLiabilityCurrent,tag,"shadowed (tag on that statement, rule never fired)",ContractWithCustomerLiabilityCurrent,BS,275,library knowledge outside exam data points (keep),,excluded
+lib.bs.OperatingLeaseLiabilityNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",OperatingLeaseLiabilityNoncurrent,BS,479,library knowledge outside exam data points (keep),,excluded
+lib.bs.AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment,tag,"shadowed (tag on that statement, rule never fired)",AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment,BS,72,SHADOWED exam rule,ppe_net,component
+lib.bs.CommonStocksIncludingAdditionalPaidInCapital,tag,"shadowed (tag on that statement, rule never fired)",CommonStocksIncludingAdditionalPaidInCapital,BS,36,SHADOWED exam rule,stockholders_equity,component
+lib.bs.LongTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",LongTermInvestments,BS,75,library knowledge outside exam data points (keep),,excluded
+lib.bs.DeferredRevenueCurrent,tag,"shadowed (tag on that statement, rule never fired)",DeferredRevenueCurrent,BS,48,library knowledge outside exam data points (keep),,excluded
+lib.bs.PropertyPlantAndEquipmentGross,tag,"shadowed (tag on that statement, rule never fired)",PropertyPlantAndEquipmentGross,BS,65,SHADOWED exam rule,ppe_net,component
+lib.bs.DeferredTaxLiabilitiesNoncurrent,tag,dead: no filer prints the tag,DeferredTaxLiabilitiesNoncurrent,BS,0,dead: no filer prints the tag,,excluded
+lib.bs.AccruedIncomeTaxesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",AccruedIncomeTaxesNoncurrent,BS,52,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherAssets,tag,"shadowed (tag on that statement, rule never fired)",OtherAssets,BS,157,library knowledge outside exam data points (keep),,excluded
+lib.bs.MarketableSecuritiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",MarketableSecuritiesCurrent,BS,68,library knowledge outside exam data points (keep),,excluded
+lib.bs.PensionAndOtherPostretirementDefinedBenefitPlansLiabilitiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",PensionAndOtherPostretirementDefinedBenefitPlansLiabilitiesNoncurrent,BS,110,library knowledge outside exam data points (keep),,excluded
+lib.bs.TreasuryStockCommonValue,tag,"shadowed (tag on that statement, rule never fired)",TreasuryStockCommonValue,BS,281,SHADOWED exam rule,stockholders_equity,component
+lib.bs.RedeemableNoncontrollingInterestEquityCarryingAmount,tag,"shadowed (tag on that statement, rule never fired)",RedeemableNoncontrollingInterestEquityCarryingAmount,BS,92,library knowledge outside exam data points (keep),,component
+lib.bs.LiabilitiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",LiabilitiesNoncurrent,BS,116,library knowledge outside exam data points (keep),,excluded
+lib.bs.DividendsPayableCurrent,tag,"shadowed (tag on that statement, rule never fired)",DividendsPayableCurrent,BS,47,library knowledge outside exam data points (keep),,excluded
+lib.bs.EquityMethodInvestments,tag,"shadowed (tag on that statement, rule never fired)",EquityMethodInvestments,BS,105,library knowledge outside exam data points (keep),,excluded
+lib.bs.OperatingLeaseLiabilityCurrent,tag,"shadowed (tag on that statement, rule never fired)",OperatingLeaseLiabilityCurrent,BS,317,library knowledge outside exam data points (keep),,excluded
+lib.bs.Deposits,tag,"shadowed (tag on that statement, rule never fired)",Deposits,BS,50,library knowledge outside exam data points (keep),,component
+lib.bs.FiniteLivedIntangibleAssetsNet,tag,"shadowed (tag on that statement, rule never fired)",FiniteLivedIntangibleAssetsNet,BS,125,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherLiabilities,tag,"shadowed (tag on that statement, rule never fired)",OtherLiabilities,BS,97,library knowledge outside exam data points (keep),,excluded
+lib.bs.DeferredTaxAssetsNetNoncurrent,tag,dead: no filer prints the tag,DeferredTaxAssetsNetNoncurrent,BS,0,dead: no filer prints the tag,,excluded
+lib.bs.DeferredRevenueNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",DeferredRevenueNoncurrent,BS,24,library knowledge outside exam data points (keep),,excluded
+lib.bs.ContractWithCustomerLiabilityNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",ContractWithCustomerLiabilityNoncurrent,BS,122,library knowledge outside exam data points (keep),,excluded
+lib.bs.InvestmentsInAffiliatesSubsidiariesAssociatesAndJointVentures,tag,"shadowed (tag on that statement, rule never fired)",InvestmentsInAffiliatesSubsidiariesAssociatesAndJointVentures,BS,67,library knowledge outside exam data points (keep),,excluded
+lib.bs.AvailableForSaleSecuritiesDebtSecuritiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",AvailableForSaleSecuritiesDebtSecuritiesCurrent,BS,60,library knowledge outside exam data points (keep),,excluded
+lib.bs.DeferredTaxAssetsNetCurrent,tag,dead: no filer prints the tag,DeferredTaxAssetsNetCurrent,BS,0,dead: no filer prints the tag,,excluded
+lib.bs.CashAndDueFromBanks,tag,"shadowed (tag on that statement, rule never fired)",CashAndDueFromBanks,BS,41,SHADOWED exam rule,cash_and_equivalents,component
+lib.bs.TaxesPayableCurrent,tag,"shadowed (tag on that statement, rule never fired)",TaxesPayableCurrent,BS,66,library knowledge outside exam data points (keep),,excluded
+lib.bs.NotesAndLoansReceivableNetNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",NotesAndLoansReceivableNetNoncurrent,BS,17,library knowledge outside exam data points (keep),,component
+lib.bs.Investments,tag,"shadowed (tag on that statement, rule never fired)",Investments,BS,63,library knowledge outside exam data points (keep),,excluded
+lib.bs.InterestBearingDepositsInBanks,tag,"shadowed (tag on that statement, rule never fired)",InterestBearingDepositsInBanks,BS,39,SHADOWED exam rule,cash_and_equivalents,component
+lib.bs.OtherAccruedLiabilitiesCurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherAccruedLiabilitiesCurrent,BS,69,library knowledge outside exam data points (keep),,excluded
+lib.bs.AvailableForSaleSecuritiesCurrent,tag,dead: no filer prints the tag,AvailableForSaleSecuritiesCurrent,BS,0,dead: no filer prints the tag,,excluded
+lib.bs.MarketableSecuritiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",MarketableSecuritiesNoncurrent,BS,31,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherReceivablesNetCurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherReceivablesNetCurrent,BS,47,library knowledge outside exam data points (keep),,excluded
+lib.bs.PrepaidExpenseCurrent,tag,"shadowed (tag on that statement, rule never fired)",PrepaidExpenseCurrent,BS,91,library knowledge outside exam data points (keep),,excluded
+lib.bs.DefinedBenefitPensionPlanLiabilitiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",DefinedBenefitPensionPlanLiabilitiesNoncurrent,BS,36,library knowledge outside exam data points (keep),,excluded
+lib.bs.NotesAndLoansReceivableNetCurrent,tag,"shadowed (tag on that statement, rule never fired)",NotesAndLoansReceivableNetCurrent,BS,20,library knowledge outside exam data points (keep),,component
+lib.bs.InventoryFinishedGoodsNetOfReserves,tag,"shadowed (tag on that statement, rule never fired)",InventoryFinishedGoodsNetOfReserves,BS,15,SHADOWED exam rule,inventory,component
+lib.bs.LoansAndLeasesReceivableNetReportedAmount,tag,"shadowed (tag on that statement, rule never fired)",LoansAndLeasesReceivableNetReportedAmount,BS,2,library knowledge outside exam data points (keep),,component
+lib.bs.AssetsOfDisposalGroupIncludingDiscontinuedOperationCurrent,tag,"shadowed (tag on that statement, rule never fired)",AssetsOfDisposalGroupIncludingDiscontinuedOperationCurrent,BS,76,library knowledge outside exam data points (keep),,excluded
+lib.bs.CommonStockValueOutstanding,tag,"shadowed (tag on that statement, rule never fired)",CommonStockValueOutstanding,BS,80,SHADOWED exam rule,stockholders_equity,component
+lib.bs.OtherReceivables,tag,"shadowed (tag on that statement, rule never fired)",OtherReceivables,BS,31,library knowledge outside exam data points (keep),,excluded
+lib.bs.AssetsNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",AssetsNoncurrent,BS,48,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherPostretirementDefinedBenefitPlanLiabilitiesNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",OtherPostretirementDefinedBenefitPlanLiabilitiesNoncurrent,BS,26,library knowledge outside exam data points (keep),,excluded
+lib.bs.LiabilitiesOfDisposalGroupIncludingDiscontinuedOperationCurrent,tag,"shadowed (tag on that statement, rule never fired)",LiabilitiesOfDisposalGroupIncludingDiscontinuedOperationCurrent,BS,65,library knowledge outside exam data points (keep),,excluded
+lib.bs.ContractWithCustomerAssetNetCurrent,tag,"shadowed (tag on that statement, rule never fired)",ContractWithCustomerAssetNetCurrent,BS,59,library knowledge outside exam data points (keep),,excluded
+lib.bs.SalesAndExciseTaxPayableCurrent,tag,"shadowed (tag on that statement, rule never fired)",SalesAndExciseTaxPayableCurrent,BS,4,library knowledge outside exam data points (keep),,excluded
+lib.bs.InventoryWorkInProcessNetOfReserves,tag,"shadowed (tag on that statement, rule never fired)",InventoryWorkInProcessNetOfReserves,BS,10,SHADOWED exam rule,inventory,component
+lib.bs.AvailableForSaleSecuritiesDebtSecurities,tag,"shadowed (tag on that statement, rule never fired)",AvailableForSaleSecuritiesDebtSecurities,BS,43,library knowledge outside exam data points (keep),,excluded
+lib.bs.CashCashEquivalentsAndShortTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",CashCashEquivalentsAndShortTermInvestments,BS,13,library knowledge outside exam data points (keep),,excluded
+lib.bs.CommonStockSharesIssued,tag,"shadowed (tag on that statement, rule never fired)",CommonStockSharesIssued,BS,40,library knowledge outside exam data points (keep),,excluded
+lib.bs.FederalFundsSoldAndSecuritiesPurchasedUnderAgreementsToResell,tag,"shadowed (tag on that statement, rule never fired)",FederalFundsSoldAndSecuritiesPurchasedUnderAgreementsToResell,BS,11,library knowledge outside exam data points (keep),,excluded
+lib.bs.TradingLiabilities,tag,"shadowed (tag on that statement, rule never fired)",TradingLiabilities,BS,10,library knowledge outside exam data points (keep),,excluded
+lib.bs.DefinedBenefitPlanAssetsForPlanBenefitsNoncurrent,tag,"shadowed (tag on that statement, rule never fired)",DefinedBenefitPlanAssetsForPlanBenefitsNoncurrent,BS,36,library knowledge outside exam data points (keep),,excluded
+lib.bs.OtherLongTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",OtherLongTermInvestments,BS,24,library knowledge outside exam data points (keep),,excluded
+lib.bs.NotesReceivableNet,tag,"shadowed (tag on that statement, rule never fired)",NotesReceivableNet,BS,27,library knowledge outside exam data points (keep),,component
+lib.bs.AccruedLiabilitiesAndOtherLiabilities,tag,"shadowed (tag on that statement, rule never fired)",AccruedLiabilitiesAndOtherLiabilities,BS,36,library knowledge outside exam data points (keep),,excluded
+lib.bs.TradingSecurities,tag,"shadowed (tag on that statement, rule never fired)",TradingSecurities,BS,12,library knowledge outside exam data points (keep),,excluded
+lib.bs.IndefiniteLivedLicenseAgreements,tag,"shadowed (tag on that statement, rule never fired)",IndefiniteLivedLicenseAgreements,BS,4,library knowledge outside exam data points (keep),,excluded
+lib.bs.Payables,tag,"shadowed (tag on that statement, rule never fired)",Payables,BS,1,library knowledge outside exam data points (keep),,combined
+lib.bs.CommonStockParOrStatedValuePerShare,tag,"shadowed (tag on that statement, rule never fired)",CommonStockParOrStatedValuePerShare,BS,30,library knowledge outside exam data points (keep),,excluded
+lib.bs.PreferredStockSharesAuthorized,tag,"shadowed (tag on that statement, rule never fired)",PreferredStockSharesAuthorized,BS,15,library knowledge outside exam data points (keep),,excluded
+nd.CommercialPaper,combined_concept,tag present elsewhere (other statement/parenthetical),CommercialPaper,,0,SHADOWED exam rule,total_debt,
+nd.AccountsNotesAndLoansReceivableNetCurrent,combined_concept,tag present elsewhere (other statement/parenthetical),AccountsNotesAndLoansReceivableNetCurrent,,0,SHADOWED exam rule,accounts_receivable,
+nd.AccountsReceivableNetCurrent,combined_concept,tag present elsewhere (other statement/parenthetical),AccountsReceivableNetCurrent,,0,SHADOWED exam rule,accounts_receivable,
+nd.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,combined_concept,tag present elsewhere (other statement/parenthetical),CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,,0,SHADOWED exam rule,cash_and_equivalents,
+nd.StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,combined_concept,tag present elsewhere (other statement/parenthetical),StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,,0,SHADOWED exam rule,stockholders_equity,
+nd.CashCashEquivalentsAndRestrictedCashAtCarryingValue,combined_concept,dead: no filer prints the tag,CashCashEquivalentsAndRestrictedCashAtCarryingValue,,0,dead: no filer prints the tag,cash_and_equivalents,
+nd.CashAndCashEquivalentsAtCarryingValueAndRestrictedCashAndCashEquivalentsCurrent,combined_concept,dead: no filer prints the tag,CashAndCashEquivalentsAtCarryingValueAndRestrictedCashAndCashEquivalentsCurrent,,0,dead: no filer prints the tag,cash_and_equivalents,
+template.accounts_payable,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",accounts_payable,
+template.accounts_receivable,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",accounts_receivable,
+template.cash_and_equivalents,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_and_equivalents,
+template.current_assets,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",current_assets,
+template.current_liabilities,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",current_liabilities,
+template.goodwill,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",goodwill,
+template.inventory,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",inventory,
+template.ppe_net,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",ppe_net,
+template.stockholders_equity,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",stockholders_equity,
+template.total_assets,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",total_assets,
+template.total_debt,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",total_debt,
+template.total_liabilities,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",total_liabilities,
+bs.total_debt.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",total_debt,
+bs.detect_classified,sector_detect,"non-tag rule, no fire",,,0,"non-tag rule, no fire",,
+lib.cf.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,tag,"shadowed (tag on that statement, rule never fired)",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,CF,885,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashAndCashEquivalentsAtCarryingValue,tag,"shadowed (tag on that statement, rule never fired)",CashAndCashEquivalentsAtCarryingValue,CF,161,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromPaymentsForOtherFinancingActivities,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromPaymentsForOtherFinancingActivities,CF,549,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsForProceedsFromOtherInvestingActivities,tag,"shadowed (tag on that statement, rule never fired)",PaymentsForProceedsFromOtherInvestingActivities,CF,569,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect,tag,"shadowed (tag on that statement, rule never fired)",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect,CF,915,library knowledge outside exam data points (keep),,excluded
+lib.cf.DeferredIncomeTaxExpenseBenefit,tag,"shadowed (tag on that statement, rule never fired)",DeferredIncomeTaxExpenseBenefit,CF,477,library knowledge outside exam data points (keep),,excluded
+lib.cf.OtherNoncashIncomeExpense,tag,"shadowed (tag on that statement, rule never fired)",OtherNoncashIncomeExpense,CF,447,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProfitLoss,tag,"shadowed (tag on that statement, rule never fired)",ProfitLoss,CF,558,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireBusinessesNetOfCashAcquired,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireBusinessesNetOfCashAcquired,CF,506,library knowledge outside exam data points (keep),,excluded
+lib.cf.NetIncomeLoss,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLoss,CF,414,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOfLongTermDebt,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfLongTermDebt,CF,313,library knowledge outside exam data points (keep),,excluded
+lib.cf.RepaymentsOfLongTermDebt,tag,"shadowed (tag on that statement, rule never fired)",RepaymentsOfLongTermDebt,CF,357,library knowledge outside exam data points (keep),,excluded
+lib.cf.EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,tag,"shadowed (tag on that statement, rule never fired)",EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,CF,495,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashAndCashEquivalentsPeriodIncreaseDecrease,tag,dead: no filer prints the tag,CashAndCashEquivalentsPeriodIncreaseDecrease,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.IncreaseDecreaseInOtherOperatingCapitalNet,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherOperatingCapitalNet,CF,257,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOtherOperatingAssets,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherOperatingAssets,CF,275,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsRelatedToTaxWithholdingForShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",PaymentsRelatedToTaxWithholdingForShareBasedCompensation,CF,431,library knowledge outside exam data points (keep),,excluded
+lib.cf.EffectOfExchangeRateOnCashAndCashEquivalents,tag,dead: no filer prints the tag,EffectOfExchangeRateOnCashAndCashEquivalents,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets,CF,365,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities,CF,163,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOfCommonStock,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfCommonStock,CF,246,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireInvestments,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireInvestments,CF,136,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInAccruedIncomeTaxesPayable,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInAccruedIncomeTaxesPayable,CF,180,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleOfPropertyPlantAndEquipment,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleOfPropertyPlantAndEquipment,CF,231,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOtherOperatingLiabilities,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherOperatingLiabilities,CF,213,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromStockOptionsExercised,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromStockOptionsExercised,CF,242,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromRepaymentsOfShortTermDebt,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromRepaymentsOfShortTermDebt,CF,89,library knowledge outside exam data points (keep),,excluded
+lib.cf.OtherOperatingActivitiesCashFlowStatement,tag,"shadowed (tag on that statement, rule never fired)",OtherOperatingActivitiesCashFlowStatement,CF,215,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInContractWithCustomerLiability,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInContractWithCustomerLiability,CF,208,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleOfAvailableForSaleSecuritiesDebt,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleOfAvailableForSaleSecuritiesDebt,CF,143,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireAvailableForSaleSecuritiesDebt,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireAvailableForSaleSecuritiesDebt,CF,202,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInDeferredIncomeTaxes,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInDeferredIncomeTaxes,CF,112,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireMarketableSecurities,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireMarketableSecurities,CF,105,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleMaturityAndCollectionsOfInvestments,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleMaturityAndCollectionsOfInvestments,CF,84,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInAccruedLiabilities,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInAccruedLiabilities,CF,188,library knowledge outside exam data points (keep),,excluded
+lib.cf.ExcessTaxBenefitFromShareBasedCompensationFinancingActivities,tag,dead: no filer prints the tag,ExcessTaxBenefitFromShareBasedCompensationFinancingActivities,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.IncreaseDecreaseInEmployeeRelatedLiabilities,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInEmployeeRelatedLiabilities,CF,105,library knowledge outside exam data points (keep),,excluded
+lib.cf.RepaymentsOfDebt,tag,"shadowed (tag on that statement, rule never fired)",RepaymentsOfDebt,CF,98,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInDeferredRevenue,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInDeferredRevenue,CF,69,library knowledge outside exam data points (keep),,excluded
+lib.cf.DeferredIncomeTaxesAndTaxCredits,tag,"shadowed (tag on that statement, rule never fired)",DeferredIncomeTaxesAndTaxCredits,CF,202,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInAccruedLiabilitiesAndOtherOperatingLiabilities,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInAccruedLiabilitiesAndOtherOperatingLiabilities,CF,79,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromRepaymentsOfShortTermDebtMaturingInThreeMonthsOrLess,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromRepaymentsOfShortTermDebtMaturingInThreeMonthsOrLess,CF,46,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleOfAvailableForSaleSecurities,tag,dead: no filer prints the tag,ProceedsFromSaleOfAvailableForSaleSecurities,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.CapitalExpendituresIncurredButNotYetPaid,tag,"shadowed (tag on that statement, rule never fired)",CapitalExpendituresIncurredButNotYetPaid,CF,230,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOfDebt,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfDebt,CF,116,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireAvailableForSaleSecurities,tag,dead: no filer prints the tag,PaymentsToAcquireAvailableForSaleSecurities,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.RepaymentsOfLongTermDebtAndCapitalSecurities,tag,"shadowed (tag on that statement, rule never fired)",RepaymentsOfLongTermDebtAndCapitalSecurities,CF,51,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInDeposits,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInDeposits,CF,49,library knowledge outside exam data points (keep),,excluded
+lib.cf.GainsLossesOnExtinguishmentOfDebt,tag,"shadowed (tag on that statement, rule never fired)",GainsLossesOnExtinguishmentOfDebt,CF,190,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleAndMaturityOfMarketableSecurities,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleAndMaturityOfMarketableSecurities,CF,97,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProvisionForDoubtfulAccounts,tag,"shadowed (tag on that statement, rule never fired)",ProvisionForDoubtfulAccounts,CF,135,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleOfProductiveAssets,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleOfProductiveAssets,CF,87,library knowledge outside exam data points (keep),,excluded
+lib.cf.AssetImpairmentCharges,tag,"shadowed (tag on that statement, rule never fired)",AssetImpairmentCharges,CF,140,library knowledge outside exam data points (keep),,excluded
+lib.cf.ExcessTaxBenefitFromShareBasedCompensationOperatingActivities,tag,dead: no filer prints the tag,ExcessTaxBenefitFromShareBasedCompensationOperatingActivities,CF,0,dead: no filer prints the tag,,excluded
+lib.cf.ProceedsFromIssuanceOfSharesUnderIncentiveAndShareBasedCompensationPlansIncludingStockOptions,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfSharesUnderIncentiveAndShareBasedCompensationPlansIncludingStockOptions,CF,108,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,tag,"shadowed (tag on that statement, rule never fired)",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,CF,137,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOperatingCapital,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOperatingCapital,CF,28,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromShortTermDebt,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromShortTermDebt,CF,61,library knowledge outside exam data points (keep),,excluded
+lib.cf.AccretionAmortizationOfDiscountsAndPremiumsInvestments,tag,"shadowed (tag on that statement, rule never fired)",AccretionAmortizationOfDiscountsAndPremiumsInvestments,CF,108,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromStockPlans,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromStockPlans,CF,85,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromSaleAndMaturityOfAvailableForSaleSecurities,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromSaleAndMaturityOfAvailableForSaleSecurities,CF,54,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOtherCurrentAssets,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherCurrentAssets,CF,92,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncomeLossFromEquityMethodInvestments,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromEquityMethodInvestments,CF,157,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireOtherInvestments,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireOtherInvestments,CF,68,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromMinorityShareholders,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromMinorityShareholders,CF,81,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities,CF,51,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOfPreferredStockAndPreferenceStock,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfPreferredStockAndPreferenceStock,CF,30,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireIntangibleAssets,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireIntangibleAssets,CF,108,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncomeLossFromEquityMethodInvestmentsNetOfDividendsOrDistributions,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromEquityMethodInvestmentsNetOfDividendsOrDistributions,CF,64,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromDivestitureOfBusinesses,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromDivestitureOfBusinesses,CF,105,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireShortTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireShortTermInvestments,CF,59,library knowledge outside exam data points (keep),,excluded
+lib.cf.RepaymentsOfShortTermDebt,tag,"shadowed (tag on that statement, rule never fired)",RepaymentsOfShortTermDebt,CF,60,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations,tag,"shadowed (tag on that statement, rule never fired)",CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations,CF,60,SHADOWED exam rule,cfo,component
+lib.cf.PaymentsToMinorityShareholders,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToMinorityShareholders,CF,105,library knowledge outside exam data points (keep),,excluded
+lib.cf.AmortizationOfFinancingCostsAndDiscounts,tag,"shadowed (tag on that statement, rule never fired)",AmortizationOfFinancingCostsAndDiscounts,CF,119,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromRepaymentsOfCommercialPaper,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromRepaymentsOfCommercialPaper,CF,50,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOtherNoncurrentLiabilities,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherNoncurrentLiabilities,CF,89,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromDivestitureOfBusinessesNetOfCashDivested,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromDivestitureOfBusinessesNetOfCashDivested,CF,90,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsForProceedsFromShortTermInvestments,tag,"shadowed (tag on that statement, rule never fired)",PaymentsForProceedsFromShortTermInvestments,CF,35,library knowledge outside exam data points (keep),,excluded
+lib.cf.ForeignCurrencyTransactionGainLossUnrealized,tag,"shadowed (tag on that statement, rule never fired)",ForeignCurrencyTransactionGainLossUnrealized,CF,48,library knowledge outside exam data points (keep),,excluded
+lib.cf.GainLossOnSaleOfBusiness,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnSaleOfBusiness,CF,121,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsOfDividendsMinorityInterest,tag,"shadowed (tag on that statement, rule never fired)",PaymentsOfDividendsMinorityInterest,CF,103,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireHeldToMaturitySecurities,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireHeldToMaturitySecurities,CF,56,library knowledge outside exam data points (keep),,excluded
+lib.cf.GainLossOnSaleOfPropertyPlantEquipment,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnSaleOfPropertyPlantEquipment,CF,123,library knowledge outside exam data points (keep),,excluded
+lib.cf.EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,tag,"shadowed (tag on that statement, rule never fired)",EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations,CF,173,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOrSaleOfEquity,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOrSaleOfEquity,CF,20,library knowledge outside exam data points (keep),,excluded
+lib.cf.EquityMethodInvestmentDividendsOrDistributions,tag,"shadowed (tag on that statement, rule never fired)",EquityMethodInvestmentDividendsOrDistributions,CF,95,library knowledge outside exam data points (keep),,excluded
+lib.cf.FinanceLeasePrincipalPayments,tag,"shadowed (tag on that statement, rule never fired)",FinanceLeasePrincipalPayments,CF,115,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest,CF,27,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsForProceedsFromInvestments,tag,"shadowed (tag on that statement, rule never fired)",PaymentsForProceedsFromInvestments,CF,30,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInPensionAndPostretirementObligations,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInPensionAndPostretirementObligations,CF,33,library knowledge outside exam data points (keep),,excluded
+lib.cf.PensionContributions,tag,"shadowed (tag on that statement, rule never fired)",PensionContributions,CF,26,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsOfDebtIssuanceCosts,tag,"shadowed (tag on that statement, rule never fired)",PaymentsOfDebtIssuanceCosts,CF,264,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,tag,"shadowed (tag on that statement, rule never fired)",ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,CF,24,library knowledge outside exam data points (keep),,excluded
+lib.cf.PaymentsToAcquireBusinessesAndInterestInAffiliates,tag,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireBusinessesAndInterestInAffiliates,CF,14,library knowledge outside exam data points (keep),,excluded
+lib.cf.ProvisionForLoanLeaseAndOtherLosses,tag,"shadowed (tag on that statement, rule never fired)",ProvisionForLoanLeaseAndOtherLosses,CF,36,library knowledge outside exam data points (keep),,excluded
+lib.cf.GainLossOnInvestments,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnInvestments,CF,74,library knowledge outside exam data points (keep),,excluded
+lib.cf.CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations,tag,"shadowed (tag on that statement, rule never fired)",CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations,CF,38,SHADOWED exam rule,cfo,component
+lib.cf.RightOfUseAssetObtainedInExchangeForOperatingLeaseLiability,tag,"shadowed (tag on that statement, rule never fired)",RightOfUseAssetObtainedInExchangeForOperatingLeaseLiability,CF,131,library knowledge outside exam data points (keep),,excluded
+lib.cf.GainLossOnDispositionOfAssets1,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnDispositionOfAssets1,CF,91,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInOtherNoncurrentAssetsAndLiabilitiesNet,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInOtherNoncurrentAssetsAndLiabilitiesNet,CF,30,library knowledge outside exam data points (keep),,excluded
+lib.cf.IncreaseDecreaseInIncomeTaxes,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInIncomeTaxes,CF,42,library knowledge outside exam data points (keep),,excluded
+lib.is.Depreciation,tag,"shadowed (tag on that statement, rule never fired)",Depreciation,IS,31,SHADOWED exam rule,depreciation_and_amortization,component
+lib.cf.IncreaseDecreaseInAccountsAndOtherReceivables,tag,"shadowed (tag on that statement, rule never fired)",IncreaseDecreaseInAccountsAndOtherReceivables,CF,62,library knowledge outside exam data points (keep),,combined
+lib.cf.AllocatedShareBasedCompensationExpense,tag,"shadowed (tag on that statement, rule never fired)",AllocatedShareBasedCompensationExpense,CF,24,SHADOWED exam rule,sbc,component
+lib.cf.DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense,tag,"shadowed (tag on that statement, rule never fired)",DepreciationAndAmortizationIncludingAmountFromOtherIncomeExpense,CF,1,library knowledge outside exam data points (keep),,combined
+nd.PaymentsToDevelopSoftware,combined_concept,tag present elsewhere (other statement/parenthetical),PaymentsToDevelopSoftware,,0,SHADOWED exam rule,capex,
+nd.AmortizationOfIntangibleAssets,combined_concept,tag present elsewhere (other statement/parenthetical),AmortizationOfIntangibleAssets,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.PaymentsForRepurchasesOfCommonSharesAndOther,combined_concept,dead: no filer prints the tag,PaymentsForRepurchasesOfCommonSharesAndOther,,0,dead: no filer prints the tag,share_buybacks,
+nd.TreasuryStockValueAcquired,combined_concept,dead: no filer prints the tag,TreasuryStockValueAcquired,,0,dead: no filer prints the tag,share_buybacks,
+nd.TreasuryStockValueAcquiredCostMethod,combined_concept,tag present elsewhere (other statement/parenthetical),TreasuryStockValueAcquiredCostMethod,,0,SHADOWED exam rule,share_buybacks,
+nd.NoncashAdjustmentsForDepreciationAmortizationAccretion,combined_concept,tag present elsewhere (other statement/parenthetical),NoncashAdjustmentsForDepreciationAmortizationAccretion,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.PaymentsForRepurchaseOfCommonStock,combined_concept,tag present elsewhere (other statement/parenthetical),PaymentsForRepurchaseOfCommonStock,,0,SHADOWED exam rule,share_buybacks,
+nd.DepreciationDepletionandAmortizationIncludingDiscontinuedOperations,combined_concept,dead: no filer prints the tag,DepreciationDepletionandAmortizationIncludingDiscontinuedOperations,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.InterestExpenseIncludingAccretion,combined_concept,dead: no filer prints the tag,InterestExpenseIncludingAccretion,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.DepreciationDepletionAmortizationAndImpairment,combined_concept,dead: no filer prints the tag,DepreciationDepletionAmortizationAndImpairment,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.DepreciationAndAmortizationIncludingDebtIssuanceCosts,combined_concept,tag present elsewhere (other statement/parenthetical),DepreciationAndAmortizationIncludingDebtIssuanceCosts,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.PaymentsToAcquireProductiveAssets,combined_concept,tag present elsewhere (other statement/parenthetical),PaymentsToAcquireProductiveAssets,,0,SHADOWED exam rule,capex,
+nd.AmortizationOfIntangibleAssetsExcludingAmortizationIncludedInPropertyPlantAndEquipment,combined_concept,tag present elsewhere (other statement/parenthetical),AmortizationOfIntangibleAssetsExcludingAmortizationIncludedInPropertyPlantAndEquipment,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.Paymentsforrepurchasesofsharesandwarrants,combined_concept,dead: no filer prints the tag,Paymentsforrepurchasesofsharesandwarrants,,0,dead: no filer prints the tag,share_buybacks,
+nd.PaymentForPropertyImprovements,combined_concept,tag present elsewhere (other statement/parenthetical),PaymentForPropertyImprovements,,0,SHADOWED exam rule,capex,
+nd.ProceedsfromPaymentsforRepurchaseofCommonStock,combined_concept,dead: no filer prints the tag,ProceedsfromPaymentsforRepurchaseofCommonStock,,0,dead: no filer prints the tag,share_buybacks,
+nd.DepreciationDepletionAmortizationAndOther,combined_concept,dead: no filer prints the tag,DepreciationDepletionAmortizationAndOther,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.PaymentsForPurchaseOfPreferredStockLimitedPartnerUnitsAndTreasuryStock,combined_concept,dead: no filer prints the tag,PaymentsForPurchaseOfPreferredStockLimitedPartnerUnitsAndTreasuryStock,,0,dead: no filer prints the tag,share_buybacks,
+nd.PaymentsForPurchaseOfLimitedPartnerUnitsAndTreasuryStock,combined_concept,dead: no filer prints the tag,PaymentsForPurchaseOfLimitedPartnerUnitsAndTreasuryStock,,0,dead: no filer prints the tag,share_buybacks,
+nd.DepreciationAndAmortizationIncludingAmountsReportedAsDiscontinuedOperations,combined_concept,dead: no filer prints the tag,DepreciationAndAmortizationIncludingAmountsReportedAsDiscontinuedOperations,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.DepreciationAndAmortizationAndGainLossOnDispositionOfAssets,combined_concept,dead: no filer prints the tag,DepreciationAndAmortizationAndGainLossOnDispositionOfAssets,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.PaymentsOfDividendsAndDividendEquivalents,combined_concept,dead: no filer prints the tag,PaymentsOfDividendsAndDividendEquivalents,,0,dead: no filer prints the tag,dividends_paid,
+nd.CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,combined_concept,dead: no filer prints the tag,CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.CostOfServicesExcludingDepreciationDepletionAndAmortization,combined_concept,dead: no filer prints the tag,CostOfServicesExcludingDepreciationDepletionAndAmortization,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.DepreciationDepletionAndAmortization,combined_concept,tag present elsewhere (other statement/parenthetical),DepreciationDepletionAndAmortization,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.NetSettlementOfVestedCommonStockAndRepurchaseOfCommonStock,combined_concept,dead: no filer prints the tag,NetSettlementOfVestedCommonStockAndRepurchaseOfCommonStock,,0,dead: no filer prints the tag,share_buybacks,
+nd.Depreciationamortizationandimpairmentcharges,combined_concept,dead: no filer prints the tag,Depreciationamortizationandimpairmentcharges,,0,dead: no filer prints the tag,depreciation_and_amortization,
+nd.DividendsincludingChargestoPurchasePreferredStock,combined_concept,dead: no filer prints the tag,DividendsincludingChargestoPurchasePreferredStock,,0,dead: no filer prints the tag,dividends_paid,
+nd.DepreciationandImpairmentofEquipmentonOperatingLeasesNet,combined_concept,tag present elsewhere (other statement/parenthetical),DepreciationandImpairmentofEquipmentonOperatingLeasesNet,,0,SHADOWED exam rule,depreciation_and_amortization,
+nd.DepreciationamortizationandimpairmentchargesonProperty,combined_concept,dead: no filer prints the tag,DepreciationamortizationandimpairmentchargesonProperty,,0,dead: no filer prints the tag,depreciation_and_amortization,
+template.capex,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",capex,
+template.cash_flow_financing,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_flow_financing,
+template.cash_flow_investing,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_flow_investing,
+template.cf_ap_change,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cf_ap_change,
+template.cf_ar_change,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cf_ar_change,
+template.cf_inventory_change,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cf_inventory_change,
+template.cfo,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cfo,
+template.depreciation_and_amortization,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",depreciation_and_amortization,
+template.dividends_paid,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",dividends_paid,
+template.sbc,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",sbc,
+template.share_buybacks,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",share_buybacks,
+notes.sbc.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",sbc,
+cf.capex.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",capex,
+cf.depreciation_and_amortization.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",depreciation_and_amortization,
+company.MCD.PaymentsToAcquireOtherProductiveAssets,override,"shadowed (tag on that statement, rule never fired)",PaymentsToAcquireOtherProductiveAssets,CF,34,library knowledge outside exam data points (keep),,
+company.BA.PaymentsOfDividends,override,"shadowed (tag on that statement, rule never fired)",PaymentsOfDividends,CF,235,library knowledge outside exam data points (keep),,
+company.PH.InterestIncomeExpenseNonoperatingNet,override,"shadowed (tag on that statement, rule never fired)",InterestIncomeExpenseNonoperatingNet,IS,145,SHADOWED exam rule,interest_income,
+company.CB.CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,override,"shadowed (tag on that statement, rule never fired)",CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,BS,75,library knowledge outside exam data points (keep),,
+company.CRM.AmortizationOfAboveAndBelowMarketLeases,override,tag present elsewhere (other statement/parenthetical),AmortizationOfAboveAndBelowMarketLeases,IS,0,library knowledge outside exam data points (keep),,
+company.SNDK.AccountsPayableCurrent,override,"shadowed (tag on that statement, rule never fired)",AccountsPayableCurrent,BS,636,library knowledge outside exam data points (keep),,
+company.IBM.custominvestmentinsoftware,override,dead: no filer prints the tag,(custom) investment in software,CF,0,dead: no filer prints the tag,capex_resolved component,
+dqc.dqc4-01,validation,validation (not engine),,,0,validation (not engine),total_assets,
+dqc.dqc4-02,validation,validation (not engine),,,0,validation (not engine),total_assets;current_assets,
+dqc.dqc4-03,validation,validation (not engine),,,0,validation (not engine),total_liabilities;current_liabilities,
+dqc.dqc4-04,validation,validation (not engine),,,0,validation (not engine),stockholders_equity,
+dqc.dqc4-05,validation,validation (not engine),,,0,validation (not engine),total_liabilities;stockholders_equity,
+dqc.dqc4-06,validation,validation (not engine),,,0,validation (not engine),cfo;cash_flow_investing;cash_flow_financing,
+dqc.dqc4-07,validation,validation (not engine),,,0,validation (not engine),comprehensive_income,
+dqc.dqc9-01,validation,validation (not engine),,,0,validation (not engine),shares_outstanding,
+dqc.dqc15-depreciationdepletionandamortization,validation,validation (not engine),,,0,validation (not engine),(any using DepreciationDepletionAndAmortization),
+dqc.dqc15-depreciation,validation,validation (not engine),,,0,validation (not engine),(any using Depreciation),
+dqc.dqc15-incometaxespaid,validation,validation (not engine),,,0,validation (not engine),(any using IncomeTaxesPaid),
+dqc.dqc15-interestpaid,validation,validation (not engine),,,0,validation (not engine),(any using InterestPaid),
+dqc.dqc15-paymentstoacquirepropertyplantandequipment,validation,validation (not engine),,,0,validation (not engine),(any using PaymentsToAcquirePropertyPlantAndEquipment),
+dqc.dqc15-accountsreceivablenetcurrent,validation,validation (not engine),,,0,validation (not engine),(any using AccountsReceivableNetCurrent),
+dqc.dqc15-receivablesnetcurrent,validation,validation (not engine),,,0,validation (not engine),(any using ReceivablesNetCurrent),
+dqc.dqc15-accountsandotherreceivablesnetcurrent,validation,validation (not engine),,,0,validation (not engine),(any using AccountsAndOtherReceivablesNetCurrent),
+dqc.dqc15-commonstockdividendspersharedeclared,validation,validation (not engine),,,0,validation (not engine),(any using CommonStockDividendsPerShareDeclared),
+dqc.dqc15-goodwill,validation,validation (not engine),,,0,validation (not engine),(any using Goodwill),
+dqc.dqc15-inventorynet,validation,validation (not engine),,,0,validation (not engine),(any using InventoryNet),
+dqc.dqc15-propertyplantandequipmentnet,validation,validation (not engine),,,0,validation (not engine),(any using PropertyPlantAndEquipmentNet),
+dqc.dqc15-assets,validation,validation (not engine),,,0,validation (not engine),(any using Assets),
+dqc.dqc15-liabilities,validation,validation (not engine),,,0,validation (not engine),(any using Liabilities),
+dqc.dqc15-longtermdebt,validation,validation (not engine),,,0,validation (not engine),(any using LongTermDebt),
+dqc.dqc15-longtermdebtnoncurrent,validation,validation (not engine),,,0,validation (not engine),(any using LongTermDebtNoncurrent),
+dqc.sec-neg-ie,validation,validation (not engine),,,0,validation (not engine),interest_expense,
+dqc.dqc65-01,validation,validation (not engine),,,0,validation (not engine),cash_paid_for_interest,
+dqc.it-01,validation,validation (not engine),,,0,validation (not engine),cash_paid_for_income_taxes,
+dqc.dqc181-01,validation,validation (not engine),,,0,validation (not engine),interest_expense;other_income_expense_net;operating_expenses,
+dqc.dqc51-01,validation,validation (not engine),,,0,validation (not engine),income_before_tax;net_income,
+dqc.dqc119-01,validation,validation (not engine),,,0,validation (not engine),income_before_tax,
+dqc.dqc67-01,validation,validation (not engine),,,0,validation (not engine),revenue,
+dqc.dqc71-01,validation,validation (not engine),,,0,validation (not engine),revenue;cost_of_revenue,
+dqc.dqc180-01,validation,validation (not engine),,,0,validation (not engine),dividends_per_share,
+dqc.dqc187-01,validation,validation (not engine),,,0,validation (not engine),ppe_net,
+dqc.dqc227-01,validation,validation (not engine),,,0,validation (not engine),basic_eps;diluted_eps;weighted_basic_shares,
+dqc.sec-shr-01,validation,validation (not engine),,,0,validation (not engine),shares_outstanding,
+dqc.dqc230-01,validation,validation (not engine),,,0,validation (not engine),accounts_receivable;interest_expense,
+dqc.dqc57-01,validation,validation (not engine),,,0,validation (not engine),cash_and_equivalents,
+dqc.dqc206-01,validation,validation (not engine),,,0,validation (not engine),depreciation_and_amortization;operating_expenses,
+dqc.dise-01,validation,validation (not engine),,,0,validation (not engine),operating_expenses,
+insurer.detect,sector_detect,"non-tag rule, no fire",,,0,"non-tag rule, no fire",,
+lib.eq.StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,EQ,522,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockholdersEquity,tag,"shadowed (tag on that statement, rule never fired)",StockholdersEquity,EQ,469,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossNetOfTax,CI,421,SHADOWED exam rule,comprehensive_income,component
+lib.ci.NetIncomeLoss,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLoss,CI,402,library knowledge outside exam data points (keep),,excluded
+lib.ci.ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,CI,419,library knowledge outside exam data points (keep),,excluded
+lib.is.ProfitLoss,tag,"shadowed (tag on that statement, rule never fired)",ProfitLoss,IS,489,library knowledge outside exam data points (keep),,excluded
+lib.eq.AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue,tag,"shadowed (tag on that statement, rule never fired)",AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue,EQ,572,library knowledge outside exam data points (keep),,excluded
+lib.eq.OtherComprehensiveIncomeLossNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossNetOfTax,EQ,385,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,CI,331,SHADOWED exam rule,comprehensive_income,component
+lib.ci.ProfitLoss,tag,"shadowed (tag on that statement, rule never fired)",ProfitLoss,CI,413,library knowledge outside exam data points (keep),,excluded
+lib.eq.NetIncomeLoss,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLoss,EQ,529,library knowledge outside exam data points (keep),,excluded
+lib.eq.TreasuryStockValueAcquiredCostMethod,tag,"shadowed (tag on that statement, rule never fired)",TreasuryStockValueAcquiredCostMethod,EQ,291,library knowledge outside exam data points (keep),,excluded
+lib.ci.ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest,CI,310,library knowledge outside exam data points (keep),,excluded
+lib.eq.DividendsCommonStockCash,tag,"shadowed (tag on that statement, rule never fired)",DividendsCommonStockCash,EQ,283,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossPensionAndOtherPostretirementBenefitPlansAdjustmentNetOfTax,CI,241,SHADOWED exam rule,comprehensive_income,component
+lib.is.CostsAndExpenses,tag,"shadowed (tag on that statement, rule never fired)",CostsAndExpenses,IS,321,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueShareBasedCompensation,EQ,269,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,CI,258,SHADOWED exam rule,comprehensive_income,component
+lib.ci.OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax,CI,105,SHADOWED exam rule,comprehensive_income,component
+lib.eq.StockholdersEquityOther,tag,"shadowed (tag on that statement, rule never fired)",StockholdersEquityOther,EQ,107,library knowledge outside exam data points (keep),,excluded
+lib.eq.SharesIssued,tag,"shadowed (tag on that statement, rule never fired)",SharesIssued,EQ,2,library knowledge outside exam data points (keep),,excluded
+lib.eq.ProfitLoss,tag,"shadowed (tag on that statement, rule never fired)",ProfitLoss,EQ,317,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax,CI,120,SHADOWED exam rule,comprehensive_income,component
+lib.eq.StockIssuedDuringPeriodValueNewIssues,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueNewIssues,EQ,174,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromEquityMethodInvestments,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromEquityMethodInvestments,IS,240,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodSharesShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesShareBasedCompensation,EQ,6,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossCashFlowHedgeGainLossAfterReclassificationAndTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossCashFlowHedgeGainLossAfterReclassificationAndTax,CI,205,SHADOWED exam rule,comprehensive_income,component
+lib.eq.OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent,EQ,250,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromContinuingOperationsPerDilutedShare,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromContinuingOperationsPerDilutedShare,IS,129,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromContinuingOperationsPerBasicShare,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromContinuingOperationsPerBasicShare,IS,129,library knowledge outside exam data points (keep),,excluded
+lib.ci.OtherComprehensiveIncomeLossDerivativesQualifyingAsHedgesNetOfTax,tag,dead: no filer prints the tag,OtherComprehensiveIncomeLossDerivativesQualifyingAsHedgesNetOfTax,CI,0,dead: no filer prints the tag,comprehensive_income,component
+lib.is.SalesRevenueNet,tag,dead: no filer prints the tag,SalesRevenueNet,IS,0,dead: no filer prints the tag,revenue,map
+lib.eq.TreasuryStockSharesAcquired,tag,"shadowed (tag on that statement, rule never fired)",TreasuryStockSharesAcquired,EQ,77,library knowledge outside exam data points (keep),,excluded
+lib.eq.MinorityInterestDecreaseFromDistributionsToNoncontrollingInterestHolders,tag,"shadowed (tag on that statement, rule never fired)",MinorityInterestDecreaseFromDistributionsToNoncontrollingInterestHolders,EQ,192,library knowledge outside exam data points (keep),,excluded
+lib.eq.AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation,EQ,176,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockRepurchasedAndRetiredDuringPeriodValue,tag,"shadowed (tag on that statement, rule never fired)",StockRepurchasedAndRetiredDuringPeriodValue,EQ,225,library knowledge outside exam data points (keep),,excluded
+lib.is.CostOfGoodsSold,tag,dead: no filer prints the tag,CostOfGoodsSold,IS,0,dead: no filer prints the tag,cost_of_revenue,map
+lib.eq.DividendsCommonStock,tag,"shadowed (tag on that statement, rule never fired)",DividendsCommonStock,EQ,127,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockRepurchasedAndRetiredDuringPeriodShares,tag,"shadowed (tag on that statement, rule never fired)",StockRepurchasedAndRetiredDuringPeriodShares,EQ,47,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodSharesNewIssues,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesNewIssues,EQ,8,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockRepurchasedDuringPeriodValue,tag,"shadowed (tag on that statement, rule never fired)",StockRepurchasedDuringPeriodValue,EQ,96,library knowledge outside exam data points (keep),,excluded
+lib.is.LaborAndRelatedExpense,tag,"shadowed (tag on that statement, rule never fired)",LaborAndRelatedExpense,IS,109,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromDiscontinuedOperationsNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromDiscontinuedOperationsNetOfTax,IS,63,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromDiscontinuedOperationsNetOfTaxPerDilutedShare,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromDiscontinuedOperationsNetOfTaxPerDilutedShare,IS,75,library knowledge outside exam data points (keep),,excluded
+lib.is.SalesRevenueGoodsNet,tag,dead: no filer prints the tag,SalesRevenueGoodsNet,IS,0,dead: no filer prints the tag,revenue,component
+lib.is.IncomeLossFromDiscontinuedOperationsNetOfTaxPerBasicShare,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromDiscontinuedOperationsNetOfTaxPerBasicShare,IS,78,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockRepurchasedDuringPeriodShares,tag,"shadowed (tag on that statement, rule never fired)",StockRepurchasedDuringPeriodShares,EQ,23,library knowledge outside exam data points (keep),,excluded
+lib.eq.TreasuryStockCommonShares,tag,"shadowed (tag on that statement, rule never fired)",TreasuryStockCommonShares,EQ,166,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueStockOptionsExercised,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueStockOptionsExercised,EQ,185,library knowledge outside exam data points (keep),,excluded
+lib.eq.SharesPaidForTaxWithholdingForShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",SharesPaidForTaxWithholdingForShareBasedCompensation,EQ,7,library knowledge outside exam data points (keep),,excluded
+lib.is.NoninterestExpense,tag,"shadowed (tag on that statement, rule never fired)",NoninterestExpense,IS,55,library knowledge outside exam data points (keep),,component
+lib.is.IncomeLossFromContinuingOperations,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromContinuingOperations,IS,71,library knowledge outside exam data points (keep),,excluded
+lib.eq.DividendsCash,tag,"shadowed (tag on that statement, rule never fired)",DividendsCash,EQ,43,library knowledge outside exam data points (keep),,excluded
+lib.eq.DividendsPreferredStockCash,tag,"shadowed (tag on that statement, rule never fired)",DividendsPreferredStockCash,EQ,35,library knowledge outside exam data points (keep),,excluded
+lib.is.NoninterestIncome,tag,"shadowed (tag on that statement, rule never fired)",NoninterestIncome,IS,49,library knowledge outside exam data points (keep),,component
+lib.is.RestructuringCharges,tag,"shadowed (tag on that statement, rule never fired)",RestructuringCharges,IS,120,library knowledge outside exam data points (keep),,excluded
+lib.is.OccupancyNet,tag,"shadowed (tag on that statement, rule never fired)",OccupancyNet,IS,63,library knowledge outside exam data points (keep),,excluded
+lib.eq.CommonStockSharesIssued,tag,"shadowed (tag on that statement, rule never fired)",CommonStockSharesIssued,EQ,72,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherNoninterestExpense,tag,"shadowed (tag on that statement, rule never fired)",OtherNoninterestExpense,IS,48,library knowledge outside exam data points (keep),,excluded
+lib.is.CommunicationsAndInformationTechnology,tag,"shadowed (tag on that statement, rule never fired)",CommunicationsAndInformationTechnology,IS,27,library knowledge outside exam data points (keep),,excluded
+lib.ci.NetIncomeLossAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLossAttributableToNoncontrollingInterest,CI,79,library knowledge outside exam data points (keep),,excluded
+lib.eq.CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption,tag,dead: no filer prints the tag,CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption,EQ,0,dead: no filer prints the tag,,excluded
+lib.is.SalesRevenueServicesNet,tag,dead: no filer prints the tag,SalesRevenueServicesNet,IS,0,dead: no filer prints the tag,revenue,component
+lib.is.PreferredStockDividendsIncomeStatementImpact,tag,"shadowed (tag on that statement, rule never fired)",PreferredStockDividendsIncomeStatementImpact,IS,63,library knowledge outside exam data points (keep),,excluded
+lib.eq.MinorityInterestDecreaseFromRedemptions,tag,"shadowed (tag on that statement, rule never fired)",MinorityInterestDecreaseFromRedemptions,EQ,40,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueTreasuryStockReissued,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueTreasuryStockReissued,EQ,40,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueAcquisitions,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueAcquisitions,EQ,79,library knowledge outside exam data points (keep),,excluded
+lib.eq.MinorityInterestPeriodIncreaseDecrease,tag,"shadowed (tag on that statement, rule never fired)",MinorityInterestPeriodIncreaseDecrease,EQ,25,library knowledge outside exam data points (keep),,excluded
+lib.eq.OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax,EQ,106,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToReportingEntity,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToReportingEntity,IS,61,library knowledge outside exam data points (keep),,excluded
+lib.eq.NetIncomeLossAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLossAttributableToNoncontrollingInterest,EQ,36,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueConversionOfConvertibleSecurities,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueConversionOfConvertibleSecurities,EQ,41,library knowledge outside exam data points (keep),,excluded
+lib.eq.NetIncomeLossIncludingPortionAttributableToNonredeemableNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLossIncludingPortionAttributableToNonredeemableNoncontrollingInterest,EQ,74,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockRedeemedOrCalledDuringPeriodValue,tag,"shadowed (tag on that statement, rule never fired)",StockRedeemedOrCalledDuringPeriodValue,EQ,19,library knowledge outside exam data points (keep),,excluded
+lib.eq.TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests,tag,"shadowed (tag on that statement, rule never fired)",TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests,EQ,24,library knowledge outside exam data points (keep),,excluded
+lib.is.ProfessionalFees,tag,"shadowed (tag on that statement, rule never fired)",ProfessionalFees,IS,46,library knowledge outside exam data points (keep),,excluded
+lib.eq.AdjustmentsToAdditionalPaidInCapitalOther,tag,"shadowed (tag on that statement, rule never fired)",AdjustmentsToAdditionalPaidInCapitalOther,EQ,17,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodSharesConversionOfConvertibleSecurities,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesConversionOfConvertibleSecurities,EQ,1,library knowledge outside exam data points (keep),,excluded
+lib.is.RestructuringSettlementAndImpairmentProvisions,tag,"shadowed (tag on that statement, rule never fired)",RestructuringSettlementAndImpairmentProvisions,IS,37,library knowledge outside exam data points (keep),,excluded
+lib.eq.AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation,tag,dead: no filer prints the tag,AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation,EQ,0,dead: no filer prints the tag,,excluded
+lib.is.NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent,tag,"shadowed (tag on that statement, rule never fired)",NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent,IS,30,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodValueEmployeeStockPurchasePlan,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodValueEmployeeStockPurchasePlan,EQ,138,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodSharesStockOptionsExercised,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesStockOptionsExercised,EQ,105,library knowledge outside exam data points (keep),,excluded
+lib.eq.StockIssuedDuringPeriodSharesAcquisitions,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesAcquisitions,EQ,2,library knowledge outside exam data points (keep),,excluded
+lib.is.ProvisionForLoanLeaseAndOtherLosses,tag,"shadowed (tag on that statement, rule never fired)",ProvisionForLoanLeaseAndOtherLosses,IS,26,library knowledge outside exam data points (keep),,component
+lib.eq.Dividends,tag,"shadowed (tag on that statement, rule never fired)",Dividends,EQ,57,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherCostAndExpenseOperating,tag,"shadowed (tag on that statement, rule never fired)",OtherCostAndExpenseOperating,IS,92,library knowledge outside exam data points (keep),,excluded
+lib.is.GainsLossesOnExtinguishmentOfDebt,tag,"shadowed (tag on that statement, rule never fired)",GainsLossesOnExtinguishmentOfDebt,IS,148,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherComprehensiveIncomeLossNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossNetOfTax,IS,41,SHADOWED exam rule,comprehensive_income,component
+lib.eq.StockIssuedDuringPeriodSharesEmployeeStockPurchasePlans,tag,"shadowed (tag on that statement, rule never fired)",StockIssuedDuringPeriodSharesEmployeeStockPurchasePlans,EQ,12,library knowledge outside exam data points (keep),,excluded
+lib.is.InvestmentIncomeNet,tag,"shadowed (tag on that statement, rule never fired)",InvestmentIncomeNet,IS,33,library knowledge outside exam data points (keep),,excluded
+lib.is.ExplorationExpense,tag,"shadowed (tag on that statement, rule never fired)",ExplorationExpense,IS,16,library knowledge outside exam data points (keep),,excluded
+lib.eq.NoncontrollingInterestIncreaseFromSubsidiaryEquityIssuance,tag,"shadowed (tag on that statement, rule never fired)",NoncontrollingInterestIncreaseFromSubsidiaryEquityIssuance,EQ,33,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity,IS,21,SHADOWED exam rule,net_income,component
+lib.eq.OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax,tag,"shadowed (tag on that statement, rule never fired)",OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax,EQ,23,library knowledge outside exam data points (keep),,excluded
+lib.eq.ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,EQ,29,library knowledge outside exam data points (keep),,excluded
+lib.eq.DividendsPreferredStock,tag,"shadowed (tag on that statement, rule never fired)",DividendsPreferredStock,EQ,31,library knowledge outside exam data points (keep),,excluded
+lib.is.InterestExpenseDeposits,tag,"shadowed (tag on that statement, rule never fired)",InterestExpenseDeposits,IS,37,SHADOWED exam rule,interest_expense,component
+lib.is.InvestmentBankingRevenue,tag,"shadowed (tag on that statement, rule never fired)",InvestmentBankingRevenue,IS,4,SHADOWED exam rule,revenue,component
+lib.is.OtherIncome,tag,"shadowed (tag on that statement, rule never fired)",OtherIncome,IS,50,library knowledge outside exam data points (keep),,excluded
+lib.is.ForeignCurrencyTransactionGainLossBeforeTax,tag,"shadowed (tag on that statement, rule never fired)",ForeignCurrencyTransactionGainLossBeforeTax,IS,60,library knowledge outside exam data points (keep),,excluded
+lib.is.WeightedAverageNumberDilutedSharesOutstandingAdjustment,tag,"shadowed (tag on that statement, rule never fired)",WeightedAverageNumberDilutedSharesOutstandingAdjustment,IS,14,library knowledge outside exam data points (keep),,excluded
+lib.is.PreferredStockDividendsAndOtherAdjustments,tag,"shadowed (tag on that statement, rule never fired)",PreferredStockDividendsAndOtherAdjustments,IS,22,library knowledge outside exam data points (keep),,excluded
+lib.is.AssetImpairmentCharges,tag,"shadowed (tag on that statement, rule never fired)",AssetImpairmentCharges,IS,77,library knowledge outside exam data points (keep),,excluded
+lib.is.TaxesExcludingIncomeAndExciseTaxes,tag,"shadowed (tag on that statement, rule never fired)",TaxesExcludingIncomeAndExciseTaxes,IS,37,library knowledge outside exam data points (keep),,excluded
+lib.is.GainLossOnInvestments,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnInvestments,IS,47,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherExpenses,tag,"shadowed (tag on that statement, rule never fired)",OtherExpenses,IS,18,library knowledge outside exam data points (keep),,excluded
+lib.is.TradingGainsLosses,tag,"shadowed (tag on that statement, rule never fired)",TradingGainsLosses,IS,5,library knowledge outside exam data points (keep),,excluded
+lib.is.ExciseAndSalesTaxes,tag,"shadowed (tag on that statement, rule never fired)",ExciseAndSalesTaxes,IS,5,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherOperatingIncome,tag,"shadowed (tag on that statement, rule never fired)",OtherOperatingIncome,IS,12,library knowledge outside exam data points (keep),,excluded
+lib.is.ProfessionalAndContractServicesExpense,tag,"shadowed (tag on that statement, rule never fired)",ProfessionalAndContractServicesExpense,IS,6,library knowledge outside exam data points (keep),,excluded
+lib.is.InterestExpenseLongTermDebt,tag,"shadowed (tag on that statement, rule never fired)",InterestExpenseLongTermDebt,IS,18,SHADOWED exam rule,interest_expense,component
+lib.is.BusinessCombinationAcquisitionRelatedCosts,tag,"shadowed (tag on that statement, rule never fired)",BusinessCombinationAcquisitionRelatedCosts,IS,48,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherSalesRevenueNet,tag,dead: no filer prints the tag,OtherSalesRevenueNet,IS,0,dead: no filer prints the tag,revenue,component
+lib.is.DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerDilutedShare,tag,"shadowed (tag on that statement, rule never fired)",DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerDilutedShare,IS,27,library knowledge outside exam data points (keep),,excluded
+lib.is.NetIncomeLossAvailableToCommonStockholdersDiluted,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLossAvailableToCommonStockholdersDiluted,IS,42,library knowledge outside exam data points (keep),,excluded
+lib.is.ProvisionForLoanLossesExpensed,tag,"shadowed (tag on that statement, rule never fired)",ProvisionForLoanLossesExpensed,IS,12,library knowledge outside exam data points (keep),,component
+lib.is.AntidilutiveSecuritiesExcludedFromComputationOfEarningsPerShareAmount,tag,"shadowed (tag on that statement, rule never fired)",AntidilutiveSecuritiesExcludedFromComputationOfEarningsPerShareAmount,IS,4,library knowledge outside exam data points (keep),,excluded
+lib.is.NetIncomeLossAttributableToNonredeemableNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",NetIncomeLossAttributableToNonredeemableNoncontrollingInterest,IS,17,SHADOWED exam rule,net_income,component
+lib.is.ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,tag,"shadowed (tag on that statement, rule never fired)",ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff,IS,8,library knowledge outside exam data points (keep),,excluded
+lib.is.OperatingCostsAndExpenses,tag,"shadowed (tag on that statement, rule never fired)",OperatingCostsAndExpenses,IS,45,library knowledge outside exam data points (keep),,excluded
+lib.is.PremiumsEarnedNet,tag,"shadowed (tag on that statement, rule never fired)",PremiumsEarnedNet,IS,47,library knowledge outside exam data points (keep),,component
+lib.is.PolicyholderBenefitsAndClaimsIncurredNet,tag,"shadowed (tag on that statement, rule never fired)",PolicyholderBenefitsAndClaimsIncurredNet,IS,46,library knowledge outside exam data points (keep),,component
+lib.is.GoodwillImpairmentLoss,tag,"shadowed (tag on that statement, rule never fired)",GoodwillImpairmentLoss,IS,73,library knowledge outside exam data points (keep),,excluded
+lib.is.DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerBasicShare,tag,"shadowed (tag on that statement, rule never fired)",DiscontinuedOperationIncomeLossFromDiscontinuedOperationNetOfTaxPerBasicShare,IS,24,library knowledge outside exam data points (keep),,excluded
+lib.is.PrincipalTransactionsRevenue,tag,"shadowed (tag on that statement, rule never fired)",PrincipalTransactionsRevenue,IS,5,SHADOWED exam rule,revenue,component
+lib.is.InterestAndOtherIncome,tag,"shadowed (tag on that statement, rule never fired)",InterestAndOtherIncome,IS,31,library knowledge outside exam data points (keep),,excluded
+lib.is.GainLossOnSaleOfBusiness,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnSaleOfBusiness,IS,69,library knowledge outside exam data points (keep),,excluded
+lib.is.GainLossOnDispositionOfAssets,tag,"shadowed (tag on that statement, rule never fired)",GainLossOnDispositionOfAssets,IS,11,library knowledge outside exam data points (keep),,excluded
+lib.is.LitigationSettlementExpense,tag,"shadowed (tag on that statement, rule never fired)",LitigationSettlementExpense,IS,8,library knowledge outside exam data points (keep),,excluded
+lib.is.OtherGeneralExpense,tag,"shadowed (tag on that statement, rule never fired)",OtherGeneralExpense,IS,6,library knowledge outside exam data points (keep),,excluded
+lib.is.TaxesOther,tag,"shadowed (tag on that statement, rule never fired)",TaxesOther,IS,10,library knowledge outside exam data points (keep),,excluded
+lib.is.BenefitsLossesAndExpenses,tag,"shadowed (tag on that statement, rule never fired)",BenefitsLossesAndExpenses,IS,40,library knowledge outside exam data points (keep),,component
+lib.is.DeferredPolicyAcquisitionCostAmortizationExpense,tag,"shadowed (tag on that statement, rule never fired)",DeferredPolicyAcquisitionCostAmortizationExpense,IS,20,library knowledge outside exam data points (keep),,component
+lib.is.DiscontinuedOperationTaxEffectOfDiscontinuedOperation,tag,"shadowed (tag on that statement, rule never fired)",DiscontinuedOperationTaxEffectOfDiscontinuedOperation,IS,5,library knowledge outside exam data points (keep),,excluded
+lib.is.IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToNoncontrollingInterest,tag,"shadowed (tag on that statement, rule never fired)",IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToNoncontrollingInterest,IS,7,SHADOWED exam rule,net_income,component
+lib.is.InterestIncomeExpenseAfterProvisionForLoanLoss,tag,"shadowed (tag on that statement, rule never fired)",InterestIncomeExpenseAfterProvisionForLoanLoss,IS,34,library knowledge outside exam data points (keep),,excluded
+lib.is.FinancialServicesRevenue,tag,dead: no filer prints the tag,FinancialServicesRevenue,IS,0,dead: no filer prints the tag,revenue,component
+lib.is.Communication,tag,"shadowed (tag on that statement, rule never fired)",Communication,IS,8,library knowledge outside exam data points (keep),,excluded
+lib.is.LossContingencyLossInPeriod,tag,"shadowed (tag on that statement, rule never fired)",LossContingencyLossInPeriod,IS,6,library knowledge outside exam data points (keep),,excluded
+lib.is.IncrementalCommonSharesAttributableToShareBasedPaymentArrangements,tag,"shadowed (tag on that statement, rule never fired)",IncrementalCommonSharesAttributableToShareBasedPaymentArrangements,IS,9,library knowledge outside exam data points (keep),,excluded
+lib.is.BusinessDevelopment,tag,"shadowed (tag on that statement, rule never fired)",BusinessDevelopment,IS,7,library knowledge outside exam data points (keep),,excluded
+lib.is.EmployeeBenefitsAndShareBasedCompensation,tag,"shadowed (tag on that statement, rule never fired)",EmployeeBenefitsAndShareBasedCompensation,IS,4,library knowledge outside exam data points (keep),,combined
+lib.is.AmortizationOfAboveAndBelowMarketLeases,tag,tag present elsewhere (other statement/parenthetical),AmortizationOfAboveAndBelowMarketLeases,IS,0,library knowledge outside exam data points (keep),,excluded
+nd.ProfessionalFees,combined_concept,tag present elsewhere (other statement/parenthetical),ProfessionalFees,,0,SHADOWED exam rule,operating_expenses,
+nd.NoninterestIncome,combined_concept,tag present elsewhere (other statement/parenthetical),NoninterestIncome,,0,SHADOWED exam rule,revenue,
+nd.PremiumsEarnedNet,combined_concept,tag present elsewhere (other statement/parenthetical),PremiumsEarnedNet,,0,SHADOWED exam rule,revenue,
+nd.MarketingAndAdvertisingExpense,combined_concept,tag present elsewhere (other statement/parenthetical),MarketingAndAdvertisingExpense,,0,SHADOWED exam rule,sga_expense,
+nd.InterestExpenseDeposits,combined_concept,tag present elsewhere (other statement/parenthetical),InterestExpenseDeposits,,0,SHADOWED exam rule,interest_expense,
+nd.InterestAndFeeIncomeLoansAndLeases,combined_concept,tag present elsewhere (other statement/parenthetical),InterestAndFeeIncomeLoansAndLeases,,0,SHADOWED exam rule,revenue,
+nd.CommunicationsAndInformationTechnology,combined_concept,tag present elsewhere (other statement/parenthetical),CommunicationsAndInformationTechnology,,0,SHADOWED exam rule,operating_expenses,
+nd.InformationTechnologyAndDataProcessing,combined_concept,tag present elsewhere (other statement/parenthetical),InformationTechnologyAndDataProcessing,,0,SHADOWED exam rule,operating_expenses,
+nd.InterestExpenseLongTermDebt,combined_concept,tag present elsewhere (other statement/parenthetical),InterestExpenseLongTermDebt,,0,SHADOWED exam rule,interest_expense,
+nd.InterestExpenseShortTermBorrowings,combined_concept,tag present elsewhere (other statement/parenthetical),InterestExpenseShortTermBorrowings,,0,SHADOWED exam rule,interest_expense,
+nd.InterestIncomeExpenseNet,combined_concept,tag present elsewhere (other statement/parenthetical),InterestIncomeExpenseNet,,0,SHADOWED exam rule,interest_expense,
+nd.CostOfGoodsSold,combined_concept,dead: no filer prints the tag,CostOfGoodsSold,,0,dead: no filer prints the tag,cost_of_revenue,
+nd.CostOfServices,combined_concept,tag present elsewhere (other statement/parenthetical),CostOfServices,,0,SHADOWED exam rule,cost_of_revenue,
+nd.OtherNonoperatingIncomeExpense,combined_concept,tag present elsewhere (other statement/parenthetical),OtherNonoperatingIncomeExpense,,0,SHADOWED exam rule,other_income_expense_net,
+nd.InterestExpense,combined_concept,tag present elsewhere (other statement/parenthetical),InterestExpense,,0,SHADOWED exam rule,interest_expense,
+nd.InterestExpenseNonoperating,combined_concept,tag present elsewhere (other statement/parenthetical),InterestExpenseNonoperating,,0,SHADOWED exam rule,other_income_expense_net,
+nd.InterestAndOtherIncomeExpenseNet,combined_concept,dead: no filer prints the tag,InterestAndOtherIncomeExpenseNet,,0,dead: no filer prints the tag,other_income_expense_net,
+nd.InterestExpenseAndOther,combined_concept,dead: no filer prints the tag,InterestExpenseAndOther,,0,dead: no filer prints the tag,interest_expense,
+nd.IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,combined_concept,tag present elsewhere (other statement/parenthetical),IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest,,0,SHADOWED exam rule,income_before_tax,
+nd.CostOfOtherServices,combined_concept,dead: no filer prints the tag,CostOfOtherServices,,0,dead: no filer prints the tag,cost_of_revenue,
+nd.CostofUniformRentalandFacilityServices,combined_concept,dead: no filer prints the tag,CostofUniformRentalandFacilityServices,,0,dead: no filer prints the tag,cost_of_revenue,
+nd.CostOfProductAndMaintenance,combined_concept,dead: no filer prints the tag,CostOfProductAndMaintenance,,0,dead: no filer prints the tag,cost_of_revenue,
+nd.TechnologyServicesCosts,combined_concept,dead: no filer prints the tag,TechnologyServicesCosts,,0,dead: no filer prints the tag,cost_of_revenue,
+nd.OtherExpenses,combined_concept,tag present elsewhere (other statement/parenthetical),OtherExpenses,,0,SHADOWED exam rule,other_income_expense_net,
+nd.NetInterestIncomeExpense,combined_concept,dead: no filer prints the tag,NetInterestIncomeExpense,,0,dead: no filer prints the tag,interest_expense,
+nd.RoyaltyAndInterestExpenseDebt,combined_concept,dead: no filer prints the tag,RoyaltyAndInterestExpenseDebt,,0,dead: no filer prints the tag,interest_expense,
+nd.InterestAndDebtExpense,combined_concept,tag present elsewhere (other statement/parenthetical),InterestAndDebtExpense,,0,SHADOWED exam rule,interest_expense,
+template.comprehensive_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",comprehensive_income,
+template.cost_of_revenue,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cost_of_revenue,
+template.gross_profit,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",gross_profit,
+template.income_before_tax,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",income_before_tax,
+template.income_tax_expense,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",income_tax_expense,
+template.interest_expense,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",interest_expense,
+template.net_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",net_income,
+template.operating_expenses,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",operating_expenses,
+template.operating_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",operating_income,
+template.other_income_expense_net,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",other_income_expense_net,
+template.research_and_development,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",research_and_development,
+template.revenue,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",revenue,
+template.sga_expense,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",sga_expense,
+is.cost_of_revenue.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cost_of_revenue,
+is.operating_expenses.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",operating_expenses,
+is.sga_expense.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",sga_expense,
+is.interest_expense.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",interest_expense,
+is.research_and_development.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",research_and_development,
+is.revenue.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",revenue,
+is.income_tax_expense.duration_sum,sum_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",income_tax_expense,
+is.interest_expense.sole_debt,procedure,tag present elsewhere (other statement/parenthetical),InterestExpenseDebt,,0,SHADOWED exam rule,interest_expense,
+is.opex_components,procedure,"non-tag rule, no fire",,,0,"non-tag rule, no fire",operating_expenses,
+lib.is.InterestAndDividendIncomeSecurities,tag,"note rule, no fire",InterestAndDividendIncomeSecurities,IS,12,"note rule, no fire",interest_income,component
+nd.InvestmentIncomeNet,combined_concept,"note rule, no fire",InvestmentIncomeNet,,0,"note rule, no fire",interest_income,
+nd.InterestAndOtherIncome,combined_concept,"note rule, no fire",InterestAndOtherIncome,,0,"note rule, no fire",interest_income,
+nd.OtherInterestAndDividendIncome,combined_concept,"note rule, no fire",OtherInterestAndDividendIncome,,0,"note rule, no fire",interest_income,
+nd.InterestIncomeSecuritiesTaxable,combined_concept,"note rule, no fire",InterestIncomeSecuritiesTaxable,,0,"note rule, no fire",interest_income,
+template.amortization_of_intangibles,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",amortization_of_intangibles,
+template.cash_paid_for_income_taxes,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_paid_for_income_taxes,
+template.cash_paid_for_interest,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_paid_for_interest,
+template.interest_income,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",interest_income,
+notes.cash_paid_for_income_taxes.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_paid_for_income_taxes,
+notes.cash_paid_for_interest.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",cash_paid_for_interest,
+notes.amortization_of_intangibles.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",amortization_of_intangibles,
+notes.interest_income.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",interest_income,
+notes.weighted_basic_shares.fact.WeightedAverageNumberOfShareOutstandingBasicAndDiluted,note_fact,"note rule, no fire",WeightedAverageNumberOfShareOutstandingBasicAndDiluted,,0,"note rule, no fire",weighted_basic_shares,
+notes.weighted_diluted_shares.fact.WeightedAverageNumberOfShareOutstandingBasicAndDiluted,note_fact,"note rule, no fire",WeightedAverageNumberOfShareOutstandingBasicAndDiluted,,0,"note rule, no fire",weighted_diluted_shares,
+lib.eq.SharesOutstanding,tag,"shadowed (tag on that statement, rule never fired)",SharesOutstanding,EQ,2,SHADOWED exam rule,shares_outstanding,component
+lib.is.EarningsPerShareBasicAndDiluted,tag,dead: no filer prints the tag,EarningsPerShareBasicAndDiluted,IS,0,dead: no filer prints the tag,diluted_eps,map
+lib.is.WeightedAverageNumberOfShareOutstandingBasicAndDiluted,tag,dead: no filer prints the tag,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,IS,0,dead: no filer prints the tag,weighted_basic_shares,map
+template.basic_eps,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",basic_eps,
+template.diluted_eps,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",diluted_eps,
+template.dividends_per_share,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",dividends_per_share,
+template.shares_outstanding,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",shares_outstanding,
+template.weighted_basic_shares,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",weighted_basic_shares,
+template.weighted_diluted_shares,data_point,"non-tag rule, no fire",,,0,"non-tag rule, no fire",weighted_diluted_shares,
+notes.weighted_basic_shares.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",weighted_basic_shares,
+notes.weighted_diluted_shares.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",weighted_diluted_shares,
+notes.dividends_per_share.default_tag,note_default,"non-tag rule, no fire",,,0,"non-tag rule, no fire",dividends_per_share,
+per_share.shares_outstanding.stmt,stmt_restrict,"non-tag rule, no fire",,,0,"non-tag rule, no fire",shares_outstanding,
+per_share.parenthetical_allowed,parenthetical_allowed,"non-tag rule, no fire",,,0,"non-tag rule, no fire",,

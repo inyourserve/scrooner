@@ -42,7 +42,7 @@ FY0 = 2025-12-27; FY1 = prior year. Values in full USD (printed value x the R-pa
 | total_liabilities | mapped | Liabilities | BS R6.htm | Liabilities | 86852000000 | 86852000000 | 81296000000 | 81296000000 | Y | FILING-CHECKED |  | accn 0000077476-26-000007 period ..2025-12-27 |
 | total_debt | component sum | DebtCurrent+LongTermDebtNoncurrent | BS R6.htm+R6.htm | Short-term debt obligations + Long-Term Debt Obligations | 49182000000 | 49182000000 | 44306000000 | 44306000000 | Y | FILING-CHECKED | BS 'Short-term debt obligations' + 'Long-Term Debt Obligations' (finance leases are described inside debt obligations; no separate finance lease fact found in fetched pages) | accn 0000077476-26-000007 period ..2025-12-27 |
 | stockholders_equity | mapped | StockholdersEquity | BS R6.htm | Stockholders' Equity Attributable to Parent | 20406000000 | 20406000000 | 18041000000 | 18041000000 | Y | FILING-CHECKED |  | accn 0000077476-26-000007 period ..2025-12-27 |
-| shares_outstanding | mapped | dei:EntityCommonStockSharesOutstanding | COVER R1.htm | Entity Common Stock, Shares Outstanding (cover) | 1366649053 | 1366649053 |  |  | Y | FILING-CHECKED | R7 prints issued 1,367 million and treasury shares; outstanding = cover | accn 0000077476-26-000007 period 2026-01-23 |
+| shares_outstanding | review |  | BS R6.htm |  |  |  |  |  |  | FILING-CHECKED | check: hand R8 (equity statement): 'Balance, outstanding, end of year' printed on us-gaap:SharesOutstanding (BS-date outstanding count); R6/R7 print issued 1,367 and treasury 500 (millions). DEFINITION QUESTION (as C): may the printed SharesOutstanding outstanding balance serve as the BS-date count? Recommend yes | 2026-11-12 |
 | cfo | mapped | NetCashProvidedByUsedInOperatingActivities | CF R5.htm | Net Cash Provided by Operating Activities | 12087000000 | 12087000000 | 12507000000 | 12507000000 | Y | FILING-CHECKED |  | accn 0000077476-26-000007 period 2024-12-29..2025-12-27 |
 | cash_flow_investing | mapped | NetCashProvidedByUsedInInvestingActivities | CF R5.htm | Net Cash Used for Investing Activities | -6879000000 | -6879000000 | -5472000000 | -5472000000 | Y | FILING-CHECKED |  | accn 0000077476-26-000007 period 2024-12-29..2025-12-27 |
 | cash_flow_financing | mapped | NetCashProvidedByUsedInFinancingActivities | CF R5.htm | Net Cash Used for Financing Activities | -4979000000 | -4979000000 | -7556000000 | -7556000000 | Y | FILING-CHECKED |  | accn 0000077476-26-000007 period 2024-12-29..2025-12-27 |
@@ -66,3 +66,8 @@ Auto scan: no chosen tag flagged. Interest line: the cloud row (InterestIncomeEx
 
 ## Mismatches (printed vs API)
 none beyond sign differences (printed in parentheses).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+- shares_outstanding: mapped dei:EntityCommonStockSharesOutstanding -> not_presented  | shares_outstanding = BS-date count, never dei (Dhairya ruling 2026-11-12)
+- shares_outstanding: check: hand -> review | check: hand R8 (equity statement): 'Balance, outstanding, end of year' printed on us-gaap:SharesOutstanding (BS-date outstanding count); R6/
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

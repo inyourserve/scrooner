@@ -67,3 +67,7 @@ Auto scan flagged interest_expense (InterestExpenseNonoperating FY2022-FY2025; I
 
 ## Mismatches (printed vs API)
 none beyond sign differences (interest income printed (105,266) as a credit in 'nonoperating expense (income)'; other, net printed 7,934 expense = fact -7,934).
+
+## Fixes 2026-11-12 (Ritwik cloud re-read of the same 10-K)
+
+- 0 AUTO rows machine-checked against the same 10-K (R-page row = the filing's XBRL fact, or blank confirmed by the whole-filing MetaLinks check); hand checks are listed separately

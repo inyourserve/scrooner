@@ -200,3 +200,54 @@ Guard: when a label would demote a line, check it against the calc position and 
 - Tooling: FSDS num.txt carries per-share values to 4 decimals (par 0.00001 reads 0.0000: AAPL 0001193125-15-023697): per-share and tiny values come from the API or the instance, never FSDS. Tag-name ABSENCE in analytics.company_sec_tag is evidence only for undimensioned primary-statement lines (collaboration revenue sits on members/custom tags at LLY, REGN, VRTX, ALNY, BMY).
 - The filer's own calc linkbase lists `OtherShortTermBorrowings`, `ShortTermBorrowings`, `CapitalLeaseObligationsNoncurrent`, `DebtCurrent` directly under LiabilitiesCurrent/Liabilities (AAPL 0000320193-20-000062, ABBV 0001551152-22-000017, CVX 0000093410-15-000020, MU 0000723125-21-000065): debt slots come from tags, not from calc position.
 - `Deposits` + `InterestIncomeExpenseNet` co-occur at FCX, ZBRA, CPAY, WEX, CBC: not a bank test (sector-faces.md).
+
+## AB. Status convention for data points found only in notes (Dhairya ruling 2026-11-12)
+- The data point's fact is in the filing's note → **mapped**, stmt NOTE, with the R page (e.g. `IncomeTaxesPaidNet` in the tax or supplemental-cash note under ASU 2023-09).
+- The fact is nowhere in the filing (face or notes, checked in the filing's XBRL and its R pages) → **not_presented**, with the evidence of absence.
+- **component_in_note** only when the note value is a COMPONENT of the data point, not the data point itself.
+- A face miss alone is never not_presented. Rows a reader marks "AUTO / not hand-verified" are not answer key (graded key_unverified; Engineering's loader rejects them).
+
+## AC. Exam-driven fixes (v6, 2026-11-12; 120 graded companies)
+- Net income without a parent line: `NetIncomeLossAvailableToCommonStockholdersBasic` when no preferred line is printed; `ProfitLoss` when no NCI line is printed (net-income card rules, now in predict.py).
+- A lone CF `Depreciation` / `OtherDepreciationAndAmortization` line is the D&A line; two or more CF D&A component lines are a duration sum.
+- New library rows: `IncreaseDecreaseInAccountsPayableTrade` → cf_ap_change; unclassified `AccountsReceivableNet` → accounts_receivable; `AccountsPayableCurrentAndNoncurrent` → accounts_payable.
+- Reader keys graded as key errors under existing rulings: tax-withholding or `ProceedsFromRepurchaseOfEquity` keyed as buybacks (founder 2026-11-04 item 4); NCI or preferred dividends keyed as common dividends; interest, notes or financing receivables keyed as accounts receivable.
+
+## AD. Rulings 2026-11-13 (Dhairya)
+
+1. **OUT vs not_presented.** This applies to every data point, not only current assets and liabilities. A data point outside the company's template group is OUT. A data point inside the template that the filing does not print is not_presented. Banks and insurers present no classified balance sheet, so current_assets and current_liabilities are OUT for them (SYF). cost_of_revenue, gross_profit, research_and_development and inventory are outside the bank and insurer templates, so they are OUT as well. The one exception is a company-scope rule where the filing really prints the line: a conglomerate insurer with an operating segment, such as L, may print cost of revenue, and that row is mapped or combined, never OUT. exam/tools/grade.py grades a reader key of not_presented where the predictor says OUT as a key error (Dhairya 2026-11-13, second message).
+2. **Opex as a difference of two totals** (WYNN: CostsAndExpenses − COGS). Status component_sum, tags = the printed face lines between COGS and operating income. The difference of the two totals is only a cross-check, and it must tie to that sum. The predictor still returns `mapped CostsAndExpenses` there. The fix is queued for the backtest (rules/inbox), with no rule change before exam/tools/backtest.py is on main.
+3. **Headline.** Hand-verified rows stay the headline, and graduation counts hand rows only, until exam/results/key-adjudication-2026-11-13.csv (the Verifier's 30 + 30 filing check) decides hand against machine.
+4. **Cost of revenue printed only by member** (WYNN, with the same pattern at BLCO, CZR, HST, TMUS and ASTS). The face line has no undimensioned value; the R page hides the member rows. cost_of_revenue = component_sum of the printed ProductOrServiceAxis member facts, which is allowed as a duration sum of printed face lines. Its value_source is fsn_xbrl, because companyfacts carries no dimensioned facts. Opex = component_sum of the valued lines after the cost line, but only where total = those lines + the sum of the members exactly. Each tie is checked in the filing's XBRL instance and cited in exam/tools/adjudications.csv. All six tied to 0 on 2026-11-13. Where the lines carry interest (DE Financial Services), the rule stands down and the total is combined.
+
+## AE. Rulings 2026-11-13, second batch (Dhairya; evidence exam/results/key-adjudication-2026-11-13.csv, 60 rows, R pages opened)
+
+1. **Key evidence has three buckets.** A row is hand only when its note carries `check: hand`. `machine-full-filing` is machine. Everything else is tool. In the adjudication, machine keys were right in 28 of 30 sampled rows, with no shared blind spot. The old hand bucket mixed in 367 unmarked tool rows. exam/tools/grade.py and exam_score.py report hand / machine / tool / all.
+2. **Note-only mapping** accepts only an undimensioned, consolidated fact. It never takes an investee's gross profit (BWXT) or a segment's overhead (SEIC).
+3. **Face line printed only under a class member** (STZ diluted shares, Class A). It is still the face line: map it to that member's fact.
+4. **Custom tag for a standard concept on the face** (AKAM akam:PropertyPlantAndEquipmentAndCapitalizedSoftwareNet → PP&E). Map it through a company rule with value_source fsn_xbrl.
+5. **SG&A with G&A alone.** Lone G&A → sga_expense is mapped only when the face prints no selling or marketing line anywhere and no other selling-type line sits in the opex block (TLN). Otherwise it is component_sum or combined. SG&A is never G&A alone when S&M exists (the MSFT incident).
+6. **Bank capex** "Purchases of premises and equipment, net", net of disposals → combined, as before (DEMOTE net of proceeds).
+7. **Capex perimeter** (doc 02 line 119) includes turnarounds (PBF: key and prediction both wrong) and purchased real property used in operations (GKOS second line).
+8. **total_debt** includes finance leases disclosed in the notes (RL).
+
+## AF. Machine docmap errors caught by hand checks, ranks 101-110 (relayed 2026-11-13; fixes proposed in data-team/tags/decisions/NOTES-TAG-EXPERT-reads-101-110-2026-11-12.md on work/ritwik-cloud/tag-decisions-2026-11-11 @26564cdf)
+
+The predictor (v7 engine, rules as of ee1a40ec) already gets each case right. The errors live in the docmap tool:
+- **PLD dividends.** "Dividends on common and preferred stock/units" is combined, not mapped (PaymentsOfDividends covers preferred stock and OP units).
+- **PLD debt.** Count debt once. The co-registrant (Prologis LP) repeats the parent's debt: 70,074M is the double count, 35,037M is right. A fact with coreg ≠ '' is never consolidated (the same as the note-only rule in AE.2).
+- **MCK and SYK D&A.** The CF D&A is the sum of Depreciation and AdjustmentForAmortization.
+- **MCK and PSX notes.** Values from VIE notes (total liabilities, AR) belong to the VIE, not the company. Take note values only from undimensioned, consolidated facts (AE.2). exam/tools/NOTES.sql enforces this with dim_id=0 and coreg=''.
+- **PSX.** The face line "Interest and debt expense" is InterestAndDebtExpense, which maps to interest_expense.
+- **PLD capex.** A REIT's capex lines (development, acquisitions of real estate) need a perimeter check. The predictor keys PaymentsToDevelopRealEstateAssets as combined. Pending Dhairya's capex perimeter (doc 02 line 119) for REITs.
+5. **Location slices** (Dhairya 2026-11-13, CSCO). An undimensioned AmortizationOfIntangibleAssets, D&A or SBC fact can be only one income-statement-location slice. In FSN segments, the location axis appears as IncomeStatementLocation= or StatementOfIncomeLocationBalance=. When the location members sum to more than the undimensioned fact (beyond the dcml tolerance), the data point is component_sum of the location members, value_source fsn_xbrl. A printed location total (an OperatingIncomeLoss or CostsAndExpenses member) must tie. Otherwise the undimensioned fact stays mapped. Cohort scan (exam/tools/LOCATION.sql, 2026-11-13): the slice occurs only at CSCO, with 947 + 916 = 1,863, the location total. The LYFT and FIG SBC location sums tie exactly to the printed CF line.
+6. **Accretion tag.** DepreciationAmortizationAndAccretionNet is combined for D&A, even when the label reads "Depreciation and amortization". It includes accretion by definition, and a label never promotes a wider tag (doc 02; DUK ruling).
+7. **"Could be classified as G&A" disclosures are not SG&A** (HCA, 2026-11-13). HCA's policy note tags its corporate office costs (548M FY2025) as GeneralAndAdministrativeExpense, undimensioned and consolidated, but says most expenses are costs of revenues. The fact is a slice of a natural-expense income statement, not the company's SG&A, so sga_expense is not_presented. Undimensioned does not by itself mean the whole concept: read the caption or sentence that carries the fact.
+8. **Turnarounds count as capex only in investing activities** (Dhairya 2026-11-13, DINO). A turnaround line in operating activities (DINO IncreaseDecreaseInTurnaroundExpenditures, 437M) is already inside CFO. Adding it to capex would subtract it twice in FCF (CFO − capex). Investing-section turnaround lines are capex components: PBF PaymentsForDeferredTurnaroundCosts and CVI PaymentsForTurnaroundCosts (company extension tags).
+9. **Finance leases in total_debt** (founder 2026-11-04 item 5; Dhairya 2026-11-13). Total debt includes finance leases, printed or disclosed in the notes. Guards:
+   - If a debt line's tag or label already includes leases ("and finance lease obligations", "capital lease", LongTermDebtAndCapitalLeaseObligations…), add no separate lease line.
+   - Never add both the note total and a face current/noncurrent split.
+   - Use the note FinanceLeaseLiability only when no face line carries leases.
+   - Operating leases never count.
+   - The deterministic location signal is FinanceLeaseLiability(Current|Noncurrent)StatementOfFinancialPositionExtensibleList. For IBM it points to ShortTermBorrowings/LongTermDebtNoncurrent, so leases are already in debt and nothing is added. For AAPL and COST it points to OtherLiabilitiesCurrent/Noncurrent, so the leases are added (AAPL 538 + 692 = 1,230M; COST 94 + 1,319 = 1,413M).
+   - exam/tools/grade.py (with GRADE_LINES_DIR) grades a total_debt key that omits a printed finance-lease line as a key error.

@@ -41,7 +41,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 3982,SNOW,CF,,not_presented,dividends_paid,,,24,no dividends
 2929,ABNB,IS,us-gaap:IncomeLossFromContinuingOperationsPerBasicShare,map,basic_eps,2103,2606,22,EPS tagged continuing-ops per share; no discontinued operations
 2929,ABNB,IS,us-gaap:IncomeLossFromContinuingOperationsPerDilutedShare,map,diluted_eps,2103,2606,22,as basic
-2929,ABNB,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,map,interest_expense,2103,2606,13,"FILING-CHECKED 0001559720-24-000006 R5: 'Interest income' 721M (InvestmentIncomeNonoperating) on its own row, then 'Interest expense' (83M) tagged InterestIncomeExpenseNonoperatingNet: map with sign -1. Company-scoped override"
+2929,ABNB,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,2103,2606,13,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: FILING-CHECKED 0001559720-24-000006 R5: 'Interest income' 721M (InvestmentIncomeNonoperating) on its own row, then 'Interest expense' (83M) tagged InterestIncomeExpenseNonoperatingNet: map with sign -1. Company-scoped override"
 2929,ABNB,CF,,not_presented,dividends_paid,,,22,no dividends
 3987,CME,IS,us-gaap:ProfitLoss,map,net_income,1603,1809,10,'net income' tagged ProfitLoss: map where no NCI line is printed (rule as LOW/CVS); otherwise use the attributable line
 3987,CME,CF,us-gaap:PaymentsForProceedsFromDerivativeInstrumentFinancingActivities,map,share_buybacks,2506,2606,4,"FILING-CHECKED 0001156375-26-000047 R8: cash-flow row 'Repurchase of Class A common stock, including costs' (1,236.9) tagged PaymentsForProceedsFromDerivativeInstrumentFinancingActivities (filer tag error); company-scoped override 2025-06..2026-06"
@@ -100,8 +100,8 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1567,WM,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1606,2606,41,'interest expense net'
 1567,WM,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1406,1603,8,'interest expense net'
 1178,CSX,BS,us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents,combined,cash,2003,2606,23,"Tag Expert correction 2026-11-11 (relayed by Mac Ritwik; TAG-EXPERT-RECONCILE-FSN-CARDS-2026-11-11.md): a BS cash line tagged with the restricted-cash total is a combined line (cash + restricted cash), a blank with reason line_presented_combined_with_others, not cash. Supersedes card rule 9. Earlier: card rule 9 (only where no restricted-cash line is printed)"
-1178,CSX,IS,us-gaap:InterestIncomeExpenseNet,map,interest_expense,1812,2403,19,FILING-CHECKED 0000277948-20-000008 R2: row 'Interest Expense' (737) tagged InterestIncomeExpenseNet; interest income sits inside 'Other Income - Net' (88). A gross interest-expense row under a net tag: map with sign -1. Company-scoped override
-1178,CSX,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,map,interest_expense,1806,1909,5,same face row 2018-06..2019-09 as the FILING-CHECKED 2019 10-K R2; map with sign -1
+1178,CSX,IS,us-gaap:InterestIncomeExpenseNet,combined,interest_expense,1812,2403,19,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: FILING-CHECKED 0000277948-20-000008 R2: row 'Interest Expense' (737) tagged InterestIncomeExpenseNet; interest income sits inside 'Other Income - Net' (88). A gross interest-expense row under a net tag: map with sign -1. Company-scoped override"
+1178,CSX,IS,us-gaap:InterestIncomeExpenseNonoperatingNet,combined,interest_expense,1806,1909,5,"Dhairya ruling 2026-11-12: interest_expense is the gross charge only; a net tag is combined, never mapped (supersedes rule 12/33 sign-column maps). Was: same face row 2018-06..2019-09 as the FILING-CHECKED 2019 10-K R2; map with sign -1"
 1178,CSX,IS,,not_presented,cost_of_revenue;gross_profit,,,51,railroad: expenses by nature
 1595,JCI,IS,,not_presented,interest_expense;operating_income,,,50,JCI prints 'net financing charges' (no interest-expense line) and no operating income line
 1595,JCI,BS,,not_presented,total_liabilities,,,50,no total liabilities line
@@ -135,7 +135,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 1282,PNC,BS,,template_out_pending_read,current_assets;current_liabilities,,,51,unclassified bank balance sheet (proposed template-OUT; per Dhairya 2026-11-12 the status waits for this company's full 10-K read)
 1282,PNC,CF,,not_presented,capex,,,51,bank CF has no PP&E purchase line
 2956,DDOG,CF,,not_presented,dividends_paid;share_buybacks,,,28,none paid
-2854,AMT,CF,c:DepreciationAmortizationAndAccretionIncludingDiscontinuedOperations,map,d_and_a,2409,2606,8,"CF 'depreciation, amortization and accretion' (custom; AMT's standing D&A line, accretion of AROs included as presented)"
+2854,AMT,CF,c:DepreciationAmortizationAndAccretionIncludingDiscontinuedOperations,combined,d_and_a,2409,2606,8,"Dhairya ruling 2026-11-12: D&A that includes accretion is combined. Was: CF 'depreciation, amortization and accretion' (custom; AMT's standing D&A line, accretion of AROs included as presented)"
 4553,MRNA,IS,,not_presented,interest_expense,,,31,only interest income printed
 4553,MRNA,CF,us-gaap:PaymentsForRepurchaseOfRedeemableConvertiblePreferredStock,exclude,share_buybacks,1812,2012,4,preferred (founder ruling)
 4553,MRNA,CF,,not_presented,dividends_paid,,,31,no dividends
@@ -267,7 +267,7 @@ company_id,ticker,stmt,tag,decision,concept,era_from,era_to,n_filings,reason
 4057,HPE,BS,,not_presented,total_liabilities,,,44,no total liabilities line
 1823,ORLY,CF,,not_presented,dividends_paid,,,51,no dividends
 1823,ORLY,BS,,not_presented,total_liabilities,,,51,no total liabilities line
-2951,RSG,CF,c:DepreciationDepletionAmortizationAndAccretionAssociatedWithPropertyPlantAndEquipmentIntangibleAssetsAndAssetRetirementObligations,map,d_and_a,1312,2609,52,"CF 'depreciation, amortization, depletion and accretion' (RSG's standing D&A line, landfill accretion included as presented)"
+2951,RSG,CF,c:DepreciationDepletionAmortizationAndAccretionAssociatedWithPropertyPlantAndEquipmentIntangibleAssetsAndAssetRetirementObligations,combined,d_and_a,1312,2609,52,"Dhairya ruling 2026-11-12: D&A that includes accretion is combined. Was: CF 'depreciation, amortization, depletion and accretion' (RSG's standing D&A line, landfill accretion included as presented)"
 2951,RSG,BS,,not_presented,total_liabilities,,,52,no total liabilities line
 327,TGT,BS,us-gaap:CashCashEquivalentsAndShortTermInvestments,map,cash,1401,2607,51,"face 'cash and cash equivalents' tagged CashCashEquivalentsAndShortTermInvestments: TGT's cash equivalents include short-term investments by its own policy; map the face line as printed (label rule, as Dhairya CB ruling)"
 327,TGT,IS,us-gaap:IncomeLossFromContinuingOperationsBeforeInterestExpenseInterestIncomeIncomeTaxesExtraordinaryItemsNoncontrollingInterestsNet,map,operating_income,1804,1810,3,face 'operating income' (EBIT tag)
