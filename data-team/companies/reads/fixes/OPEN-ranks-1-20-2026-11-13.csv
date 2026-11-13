@@ -1,3 +1,20 @@
 ticker,data_point,fiscal_year,period_end,lane,why
 GOOG,cash_paid_for_income_taxes,2024,2024-12-31,b,us-gaap:IncomeTaxesPaidNet not found undimensioned on an R page of 0001652044-25-000014
 LLY,interest_expense,2024,2024-12-31,b,us-gaap:InterestExpenseNonoperating not found undimensioned on an R page of 0000059478-25-000067
+WMT,cf_ar_change,2025,2025-01-31,b,nearest decision not_presented; recheck in the FY's own 10-K ['0000104169-25-000021'] by hand
+AMD,depreciation_and_amortization,2024,2024-12-28,b,nearest decision not_presented; recheck in the FY's own 10-K ['0000002488-25-000012'] by hand
+XOM,cash_paid_for_income_taxes,2025,2025-12-31,b,us-gaap:IncomeTaxesPaidNet not found undimensioned on an R page of 0000034088-26-000045
+XOM,cash_paid_for_interest,2025,2025-12-31,b,us-gaap:InterestPaid not found undimensioned on an R page of 0000034088-26-000045
+XOM,research_and_development,2025,2025-12-31,b,us-gaap:ResearchAndDevelopmentExpense not found undimensioned on an R page of 0000034088-26-000045
+XOM,revenue,2015,2015-12-31,b,us-gaap:Revenues not found undimensioned on an R page of 0000034088-16-000065
+XOM,revenue,2016,2016-12-31,b,us-gaap:Revenues not found undimensioned on an R page of 0000034088-17-000017
+XOM,revenue,2017,2017-12-31,b,us-gaap:Revenues not found undimensioned on an R page of 0000034088-18-000015
+XOM,shares_outstanding,2015,2015-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-16-000065
+XOM,shares_outstanding,2016,2016-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-17-000017
+XOM,shares_outstanding,2017,2017-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-18-000015
+XOM,shares_outstanding,2018,2018-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-19-000010
+XOM,shares_outstanding,2019,2019-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-20-000016
+XOM,shares_outstanding,2020,2020-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-21-000012
+XOM,shares_outstanding,2021,2021-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-22-000011
+XOM,shares_outstanding,2022,2022-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-23-000020
+XOM,shares_outstanding,2023,2023-12-31,b,us-gaap:CommonStockSharesOutstanding not found undimensioned on an R page of 0000034088-24-000018
