@@ -15,7 +15,7 @@ ppe_net,2023,95641000000,95641000000,MATCH,0000950170-23-035122,PropertyPlantAnd
 cash_and_equivalents,2016,6510000000,6510000000,MATCH (hand),0001193125-16-662209,"CashAndCashEquivalentsAtCarryingValue=6,510 on BS R5 (hand check; the script read the CF beginning-of-period row)"
 current_assets,2017,162696000000,162696000000,MATCH,0001564590-18-019062,AssetsCurrent=162696000000 (R4)
 amortization_of_intangibles,2023,2500000000,2500000000.0,MATCH,0000950170-23-035122,AmortizationOfIntangibleAssets=2500000000.0 (R74)
-total_debt,2016,40557000000,40557000000,MATCH,0001564590-17-014900,LongTermDebtCurrent=0 (R5); LongTermDebtNoncurrent=40557000000 (R5)
+total_debt,2016,40557000000,53461000000,ERROR (re-check 2026-11-14),0001564590-17-014900,"re-checked against the full perimeter (founder 2026-11-04: all debt incl. finance leases): FY2017 10-K BS R5 prints Short-term debt 12,904 + Current portion of LTD 0 + Long-term debt 40,557 = 53,461; served 40,557 omits short-term debt. First pass wrongly checked only the proof's own two tags"
 cf_ap_change,2018,1148000000,1148000000,MATCH,0001564590-18-019062,IncreaseDecreaseInAccountsPayable=1148000000 (R6)
 sbc,2017,3266000000,3266000000,MATCH,0001564590-17-014900,ShareBasedCompensation=3266000000 (R7)
 research_and_development,2017,13037000000,13037000000,MATCH,0001564590-17-014900,ResearchAndDevelopmentExpense=13037000000 (R2)
