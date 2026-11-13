@@ -1,0 +1,7 @@
+ticker,data_point,fiscal_year,period_end,filing_checked,why_open
+PM,amortization_of_intangibles,2022,2022-12-31,0001413329-23-000025,"FSN holds no fact of the amortization family in this 10-K or the next; the v2 list says not_presented, but PM discloses intangible amortization in notes in other years: needs an R-page read before not_presented"
+CVX,dividends_per_share,2019,2019-12-31,0000093410-20-000010,"no DividendsPerShare fact (undimensioned or presented) in the FY2019 or FY2020 10-K in FSN, yet 4.76 is served: the value's source must be read on the R page"
+ABBV,cash_paid_for_income_taxes,2018,2018-12-31,0001551152-19-000008,"no IncomeTaxesPaid fact in the FY2018 or FY2019 10-K in FSN; ABBV pays taxes, so not_presented needs an R-page read of the supplemental cash-flow note"
+ORCL,gross_profit,2015,2015-05-31,0001193125-15-235239,"no GrossProfit fact in the FY2015 or FY2016 10-K in FSN (later years carry it in a note); 23,709,000,000 is served: source to be read"
+GE,share_buybacks,2020,2020-12-31,0000040545-21-000011,"no PaymentsForRepurchaseOf* fact in the FY2020 or FY2021 10-K in FSN, yet 15,300,000 is served: source to be read"
+AMAT,dividends_per_share,2018,2018-10-28,0000006951-18-000041,"no DividendsPerShare fact in the FY2018 or FY2019 10-K in FSN although AMAT paid dividends in FY2018: needs an R-page read before any decision"
