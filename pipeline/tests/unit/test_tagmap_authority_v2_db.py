@@ -70,11 +70,29 @@ HD = [
 def test_hd_shape_far_later_note_copy_loses_and_is_demoted(isolated_database_url):
     with psycopg.connect(isolated_database_url) as conn:
         cid, ids = _build(conn, "0000000101", HD, auth=("A18",))
+        conn.execute(
+            "insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max) values (%s,'latest_filed_tagmap_v1',4,1353,2102)",
+            (ids["A18"],),
+        )
+        conn.commit()
         _run(conn, cid)
         assert _auth(conn, ids) == ["A15"]  # latest ELIGIBLE copy (<=400 days); the 2,102 note copy is history
         rule = conn.execute("select rule from core.fact_conflict_resolution where fact_id=%s", (ids["A15"],)).fetchone()[0]
         assert rule == "latest_filed_tagmap_v2"  # the audit rule id is versioned
-        assert conn.execute("select count(*) from core.fact_conflict_resolution where fact_id=%s", (ids["A18"],)).fetchone()[0] == 0
+        # audit history stays: the demoted copy's old row still exists, marked as demoted with the old rule kept
+        old = conn.execute("select rule, value_min, value_max from core.fact_conflict_resolution where fact_id=%s", (ids["A18"],)).fetchone()
+        assert old is not None
+        assert old[0] == clf.DEMOTED_RULE + " (was latest_filed_tagmap_v1)"
+        assert (old[1], old[2]) == (1353, 2102)
+
+
+@pytest.mark.integration
+def test_a_demoted_copy_without_an_old_audit_row_gets_a_demotion_row(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as conn:
+        cid, ids = _build(conn, "0000000108", HD, auth=("A18",))
+        _run(conn, cid)
+        rule = conn.execute("select rule from core.fact_conflict_resolution where fact_id=%s", (ids["A18"],)).fetchone()[0]
+        assert rule == clf.DEMOTED_RULE
 
 
 @pytest.mark.integration

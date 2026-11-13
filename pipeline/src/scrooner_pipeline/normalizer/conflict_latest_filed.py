@@ -247,6 +247,7 @@ on conflict (fact_id) do update
 # class, so a loser's reason is superseded_precision (precision rule) or superseded_restated (latest rule). Same
 # sign-only quarantine as above.
 RULE_TAGMAP_PRECISION = "precision_tagmap_v2"
+DEMOTED_RULE = "latest_filed_tagmap_v2:demoted_not_face_column_eligible"
 
 TAGMAP_CANDIDATES_SQL = """
 with candidates as (
@@ -446,9 +447,28 @@ def apply_tag_map_promotions(conn: psycopg.Connection, plan: list[dict]) -> int:
                 "update core.fact set is_authoritative = false where id = any(%s) and is_authoritative",
                 (demote,),
             )
+            # Audit history stays (the table has one row per fact and no reason column): the old row is kept
+            # with its numbers and its old rule wrapped into the demotion marker; a demoted fact with no row
+            # gets one. Idempotent: an already-marked row is not wrapped twice.
+            dem = [(i, p) for p in plan for i in p.get("demote", [])]
             cur.execute(
-                "delete from core.fact_conflict_resolution where fact_id = any(%s)",
-                (demote,),
+                """
+                insert into core.fact_conflict_resolution (fact_id, rule, group_size, value_min, value_max)
+                select * from unnest(%s::bigint[], %s::text[], %s::int[], %s::numeric[], %s::numeric[])
+                on conflict (fact_id) do update
+                    set rule = %s || ' (was ' || core.fact_conflict_resolution.rule || ')',
+                        resolved_at = now()
+                    where core.fact_conflict_resolution.rule not like %s
+                """,
+                (
+                    [i for i, _ in dem],
+                    [DEMOTED_RULE] * len(dem),
+                    [p["group_size"] for _, p in dem],
+                    [p["value_min"] for _, p in dem],
+                    [p["value_max"] for _, p in dem],
+                    DEMOTED_RULE,
+                    DEMOTED_RULE + "%",
+                ),
             )
         if not winners:
             return 0
