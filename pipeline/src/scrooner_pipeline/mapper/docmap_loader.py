@@ -551,7 +551,7 @@ def latest_docmaps(paths: list[Path]) -> list[Path]:
 
 EXISTING_SQL = """
 select id, company_id, decision, taxonomy, tag, sign, canonical_concept_id, parent_concept_id, components, era_from,
-       era_to, stmt, rule_id
+       era_to, stmt, rule_id, decided_by
 from analytics.company_tag_map where company_id = any(%s)
 """
 
@@ -708,9 +708,21 @@ def load(
     apply: bool = False,
     extend_eras: bool = False,
     era_log: Path | None = None,
+    predictor_eras: Path | None = None,
+    predictor_concepts: set[str] | None = None,
+    no_filing_ciks: set[str] | None = None,
 ) -> dict:
     """Plan (and with apply, write) every docmap in `paths`. One transaction per company; a company whose rows fail
-    validation or era overlap is skipped whole and listed."""
+    validation or era overlap is skipped whole and listed.
+    predictor_eras: directory of the Tag Expert's per-10-K predictions; the years the FSN extension could not carry
+    become era_extend@1 / tag_expert_predictor CANDIDATE slices (era_guard.hold_unproven decides them after the cell
+    proof). predictor_concepts (base names, e.g. total_debt, interest_expense) reloads only those concepts: only their
+    predictor and guard rows are replaced. no_filing_ciks: companies with no 10-K before their listing: the uncovered
+    years are reasoned blanks no_public_filing_for_period."""
+    from scrooner_pipeline.mapper import era_predictor
+
+    preds = era_predictor.read_predictions(predictor_eras) if predictor_eras else {}
+    no_filing = {c.zfill(10) for c in (no_filing_ciks or set())}
     files = latest_docmaps(paths)
     with conn.cursor() as cur:
         cur.execute("select name, id, statement from analytics.canonical_concept")
@@ -823,7 +835,9 @@ def load(
             period_ends[pc].append(end)
     writes = []
     for cid, (cik, rows) in sorted(docs.items()):
-        mine = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]
+        own = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]
+        mine = [r for r in own if r["decided_by"] not in era_predictor.PRED_BY]
+        pred_old = [r for r in own if r["decided_by"] in era_predictor.PRED_BY]
         library = [r for r in existing[cid] if r["rule_id"] not in OWN_RULES]
         plan = plan_company(library, rows, concept_ids)
         stats["conflicts"] += plan.conflicts
@@ -843,10 +857,71 @@ def load(
             for r in library
             if r["id"] not in plan.delete
         ]
-        errors = check_overlaps(kept + new)
+        # predictor candidates / no-public-filing reasons for the years still uncovered; the predictor and guard rows
+        # of the reloaded concepts are replaced, the others stay unless a new row now covers their years
+        pnew: list[dict] = []
+        pred_delete: list[int] = []
+        if preds or cik in no_filing:
+            ticker = rows[0].ticker if rows else ""
+            try:
+                if cik in no_filing:
+                    raw = era_predictor.no_filing_rows(
+                        rows, concept_statement, cid, cik
+                    )
+                else:
+                    raw, prejects = era_predictor.candidates(
+                        ticker,
+                        preds.get(ticker, {}),
+                        rows,
+                        concept_ids,
+                        concept_statement,
+                        cid,
+                        cik,
+                        concepts=predictor_concepts,
+                    )
+                    stats["rejects"] += prejects
+                pnew = [normalize(t, {}, concept_ids, RULE_ID, warnings) for t in raw]
+            except (ValueError, TypeError) as exc:
+                stats["blocked"][cik] = str(exc)
+                continue
+        scope_ids = (
+            {
+                concept_ids[n]
+                for c in predictor_concepts
+                for n in (c, served_concept(c, set(concept_ids)))
+                if n in concept_ids
+            }
+            if predictor_concepts is not None
+            else None
+        )
+
+        def key(r):
+            return r["canonical_concept_id"] or r["parent_concept_id"]
+
+        def overlaps(a, b):
+            return (
+                key(a) == key(b)
+                and a["era_from"] <= (b["era_to"] or date.max)
+                and b["era_from"] <= (a["era_to"] or date.max)
+            )
+
+        if preds or cik in no_filing:
+            pred_delete = [
+                r["id"]
+                for r in pred_old
+                if (scope_ids is None or key(r) in scope_ids)
+                or any(overlaps(r, n) for n in new)
+            ]
+        keep_pred = [r for r in pred_old if r["id"] not in set(pred_delete)]
+        # a candidate never overlaps a row that already covers its years (library, docmap, extension, kept predictor)
+        pnew = [
+            n for n in pnew if not any(overlaps(n, k) for k in kept + new + keep_pred)
+        ]
+        errors = check_overlaps(kept + keep_pred + new + pnew)
         if errors:
             stats["blocked"][cik] = "; ".join(errors[:3])
             continue
+        new_all = new + pnew
         before = {_content(r, names) for r in mine}
         after = {_content(r, names) for r in new}
         # the era half of tagmap-plan's coverage gate, on the merged map (library kept + new rows)
@@ -857,13 +932,15 @@ def load(
                     r["era_from"],
                     r["era_to"],
                 )
-                for r in kept + new
+                for r in kept + keep_pred + new_all
             ],
             period_ends.get(cid, []),
         )
         era_report = {
             "era_short": len(short),
-            "era_from_min": min((r["era_from"] for r in kept + new), default=None),
+            "era_from_min": min(
+                (r["era_from"] for r in kept + keep_pred + new_all), default=None
+            ),
         }
         stats["companies"][cik] = {
             **era_report,
@@ -875,8 +952,9 @@ def load(
                     r["era_from"],
                     r["era_to"],
                 )
-                for r in kept + new
+                for r in kept + keep_pred + new_all
             ],
+            "predictor_rows": len(pnew),
             "company_id": cid,
             "docmap_rows": len(new),
             "added": len(after - before),
@@ -886,17 +964,23 @@ def load(
             "agree": plan.agree,
             "conflicts": len(plan.conflicts),
         }
-        writes.append((cid, new, plan))
+        writes.append((cid, new_all, plan, pred_delete))
     if era_log is not None:
         write_listing(era_log, era_log_rows)
     if not apply:
         return stats
-    for cid, new, plan in writes:
+    for cid, new, plan, pred_delete in writes:
         with conn.transaction():
             conn.execute(
-                "delete from analytics.company_tag_map where company_id = %s and rule_id = any(%s)",
-                (cid, list(OWN_RULES)),
+                "delete from analytics.company_tag_map where company_id = %s and rule_id = any(%s) "
+                "and decided_by <> all(%s)",
+                (cid, list(OWN_RULES), list(era_predictor.PRED_BY)),
             )
+            if pred_delete:
+                conn.execute(
+                    "delete from analytics.company_tag_map where id = any(%s)",
+                    (pred_delete,),
+                )
             if plan.delete:
                 conn.execute(
                     "delete from analytics.company_tag_map where id = any(%s)",

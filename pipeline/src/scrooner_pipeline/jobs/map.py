@@ -192,6 +192,21 @@ def docmap_load_cmd(
     era_log: Path = typer.Option(
         None, "--era-log", help="CSV of every per-filing era check (pass/fail)."
     ),
+    predictor_eras: Path = typer.Option(
+        None,
+        "--predictor-eras",
+        help="Directory of the Tag Expert's per-10-K predictions (data-team/tags/exam/eras): the years the extension could not carry become predictor CANDIDATE slices (era_extend@1, decided_by tag_expert_predictor). `era-guard` decides them after the cell proof.",
+    ),
+    predictor_concepts: str = typer.Option(
+        "",
+        "--predictor-concepts",
+        help="Comma-separated base concept names (e.g. total_debt,interest_expense): reload only these concepts' predictor and guard rows.",
+    ),
+    no_filing_ciks: str = typer.Option(
+        "",
+        "--no-filing-ciks",
+        help="Comma-separated CIKs with no 10-K before their listing: uncovered years become no_public_filing_for_period reasons.",
+    ),
 ) -> None:
     """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
     default: plans, validates and lists conflicts, writes nothing."""
@@ -204,6 +219,12 @@ def docmap_load_cmd(
             apply=apply,
             extend_eras=extend_eras,
             era_log=era_log,
+            predictor_eras=predictor_eras,
+            predictor_concepts={
+                c.strip() for c in predictor_concepts.split(",") if c.strip()
+            }
+            or None,
+            no_filing_ciks={c.strip() for c in no_filing_ciks.split(",") if c.strip()},
         )
     write_listing(conflicts_out, stats["conflicts"])
     if rejects_out:
@@ -225,6 +246,33 @@ def docmap_load_cmd(
         if c["added"] or c["removed"] or c["library_cut"] or c["library_deleted"]
     )
     typer.echo(f"changed company ids: {','.join(map(str, changed))}")
+
+
+@app.command("era-guard")
+def era_guard_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    apply: bool = typer.Option(
+        False,
+        "--apply",
+        help="Write (one transaction per company). Default: report only.",
+    ),
+) -> None:
+    """Phase 2 of the predictor fallback. After docmap-load --predictor-eras, tagmap-plan --apply and scrooner-proof
+    run --write: every predictor slice the cell proof does not back (PROVEN for values, NOT_PRESENTED for reasons) is
+    replaced by a not_presented row, reason_class era_unmapped. Re-run tagmap-plan --apply afterwards."""
+    from scrooner_pipeline.mapper.era_guard import hold_unproven
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    with get_connection() as conn:
+        rep = hold_unproven(conn, ids, apply=apply)
+    typer.echo(
+        f"era-guard: slices={rep['slices']} kept={rep['kept']} held={rep['held']} "
+        f"companies={rep['companies']} applied={rep.get('applied', False)}"
+    )
+    for cid, name, a, b, why in rep["held_cells"][:60]:
+        typer.echo(f"  held {cid} {name} {a}..{b}: {why}")
 
 
 @app.command("seed-company-tag-map")
