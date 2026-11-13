@@ -207,11 +207,18 @@ def docmap_load_cmd(
         "--no-filing-ciks",
         help="Comma-separated CIKs with no 10-K before their listing: uncovered years become no_public_filing_for_period reasons.",
     ),
+    fixes: Path = typer.Option(
+        None,
+        "--fixes",
+        help="Directory of reader fix files (<TICKER>-fixes-<date>.csv, one row per cell). Default: <reads>/fixes when present. Each row overrides the docmap/era/predictor row of that one data point and fiscal year (rule company_tag_map.docmap_fix@1, decided_by reader_fix); the rows are split around it. printed_value goes to the serve_note for the Verifier, never served.",
+    ),
 ) -> None:
     """Load the FILING-CHECKED docmaps into analytics.company_tag_map (rule company_tag_map.docmap@1). Dry run by
     default: plans, validates and lists conflicts, writes nothing."""
     from scrooner_pipeline.mapper.docmap_loader import load, write_listing
 
+    if fixes is None and (reads / "fixes").is_dir():
+        fixes = reads / "fixes"
     with get_connection() as conn:
         stats = load(
             conn,
@@ -225,6 +232,7 @@ def docmap_load_cmd(
             }
             or None,
             no_filing_ciks={c.strip() for c in no_filing_ciks.split(",") if c.strip()},
+            fixes=fixes,
         )
     write_listing(conflicts_out, stats["conflicts"])
     if rejects_out:
@@ -236,7 +244,9 @@ def docmap_load_cmd(
         f"library_cut={sum(c['library_cut'] for c in comps.values())} "
         f"library_deleted={sum(c['library_deleted'] for c in comps.values())} "
         f"conflicts={len(stats['conflicts'])} rejects={len(stats['rejects'])} blocked={len(stats['blocked'])} "
-        f"extended={len(stats['extended'])} applied={stats['applied']}"
+        f"extended={len(stats['extended'])} fix_files={stats.get('fix_files', 0)} "
+        f"fix_rows={stats.get('fix_rows', 0)} "
+        f"fix_clipped={sum(c.get('fix_clipped', 0) for c in comps.values())} applied={stats['applied']}"
     )
     for key, why in sorted(stats["blocked"].items()):
         typer.echo(f"  blocked {key}: {why}")

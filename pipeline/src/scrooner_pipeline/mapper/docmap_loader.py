@@ -52,7 +52,10 @@ from scrooner_pipeline.mapper.company_tag_map_seed import (
 
 RULE_ID = "company_tag_map.docmap@1"
 DECIDED_BY = "docmap"
-OWN_RULES = (RULE_ID, era_extend.EXT_RULE_ID)  # rows this loader replaces per company
+FIX_RULE_ID = "company_tag_map.docmap_fix@1"
+FIX_DECIDED_BY = "reader_fix"
+# rows this loader replaces per company
+OWN_RULES = (RULE_ID, era_extend.EXT_RULE_ID, FIX_RULE_ID)
 STATUSES = {
     "mapped",
     "combined",
@@ -101,6 +104,10 @@ class DocmapRow:
     ext_note: str = ""
     # closed end of the row's era (None = open-ended); set when an agreeing library row already covers the later years
     era_to: date | None = None
+    # reader fix (data-team/companies/reads/fixes): one cell, one fiscal year; serve_note carries the printed value for
+    # the Verifier (never served directly)
+    is_fix: bool = False
+    fix_note: str = ""
 
     @property
     def cites_page(self) -> bool:
@@ -273,6 +280,169 @@ def parse_docmap(
     return rows, rejects
 
 
+FIX_FILE_RE = re.compile(r"(.+)-fixes-(\d{4}-\d{2}-\d{2})\.csv$")
+DEFAULT_FIXES_DIR = Path("data-team/companies/reads/fixes")
+
+
+def fix_files(directory: Path | None) -> list[Path]:
+    """Reader fix files (<TICKER>-fixes-<date>.csv) of a directory, oldest date first (a newer file wins a cell)."""
+    if directory is None or not directory.is_dir():
+        return []
+    found = []
+    for p in directory.glob("*.csv"):
+        m = FIX_FILE_RE.match(p.name)
+        if m:
+            found.append((m.group(2), p.name, p))
+    return [p for _, _, p in sorted(found)]
+
+
+def parse_fixes(csv_text: str, source: str) -> tuple[list[DocmapRow], list[dict]]:
+    """One reader fix file -> rows (one per cell: data point x fiscal-year period), rejects. Pure. Columns: data_point,
+    fiscal_year, period_end, decision, tags (or tag), stmt, accession, r_page, printed_value, note. The decision
+    vocabulary is the docmap's statuses. The era is that fiscal year only: from the day after the year before ended
+    (see assign_fix_eras for 52/53-week neighbors) to period_end."""
+    m = FIX_FILE_RE.match(source)
+    ticker = (m.group(1) if m else source).upper()
+    rows: list[DocmapRow] = []
+    rejects: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    for raw in csv.DictReader(io.StringIO(csv_text)):
+        r = {(k or "").strip(): (v or "").strip() for k, v in raw.items()}
+        status = STATUS_ALIASES.get(r.get("decision", ""), r.get("decision", ""))
+
+        def reject(why: str, r: dict = r) -> None:
+            rejects.append(
+                {
+                    "source": source,
+                    "ticker": ticker,
+                    "data_point": r.get("data_point", ""),
+                    "status": r.get("decision", ""),
+                    "why": f"fix: {why} (period_end {r.get('period_end', '')})",
+                }
+            )
+
+        if status not in STATUSES:
+            reject(f"unknown decision {r.get('decision', '')!r}")
+            continue
+        try:
+            end = date.fromisoformat(r.get("period_end", ""))
+        except ValueError:
+            reject("period_end is not a date")
+            continue
+        accn = r.get("accession", "")
+        if not ACCN_RE.fullmatch(accn):
+            reject("accession is not an SEC accession number")
+            continue
+        key = (r.get("data_point", ""), end.isoformat())
+        if key in seen:
+            reject("duplicate cell in file")
+            continue
+        seen.add(key)
+        try:
+            parts = parse_parts(r.get("tags", r.get("tag", "")))
+        except ValueError as exc:
+            reject(str(exc))
+            continue
+        if status in TAGLESS_STATUS:
+            parts = parts if status == "combined" else ()
+        elif not parts:
+            reject(f"{status} row without a tag")
+            continue
+        elif len({(tax, tag) for _, tax, tag in parts}) < len(parts):
+            reject("a part tag repeats (dimensional members are not separable by tag)")
+            continue
+        elif status != "component sum" and len(parts) > 1:
+            reject(f"{status} row with {len(parts)} tags")
+            continue
+        note = r.get("note", "")
+        printed = r.get("printed_value", "")
+        rows.append(
+            DocmapRow(
+                ticker,
+                r["data_point"],
+                status,
+                parts,
+                r.get("stmt", ""),
+                r.get("r_page", ""),
+                "",
+                _fy_start(end),
+                accn,
+                note,
+                source,
+                end,
+                era_to=end,
+                is_fix=True,
+                fix_note=(
+                    f"reader fix (company_tag_map.docmap_fix@1), FY ending {end}: printed value {printed or 'n/a'} in "
+                    f"{accn} {r.get('r_page', '')}; for the Verifier, never served directly. {note}"
+                ).strip(),
+            )
+        )
+    return rows, rejects
+
+
+def assign_fix_eras(rows: list[DocmapRow]) -> list[DocmapRow]:
+    """A fix's era must not overlap its neighbor's of the same data point (52/53-week years end 364 days apart, so
+    the nominal start of one year is the previous period end)."""
+    out: list[DocmapRow] = []
+    last: dict[str, date] = {}
+    for d in sorted(rows, key=lambda d: (d.data_point, d.era_to or date.max)):
+        prev = last.get(d.data_point)
+        if prev is not None and d.era_from <= prev:
+            d = replace(d, era_from=prev + timedelta(days=1))
+        last[d.data_point] = d.era_to or date.max
+        out.append(d)
+    return out
+
+
+def _key(r: dict) -> int | None:
+    return r["canonical_concept_id"] or r["parent_concept_id"]
+
+
+def clip_rows(
+    rows: list[dict], spans: list[tuple[Any, date, date]]
+) -> tuple[list[dict], list[tuple[int, date, date | None]], list[int], list[dict]]:
+    """Cut the fix eras out of every row of the same concept (value or reason; 'combined' and 'excluded' rows carry no
+    concept key and stay). A row that spans a fix era is split into a before and an after piece; the other years are
+    never removed. Rows with an id are DB rows: the first remaining piece is an update of that row, further pieces
+    are inserts. Returns (rows in memory, updates (id, era_from, era_to), deleted ids, new piece rows). Pure."""
+    kept: list[dict] = []
+    updates: list[tuple[int, date, date | None]] = []
+    deletes: list[int] = []
+    extras: list[dict] = []
+    for r in rows:
+        k = _key(r)
+        mine = sorted((a, b) for c, a, b in spans if k is not None and c == k)
+        pieces: list[tuple[date, date | None]] = [(r["era_from"], r["era_to"])]
+        for a, b in mine:
+            nxt: list[tuple[date, date | None]] = []
+            for lo, hi in pieces:
+                if (hi is not None and hi < a) or lo > b:
+                    nxt.append((lo, hi))
+                    continue
+                if lo < a:
+                    nxt.append((lo, a - timedelta(days=1)))
+                if hi is None or hi > b:
+                    nxt.append((b + timedelta(days=1), hi))
+            pieces = nxt
+        if pieces == [(r["era_from"], r["era_to"])]:
+            kept.append(r)
+            continue
+        if r.get("id") is not None:
+            if not pieces:
+                deletes.append(r["id"])
+                continue
+            lo, hi = pieces[0]
+            updates.append((r["id"], lo, hi))
+            kept.append({**r, "era_from": lo, "era_to": hi})
+            for lo, hi in pieces[1:]:
+                extras.append({**r, "id": None, "era_from": lo, "era_to": hi})
+        else:
+            for lo, hi in pieces:
+                kept.append({**r, "era_from": lo, "era_to": hi})
+    return kept, updates, deletes, extras
+
+
 def stmt_code(
     raw: str, concept_name: str, concept_statement: str, *, value_row: bool
 ) -> str:
@@ -310,9 +480,11 @@ def table_rows(
         "evidence_adsh": d.accession,
         "evidence_report": d.report,
         "evidence_plabel": d.label or None,
-        "decided_by": DECIDED_BY,
-        "rule_id": RULE_ID,
+        "decided_by": FIX_DECIDED_BY if d.is_fix else DECIDED_BY,
+        "rule_id": FIX_RULE_ID if d.is_fix else RULE_ID,
     }
+    if d.is_fix:
+        base["serve_note"] = d.fix_note
     if d.base_era is not None and d.base_era > d.era_from:
         main = (
             table_rows(
@@ -358,7 +530,9 @@ def table_rows(
                 "canonical_concept": d.data_point,
                 "stmt": stmt_code(d.stmt_raw, d.data_point, st, value_row=False),
                 "reason": reason,
-                "reason_class": f"docmap_{d.status.replace(' ', '_').lower()}",
+                "reason_class": f"docmap_{d.status.replace(' ', '_').lower()}"
+                if not d.is_fix
+                else f"docmap_fix_{d.status.replace(' ', '_').lower()}",
             }
         ]
     stmt = (
@@ -427,6 +601,9 @@ class CompanyPlan:
     cut: list[tuple[int, date]] = field(
         default_factory=list
     )  # (library row id, new era_to)
+    edits: list[tuple[int, date, date | None]] = field(
+        default_factory=list
+    )  # reader fixes: (row id, new era_from, new era_to)
     delete: list[int] = field(default_factory=list)  # library row ids
     conflicts: list[dict] = field(default_factory=list)
     agree: int = 0
@@ -573,9 +750,7 @@ def latest_docmaps(paths: list[Path]) -> list[Path]:
 
 
 EXISTING_SQL = """
-select id, company_id, decision, taxonomy, tag, sign, canonical_concept_id, parent_concept_id, components, era_from,
-       era_to, stmt, rule_id, decided_by
-from analytics.company_tag_map where company_id = any(%s)
+select * from analytics.company_tag_map where company_id = any(%s)
 """
 
 
@@ -734,6 +909,7 @@ def load(
     predictor_eras: Path | None = None,
     predictor_concepts: set[str] | None = None,
     no_filing_ciks: set[str] | None = None,
+    fixes: Path | None = None,
 ) -> dict:
     """Plan (and with apply, write) every docmap in `paths`. One transaction per company; a company whose rows fail
     validation or era overlap is skipped whole and listed.
@@ -741,7 +917,10 @@ def load(
     become era_extend@1 / tag_expert_predictor CANDIDATE slices (era_guard.hold_unproven decides them after the cell
     proof). predictor_concepts (base names, e.g. total_debt, interest_expense) reloads only those concepts: only their
     predictor and guard rows are replaced. no_filing_ciks: companies with no 10-K before their listing: the uncovered
-    years are reasoned blanks no_public_filing_for_period."""
+    years are reasoned blanks no_public_filing_for_period.
+    fixes: directory of reader fix files (<TICKER>-fixes-<date>.csv, one row per cell): each overrides the docmap, era
+    extension, predictor and library rows of that one data point for that one fiscal year (the rows are split around it,
+    the other years stay); rule company_tag_map.docmap_fix@1, decided_by reader_fix."""
     from scrooner_pipeline.mapper import era_predictor
 
     preds = era_predictor.read_predictions(predictor_eras) if predictor_eras else {}
@@ -840,6 +1019,63 @@ def load(
             ]
         stats["rows"] += len(ok)
         docs[cid] = (cik, ok)
+    fixes_by_cid: dict[int, list[DocmapRow]] = {}
+    fix_cells: dict[tuple[str, str, date], DocmapRow] = {}
+    stats["fix_files"] = 0
+    for p in fix_files(fixes):
+        stats["fix_files"] += 1
+        frows, frejects = parse_fixes(p.read_text(), p.name)
+        stats["rejects"] += frejects
+        for d in frows:  # a newer file corrects an older one for the same cell
+            fix_cells[(d.ticker, d.data_point, d.era_to or date.max)] = d
+    fix_by_ticker: dict[str, list[DocmapRow]] = defaultdict(list)
+    for d in fix_cells.values():
+        fix_by_ticker[d.ticker].append(d)
+    for ticker, frows in sorted(fix_by_ticker.items()):
+        hits = by_ticker.get(ticker, set())
+        if len(hits) != 1:
+            stats["blocked"][f"{ticker} fixes"] = (
+                f"ticker {ticker} resolves to {len(hits)} companies"
+            )
+            continue
+        ((cid, cik),) = hits
+        if cid not in docs:
+            stats["blocked"][f"{ticker} fixes"] = (
+                "no docmap file loaded for the company: a fix overrides docmap rows, it is not a docmap"
+            )
+            continue
+        good: list[DocmapRow] = []
+        for d in (
+            replace(d, data_point=served_concept(d.data_point, set(concept_ids)))
+            for d in assign_fix_eras(frows)
+        ):
+            why = None
+            if d.data_point not in concept_ids:
+                why = "no canonical concept of that name"
+            elif d.status == "component sum" and instant_sum_refused(
+                d.data_point, concept_statement[d.data_point]
+            ):
+                why = "instant component sum refused (only total_debt)"
+            else:
+                try:
+                    for t in table_rows(d, cid, cik, concept_statement):
+                        normalize(t, {}, concept_ids, FIX_RULE_ID, [])
+                except (ValueError, TypeError) as exc:
+                    why = f"invalid row: {exc}"
+            if why:
+                stats["rejects"].append(
+                    {
+                        "source": d.source,
+                        "ticker": d.ticker,
+                        "data_point": d.data_point,
+                        "status": d.status,
+                        "why": f"fix: {why} (period_end {d.era_to})",
+                    }
+                )
+            else:
+                good.append(d)
+        fixes_by_cid[cid] = good
+        stats["fix_rows"] = stats.get("fix_rows", 0) + len(good)
     with conn.cursor() as cur:
         cur.execute(EXISTING_SQL, (sorted(docs),))
         cols = [c.name for c in cur.description]
@@ -967,6 +1203,26 @@ def load(
         pnew = [
             n for n in pnew if not any(overlaps(n, k) for k in kept + new + keep_pred)
         ]
+        fix_rows = fixes_by_cid.get(cid, [])
+        if fix_rows:
+            try:
+                fnew = [
+                    normalize(t, {}, concept_ids, FIX_RULE_ID, warnings)
+                    for d in fix_rows
+                    for t in table_rows(d, cid, cik, concept_statement)
+                ]
+            except (ValueError, TypeError) as exc:
+                stats["blocked"][cik] = str(exc)
+                continue
+            spans = sorted({(_key(r), r["era_from"], r["era_to"]) for r in fnew})
+            kept, ed1, de1, x1 = clip_rows(kept, spans)
+            keep_pred, ed2, de2, x2 = clip_rows(keep_pred, spans)
+            new, _, _, _ = clip_rows(new, spans)
+            pnew, _, _, _ = clip_rows(pnew, spans)
+            plan.edits += ed1 + ed2
+            plan.delete += de1
+            pred_delete += de2
+            new = new + fnew + x1 + x2
         errors = check_overlaps(kept + keep_pred + new + pnew)
         if errors:
             stats["blocked"][cik] = "; ".join(errors[:3])
@@ -1007,6 +1263,8 @@ def load(
             "predictor_rows": len(pnew),
             "company_id": cid,
             "docmap_rows": len(new),
+            "fix_rows": len(fix_rows),
+            "fix_clipped": len(plan.edits),
             "added": len(after - before),
             "removed": len(before - after),
             "library_cut": len(plan.cut),
@@ -1041,6 +1299,11 @@ def load(
                     cur.executemany(
                         "update analytics.company_tag_map set era_to = %s where id = %s",
                         [(to, rid) for rid, to in plan.cut],
+                    )
+                if plan.edits:
+                    cur.executemany(
+                        "update analytics.company_tag_map set era_from = %s, era_to = %s where id = %s",
+                        [(a, b, rid) for rid, a, b in plan.edits],
                     )
                 cur.executemany(INSERT, new)
     stats["applied"] = True
