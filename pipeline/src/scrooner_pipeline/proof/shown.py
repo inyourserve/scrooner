@@ -46,6 +46,38 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
         return [tuple(r) for r in cur.fetchall()]  # type: ignore[misc]
 
 
+def load_combined(
+    conn: psycopg.Connection, company_id: int
+) -> list[tuple[str, tuple[str, ...], date, date | None]]:
+    """The company's 'combined' map rows: (tag, spanned concept names, era_from, era_to)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select tag, components, era_from, era_to from analytics.company_tag_map "
+            "where company_id = %s and decision = 'combined' and tag is not null",
+            (company_id,),
+        )
+        return [(t, tuple(c or ()), a, b) for t, c, a, b in cur.fetchall()]
+
+
+def combined_for(
+    rows: list[tuple[str, tuple[str, ...], date, date | None]],
+    name: str,
+    period_end: date,
+) -> tuple[str, ...]:
+    base = _base_name(name)
+    return tuple(
+        sorted(
+            {
+                t
+                for t, comps, a, b in rows
+                if a <= period_end
+                and (b is None or period_end <= b)
+                and (name in comps or base in comps)
+            }
+        )
+    )
+
+
 def claim_for(rows: list[MapRow], name: str, period_end: date) -> Claim | None:
     """The claim of one cell: the company's rows for this concept whose era holds the period end.
     'concept' rows win over 'component' rows. The statement is the latest era's; the tags are those
@@ -174,6 +206,7 @@ def load_shown(
     source tags, accession (latest-filed source fact wins) and derived flag."""
     scale = company_presentation_scale(conn, company_id)
     map_rows = load_map_rows(conn, company_id)
+    combined_rows = load_combined(conn, company_id)
     names = {*EXPECTED, "total_debt_resolved"}
     for r in map_rows:
         names.update(n for n in (r[4], r[5]) if n)
@@ -251,6 +284,7 @@ def load_shown(
                 copies_disagree=tuple(disagreeing) or None,
                 copies=len(copies),
                 claim=claim_for(map_rows, name, end),
+                combined=combined_for(combined_rows, name, end),
             )
         )
     return out

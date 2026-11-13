@@ -143,7 +143,6 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
         "CF",
         (
             "DepreciationDepletionAndAmortization",
-            "DepreciationAmortizationAndAccretionNet",
             "DepreciationAndAmortization",
             "Depreciation",
         ),
@@ -167,7 +166,7 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
     ),
     "dividends_paid_resolved": (
         "CF",
-        ("PaymentsOfDividends", "PaymentsOfDividendsCommonStock"),
+        ("PaymentsOfDividendsCommonStock",),
         False,
     ),
     "share_buybacks_resolved": ("CF", ("PaymentsForRepurchaseOfCommonStock",), False),
@@ -356,6 +355,9 @@ class Shown:
     )
     copies: int = 0
     claim: Claim | None = None
+    # tags of the company's 'combined' map rows spanning this data point in this era: one printed
+    # line over several concepts is never the data point (audit R15)
+    combined: tuple[str, ...] = ()
 
 
 @dataclass
@@ -838,6 +840,14 @@ def prove_cell(
                 "after the balance sheet and is never the balance-sheet-date shares outstanding"
             )
             return p
+    veto = sorted(set(shown.tags) & set(shown.combined))
+    if veto:
+        p.verdict, p.reason_code = DISAGREE, "combined_line_shown_as_concept"
+        p.reason_text = (
+            f"production shows {shown.value} from {veto}, which the company's map declares a combined "
+            f"line spanning several concepts; a combined line is never {shown.data_point_name}"
+        )
+        return p
     if shown.copies_disagree:
         p.verdict, p.reason_code = DISAGREE, "restated_copies_disagree"
         others = "; ".join(f"{v} in {acc}" for acc, v in shown.copies_disagree[:4])
@@ -873,6 +883,13 @@ def prove_cell(
             p.reason_text = f"every candidate {shown.data_point_name} line on the {stmt} is a component of another candidate"
         return p
     p.position_tag, p.fsn_line, p.fsn_label = line.tag, line.line, line.label
+    if line.tag in shown.combined:
+        p.verdict, p.reason_code = DISAGREE, "combined_line_shown_as_concept"
+        p.reason_text = (
+            f"the printed {line.tag} line is a combined line spanning several concepts "
+            f"(company map); it is never {shown.data_point_name}"
+        )
+        return p
     parents = structure.calc_parents.get(line.tag, set())
     p.fsn_calc_parent = ",".join(sorted(parents)) or None
     p.position_source = "fsn_pre_calc"
