@@ -21,6 +21,7 @@ import csv
 import gzip
 import json
 import os
+import re
 import sys
 import time
 import xml.etree.ElementTree as ET
@@ -73,13 +74,25 @@ def latest_10k(sub: dict) -> tuple[str, str] | None:
     return None
 
 
+# Some filings put a primary statement in MenuCategory "Uncategorized" (e.g. NEE and PEP FY2021 10-K R3 "Consolidated
+# Statement(s) of Income"); such a page is taken when its title names a primary statement.
+STATEMENT_TITLE = re.compile(
+    r"statements? of (consolidated )?(income|operations|earnings|comprehensive|cash flows?|financial (position|condition)|"
+    r"(stockholders|shareholders|shareowners)|changes in equity)|balance sheets?"
+)
+
+
 def statement_pages(summary: bytes) -> list[str]:
     root = ET.fromstring(summary)
     out = []
     for rep in root.iter("Report"):
         cat = (rep.findtext("MenuCategory") or "").strip()
         name = (rep.findtext("HtmlFileName") or "").strip()
-        if name and cat in ("Statements", "Cover"):
+        title = (rep.findtext("ShortName") or rep.findtext("LongName") or "").lower()
+        if name and (
+            cat in ("Statements", "Cover")
+            or (cat == "Uncategorized" and STATEMENT_TITLE.search(title))
+        ):
             out.append(name)
     return out
 

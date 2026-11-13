@@ -400,3 +400,30 @@ def test_net_interest_and_accretion_lines_are_combined(tmp_path):
         ]
     }
     assert rows["interest_expense"]["status"] == "combined"
+
+
+def test_an_uncategorized_income_statement_is_read(tmp_path):
+    """NEE and PEP FY2021 10-Ks file the income statement (R3) under MenuCategory 'Uncategorized'; it is still the face"""
+    m = _mod()
+    acc = "0000000002-26-000001"
+    d = tmp_path / "0000000002" / acc
+    d.mkdir(parents=True)
+    (d / "FilingSummary.xml").write_text(
+        "<FilingSummary><MyReports><Report><HtmlFileName>R3.htm</HtmlFileName>"
+        "<LongName>0000003 - Statement - Consolidated Statement of Income</LongName>"
+        "<ShortName>Consolidated Statement of Income</ShortName><MenuCategory>Uncategorized</MenuCategory></Report>"
+        "</MyReports></FilingSummary>"
+    )
+    (d / "R3.htm").write_text(
+        IS_HEAD + _row("us-gaap_Revenues", "Net revenue", "1,000", "900") + "</table>"
+    )
+    rows = {
+        r["data_point"]: r
+        for r in m.read_company(tmp_path, "0000000002", "TS6", acc, "2026-02-01")[
+            "rows"
+        ]
+    }
+    assert (rows["revenue"]["status"], rows["revenue"]["fy0_printed"]) == (
+        "mapped",
+        "1000000000",
+    )

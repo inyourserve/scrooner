@@ -1106,7 +1106,20 @@ class Reader:
                     + (rep.findtext("ShortName") or "")
                 ).split()
             )
-            if not fn or not (d / fn).exists() or cat not in ("Statements", "Cover"):
+            uncategorized_statement = cat == "Uncategorized" and bool(
+                re.search(
+                    r"statements? of (consolidated )?(income|operations|earnings|comprehensive|cash flows?|"
+                    r"financial (position|condition)|(stockholders|shareholders|shareowners)|changes in equity)"
+                    r"|balance sheets?",
+                    name,
+                    re.IGNORECASE,
+                )
+            )
+            if (
+                not fn
+                or not (d / fn).exists()
+                or (cat not in ("Statements", "Cover") and not uncategorized_statement)
+            ):
                 continue
             k = (
                 "COVER"
