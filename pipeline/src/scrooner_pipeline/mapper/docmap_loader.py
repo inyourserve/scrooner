@@ -39,7 +39,10 @@ import psycopg
 
 from scrooner_pipeline.mapper import era_extend
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
-from scrooner_pipeline.mapper.company_tag_map_plan import era_shortfall
+from scrooner_pipeline.mapper.company_tag_map_plan import (
+    era_shortfall,
+    reporting_period_ends,
+)
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
     check_overlaps,
@@ -845,14 +848,9 @@ def load(
             rec = dict(zip(cols, row))
             existing[rec["company_id"]].append(rec)
     names = {i: n for n, i in concept_ids.items()}
-    period_ends: dict[int, list[date]] = defaultdict(list)
-    with conn.cursor() as cur:
-        cur.execute(
-            "select company_id, end_date from core.period where company_id = any(%s)",
-            (sorted(docs),),
-        )
-        for pc, end in cur.fetchall():
-            period_ends[pc].append(end)
+    period_ends: dict[int, list[date]] = {
+        pc: reporting_period_ends(conn, pc) for pc in sorted(docs)
+    }
     writes = []
     for cid, (cik, rows) in sorted(docs.items()):
         own = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]

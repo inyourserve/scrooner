@@ -480,6 +480,23 @@ def era_shortfall(map_rows, period_ends: list[date]) -> dict[int, date]:
     return out
 
 
+def reporting_period_ends(conn: psycopg.Connection, cid: int) -> list[date]:
+    """The company's period ends that an era must cover: every core.period except a cover-page date. A cover-page
+    date is an instant that carries no canonical value and is the end of no duration period (the dei 'shares
+    outstanding as of' date in a 10-K/10-Q, a filing date: MSFT 2015-01-22, 2026-10-22), so no era can be owed there."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select p.end_date from core.period p
+               where p.company_id = %s
+                 and (p.period_type <> 'instant'
+                      or exists (select 1 from analytics.canonical_fact f where f.period_id = p.id)
+                      or exists (select 1 from core.period d where d.company_id = p.company_id
+                                 and d.period_type <> 'instant' and d.end_date = p.end_date))""",
+            (cid,),
+        )
+        return [e for (e,) in cur.fetchall()]
+
+
 def coverage_gate_ok(cov: dict) -> bool:
     """Apply a company only when its map covers the data window for every data point, it loses no FY0/FY-1 template
     value, and no value disappears without a reason (Dhairya 2026-11-12, invariant I11)."""
@@ -528,7 +545,7 @@ def coverage(
         for c, p in gone
         if c in concept_info
     )
-    short = era_shortfall(map_rows, [e for e, _, _, _ in periods])
+    short = era_shortfall(map_rows, reporting_period_ends(conn, cid))
     return {
         "era_from_min": min((e for _, e, _ in map_rows), default=None),
         "era_short": {
@@ -551,6 +568,33 @@ class _Retry(Exception):
         self.concepts = concepts
 
 
+def served_managed(
+    conn: psycopg.Connection, cid: int, managed: set[int], concept_info
+) -> set[int]:
+    """The managed concepts the map serves under their own name, plus the ones it does not map at all. A base
+    concept the map never targets because it serves a twin (revenue -> revenue_sanity_resolved, gross_profit ->
+    gross_profit_resolved; docmap_loader.served_concept) is not a served concept: it is neither judged nor
+    rewritten, so it cannot be 'skipped'. A concept without a mapped twin stays (the 'no map row' skip)."""
+    from scrooner_pipeline.mapper.docmap_loader import (
+        served_concept,
+    )  # docmap_loader imports this module
+
+    names = {n for n, _ in concept_info.values()}
+    ids = {v[0]: i for i, v in concept_info.items()}
+    with conn.cursor() as cur:
+        cur.execute(
+            "select distinct coalesce(canonical_concept_id, parent_concept_id) from analytics.company_tag_map where company_id = %s",
+            (cid,),
+        )
+        mapped = {c for (c,) in cur.fetchall() if c is not None}
+    out = set(managed)
+    for c in managed - mapped:
+        twin = served_concept(concept_info[c][0], names) if c in concept_info else None
+        if twin and twin != concept_info[c][0] and ids.get(twin) in mapped:
+            out.discard(c)
+    return out
+
+
 def concepts_to_skip(
     conn: psycopg.Connection, cid: int, managed: set[int]
 ) -> tuple[set[int], dict[int, str]]:
@@ -564,9 +608,7 @@ def concepts_to_skip(
             (cid,),
         )
         map_rows = cur.fetchall()
-        cur.execute("select end_date from core.period where company_id = %s", (cid,))
-        ends = [e for (e,) in cur.fetchall()]
-    short = era_shortfall(map_rows, ends)
+    short = era_shortfall(map_rows, reporting_period_ends(conn, cid))
     why = {c: f"era short from {d.isoformat()}" for c, d in short.items()}
     mapped = {c for c, _, _ in map_rows if c is not None}
     for c in managed - mapped:
@@ -653,6 +695,7 @@ def _company(
     skip: set[int] = set(forced)
     why: dict[int, str] = {c: "would lose a value" for c in forced}
     if by_concept:
+        managed = served_managed(conn, cid, set(managed), concept_info)
         more, w = concepts_to_skip(conn, cid, set(managed))
         skip |= more
         why = {**w, **why}

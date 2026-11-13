@@ -210,3 +210,50 @@ def test_concept_without_any_concept_mapping_row_is_served_by_the_tag_map(isolat
         rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
         assert "error" not in rep[co], rep[co]
         assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, shares) == Decimal("7")
+
+
+@pytest.mark.integration
+def test_concept_gate_scope_base_concept_served_through_its_resolved_twin_is_not_skipped(isolated_database_url, monkeypatch):
+    """The map serves tm_gp_resolved (docmap_loader.served_concept); the base tm_gp is managed (it has a concept_mapping
+    row) but the map never targets it: not 'no map row', not rewritten, left as it is. A managed concept with no mapped
+    twin is still 'no map row'."""
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001701", True)
+        fact("Revenues", "in", "new", "110")
+        base = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_gp','income_statement','first_match') returning id")
+        twin = _one(conn, "insert into analytics.canonical_concept (name, statement, combination_mode) values ('tm_gp_resolved','income_statement','first_match') returning id")
+        conn.execute("insert into analytics.concept_mapping (canonical_concept_id, concept_id, priority) values (%s,%s,1)", (base, x["tags"]["OpA"]))
+        ins = "insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap',%s,'IS','concept',%s,'2015-01-01','t','tm.r@1')"
+        conn.execute(ins, (co, "Revenues", x["rev"]))
+        conn.execute(ins, (co, "OpA", twin))
+        fact("OpA", "in", "new", "7")
+        conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, base, per["in"], Decimal("5")))
+        conn.commit()
+        rep = plan.run(conn, [co], {co: []}, apply=True, gate=True, gate_scope="concept")
+        assert "error" not in rep[co], rep[co]
+        assert rep[co]["coverage"]["skipped_concepts"] == {"tm_opex": "no map row"}
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, twin) == Decimal("7")
+        assert _one(conn, "select value from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", co, base) == Decimal("5")
+
+
+@pytest.mark.integration
+def test_cover_page_instant_is_no_era_shortfall_but_a_valued_period_is(isolated_database_url, monkeypatch):
+    """An instant that carries no canonical value and ends no duration (a cover-page 'as of' date, MSFT 2015-01-22)
+    owes no era; the same date with a served value, or the end of a duration, does."""
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "company_tag_map.select@1")
+    with psycopg.connect(isolated_database_url) as conn:
+        x = _seed(conn)
+        co, per, fil, fact = x["company"]("0000001801", True)
+        fact("Revenues", "in", "new", "110")
+        cover = _one(conn, "insert into core.period (company_id, start_date, end_date, period_type) values (%s,'2015-01-22','2015-01-22','instant') returning id", co)
+        conn.execute("insert into analytics.company_tag_map (company_id, taxonomy, tag, stmt, decision, canonical_concept_id, era_from, decided_by, rule_id) values (%s,'us-gaap','Revenues','IS','concept',%s,'2015-03-31','t','tm.r@1')", (co, x["rev"]))
+        conn.commit()
+        assert date(2015, 1, 22) not in plan.reporting_period_ends(conn, co)
+        rep = plan.run(conn, [co], {co: []}, apply=False, gate=True, gate_scope="concept")
+        assert "tm_rev" not in rep[co]["coverage"]["skipped_concepts"], rep[co]["coverage"]
+        assert rep[co]["coverage"]["era_short"] == {}
+        conn.execute("insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s,%s,%s,%s,'{}')", (co, x["opex"], cover, Decimal("3")))
+        assert date(2015, 1, 22) in plan.reporting_period_ends(conn, co)
+        conn.rollback()
