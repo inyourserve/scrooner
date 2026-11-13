@@ -1,16 +1,13 @@
-# MSFT certification sample 2026-11-13 (Verifier)
+# MSFT certification: independent Verifier sample 2026-11-13 (final)
 
-- **Population:** 546 FY template cells, FY2015 to FY2026: 510 PROVEN and 36 REASON. It was rebuilt live from analytics.cell_proof (detector cell_proof_v2_2026-11-13, basis latest) and analytics.cell_blank_reason with the rules of pipeline/src/scrooner_pipeline/mapper/top100_coverage.py, and matches Dhairya's 510/36.
-- **Draw:** 32 cells, seeded by md5('msft-cert32-20261113|dp|fy'). All 32 were PROVEN; no REASON cell was drawn.
-- **Check:** each cell's own filing (accession of the served copy) was opened on sec.gov. The line carrying the served tag was located on the R page, and the 12-month column (or instant at fiscal year end) was read. Printed value x page scale was compared with the served value; the sign was compared too.
+- **Frame:** MSFT FY template cells in data-team/strategy/top100-coverage.csv @ 6e9a31be. The snapshot has 552 cells: 510 PROVEN, 36 REASON, 4 UNCHECKED, 2 DISAGREE. Dhairya quotes 516/36 on main 6e9a31be; the committed snapshot predates the 6-cell fix (457ae03a), so it still shows them as non-proven. The draw is from the 546 PROVEN + REASON rows.
+- **Draw:** 32 cells, ordered by md5('verifier-msft-indep-20261113|dp|fy'). This seed is independent of Ritwik's and of my first run (msft-cert32-20261113, kept as -run1). Result: 29 PROVEN, 3 REASON.
+- **Check:** each served cell's own 10-K was opened on sec.gov (FilingSummary, then the R pages carrying the served tag). The printed line was read at the fiscal-year column (12-month duration, or instant at the fiscal year end). Printed value x page scale was compared with the served value, and the sign compared. For each REASON cell, the face statement and the note were read to confirm the stated reason.
 
 ## Result
-0 wrong of 32. One-sided 95% Clopper-Pearson upper bound 8.94%.
+**0 wrong of 32. One-sided 95% Clopper-Pearson upper bound 8.94%.**
 
-Six cells match the printed value with the opposite sign. The served value follows the XBRL fact sign, and the page prints the cash-flow or other-income presentation: cf_ar_change FY2016, cf_inventory_change FY2019, capex FY2024 and FY2026, dividends_paid FY2015, interest_expense FY2025 (note R48 prints it as (2,385)). They are counted right under the XBRL sign convention. If served values must carry the printed sign, these 6 are sign errors. That ruling is still open; see the earlier question to Dhairya.
+- PROVEN 29/29 right: value, period and R page match. 29 of them match with the opposite sign: the served value is the XBRL fact; the page prints the cash-flow presentation (capex, buybacks, dividends, AR and inventory changes). They count as right under the XBRL sign convention; the convention ruling is still open.
+- REASON 3/3 confirmed: interest_income FY2015 and FY2026 are printed only as 'Dividends and interest income' (combined). other_income_expense_net FY2021: the face 'Other income, net' includes interest; the note 'Other, net' 98 is a residual component (component_in_note would be more precise; no value is wrong).
 
-## REASON cells (none drawn; checked on the FY2026 10-K 0001193125-26-323660)
-The 36 REASON cells are depreciation_and_amortization, interest_income and other_income_expense_net, 12 years each, all 'combined'.
-- depreciation_and_amortization: confirmed. R6.htm prints only 'Depreciation, amortization, and other' 38,534 (msft:DepreciationAmortizationAndOther), a combined line.
-- interest_income: confirmed as combined. The face prints only 'Other income (expense), net'. The note R48.htm prints 'Interest and dividends income' 3,301 (us-gaap:InvestmentIncomeNet), which is interest plus dividends, so it is combined. The stored reason text cites the face line, not the note; the class is right.
-- other_income_expense_net: **probably wrong reason.** The note R48.htm 'Components of Other Income (Expense), Net' prints 'Other, net' 4,722 on us-gaap:OtherNonoperatingIncomeExpense. By the whole-filing ruling, a data point found only in a note is mapped (stmt NOTE, R page), not combined. The same note already serves MSFT interest_expense (PROVEN from R48). Engineering and the Tag Expert: map other_income_expense_net to R48 'Other, net' for each year the note prints it. This affects 12 REASON cells outside this sample.
+Correction to run 1: run 1 said the 12 other_income_expense_net REASON cells 'look wrong'. On reading the notes (FY2015 R58, FY2021 R49, FY2026 R48), 'Other, net' is a residual after gains, derivatives and FX, not the data point. The combined reason stands.
