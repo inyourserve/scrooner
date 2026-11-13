@@ -72,3 +72,4 @@ none beyond sign differences
 - cfo: mapped us-gaap:NetCashProvidedByUsedInOperatingActivities (R7.htm): 2026-11-12 R7.htm: 20% mapped sample: CF R7.htm 'Net cash provided by (used for) operating activiti' is the cfo line, printed 2113800000 = filing XBRL 2113800000; agrees
 - cash_flow_financing: mapped us-gaap:NetCashProvidedByUsedInFinancingActivities (R7.htm): 2026-11-12 R7.htm: 20% mapped sample: CF R7.htm 'Net cash provided by (used for) financing activiti' is the cash_flow_financing line, printed -72300000 = filing XBRL -72300000; agrees
 - capex: mapped us-gaap:PaymentsToAcquirePropertyPlantAndEquipment (R7.htm): 2026-11-12 R7.htm: 20% mapped sample: CF R7.htm 'Capital expenditures' is the capex line, printed -220000000 = filing XBRL 220000000; agrees
+- total_debt: re-decided: 2,913.0 from the debt lines alone; finance_lease_immaterial_per_filing (R16), Dhairya 2026-11-13

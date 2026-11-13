@@ -11,7 +11,7 @@ The numbers only, updated at each 10-company commit. Per-company files are `data
 | ranks 131-140 (shared tool + hand checks) | 10 | 380 | 0 | 21 corrections (16 tool errors + 4 sample disagreements + FCX debt held), 0 rows left as review | 0 | 0 new |
 | ranks 141-150 (shared tool + hand checks) | 10 | 380 | 0 | 27 corrections (25 tool errors + 2 sample disagreements), 0 rows left as review | 0 | 1 new class (cost of revenue split across member rows) |
 | ranks 151-160 (shared tool + hand checks) | 10 | 380 | 0 | 36 corrections (35 tool errors incl. 6 OUT + 1 sample disagreement), 3 definition calls (EPD MLP) | 0 | 2 new classes (IS title with non-breaking spaces; float-formatted printed values) |
-| ranks 161-170 (done before the stop order) | 10 | 380 | 2 flagged by the tool (MSI, CL opex: the face component sum ties GP - OI; the API OperatingExpenses fact has a different scope) | 22 tool errors + 2 sample disagreements corrected; VRT total_debt held | 0 | 0 new |
+| ranks 161-170 (done before the stop order) | 10 | 380 | 2 flagged by the tool (MSI, CL opex: the face component sum ties GP - OI; the API OperatingExpenses fact has a different scope) | 22 tool errors + 2 sample disagreements corrected; VRT total_debt served with finance_lease_immaterial_per_filing | 0 | 0 new |
 
 Hand checks on ranks 101-110:
 - 67 rows hand-checked: every non-mapped row and every NOTE row.
@@ -126,7 +126,7 @@ MLP rulings (Dhairya, 2026-11-13) applied to EPD:
 - stockholders_equity = partners' equity 29,739 (excluding NCI);
 - dividends_paid = distributions to common unitholders 4,678;
 - shares_outstanding = common units 2,161,760,683 (R4);
-- weighted basic units 2,166M (R92), by analogy.
+- weighted basic units 2,166M (R92), confirmed by Dhairya; diluted units follow the same rule.
 
 Ranks 161-170 (VRT CMCSA HLT ITW KKR MSI CP ROST CL KMI) were finished before Dhairya's stop order (reading ends at rank 160).
 - 80 rows checked, 59 sampled; 2 disagreements (3.4%): HLT accounts payable and ITW equity incl. NCI, both now combined.
@@ -137,6 +137,6 @@ Ranks 161-170 (VRT CMCSA HLT ITW KKR MSI CP ROST CL KMI) were finished before Dh
   - ITW SG&A combined (includes R&D) and D&A combined (includes impairment);
   - KKR capex, PP&E and goodwill;
   - MSI net interest combined.
-- VRT total_debt HELD (finance_lease_total_not_disclosed: R16 calls finance leases 'immaterial' and gives no amount).
-- CP reports in CAD, outside the V1 USD scope.
+- VRT total_debt: served from the debt lines alone (2,913.0), with note finance_lease_immaterial_per_filing (R16) per Dhairya 2026-11-13. The finance_lease_total_not_disclosed hold stays only where leases are material (FCX).
+- CP reports in CAD, outside the top 100: parked.
 - No reads past rank 170 were done; ranks 171-200 shared-tool output is not committed.
