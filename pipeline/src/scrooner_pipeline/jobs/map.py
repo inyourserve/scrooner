@@ -302,6 +302,16 @@ def tagmap_plan_cmd(
         "--coverage-gate",
         help="With --apply: commit a company only when its eras cover the data window, it loses no FY0/FY-1 value and no value disappears without a reason.",
     ),
+    dqc_report: Path = typer.Option(
+        None,
+        "--dqc-report",
+        help="Run the DQC checks (data-team/tags/validations/dqc-checks.csv) on each company's served cells of this run and write the hits here (report only).",
+    ),
+    dqc_hold: bool = typer.Option(
+        False,
+        "--dqc-hold",
+        help="With the DQC checks: a hit whose on_fail is 'hold the cell' removes that served cell and writes a visible defect reason instead.",
+    ),
     statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
 ) -> None:
     """Rule company_tag_map.select@1 for these companies: tag-map resolve, protection of every written key,
@@ -337,7 +347,26 @@ def tagmap_plan_cmd(
             typer.echo(
                 f"before-image: {plan.write_before_image(conn, ids, before_image_dir)} -> {before_image_dir}"
             )
-        rep = plan.run(conn, ids, tpl, apply=apply, gate=coverage_gate)
+        from scrooner_pipeline.mapper import dqc_checks
+
+        checks = dqc_checks.load_checks() if (dqc_report or dqc_hold) else None
+        rep = plan.run(
+            conn,
+            ids,
+            tpl,
+            apply=apply,
+            gate=coverage_gate,
+            dqc_checks=checks,
+            dqc_hold=dqc_hold,
+        )
+    if checks:
+        all_hits = [h for r in rep.values() for h in r.get("dqc_hits", [])]
+        if dqc_report:
+            dqc_checks.write_report(all_hits, dqc_report)
+        typer.echo(
+            f"dqc: hits {dqc_checks.hits_by_check(all_hits)} held {sum(r.get('dqc_held', 0) for r in rep.values())}"
+            f"{f' -> {dqc_report}' if dqc_report else ''}"
+        )
     typer.echo(f"tagmap-plan [{'apply' if apply else 'plan'}]")
     for cid, r in rep.items():
         if "error" in r:
@@ -363,6 +392,48 @@ def tagmap_plan_cmd(
     bad = {c: r["neither"] for c, r in rep.items() if r.get("neither")}
     if bad:
         typer.echo(f"expected cells with neither value nor reason: {bad}")
+
+
+@app.command("dqc-check")
+def dqc_check_cmd(
+    company_ids: str = typer.Option(
+        ..., "--company-ids", help="Comma-separated core.company ids."
+    ),
+    report: Path = typer.Option(
+        ...,
+        "--report",
+        help="CSV of the hits (check_id, company, data point, period, values, on_fail, hold).",
+    ),
+    checks_csv: Path = typer.Option(
+        None, "--checks", help="Default: data-team/tags/validations/dqc-checks.csv."
+    ),
+    statement_timeout: str = typer.Option("120s", help="Per-statement cap."),
+) -> None:
+    """DQC checks over the SERVED cells (analytics.canonical_fact) of these companies. Read only: a read-only
+    transaction, nothing is written or held. Prints hits per check_id and per company, and the unsupported checks."""
+    from scrooner_pipeline.mapper import dqc_checks
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    checks = dqc_checks.load_checks(checks_csv)
+    impl, unsupported = dqc_checks.split_checks(checks)
+    hits: list[dqc_checks.Hit] = []
+    with get_connection() as conn:
+        conn.read_only = True
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        for cid in ids:
+            hits += dqc_checks.check_company(conn, cid, checks)
+        conn.rollback()
+    dqc_checks.write_report(hits, report)
+    typer.echo(
+        f"dqc-check: checks {len(checks)} implemented {len(impl)} unsupported {len(unsupported)}"
+    )
+    for cid_, reason in unsupported.items():
+        typer.echo(f"  unsupported {cid_}: {reason}")
+    typer.echo(f"  hits by check: {dqc_checks.hits_by_check(hits)}")
+    for cid in ids:
+        mine = [h for h in hits if h.company_id == cid]
+        typer.echo(f"  {cid}: {len(mine)} hits {dqc_checks.hits_by_check(mine)}")
+    typer.echo(f"  report -> {report}")
 
 
 @app.command("split-rebase")
