@@ -206,7 +206,7 @@ def find_reports(fs: str) -> dict[str, tuple[str, str]]:
         name = html.unescape((re.search(r"<ShortName>(.*?)</ShortName>", r, re.S) or [None, ""])[1])
         fn = (re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", r, re.S) or [None, ""])[1]
         cat = (re.search(r"<MenuCategory>(.*?)</MenuCategory>", r, re.S) or [None, ""])[1]
-        n = name.lower()
+        n = re.sub(r"\s*\((loss|losses|deficit)\)\s*", " ", name.lower()).replace("  ", " ")  # "Statements of (Loss) Earnings" (401-500 fix)
         if not fn:
             continue
         if "COVER" not in out and (cat == "Cover" or re.search(STMT_RX["COVER"], n)):
@@ -227,6 +227,8 @@ def find_reports(fs: str) -> dict[str, tuple[str, str]]:
                 break
         if re.search(r"comprehensive", n) and "CI" not in out and "IS" in out and out["IS"][1] != fn:
             out["CI"] = (name, fn)
+    if "IS" not in out and "CI" in out:  # one combined statement of income and comprehensive income (401-500 fix)
+        out["IS"] = out["CI"]
     return out
 
 
