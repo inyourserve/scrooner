@@ -126,7 +126,7 @@ def _null_rules(raw: str, where: str) -> dict[str, str]:
     out: dict[str, str] = {}
     for tok in filter(None, raw.split(";")):
         key, sep, val = tok.partition("=")
-        if not sep or key not in {"div0", "floor", "zero_when_absent", "growth_base"}:
+        if not sep or key not in {"div0", "floor", "zero_when_absent", "growth_base", "neg"}:
             raise RegistryError(f"{where}: bad null rule {tok!r}")
         out[key] = val
     return out

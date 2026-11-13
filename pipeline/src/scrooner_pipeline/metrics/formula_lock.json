@@ -36,12 +36,12 @@
   "version": 1
  },
  "debt_to_ebitda": {
-  "fingerprint": "de1add9265f0",
-  "version": 1
+  "fingerprint": "a1f1fc5b1744",
+  "version": 2
  },
  "debt_to_equity": {
-  "fingerprint": "4d47ba7a8c6c",
-  "version": 1
+  "fingerprint": "29e86a965a1b",
+  "version": 2
  },
  "debtor_days": {
   "fingerprint": "bac04eafa828",
@@ -68,8 +68,8 @@
   "version": 1
  },
  "dividends_pct_fcf": {
-  "fingerprint": "c3d1f3a3c52e",
-  "version": 1
+  "fingerprint": "f970839bc0e0",
+  "version": 2
  },
  "dps_growth_3y_cagr": {
   "fingerprint": "638871100133",
@@ -96,8 +96,8 @@
   "version": 1
  },
  "eps_dilution_spread": {
-  "fingerprint": "4da98a395cef",
-  "version": 1
+  "fingerprint": "80466559c930",
+  "version": 2
  },
  "eps_growth_10y_cagr": {
   "fingerprint": "989d45ef07a6",
@@ -116,8 +116,8 @@
   "version": 1
  },
  "ev_ebitda": {
-  "fingerprint": "b643c4c2877b",
-  "version": 1
+  "fingerprint": "bf226e0af129",
+  "version": 2
  },
  "ev_sales": {
   "fingerprint": "808b14ee9da0",
@@ -200,8 +200,8 @@
   "version": 1
  },
  "net_debt_ebitda": {
-  "fingerprint": "6e3aa20e4927",
-  "version": 1
+  "fingerprint": "96d643f543ec",
+  "version": 2
  },
  "net_income_growth_10y_cagr": {
   "fingerprint": "d16bfc4cddf6",
@@ -228,8 +228,8 @@
   "version": 1
  },
  "ocf_to_net_income": {
-  "fingerprint": "660fe6e14c14",
-  "version": 1
+  "fingerprint": "99bb38f4291d",
+  "version": 2
  },
  "operating_margin": {
   "fingerprint": "2943f3988bff",
@@ -240,8 +240,8 @@
   "version": 1
  },
  "payout_ratio": {
-  "fingerprint": "f044ea3dc784",
-  "version": 1
+  "fingerprint": "bc14927bd3ac",
+  "version": 2
  },
  "peg_ratio": {
   "fingerprint": "dcf8c88dce2f",
@@ -256,8 +256,8 @@
   "version": 1
  },
  "price_to_book": {
-  "fingerprint": "8e93feb37a5b",
-  "version": 1
+  "fingerprint": "f4414cf17383",
+  "version": 2
  },
  "price_to_sales": {
   "fingerprint": "6dadaa2c8ac2",
@@ -296,12 +296,12 @@
   "version": 1
  },
  "roe": {
-  "fingerprint": "f5d3e3f1972f",
-  "version": 1
+  "fingerprint": "52df2b697494",
+  "version": 2
  },
  "roic": {
-  "fingerprint": "e3826da873f3",
-  "version": 1
+  "fingerprint": "a87a96016d8f",
+  "version": 2
  },
  "sbc_pct_revenue": {
   "fingerprint": "c05c376b5799",
@@ -316,16 +316,16 @@
   "version": 1
  },
  "share_repurchases_pct_fcf": {
-  "fingerprint": "372c76816d1d",
-  "version": 1
+  "fingerprint": "3f9e1f32396f",
+  "version": 2
  },
  "total_shareholder_yield": {
   "fingerprint": "1f5c42ee58e8",
   "version": 1
  },
  "trailing_pe": {
-  "fingerprint": "da33357c5fc4",
-  "version": 1
+  "fingerprint": "1bda2813f95d",
+  "version": 2
  },
  "working_capital": {
   "fingerprint": "77500d1f4b66",

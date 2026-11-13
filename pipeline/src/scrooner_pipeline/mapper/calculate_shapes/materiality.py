@@ -76,6 +76,23 @@ CONCEPT_MATERIALITY_FLOORS: dict[str, Decimal] = {
 }
 
 
+# Founder 2026-11-13: a ratio whose denominator is a quantity that can go negative (equity,
+# earnings) is "not meaningful" when that denominator is below zero, not a negative number.
+# Zero keeps its own reason (zero_denominator). Keyed by denominator concept, like the floors;
+# the registry mirrors it per metric with the `neg=` null rule (metrics/engine.py).
+NEGATIVE_UNDEFINED_DENOMINATORS: frozenset[str] = frozenset(
+    {"stockholders_equity", "net_income", "diluted_eps", "basic_eps"}
+)
+
+
+def negative_denominator_violation(
+    denominator_concept_names: frozenset[str], denom_sum: Decimal
+) -> str | None:
+    if denom_sum < 0 and denominator_concept_names & NEGATIVE_UNDEFINED_DENOMINATORS:
+        return "negative_ratio_undefined"
+    return None
+
+
 def materiality_floor_violation(
     denominator_concept_names: frozenset[str], denom_sum: Decimal
 ) -> str | None:

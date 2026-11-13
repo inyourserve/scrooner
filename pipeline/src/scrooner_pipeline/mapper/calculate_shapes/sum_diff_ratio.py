@@ -8,6 +8,7 @@ from decimal import Decimal
 
 from scrooner_pipeline.mapper.calculate_shapes.materiality import (
     materiality_floor_violation,
+    negative_denominator_violation,
 )
 
 
@@ -27,6 +28,11 @@ def compute(
     denom_sum = sum(denom)
     if denom_sum == 0:
         return None, "zero_denominator"
+    neg_violation = negative_denominator_violation(
+        denominator_concept_names, denom_sum
+    )
+    if neg_violation is not None:
+        return None, neg_violation
     floor_violation = materiality_floor_violation(denominator_concept_names, denom_sum)
     if floor_violation is not None:
         return None, floor_violation

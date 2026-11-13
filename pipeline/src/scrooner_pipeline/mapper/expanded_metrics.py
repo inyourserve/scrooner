@@ -627,6 +627,8 @@ def calculate_expanded_metrics_for_company(
         rows.append(_row("net_debt_ebitda", None, no_ebitda))
     elif ebitda_ttm == 0:
         rows.append(_row("net_debt_ebitda", None, "zero_denominator"))
+    elif ebitda_ttm < 0:
+        rows.append(_row("net_debt_ebitda", None, "negative_ratio_undefined"))
     else:
         net_debt = total_debt_hit[0] - cash_hit[0]
         rows.append(_row("net_debt_ebitda", net_debt / ebitda_ttm, None))
@@ -817,6 +819,8 @@ def calculate_expanded_metrics_for_company(
         rows.append(_row("debt_to_ebitda", None, no_ebitda))
     elif ebitda_ttm == 0:
         rows.append(_row("debt_to_ebitda", None, "zero_denominator"))
+    elif ebitda_ttm < 0:
+        rows.append(_row("debt_to_ebitda", None, "negative_ratio_undefined"))
     else:
         rows.append(_row("debt_to_ebitda", total_debt_hit[0] / ebitda_ttm, None))
 
@@ -949,6 +953,8 @@ def calculate_expanded_metrics_for_company(
         rows.append(_row("share_repurchases_pct_fcf", None, no_fcf))
     elif fcf_ttm == 0:
         rows.append(_row("share_repurchases_pct_fcf", None, "zero_denominator"))
+    elif fcf_ttm < 0:
+        rows.append(_row("share_repurchases_pct_fcf", None, "negative_ratio_undefined"))
     else:
         rows.append(_row("share_repurchases_pct_fcf", buybacks_ttm / fcf_ttm, None))
 
@@ -962,6 +968,8 @@ def calculate_expanded_metrics_for_company(
         rows.append(_row("dividends_pct_fcf", None, no_fcf))
     elif fcf_ttm == 0:
         rows.append(_row("dividends_pct_fcf", None, "zero_denominator"))
+    elif fcf_ttm < 0:
+        rows.append(_row("dividends_pct_fcf", None, "negative_ratio_undefined"))
     else:
         rows.append(_row("dividends_pct_fcf", dividends_ttm / fcf_ttm, None))
 
@@ -992,6 +1000,8 @@ def calculate_expanded_metrics_for_company(
             rows.append(_row("ev_ebitda", None, no_ebitda))
         elif ebitda_ttm == 0:
             rows.append(_row("ev_ebitda", None, "zero_denominator"))
+        elif ebitda_ttm < 0:
+            rows.append(_row("ev_ebitda", None, "negative_ratio_undefined"))
         else:
             rows.append(_row("ev_ebitda", enterprise_value / ebitda_ttm, ev_reason))
 

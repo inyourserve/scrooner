@@ -49,4 +49,7 @@ def compute(
     invested_capital = sum(ic_add) - sum(ic_sub)
     if invested_capital == 0:
         return None, "zero_invested_capital"
+    if invested_capital < 0:
+        # founder 2026-11-13: negative invested capital is "not meaningful", not a negative ROIC
+        return None, "negative_ratio_undefined"
     return nopat / invested_capital, None

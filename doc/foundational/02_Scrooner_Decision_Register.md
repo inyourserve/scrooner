@@ -148,6 +148,13 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
   1. Revenue = total investment income as printed (interest, dividend and fee income).
   2. The earnings line = net investment income (NII) as printed.
   3. Both are face lines taken as printed, never derived.
+- **Founder metric decisions of 2026-11-13** (founder: "yes go ahead for everything", relayed by the chief of staff in the task brief). Metric registry, `pipeline/src/scrooner_pipeline/metrics/`:
+  1. A ratio whose denominator can go negative (equity, earnings, EBITDA, FCF, invested capital) is null when the denominator is below zero, reason `negative_ratio_undefined` ("not meaningful"); zero keeps `zero_denominator` (ROIC: `zero_invested_capital`). Applies to ROE, ROIC, P/E, price/book, debt/equity, OCF/net income, EPS dilution spread, payout ratio, EV/EBITDA, net debt/EBITDA, debt/EBITDA, buybacks and dividends as % of FCF. Margins (revenue denominator) keep current behaviour. Formula versions bumped; old proofs are stale by design.
+  2. ROIC invested capital = total debt (including finance leases) + equity - cash; operating leases are out of invested capital.
+  3. Insurers are treated like banks for corporate-only metrics (`not_applicable_insurer`).
+  4. Strict inputs: a metric is blocked when any input is UNCHECKED.
+  5. Deferred: shareholder yield and the quality-flag formulas.
+  6. Deferred until after certification: the TTM-margin and net debt/EBITDA alignment.
 
 ## Rejected or deferred directions
 

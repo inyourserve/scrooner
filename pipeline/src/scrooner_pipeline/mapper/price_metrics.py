@@ -539,7 +539,14 @@ def calculate_price_metrics_for_company(
         ni_ttm, ni_fids = ttm.get("net_income", (None, []))
         if not never_derive:
             # legacy order: price / TTM EPS, else market cap / TTM net income
-            if eps_ttm is None and market_cap is not None and ni_ttm:
+            if (
+                eps_ttm is None
+                and market_cap is not None
+                and ni_ttm is not None
+                and ni_ttm < 0
+            ):
+                rows.append(_row("trailing_pe", None, "negative_ratio_undefined", []))
+            elif eps_ttm is None and market_cap is not None and ni_ttm:
                 rows.append(
                     _row("trailing_pe", market_cap / ni_ttm, None, mc_fids + ni_fids)
                 )
@@ -547,11 +554,15 @@ def calculate_price_metrics_for_company(
                 rows.append(_row("trailing_pe", None, "missing:diluted_eps_ttm", []))
             elif eps_ttm == 0:
                 rows.append(_row("trailing_pe", None, "zero_denominator", []))
+            elif eps_ttm < 0:
+                rows.append(_row("trailing_pe", None, "negative_ratio_undefined", []))
             else:
                 rows.append(_row("trailing_pe", price / eps_ttm, None, eps_fids))
         elif eps_ttm is not None:
             if eps_ttm == 0:
                 rows.append(_row("trailing_pe", None, "zero_denominator", []))
+            elif eps_ttm < 0:
+                rows.append(_row("trailing_pe", None, "negative_ratio_undefined", []))
             else:
                 rows.append(_row("trailing_pe", price / eps_ttm, None, eps_fids))
         elif market_cap is None:
@@ -560,6 +571,8 @@ def calculate_price_metrics_for_company(
             rows.append(_row("trailing_pe", None, "missing:net_income_ttm", []))
         elif ni_ttm == 0:
             rows.append(_row("trailing_pe", None, "zero_denominator", []))
+        elif ni_ttm < 0:
+            rows.append(_row("trailing_pe", None, "negative_ratio_undefined", []))
         else:
             rows.append(
                 _row("trailing_pe", market_cap / ni_ttm, None, mc_fids + ni_fids)
@@ -585,6 +598,8 @@ def calculate_price_metrics_for_company(
             rows.append(_row("price_to_book", None, "missing:stockholders_equity", []))
         elif equity_hit[0] == 0:
             rows.append(_row("price_to_book", None, "zero_denominator", []))
+        elif equity_hit[0] < 0:
+            rows.append(_row("price_to_book", None, "negative_ratio_undefined", []))
         else:
             rows.append(
                 _row(

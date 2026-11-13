@@ -9,8 +9,12 @@ growth engine, mapper/ttm.py `_growth_value`, which the agreement tests hold it 
     (`div0=`, in evaluation order);
   * `floor=denominator`: a divisor whose concept is below its materiality floor is null,
     `immaterial_<concept>_base`; the floors table stays in calculate_shapes/materiality.py.
-Note the live rule is `divisor == 0`, not `divisor <= 0`: a negative denominator computes
-(negative equity gives a negative ROE). Reported as an open decision, not changed here.
+  * `neg=<n,..>` (founder 2026-11-13): the n-th division (1-based, evaluation order) is also
+    null when its divisor is negative, reason `negative_ratio_undefined` ("not meaningful"):
+    ratios whose denominator is equity, earnings, EBITDA, FCF or invested capital. Zero stays
+    the `div0` reason. Divisions without `neg` (margins, revenue/assets denominators) keep
+    `divisor == 0` as the only sign rule. The live shapes (mapper/calculate_shapes) apply the
+    same rule by denominator concept (NEGATIVE_UNDEFINED_DENOMINATORS).
 """
 
 from __future__ import annotations
@@ -99,6 +103,7 @@ def evaluate(metric: Metric, env, *, check_period: str | None = None) -> Result:
         x for x in metric.null_rules.get("div0", "zero_denominator").split(",") if x
     ]
     floor_rule = metric.null_rules.get("floor") == "denominator"
+    neg_divs = {int(x) for x in metric.null_rules.get("neg", "").split(",") if x}
     cls = (
         metric.classification() if metric.expression_status == "engine_wired" else None
     )
@@ -131,6 +136,8 @@ def evaluate(metric: Metric, env, *, check_period: str | None = None) -> Result:
                 div_index[0] += 1
                 if d == 0:
                     raise _Null(div_reasons[min(idx, len(div_reasons) - 1)])
+                if d < 0 and (idx + 1) in neg_divs:
+                    raise _Null("negative_ratio_undefined")
                 if floor_rule:
                     bot = expr.chain(node.right)
                     if bot is not None:

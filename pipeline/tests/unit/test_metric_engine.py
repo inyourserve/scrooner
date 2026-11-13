@@ -189,9 +189,9 @@ def test_all_proven_inputs_compute_and_record_lineage_and_recompute():
     assert row["verdict"] == "PROVEN" and row["position_is_expected_line"] is True
     assert row["checks"]["metric_inputs"][0]["rule_id"] == "tagmap.x@1"
     assert row["checks"]["metric_inputs"][0]["rules_commit"] == "abc123"
-    assert row["checks"]["formula"]["ref"] == "roe@1"
+    assert row["checks"]["formula"]["ref"] == "roe@2"
     assert row["checks"]["period_basis"] == {"label": "FY", "rule": "any_period"}
-    assert row["detector_version"].startswith("roe@1#")
+    assert row["detector_version"].startswith("roe@2#")
     mismatch = build_cell_record(REG["roe"], _cells(), FY, stored_value=D("0.3"))
     assert mismatch.recompute["status"] == "mismatch" and mismatch.verdict == "DISAGREE"
     assert to_cell_proof_row(mismatch, 7, REG["roe"])["reason_code"] == "metric_recompute_mismatch"
@@ -219,14 +219,14 @@ def test_version_bump_or_formula_edit_marks_proofs_stale_but_label_edit_does_not
     m = REG["roe"]
     dv = detector_version(m)
     assert not proof_is_stale(dv, m)
-    assert proof_is_stale(dv, replace(m, version=2))
+    assert proof_is_stale(dv, replace(m, version=3))
     assert proof_is_stale(dv, replace(m, expression="net_income / total_assets"))
     assert proof_is_stale(dv, replace(m, perimeter_spec={"x": "y"}))
     assert not proof_is_stale(dv, replace(m, label="Return on equity, renamed"))
     assert proof_is_stale(None, m) and proof_is_stale("garbage", m)
     assert formula_fingerprint(m) != formula_fingerprint(REG["roa"])
     stamp = value_stamp(m)
-    assert stamp["formula_version"] == 1 and len(stamp["registry_version"]) == 16
+    assert stamp["formula_version"] == 2 and len(stamp["registry_version"]) == 16
 
 
 # ---- applicability: families, OUT with a reason ----------------------------------------------------
@@ -365,7 +365,7 @@ def test_company_metric_status_flags_a_value_the_registry_says_is_out():
             ("roe", 1, "COMPUTED", None, "bank", "FY", date(2025, 12, 31), D("0.1"))]
     out = {r["metric"]: r for r in company_metric_status(_FakeConn(rows), 1, group="bank")}
     assert out["gross_margin"]["status"] == "conflict" and out["gross_margin"]["applicability"] == "OUT"
-    assert out["roe"]["status"] == "COMPUTED" and out["roe"]["registry_ref"] == "roe@1"
+    assert out["roe"]["status"] == "COMPUTED" and out["roe"]["registry_ref"] == "roe@2"
 
 
 @pytest.mark.unit
