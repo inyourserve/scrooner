@@ -71,13 +71,42 @@ class Print:
 DCML_EXACT = 20
 
 
-def tol_of(dcmls: Iterable[int | None]) -> Decimal:
+# a filer who prints in whole millions rounds each operand to 10^6 whatever its decimals attribute says
+# (MCD: decimals -5 on figures that are whole millions), so the rounding unit of a Print is the coarser
+# of its declared decimals and 10^6 when the value is a whole number of millions (nothing narrower or
+# wider is inferred from zeros: a round 1,000 at decimals 0 is still exact)
+TRAILING_UNIT_CAP = 6
+
+
+def _unit_exp(item: Print | int | None) -> int | None:
+    """Exponent of the rounding unit (10^e), or None when the print is exact."""
+    if isinstance(item, Print):
+        d, v = item.dcml, item.value
+    else:
+        d, v = item, None
+    d = 0 if d is None else d
+    if abs(d) > DCML_EXACT:
+        return None  # an exact print adds no rounding slack
+    e = -d
+    if v is not None and v != 0:
+        n = int(v)
+        if n == v:
+            z = 0
+            while n % 10 == 0 and z < TRAILING_UNIT_CAP:
+                n //= 10
+                z += 1
+            if z >= TRAILING_UNIT_CAP:  # whole millions: the filer rounded to 10^6
+                e = max(e, z)
+    return e
+
+
+def tol_of(items: Iterable[Print | int | None]) -> Decimal:
+    """0.5 x unit per operand; items are Prints (declared decimals and trailing zeros) or bare dcml."""
     t = Decimal(0)
-    for d in dcmls:
-        d = 0 if d is None else d
-        if abs(d) > DCML_EXACT:
-            continue  # an exact print adds no rounding slack
-        t += Decimal(5) * (Decimal(10) ** (-d - 1))
+    for it in items:
+        e = _unit_exp(it)
+        if e is not None:
+            t += Decimal(5) * (Decimal(10) ** (e - 1))
     return t
 
 
@@ -169,7 +198,7 @@ def check_column(
         if any(stmt_of.get((c, v)) != stmt for c, v, _ in children):
             continue
         rhs = sum((t.value * w for t, w in terms), Decimal(0))
-        tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])
+        tol = tol_of([parent, *(t for t, _ in terms)])
         out.append(
             {
                 "check_id": f"calc:{ptag}:{grp}",
@@ -189,7 +218,7 @@ def check_column(
             rhs = [p for (t, _v), p in col.items() if t in rhs_tags]
             if lhs and rhs:
                 l, r = lhs[0], rhs[0]
-                tol = tol_of([l.dcml, r.dcml])
+                tol = tol_of([l, r])
                 out.append(
                     {
                         "check_id": check_id,
@@ -208,7 +237,7 @@ def check_column(
         gp = {t: p for (t, _v), p in col.items() if t in IS_GP[1:]}
         if len(gp) == 3:
             rhs = gp["Revenues"].value - gp["CostOfRevenue"].value
-            tol = tol_of([p.dcml for p in gp.values()])
+            tol = tol_of(list(gp.values()))
             out.append(
                 {
                     "check_id": IS_GP[0],
@@ -272,7 +301,7 @@ def _cf_tree(
             if any(t is None for t, _ in terms):
                 continue
             rhs = sum((t.value * w for t, w in terms), Decimal(0))
-            tol = tol_of([change.dcml, *(t.dcml for t, _ in terms)])
+            tol = tol_of([change, *(t for t, _ in terms)])
             return {
                 "check_id": "cf_parts_eq_change",
                 "ok": abs(change.value - rhs) <= tol,
@@ -311,10 +340,10 @@ def _cf_fallback(
     # order; the column passes if any ties and the detail records which did (6b0b4355)
     cands: list[tuple[Print, Print | None, Decimal, Decimal]] = []
     for c in changes:
-        tol_no = tol_of([c.dcml, *(p.dcml for p in parts + disc)])
+        tol_no = tol_of([c, *parts, *disc])
         if "Excluding" not in c.tag:
             for fxp in fx:
-                cands.append((c, fxp, base + fxp.value, tol_no + tol_of([fxp.dcml])))
+                cands.append((c, fxp, base + fxp.value, tol_no + tol_of([fxp])))
         cands.append((c, None, base, tol_no))
     c, fx_used, rhs, tol = next(
         (x for x in cands if abs(x[0].value - x[2]) <= x[3]), cands[0]
@@ -362,7 +391,7 @@ def _row(
     check_id: str, lhs: Print, rhs_terms: list[Print], detail: dict
 ) -> dict[str, Any]:
     rhs = sum((p.value for p in rhs_terms), Decimal(0))
-    tol = tol_of([lhs.dcml, *(p.dcml for p in rhs_terms)])
+    tol = tol_of([lhs, *rhs_terms])
     return {
         "check_id": check_id,
         "ok": abs(lhs.value - rhs) <= tol,

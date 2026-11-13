@@ -286,9 +286,55 @@ def test_cash_change_passes_when_only_the_filers_calc_weights_are_wrong():
     # numbers tie, so the column passes and the linkbase defect is recorded, never a quarantine
     root = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect"
     kids = [t for t, _ in MSFT_FY2024 if t != root]
-    groups = {(root, "us-gaap/2023", 1): [(t, "us-gaap/2023", Decimal(-1 if "Operating" in t else 1)) for t in kids]}
+    groups = {
+        (root, "us-gaap/2023", 1): [
+            (t, "us-gaap/2023", Decimal(-1 if "Operating" in t else 1)) for t in kids
+        ]
+    }
     c = checks.cf_change_check(_cf(MSFT_FY2024), groups)
-    assert c["ok"] and c["detail"]["form"] == "fallback_totals" and "calc_tree_failed" in c["detail"]
+    assert (
+        c["ok"]
+        and c["detail"]["form"] == "fallback_totals"
+        and "calc_tree_failed" in c["detail"]
+    )
     # numbers that tie neither way still fail
-    broken = _cf([r if not r[0].startswith("CashCash") else (r[0], "-16000000000") for r in MSFT_FY2024])
+    broken = _cf(
+        [
+            r if not r[0].startswith("CashCash") else (r[0], "-16000000000")
+            for r in MSFT_FY2024
+        ]
+    )
     assert not checks.cf_change_check(broken, groups)["ok"]
+
+
+@pytest.mark.unit
+def test_tolerance_follows_the_filers_whole_million_rounding_not_a_wrong_decimals_attribute():
+    # MCD: decimals -5 on figures that are whole millions; five operands each rounded to 1M can be 2.5M off
+    col = {
+        (t, "v"): checks.Print(t, "v", Decimal(v), -5, None)
+        for t, v in (
+            ("NetCashProvidedByUsedInOperatingActivities", "7000000000"),
+            ("NetCashProvidedByUsedInInvestingActivities", "-2000000000"),
+            ("NetCashProvidedByUsedInFinancingActivities", "-7000000000"),
+            ("EffectOfExchangeRateOnCashAndCashEquivalents", "-126000000"),
+            ("CashAndCashEquivalentsPeriodIncreaseDecrease", "-2127000000"),
+        )
+    }
+    c = {x["check_id"]: x for x in checks.check_column("CF", col, {}, {})}[
+        "cf_parts_eq_change"
+    ]
+    assert c["ok"]
+    # a 4M gap is more than five 0.5M roundings: still fails
+    col[("CashAndCashEquivalentsPeriodIncreaseDecrease", "v")] = checks.Print(
+        "CashAndCashEquivalentsPeriodIncreaseDecrease",
+        "v",
+        Decimal("-2130000000"),
+        -5,
+        None,
+    )
+    assert not {x["check_id"]: x for x in checks.check_column("CF", col, {}, {})}[
+        "cf_parts_eq_change"
+    ]["ok"]
+    assert checks.tol_of([checks.Print("a", "v", Decimal(1000), 0, None)]) == Decimal(
+        "0.5"
+    )
