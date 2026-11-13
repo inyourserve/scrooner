@@ -38,7 +38,7 @@ def lines_for(years, **kw):
 
 
 def run(d):
-    return ee.extend([TAG], set(), BASE, acc(2025), d)
+    return ee.extend([TAG], set(), BASE, acc(2025), d)[:3]
 
 
 def test_extends_back_across_continuous_years():
@@ -79,7 +79,7 @@ def test_stops_at_a_gap_and_never_bridges():
 def test_other_tag_mapped_to_the_concept_stops():
     ls = lines_for(YEARS)
     mp = {acc(2019): {7: {"SalesRevenueNet"}}}
-    era, _, _ = ee.extend([TAG], {7}, BASE, acc(2025), data(YEARS, ls, mp))
+    era, _, _, _ = ee.extend([TAG], {7}, BASE, acc(2025), data(YEARS, ls, mp))
     assert era == date(2019, 1, 1)
 
 
@@ -88,6 +88,58 @@ def test_unknown_reference_extends_nothing():
     era, adsh, log = run(d)
     assert (era, adsh) == (BASE, None) and log[0]["check"] == "fail"
 
+
+
+def test_calc_parent_relaxed_only_when_the_earlier_filing_has_no_arc():
+    ls = lines_for(YEARS)
+    ls[acc(2020)] = {TAG: [L(parents=())]}  # no calc arc in FY2020: passes on stmt + role/label
+    assert run(data(YEARS, ls))[0] == date(2015, 1, 1)
+    ls[acc(2020)] = {TAG: [L(parents=("Other",))]}  # a different parent still cuts
+    assert run(data(YEARS, ls))[0] == date(2020, 1, 1)
+
+
+def V(kind="annual", unit="usd"):
+    return {(kind, unit)}
+
+
+def value_data(with_value, other_unit_year=None):
+    """The read 10-K has no face line, only a non-dimensional value (a note / CF supplemental tag)."""
+    vals = {acc(y): {TAG: V()} for y in with_value}
+    if other_unit_year:
+        vals[acc(other_unit_year)] = {TAG: V(unit="shares")}
+    d = data(YEARS, {})
+    d.values = vals
+    return d
+
+
+def test_value_fallback_extends_marks_value_and_stops():
+    era, adsh, log, by_value = ee.extend(
+        [TAG], set(), BASE, acc(2025), value_data(range(2019, 2026))
+    )
+    assert (era, adsh, by_value) == (date(2018, 1, 1), acc(2019), True)
+    assert log[-1]["check"] == "fail" and "value" in log[-1]["detail"]
+
+
+def test_value_fallback_needs_the_same_unit_class():
+    d = value_data(range(2019, 2026), other_unit_year=2021)
+    era, _, _, _ = ee.extend([TAG], set(), BASE, acc(2025), d)
+    assert era == date(2021, 1, 1)  # FY2021 carries the tag in another unit class: cut
+
+
+def test_value_fallback_stops_when_another_tag_is_mapped():
+    d = value_data(range(2015, 2026))
+    d.mapped = {acc(2019): {7: {"Other"}}}
+    assert ee.extend([TAG], {7}, BASE, acc(2025), d)[0] == date(2019, 1, 1)
+
+
+def test_not_printed_logs_the_other_tag_used():
+    ls = lines_for(YEARS)
+    ls[acc(2020)] = {"SalesRevenueNet": [L()]}
+    d = data(YEARS, ls, {acc(2020): {7: {"SalesRevenueNet"}}})
+    d.by_label = {acc(2020): {("IS", "net sales"): {"SalesRevenueNet"}}}
+    log = ee.extend([TAG], {7}, BASE, acc(2025), d)[2]
+    assert log[-1]["check"] == "fail"
+    assert log[-1]["other_tag"] == "label:SalesRevenueNet;line_map:SalesRevenueNet"
 
 # ---- loader, DB-backed -------------------------------------------------------------------------------------------
 
@@ -157,3 +209,41 @@ def test_loader_extends_and_records_evidence(isolated_database_url, tmp_path: Pa
             "select count(*) from analytics.company_tag_map where company_id = %s", (cid,)
         ).fetchone()[0] == 2
     assert "pass" in log.read_text() and "fail" in log.read_text()
+
+
+CSV_NOTE = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
+ZZE,cash_paid_for_income_taxes,component_in_note,us-gaap:IncomeTaxesPaidNet,Taxes - Details,R60,Taxes paid,,FILING-CHECKED,
+"""
+
+
+@pytest.mark.integration
+def test_loader_value_fallback_for_a_note_tag(isolated_database_url, tmp_path: Path):
+    (tmp_path / "ZZE-docmap-2026-11-12.csv").write_text(CSV_NOTE)
+    (tmp_path / "ZZE-docmap-2026-11-12.md").write_text(MD)
+    paths = sorted(tmp_path.glob("*-docmap-*.csv"))
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _seed(conn, set())
+        tid = conn.execute(
+            "insert into fsn.tag (tag, version) values ('IncomeTaxesPaidNet', 'us-gaap/2024') returning id"
+        ).fetchone()[0]
+        for y in range(2019, 2026):
+            fid = conn.execute(
+                "select id from fsn.filing where accession = %s", (acc(y),)
+            ).fetchone()[0]
+            conn.execute(
+                "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, value) "
+                "values (%s, %s, %s, %s, 4, 'USD', 0, 5)",
+                (fid, cid, tid, date(y, 12, 31)),
+            )
+        conn.commit()
+        dl.load(conn, paths, apply=True, extend_eras=True)
+        rows = conn.execute(
+            "select rule_id, era_from::text, era_to::text, serve_note from analytics.company_tag_map "
+            "where company_id = %s order by era_from",
+            (cid,),
+        ).fetchall()
+    assert [(r[0], r[1], r[2]) for r in rows] == [
+        (ee.EXT_RULE_ID, "2018-01-01", "2023-12-31"),
+        (dl.RULE_ID, "2024-01-01", None),
+    ]
+    assert rows[0][3].startswith(ee.EXT_MARK_VALUE)
