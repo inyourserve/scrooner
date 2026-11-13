@@ -39,6 +39,11 @@ def run_cmd(
         "--write",
         help="Upsert into analytics.cell_proof (needs migration 0114 applied).",
     ),
+    fsn_source: str = typer.Option(
+        "db",
+        help="db: read each company's filings from schema fsn (files only for a filing the store lacks, logged); "
+        "files: the zstd quarter files.",
+    ),
     statement_timeout: str = typer.Option("10min"),
     floor: str = typer.Option(
         None,
@@ -47,8 +52,10 @@ def run_cmd(
 ) -> None:
     """Dry run by default (report only). --write stores the proofs; the website
     reads them only behind proof.serve_proven_only@1 (OFF)."""
+    if fsn_source not in ("db", "files"):
+        raise typer.BadParameter("--fsn-source must be db or files")
     try:
-        require_zstd()
+        require_zstd()  # the db source still falls back to files for a filing the store lacks
         with get_connection() as conn:
             conn.execute(f"set statement_timeout = '{statement_timeout}'")
             totals = run(
@@ -58,6 +65,7 @@ def run_cmd(
                 report_path=Path(report) if report else None,
                 write=write,
                 floor=date.fromisoformat(floor) if floor else None,
+                fsn_source=fsn_source,
             )
     except DecompressError as exc:
         typer.echo(f"cell-proof ABORTED, nothing written: {exc}", err=True)

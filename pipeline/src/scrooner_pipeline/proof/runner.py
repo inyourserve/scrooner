@@ -30,6 +30,7 @@ from scrooner_pipeline.proof.fsn import (
     quarter_of,
     require_zstd,
 )
+from scrooner_pipeline.proof.fsn_db import load_filings
 from scrooner_pipeline.proof.prove import Proof, prove_cell
 from scrooner_pipeline.proof.shown import group_by_accession, load_shown
 
@@ -72,7 +73,22 @@ class StructureCache:
     """FSN structures per accession, loading each quarter once for all the
     accessions that fall in it. Quarters missing from the bucket are remembered."""
 
-    def __init__(self, fsn_root: Path):
+    def __init__(
+        self,
+        fsn_root: Path,
+        conn: psycopg.Connection | None = None,
+        source: str = "files",
+    ):
+        """source 'db' (needs conn) reads each company's filings from schema fsn (proof/fsn_db.py); a filing the
+        store does not hold falls back to the quarter files and is logged and counted in `fallbacks`."""
+        if source not in ("db", "files"):
+            raise ValueError(f"fsn source must be db or files, not {source!r}")
+        if source == "db" and conn is None:
+            raise ValueError("the db fsn source needs a connection")
+        self.conn = conn
+        self.source = source
+        self.company: str = ""  # the cik being proved, for the fallback log
+        self.fallbacks: list[tuple[str, str, str]] = []  # (cik, accession, quarter)
         self.fsn_root = fsn_root
         self.loaded: dict[str, dict[str, FilingStructure]] = {}
         self.missing_quarters: set[str] = set()
@@ -95,6 +111,21 @@ class StructureCache:
                 need |= {
                     a for a in accs if a in have and (q, a) not in self.dims_loaded
                 }
+            if need and self.source == "db":
+                assert self.conn is not None
+                got_db = load_filings(self.conn, need, with_dims=dims)
+                have.update(got_db)
+                if dims:
+                    self.dims_loaded.update((q, a) for a in got_db)
+                need = need - set(got_db)
+                for a in sorted(need):
+                    self.fallbacks.append((self.company, a, q))
+                    logger.warning(
+                        "cell_proof.fsn_db_fallback_to_files",
+                        cik=self.company,
+                        accession=a,
+                        quarter=q,
+                    )
             if need:
                 try:
                     got = None
@@ -221,6 +252,7 @@ def run(
     report_path: Path | None = None,
     write: bool = False,
     floor: date | None = None,
+    fsn_source: str = "db",
 ) -> dict[str, Any]:
     # reads run in autocommit: one transaction across companies and FSN downloads held
     # AccessShareLocks on canonical_fact for 19 min and blocked a migration ALTER (2026-11-01)
@@ -237,7 +269,7 @@ def run(
         raise RuntimeError(
             "analytics.cell_proof does not exist (migration 0114 not applied); use the report instead"
         )
-    cache = StructureCache(fsn_root)
+    cache = StructureCache(fsn_root, conn, fsn_source)
     totals: dict[str, Any] = {"companies": 0, "cells": 0, "errored": 0}
     verdicts: Counter = Counter()
     reasons: Counter = Counter()
@@ -249,6 +281,7 @@ def run(
             if company_id is None:
                 continue
             totals["companies"] += 1
+            cache.company = cik
             try:
                 proofs = prove_company(conn, company_id, cache, floor)
                 if write and proofs:
@@ -278,6 +311,8 @@ def run(
             report.close()
     totals["verdicts"] = dict(verdicts)
     totals["reasons"] = dict(reasons.most_common())
+    totals["fsn_source"] = fsn_source
+    totals["fsn_db_fallbacks"] = len(cache.fallbacks)
     totals["fsn_quarters_missing"] = sorted(cache.missing_quarters)
     totals["per_company"] = per_company
     logger.info(
