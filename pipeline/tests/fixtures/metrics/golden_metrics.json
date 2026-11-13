@@ -1,178 +1,152 @@
 {
- "_comment": "Inputs are FY0 printed values from the filing-read docmaps (FILING-CHECKED, data-team/companies/reads). Expected values are hand arithmetic (independent Fraction code, rounded to 6 dp), not read from any metric table. Sign convention: canonical positive outflows (capex, interest expense) = absolute printed value.",
+ "_comment": "Inputs are FY0 printed values from the filing (FILING-CHECKED): the docmaps in data-team/companies/reads for CB, JPM, MSFT, PLD, XOM; sec.gov R pages read 2026-11-13 for EPD, GD, INTU (no docmap). Every input carries its accession and R page; an input a docmap marks 'combined' is not a golden input. Expected values are hand arithmetic (independent Fraction code, rounded to 6 dp), not read from any metric table. Sign convention: canonical positive outflows (capex, interest expense) = absolute printed value. Insurer (CB) carries only metrics IN for insurers (applies_to all); corporate-only metrics are OUT with not_applicable_insurer. EPD is an MLP: keys partners_equity, common_units, unitholder_distributions map to stockholders_equity, shares_outstanding, dividends_paid by family (applicability.FAMILY_INPUT_ALIASES). GD total_debt includes note finance-lease liabilities (R79). INTU cost_of_revenue is the sum of the two member rows (Service, Product and other); the amortization-of-acquired-technology line is outside that perimeter (perimeter ruling pending).",
  "companies": {
   "CB": {
    "docmap": "data-team/companies/reads/CB-docmap-2026-11-12.csv",
    "expected_6dp": {
     "book_value_per_share": "188.588005",
-    "debt_to_equity": "0.239286",
     "goodwill_pct_assets": "0.074201",
-    "net_cash": "-15179000000.000000",
     "net_change_in_cash": "-294000000.000000",
-    "net_margin": "0.173563",
-    "ocf_to_net_income": "1.243065",
-    "pretax_margin": "0.219589",
     "roa": "0.037859",
     "roe": "0.139783"
    },
    "group": "insurer",
    "inputs": {
-    "accounts_payable": {
-     "accession": "",
-     "label": "Accounts payable, accrued expenses, and other liabilities (includes VIE balances of $159 and $183)",
-     "printed": "10108000000",
-     "r_page": "R3.htm",
-     "value": "10108000000"
-    },
     "amortization_of_intangibles": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Amortization of purchased intangibles",
      "printed": "301000000",
      "r_page": "R5.htm",
      "value": "301000000"
     },
     "basic_eps": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Basic earnings per share attributable to Chubb",
      "printed": "25.93",
      "r_page": "R5.htm",
      "value": "25.93"
     },
     "cash_and_equivalents": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Cash, including restricted cash $198 and $261 (includes VIE balances of $168 and $114)",
      "printed": "2470000000",
      "r_page": "R3.htm",
      "value": "2470000000"
     },
     "cash_flow_financing": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Net cash flows (used for) from financing activities",
      "printed": "-1850000000",
      "r_page": "R8.htm",
      "value": "-1850000000"
     },
     "cash_flow_investing": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Cash Provided by (Used in) Investing Activity, Including Discontinued Operation",
      "printed": "-11260000000",
      "r_page": "R8.htm",
      "value": "-11260000000"
     },
     "cash_paid_for_income_taxes": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Income Taxes Paid, Net",
      "printed": "2211000000",
      "r_page": "R114.htm",
      "value": "2211000000"
     },
     "cash_paid_for_interest": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Interest paid",
      "printed": "650000000",
      "r_page": "R8.htm",
      "value": "650000000"
     },
-    "cf_ap_change": {
-     "accession": "",
-     "label": "Accounts payable, accrued expenses, and other liabilities",
-     "printed": "53000000",
-     "r_page": "R8.htm",
-     "value": "53000000"
-    },
     "cfo": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Net Cash Provided by (Used) in Operating Activities, Total",
      "printed": "12816000000",
      "r_page": "R8.htm",
      "value": "12816000000"
     },
     "comprehensive_income": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Comprehensive income attributable to Chubb",
      "printed": "13979000000",
      "r_page": "R5.htm",
      "value": "13979000000"
     },
     "diluted_eps": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Diluted earnings per share attributable to Chubb",
      "printed": "25.68",
      "r_page": "R5.htm",
      "value": "25.68"
     },
     "dividends_paid": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Dividends paid on Common Shares",
      "printed": "-1505000000",
      "r_page": "R8.htm",
      "value": "1505000000"
     },
-    "dividends_per_share": {
-     "accession": "",
-     "label": "Total dividend distributions per common share (USD)",
-     "printed": "3.82",
-     "r_page": "equity note (text) / companyfacts",
-     "value": "3.82"
-    },
     "goodwill": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Goodwill",
      "printed": "20207000000",
      "r_page": "R3.htm",
      "value": "20207000000"
     },
     "income_before_tax": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Income before income tax",
      "printed": "13044000000",
      "r_page": "R5.htm",
      "value": "13044000000"
     },
     "income_tax_expense": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Income tax expense",
      "printed": "2422000000",
      "r_page": "R5.htm",
      "value": "2422000000"
     },
     "interest_expense": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Interest expense",
      "printed": "764000000",
      "r_page": "R5.htm",
      "value": "764000000"
     },
     "net_income": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Net income attributable to Chubb",
      "printed": "10310000000",
      "r_page": "R5.htm",
      "value": "10310000000"
     },
     "operating_expenses": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Total expenses",
      "printed": "46358000000",
      "r_page": "R5.htm",
      "value": "46358000000"
     },
     "revenue": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Total revenues",
      "printed": "59402000000",
      "r_page": "R5.htm",
      "value": "59402000000"
     },
     "sga_expense": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Administrative expenses",
      "printed": "4504000000",
      "r_page": "R5.htm",
      "value": "4504000000"
     },
     "share_buybacks": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Common Shares repurchased",
      "printed": "-3694000000",
      "r_page": "R8.htm",
@@ -186,48 +160,423 @@
      "value": "391101227"
     },
     "stockholders_equity": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Total Chubb shareholders' equity",
      "printed": "73757000000",
      "r_page": "R3.htm",
      "value": "73757000000"
     },
     "total_assets": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Total assets",
      "printed": "272327000000",
      "r_page": "R3.htm",
      "value": "272327000000"
     },
     "total_debt": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Short-term debt + Long-term debt + Hybrid debt",
      "printed": "17649000000",
      "r_page": "R3.htm",
      "value": "17649000000"
     },
     "total_liabilities": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Total liabilities",
      "printed": "192548000000",
      "r_page": "R3.htm",
      "value": "192548000000"
     },
     "weighted_basic_shares": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Weighted-average shares outstanding",
      "printed": "397611884",
      "r_page": "R153.htm",
      "value": "397611884"
     },
     "weighted_diluted_shares": {
-     "accession": "",
+     "accession": "0000896159-26-000005",
      "label": "Adjusted weighted-average shares outstanding and assumed conversions",
      "printed": "401513338",
      "r_page": "R153.htm",
      "value": "401513338"
     }
    }
+  },
+  "EPD": {
+   "docmap": null,
+   "expected_6dp": {
+    "book_value_per_share": "13.756842",
+    "cash_returned_to_shareholders": "4978000000.000000",
+    "debt_to_equity": "1.156562",
+    "fcf": "2965000000.000000",
+    "fcf_margin": "0.056373",
+    "goodwill_pct_assets": "0.073323",
+    "interest_coverage_ratio": "5.186296",
+    "net_cash": "-33426000000.000000",
+    "net_change_in_cash": "407000000.000000",
+    "net_margin": "0.110465",
+    "ocf_to_net_income": "1.477625",
+    "operating_margin": "0.138147",
+    "pretax_margin": "0.112157",
+    "roa": "0.074581",
+    "roe": "0.195366"
+   },
+   "group": "mlp (midstream)",
+   "inputs": {
+    "capex": {
+     "accession": "0001061219-26-000006",
+     "label": "Capital expenditures",
+     "printed": "-5620000000",
+     "r_page": "R7.htm",
+     "value": "5620000000"
+    },
+    "cash_and_equivalents": {
+     "accession": "0001061219-26-000006",
+     "label": "Cash and cash equivalents",
+     "printed": "969000000",
+     "r_page": "R3.htm",
+     "value": "969000000"
+    },
+    "cash_flow_financing": {
+     "accession": "0001061219-26-000006",
+     "label": "Net cash flow used in financing activities",
+     "printed": "-2687000000",
+     "r_page": "R7.htm",
+     "value": "-2687000000"
+    },
+    "cash_flow_investing": {
+     "accession": "0001061219-26-000006",
+     "label": "Net cash flow used in investing activities",
+     "printed": "-5491000000",
+     "r_page": "R7.htm",
+     "value": "-5491000000"
+    },
+    "cfo": {
+     "accession": "0001061219-26-000006",
+     "label": "Net cash flow provided by operating activities",
+     "printed": "8585000000",
+     "r_page": "R7.htm",
+     "value": "8585000000"
+    },
+    "common_units": {
+     "accession": "0001061219-26-000006",
+     "label": "Common limited partner interests, units outstanding (R4 parenthetical)",
+     "printed": "2161760683",
+     "r_page": "R4.htm",
+     "value": "2161760683"
+    },
+    "goodwill": {
+     "accession": "0001061219-26-000006",
+     "label": "Goodwill",
+     "printed": "5712000000",
+     "r_page": "R3.htm",
+     "value": "5712000000"
+    },
+    "income_before_tax": {
+     "accession": "0001061219-26-000006",
+     "label": "Income before income taxes",
+     "printed": "5899000000",
+     "r_page": "R5.htm",
+     "value": "5899000000"
+    },
+    "interest_expense": {
+     "accession": "0001061219-26-000006",
+     "label": "Interest expense",
+     "printed": "-1401000000",
+     "r_page": "R5.htm",
+     "value": "1401000000"
+    },
+    "net_income": {
+     "accession": "0001061219-26-000006",
+     "label": "Net income attributable to common unitholders",
+     "printed": "5810000000",
+     "r_page": "R5.htm",
+     "value": "5810000000"
+    },
+    "operating_income": {
+     "accession": "0001061219-26-000006",
+     "label": "Operating income",
+     "printed": "7266000000",
+     "r_page": "R5.htm",
+     "value": "7266000000"
+    },
+    "partners_equity": {
+     "accession": "0001061219-26-000006",
+     "label": "Total partners' equity",
+     "printed": "29739000000",
+     "r_page": "R3.htm",
+     "value": "29739000000"
+    },
+    "revenue": {
+     "accession": "0001061219-26-000006",
+     "label": "Revenues",
+     "printed": "52596000000",
+     "r_page": "R5.htm",
+     "value": "52596000000"
+    },
+    "share_buybacks": {
+     "accession": "0001061219-26-000006",
+     "label": "Repurchase of common units under 2019 Buyback Program",
+     "printed": "-300000000",
+     "r_page": "R7.htm",
+     "value": "300000000"
+    },
+    "total_assets": {
+     "accession": "0001061219-26-000006",
+     "label": "Total assets",
+     "printed": "77902000000",
+     "r_page": "R3.htm",
+     "value": "77902000000"
+    },
+    "total_debt": {
+     "accession": "0001061219-26-000006",
+     "label": "Current maturities of debt 1,625 + Long-term debt 32,770 (sum of printed BS debt lines)",
+     "printed": "34395000000",
+     "r_page": "R3.htm",
+     "value": "34395000000"
+    },
+    "unitholder_distributions": {
+     "accession": "0001061219-26-000006",
+     "label": "Cash distributions paid to common unitholders",
+     "printed": "-4678000000",
+     "r_page": "R7.htm",
+     "value": "4678000000"
+    }
+   },
+   "read": "sec.gov R pages, accession 0001061219-26-000006, read 2026-11-13 (FILING-CHECKED)"
+  },
+  "GD": {
+   "docmap": null,
+   "expected_6dp": {
+    "cash_returned_to_shareholders": "2230000000.000000",
+    "current_ratio": "1.443677",
+    "debt_to_equity": "0.328038",
+    "fcf": "3959000000.000000",
+    "fcf_margin": "0.075338",
+    "goodwill_pct_assets": "0.366976",
+    "net_cash": "-6072000000.000000",
+    "net_margin": "0.080114",
+    "ocf_to_net_income": "1.216152",
+    "operating_margin": "0.101922",
+    "pretax_margin": "0.097108",
+    "quick_ratio": "0.894022",
+    "roa": "0.073538",
+    "roe": "0.164312",
+    "working_capital": "7452000000.000000"
+   },
+   "group": "general (defense, finance-lease debt)",
+   "inputs": {
+    "capex": {
+     "accession": "0000040533-26-000006",
+     "label": "Capital expenditures",
+     "printed": "-1161000000",
+     "r_page": "R6.htm",
+     "value": "1161000000"
+    },
+    "cash_and_equivalents": {
+     "accession": "0000040533-26-000006",
+     "label": "Cash and equivalents",
+     "printed": "2333000000",
+     "r_page": "R5.htm",
+     "value": "2333000000"
+    },
+    "cfo": {
+     "accession": "0000040533-26-000006",
+     "label": "Net cash provided by operating activities",
+     "printed": "5120000000",
+     "r_page": "R6.htm",
+     "value": "5120000000"
+    },
+    "current_assets": {
+     "accession": "0000040533-26-000006",
+     "label": "Total current assets",
+     "printed": "24248000000",
+     "r_page": "R5.htm",
+     "value": "24248000000"
+    },
+    "current_liabilities": {
+     "accession": "0000040533-26-000006",
+     "label": "Total current liabilities",
+     "printed": "16796000000",
+     "r_page": "R5.htm",
+     "value": "16796000000"
+    },
+    "dividends_paid": {
+     "accession": "0000040533-26-000006",
+     "label": "Dividends paid",
+     "printed": "-1593000000",
+     "r_page": "R6.htm",
+     "value": "1593000000"
+    },
+    "goodwill": {
+     "accession": "0000040533-26-000006",
+     "label": "Goodwill",
+     "printed": "21009000000",
+     "r_page": "R5.htm",
+     "value": "21009000000"
+    },
+    "income_before_tax": {
+     "accession": "0000040533-26-000006",
+     "label": "Earnings before income tax",
+     "printed": "5103000000",
+     "r_page": "R3.htm",
+     "value": "5103000000"
+    },
+    "inventory": {
+     "accession": "0000040533-26-000006",
+     "label": "Inventories",
+     "printed": "9232000000",
+     "r_page": "R5.htm",
+     "value": "9232000000"
+    },
+    "net_income": {
+     "accession": "0000040533-26-000006",
+     "label": "Net earnings",
+     "printed": "4210000000",
+     "r_page": "R3.htm",
+     "value": "4210000000"
+    },
+    "operating_income": {
+     "accession": "0000040533-26-000006",
+     "label": "Operating earnings",
+     "printed": "5356000000",
+     "r_page": "R3.htm",
+     "value": "5356000000"
+    },
+    "revenue": {
+     "accession": "0000040533-26-000006",
+     "label": "Revenue",
+     "printed": "52550000000",
+     "r_page": "R3.htm",
+     "value": "52550000000"
+    },
+    "share_buybacks": {
+     "accession": "0000040533-26-000006",
+     "label": "Purchases of common stock",
+     "printed": "-637000000",
+     "r_page": "R6.htm",
+     "value": "637000000"
+    },
+    "stockholders_equity": {
+     "accession": "0000040533-26-000006",
+     "label": "Total shareholders' equity",
+     "printed": "25622000000",
+     "r_page": "R5.htm",
+     "value": "25622000000"
+    },
+    "total_assets": {
+     "accession": "0000040533-26-000006",
+     "label": "Total assets",
+     "printed": "57249000000",
+     "r_page": "R5.htm",
+     "value": "57249000000"
+    },
+    "total_debt": {
+     "accession": "0000040533-26-000006",
+     "label": "Short-term debt and current portion 1,006 (R5) + Long-term debt 7,007 (R5) + finance lease liabilities current 39 + long-term 353 (R79, notes)",
+     "printed": "8405000000",
+     "r_page": "R5.htm+R79.htm",
+     "value": "8405000000"
+    }
+   },
+   "read": "sec.gov R pages, accession 0000040533-26-000006, read 2026-11-13 (FILING-CHECKED)"
+  },
+  "INTU": {
+   "docmap": null,
+   "expected_6dp": {
+    "book_value_per_share": "70.764278",
+    "debt_to_equity": "0.403802",
+    "goodwill_pct_assets": "0.380063",
+    "gross_margin": "0.809819",
+    "net_cash": "-2964000000.000000",
+    "net_margin": "0.212887",
+    "operating_margin": "0.274338",
+    "pretax_margin": "0.280539",
+    "roa": "0.124123",
+    "roe": "0.240417"
+   },
+   "group": "general (software, member-row cost of revenue)",
+   "inputs": {
+    "cash_and_equivalents": {
+     "accession": "0000896878-26-000037",
+     "label": "Cash and cash equivalents",
+     "printed": "4705000000",
+     "r_page": "R5.htm",
+     "value": "4705000000"
+    },
+    "cost_of_revenue": {
+     "accession": "0000896878-26-000037",
+     "label": "Cost of revenue, member rows: Service 4,016 + Product and other 63 (perimeter excludes the Amortization of acquired technology line, 174)",
+     "printed": "4079000000",
+     "r_page": "R3.htm",
+     "value": "4079000000"
+    },
+    "goodwill": {
+     "accession": "0000896878-26-000037",
+     "label": "Goodwill",
+     "printed": "13981000000",
+     "r_page": "R5.htm",
+     "value": "13981000000"
+    },
+    "income_before_tax": {
+     "accession": "0000896878-26-000037",
+     "label": "Income before income taxes",
+     "printed": "6017000000",
+     "r_page": "R3.htm",
+     "value": "6017000000"
+    },
+    "net_income": {
+     "accession": "0000896878-26-000037",
+     "label": "Net income",
+     "printed": "4566000000",
+     "r_page": "R3.htm",
+     "value": "4566000000"
+    },
+    "operating_income": {
+     "accession": "0000896878-26-000037",
+     "label": "Operating income",
+     "printed": "5884000000",
+     "r_page": "R3.htm",
+     "value": "5884000000"
+    },
+    "revenue": {
+     "accession": "0000896878-26-000037",
+     "label": "Total net revenue",
+     "printed": "21448000000",
+     "r_page": "R3.htm",
+     "value": "21448000000"
+    },
+    "shares_outstanding": {
+     "accession": "0000896878-26-000037",
+     "label": "Common stock, shares, outstanding (R6 parenthetical)",
+     "printed": "268384000",
+     "r_page": "R6.htm",
+     "value": "268384000"
+    },
+    "stockholders_equity": {
+     "accession": "0000896878-26-000037",
+     "label": "Total stockholders' equity",
+     "printed": "18992000000",
+     "r_page": "R5.htm",
+     "value": "18992000000"
+    },
+    "total_assets": {
+     "accession": "0000896878-26-000037",
+     "label": "Total assets",
+     "printed": "36786000000",
+     "r_page": "R5.htm",
+     "value": "36786000000"
+    },
+    "total_debt": {
+     "accession": "0000896878-26-000037",
+     "label": "Short-term debt 1,249 + Long-term debt 6,420",
+     "printed": "7669000000",
+     "r_page": "R5.htm",
+     "value": "7669000000"
+    }
+   },
+   "read": "sec.gov R pages, accession 0000896878-26-000037, read 2026-11-13 (FILING-CHECKED)"
   },
   "JPM": {
    "docmap": "data-team/companies/reads/JPM-docmap-2026-11-12.csv",
@@ -246,13 +595,6 @@
    },
    "group": "bank",
    "inputs": {
-    "accounts_payable": {
-     "accession": "0001628280-26-008131",
-     "label": "Accounts payable and other liabilities (included $6,660 and $5,893 at fair value)",
-     "printed": "316794000000",
-     "r_page": "R5.htm",
-     "value": "316794000000"
-    },
     "amortization_of_intangibles": {
      "accession": "0001628280-26-008131",
      "label": "Goodwill, Mortgage Servicing Rights, and Other Intangible Assets - Narrative (Details)",
@@ -315,13 +657,6 @@
      "printed": "65214000000",
      "r_page": "R4.htm",
      "value": "65214000000"
-    },
-    "depreciation_and_amortization": {
-     "accession": "0001628280-26-008131",
-     "label": "Depreciation and amortization",
-     "printed": "8821000000",
-     "r_page": "R9.htm",
-     "value": "8821000000"
     },
     "diluted_eps": {
      "accession": "0001628280-26-008131",
@@ -681,13 +1016,6 @@
      "r_page": "R48.htm",
      "value": "3051000000"
     },
-    "interest_income": {
-     "accession": "0001193125-26-323660",
-     "label": "Interest and dividends income",
-     "printed": "3301000000",
-     "r_page": "R48.htm",
-     "value": "3301000000"
-    },
     "inventory": {
      "accession": "0001193125-26-323660",
      "label": "Inventories",
@@ -715,13 +1043,6 @@
      "printed": "155237000000",
      "r_page": "R2.htm",
      "value": "155237000000"
-    },
-    "other_income_expense_net": {
-     "accession": "0001193125-26-323660",
-     "label": "Other income (expense), net",
-     "printed": "10697000000",
-     "r_page": "R2.htm",
-     "value": "10697000000"
     },
     "ppe_net": {
      "accession": "0001193125-26-323660",
@@ -899,13 +1220,6 @@
      "r_page": "R4.htm",
      "value": "3.56"
     },
-    "dividends_paid": {
-     "accession": "0001193125-26-051453",
-     "label": "Dividends/distributions paid on common and preferred stock/units",
-     "printed": "-3764745000",
-     "r_page": "R8.htm",
-     "value": "3764745000"
-    },
     "dividends_per_share": {
      "accession": "0001193125-26-051453",
      "label": "Dividends per common share",
@@ -970,7 +1284,7 @@
      "value": "469114000"
     },
     "shares_outstanding": {
-     "accession": "",
+     "accession": "0001193125-26-051453",
      "label": "Common stock, shares outstanding",
      "printed": "929153000",
      "r_page": "R3.htm",
@@ -991,7 +1305,7 @@
      "value": "98724256000"
     },
     "total_debt": {
-     "accession": "",
+     "accession": "0001193125-26-051453",
      "label": "Debt",
      "printed": "35037073000",
      "r_page": "R2.htm",
@@ -1040,13 +1354,6 @@
    },
    "group": "general (energy)",
    "inputs": {
-    "accounts_payable": {
-     "accession": "0000034088-26-000045",
-     "label": "Accounts payable and accrued liabilities",
-     "printed": "60911000000",
-     "r_page": "R5.htm",
-     "value": "60911000000"
-    },
     "accounts_receivable": {
      "accession": "0000034088-26-000045",
      "label": "Notes and accounts receivable  net",
@@ -1102,13 +1409,6 @@
      "printed": "1752000000",
      "r_page": "R109.htm",
      "value": "1752000000"
-    },
-    "cf_ap_change": {
-     "accession": "0000034088-26-000045",
-     "label": "Accounts and other payables increase/(reduction)",
-     "printed": "-222000000",
-     "r_page": "R7.htm",
-     "value": "-222000000"
     },
     "cf_ar_change": {
      "accession": "0000034088-26-000045",
@@ -1207,13 +1507,6 @@
      "printed": "28844000000",
      "r_page": "R3.htm",
      "value": "28844000000"
-    },
-    "operating_expenses": {
-     "accession": "0000034088-26-000045",
-     "label": "Total costs and other deductions",
-     "printed": "290970000000",
-     "r_page": "R3.htm",
-     "value": "290970000000"
     },
     "ppe_net": {
      "accession": "0000034088-26-000045",

@@ -115,7 +115,7 @@ class CellRecord:
     @property
     def verdict(self) -> str:
         if self.value is None:
-            return "NOT_PRESENTED"  # a blank with its reason
+            return null_verdict(self.reason)
         if self.recompute.get("status") == "mismatch":
             return "DISAGREE"
         if all(
@@ -124,6 +124,26 @@ class CellRecord:
         ):
             return "PROVEN"
         return "UNCHECKED"
+
+
+_REGISTRY_NULL_PREFIXES = (
+    "zero_",  # zero_denominator, zero_pretax_income, zero_invested_capital, zero_base_value
+    "period_not_applicable",
+    "immaterial_",
+    "negative_ratio_undefined",
+)
+
+
+def null_verdict(reason: str | None) -> str:
+    """Verdict of a null cell. NOT_PRESENTED (a REASON in coverage) only for a registry null rule or
+    an input that is itself NOT_PRESENTED. A null caused by an unserved input (UNCHECKED, DISAGREE,
+    HELD, MISSING) or any other cause is UNCHECKED, never a REASON."""
+    if reason:
+        if reason.startswith("input_not_served:"):
+            return "NOT_PRESENTED" if reason.endswith(":NOT_PRESENTED") else "UNCHECKED"
+        if reason.startswith(_REGISTRY_NULL_PREFIXES):
+            return "NOT_PRESENTED"
+    return "UNCHECKED"
 
 
 def _grain(label: str) -> str:
@@ -159,7 +179,7 @@ def build_cell_record(
     """Compute a metric cell from proof-gated inputs, with the recomputation check.
 
     `stored_value` is what production shows today, if any; the recompute check compares it with the
-    engine value computed from the recorded inputs (status match | mismatch | n/a)."""
+    engine value computed from the recorded inputs (status match | mismatch | self; 'self' = no stored value yet; n/a = a stored value but no recomputable value)."""
     values, blocked = gate_inputs(m, cells, served)
     env = env_extra or DictEnv()
     env = DictEnv(
@@ -181,7 +201,14 @@ def build_cell_record(
     else:
         res = evaluate(m, env, check_period=period.period_label)
         res_value, res_reason = res.value, res.reason
-    if stored_value is None or res_value is None:
+    if stored_value is None:
+        # nothing stored yet: recorded as 'self' so a later stored value gets a real match check
+        recompute = {
+            "status": "self",
+            "recomputed": None if res_value is None else str(res_value),
+            "stored": None,
+        }
+    elif res_value is None:
         recompute = {
             "status": "n/a",
             "recomputed": None if res_value is None else str(res_value),
@@ -247,7 +274,7 @@ def to_cell_proof_row(rec: CellRecord, company_id: int, m: Metric) -> dict:
         "rule_id": RULE_ID,
         "detector_version": detector_version(m, rec.registry_version),
     }
-    if verdict in ("DISAGREE", "NOT_PRESENTED"):
+    if verdict in ("DISAGREE", "NOT_PRESENTED") or (verdict == "UNCHECKED" and rec.value is None):
         reason = rec.reason or "metric_recompute_mismatch"
         row["reason_code"] = reason.split(":", 1)[0]
         row["reason_text"] = reason

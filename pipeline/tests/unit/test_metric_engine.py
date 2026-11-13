@@ -13,7 +13,9 @@ import pytest
 from scrooner_pipeline.mapper.calculate_shapes import compute as legacy_compute
 from scrooner_pipeline.mapper.ttm import _growth_value as legacy_growth
 from scrooner_pipeline.metrics import expr
-from scrooner_pipeline.metrics.applicability import applicability
+from scrooner_pipeline.metrics.applicability import (
+    NOT_APPLICABLE_INSURER, alias_inputs, applicability,
+)
 from scrooner_pipeline.metrics.engine import DictEnv, evaluate, growth_value
 from scrooner_pipeline.metrics.provenance import (
     InputCell, PeriodBasis, build_cell_record, detector_version, formula_fingerprint, gate_inputs,
@@ -140,7 +142,43 @@ def test_metric_never_computes_from_an_unserved_input(bad):
     rec = build_cell_record(REG["roe"], _cells(stockholders_equity=bad), FY)
     assert rec.value is None
     assert rec.reason == f"input_not_served:stockholders_equity:{bad}"
-    assert to_cell_proof_row(rec, 1, REG["roe"])["verdict"] == "NOT_PRESENTED"
+    row = to_cell_proof_row(rec, 1, REG["roe"])
+    assert row["verdict"] == "UNCHECKED"  # a blocked metric is never a REASON
+    assert row["reason_code"] == "input_not_served"
+
+
+@pytest.mark.unit
+def test_null_verdict_not_presented_only_for_registry_null_rules_or_a_not_presented_input():
+    from scrooner_pipeline.metrics.provenance import null_verdict
+    from scrooner_pipeline.mapper.top100_coverage import classify
+    # registry null rules
+    zero = build_cell_record(REG["roe"], {c: InputCell(c, "PROVEN", D(0) if c == "stockholders_equity" else D(5))
+                                          for c in ("net_income", "stockholders_equity")}, FY)
+    assert zero.reason == "zero_denominator" and zero.verdict == "NOT_PRESENTED"
+    q = build_cell_record(REG["roe"], _cells(), PeriodBasis("Q1", None, None, "any_period"))
+    assert q.reason == "period_not_applicable:fy_only" and q.verdict == "NOT_PRESENTED"
+    assert null_verdict("input_not_served:revenue:NOT_PRESENTED") == "NOT_PRESENTED"
+    # anything else that is null is UNCHECKED
+    for r in ("input_not_served:revenue:UNCHECKED", "input_not_served:revenue:DISAGREE",
+              "input_not_served:revenue:HELD", "input_not_served:revenue:MISSING", "missing:revenue", None):
+        assert null_verdict(r) == "UNCHECKED", r
+    blocked = build_cell_record(REG["roe"], _cells(net_income="HELD"), FY)
+    row = to_cell_proof_row(blocked, 1, REG["roe"])
+    cls, _ = classify(row["verdict"], row["reason_text"], None, None, None, None, None, None)
+    assert cls == "UNCHECKED"  # never counted as REASON
+    ok = build_cell_record(REG["roe"], _cells(stockholders_equity="NOT_PRESENTED"), FY)
+    assert classify(to_cell_proof_row(ok, 1, REG["roe"])["verdict"], "x", None, None, None, None, None, None)[0] == "REASON"
+
+
+@pytest.mark.unit
+def test_recompute_is_self_when_nothing_is_stored_and_real_check_once_stored():
+    rec = build_cell_record(REG["roe"], _cells(), FY)
+    assert rec.recompute["status"] == "self" and rec.recompute["stored"] is None
+    assert rec.recompute["recomputed"] == "0.25"
+    assert build_cell_record(REG["roe"], _cells(), FY, stored_value=D("0.25")).recompute["status"] == "match"
+    assert build_cell_record(REG["roe"], _cells(), FY, stored_value=D("0.26")).recompute["status"] == "mismatch"
+    blocked = build_cell_record(REG["roe"], _cells(net_income="HELD"), FY, stored_value=D("0.25"))
+    assert blocked.recompute["status"] == "n/a"
 
 
 @pytest.mark.unit
@@ -198,6 +236,10 @@ def test_corporate_metrics_are_out_for_banks_and_insurers_with_a_reason():
     a = applicability(REG["gross_margin"], "bank")
     assert a.status == "OUT" and a.reason and a.source == "family"
     assert applicability(REG["gross_margin"], "insurer").status == "OUT"
+    assert applicability(REG["net_margin"], "insurer").reason == NOT_APPLICABLE_INSURER == "not_applicable_insurer"
+    assert applicability(REG["pretax_margin"], "insurer").status == "OUT"
+    for keep in ("roe", "roa", "book_value_per_share", "price_to_book", "trailing_pe"):
+        assert applicability(REG[keep], "insurer").status == "IN"
     assert applicability(REG["gross_margin"], "general").status == "IN"
     assert applicability(REG["roe"], "bank").status == "IN"  # ROE, ROA, EPS, BVPS stay for banks (2026-10-19 decision)
     assert applicability(REG["net_interest_income"], "bank").status == "IN"
@@ -224,8 +266,9 @@ CASES = [(t, m) for t, c in GOLDEN["companies"].items() for m in c["expected_6dp
 def test_golden_values_from_filing_printed_inputs(ticker, metric):
     c = GOLDEN["companies"][ticker]
     values = {}
+    inputs = alias_inputs(c["group"].split()[0], c["inputs"])  # MLP family renames, by family not company
     for concept in {n for n, _ in REG[metric].input_roles()}:
-        src = c["inputs"].get(ALIAS.get(concept, concept))
+        src = inputs.get(ALIAS.get(concept, concept))
         if src is not None:
             values[concept] = D(src["value"])
     res = evaluate(REG[metric], DictEnv(values=values), check_period="FY")
@@ -234,15 +277,58 @@ def test_golden_values_from_filing_printed_inputs(ticker, metric):
 
 
 @pytest.mark.unit
-def test_golden_covers_five_diverse_companies_and_the_out_of_template_rows_are_reasoned():
-    assert {c["group"].split()[0] for c in GOLDEN["companies"].values()} == {"general", "bank", "equity_reit", "insurer"}
-    assert len(GOLDEN["companies"]) == 5
-    assert sum(len(c["expected_6dp"]) for c in GOLDEN["companies"].values()) >= 60
+def test_golden_covers_diverse_companies_and_the_out_of_template_rows_are_reasoned():
+    assert {c["group"].split()[0] for c in GOLDEN["companies"].values()} == {
+        "general", "bank", "equity_reit", "insurer", "mlp"}
+    assert set(GOLDEN["companies"]) == {"CB", "JPM", "MSFT", "PLD", "XOM", "EPD", "GD", "INTU"}
+    assert sum(len(c["expected_6dp"]) for c in GOLDEN["companies"].values()) >= 100
     for ticker, group in (("JPM", "bank"), ("CB", "insurer"), ("PLD", "equity_reit")):
         out = [m for m in REG.values() if m.tier != "planned" and applicability(m, group).status == "OUT"]
         assert out and all(applicability(m, group).reason for m in out)
         assert not set(GOLDEN["companies"][ticker]["expected_6dp"]) & {
             "gross_margin", "current_ratio", "quick_ratio", "working_capital"}
+
+
+@pytest.mark.unit
+def test_every_golden_input_has_an_accession_and_an_r_page():
+    import re
+    for t, c in GOLDEN["companies"].items():
+        for k, v in c["inputs"].items():
+            assert re.fullmatch(r"\d{10}-\d{2}-\d{6}", v["accession"]), (t, k)
+            assert re.fullmatch(r"R\d+\.htm(\+R\d+\.htm)*", v["r_page"]), (t, k)
+
+
+@pytest.mark.unit
+def test_golden_inputs_follow_docmap_status_and_insurer_carries_only_in_metrics():
+    import csv
+    root = Path(__file__).resolve().parents[3]
+    for t, c in GOLDEN["companies"].items():
+        if c["docmap"]:
+            status = {}
+            for r in csv.DictReader((root / c["docmap"]).open()):
+                status.setdefault(r["data_point"], r["status"])
+            assert not {k for k in c["inputs"] if status.get(k) == "combined"}, t  # combined line: not a golden input
+    assert "accounts_payable" not in GOLDEN["companies"]["CB"]["inputs"]
+    for m in GOLDEN["companies"]["CB"]["expected_6dp"]:
+        assert applicability(REG[m], "insurer").status == "IN", m
+
+
+@pytest.mark.unit
+def test_mlp_inputs_map_by_family_not_company():
+    epd = GOLDEN["companies"]["EPD"]
+    assert set(alias_inputs("mlp", epd["inputs"])) >= {"stockholders_equity", "shares_outstanding", "dividends_paid"}
+    assert "stockholders_equity" not in alias_inputs("general", epd["inputs"])  # not applied outside the family
+    assert alias_inputs("general", {"x": 1}) == {"x": 1}
+    assert {"book_value_per_share", "roe", "cash_returned_to_shareholders"} <= set(epd["expected_6dp"])
+    assert applicability(REG["book_value_per_share"], "mlp").status == "IN"
+
+
+@pytest.mark.unit
+def test_golden_special_cases_gd_finance_lease_debt_and_intu_member_rows():
+    gd = GOLDEN["companies"]["GD"]["inputs"]
+    assert D(gd["total_debt"]["value"]) == D(1006 + 7007 + 39 + 353) * 10**6
+    intu = GOLDEN["companies"]["INTU"]["inputs"]
+    assert D(intu["cost_of_revenue"]["value"]) == D(4016 + 63) * 10**6
 
 
 # ---- "which company uses which calculation": generated views -------------------------------------------
