@@ -39,7 +39,10 @@ RULE_ID = "proof.cell_proof@1"
 # Bump whenever a rule changes what a verdict means: a row written by an older detector is history, never the
 # verdict (coverage and the mapper hold read only rows of this version). The v1 string stayed through R13
 # (judge the authoritative copy only), so 48 MSFT DISAGREE rows of the pre-R13 logic outlived the rule.
-DETECTOR_VERSION = "cell_proof_v2_2026-11-13"
+# v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
+# guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
+# string changing.
+DETECTOR_VERSION = "cell_proof_v3_2026-11-13"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",

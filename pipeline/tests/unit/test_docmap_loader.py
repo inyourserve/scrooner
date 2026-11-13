@@ -232,3 +232,46 @@ def test_agreeing_library_row_cut_at_the_read_fy_is_opened_to_the_docmaps_open_e
     assert dl.plan_company([LIB], [_doc("us-gaap:Revenues")], ids).cut == []
     closed = dl.replace(_doc("us-gaap:Revenues"), era_to=date(2025, 6, 30))
     assert dl.plan_company([cut], [closed], ids).cut == []
+
+
+NOTE_CMP = (
+    "era from the FY2017 10-K's comparative year to FY2026: same tag(s) in 10 10-Ks; prior era read in 10-K "
+    "0001193125-16-662209 (FY2016): mapped us-gaap:AllocatedShareBasedCompensationExpense R7.htm 'SBC'; "
+    "value_source sec_api | accn 0000000001-26-000001 period 2025-07-01..2026-06-30"
+)
+
+
+def _sbc_doc() -> dl.DocmapRow:
+    (row,), _ = _parse(
+        f'T,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R6.htm,SBC,same_tag@2016-06-30,FILING-CHECKED,"{NOTE_CMP}"'
+    )
+    return row
+
+
+def test_comparative_start_keeps_the_prior_tag_through_its_first_year():
+    """MSFT sbc: the FY2017 10-K's comparative year (FY2016) is not the year's own filing: the FY2016 10-K and its
+    10-Qs print the prior tag, the quarters and Q4 exist only under it. The prior era runs to the FY2016 end."""
+    d = _sbc_doc()
+    assert d.comparative_start and d.prior_tags == ("AllocatedShareBasedCompensationExpense",)
+    assert d.era_from == date(2015, 7, 1)
+    ids = {"sbc": 72}
+    alloc = {**LIB, "id": 9, "tag": "AllocatedShareBasedCompensationExpense", "canonical_concept_id": 72,
+             "era_from": date(2015, 3, 31), "era_to": date(2017, 3, 31)}
+    first = dl.plan_company([alloc], [d], ids)  # first load: the library row overlaps the docmap era
+    assert first.cut == [(9, date(2016, 6, 30))]
+    assert [x.era_from for x in first.insert] == [date(2016, 7, 1)]
+    # a reload sees the row this loader cut at the comparative year before: it is opened to the first year's end
+    again = dl.plan_company([{**alloc, "era_to": date(2015, 6, 30)}], [d], ids)
+    assert again.cut == [(9, date(2016, 6, 30))]
+    assert [x.era_from for x in again.insert] == [date(2016, 7, 1)]
+    # a library row of another tag than the read's prior tag is never extended
+    other = dl.plan_company([{**alloc, "tag": "Other", "era_to": date(2015, 6, 30)}], [d], ids)
+    assert other.cut == []
+
+
+def test_comparative_start_without_a_named_prior_tag_changes_nothing():
+    (row,), _ = _parse(
+        'T,sbc,mapped,us-gaap:ShareBasedCompensation,CF,R6.htm,SBC,same_tag@2016-06-30,FILING-CHECKED,'
+        '"era from the FY2017 10-K\'s comparative year to FY2026; value_source sec_api | accn 0000000001-26-000001 period 2025-07-01..2026-06-30"'
+    )
+    assert not row.comparative_start and row.era_from == date(2015, 7, 1)

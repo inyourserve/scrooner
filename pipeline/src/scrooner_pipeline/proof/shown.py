@@ -276,7 +276,8 @@ def load_shown(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id
+            select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id,
+                   cf.source_value_ids
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
             join core.period p on p.id = cf.period_id
@@ -290,6 +291,23 @@ def load_shown(
         rows = cur.fetchall()
         fact_ids = sorted({f for r in rows for f in (r[6] or [])})
         facts: dict[int, tuple[str, str | None, date | None, bool, Decimal]] = {}
+        # a cell built from the filing's own XBRL (value_source fsn_xbrl, e.g. a component sum with a custom
+        # tag) carries fsn.value ids, not core.fact ids: tag, accession and filing date come from fsn
+        value_ids = sorted({v for r in rows for v in (r[8] or [])})
+        fsn_facts: dict[int, tuple[str, str | None, date | None, bool, Decimal]] = {}
+        for i in range(0, len(value_ids), 5000):
+            cur.execute(
+                """
+                select v.id, t.tag, f.accession, f.filed, v.value
+                from fsn.value v
+                join fsn.tag t on t.id = v.tag_id
+                join fsn.filing f on f.id = v.filing_id
+                where v.id = any(%s)
+                """,
+                (value_ids[i : i + 5000],),
+            )
+            for vid, tag, acc, filed, vval in cur.fetchall():
+                fsn_facts[vid] = (tag, acc, filed, False, Decimal(vval))
         for i in range(0, len(fact_ids), 5000):
             cur.execute(
                 """
@@ -305,13 +323,14 @@ def load_shown(
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
     copies_by, auth_by, filed_by = _periodic_copies(conn, company_id, floor)
-    for name, ptype, fp, start, end, value, src, period_id in rows:
+    for name, ptype, fp, start, end, value, src, period_id, src_vals in rows:
         if name not in names:
             continue
         grain = _grain(ptype, fp, start, end)
         if grain is None:
             continue
         srcs = [facts[f] for f in (src or []) if f in facts]
+        srcs += [fsn_facts[v] for v in (src_vals or []) if v in fsn_facts]
         tags = tuple(sorted({t for t, _a, _d, _der, _v in srcs if t}))
         # derived: a source fact is derived, or (cell loader cells) a quarter whose value equals
         # none of its source facts was computed from them (FY - 9M, YTD differences)

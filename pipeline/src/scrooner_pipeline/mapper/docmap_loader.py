@@ -108,6 +108,11 @@ class DocmapRow:
     # the Verifier (never served directly)
     is_fix: bool = False
     fix_note: str = ""
+    # the era starts at the comparative year of the earliest 10-K that prints the tag (reader convention), and the
+    # read names the tag(s) the PRIOR era's 10-K printed (MSFT sbc: the FY2017 10-K prints ShareBasedCompensation
+    # for FY2016, the FY2016 10-K and that year's 10-Qs print AllocatedShareBasedCompensationExpense)
+    comparative_start: bool = False
+    prior_tags: tuple[str, ...] = ()
 
     @property
     def cites_page(self) -> bool:
@@ -172,6 +177,26 @@ def era_from_of(era_note: str, parts, fy0_end: date) -> date:
     if parts and old and all(f"{tax}:{tag}" in old for _, tax, tag in parts):
         return _fy_start(fy0_end, 5)  # the FY-4 10-K prints the same tag(s)
     return _fy_start(fy0_end, 2)
+
+
+COMPARATIVE_RE = re.compile(r"10-K's comparative year")
+PRIOR_ERA_RE = re.compile(
+    r"prior era read in 10-K \S+ \(FY\d{4}\): (?:mapped|combined|component sum) (\S+)"
+)
+
+
+def comparative_era_of(note: str) -> tuple[bool, tuple[str, ...]]:
+    """(the era starts at a comparative year, the prior era's tag names) from the read's note. Both or nothing: a
+    comparative start without a named prior tag is no evidence to keep the prior era a year longer."""
+    if not COMPARATIVE_RE.search(note):
+        return False, ()
+    m = PRIOR_ERA_RE.search(note)
+    if not m:
+        return False, ()
+    tags = tuple(
+        t.split(":", 1)[-1] for t in re.split(r"[+;]", m.group(1)) if t.strip()
+    )
+    return bool(tags), tags
 
 
 def _fy0_end(note: str, md_text: str) -> date | None:
@@ -261,6 +286,7 @@ def parse_docmap(
             if status not in TAGLESS_STATUS
             else _fy_start(fy0, 2)
         )
+        comparative_start, prior_tags = comparative_era_of(r["note"])
         rows.append(
             DocmapRow(
                 r["ticker"],
@@ -275,6 +301,8 @@ def parse_docmap(
                 _reason(r["note"]),
                 source,
                 fy0,
+                comparative_start=comparative_start,
+                prior_tags=prior_tags,
             )
         )
     return rows, rejects
@@ -646,6 +674,25 @@ def plan_company(
     names_by_id = {i: n for n, i in concept_ids.items()}
     for d in docrows:
         cid = concept_ids.get(d.data_point)
+        if d.comparative_start and d.prior_tags:
+            # The read's era starts at the comparative year: the next 10-K prints the new tag for it, but that year's
+            # own 10-K and its 10-Qs (the quarters, and the Q4 derived from that 10-K) print the prior tag, and those
+            # cells exist only under it. The prior era (the library row carrying the tag the read names) is kept
+            # through that first year; the new tag starts one year later (MSFT sbc FY2016 quarters were lost).
+            new_from = _years_back(d.era_from, -1)
+            for r in existing:
+                if (
+                    r["decision"] not in REASON_DECISIONS | {"excluded", "combined"}
+                    and cid in (r["canonical_concept_id"], r["parent_concept_id"])
+                    and r["tag"] in d.prior_tags
+                    and r["era_to"] is not None
+                    and d.era_from - timedelta(days=1)
+                    <= r["era_to"]
+                    < new_from - timedelta(days=1)
+                ):
+                    # a row this loader cut at the comparative year before: open it to the first year's end
+                    plan.cut.append((r["id"], new_from - timedelta(days=1)))
+            d = replace(d, era_from=new_from)
         current = [
             r
             for r in existing
