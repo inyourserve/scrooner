@@ -188,3 +188,167 @@ def test_combined_line_with_filing_evidence_is_a_reason_bare_not_in_template_is_
         )[0]
         == "UNCHECKED"
     )
+
+
+# ---- one filing per locator, reason text, DERIVED ----
+def _idx():
+    from scrooner_pipeline.mapper.top100_coverage import LocatorIndex
+
+    i = LocatorIndex()
+    A, B = (
+        "0001564590-18-019062",
+        "0001564590-17-014900",
+    )  # latest filing / the year's own filing
+    i.add(A, 4, 9, "BS", "AssetsCurrent", "Total current assets")
+    i.add(A, 4, 16, "BS", "Assets", "Total assets")
+    i.add(A, 5, 1, "BS", "CommonStockSharesOutstanding", "shares")  # parenthetical
+    i.add(A, 6, 19, "CF", "NetCashProvidedByUsedInOperatingActivities", "CFO")
+    i.add(
+        B, 5, 9, "BS", "AssetsCurrent", "Total current assets"
+    )  # own-year layout differs: BS is R5
+    i.add(B, 4, 1, "BS", "Other", "x")
+    i.add(A, 40, 1, "UN", "InterestExpenseNonoperating", "Interest expense")
+    return i
+
+
+def test_proven_locator_page_comes_from_the_proofs_accession_only():
+    from scrooner_pipeline.mapper.top100_coverage import proven_locator
+
+    A, B = "0001564590-18-019062", "0001564590-17-014900"
+    assert proven_locator(A, "BS", 9, "AssetsCurrent", _idx()) == (
+        A,
+        "R4.htm",
+        "proof_line",
+    )
+    assert proven_locator(B, "BS", 9, "AssetsCurrent", _idx()) == (
+        B,
+        "R5.htm",
+        "proof_line",
+    )
+    assert (
+        proven_locator(
+            A, "CF", None, "NetCashProvidedByUsedInOperatingActivities", _idx()
+        )[1]
+        == "R6.htm"
+    )
+    # a parenthetical tag lands on the parenthetical report of the SAME filing
+    assert (
+        proven_locator(A, "BS", None, "CommonStockSharesOutstanding", _idx())[1]
+        == "R5.htm"
+    )
+    # a note line is found by tag (stmt UN)
+    assert proven_locator(A, "UN", None, "InterestExpenseNonoperating", _idx()) == (
+        A,
+        "R40.htm",
+        "proof_tag",
+    )
+    # a tag on no line of the filing: never the statement page, the page stays blank
+    acc, page, src = proven_locator(A, "CF", None, "InterestPaid", _idx())
+    assert (acc, page) == (A, "") and src == "note_fact_report_not_stored"
+    assert proven_locator(None, "BS", 9, "Assets", _idx()) == ("", "", "none")
+
+
+def test_reason_locator_uses_one_evidence_row_and_never_mixes_filings():
+    from scrooner_pipeline.mapper.top100_coverage import reason_locator
+
+    A = "0001564590-18-019062"
+    assert reason_locator([(A, 7, None, "Interest and other", "IS")], "IS", _idx())[
+        :3
+    ] == (A, "R7.htm", "evidence_report")
+    # no report: the label finds the report in the same filing; then the line position
+    assert reason_locator([(A, None, None, "Total assets", "BS")], "BS", _idx())[
+        :2
+    ] == (A, "R4.htm")
+    assert reason_locator([(A, None, 16, "", "BS")], "BS", _idx())[:2] == (A, "R4.htm")
+    assert reason_locator([(A, None, 16, "", "BS")], "BS", _idx())[3] == "Total assets"
+    assert reason_locator([], "BS", _idx()) == ("", "", "none", "")
+
+
+def test_combined_reason_quotes_the_evidence_label():
+    from scrooner_pipeline.mapper.top100_coverage import combined_reason_text as f
+
+    assert f("combined line '' (a,b): x", "Depreciation, amortization, and other") == (
+        "combined line 'Depreciation, amortization, and other' (a,b): x"
+    )
+    assert "''" not in f("combined line '' (a,b): x", "")
+    assert f("combined line 'L': x", "Other") == "combined line 'L': x"
+
+
+def _row(dp, cls="PROVEN", acc="A", fam="", fy=2024, val="1"):
+    return {
+        "company_id": 1,
+        "data_point": dp,
+        "fiscal_year": fy,
+        "class": cls,
+        "_shown_acc": acc,
+        "_family": fam,
+        "shown_value": val,
+        "reason_code": "",
+        "reason": "",
+        "evidence": "",
+        "accession": acc,
+        "r_page": "R2.htm",
+        "locator_source": "proof_line",
+    }
+
+
+def test_derived_counts_only_with_proven_inputs_of_one_filing():
+    from scrooner_pipeline.mapper.top100_coverage import (
+        DERIVED_FAMILY,
+        Company,
+        resolve_derived,
+        summarize,
+    )
+
+    def run(rev_acc="A", cor_acc="A", cor_cls="PROVEN"):
+        rows = [
+            _row("revenue", acc=rev_acc),
+            _row("cost_of_revenue", cls=cor_cls, acc=cor_acc),
+            _row("gross_profit", cls="UNCHECKED", acc="", fam=DERIVED_FAMILY),
+        ]
+        resolve_derived(rows)
+        return rows
+
+    r = run()
+    assert (r[2]["class"], r[2]["reason_code"]) == ("DERIVED", "derived_not_printed")
+    assert r[2]["evidence"] == "revenue=1@A; cost_of_revenue=1@A"
+    for r in (run(cor_acc="B"), run(cor_cls="UNCHECKED"), run(cor_acc="")):
+        assert (r[2]["class"], r[2]["reason_code"]) == (
+            "UNCHECKED",
+            "derived_inputs_unproven",
+        )
+    out = summarize(
+        [dict(company_id=1, **{"class": k}) for k in ("DERIVED", "BLANK")],
+        [Company(1, "X", 1, "")],
+        {},
+        "t",
+    )
+    assert out[0]["DERIVED"] == 1 and out[0]["pct_proven_plus_reason"] == "50.0"
+
+
+def test_locator_index_fetch_is_keyed_by_accession():
+    from scrooner_pipeline.mapper.top100_coverage import _locator_index
+
+    class Conn:
+        def execute(self, sql, params):
+            assert "f.accession = any" in sql
+
+            class C:
+                def fetchall(self):
+                    return [("A", 4, 9, "BS", "AssetsCurrent", "Total current assets")]
+
+            return C()
+
+    idx = _locator_index(Conn(), {"A", ""}, {"AssetsCurrent"})
+    assert idx.line[("A", "BS", 9)] == 4
+
+
+def test_proven_cell_carries_no_reason_code_or_text():
+    from scrooner_pipeline.mapper.top100_coverage import reason_fields
+
+    assert reason_fields("PROVEN", "x", "the line is not mapped for this era") == (
+        "",
+        "",
+    )
+    assert reason_fields("REASON", "np", "why") == ("np", "why")
+    assert reason_fields("BLANK", None, None) == ("", "")

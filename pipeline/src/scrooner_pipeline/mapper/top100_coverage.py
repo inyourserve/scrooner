@@ -28,7 +28,7 @@ from __future__ import annotations
 import csv
 import re
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -36,7 +36,7 @@ from typing import Any
 
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
-CLASSES = ("PROVEN", "REASON", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
+CLASSES = ("PROVEN", "REASON", "DERIVED", "HELD", "DISAGREE", "UNCHECKED", "BLANK")
 REASON_STATES = {
     "not_presented",
     "not_in_template",
@@ -66,6 +66,15 @@ INSTANT_DPS = {
     "deposits",
     "loans_net",
 }
+# canonical_fact.family of a served value the filing does not print (mapper/derived_cells.py): the cell is DERIVED
+# only while every input cell is PROVEN at the current detector version and all inputs cite the same filing.
+DERIVED_FAMILY = "company_tag_map:derived_not_printed"
+DERIVED_CODE = "derived_not_printed"
+DERIVED_UNPROVEN = "derived_inputs_unproven"
+DERIVED_INPUTS = {
+    "gross_profit": ("revenue", "cost_of_revenue"),
+    "total_liabilities": ("total_assets", "stockholders_equity"),
+}
 FIRST_FY = 2015
 UNMAPPED = "era_unmapped"
 COMBINED = "line_presented_combined"
@@ -94,6 +103,8 @@ CSV_COLUMNS = [
     "verdict",
     "accession",
     "r_page",
+    "locator_source",
+    "evidence",
     "tag",
     "value_source",
     "docmap_status",
@@ -102,6 +113,127 @@ CSV_COLUMNS = [
 
 def candidates(dp: str) -> list[str]:
     return SPECIAL_CANDIDATES.get(dp, [f"{dp}_resolved", dp])
+
+
+STATEMENT_STMTS = ("IS", "BS", "CF", "CI", "EQ")
+
+
+@dataclass
+class LocatorIndex:
+    """The printed layout of the filings a cell may cite, from fsn.line (one accession = one filing).
+    Every lookup is keyed by the accession, so a page can never come from another filing than the accession beside it."""
+
+    pos: dict[tuple[str, int, int], tuple[str, str, str]] = field(
+        default_factory=dict
+    )  # (acc, report, line) -> (stmt, tag, plabel)
+    line: dict[tuple[str, str, int], int] = field(
+        default_factory=dict
+    )  # (acc, stmt, line) -> report
+    tag: dict[tuple[str, str], list[tuple[str, int]]] = field(
+        default_factory=lambda: defaultdict(list)
+    )  # (acc, tag) -> [(stmt, report)]
+    plabel: dict[tuple[str, str], int] = field(
+        default_factory=dict
+    )  # (acc, plabel) -> report
+    stmt_n: dict[tuple[str, str, int], int] = field(
+        default_factory=lambda: defaultdict(int)
+    )  # (acc, stmt, report) -> lines
+
+    def add(
+        self, acc: str, report: int, line: int, stmt: str, tag: str, plabel: str | None
+    ) -> None:
+        self.pos[(acc, report, line)] = (stmt, tag, plabel or "")
+        self.line.setdefault((acc, stmt, line), report)
+        self.tag[(acc, tag)].append((stmt, report))
+        if plabel:
+            self.plabel.setdefault((acc, plabel), report)
+        if stmt in STATEMENT_STMTS:
+            self.stmt_n[(acc, stmt, report)] += 1
+
+    def stmt_report(self, acc: str, stmt: str) -> int | None:
+        """The report that carries most of the statement's lines in THIS filing (a parenthetical has few)."""
+        best = [
+            (n, -r) for (a, s, r), n in self.stmt_n.items() if a == acc and s == stmt
+        ]
+        return -max(best)[1] if best else None
+
+
+def _page(report: int | None) -> str:
+    return "" if report is None else f"R{report}.htm"
+
+
+def proven_locator(
+    acc: str | None,
+    stmt: str | None,
+    line: int | None,
+    tags: str | None,
+    idx: LocatorIndex,
+) -> tuple[str, str, str]:
+    """(accession, r_page, source) for a cell with a proof: the proof's accession and a report of THAT filing only.
+    Order: the proof's own (stmt, line) position; the statement line carrying the shown tag(s) (note line for a note
+    claim); the filing's main report of the claimed statement. No page found: the accession alone, page blank."""
+    if not acc:
+        return "", "", "none"
+    if stmt and line is not None and (acc, stmt, line) in idx.line:
+        return acc, _page(idx.line[(acc, stmt, line)]), "proof_line"
+    votes: dict[int, int] = defaultdict(int)
+    for t in (x.strip() for x in (tags or "").split(",") if x.strip()):
+        hits = idx.tag.get((acc, t), [])
+        same = [r for s_, r in hits if s_ == stmt] or [r for _s, r in hits]
+        if same:
+            votes[min(same)] += 1
+    if votes:
+        return acc, _page(min(votes, key=lambda r: (-votes[r], r))), "proof_tag"
+    if stmt in STATEMENT_STMTS and not (tags or "").strip():
+        # no tag to place: the statement's main report. A tag on no line of this filing (a note-only fact) is
+        # NEVER placed on the statement page: the page stays blank.
+        rep = idx.stmt_report(acc, stmt)
+        if rep is not None:
+            return acc, _page(rep), "proof_stmt"
+    return acc, "", "note_fact_report_not_stored"
+
+
+def reason_locator(
+    evidence: list[tuple], stmt: str | None, idx: LocatorIndex
+) -> tuple[str, str, str, str]:
+    """(accession, r_page, source, printed label) from the covering map rows' evidence
+    (adsh, report, line, plabel, row stmt). The adsh and the report are of one row, so one filing."""
+    for adsh, rep, ln, label, rstmt in evidence:
+        if not adsh:
+            continue
+        if rep is None and ln is not None and rstmt and (adsh, rstmt, ln) in idx.line:
+            rep = idx.line[(adsh, rstmt, ln)]
+        if not label and rep is not None and ln is not None:
+            label = idx.pos.get((adsh, rep, ln), ("", "", ""))[2]
+        if rep is None and label and (adsh, label) in idx.plabel:
+            rep = idx.plabel[(adsh, label)]
+        if rep is not None:
+            return adsh, _page(rep), "evidence_report", label or ""
+        srep = idx.stmt_report(adsh, stmt or rstmt or "")
+        if srep is not None:
+            return adsh, _page(srep), "evidence_stmt", label or ""
+        return adsh, "", "evidence_acc_no_page", label or ""
+    return "", "", "none", ""
+
+
+def reason_fields(cls: str, code: str | None, text: str | None) -> tuple[str, str]:
+    """(reason_code, reason_text): only a non-PROVEN cell carries them (a stale text on a value contradicts it)."""
+    if cls == "PROVEN":
+        return "", ""
+    return code or "", text or ""
+
+
+def combined_reason_text(text: str | None, label: str) -> str:
+    """The stored combined reason quotes the printed label; an empty quote is replaced by the evidence's label."""
+    text = text or ""
+    if "combined line ''" in text:
+        text = text.replace(
+            "combined line ''",
+            f"combined line '{label}'"
+            if label
+            else "combined line (printed label not recorded)",
+        )
+    return text
 
 
 def classify(
@@ -224,7 +356,7 @@ def load_current_proofs(
     for row in conn.execute(
         """select distinct on (company_id, data_point_name, period_start, period_end)
                   company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
-                  shown_value, shown_tag, shown_accession, position_source, face_report
+                  shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line
            from analytics.cell_proof
            where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
              and detector_version = %s
@@ -256,6 +388,21 @@ def _statement_pages(
     return {k: (v[1], v[2]) for k, v in best.items()}
 
 
+def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIndex:
+    """fsn.line of the cited filings: every statement line, and the note lines (any stmt) of the tags shown."""
+    idx = LocatorIndex()
+    accs = sorted(a for a in accessions if a)
+    for i in range(0, len(accs), 200):
+        for acc, report, line, stmt, tag, plabel in conn.execute(
+            """select f.accession, l.report, l.line, l.stmt, t.tag, l.plabel
+               from fsn.line l join fsn.filing f on f.id = l.filing_id join fsn.tag t on t.id = l.tag_id
+               where f.accession = any(%s) and (l.stmt = any(%s) or t.tag = any(%s))""",
+            (accs[i : i + 200], list(STATEMENT_STMTS), sorted(tags)),
+        ).fetchall():
+            idx.add(acc, report, line, stmt, tag, plabel)
+    return idx
+
+
 def build_rows(
     conn: Any, companies: list[Company], reads_dir: Path, today: date
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
@@ -274,14 +421,16 @@ def build_rows(
         ).fetchall()
     }
     served: dict[tuple[int, str, date, date], Decimal] = {}
-    for cid, name, s, e, v in conn.execute(
-        """select f.company_id, c.name, p.start_date, p.end_date, f.value
+    served_family: dict[tuple[int, str, date, date], str] = {}
+    for cid, name, s, e, v, fam in conn.execute(
+        """select f.company_id, c.name, p.start_date, p.end_date, f.value, f.family
            from analytics.canonical_fact f join core.period p on p.id = f.period_id
            join analytics.canonical_concept c on c.id = f.canonical_concept_id
            where f.company_id = any(%s) and c.name = any(%s) and p.fiscal_period = 'FY' and p.fiscal_year >= %s""",
         (ids, names, FIRST_FY),
     ).fetchall():
         served[(cid, name, s, e)] = v
+        served_family[(cid, name, s, e)] = fam or ""
     proofs = load_current_proofs(conn, ids, names)
     blanks: dict[tuple[int, str, date, date], tuple] = {}
     for row in conn.execute(
@@ -296,15 +445,36 @@ def build_rows(
     ).fetchall():
         blanks[(row[0], row[1], row[2], row[3])] = row[4:]
     tagmap: dict[tuple[int, str], list[tuple]] = defaultdict(list)
-    for cid, name, dec, ef, et, reason, rclass, eadsh, erep, elab in conn.execute(
+    for (
+        cid,
+        name,
+        dec,
+        ef,
+        et,
+        reason,
+        rclass,
+        eadsh,
+        erep,
+        elab,
+        eline,
+        mstmt,
+    ) in conn.execute(
         """select m.company_id, c.name, m.decision, m.era_from, m.era_to, m.reason, m.reason_class,
-                  m.evidence_adsh, m.evidence_report, m.evidence_plabel
+                  m.evidence_adsh, m.evidence_report, m.evidence_plabel, m.evidence_line, m.stmt
            from analytics.company_tag_map m join analytics.canonical_concept c on c.id = m.canonical_concept_id
            where m.company_id = any(%s) and m.decision in ('not_presented', 'not_in_template', 'combined')""",
         (ids,),
     ).fetchall():
         tagmap[(cid, name)].append(
-            (dec, ef, et, reason, rclass, bool(eadsh and (erep or elab)))
+            (
+                dec,
+                ef,
+                et,
+                reason,
+                rclass,
+                bool(eadsh and (erep or elab)),
+                (eadsh, erep, eline, elab, mstmt),
+            )
         )
 
     # the company's CURRENT sector template (latest effective_from <= today): data point -> in_template
@@ -319,6 +489,13 @@ def build_rows(
         in_tpl[(cid, dp)] = bool(inn)
 
     stmt_pages = _statement_pages(conn, ids)
+    cited = {v[0] for v in stmt_pages.values()}
+    cited |= {p[5] for p in proofs.values() if p[5]}
+    cited |= {ev[6][0] for evs in tagmap.values() for ev in evs if ev[6][0]}
+    shown_tags = {
+        t.strip() for p in proofs.values() if p[4] for t in p[4].split(",") if t.strip()
+    }
+    idx = _locator_index(conn, cited, shown_tags)
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -336,9 +513,11 @@ def build_rows(
                 s, e = per
                 cand = candidates(dp)
                 svalue = sname = None
+                sfam = ""
                 for n in cand:
                     if (c.company_id, n, s, e) in served:
                         svalue, sname = served[(c.company_id, n, s, e)], n
+                        sfam = served_family.get((c.company_id, n, s, e), "")
                         break
                 prow = brow = pname = None
                 for n in ([sname] if sname else []) + cand:
@@ -348,17 +527,21 @@ def build_rows(
                         brow = blanks[(c.company_id, n, s, e)]
                 tm = None
                 comb = False
+                covering: list[tuple[bool, tuple]] = []
                 for n in cand:
-                    for dec, ef, et, why, rcl, evid in tagmap.get(
+                    for dec, ef, et, why, rcl, evid, evt in tagmap.get(
                         (c.company_id, n), []
                     ):
                         if (ef is None or ef <= e) and (et is None or et >= e):
-                            if evid and (dec == "combined" or rcl in COMBINED_CLASSES):
+                            is_comb = dec == "combined" or rcl in COMBINED_CLASSES
+                            if evid and is_comb:
                                 comb = True
+                            if evt[0]:
+                                covering.append((is_comb, evt))
                             if dec != "combined":
                                 tm = (dec, why, rcl)
-                verdict, preason, ptext, pval, ptag, pacc, psrc, pface = (
-                    prow if prow else (None,) * 8
+                verdict, preason, ptext, pval, ptag, pacc, psrc, pstmt, pline = (
+                    prow if prow else (None,) * 9
                 )
                 cls, code = classify(
                     verdict,
@@ -374,14 +557,58 @@ def build_rows(
                     in_tpl.get((c.company_id, dp)),
                     comb,
                 )
-                # The docmap's r_page is the page in the read (latest) 10-K only: wrong for every earlier year.
-                # The page comes from the proof (face_report) or from the fsn report of THAT year's own 10-K.
-                fsn_acc, fsn_page = stmt_pages.get(
-                    (c.company_id, e, dm.get("stmt", "")), ("", "")
-                )
-                reason_text = (
-                    ptext or (brow[2] if brow else None) or (tm[1] if tm else None)
-                )
+                # ONE filing per locator: the accession and the page always come from the same fsn filing.
+                #  - a cell with a proof: the proof's shown_accession and that filing's line/report of the shown tag;
+                #  - a REASON: the covering map row's evidence_adsh and its evidence_report;
+                #  - otherwise the year's own 10-K (accession and statement report both from it).
+                dstmt = dm.get("stmt", "")
+                label = ""
+                if cls == "REASON" and covering:
+                    pref = sorted(
+                        covering,
+                        key=lambda x: (x[0] != (code == COMBINED), x[1][1] is None),
+                    )
+                    acc, page, lsrc, label = reason_locator(
+                        [x[1] for x in pref], dstmt, idx
+                    )
+                else:
+                    acc, page, lsrc = proven_locator(pacc, pstmt, pline, ptag, idx)
+                if lsrc in (
+                    "none",
+                    "note_fact_report_not_stored",
+                    "evidence_acc_no_page",
+                ) and not (acc and page):
+                    own_acc, own_page = stmt_pages.get(
+                        (c.company_id, e, dstmt), ("", "")
+                    )
+                    if own_acc and not acc:
+                        acc, page, lsrc = own_acc, own_page, "own_year"
+                    elif own_acc and acc == own_acc and own_page:
+                        page, lsrc = own_page, "own_year"
+                # reason text only on a non-PROVEN cell; a combined reason quotes the printed label of its evidence
+                reason_text = reason_fields(
+                    cls,
+                    code,
+                    ptext or (brow[2] if brow else None) or (tm[1] if tm else None),
+                )[1]
+                if cls == "REASON" and code == COMBINED:
+                    reason_text = combined_reason_text(
+                        reason_text
+                        or next(
+                            (
+                                w
+                                for n in cand
+                                for d_, f_, t_, w, rc_, ev_, et_ in tagmap.get(
+                                    (c.company_id, n), []
+                                )
+                                if (f_ is None or f_ <= e)
+                                and (t_ is None or t_ >= e)
+                                and w
+                            ),
+                            "",
+                        ),
+                        label,
+                    )
                 shown = (
                     svalue
                     if svalue is not None
@@ -396,19 +623,24 @@ def build_rows(
                         "fiscal_year": fy,
                         "period_end": e.isoformat(),
                         "class": cls,
-                        "reason_code": code or "",
+                        "reason_code": reason_fields(cls, code, "")[0],
                         "reason": reason_text or "",
                         "shown_value": "" if shown is None else format(shown, "f"),
                         "proof_verdict": verdict or "",
                         "verdict": verdict or "",
-                        "accession": pacc or fsn_acc,
-                        "r_page": pface or fsn_page,
+                        "accession": acc,
+                        "r_page": page,
+                        "locator_source": lsrc,
+                        "evidence": "",
+                        "_shown_acc": pacc or "",
+                        "_family": sfam,
                         "tag": ptag or "",
                         "value_source": psrc
                         or ("canonical_fact" if svalue is not None else ""),
                         "docmap_status": dm["status"],
                     }
                 )
+    resolve_derived(rows)
     note = {
         c.company_id: (
             "TEMPLATE_UNAVAILABLE"
@@ -418,6 +650,47 @@ def build_rows(
         if not templates[c.company_id]
     }
     return rows, note
+
+
+def resolve_derived(rows: list[dict[str, Any]]) -> None:
+    """In place. A served cell of family derived_not_printed is DERIVED only when every input data point of the same
+    company and fiscal year is PROVEN and all inputs were proven against the same filing (the same shown_accession);
+    the row then lists the derivation as `dp=value@accession`. Any other case is UNCHECKED derived_inputs_unproven."""
+    by = {(r["company_id"], r["data_point"], r["fiscal_year"]): r for r in rows}
+    for r in rows:
+        if r.get("_family") != DERIVED_FAMILY or r["class"] in ("PROVEN", "DISAGREE"):
+            continue
+        inputs = [
+            by.get((r["company_id"], dp, r["fiscal_year"]))
+            for dp in DERIVED_INPUTS.get(r["data_point"], ())
+        ]
+        ok = (
+            bool(inputs)
+            and all(
+                i is not None and i["class"] == "PROVEN" and i["_shown_acc"]
+                for i in inputs
+            )
+            and len({i["_shown_acc"] for i in inputs if i}) == 1
+        )
+        if inputs:
+            r["evidence"] = "; ".join(
+                f"{i['data_point']}={i['shown_value']}@{i['_shown_acc'] or '?'}"
+                for i in inputs
+                if i is not None
+            )
+        if ok:
+            r["class"], r["reason_code"] = "DERIVED", DERIVED_CODE
+            r["reason"] = (
+                f"{r['data_point']} is not printed; derived from {r['evidence']}, "
+                "inputs proven against one filing"
+            )
+            r["accession"], r["r_page"], r["locator_source"] = (
+                inputs[0]["accession"],
+                inputs[0]["r_page"],
+                "derived_input",
+            )
+        else:
+            r["class"], r["reason_code"] = "UNCHECKED", DERIVED_UNPROVEN
 
 
 def summarize(
@@ -440,7 +713,7 @@ def summarize(
                 "company_id": c.company_id,
                 "cells": total,
                 **t,
-                "pct_proven_plus_reason": f"{100 * (t['PROVEN'] + t['REASON']) / total:.1f}"
+                "pct_proven_plus_reason": f"{100 * (t['PROVEN'] + t['REASON'] + t['DERIVED']) / total:.1f}"
                 if total
                 else "",
                 "note": notes.get(c.company_id, ""),
@@ -452,7 +725,7 @@ def summarize(
 
 def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
     with path.open("w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=columns)
+        w = csv.DictWriter(fh, fieldnames=columns, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
 
