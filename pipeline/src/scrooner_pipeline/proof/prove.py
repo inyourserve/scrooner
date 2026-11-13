@@ -632,6 +632,33 @@ def _note_only(shown: Shown) -> bool:
     )
 
 
+def _note_fact_claim(shown: Shown, structure: FilingStructure) -> bool:
+    """The map claims a tag on a face statement (IS/BS/CF), but the filing does not print that tag
+    as a line of the statement and carries it as an undimensioned (consolidated) note fact at the
+    cell's column: the line is a note line (audit R01: the maps store note facts on IS/BS/CF).
+    A claimed tag that IS a face line keeps the face path, and with it the
+    value_in_note_not_on_statement_face reason."""
+    c = shown.claim
+    if (
+        c is None
+        or c.kind != "concept"
+        or c.stmt in NOTE_STMTS
+        or not c.tags
+        or shown.data_point_name == "shares_outstanding_resolved"
+    ):
+        return False
+    # a tag printed on ANY face statement is a face line (a wrong claimed statement falls back to the
+    # expected line, as before); only a tag on no face statement at all is a note line
+    face = {ln.tag for ln in structure.pre if ln.stmt not in NOTE_STMTS}
+    if any(t in face for t in c.tags):
+        return False
+    ddate, qtrs = _column(shown)
+    if qtrs is None:
+        return False
+    cls = unit_class(shown.data_point_name)
+    return any(find_value(structure, t, ddate, qtrs, cls) for t in c.tags)
+
+
 def _finish(
     p: Proof,
     shown: Shown,
@@ -822,11 +849,13 @@ def prove_cell(
         return p
     if shown.data_point_name == "shares_outstanding_resolved":
         cover = sorted(
-            DEI_COVER_TAGS
-            & {*shown.tags, *(shown.claim.tags if shown.claim else ())}
+            DEI_COVER_TAGS & {*shown.tags, *(shown.claim.tags if shown.claim else ())}
         )
         if cover:
-            p.verdict, p.reason_code = DISAGREE, "dei_cover_count_is_not_shares_outstanding"
+            p.verdict, p.reason_code = (
+                DISAGREE,
+                "dei_cover_count_is_not_shares_outstanding",
+            )
             p.reason_text = (
                 f"shares outstanding rests on the dei cover fact {cover}; the cover count is dated "
                 "after the balance sheet and is never the balance-sheet-date shares outstanding"
@@ -865,7 +894,7 @@ def prove_cell(
     claim = shown.claim
     if claim is not None and claim.kind == "component":
         return prove_component(shown, structure, p)
-    if _note_only(shown):
+    if _note_only(shown) or _note_fact_claim(shown, structure):
         return prove_note(shown, structure, p)
     cls = unit_class(shown.data_point_name)
     line, why, stmt, used = locate(structure, shown)
@@ -986,6 +1015,9 @@ def prove_derived(
         return p
     if structure is None:
         p.reason_text = "no FSN structure for the derived fact's filing (quarter not in bucket, or filing absent)"
+        return p
+    if _note_fact_claim(shown, structure):
+        p.reason_text = "derived quarter of a note-only line: no printed year-to-date line to subtract"
         return p
     line, why, stmt, used = locate(structure, shown)
     sign = used.sign if used is not None else 1
