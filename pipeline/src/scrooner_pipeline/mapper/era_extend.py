@@ -208,22 +208,18 @@ def _others(
     return ";".join(sorted(found - mine))
 
 
-def extend(
+def _walk(
     tags: list[str],
-    concept_ids: set[int],
     base_era: date,
-    ref_accession: str,
     data: FsnData,
-    floor: date = FLOOR,
-) -> tuple[date, str | None, list[dict], bool]:
-    """(new era_from, accession of the earliest verified filing | None, per-filing check log, any value check). Pure."""
-    log: list[dict] = []
-    ref = (data.lines.get(ref_accession, {}), data.values.get(ref_accession, {}))
-    ref_period = next(
-        (p for p, accs in data.periods.items() if ref_accession in accs), None
-    )
+    floor: date,
+    test,  # accession -> (ok, why, shown, used_value)
+    other,  # first accession of a failed year -> text for the log's other_tag column
+    log: list[dict],
+) -> tuple[date, str | None, bool]:
+    """Walk the earlier 10-Ks newest first; `test` decides each. Cut at the first failure or missing year."""
 
-    def rec(acc, period, ok, detail, shown="", other=""):
+    def rec(acc, period, ok, detail, shown="", oth=""):
         log.append(
             {
                 "adsh": acc,
@@ -232,18 +228,10 @@ def extend(
                 "check": "pass" if ok else "fail",
                 "detail": detail,
                 "stmt_role_label_calc_parent": shown,
-                "other_tag": other,
+                "other_tag": oth,
             }
         )
 
-    if ref_period is None or not all(t in ref[0] or t in ref[1] for t in tags):
-        rec(
-            ref_accession,
-            ref_period,
-            False,
-            "reference 10-K: tag has no line and no value in the FSN store",
-        )
-        return base_era, None, log, False
     era, earliest, value_used = base_era, None, False
     # the 10-K whose two columns start at base_era ends here; the next one tested is a year before it
     prev = _shift(base_era, 2) - timedelta(days=1)
@@ -267,32 +255,13 @@ def extend(
             break
         ok, why, shown, acc_ok, used = False, "", "", None, False
         for acc in sorted(data.periods[period]):
-            ok, why, shown, used = _check(
-                tags, ref, (data.lines.get(acc, {}), data.values.get(acc, {}))
-            )
-            if ok:
-                switched = [
-                    c
-                    for c in concept_ids
-                    if (m := data.mapped.get(acc, {}).get(c)) and not (m & set(tags))
-                ]
-                if switched:
-                    ok, why = (
-                        False,
-                        "another tag is mapped to the concept in this filing",
-                    )
+            ok, why, shown, used = test(acc)
             if ok:
                 acc_ok = acc
                 break
         if not ok:
             first = sorted(data.periods[period])[0]
-            rec(
-                first,
-                period,
-                False,
-                why,
-                other=_others(tags, concept_ids, first, data, ref[0]),
-            )
+            rec(first, period, False, why, oth=other(first))
             break
         rec(acc_ok, period, True, "", shown)
         era, earliest, value_used = (
@@ -301,4 +270,145 @@ def extend(
             value_used or used,
         )
         prev = period
-    return min(era, base_era), earliest, log, value_used
+    return min(era, base_era), earliest, value_used
+
+
+def extend(
+    tags: list[str],
+    concept_ids: set[int],
+    base_era: date,
+    ref_accession: str,
+    data: FsnData,
+    floor: date = FLOOR,
+) -> tuple[date, str | None, list[dict], bool]:
+    """(new era_from, accession of the earliest verified filing | None, per-filing check log, any value check). Pure."""
+    log: list[dict] = []
+    ref = (data.lines.get(ref_accession, {}), data.values.get(ref_accession, {}))
+    ref_period = next(
+        (p for p, accs in data.periods.items() if ref_accession in accs), None
+    )
+    if ref_period is None or not all(t in ref[0] or t in ref[1] for t in tags):
+        log.append(
+            {
+                "adsh": ref_accession,
+                "period": ref_period,
+                "tags": "+".join(tags),
+                "check": "fail",
+                "detail": "reference 10-K: tag has no line and no value in the FSN store",
+                "stmt_role_label_calc_parent": "",
+                "other_tag": "",
+            }
+        )
+        return base_era, None, log, False
+
+    def test(acc):
+        ok, why, shown, used = _check(
+            tags, ref, (data.lines.get(acc, {}), data.values.get(acc, {}))
+        )
+        if ok and any(
+            (m := data.mapped.get(acc, {}).get(c)) and not (m & set(tags))
+            for c in concept_ids
+        ):
+            return (
+                False,
+                "another tag is mapped to the concept in this filing",
+                "",
+                used,
+            )
+        return ok, why, shown, used
+
+    era, earliest, used = _walk(
+        tags,
+        base_era,
+        data,
+        floor,
+        test,
+        lambda a: _others(tags, concept_ids, a, data, ref[0]),
+        log,
+    )
+    return era, earliest, log, used
+
+
+EXT_MARK_ABSENT = "ERA-EXT(absent)"
+
+
+def fetch_facts(
+    conn: psycopg.Connection, company_id: int, tags: set[str]
+) -> tuple[set, dict]:
+    """(accessions of the company's 10-Ks that carry XBRL facts at all, accession -> candidate tags among its facts)
+    from core.fact (any authority: presence is the question; notes included). Same source as fy_era_extract.py."""
+    with_facts: set = set()
+    present: dict = {}
+    with conn.cursor() as cur:
+        cur.execute(
+            """select fl.accession_number from core.fact f join core.filing fl on fl.id = f.filing_id
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+                 and fl.filing_date >= '2015-01-01' group by 1""",
+            (company_id,),
+        )
+        with_facts = {a for (a,) in cur.fetchall()}
+        cur.execute(
+            """select distinct fl.accession_number, c.tag from core.fact f
+               join core.filing fl on fl.id = f.filing_id join core.concept c on c.id = f.concept_id
+               where f.company_id = %s and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A')
+                 and fl.filing_date >= '2015-01-01' and c.tag = any(%s)""",
+            (company_id, sorted(tags)),
+        )
+        for a, tag in cur.fetchall():
+            present.setdefault(a, set()).add(tag)
+    return with_facts, present
+
+
+def extend_absent(
+    candidates: set[str],
+    combined: list[str],
+    base_era: date,
+    data: FsnData,
+    with_facts: set,
+    present: dict,
+    floor: date = FLOOR,
+) -> tuple[date, str | None, list[dict]]:
+    """Reason rows (not_presented; combined not_in_template with `combined` = its line's tags). Extends back one 10-K
+    at a time while the filing has XBRL facts, no statement line (fsn.line) and no fact (core.fact) carries any
+    candidate tag of the concept (for a combined row: the candidates exclude the combined tags, and the combined
+    line itself must still be printed). Cut at the first year with a candidate. Pure."""
+    cands = candidates - set(combined)
+    log: list[dict] = []
+
+    def line_tags(acc) -> set:
+        return {t for tags in data.by_label.get(acc, {}).values() for t in tags}
+
+    def test(acc):
+        if acc not in with_facts:
+            return (
+                False,
+                "no XBRL facts for the filing: absence cannot be shown",
+                "",
+                False,
+            )
+        lt = line_tags(acc)
+        hit = sorted((cands & lt) | (cands & present.get(acc, set())))
+        if hit:
+            where = "statement line" if cands & lt else "XBRL fact"
+            return False, f"candidate tag present ({where})", ",".join(hit), False
+        if combined and not set(combined) <= lt:
+            return False, "the combined line is not printed", "", False
+        return (
+            True,
+            "",
+            "absent" if not combined else "combined line printed, concept untagged",
+            False,
+        )
+
+    era, earliest, _ = _walk(
+        sorted(combined) or sorted(cands)[:1],
+        base_era,
+        data,
+        floor,
+        test,
+        lambda a: ",".join(
+            sorted((cands & line_tags(a)) | (cands & present.get(a, set())))
+        ),
+        log,
+    )
+    return era, earliest, log

@@ -211,6 +211,122 @@ def test_loader_extends_and_records_evidence(isolated_database_url, tmp_path: Pa
     assert "pass" in log.read_text() and "fail" in log.read_text()
 
 
+def absent_data(years, lines_by_year=None, facts_years=None, cand_fact_years=()):
+    lbl = {
+        acc(y): {("IS", "other"): set((lines_by_year or {}).get(y, {"Other"}))}
+        for y in years
+    }
+    d = data(years, {})
+    d.by_label = lbl
+    with_facts = {acc(y) for y in (facts_years if facts_years is not None else years)}
+    present = {acc(y): {"Cand"} for y in cand_fact_years}
+    return d, with_facts, present
+
+
+def absent(years=YEARS, **kw):
+    combined = kw.pop("combined", [])
+    d, wf, pr = absent_data(years, **kw)
+    # the candidate set may include the combined tag itself (it serves other concepts): it must not count against
+    return ee.extend_absent({"Cand"} | set(combined), combined, BASE, d, wf, pr)
+
+
+def test_absence_extends_until_a_candidate_fact_or_line():
+    era, adsh, log = absent()
+    assert era == date(2015, 1, 1)
+    assert all(r["check"] == "pass" for r in log)
+    era, adsh, log = absent(cand_fact_years=(2019,))  # a candidate among the FY2019 10-K's facts (a note)
+    assert (era, adsh) == (date(2019, 1, 1), acc(2020))
+    assert log[-1]["check"] == "fail" and log[-1]["other_tag"] == "Cand"
+    era, _, _ = absent(lines_by_year={2018: {"Cand"}})  # a candidate on a statement line
+    assert era == date(2018, 1, 1)
+
+
+def test_absence_needs_xbrl_facts_and_never_bridges_a_gap():
+    era, _, log = absent(facts_years=[y for y in YEARS if y != 2020])
+    assert era == date(2020, 1, 1) and "no XBRL facts" in log[-1]["detail"]
+    era, _, log = absent(years={y: a for y, a in YEARS.items() if y != 2019})
+    assert era == date(2019, 1, 1) and log[-1]["detail"].startswith("gap")
+
+
+def test_combined_row_needs_the_combined_line_printed():
+    lines = {y: {"Comb"} for y in range(2018, 2026)}
+    lines[2017] = {"Other"}
+    era, _, log = absent(lines_by_year=lines, combined=["Comb"])
+    assert era == date(2017, 1, 1)  # FY2018 10-K prints FY2018 and FY2017; FY2017's own 10-K has no combined line
+    assert "combined line is not printed" in log[-1]["detail"]
+    lines[2020] = {"Comb", "Cand"}  # the concept is tagged separately beside the combined line
+    assert absent(lines_by_year=lines, combined=["Comb"])[0] == date(2020, 1, 1)
+
+
+CSV_REASON = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
+ZZE,revenue,not_presented,,IS,R3.htm,,,FILING-CHECKED,no revenue line
+"""
+
+
+@pytest.mark.integration
+def test_loader_reason_row_extension(isolated_database_url, tmp_path: Path):
+    (tmp_path / "ZZE-docmap-2026-11-12.csv").write_text(CSV_REASON)
+    (tmp_path / "ZZE-docmap-2026-11-12.md").write_text(MD)
+    paths = sorted(tmp_path.glob("*-docmap-*.csv"))
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _seed(conn, set())
+        rev = conn.execute(
+            "select id from analytics.canonical_concept where name = 'revenue_sanity_resolved'"
+        ).fetchone()[0]
+        other = conn.execute(
+            "insert into core.company (cik, company_name, primary_ticker) values ('0000000088', 'O', 'OOO') returning id"
+        ).fetchone()[0]
+        conn.execute(
+            "insert into analytics.company_tag_map (company_id, cik, taxonomy, tag, stmt, decision, canonical_concept_id, "
+            "era_from, decided_by, rule_id) values (%s, '0000000088', 'us-gaap', 'Revenues', 'IS', 'concept', %s, "
+            "'2015-01-01', 'structure', 'company_tag_map.library@1')",
+            (other, rev),
+        )
+        conn.execute("insert into core.unit (unit_name) values ('usd') on conflict do nothing")
+        uid = conn.execute("select id from core.unit where unit_name = 'usd'").fetchone()[0]
+        rid = conn.execute(
+            "insert into raw.sec_companyfacts (cik, source_url, sha256, storage_path, http_status) "
+            "values ('0000000077', 'u', 'h', 'raw/77', 200) returning id"
+        ).fetchone()[0]
+        for tag in ("Dummy", "Revenues"):
+            conn.execute(
+                "insert into core.concept (taxonomy, tag) values ('us-gaap', %s) on conflict do nothing", (tag,)
+            )
+        cdummy, crev = (
+            conn.execute("select id from core.concept where tag = %s", (t,)).fetchone()[0]
+            for t in ("Dummy", "Revenues")
+        )
+        for y in range(2015, 2026):
+            pid = conn.execute(
+                "insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period) "
+                "values (%s, %s, %s, 'duration', %s, 'FY') returning id",
+                (cid, date(y, 1, 1), date(y, 12, 31), y),
+            ).fetchone()[0]
+            fid = conn.execute(
+                "insert into core.filing (company_id, accession_number, form, filing_date, period_of_report, is_amendment) "
+                "values (%s, %s, '10-K', %s, %s, false) returning id",
+                (cid, acc(y), date(y + 1, 2, 20), date(y, 12, 31)),
+            ).fetchone()[0]
+            for c in (cdummy, crev) if y == 2019 else (cdummy,):
+                conn.execute(
+                    "insert into core.fact (company_id, concept_id, unit_id, period_id, filing_id, value, is_authoritative, "
+                    "raw_object_id) values (%s, %s, %s, %s, %s, 5, true, %s)",
+                    (cid, c, uid, pid, fid, rid),
+                )
+        conn.commit()
+        dl.load(conn, paths, apply=True, extend_eras=True)
+        rows = conn.execute(
+            "select rule_id, decision, era_from::text, era_to::text, serve_note from analytics.company_tag_map "
+            "where company_id = %s order by era_from",
+            (cid,),
+        ).fetchall()
+    assert [r[:4] for r in rows] == [
+        (ee.EXT_RULE_ID, "not_presented", "2019-01-01", "2023-12-31"),
+        (dl.RULE_ID, "not_presented", "2024-01-01", None),
+    ]
+    assert rows[0][4].startswith(ee.EXT_MARK_ABSENT)
+
+
 CSV_NOTE = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
 ZZE,cash_paid_for_income_taxes,component_in_note,us-gaap:IncomeTaxesPaidNet,Taxes - Details,R60,Taxes paid,,FILING-CHECKED,
 """
