@@ -355,9 +355,16 @@ def main(lines_path, ticker, rank, rulesdir, notes_path=None, accession=None):
                 add = [l for l in face_fl if l not in chosen]
                 if add: chosen = chosen + add; status = 'component_sum'; rule += '; + printed finance lease liabilities (founder item 5)'
             elif NF and FLLOC[0] == 'out':
-                fl = NF.get('FinanceLeaseLiability', {}).get(0)
-                if fl not in (None, '') and float(fl) > 0:
-                    chosen = chosen + [dict(st='NOTE', tag='FinanceLeaseLiability', cu=0, val=fl, r='', lab='finance lease liability (note)', acc=chosen[0]['acc'], pth=0, ln=0, dc='')]
+                fl, fltag = None, None
+                for tg_ in PFL.get('note_lease_tags', ['FinanceLeaseLiability']):
+                    v_ = NF.get(tg_, {}).get(0)
+                    if v_ not in (None, '') and float(v_) > 0: fl, fltag = v_, tg_; break
+                if fl is None and PFL.get('capital_lease_split_tags'):
+                    parts = [NF.get(t_, {}).get(0) for t_ in PFL['capital_lease_split_tags']]
+                    parts = [float(x) for x in parts if x not in (None, '')]
+                    if parts and sum(parts) > 0: fl, fltag = '%.4f' % sum(parts), '+'.join(PFL['capital_lease_split_tags'])
+                if fl is not None:
+                    chosen = chosen + [dict(st='NOTE', tag=fltag, cu=0, val=fl, r='', lab='finance/capital lease liability (note)', acc=chosen[0]['acc'], pth=0, ln=0, dc='')]
                     status = 'component_sum'; rule += '; + note finance lease liability, XBRL location outside debt (founder item 5)'
             fired.append('bs.total_debt.finance_leases')
         if chosen:
