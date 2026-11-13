@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import date
 
+import pytest
+
 from scrooner_pipeline.mapper import docmap_loader as dl
 
 HEADER = "ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note\n"
@@ -165,12 +167,68 @@ def test_a_combined_line_replaces_the_library_period_reasons_inside_its_era():
     assert plan.delete == [3] and len(plan.insert) == 1  # no overlapping reason rows left behind
 
 
-def test_member_qualified_tags_are_rejected_row_by_row():
+def test_member_qualified_parts_parse_into_tag_and_segments():
     rows, rejects = _parse(
         "T,cost_of_revenue,component sum,us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Product]+us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Service],IS,R4+R4,x,,FILING-CHECKED,",
         "T,amortization_of_intangibles,component sum,us-gaap:AmortizationOfIntangibleAssets[StatementOfIncomeLocationBalance=us-gaap:OperatingExpenses],IS,R4,x,,FILING-CHECKED,",
         "T,revenue,mapped,us-gaap:Revenues,IS,R4.htm,Revenues,,FILING-CHECKED,",
     )
+    assert rejects == []
+    assert [(r.data_point, r.parts, r.dims) for r in rows] == [
+        (
+            "cost_of_revenue",
+            ((1, "us-gaap", "CostOfGoodsAndServicesSold"), (1, "us-gaap", "CostOfGoodsAndServicesSold")),
+            ("ProductOrService=Product;", "ProductOrService=Service;"),
+        ),
+        (
+            "amortization_of_intangibles",
+            ((1, "us-gaap", "AmortizationOfIntangibleAssets"),),
+            ("StatementOfIncomeLocationBalance=OperatingExpenses;",),
+        ),
+        ("revenue", ((1, "us-gaap", "Revenues"),), ()),
+    ]
+
+
+def test_dims_are_normalized_to_the_fsn_segments_format():
+    assert dl.normalize_dims("ClassOfStock=us-gaap:CommonClassAMember") == "ClassOfStock=CommonClassA;"
+    assert (
+        dl.normalize_dims("us-gaap:ProductOrServiceAxis=Gaming,BusinessSegments=amzn:GamingMember")
+        == "BusinessSegments=Gaming;ProductOrService=Gaming;"
+    )  # axes sorted, no Axis / Member suffix, no namespace prefix
+    for bad in ("Product", "A=B,A=C", "A=B C"):
+        with pytest.raises(ValueError, match="member_syntax"):
+            dl.normalize_dims(bad)
+
+
+def test_malformed_member_syntax_and_repeats_are_rejected_alone():
+    rows, rejects = _parse(
+        "T,cost_of_revenue,component sum,us-gaap:CostOfGoodsAndServicesSold[ProductOrService]+us-gaap:Other,IS,R4+R4,x,,FILING-CHECKED,",
+        "T,sga_expense,component sum,us-gaap:Selling[A=B]+us-gaap:Selling[A=B],IS,R4+R4,x,,FILING-CHECKED,",
+        "T,revenue,mapped,us-gaap:Revenues,IS,R4.htm,Revenues,,FILING-CHECKED,",
+    )
     assert [r.data_point for r in rows] == ["revenue"]
-    assert [(r["data_point"], r["why"]) for r in rejects] == [
-        ("cost_of_revenue", "member_not_supported"), ("amortization_of_intangibles", "member_not_supported")]
+    assert [(r["data_point"], r["why"][:14]) for r in rejects] == [
+        ("cost_of_revenue", "member_syntax:"),
+        ("sga_expense", "a part tag rep"),
+    ]
+
+
+def test_the_table_check_is_mirrored_so_a_refusable_row_is_refused_alone():
+    from scrooner_pipeline.mapper.company_tag_map_seed import dims_refusal
+
+    assert dims_refusal("component", "ProductOrService=Product;") is None
+    assert dims_refusal("concept", "ClassOfStock=CommonClassA;") is None
+    assert dims_refusal("concept", "ProductOrService=Product;")  # a slice is never the data point
+    assert dims_refusal("concept", "ClassOfStock=A;ProductOrService=P;")  # two axes
+    assert dims_refusal("component", "ProductOrService Product")  # not segments format
+    assert dims_refusal("concept", "") is None
+
+
+def test_a_dims_row_competes_by_dims_in_the_library_signature():
+    d = dl.DocmapRow("T", "revenue", "component sum", ((1, "us-gaap", "X"),), "IS", "R3", "", date(2020, 1, 1),
+                     "0000000001-26-000001", "", "T.csv", None, ("ProductOrService=Product;",))
+    plain = dl.DocmapRow("T", "revenue", "component sum", ((1, "us-gaap", "X"),), "IS", "R3", "", date(2020, 1, 1),
+                         "0000000001-26-000001", "", "T.csv")
+    assert dl._signature_doc(d) != dl._signature_doc(plain)
+    lib = [{"decision": "component", "taxonomy": "us-gaap", "tag": "X", "sign": 1, "dims": "ProductOrService=Product;"}]
+    assert dl._signature_lib(lib) == dl._signature_doc(d)

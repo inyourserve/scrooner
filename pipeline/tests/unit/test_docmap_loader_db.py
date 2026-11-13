@@ -55,3 +55,47 @@ def test_load_is_idempotent_and_the_cited_docmap_cuts_the_library(isolated_datab
         assert _snapshot(conn, cid) == once
         c = second["companies"]["0000000099"]
         assert (c["added"], c["removed"], c["library_cut"], c["library_deleted"]) == (0, 0, 0, 0)
+
+
+DIMS_CSV = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
+ZZD,cost_of_revenue,component sum,us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Product]+us-gaap:CostOfGoodsAndServicesSold[ProductOrService=Service],IS,R4.htm+R4.htm,Cost of sales,same_tag@2020-12-31,FILING-CHECKED,
+ZZD,weighted_diluted_shares,mapped,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding[ClassOfStock=us-gaap:CommonClassAMember],IS,R4.htm,Diluted Class A,same_tag@2020-12-31,FILING-CHECKED,
+ZZD,revenue,mapped,us-gaap:Revenues[ProductOrService=Product],IS,R4.htm,Revenues,same_tag@2020-12-31,FILING-CHECKED,
+"""
+MIGRATION_0125 = Path(__file__).resolve().parents[2] / "db/migrations/0125_company_tag_map_dims.sql"
+
+
+@pytest.mark.integration
+def test_dimensional_rows_load_with_their_segments_and_a_refusable_one_is_rejected_alone(isolated_database_url, tmp_path: Path):
+    (tmp_path / "ZZD-docmap-2026-11-13.csv").write_text(DIMS_CSV)
+    (tmp_path / "ZZD-docmap-2026-11-13.md").write_text(MD)
+    paths = sorted(tmp_path.glob("*-docmap-*.csv"))
+    with psycopg.connect(isolated_database_url) as conn:
+        if not conn.execute("select 1 from information_schema.columns where table_name = 'company_tag_map' and column_name = 'dims'").fetchone():
+            conn.execute(MIGRATION_0125.read_text())  # until it lands contiguously (CI applies it with the rest)
+        cid = conn.execute("insert into core.company (cik, company_name, primary_ticker) values ('0000000098', 'Z', 'ZZD') returning id").fetchone()[0]
+        conn.commit()
+        first = dl.load(conn, paths, apply=True)
+        assert first["blocked"] == {}
+        assert [(r["data_point"], r["why"][:12]) for r in first["rejects"]] == [("revenue_sanity_resolved", "invalid row:")]  # a slice is no data point
+        got = conn.execute(
+            """select decision, tag, dims from analytics.company_tag_map where company_id = %s and rule_id = %s order by dims""",
+            (cid, dl.RULE_ID),
+        ).fetchall()
+        assert got == [
+            ("concept", "WeightedAverageNumberOfDilutedSharesOutstanding", "ClassOfStock=CommonClassA;"),
+            ("component", "CostOfGoodsAndServicesSold", "ProductOrService=Product;"),
+            ("component", "CostOfGoodsAndServicesSold", "ProductOrService=Service;"),
+        ]
+        second = dl.load(conn, paths, apply=True)
+        c = second["companies"]["0000000098"]
+        assert (c["added"], c["removed"]) == (0, 0)  # idempotent: dims are part of the row's content
+        # a library row of the same tag WITHOUT dims is a different line: the docmap's dimensional parts conflict with it
+        cost = conn.execute("select id from analytics.canonical_concept where name = 'cost_of_revenue_resolved'").fetchone()[0]
+        conn.execute(
+            """insert into analytics.company_tag_map (company_id, cik, taxonomy, tag, stmt, decision, canonical_concept_id,
+                   era_from, decided_by, rule_id) values (%s, '0000000098', 'us-gaap', 'CostOfGoodsAndServicesSold', 'IS', 'concept', %s,
+                   '2015-01-01', 'structure', 'company_tag_map.library@1')""", (cid, cost))
+        conn.commit()
+        third = dl.load(conn, paths, apply=False)
+        assert [(x["data_point"], x["winner"]) for x in third["conflicts"]] == [("cost_of_revenue_resolved", "docmap")]

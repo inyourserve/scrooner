@@ -109,6 +109,29 @@ class MapRow:
     decided_by: str | None = None
     evidence_adsh: str | None = None
     evidence_report: int | None = None
+    dims: str = ""  # fsn.dim.segments the value is read under (0125); '' = the no-dimension fact
+
+    @property
+    def key(self) -> tuple[str | None, str | None]:
+        """Key of the row's facts: (taxonomy, tag), or (taxonomy, 'tag[segments]') for a dimensional row."""
+        return dim_key(self.taxonomy, self.tag, self.dims)
+
+
+def dim_key(taxonomy: str | None, tag: str | None, dims: str = ""):
+    return (taxonomy, f"{tag}[{dims}]" if dims and tag else tag)
+
+
+def split_key(key: tuple[str | None, str | None]) -> tuple[str | None, str | None, str]:
+    """(taxonomy, tag, segments) of a fact key; segments '' for a plain (taxonomy, tag)."""
+    tax, tag = key
+    if tag and tag.endswith("]") and "[" in tag:
+        base, _, rest = tag.partition("[")
+        return tax, base, rest[:-1]
+    return tax, tag, ""
+
+
+def is_dim_key(key: tuple[str | None, str | None]) -> bool:
+    return split_key(key)[2] != ""
 
 
 @dataclass(frozen=True)
@@ -154,6 +177,17 @@ def load_tag_map_company_ids(
         return {r[0] for r in cur.fetchall()}
 
 
+def has_dims_column(conn: psycopg.Connection) -> bool:
+    """True once 0125 (analytics.company_tag_map.dims) is applied."""
+    return (
+        conn.execute(
+            "select 1 from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'company_tag_map' and column_name = 'dims'"
+        ).fetchone()
+        is not None
+    )
+
+
 def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
     with conn.cursor() as cur:
         cur.execute(
@@ -163,11 +197,14 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
         scale_col = (
             "scale" if cur.fetchone()[0] else "1::numeric"
         )  # 0123 adds the column
+        dims_col = (
+            "dims" if has_dims_column(conn) else "''::text"
+        )  # 0125 adds the column
         cur.execute(
             f"""
             select taxonomy, tag, stmt, decision, canonical_concept_id, parent_concept_id, sign,
                    era_from, era_to, evidence_cal_parent, reason, rule_id, components, evidence_plabel, serve_note, id, reason_class,
-                   {scale_col} as scale, decided_by, evidence_adsh, evidence_report
+                   {scale_col} as scale, decided_by, evidence_adsh, evidence_report, {dims_col} as dims
             from analytics.company_tag_map where company_id = %s
             """,
             (company_id,),
@@ -195,6 +232,7 @@ def _load_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
                 decided_by=r[18],
                 evidence_adsh=r[19],
                 evidence_report=r[20],
+                dims=r[21],
             )
             for r in cur.fetchall()
         ]
@@ -380,27 +418,38 @@ def _load_fsn_vintages(
     _load_fsn_facts). custom_only=False also reads standard tags: the filing's own XBRL carries its us-gaap lines,
     so a sum with a custom part can read every part from that one filing (_single_source_parts)."""
     out: dict[tuple[str | None, str | None], dict[int, list[Fact]]] = defaultdict(dict)
-    wanted = {(t, g) for t, g in tags if g is not None}
+    wanted = {split_key(k) for k in tags if k[1] is not None}
     if not wanted:
         return out
-    tax_of = {g: t for t, g in wanted}
+    tax_of = {g: t for t, g, _ in wanted}
+    # a dimensional key ('tag[segments]', a row with dims) reads the fact printed under exactly those segments;
+    # a plain key reads the no-dimension fact (dim 0, whose segments are '')
+    want_segs = sorted({sg for _, _, sg in wanted})
+    want_pairs = {(g, sg) for _, g, sg in wanted}
     with conn.cursor() as cur:
+        # plain keys only: the partial no-dimension series index (dim_id = 0) answers it
+        seg_filter = "v.dim_id = 0" if want_segs == [""] else "d.segments = any(%s)"
         cur.execute(
-            """
+            f"""
             select t.tag, v.id, v.ddate, v.qtrs, v.value, f.id, f.accession, f.accepted,
-                   exists (select 1 from fsn.line l where l.filing_id = v.filing_id and l.tag_id = v.tag_id)
+                   exists (select 1 from fsn.line l where l.filing_id = v.filing_id and l.tag_id = v.tag_id),
+                   d.segments
             from fsn.value v
             join fsn.tag t on t.id = v.tag_id
+            join fsn.dim d on d.id = v.dim_id
             join fsn.filing f on f.id = v.filing_id
-            where v.company_id = %s and (t.custom or not %s) and t.tag = any(%s)
-              and v.dim_id = 0 and v.coreg = '' and v.iprx = 0 and v.value is not null
+            where v.company_id = %s and (t.custom or not %s or d.segments <> '') and t.tag = any(%s)
+              and ({seg_filter}) and v.coreg = '' and v.iprx = 0 and v.value is not null
             order by f.accepted desc nulls last, v.id desc
             """,
-            (company_id, custom_only, sorted(tax_of)),
+            (company_id, custom_only, sorted(tax_of))
+            + ((want_segs,) if want_segs != [""] else ()),
         )
         rows = cur.fetchall()
-    grouped: dict[tuple[str, int, int], list[tuple]] = defaultdict(list)
-    for tag, vid, ddate, qtrs, value, fid, acc, accepted, on_face in rows:
+    grouped: dict[tuple[str, str, int, int], list[tuple]] = defaultdict(list)
+    for tag, vid, ddate, qtrs, value, fid, acc, accepted, on_face, segs in rows:
+        if (tag, segs) not in want_pairs:
+            continue
         match = [
             pid
             for pid, (start, end, ptype) in periods.items()
@@ -414,10 +463,10 @@ def _load_fsn_vintages(
         ]
         if len(match) != 1:
             continue  # no unique core.period for it: never guess
-        grouped[(tag, match[0], fid)].append(
+        grouped[(tag, segs, match[0], fid)].append(
             (vid, ddate, Decimal(value), fid, acc, accepted, on_face)
         )
-    for (tag, pid, _), same in sorted(
+    for (tag, segs, pid, _), same in sorted(
         grouped.items(),
         key=lambda kv: max((r[5] is not None, r[5], r[0]) for r in kv[1]),
         reverse=True,
@@ -427,7 +476,7 @@ def _load_fsn_vintages(
         used = [r for r in same if r[6]] or same
         first = used[0]
         accepted = first[5]
-        out[(tax_of[tag], tag)].setdefault(pid, []).append(
+        out[dim_key(tax_of[tag], tag, segs)].setdefault(pid, []).append(
             Fact(
                 first[2],
                 first[0],
@@ -654,7 +703,8 @@ def _check_components(
         return "ambiguous_values_in_filing"
     if len({f.filing_id for _, f in comps}) != 1:
         return "components_from_different_filings"
-    if founder_definition:
+    if founder_definition or all(r.dims for r, _ in comps):
+        # members of one printed line share its tag: no calc arc joins them, the sum is the printed members (0125)
         return None
     acc = comps[0][1].accession
     filing_arcs = arcs.get(acc, set())
@@ -706,10 +756,7 @@ def _one_filing_parts(
     for row, f in comps:
         if f.source != "sec_api":
             return None
-        prints = {
-            v.filing_id: v
-            for v in vintages.get((row.taxonomy, row.tag), {}).get(period_id, [])
-        }
+        prints = {v.filing_id: v for v in vintages.get(row.key, {}).get(period_id, [])}
         if not prints:
             return None
         by_filing.append(prints)
@@ -737,9 +784,7 @@ def _single_source_parts(
         if f.source != "fsn_xbrl":
             same = [
                 v
-                for v in fsn_vintages.get((row.taxonomy, row.tag), {}).get(
-                    period_id, []
-                )
+                for v in fsn_vintages.get(row.key, {}).get(period_id, [])
                 if v.accession == acc
             ]
             if not same:
@@ -918,7 +963,7 @@ def build_cells(
         if target is None or not stmt_ok(target, row.stmt):
             stats["stmt_mismatch_rows"] += 1
             continue
-        for period_id, fact in facts.get((row.taxonomy, row.tag), {}).items():
+        for period_id, fact in facts.get(row.key, {}).items():
             if not _in_era(row, fact.end):
                 continue
             if fact.derived and concept_info[target][0] in NEVER_DERIVED:
@@ -961,8 +1006,8 @@ def build_cells(
             if same:
                 total = sum(f.value * _mult(r) for r, f in same)
                 tol = tol_of(
-                    [dcml.get((f.accession, r.tag, f.end)) for r, f in same]
-                    + [dcml.get((ref.accession, d[0][0].tag, ref.end))]
+                    [dcml.get((f.accession, r.key[1], f.end)) for r, f in same]
+                    + [dcml.get((ref.accession, d[0][0].key[1], ref.end))]
                 )
                 if abs(total - ref_value) > tol:
                     hold(key, "printed_total_does_not_tie_to_components")
@@ -977,7 +1022,7 @@ def build_cells(
                     "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
                     "_accession": ref.accession,
-                    "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in d],
+                    "_dcml_keys": [(f.accession, r.key[1], f.end) for r, f in d],
                 }
             )
             continue
@@ -989,24 +1034,21 @@ def build_cells(
         # every part the map lists for the period must be present: a missing part is unknown, not zero, and
         # summing the rest serves a partial total (MSFT sga FY2016 = G&A alone: S&M's copies were all
         # non-authoritative, and its Q4 could not be derived). Eras are cut to where a line is printed.
-        present = {(r.taxonomy, r.tag) for r, _ in c}
+        present = {r.key for r, _ in c}
         end = c[0][1].end
         missing = [
             r
             for r in rows
             if r.decision == "component"
             and r.parent_concept_id == key[0]
-            and (r.taxonomy, r.tag) not in present
+            and r.key not in present
             and _in_era(r, end)
         ]
         if missing:
             hold(
                 key,
                 "component_without_authoritative_fact"
-                if any(
-                    (no_auth or {}).get((r.taxonomy, r.tag), {}).get(key[1])
-                    for r in missing
-                )
+                if any((no_auth or {}).get(r.key, {}).get(key[1]) for r in missing)
                 else "component_missing_for_period",
             )
             continue
@@ -1031,7 +1073,7 @@ def build_cells(
                 "_accession": c[0][1].accession,
                 "_from_components": True,
                 "_needs_tie": needs_tie,
-                "_dcml_keys": [(f.accession, r.tag, f.end) for r, f in c],
+                "_dcml_keys": [(f.accession, r.key[1], f.end) for r, f in c],
             }
         )
     # gross profit / operating income as printed in EACH filing (not only the latest print), so a sum read from
@@ -1045,7 +1087,7 @@ def build_cells(
         ):
             continue
         for vs in (vintages, fsn_vintages):
-            for pid, prints in vs.get((row.taxonomy, row.tag), {}).items():
+            for pid, prints in vs.get(row.key, {}).items():
                 for f in prints:
                     if _in_era(row, f.end) and not f.ambiguous:
                         tie_prints.setdefault(
@@ -1069,9 +1111,7 @@ def build_cells(
             # SERVED as the company's own combined line (analytics.company_combined_line: label, sign x stored
             # value) and never feeds a spanned concept; each spanned concept leaves the company's template for
             # that period (state not_in_template), unless a separate 'concept' row prints it.
-            for period_id, fact in sorted(
-                facts.get((row.taxonomy, row.tag), {}).items()
-            ):
+            for period_id, fact in sorted(facts.get(row.key, {}).items()):
                 if not _in_era(row, fact.end) or period_id not in (periods or {}):
                     continue
                 start, end, ptype = periods[period_id]
@@ -1165,16 +1205,14 @@ def build_cells(
                 or alt.reason_class != "alternate_tag_overlapping"
             ):
                 continue
-            if alt.stmt != row.stmt or alt.tag == row.tag:
+            if alt.stmt != row.stmt or alt.key == row.key:
                 continue
             if alt.canonical_concept_id is not None:
                 if alt.canonical_concept_id != row.canonical_concept_id:
                     continue
             elif f"same concept {cname} " not in (alt.reason or ""):
                 continue
-            for period_id, afact in sorted(
-                (alt_facts or {}).get((alt.taxonomy, alt.tag), {}).items()
-            ):
+            for period_id, afact in sorted((alt_facts or {}).get(alt.key, {}).items()):
                 key = (row.canonical_concept_id, period_id)
                 if (
                     not _in_era(row, afact.end)
@@ -1184,7 +1222,7 @@ def build_cells(
                     continue
                 if key in value_now or key in held_now:
                     continue
-                if period_id in facts.get((row.taxonomy, row.tag), {}):
+                if period_id in facts.get(row.key, {}):
                     continue  # the winner has a fact; it was refused or conflicted for its own reason
                 start, end, ptype = periods[period_id]
                 grain = _grain(start, end, ptype)
@@ -1225,9 +1263,7 @@ def build_cells(
         )
         if target is None or not stmt_ok(target, row.stmt):
             continue
-        for period_id, n in sorted(
-            (no_auth or {}).get((row.taxonomy, row.tag), {}).items()
-        ):
+        for period_id, n in sorted((no_auth or {}).get(row.key, {}).items()):
             key = (target, period_id)
             if period_id not in periods or key in value_now2 or key in held_now2:
                 continue
@@ -1461,13 +1497,16 @@ def resolve_for_company(
     (plus every concept the map targets), so no value of the old path survives for a tag-map company."""
     rows = _load_rows(conn, company_id)
     used: set[tuple[str | None, str | None]] = {
-        (r.taxonomy, r.tag)
-        for r in rows
-        if r.tag is not None and r.decision != "excluded"
+        r.key for r in rows if r.tag is not None and r.decision != "excluded"
     }
     periods = _load_periods(conn, company_id)
-    facts = _load_facts(conn, company_id, {k for k in used if not is_custom(k[0])})
-    custom_used = {k for k in used if is_custom(k[0])}
+    facts = _load_facts(
+        conn,
+        company_id,
+        {k for k in used if not is_custom(k[0]) and not is_dim_key(k)},
+    )
+    # custom tags and every dimensional row (0125) are read from the filing's own XBRL (fsn.value)
+    custom_used = {k for k in used if is_custom(k[0]) or is_dim_key(k)}
     for k, by_period in _load_fsn_facts(conn, company_id, custom_used, periods).items():
         facts[k] = by_period
     alt_tags: set[tuple[str | None, str | None]] = set()
@@ -1477,23 +1516,25 @@ def resolve_for_company(
             and r.reason_class == "alternate_tag_overlapping"
             and r.tag is not None
         ):
-            alt_tags.add((r.taxonomy, r.tag))
+            alt_tags.add(r.key)
     alt_tags -= used
     alt_facts = _load_facts(
         conn, company_id, alt_tags
     )  # read only to detect winner-tag gaps, never a value
-    comp_tags = {(r.taxonomy, r.tag) for r in rows if r.decision == "component"}
+    comp_tags = {r.key for r in rows if r.decision == "component"}
     vintages = _load_fact_vintages(
-        conn, company_id, {k for k in comp_tags if not is_custom(k[0])}
+        conn,
+        company_id,
+        {k for k in comp_tags if not is_custom(k[0]) and not is_dim_key(k)},
     )
     # standard parts of a sum that has a custom part are also read from the filings' own XBRL (one source a cell)
     custom_parents = {
         r.parent_concept_id
         for r in rows
-        if r.decision == "component" and is_custom(r.taxonomy)
+        if r.decision == "component" and (is_custom(r.taxonomy) or r.dims)
     }
     tie_tags = {
-        (r.taxonomy, r.tag)
+        r.key
         for r in rows
         if r.decision == "concept"
         and r.tag is not None
@@ -1501,14 +1542,16 @@ def resolve_for_company(
         in ("gross_profit", "operating_income")
     }
     for k, by_period in _load_fact_vintages(
-        conn, company_id, {k for k in tie_tags if not is_custom(k[0])}
+        conn,
+        company_id,
+        {k for k in tie_tags if not is_custom(k[0]) and not is_dim_key(k)},
     ).items():
         vintages.setdefault(k, by_period)
     fsn_vintages = _load_fsn_vintages(
         conn,
         company_id,
         {
-            (r.taxonomy, r.tag)
+            r.key
             for r in rows
             if r.decision == "component"
             and r.parent_concept_id in custom_parents
@@ -1527,7 +1570,9 @@ def resolve_for_company(
         for f in fs
     }
     arcs, dcml = load_calc_evidence(conn, accessions)
-    no_auth = _load_no_authoritative(conn, company_id, used)
+    no_auth = _load_no_authoritative(
+        conn, company_id, {k for k in used if not is_dim_key(k)}
+    )
     cells, stats = build_cells(
         rows,
         facts,

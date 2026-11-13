@@ -65,8 +65,26 @@ def held_by_verifier(raw: dict) -> bool:
 COLUMNS = (
     "company_id cik taxonomy tag stmt decision canonical_concept_id parent_concept_id sign scale serve_note components "
     "reason_class reason era_from era_to evidence_adsh evidence_report evidence_line evidence_plabel "
-    "evidence_cal_parent decided_by rule_id"
+    "evidence_cal_parent decided_by rule_id dims"
 ).split()
+
+# 0125 analytics.company_tag_map.dims (fsn.dim.segments format): the table's own check, mirrored so a row it would
+# refuse is refused here, alone, before any write
+DIMS_RE = re.compile(r"^([A-Za-z0-9_]+=[A-Za-z0-9_:.-]+;)+$")
+CLASS_OF_STOCK_RE = re.compile(r"^ClassOfStock=[A-Za-z0-9_:.-]+;$")
+
+
+def dims_refusal(decision: str | None, dims: str) -> str | None:
+    """Why the 0125 check would refuse (decision, dims); None when it accepts."""
+    if dims == "":
+        return None
+    if not DIMS_RE.match(dims):
+        return f"dims {dims!r} is not axis=member; segments"
+    if decision in ("component", "excluded"):
+        return None
+    if decision == "concept" and CLASS_OF_STOCK_RE.match(dims):
+        return None
+    return f"dims {dims!r} on a {decision} row (only component/excluded, or a concept of one ClassOfStock member)"
 
 
 def read_rows(path: Path) -> list[dict]:
@@ -159,6 +177,7 @@ def normalize(
         n[f"{side}_id"] = _int(n[f"{side}_id"])
     raw_sign = r.get("sign") if r.get("sign") is not None else r.get("combine_sign")
     n["sign"] = 1 if raw_sign is None else int(raw_sign)
+    n["dims"] = n["dims"] or ""
     n["scale"] = (
         Decimal(str(r.get("scale"))) if r.get("scale") is not None else Decimal(1)
     )
@@ -193,6 +212,11 @@ def normalize(
             raise ValueError(f"tag must be the local name, got {n['tag']!r}")
         if not n["taxonomy"]:
             raise ValueError("taxonomy missing")
+    refusal = dims_refusal(n["decision"], n["dims"])
+    if refusal:
+        raise ValueError(refusal)
+    if n["dims"] and n["tag"] is None:
+        raise ValueError("dims on a tagless row")
     if n["stmt"] not in STMTS:
         raise ValueError(f"stmt {n['stmt']!r} not in {sorted(STMTS)}")
     d = n["decision"]
@@ -233,7 +257,15 @@ def check_overlaps(rows: list[dict]) -> list[str]:
                 (r["company_id"], r["stmt"], "concept", r["canonical_concept_id"])
             ].append(r)
         else:
-            by_key[(r["company_id"], r["taxonomy"], r["tag"], r["stmt"])].append(r)
+            by_key[
+                (
+                    r["company_id"],
+                    r["taxonomy"],
+                    r["tag"],
+                    r.get("dims") or "",
+                    r["stmt"],
+                )
+            ].append(r)
     errors = []
 
     def clash(a, b):
@@ -287,6 +319,12 @@ INSERT = (
     "%(era_to)s, %(evidence_adsh)s, %(evidence_report)s, %(evidence_line)s, %(evidence_plabel)s, "
     "%(evidence_cal_parent)s, %(decided_by)s, %(rule_id)s)"
 )
+
+
+# the INSERT for a table that has the dims column (0125); INSERT alone writes to one that has not
+INSERT_DIMS = INSERT.replace(
+    "decided_by, rule_id)", "decided_by, rule_id, dims)"
+).replace("%(rule_id)s)", "%(rule_id)s, %(dims)s)")
 
 
 def completeness(decided: list[dict], undecided: list[dict]) -> dict:

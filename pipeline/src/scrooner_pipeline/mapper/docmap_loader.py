@@ -37,9 +37,14 @@ from typing import Any
 
 import psycopg
 
-from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
+from scrooner_pipeline.mapper.company_tag_map import (
+    EXTRA_STMT,
+    STATEMENT_CODE,
+    has_dims_column,
+)
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
+    INSERT_DIMS,
     check_overlaps,
     instant_sum_refused,
     normalize,
@@ -89,6 +94,12 @@ class DocmapRow:
     fy0_end: date | None = (
         None  # the read 10-K's fiscal year end (FY0); FY-1 ends a year earlier
     )
+    dims: tuple[
+        str, ...
+    ] = ()  # per part, fsn.dim.segments format ('' = no dimension); () = none has one
+
+    def part_dims(self) -> tuple[str, ...]:
+        return self.dims or ("",) * len(self.parts)
 
     @property
     def cites_page(self) -> bool:
@@ -118,25 +129,64 @@ def _fy_start(end: date, years: int = 1) -> date:
     return _years_back(end, years) + timedelta(days=1)
 
 
-MEMBER_RE = re.compile(r"\[[^\]]*=[^\]]*\]")
+# tag[Axis=Member] or tag[Axis=Member,Axis2=Member2]: a dimensional line (members are what the filing prints under
+# the tag, e.g. cost of sales by ProductOrService). Stored in company_tag_map.dims (0125) in fsn.dim.segments format.
+MEMBER_RE = re.compile(r"^(?P<tag>[^\[\]]*)\[(?P<dims>[^\[\]]*=[^\[\]]*)\]$")
+PART_SPLIT_RE = re.compile(r"[+;](?![^\[]*\])")  # + or ; outside [..]
 
 
-def parse_parts(tags: str) -> tuple[tuple[int, str, str], ...]:
-    out = []
-    for t in re.split(r"[+;]", tags):
+def _segment_name(raw: str, suffix: str) -> str:
+    """'us-gaap:ProductOrServiceAxis' -> 'ProductOrService'; 'amzn:NorthAmericaSegmentMember' -> 'NorthAmericaSegment'
+    (the FSN store keeps neither the namespace prefix nor the Axis / Member suffix)."""
+    name = raw.strip().rpartition(":")[2]
+    return name[: -len(suffix)] if name.endswith(suffix) and name != suffix else name
+
+
+def normalize_dims(spec: str) -> str:
+    """'ProductOrService=Product,BusinessSegments=us-gaap:GamingMember' -> 'BusinessSegments=Gaming;ProductOrService=Product;'
+    (axes sorted, as fsn.dim.segments prints them). Raises ValueError on anything that is not axis=member pairs."""
+    pairs = {}
+    for pair in spec.split(","):
+        axis, eq, member = pair.partition("=")
+        if not eq:
+            raise ValueError(f"member_syntax: {pair!r}")
+        a, m = _segment_name(axis, "Axis"), _segment_name(member, "Member")
+        if not re.fullmatch(r"[A-Za-z0-9_]+", a) or not re.fullmatch(
+            r"[A-Za-z0-9_.-]+", m
+        ):
+            raise ValueError(f"member_syntax: {pair!r}")
+        if a in pairs:
+            raise ValueError(f"member_syntax: axis {a} twice")
+        pairs[a] = m
+    return "".join(f"{a}={pairs[a]};" for a in sorted(pairs))
+
+
+def parse_parts_dims(
+    tags: str,
+) -> tuple[tuple[tuple[int, str, str], ...], tuple[str, ...]]:
+    """(parts, dims): parts as (sign, taxonomy, local tag); dims[i] the part's segments string ('' = none)."""
+    out, dims = [], []
+    for t in PART_SPLIT_RE.split(tags):
         t = t.strip()
         if not t:
             continue
-        if MEMBER_RE.search(t):
-            # tag[Axis=Member]: a dimensional line; company_tag_map has no axis/member key yet (Dhairya 2026-11-13).
-            # Stored as a literal tag it would never match a value.
-            raise ValueError("member_not_supported")
+        seg = ""
+        m = MEMBER_RE.match(t)
+        if m:
+            t, seg = m["tag"].strip(), normalize_dims(m["dims"])
+        elif "[" in t or "]" in t:
+            raise ValueError(f"member_syntax: {t!r}")
         sign = -1 if t.startswith("-") else 1
         prefix, _, local = t.lstrip("-").partition(":")
         if not local:
             raise ValueError(f"tag {t!r} has no taxonomy prefix")
         out.append((sign, prefix, local))
-    return tuple(out)
+        dims.append(seg)
+    return tuple(out), tuple(dims)
+
+
+def parse_parts(tags: str) -> tuple[tuple[int, str, str], ...]:
+    return parse_parts_dims(tags)[0]
 
 
 def era_from_of(era_note: str, parts, fy0_end: date) -> date:
@@ -217,7 +267,7 @@ def parse_docmap(
             continue
         seen.add(r["data_point"])
         try:
-            parts = parse_parts(r["tags"])
+            parts, dims = parse_parts_dims(r["tags"])
         except ValueError as exc:
             reject(str(exc))
             continue
@@ -226,8 +276,8 @@ def parse_docmap(
         elif not parts:
             reject(f"{status} row without a tag")
             continue
-        elif len({(tax, tag) for _, tax, tag in parts}) < len(parts):
-            reject("a part tag repeats (dimensional members are not separable by tag)")
+        elif len({(tax, tag, g) for (_, tax, tag), g in zip(parts, dims)}) < len(parts):
+            reject("a part tag repeats (dimensional members must differ)")
             continue
         elif status != "component sum" and len(parts) > 1:
             reject(f"{status} row with {len(parts)} tags")
@@ -256,6 +306,7 @@ def parse_docmap(
                 _reason(r["note"]),
                 source,
                 fy0,
+                dims if any(dims) else (),
             )
         )
     return rows, rejects
@@ -330,10 +381,11 @@ def table_rows(
                 "parent_concept": d.data_point,
                 "taxonomy": tax,
                 "tag": tag,
+                "dims": g,
                 "sign": sign,
                 "stmt": stmt,
             }
-            for sign, tax, tag in d.parts
+            for (sign, tax, tag), g in zip(d.parts, d.part_dims())
         ]
     ((sign, tax, tag),) = d.parts
     return [
@@ -343,6 +395,7 @@ def table_rows(
             "canonical_concept": d.data_point,
             "taxonomy": tax,
             "tag": tag,
+            "dims": d.part_dims()[0],
             "sign": sign,
             "stmt": stmt,
         }
@@ -358,11 +411,14 @@ def _signature_doc(d: DocmapRow) -> frozenset:
                     None,
                     None,
                     1,
+                    "",
                 )
             }
         )
     kind = "component" if d.status == "component sum" else "concept"
-    return frozenset((kind, tax, tag, sign) for sign, tax, tag in d.parts)
+    return frozenset(
+        (kind, tax, tag, sign, g) for (sign, tax, tag), g in zip(d.parts, d.part_dims())
+    )
 
 
 def _signature_lib(rows: list[dict]) -> frozenset:
@@ -372,6 +428,7 @@ def _signature_lib(rows: list[dict]) -> frozenset:
             r["taxonomy"],
             r["tag"],
             r["sign"] if r["decision"] in ("concept", "component") else 1,
+            r.get("dims") or "",
         )
         for r in rows
     )
@@ -401,7 +458,8 @@ def _conflict(
         "why": why,
         "docmap_status": d.status,
         "docmap_tags": "+".join(
-            f"{'-' if s < 0 else ''}{t}:{g}" for s, t, g in d.parts
+            f"{'-' if s < 0 else ''}{t}:{g}{'[' + dm + ']' if dm else ''}"
+            for (s, t, g), dm in zip(d.parts, d.part_dims())
         ),
         "docmap_era_from": d.era_from.isoformat(),
         "docmap_accession": d.accession,
@@ -525,7 +583,7 @@ def latest_docmaps(paths: list[Path]) -> list[Path]:
 
 EXISTING_SQL = """
 select id, company_id, decision, taxonomy, tag, sign, canonical_concept_id, parent_concept_id, components, era_from,
-       era_to, stmt, rule_id
+       era_to, stmt, rule_id{dims}
 from analytics.company_tag_map where company_id = any(%s)
 """
 
@@ -626,7 +684,10 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
         stats["rows"] += len(ok)
         docs[cid] = (cik, ok)
     with conn.cursor() as cur:
-        cur.execute(EXISTING_SQL, (sorted(docs),))
+        dims_col = has_dims_column(conn)
+        cur.execute(
+            EXISTING_SQL.format(dims=", dims" if dims_col else ""), (sorted(docs),)
+        )
         cols = [c.name for c in cur.description]
         existing: dict[int, list[dict]] = defaultdict(list)
         for row in cur.fetchall():
@@ -648,6 +709,9 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
             ]
         except (ValueError, TypeError) as exc:
             stats["blocked"][cik] = str(exc)
+            continue
+        if not dims_col and any(t["dims"] for t in new):
+            stats["blocked"][cik] = "dimensional rows need 0125 (company_tag_map.dims)"
             continue
         cut = dict(plan.cut)
         kept = [
@@ -691,7 +755,8 @@ def load(conn: psycopg.Connection, paths: list[Path], *, apply: bool = False) ->
                         "update analytics.company_tag_map set era_to = %s where id = %s",
                         [(to, rid) for rid, to in plan.cut],
                     )
-                cur.executemany(INSERT, new)
+                # a table without the dims column (0125 not applied) takes only dimensionless rows
+                cur.executemany(INSERT_DIMS if dims_col else INSERT, new)
     stats["applied"] = True
     return stats
 
@@ -701,6 +766,7 @@ def _content(r: dict, names: dict[int, str]) -> tuple:
         r["decision"],
         r["taxonomy"],
         r["tag"],
+        r.get("dims") or "",
         r["stmt"],
         r["sign"],
         names.get(r["canonical_concept_id"]),
