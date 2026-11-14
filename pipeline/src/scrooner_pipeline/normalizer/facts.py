@@ -366,8 +366,9 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
                 continue
             per_cik[cik] = result
             if result["status"] == "ok":
+                # a predecessor CIK (no company of its own) returns only its predecessor routes, no counts
                 for k in totals:
-                    totals[k] += result[k]
+                    totals[k] += result.get(k, 0)
 
     logger.info(
         "facts.normalize.done",
