@@ -268,3 +268,64 @@ def test_sbc_note_fact_node_has_no_prose():
             ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 4500)]
     s = resolve_cf(filing(rows), {('AllocatedShareBasedCompensationExpense', 4): D(111)})['sbc']
     assert s['value'] == D(111) and parseable(s['nodes'])
+
+
+# ---- resolver .24: one node grammar; incomplete calc groups are never judged
+def _norm(rows, filings=()):
+    bad = resolve_all.normalize_nodes(rows, list(filings))
+    return bad, rows
+
+
+def test_every_node_shape_lands_in_the_grammar():
+    A, B = '0000000001-26-000001', '0000000009-27-000002'
+    rows = [
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='total_debt', status='component_sum', value=D(2), column='own',
+             nodes='ShortTermBorrowings=1 [BS R4:18 debt-role tag]; FinanceLeaseLiability=1 [NOTE note lease; no ExtensibleList and no debt line contains it (location by absence: CHECK)]', why='w'),
+        dict(ticker='X', period_end='2024-12-31', accession=B, data_point='share_buybacks', status='mapped', value=D(0), column='comparative',
+             nodes=f'PaymentsForRepurchaseOfCommonStock=0 [R7.htm:23 of {B}, FY-2 column]', why=''),
+        dict(ticker='X', period_end='2023-12-31', accession=B, data_point='total_debt', status='component_sum', value=D(0), column='comparative',
+             nodes=f'ShortTermBorrowings=0 [BS R2:24 debt-role tag]; LongTermDebt=0 [BS R2:28 debt-role tag] [comparative column of {B}]', why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='comprehensive_income', status='combined', value=None, column='own',
+             nodes=f"ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest [R3.htm:9 'Comprehensive income', own 10-K {A}]", why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='shares_outstanding', status='mapped', value=D(5), column='own',
+             nodes='CommonStockSharesOutstanding=5 [BS parenthetical / NOTE]', why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='revenue', status='mapped', value=D(10), column='own', nodes='Revenues=10 [R2:1]', why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='cost_of_revenue', status='component_sum', value=D(4), column='own',
+             nodes='CostOfGoodsAndServicesSold[ProductOrService=Product]=3 [R2.htm:2]; -OtherIncome=-1 [R2.htm:3]', why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='gross_profit', status='derived', value=D(6), column='own',
+             nodes='revenue=10; -cost_of_revenue=4', why=''),
+        dict(ticker='X', period_end='2025-12-31', accession=A, data_point='other_income_expense_net', status='mapped', value=D(-7), column='own',
+             nodes='OtherIncomeAndExpense [R2.htm]', why=''),
+    ]
+    bad, rows = _norm(rows)
+    assert bad == 0
+    for r in rows:
+        assert all(resolve_all.NODE_GRAMMAR.match(p) for p in r['nodes'].split('; ')), r['nodes']
+    by = {(r['data_point'], r['period_end']): r for r in rows}
+    assert by[('total_debt', '2025-12-31')]['nodes'] == 'ShortTermBorrowings=1 [R4.htm:18]; FinanceLeaseLiability=1 [NOTE]' and 'location by absence' in by[('total_debt', '2025-12-31')]['why']
+    assert by[('share_buybacks', '2024-12-31')]['nodes'].endswith(f'[R7.htm:23@{B}]')
+    assert by[('total_debt', '2023-12-31')]['nodes'] == f'ShortTermBorrowings=0 [R2.htm:24@{B}]; LongTermDebt=0 [R2.htm:28@{B}]'
+    assert by[('comprehensive_income', '2025-12-31')]['nodes'] == 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest [R3.htm:9]'
+    assert by[('shares_outstanding', '2025-12-31')]['nodes'] == 'CommonStockSharesOutstanding=5 [BSP]'
+    assert by[('gross_profit', '2025-12-31')]['nodes'] == 'Revenues=10 [R2.htm:1]; -CostOfGoodsAndServicesSold[ProductOrService=Product]=3 [R2.htm:2]; OtherIncome=-1 [R2.htm:3]'
+    assert by[('other_income_expense_net', '2025-12-31')]['nodes'] == 'OtherIncomeAndExpense=-7 [R2.htm]'
+
+
+def test_incomplete_calc_group_is_skipped_never_summed():
+    A = '0000101829-20-000013'
+    cf = {A: 'Liabilities|0|93492000000|2018-12-31'}
+    # RTX FY2019: Liabilities printed but untagged for 2019, tagged for 2018: the failing group is incomplete
+    assert resolve_all.finalize_calc('calc LiabilitiesAndStockholdersEquity: FAIL [no value: Liabilities]', A, cf) == 'calc LiabilitiesAndStockholdersEquity: skipped: child missing (Liabilities)'
+    # a caption the filing never tags (CommitmentsAndContingencies) and a group that foots without the child (a printed dash) stand
+    assert resolve_all.finalize_calc('calc LiabilitiesAndStockholdersEquity: FAIL [no value: CommitmentsAndContingencies]', A, cf) == 'calc LiabilitiesAndStockholdersEquity: FAIL'
+    assert resolve_all.finalize_calc('calc LiabilitiesAndStockholdersEquity: ok [no value: Liabilities]', A, cf) == 'calc LiabilitiesAndStockholdersEquity: ok'
+    assert resolve_all.finalize_calc('calc X: ok', A, cf) == 'calc X: ok'
+
+
+def test_calc_check_names_children_without_a_value():
+    # RTX FY2019 shape: Total Liabilities printed, no value; the calc of L&SE names it instead of silently summing the rest
+    LSE = 'LiabilitiesAndStockholdersEquity'; EQ = 'StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest'
+    bs = [('BS', 'Assets', 'Total Assets', 139716000000, 'totalLabel'), ('BS', 'Liabilities', 'Total Liabilities', None, 'totalLabel'),
+          ('BS', EQ, 'Total Equity', 44231000000, 'totalLabel'), ('BS', LSE, 'Total Liabilities and Equity', 139716000000, 'totalLabel')]
+    _, checks = resolve.resolve(filing(bs, f'3|{LSE}|Liabilities|1~3|{LSE}|{EQ}|1'))
+    assert f'calc {LSE}: FAIL [no value: Liabilities]' in checks

@@ -158,7 +158,7 @@ def related_splits(memberfacts, tag_re):
 
 
 NOTE_FILL_OK = {'dividends_per_share', 'basic_eps', 'diluted_eps', 'weighted_basic_shares', 'weighted_diluted_shares'}   # per-share / share counts sit in notes
-FACE_NODE = re.compile(r'\[(R\d|BS parenthetical)')
+FACE_NODE = re.compile(r'\[(R\d|BS parenthetical|BSP)')
 
 
 def _one_element(r):

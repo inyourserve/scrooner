@@ -149,9 +149,10 @@ def resolve(f):
             put('mezzanine_and_nci', 'component_sum', [dict(node(by[c], 'equity-side child'), st='BS') for c in mez], sum(by[c]['val'] for c in mez),
                 f"other calc children of {lse['tag']}" + (f" / {eq_incl}" if eq_incl in by else ''))
         # the filer's own identity on its own numbers
-        if chf:
+        miss = [c for c, w in ch if c not in by]
+        if chf:   # children without a value this column are named; resolve_all.finalize_calc decides whether the group is incomplete
             s = sum(by[c]['val'] * w for c, w in chf)
-            checks.append(f"calc {lse['tag']}: {'ok' if abs(s - lsev) <= tol(lsev, *[by[c]['val'] for c, _ in chf]) else 'FAIL'}")
+            checks.append(f"calc {lse['tag']}: {'ok' if abs(s - lsev) <= tol(lsev, *[by[c]['val'] for c, _ in chf]) else 'FAIL'}" + (f" [no value: {'+'.join(miss)}]" if miss else ''))
         # current subtotals: calc children of the asset root / liabilities node
         for dp, parent, hint in (('current_assets', out.get('total_assets', {}).get('tags'), 'AssetsCurrent'), ('current_liabilities', (liab or [None])[0], 'LiabilitiesCurrent')):
             if parent and hint in by and any(c == hint for c, _ in (children(arcs, parent, onbs) or [])):
@@ -338,9 +339,10 @@ def resolve(f):
                 x = cby[tot[0]]; put(dp, 'mapped', [dict(node(x, ''), st='CF')], x['val'], f"CF line {x['ln']}: calc child of {root}")
             elif f'NetCashProvidedByUsedIn{word}Activities' in cby:
                 x = cby[f'NetCashProvidedByUsedIn{word}Activities']; put(dp, 'mapped', [dict(node(x, ''), st='CF')], x['val'], f"CF line {x['ln']} (tag hint; not a calc child of {root})", 'hint_only')
+        cmiss = [c for c, w in (children(arcs, root, oncf) or []) if c not in cby and 'PeriodIncreaseDecrease' not in c]
         if k:
             s = sum(cby[c]['val'] * w for c, w in k if 'PeriodIncreaseDecrease' not in c)
-            checks.append(f"calc {root}: {'ok' if abs(s - cby[root]['val']) <= tol(cby[root]['val'], *[cby[c]['val'] for c, _ in k]) else 'FAIL'}")
+            checks.append(f"calc {root}: {'ok' if abs(s - cby[root]['val']) <= tol(cby[root]['val'], *[cby[c]['val'] for c, _ in k]) else 'FAIL'}" + (f" [no value: {'+'.join(cmiss)}]" if cmiss else ''))
     return out, checks
 
 DPS = ['total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'mezzanine_and_nci',

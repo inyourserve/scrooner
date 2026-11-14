@@ -146,14 +146,15 @@ def note_value(alts, notes, dp=''):
 def shares(f, notes, bsby):
     und = notes.get('CommonStockSharesOutstanding')
     if und is not None:
-        return dict(status='mapped', value=und, nodes=f"CommonStockSharesOutstanding={und} [BS parenthetical / NOTE]", why='undimensioned CommonStockSharesOutstanding at the balance-sheet date (never dei)', rule='note')
+        return dict(status='mapped', value=und, nodes=f"CommonStockSharesOutstanding={und} [BSP]", why='undimensioned CommonStockSharesOutstanding at the balance-sheet date (never dei)', rule='note')
     cls = collections.OrderedDict()
     for s in (f.get('cpv') or '').split('~'):
         x = s.split('|')
         if len(x) != 6 or x[2] != 'CommonStockSharesOutstanding': continue
         m = CLASS_SEG.findall(x[4]); other = re.sub(r'ClassOfStock=[A-Za-z0-9_]+;?', '', x[4]).strip()
         if len(m) != 1 or other or EQ_STOP.search(m[0] + ' ' + x[3]): continue
-        cls.setdefault(m[0], (D(x[5]), f"R{x[0]}.htm:{x[1]}"))
+        ax = re.search(r'(\w*ClassOfStock)=', x[4]).group(1)
+        cls.setdefault(f'{ax}={m[0]}', (D(x[5]), f"R{x[0]}.htm:{x[1]}"))   # the FSN segment verbatim: StatementClassOfStock=CommonClassA
     if cls:
         return dict(status='component_sum' if len(cls) > 1 else 'mapped', value=sum(v for v, _ in cls.values()),
                     nodes='; '.join(f"CommonStockSharesOutstanding[{k}]={v} [{r}]" for k, (v, r) in cls.items()),

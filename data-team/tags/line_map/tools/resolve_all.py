@@ -36,7 +36,7 @@ def fill_printed_zero_and_comparative(rows, td):
     cf = {}
     for (own_a, dp), c in EXT.get('cf', {}).items():   # loc = where the later filing itself resolved the data point
         nodes_loc = next((x.get('nodes') or '' for x in rows if x['accession'] == c['accession'] and x['data_point'] == dp), '')
-        m = re.search(r'\[(R[^\]]*|NOTE|BS parenthetical[^\]]*)\]', nodes_loc)
+        m = re.search(r'\[(R[^\]]*|NOTE|BSP|BS parenthetical[^\]]*)\]', nodes_loc)
         cf[(own_a, dp)] = dict(c, loc=m.group(1) if m else 'NOTE')
     nxt = {}
     by = collections.defaultdict(list)
@@ -80,7 +80,7 @@ def apply_ar_related(rows, filings):
         if a in split and r['status'] in ('mapped', 'not_presented'):   # member-only face lines leave the row not_presented (GEV, DELL 2024)
             s = split[a]; n, rel = D(s['nonrelated']), D(s['related'])
             r.update(status='component_sum', value=n + rel, tags=f"{s['tag']}+{s['tag']}",
-                     nodes=f"{s['tag']}[NonrelatedParty]={n} [face line]; {s['tag']}[RelatedParty]={rel} [face line]",
+                     nodes=f"{s['tag']}[RelatedPartyTransactionsByRelatedParty=NonrelatedParty]={n} [face line]; {s['tag']}[RelatedPartyTransactionsByRelatedParty=RelatedParty]={rel} [face line]",
                      why='the face prints receivables from third parties and from related parties on two lines (RelatedPartyTransactionsByRelatedPartyAxis members): sum (ruling 2026-11-14)')
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
             continue
@@ -95,6 +95,111 @@ def apply_ar_related(rows, filings):
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
     return rows
 PERSONNEL_LB = re.compile(r'(?i)^(personnel|salaries|compensation and benefits|employee compensation)')
+
+
+DP_REF = re.compile(r'^(-?)(revenue|cost_of_revenue|gross_profit|operating_income|operating_expenses)(?: (\w+))?=(-?[\d.]+)$')
+PART = re.compile(r'^(-?)([A-Za-z_]\w*)(\[[\w;=-]+\])?(?:=(-?[\d.]+))?$')
+LOC_R = re.compile(r'^(?:(?:BS|IS|CF) )?R(\d+)(?:\.htm)?(?::(\d+))?\b')
+ACC = re.compile(r'\b(\d{10}-\d{2}-\d{6})\b')
+NODE_GRAMMAR = re.compile(r'^-?\w+(\[\w+=[\w-]+\])?(=-?[\d.]+)? \[(R\d+\.htm(:\d+)?|NOTE|SE|BSP)(@\d{10}-\d{2}-\d{6})?\]$')
+
+
+def _split_parts(s):
+    """'; '-separated parts, never splitting inside [...] (lease reasons carry '; ' inside their bracket)."""
+    out, depth, cur = [], 0, ''
+    i = 0
+    while i < len(s):
+        ch = s[i]
+        if ch == '[': depth += 1
+        elif ch == ']': depth -= 1
+        if depth == 0 and s.startswith('; ', i):
+            out.append(cur); cur = ''; i += 2; continue
+        cur += ch; i += 1
+    if cur: out.append(cur)
+    return out
+
+
+def normalize_nodes(rows, filings):
+    """Every node in one grammar (Dhairya 2026-11-14): part := [-]Tag[Axis=Member][=value] [LOC]; LOC := Rn.htm[:line] | NOTE | SE | BSP,
+    optionally @ACC when the figure comes from another filing than the row's own (comparative fills); parts joined by '; '. SE = the
+    statement of equity, BSP = the balance-sheet parenthetical. A part names a value whenever the row has one; reason rows (combined,
+    not_presented) keep the line and may carry no value. A gross profit derived from other cells lists those cells' parts, signed.
+    Everything else a builder wrote inside a location bracket moves to why."""
+    F = {f['a']: f for f in filings}
+    cell = {(r.get('ticker'), str(r.get('period_end')), r['data_point']): r for r in rows}
+    def loc_of(text, row_acc, tag):
+        acc = ACC.findall(text); m = LOC_R.match(text.strip())
+        # a figure read from another filing's column (comparative fill: 'of ACC, FY-1 column', 'comparative column of ACC') names it;
+        # the row's own 10-K ('own 10-K ACC') does not
+        ext = next((a for a in acc if a != row_acc or re.search(r'(?:of|column of) ' + a, text)), None)
+        if m: loc = f"R{m.group(1)}.htm" + (f":{m.group(2)}" if m.group(2) else '')
+        elif text.strip().startswith('BS parenthetical') or text.strip().startswith('BSP'): loc = 'BSP'
+        elif text.strip().startswith('NOTE'): loc = 'NOTE'
+        elif text.strip() == 'SE': loc = 'SE'
+        else:
+            ps = face_positions(F.get(ext or row_acc), tag)
+            loc = f"R{ps[0]['rep']}.htm:{ps[0]['ln']}" if ps else 'NOTE'
+        rest = text.strip()
+        rest = re.sub(r'^(?:(?:BS|IS|CF) )?R\d+(?:\.htm)?(?::\d+)?|^BS parenthetical( / NOTE)?|^BSP|^NOTE|^SE$', '', rest).strip(' ,')
+        return loc + (f"@{ext}" if ext else ''), rest
+    def norm(r, depth=0):
+        raw = (r.get('nodes') or '').split(' | why')[0]
+        if not raw: return '', []
+        out, prose = [], []
+        for p in _split_parts(raw):
+            p = p.strip()
+            m_ = re.match(r'^(-?\w+(?:\[[\w;=-]+\])?(?: \w+)?(?:=-?[\d.]+)?)\s*(?:\[([^\]]*)\])?\s*(?:\[comparative column of (\d{10}-\d{2}-\d{6})\])?$', p)
+            head, inside, comp = (m_.group(1), m_.group(2) or '', m_.group(3)) if m_ else (p, '', None)
+            d = DP_REF.match(head)
+            if d and depth == 0:
+                ref = cell.get((r.get('ticker'), str(r.get('period_end')), d.group(2)))
+                sub_parts = norm(ref, 1)[0].split('; ') if ref is not None and ref.get('nodes') else []
+                if sub_parts and sub_parts != ['']:
+                    for q in sub_parts:
+                        neg = q.startswith('-')
+                        out.append((q[1:] if neg else '-' + q) if d.group(1) == '-' else q)
+                    continue
+                head = f"{d.group(1)}{d.group(3) or d.group(2)}={d.group(4)}"
+            m = PART.match(head)
+            if not m:
+                prose.append(p); continue
+            sign, tag, mem, val = m.groups()
+            if val is None and r.get('value') not in (None, '') and len(_split_parts(raw)) == 1 and r.get('status') in ('mapped', 'component_sum', 'derived'):
+                val = str(r['value'])
+            text = inside + (f' of {comp}' if comp else '')
+            loc, rest = loc_of(text, r.get('accession'), tag)
+            if rest and not re.fullmatch(r'(?:of )?\d{10}-\d{2}-\d{6}(?:, FY-\d column)?|FY-\d column|own 10-K \d{10}-\d{2}-\d{6}', rest): prose.append(f"{tag}: {rest}")
+            out.append(f"{sign}{tag}{mem or ''}{'=' + val if val is not None else ''} [{loc}]")
+        # a comparative row's figures all come from the same later filing: every part names it (QCOM: one trailing 'comparative column of')
+        accs = {m_.group(1) for q in out for m_ in [re.search(r'@(\d{10}-\d{2}-\d{6})\]$', q)] if m_}
+        if len(accs) == 1 and r.get('column') == 'comparative':
+            a_ = accs.pop(); out = [q if '@' in q else q[:-1] + f'@{a_}]' for q in out]
+        return '; '.join(out), prose
+    bad = 0
+    for r in rows:
+        n, prose = norm(r)
+        if not n and not (r.get('nodes') or ''): continue
+        if prose: r['why'] = ((r.get('why') or '') + ' | node notes: ' + '; '.join(prose)).strip(' |')
+        r['nodes'] = n
+        if n and not all(NODE_GRAMMAR.match(q) for q in n.split('; ')): bad += 1
+    return bad
+
+
+def finalize_calc(chk, accession, compfacts):
+    """Ruling 2026-11-14: never sum an incomplete group. A calc child with no value in this column is MISSING when the filing tags it in
+    another column (RTX FY2019: Liabilities 2018 tagged, 2019 printed but untagged): the check is 'skipped: child missing (...)'. A child
+    the filing tags in no column (CommitmentsAndContingencies, a caption) is not printed with a value, and a group that foots without the
+    child shows it as a dash: in both cases the check stands."""
+    tagged = {x[0] for x in standard_inputs._facts(compfacts.get(accession), 4)}
+    out = []
+    for c in (chk or '').split(';'):
+        m = re.match(r'^(calc \w+): (ok|FAIL) \[no value: ([\w+]+)\]$', c)
+        if not m: out.append(c); continue
+        miss = [t for t in m.group(3).split('+') if t in tagged]
+        # a group that foots without the child shows the child as a printed dash (= 0, ruling 2026-11-14: ABT disposal-group
+        # liabilities, TSLA temporary equity after conversion); a group that fails with it missing is incomplete, never judged
+        out.append(f"{m.group(1)}: skipped: child missing ({'+'.join(miss)})" if miss and m.group(2) == 'FAIL' else f"{m.group(1)}: {m.group(2)}")
+    return ';'.join(out)
 
 
 def face_positions(f, tag):
@@ -293,7 +398,7 @@ def apply_ap_related(rows, filings):
         if a in split and r['status'] in ('mapped', 'not_presented', 'component_sum'):
             s = split[a]; n, rel = D(s['nonrelated']), D(s['related'])
             r.update(status='component_sum', value=n + rel, tags='AccountsPayableCurrent+AccountsPayableCurrent',
-                     nodes=f"AccountsPayableCurrent[NonrelatedParty]={n} [face line]; AccountsPayableCurrent[RelatedParty]={rel} [face line]",
+                     nodes=f"AccountsPayableCurrent[RelatedPartyTransactionsByRelatedParty=NonrelatedParty]={n} [face line]; AccountsPayableCurrent[RelatedPartyTransactionsByRelatedParty=RelatedParty]={rel} [face line]",
                      why='the face prints accounts payable to third parties and to related parties on two lines (members of RelatedPartyTransactionsByRelatedPartyAxis): sum (ruling 2026-11-14)')
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ap_related_sum') if x)
             continue
@@ -545,6 +650,9 @@ if __name__ == '__main__':
             r['why'] = f"the face line's only own-period fact carries the equity-statement column member {mem}: the consolidated value (member-only face fact rule)"
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'member_face_fact') if x)
     for r in rows: r.setdefault('nodes', '')
+    for r in rows: r['calc_check'] = finalize_calc(r.get('calc_check'), r['accession'] if r.get('column', 'own') == 'own' else r.get('own_accession', r['accession']), compfacts) if r.get('calc_check') else r.get('calc_check', '')
+    NODE_BAD = normalize_nodes(rows, filings)   # every node in one grammar (ruling 2026-11-14)
+    if NODE_BAD: print(f'nodes outside the grammar: {NODE_BAD}', file=sys.stderr)
     for r in rows:
         if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
