@@ -27,6 +27,7 @@ NET_LB = re.compile(r'(?i)interest.*(and other|net)|net.*interest|interest and o
 
 
 NETINT_LB = re.compile(r'(?i)(interest[^,]*,\s*net\b|interest (income|expense)[^,]*\b(and|\(|/)\s*(interest )?(income|expense)|net interest|interest, net|interest (expense|income)?\W+net\b|interest (expense|income)?\s*[-–—]\s*net)')
+AFFIL_LB = re.compile(r'(?i)affiliat|related part')
 MIXED_LB = re.compile(r'(?i)interest.*\b(and|&)\b.*\b(other|investment|dividend|gain|nonoperating|non-operating)\b|other.*\binterest\b|(other|non-?operating).*(income|expense).*interest')
 
 
@@ -98,6 +99,8 @@ def resolve_band(L, arcs, notes):
         out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(ot) == 1 else 'component_sum', ot, f"{where}: the line(s) that are not interest expense or interest income", flags='band')
     else:
         out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; no other nonoperating line")
+    if ie and (nt or mx) and all(AFFIL_LB.search(l['lb'] or '') or l['tag'].startswith('RelatedParty') for l in ie):
+        ie = []   # CEG: 'Interest expense to affiliates' beside 'Interest expense, net' is a part, not the data point: the net-line path below
     if ie:
         out['interest_expense'] = mk('interest_expense', 'mapped' if len(ie) == 1 else 'component_sum', ie, f"{where}: interest expense line(s), gross", flags='band')
     elif nt or mx:

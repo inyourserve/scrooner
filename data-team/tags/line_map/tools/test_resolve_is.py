@@ -115,3 +115,13 @@ def test_comprehensive_income_including_nci_is_the_parent_when_the_filing_has_no
     assert c['status'] == 'mapped' and c['value'] == D(56)
     c2 = run(lines + [('IS', 'NetIncomeLossAttributableToNoncontrollingInterest', 'NCI', 2)], notes)['comprehensive_income']
     assert c2['status'] == 'combined'
+
+
+def test_affiliate_interest_beside_a_net_line_is_a_part_not_the_data_point():
+    # CEG FY2022: 'Interest expense, net' (250) and 'Interest expense to affiliates' (1): the gross figure is the note fact, never the affiliate part
+    lines = [('IS', 'Revenues', 'Total operating revenues', 900), ('IS', 'OperatingIncomeLoss', 'Operating income', 100),
+             ('IS', 'InterestExpense', 'Interest expense, net', 250), ('IS', 'RelatedPartyTransactionInterestExpense', 'Interest expense to affiliates', 1),
+             ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxes', 'Income before income taxes', -151)]
+    r = run(lines, {('InterestExpense', 4): D(250)})['interest_expense']
+    assert r['value'] == D(250) and r['r_page'] == 'NOTE'
+    assert run(lines)['interest_expense']['status'] == 'combined'          # no gross fact: the net line is a point reason
