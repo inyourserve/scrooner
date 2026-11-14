@@ -207,3 +207,64 @@ def test_receivable_from_a_sale_of_rights_is_not_accounts_receivable():
     assert resolve_bs.pick(R, [iqos], {}, 'accounts_receivable') in (None, {}) or resolve_bs.pick(R, [iqos], {}, 'accounts_receivable').get('value') != D(1721)
     trade = dict(iqos, tag='xx_TradeReceivables', lb='Trade receivables', val=D(48))
     assert resolve_bs.pick(R, [trade], {}, 'accounts_receivable')['value'] == D(48)
+
+
+# ---- machine-parseable nodes and exact member names (Engineering, member-parts loader)
+import re as _re
+NODE = _re.compile(r'^-?\w+(\[\w+=[\w-]+\])?=-?[\d.]+ \[(R\d+(\.htm)?:\d+|NOTE|SE)\]$')
+
+
+def parseable(nodes): return all(NODE.match(p) for p in nodes.split('; '))
+
+
+def test_product_service_cor_keeps_the_filings_member_names():
+    # TMUS FY2020 (0001283699-21-000039): CostOfGoodsAndServicesSold under ProductOrService=ProductEquipment 16,388 and Service 11,878
+    mf = {'A': 'CostOfGoodsAndServicesSold|4|16388000000|ProductOrService=ProductEquipment;~CostOfGoodsAndServicesSold|4|11878000000|ProductOrService=Service;'}
+    x = standard_inputs.product_service_cor({}, mf)['A']
+    assert x['product_member'] == 'ProductEquipment' and x['service_member'] == 'Service'
+
+
+def test_cor_member_nodes_are_parseable_with_the_member_and_line():
+    f = filing([('IS', 'Revenues', 'Total revenues', 68397), ('IS', 'CostOfGoodsAndServicesSold', 'Cost of equipment sales', None)])
+    resolve_all.EXT['cor'] = {f['a']: dict(tag='CostOfGoodsAndServicesSold', product='16388000000', service='11878000000', product_member='ProductEquipment', service_member='Service')}
+    rows = [dict(accession=f['a'], data_point='cost_of_revenue', status='not_presented', value=None, tags='', nodes='', why='', flags='')]
+    try:
+        r = resolve_all.apply_cost_and_opex(rows, [f])[0]
+    finally:
+        resolve_all.EXT.pop('cor', None)
+    assert r['value'] == D(28266000000) and parseable(r['nodes'])
+    assert '[ProductOrService=ProductEquipment]=16388000000 [R2.htm:2]' in r['nodes'] and '[ProductOrService=Service]=11878000000 [R2.htm:2]' in r['nodes']
+
+
+def test_filer_missing_fact_takes_the_printed_value():
+    # RTX FY2019: the face prints Total Liabilities 95,390; the XBRL tags only the prior year
+    f = filing([('BS', 'Liabilities', 'Total Liabilities', None)])
+    errs = {(f['a'], 'Liabilities', 0): dict(xbrl=None, printed=D(95390000000), evidence='e')}
+    assert standard_inputs.apply_filer_errors([f], {}, errs) == {f['a']}
+    assert '|Total Liabilities|95390000000' in f['lines']
+    g = filing([('BS', 'Liabilities', 'Total Liabilities', 1)])   # a tagged fact is not 'missing'
+    assert standard_inputs.apply_filer_errors([g], {}, {(g['a'], 'Liabilities', 0): errs[(f['a'], 'Liabilities', 0)]}) == set()
+
+
+def test_net_income_with_a_zero_nci_line_is_one_node():
+    isl = [('IS', 'Revenues', 'Net revenue', 22597), ('IS', 'OperatingIncomeLoss', 'Operating income', 3444),
+           ('IS', 'ProfitLoss', 'Net income', 2724000000), ('IS', 'PreferredStockDividendsIncomeStatementImpact', 'Dividends on preferred stock', 29000000),
+           ('IS', 'NetIncomeLossAttributableToNoncontrollingInterest', 'Net income attributable to noncontrolling interest', 0),
+           ('IS', 'NetIncomeLossAvailableToCommonStockholdersBasic', 'Net income attributable to common stock', 2695000000)]
+    ni = next(r for r in resolve_all.run([filing(isl)], {}, {'0000000001': 'X'}, {}) if r['data_point'] == 'net_income')
+    assert ni['tags'] == 'ProfitLoss' and len(ni['nodes'].split('; ')) == 1 and parseable(ni['nodes'].replace('[R2:', '[R2.htm:'))
+
+
+def test_location_total_keeps_its_axis():
+    mf = {'A': 'AmortizationOfIntangibleAssets|4|303000000|FiniteLivedIntangibleAssetsByMajorClass=OperatingExpense;~'
+               'AmortizationOfIntangibleAssets|4|577000000|FiniteLivedIntangibleAssetsByMajorClass=CostOfSales;~'
+               'AmortizationOfIntangibleAssets|4|880000000|FiniteLivedIntangibleAssetsByMajorClass=CostofSalesandOperatingExpenses;'}
+    x = standard_inputs.amortization_location_total({}, mf)['A']
+    assert x['axis'] == 'FiniteLivedIntangibleAssetsByMajorClass' and x['total_member'] == 'CostofSalesandOperatingExpenses' and x['value'] == D(880000000)
+
+
+def test_sbc_note_fact_node_has_no_prose():
+    rows = [('CF', 'NetIncomeLoss', 'Net income', 3617), ('CF', 'ShareBasedCompensation', 'Share-based payments', -15),
+            ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 4500)]
+    s = resolve_cf(filing(rows), {('AllocatedShareBasedCompensationExpense', 4): D(111)})['sbc']
+    assert s['value'] == D(111) and parseable(s['nodes'])

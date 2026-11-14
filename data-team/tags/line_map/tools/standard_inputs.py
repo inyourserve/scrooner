@@ -240,10 +240,10 @@ def amortization_location_total(notefacts, memberfacts):
         for ax, d in sorted(by.items()):
             if '__class__' in d: continue
             if und is not None and len(d) >= 2 and sum(d.values()) == und:
-                out[a] = dict(value=und, parts=d, total_member=None); break
+                out[a] = dict(value=und, parts=d, total_member=None, axis=ax); break
             tot = [k for k, v in d.items() if len(d) >= 3 and v == sum(d.values()) - v]
             if len(tot) == 1:
-                out[a] = dict(value=d[tot[0]], parts={k: v for k, v in d.items() if k != tot[0]}, total_member=tot[0]); break
+                out[a] = dict(value=d[tot[0]], parts={k: v for k, v in d.items() if k != tot[0]}, total_member=tot[0], axis=ax); break
     return out
 
 
@@ -281,7 +281,9 @@ def product_service_cor(notefacts, memberfacts):
         (t, fs), = by.items()
         p = {v for k, v in fs if PRODUCT.fullmatch(k)}; s = {v for k, v in fs if SERVICE.fullmatch(k)}
         if len(p) == 1 and len(s) == 1 and all(PRODUCT.fullmatch(k) or SERVICE.fullmatch(k) for k, _ in fs):
-            out[a] = dict(tag=t, product=_plain(p.pop()), service=_plain(s.pop()))
+            spec = lambda rx, gen: sorted({k for k, _ in fs if rx.fullmatch(k)}, key=lambda k: (k == gen, k))[0]   # TMUS FY2019 tags Product and ProductEquipment alike: the filer's specific member is the face line's
+            pm, sm = spec(PRODUCT, 'Product'), spec(SERVICE, 'Service')
+            out[a] = dict(tag=t, product=_plain(p.pop()), service=_plain(s.pop()), product_member=pm, service_member=sm)   # the filing's own member names (TMUS: ProductEquipment)
     return out
 
 
@@ -402,7 +404,7 @@ def filer_xbrl_errors(path):
     out = {}
     if not path or not os.path.exists(path): return out
     for r in csv.DictReader(open(path)):
-        out[(r['accession'], r['tag'], int(r['qtrs']))] = dict(xbrl=D(r['xbrl_value']), printed=D(r['printed_value']), evidence=r['evidence'])
+        out[(r['accession'], r['tag'], int(r['qtrs']))] = dict(xbrl=D(r['xbrl_value']) if r['xbrl_value'] != '' else None, printed=D(r['printed_value']), evidence=r['evidence'])
     return out
 
 
@@ -416,7 +418,7 @@ def apply_filer_errors(filings, notefacts, errs):
             parts = (f['lines'] or '').split('~')
             for i, s_ in enumerate(parts):
                 x = s_.split('|')
-                if len(x) >= 9 and x[3] == tag and x[8] not in ('', None) and D(x[8]) == e['xbrl']:
+                if len(x) >= 9 and x[3] == tag and ((e['xbrl'] is None and x[8] in ('', None)) or (e['xbrl'] is not None and x[8] not in ('', None) and D(x[8]) == e['xbrl'])):   # RTX FY2019: printed, no fact
                     x[8] = str(e['printed']); parts[i] = '|'.join(x); hit.add(a)
             f['lines'] = '~'.join(parts)
         nf = notefacts.get(a)
@@ -424,7 +426,7 @@ def apply_filer_errors(filings, notefacts, errs):
             parts = nf.split('~')
             for i, s_ in enumerate(parts):
                 x = s_.split('|')
-                if len(x) == 3 and x[0] == tag and int(x[1]) == q and D(x[2]) == e['xbrl']:
+                if len(x) == 3 and x[0] == tag and int(x[1]) == q and e['xbrl'] is not None and D(x[2]) == e['xbrl']:
                     x[2] = str(e['printed']); parts[i] = '|'.join(x); hit.add(a)
             notefacts[a] = '~'.join(parts)
     return hit

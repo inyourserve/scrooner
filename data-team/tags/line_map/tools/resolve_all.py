@@ -97,6 +97,13 @@ def apply_ar_related(rows, filings):
 PERSONNEL_LB = re.compile(r'(?i)^(personnel|salaries|compensation and benefits|employee compensation)')
 
 
+def face_positions(f, tag):
+    """The IS/BS/CF face lines of `f` with this tag, in face order (value or not): their (report, line) are the node location."""
+    if not f: return []
+    L, _ = parse(f)
+    return [l for st in ('IS', 'BS', 'CF') for l in face(L, st) if l['tag'] == tag]
+
+
 def apply_expenses_by_nature(rows, filings):
     """Dhairya ruling 2026-11-14 (c): an IS that classifies operating expenses by nature (a personnel line spanning functions,
     BKNG: marketing, sales and other, personnel, G&A) and prints no SG&A line has no SG&A: not_presented, expenses_by_nature.
@@ -130,8 +137,12 @@ def apply_cost_and_opex(rows, filings):
         if r['data_point'] == 'cost_of_revenue' and r['status'] in ('not_presented', 'no_role') and r['accession'] in split:
             x = split[r['accession']]; p, sv = D(x['product']), D(x['service'])
             t = x.get('tag') or 'CostOfGoodsAndServicesSold'
+            pos = face_positions(F.get(r['accession']), t)   # the product and service lines in face order; the service line by its label
+            sl = next((l for l in pos if re.search(r'(?i)service', l['lb'] or '')), None); pl = next((l for l in pos if l is not sl), None)
+            if len(pos) == 1: pl = sl = pos[0]   # the FSN keeps the element's one face line; both members are its rows (TMUS R4:15)
+            loc = lambda l: f"R{l['rep']}.htm:{l['ln']}" if l else 'NOTE'
             r.update(status='component_sum', value=p + sv, tags=f'{t}+{t}',
-                     nodes=f"{t}[Product]={p} [IS face line]; {t}[Service]={sv} [IS face line]",
+                     nodes=f"{t}[ProductOrService={x.get('product_member', 'Product')}]={p} [{loc(pl)}]; {t}[ProductOrService={x.get('service_member', 'Service')}]={sv} [{loc(sl)}]",
                      why='the income statement prints the cost of products and the cost of services as separate lines carrying ProductOrServiceAxis members only: sum')
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
     for r in rows:   # a matrix income statement (MAR): the cost line carries ProductOrService column members only (ruling 2026-11-14)
@@ -150,7 +161,7 @@ def apply_cost_and_opex(rows, filings):
         tot = D(x['total']); chk = tot + sum((l['val'] for l in others), D(0))
         if abs(chk - ce['val']) > tol(ce['val'], tot, *[l['val'] for l in others]): continue
         r.update(status='component_sum', value=tot, tags='+'.join([x['tag']] * len(x['members'])),
-                 nodes='; '.join(f"{x['tag']}[{k}]={v} [IS face line R{cl['rep']}.htm:{cl['ln']}]" for k, v in x['members'].items()),
+                 nodes='; '.join(f"{x['tag']}[ProductOrService={k}]={v} [R{cl['rep']}.htm:{cl['ln']}]" for k, v in x['members'].items()),
                  why=f"the income statement is a matrix: '{cl['lb']}' carries only ProductOrService column members; their sum, which with the other cost lines ties to '{ce['lb']}' {ce['val']} (ruling 2026-11-14)")
         r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
     for r in rows:
@@ -424,6 +435,7 @@ def run(filings, notefacts, tick, td_rows):
             if 'ProfitLoss' in isf and pref:
                 # AVGO FY2019-22: 'Net income' (ProfitLoss) - NCI is net income; the line after preferred dividends is income to common
                 l = isf['ProfitLoss']; nci = isf.get('NetIncomeLossAttributableToNoncontrollingInterest')
+                if nci is not None and not nci['val']: nci = None   # a printed zero NCI is no part (machine-parseable node: one tag)
                 v = l['val'] - (nci['val'] if nci else 0)
                 ni.update(status='derived' if nci and nci['val'] else 'mapped', tags='ProfitLoss' + ('-NetIncomeLossAttributableToNoncontrollingInterest' if nci and nci['val'] else ''), value=v, r_page=f"R{l['rep']}.htm",
                           nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]" + (f"; -NetIncomeLossAttributableToNoncontrollingInterest={nci['val']} [R{nci['rep']}:{nci['ln']}]" if nci else ''),
@@ -498,12 +510,14 @@ if __name__ == '__main__':
     for a_, x in EXT.get('lt', {}).items():   # served when the mapped face line is smaller than the location total
         fv = next((D(r['value']) for r in rows if r['accession'] == a_ and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None), None)
         if fv is not None and x['value'] > fv:
-            LT[a_] = dict(value=str(x['value']), check=' + '.join(f"{k} {v / 10**6:f}".rstrip('0').rstrip('.') for k, v in x['parts'].items()) + (f" = {x['total_member']}" if x['total_member'] else ''))
+            LT[a_] = dict(value=str(x['value']), axis=x.get('axis'), total_member=x['total_member'], check=' + '.join(f"{k} {v / 10**6:f}".rstrip('0').rstrip('.') for k, v in x['parts'].items()) + (f" = {x['total_member']}" if x['total_member'] else ''))
     for r in rows:
         x = LT.get(r['accession'])
         if x and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None and D(x['value']) > D(r['value']):
-            r.update(value=D(x['value']), nodes=f"AmortizationOfIntangibleAssets={x['value']} [location total: {x['check']}]; face part {r.get('nodes', '').split(' | why')[0]}",
-                     why='the IS face line is the operating-expense part only; the filing reports the total by income-statement location (members sum to it)')
+            face_part = r.get('nodes', '').split(' | why')[0]
+            node = f"AmortizationOfIntangibleAssets[{x['axis']}={x['total_member']}]={x['value']} [NOTE]" if x['total_member'] else f"AmortizationOfIntangibleAssets={x['value']} [NOTE]"
+            r.update(value=D(x['value']), nodes=node,
+                     why=f"the IS face line is the operating-expense part only ({face_part}); the filing reports the total by income-statement location: {x['check']}")
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'location_total') if y)
     # a receivable/payable read from a note fact while the face line carries a member-only fact: the face line wins (COP AR)
     for r in rows:
@@ -520,11 +534,14 @@ if __name__ == '__main__':
         x = CL.get(r['accession'])
         if x and r['data_point'] == 'comprehensive_income' and r['status'] in ('combined', 'mapped') and 'IncludingPortion' in (r.get('nodes') or '') and '[NOTE]' in (r.get('nodes') or ''):
             r['nodes'] = r['nodes'].replace('[NOTE]', f"[R{x['report']}.htm:{x['line']} '{x['label']}', own 10-K {r['accession']}]")
+    F = {f['a']: f for f in filings}
     for r in rows:   # lineage of member-only face facts
         t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
         if (r['accession'], t) in MF and r['status'] == 'mapped' and not re.search(r'\[R\d+', r.get('nodes') or ''):
             mem = MF[(r['accession'], t)]
-            r['nodes'] = re.sub(r'\[[^\]]*NOTE[^\]]*\]', f'[face line, member {mem}]', r.get('nodes') or '')
+            ps = face_positions(F.get(r['accession']), t) or [dict(rep=x_[1], ln=x_[2]) for x_ in standard_inputs._facts(clines.get(r['accession']), 4) if x_[0] == t][:1]
+            seg = mem.rstrip(';')
+            r['nodes'] = re.sub(r'^(\w+)=([-\d.]+) \[[^\]]*NOTE[^\]]*\]', lambda m_: f"{m_.group(1)}[{seg}]={m_.group(2)} [" + (f"R{ps[0]['rep']}.htm:{ps[0]['ln']}" if ps else ('SE' if seg.startswith('EquityComponents=') else 'NOTE')) + "]", r.get('nodes') or '')
             r['why'] = f"the face line's only own-period fact carries the equity-statement column member {mem}: the consolidated value (member-only face fact rule)"
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'member_face_fact') if x)
     for r in rows: r.setdefault('nodes', '')

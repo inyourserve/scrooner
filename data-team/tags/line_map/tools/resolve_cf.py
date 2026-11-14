@@ -135,8 +135,8 @@ def resolve_cf(f, notes):
     # add-back (10-K 0001141391-15-000011 note: 'Share-based compensation expense ... $111'): the SBC ruling takes the note fact
     exp = note(['AllocatedShareBasedCompensationExpense'])
     if sb and exp and not re.search(r'(?i)compensation|expense|award|plans?\b', sb[0]['lb'] or '') and sb[0]['val'] != exp[0][1]:
-        put('sbc', 'mapped', exp[0][0], exp[0][1], f"{exp[0][0]}={exp[0][1]} [NOTE]; face {fmt(sb)} not used",
-            f"the CF line '{sb[0]['lb']}' ({sb[0]['val']}) names no compensation expense and differs from the filing's SBC expense: note fact (SBC ruling)", flags='sbc_face_not_addback')
+        put('sbc', 'mapped', exp[0][0], exp[0][1], f"{exp[0][0]}={exp[0][1]} [NOTE]",
+            f"the CF line '{sb[0]['lb']}' ({fmt(sb)}) names no compensation expense and differs from the filing's SBC expense: note fact (SBC ruling)", flags='sbc_face_not_addback')
     elif sb:
         put('sbc', 'mapped', sb[0]['tag'], sb[0]['val'], fmt(sb), 'CF operating section: share-based compensation add-back')
     else:

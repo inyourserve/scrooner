@@ -218,7 +218,8 @@ def test_product_service_cor_needs_member_only_product_and_service_lines():
           "ONE": f"{C}|4|1|ProductOrService=Product;",
           "TWO": f"{C}|4|1|ProductOrService=Product;~{C}|4|5|ProductOrService=ProductEquipment;~{C}|4|2|ProductOrService=Service;"}
     got = si.product_service_cor({"UND": f"{C}|4|3"}, mf)
-    assert got == {"TMUS": dict(tag=C, product="11899", service="6622")}   # an undimensioned total, another member, one side, or two product figures: no split
+    # an undimensioned total, another member, one side, or two product figures: no split; the filer's specific member names the part
+    assert got == {"TMUS": dict(tag=C, product="11899", service="6622", product_member="ProductEquipment", service_member="Service")}
 
 
 def test_gross_profit_facts_and_ci_face_lines_from_the_extract():
