@@ -354,3 +354,76 @@ def test_a_column_with_several_copies_of_a_tag_reads_the_face_copy_not_the_last(
     flat, by_col = checks.index_values(rows, stmt_of, {(re_, "us-gaap/2018"): 9})
     assert by_col[("BS", d, 0)][(re_, "us-gaap/2018")].value == Decimal(5982697000)
     assert flat[(re_, d, 0)].value == Decimal(5982697000)
+
+
+V = "us-gaap/2018"
+
+
+def _col(pairs):
+    return {(t, V): checks.Print(t, V, Decimal(v), -6, None) for t, v in pairs}
+
+
+def _calc(col, groups, alts=None):
+    return {c["check_id"]: c for c in checks.check_column("BS", col, groups, {k: "BS" for k in col}, alts)}
+
+
+@pytest.mark.unit
+def test_a_failing_calc_group_is_not_a_failure_when_another_group_of_the_parent_foots():
+    # DIS FY2013 calc:Assets:11 sums a partial child set (39,338 of 81,241) while calc:Assets:1 foots in the same column
+    col = _col([("Assets", 81241000000), ("AssetsCurrent", 39338000000), ("AssetsNoncurrent", 41903000000)])
+    groups = {("Assets", V, 1): [("AssetsCurrent", V, 1), ("AssetsNoncurrent", V, 1)],
+              ("Assets", V, 11): [("AssetsCurrent", V, 1), ("AssetsNoncurrent", V, 0)]}
+    c = _calc(col, groups)
+    assert c["calc:Assets:1"]["ok"] and "resolved_by" not in c["calc:Assets:1"]["detail"]
+    assert c["calc:Assets:11"]["ok"] and c["calc:Assets:11"]["detail"]["resolved_by"] == "parent_foots_in_calc:Assets:1"
+    # alone, the partial group stays a failure
+    assert not _calc(col, {("Assets", V, 11): groups[("Assets", V, 11)]})["calc:Assets:11"]["ok"]
+
+
+@pytest.mark.unit
+def test_a_failing_calc_group_foots_with_another_printed_copy_of_a_child():
+    # DIS 10-Q 0001744489-19-000100, Sep. 29 2018: AP 10,518 (iprx 0, another table) vs 9,479 (face); 9,479+3,790+4,591 = 17,860
+    d = date(2018, 9, 29)
+    ap = "AccountsPayableAndAccruedLiabilitiesCurrent"
+    vals = [(ap, V, d, 0, 10518000000, -6, 0), (ap, V, d, 0, 9479000000, -6, 1), ("DebtCurrent", V, d, 0, 3790000000, -6, 0),
+            ("OtherLiabilitiesCurrent", V, d, 0, 4591000000, -6, 0), ("LiabilitiesCurrent", V, d, 0, 17860000000, -6, 0)]
+    stmt_of = {(r[0], V): "BS" for r in vals}
+    _flat, by_col = checks.index_values(vals, stmt_of, {})
+    alts = checks.index_alts(vals, stmt_of)
+    groups = {("LiabilitiesCurrent", V, 3): [(ap, V, 1), ("DebtCurrent", V, 1), ("OtherLiabilitiesCurrent", V, 1)]}
+    c = checks.check_column("BS", by_col[("BS", d, 0)], groups, stmt_of, alts[("BS", d, 0)])[0]
+    assert c["ok"] and c["detail"]["resolved_by"] == "alt_copy" and c["rhs"] == Decimal(18899000000)
+    assert not checks.check_column("BS", by_col[("BS", d, 0)], groups, stmt_of)[0]["ok"]   # without the copies: a failure
+
+
+@pytest.mark.unit
+def test_a_child_the_group_counts_twice_is_a_filer_double_count_not_a_value_failure():
+    # LIN FY2019 calc:Assets:8: PropertyPlantAndEquipmentNet 29,064 beside the PP&E-plus-ROU tag that already holds it
+    ppe, rou = "PropertyPlantAndEquipmentNet", "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization"
+    col = _col([("Assets", 86612000000), ("AssetsCurrent", 57447000000), (ppe, 29064000000), (rou, 29165000000)])
+    groups = {("Assets", V, 8): [("AssetsCurrent", V, 1), (ppe, V, 1), (rou, V, 1)]}
+    c = _calc(col, groups)["calc:Assets:8"]
+    assert c["ok"] and c["detail"]["resolved_by"] == "filer_double_count"
+    # an unrelated child whose removal happens to foot is still a failure
+    col2 = _col([("Assets", 86612000000), ("AssetsCurrent", 57447000000), ("Goodwill", 29064000000), (rou, 29165000000)])
+    g2 = {("Assets", V, 8): [("AssetsCurrent", V, 1), ("Goodwill", V, 1), (rou, V, 1)]}
+    assert not _calc(col2, g2)["calc:Assets:8"]["ok"]
+
+
+@pytest.mark.unit
+def test_the_face_total_holding_member_rows_of_its_children_is_not_a_failure():
+    # BLK 10-K 0001193125-14-403120, Dec. 31 2013: Liabilities 193,203 = undimensioned children 190,760 + consolidated-VIE
+    # rows of two of its own children (debt 2,369, other liabilities 74; one VIE member)
+    d = date(2013, 12, 31)
+    col = _col([("Liabilities", 193203000000), ("DebtAndCapitalLeaseObligations", 4939000000), ("OtherLiabilities", 185821000000)])
+    groups = {("Liabilities", V, 10): [("DebtAndCapitalLeaseObligations", V, 1), ("OtherLiabilities", V, 1)]}
+    stmt_of = {k: "BS" for k in col}
+    rows = [("DebtAndCapitalLeaseObligations", V, d, 0, 127260, 2369000000), ("OtherLiabilities", V, d, 0, 127260, 74000000),
+            ("OtherLiabilities", V, d, 0, 40909, 39000000), ("Goodwill", V, d, 0, 127260, 5000000)]
+    members = checks.index_members(rows, stmt_of)[("BS", d, 0)]
+    c = checks.check_column("BS", col, groups, stmt_of, None, members)[0]
+    assert c["ok"] and c["detail"]["resolved_by"] == "face_member_rows"
+    assert not checks.check_column("BS", col, groups, stmt_of)[0]["ok"]
+    # a member whose rows do not make up the gap leaves the failure
+    other = checks.index_members(rows[2:], stmt_of)[("BS", d, 0)]
+    assert not checks.check_column("BS", col, groups, stmt_of, None, other)[0]["ok"]

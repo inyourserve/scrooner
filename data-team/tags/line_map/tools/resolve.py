@@ -87,7 +87,7 @@ def resolve(f):
     lse = by.get('LiabilitiesAndStockholdersEquity')
     if lse is None:  # structural: the last total on the face whose calc children include an equity node
         tots = [l for l in bs if l['val'] is not None and 'total' in (l['prole'] or '').lower()]
-        lse = tots[-1] if tots else None
+        lse = next((l for l in bs if l['val'] is not None and re.match(r'^LiabilitiesAnd\w*(Equity|Capital)\w*$', l['tag'])), None) or (tots[-1] if tots else None)   # PLD: LiabilitiesAndPartnersCapital..., the LP part follows
     checks = []
     if lse:
         lsev = lse['val']

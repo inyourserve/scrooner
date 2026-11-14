@@ -137,6 +137,36 @@ def index_values(
     return flat, by_col
 
 
+def index_alts(values: list[tuple], stmt_of: dict) -> dict:
+    """Every distinct printed value of a key per column, face copy (lowest iprx) first. A filing can carry a second,
+    unrelated copy of one undimensioned fact (DIS 10-Q 0001744489-19-000100, Sep. 29 2018: accounts payable 10,518 at
+    iprx 0 from another table, 9,479 at iprx 1 and 2 on the face); the calc check tries the other copies before failing."""
+    alts: dict[tuple[str, date, int], dict[tuple[str, str], list[Decimal]]] = (
+        defaultdict(dict)
+    )
+    for tag, version, ddate, qtrs, value, _dcml, _iprx in sorted(
+        values, key=lambda r: r[6] or 0
+    ):
+        stmt = stmt_of.get((tag, version))
+        if stmt is None:
+            continue
+        lst = alts[(stmt, ddate, qtrs)].setdefault((tag, version), [])
+        if Decimal(value) not in lst:
+            lst.append(Decimal(value))
+    return alts
+
+
+def index_members(rows: list[tuple], stmt_of: dict) -> dict:
+    """{(stmt, ddate, qtrs): {dim_id: {(tag, version): value}}} from (tag, version, ddate, qtrs, dim_id, value) rows ordered
+    by iprx; the first copy of a key wins."""
+    out: dict = defaultdict(lambda: defaultdict(dict))
+    for tag, version, ddate, qtrs, dim_id, value in rows:
+        stmt = stmt_of.get((tag, version))
+        if stmt is not None:
+            out[(stmt, ddate, qtrs)][dim_id].setdefault((tag, version), Decimal(value))
+    return out
+
+
 def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
     """Statement lines, non-dimensional values per (stmt, ddate, qtrs) column, and calc arcs of one filing."""
     with conn.cursor() as cur:
@@ -172,6 +202,19 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
             (filing_id,),
         )
         arcs = cur.fetchall()
+        # member rows of calc children (BLK prints a consolidated-VIE block whose rows carry a VIE member; the face totals
+        # include them): one value per (tag, column, member), face copy first, the filer's own context only
+        cur.execute(
+            """
+            select t.tag, t.version, v.ddate, v.qtrs, v.dim_id, v.value
+            from fsn.value v join fsn.tag t on t.id = v.tag_id
+            where v.filing_id = %s and v.dim_id <> 0 and v.value is not null and v.uom = 'USD' and v.coreg = ''
+              and v.tag_id in (select child_tag_id from fsn.calc_arc where filing_id = %s)
+            order by v.iprx
+            """,
+            (filing_id, filing_id),
+        )
+        member_values = cur.fetchall()
     stmt_of: dict[tuple[str, str], str] = {}
     line_of: dict[tuple[str, str], int] = {}
     on: dict[str, set[str]] = defaultdict(
@@ -190,17 +233,92 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
     return {
         "stmt_of": stmt_of,
         "columns": by_col,
+        "alts": index_alts(values, stmt_of),
+        "members": index_members(member_values, stmt_of),
         "groups": groups,
         "on": on,
         "values": flat,
     }
 
 
+ALT_COMBOS = (
+    64  # bound on the alternative-copy combinations tried for one failing calc group
+)
+
+
+def _resolve_calc_failure(
+    parent: Print,
+    terms: list[tuple[Print, int]],
+    keys: list[tuple[str, str]],
+    pkey: tuple[str, str],
+    alts: dict,
+    tol: Decimal,
+    members: dict | None = None,
+) -> str | None:
+    """Why a failing calc group is not a value failure, or None. Two filing-structure causes (successor-check review 2026-11-14):
+    alt_copy: another printed copy of the parent or a child (index_alts) makes the group foot;
+    filer_double_count: the group foots without one child that another child of the group repeats (DIS CF FY2019 Q2: the
+    discontinued-operations line and its subtotal, -35 each; LIN FY2019: PropertyPlantAndEquipmentNet beside the PP&E-plus-ROU tag)."""
+    import itertools
+
+    choices = [alts.get(pkey) or [parent.value]] + [
+        alts.get(k) or [t.value] for k, (t, _w) in zip(keys, terms)
+    ]
+    if any(len(c) > 1 for c in choices):
+        n = 0
+        for combo in itertools.product(*choices):
+            n += 1
+            if n > ALT_COMBOS:
+                break
+            if (
+                abs(
+                    combo[0]
+                    - sum((v * w for v, (_t, w) in zip(combo[1:], terms)), Decimal(0))
+                )
+                <= tol
+            ):
+                return "alt_copy"
+    rhs = sum((t.value * w for t, w in terms), Decimal(0))
+    # face_member_rows: the printed total also holds the group's own children under one member (BLK consolidated VIEs:
+    # Dec. 31 2013 Liabilities 193,203 = undimensioned children 190,760 + VIE debt 2,369 + VIE other liabilities 74)
+    for rows in (members or {}).values():
+        extra = sum(
+            (rows[k] * w for k, (_t, w) in zip(keys, terms) if k in rows), Decimal(0)
+        )
+        if extra != 0 and abs(parent.value - rhs - extra) <= tol:
+            return "face_member_rows"
+    for i, (t, w) in enumerate(terms):
+        if abs(parent.value - (rhs - t.value * w)) > tol or t.value == 0:
+            continue
+        stem = re.sub(r"Net$", "", t.tag)
+        for j, (u, wu) in enumerate(terms):
+            if j != i and (
+                u.value * wu == t.value * w
+                or (
+                    u.tag != t.tag
+                    and u.tag.startswith(stem)
+                    and abs(u.value) >= abs(t.value)
+                )
+            ):
+                return "filer_double_count"
+    return None
+
+
 def check_column(
-    stmt: str, col: dict[tuple[str, str], Print], groups: dict, stmt_of: dict
+    stmt: str,
+    col: dict[tuple[str, str], Print],
+    groups: dict,
+    stmt_of: dict,
+    alts: dict | None = None,
+    members: dict | None = None,
 ) -> list[dict[str, Any]]:
-    """Checks of one column: every calc parent with all children printed in this column, plus the identities."""
+    """Checks of one column: every calc parent with all children printed in this column, plus the identities.
+    alts: index_alts() of this column (optional). A calc group that fails is not a failure when another group of the same
+    parent foots in this column (the filing's other calc trees: DIS/BLK, 81 of 99 'partial_group' failures, review 2026-11-14),
+    when another printed copy makes it foot, when the face total also holds member rows of the group's children, or when the
+    filer's calc counts one line twice (_resolve_calc_failure). members: index_members() of this column (optional)."""
     out: list[dict[str, Any]] = []
+    alts = alts or {}
     # calc arcs: parent = Σ weight·child, when parent and every child are printed on this statement column
     for (ptag, pver, grp), children in groups.items():
         parent = col.get((ptag, pver))
@@ -213,19 +331,44 @@ def check_column(
             continue
         rhs = sum((t.value * w for t, w in terms), Decimal(0))
         tol = tol_of([parent, *(t for t, _ in terms)])
+        ok = abs(parent.value - rhs) <= tol
+        detail: dict[str, Any] = {
+            "parent": ptag,
+            "children": [[c, w] for c, _v, w in children],
+        }
+        if not ok:
+            why = _resolve_calc_failure(
+                parent,
+                terms,
+                [(c, v) for c, v, _w in children],
+                (ptag, pver),
+                alts,
+                tol,
+                members,
+            )
+            if why:
+                ok, detail["resolved_by"] = True, why
         out.append(
             {
                 "check_id": f"calc:{ptag}:{grp}",
-                "ok": abs(parent.value - rhs) <= tol,
+                "ok": ok,
                 "lhs": parent.value,
                 "rhs": rhs,
                 "tol": tol,
-                "detail": {
-                    "parent": ptag,
-                    "children": [[c, w] for c, _v, w in children],
-                },
+                "detail": detail,
             }
         )
+    footed = {
+        r["detail"]["parent"]: r["check_id"]
+        for r in out
+        if r["ok"] and "resolved_by" not in r["detail"]
+    }
+    for r in out:
+        if not r["ok"] and r["detail"]["parent"] in footed:
+            r["ok"], r["detail"]["resolved_by"] = (
+                True,
+                f"parent_foots_in_{footed[r['detail']['parent']]}",
+            )
     if stmt == "BS":
         for check_id, lhs_tags, rhs_tags in BS_IDENTITIES:
             lhs = [p for (t, _v), p in col.items() if t in lhs_tags]
@@ -501,7 +644,15 @@ def check_filing(
     data = load_filing(conn, filing_id)
     rows = []
     for (stmt, ddate, qtrs), col in data["columns"].items():
-        for c in check_column(stmt, col, data["groups"], data["stmt_of"]):
+        key = (stmt, ddate, qtrs)
+        for c in check_column(
+            stmt,
+            col,
+            data["groups"],
+            data["stmt_of"],
+            data.get("alts", {}).get(key),
+            data.get("members", {}).get(key),
+        ):
             rows.append(
                 (
                     filing_id,

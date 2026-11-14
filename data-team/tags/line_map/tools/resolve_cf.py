@@ -78,7 +78,10 @@ def resolve_cf(f, notes):
     mt = {l['tag'] for l in mem}   # a member whose calc parent is also a member is inside that parent
     inside = {c for p in mt if p in arcs for g in arcs[p].values() for c, _ in g}
     mem = [l for l in mem if l['tag'] not in inside]
-    if mem:
+    cmb = [l for l in mem if re.search(r'(?i)\band (other )?investments\b', l['lb'] or '')]
+    if cmb and len(cmb) == len(mem):   # NEE: a combined segment line beside other capex lines stays in the sum (Dhairya ruling: NEE capex = sum of the segment lines); PSX 'Capital expenditures and investments': capex printed together with investments in affiliates (founder ruling 2026-11-01 item 3: a combined line is never one concept)
+        put('capex', 'combined', '+'.join(l['tag'] for l in cmb), None, fmt(cmb), "CF investing section: the capital-purchase line also holds investments ('" + cmb[0]['lb'] + "'): combined")
+    elif mem:
         put('capex', 'mapped' if len(mem) == 1 else 'component_sum', '+'.join(l['tag'] for l in mem), sum(l['val'] for l in mem), fmt(mem),
             "CF investing section: capital-purchase line(s) (register 2026-11-04 item 3)" + ('; sum of ' + str(len(mem)) if len(mem) > 1 else ''))
     else:

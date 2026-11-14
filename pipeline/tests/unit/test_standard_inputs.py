@@ -230,3 +230,14 @@ def test_gross_profit_facts_and_ci_face_lines_from_the_extract():
     assert si.face_clines([("A", "v", "c", "cl"), ("B", "v", "c")]) == {"A": "cl"}
     face = (TOOLS / "extract_facelines.sql").read_text(); main = (TOOLS / "extract_notefacts.sql").read_text()
     assert "l.stmt='CI'" in face and "cl.clines" in face and "ProductOrService=[^;=]+;$" in main
+
+
+def test_comparative_fill_keeps_the_later_cells_calc_sign():
+    # MDT FY2016: the FY2018 10-K band holds OTTI 227 at weight -1 toward pretax (cell -227); its FY-2 column fact 70 fills as -70
+    T = "OtherThanTemporaryImpairmentLossesInvestmentsAvailableforsaleSecurities"
+    later = dict(_row("M18", "2018-04-30", "mapped", T, dp="other_income_expense_net"), value="-227000000", nodes=f"{T}=227000000.0000 [R2.htm:15]")
+    own = _row("M16", "2016-04-30", "not_presented", dp="other_income_expense_net")
+    got = si.comparative_fill([own, later], {"M18": f"{T}|4|70|2016-04-30"}, set())
+    assert got[("M16", "other_income_expense_net")]["value"] == "-70"
+    later["value"] = "227000000"
+    assert si.comparative_fill([own, later], {"M18": f"{T}|4|70|2016-04-30"}, set())[("M16", "other_income_expense_net")]["value"] == "70"

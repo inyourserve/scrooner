@@ -394,6 +394,16 @@ def run(filings, notefacts, tick, td_rows):
             if 'ProfitLoss' in isf and not any('Noncontrolling' in t for t in isf):
                 l = isf['ProfitLoss']
                 ni.update(status='mapped', tags='ProfitLoss', value=l['val'], r_page=f"R{l['rep']}.htm", nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]", why='FALLBACK: the IS ends at ProfitLoss and prints no NCI line, so ProfitLoss is the parent net income', source='core_fallback')
+        if ni is not None and ni.get('tags') == 'NetIncomeLossAvailableToCommonStockholdersBasic':
+            isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
+            pref = [t for t in isf if t.startswith('PreferredStockDividends')]
+            if 'ProfitLoss' in isf and pref:
+                # AVGO FY2019-22: 'Net income' (ProfitLoss) - NCI is net income; the line after preferred dividends is income to common
+                l = isf['ProfitLoss']; nci = isf.get('NetIncomeLossAttributableToNoncontrollingInterest')
+                v = l['val'] - (nci['val'] if nci else 0)
+                ni.update(status='derived' if nci and nci['val'] else 'mapped', tags='ProfitLoss' + ('-NetIncomeLossAttributableToNoncontrollingInterest' if nci and nci['val'] else ''), value=v, r_page=f"R{l['rep']}.htm",
+                          nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]" + (f"; -NetIncomeLossAttributableToNoncontrollingInterest={nci['val']} [R{nci['rep']}:{nci['ln']}]" if nci else ''),
+                          why=f"FALLBACK: net income is the line before preferred dividends ({pref[0]}); the bottom line is income available to common stock", source='core_fallback')
         # rule (C1/S12 generalised): a statement role with no node on a filing whose statement was read is a reason,
         # not a gap: gross profit, opex, operating income, cost of revenue not printed -> not_presented
         isread = any(o['data_point'] == 'revenue' and o['status'] in ('mapped', 'component_sum') for o in out if o['accession'] == f['a'])

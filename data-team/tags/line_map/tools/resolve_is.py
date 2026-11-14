@@ -14,11 +14,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from resolve import parse, face, children, tol, note_facts
 
 MINE = ('other_income_expense_net', 'interest_expense', 'interest_income', 'comprehensive_income', 'depreciation_and_amortization', 'amortization_of_intangibles')
-PRETAX = re.compile(r'BeforeIncomeTax|IncomeLossFromContinuingOperationsBefore|PretaxIncome|(Income|Earnings)\w*BeforeTax')
+PRETAX = re.compile(r'^(?!\w*(ComprehensiveIncome|NetPeriodicBenefit))(?=\w*(BeforeIncomeTax|IncomeLossFromContinuingOperationsBefore|PretaxIncome|(Income|Earnings)\w*BeforeTax))')
 PRETAX_LB = re.compile(r'(?i)before (provision for |benefit from )?(income )?tax|pre-?tax')
 OI_TAG = re.compile(r'^OperatingIncomeLoss$')
-OI_LB = re.compile(r'(?i)^(total )?(operating (income|profit|loss|earnings)|income from operations|(profit|earnings) from operations)')
-IE_TAG = re.compile(r'^(InterestExpense\w*|InterestAndDebtExpense|FinanceLeaseInterestExpense\w*|InterestExpenseLesseeAssetsUnderCapitalLease|InterestIncurred\w*|InterestExpenseDebt)$')
+OI_LB = re.compile(r'(?i)^(total )?(operating (income|profit|loss|earnings)\b(?!es)|income from operations|(profit|earnings) from operations)')
+IE_TAG = re.compile(r'^(InterestExpense\w*|FinanceLeaseAndFinancingObligationInterestExpense|InterestAndDebtExpense|FinanceLeaseInterestExpense\w*|InterestExpenseLesseeAssetsUnderCapitalLease|InterestIncurred\w*|InterestExpenseDebt)$')
 IE_LB = re.compile(r'(?i)^(total )?(interest expense|interest and debt expense|interest on|finance lease interest|interest cost)|^interest( and amortization of debt)?$|^(debt|capital leases?|finance leases?|long-term debt)$')
 II_TAG = re.compile(r'^(InvestmentIncomeInterest|InterestIncomeOther|InterestAndDividendIncomeOperating|InvestmentIncomeInterestAndDividend|InterestIncomeOperating|InterestIncomeNonoperating|InterestAndOtherIncomeAbstract|InterestIncome\w*|InvestmentIncomeDividend|InvestmentIncomeNet)$')
 II_LB = re.compile(r'(?i)^(?!investment income and other)(interest income|investment income|interest and dividend income|dividend and interest income|interest and investment income)')
@@ -36,6 +36,7 @@ II_NOTE = ('InvestmentIncomeInterest', 'InterestIncomeOther', 'InterestAndDivide
 
 def kind(l):
     t, lb = l['tag'], l['lb'] or ''
+    if t.startswith('InterestCostsCapitalized') or re.search(r'(?i)^(less:? )?(capitalized interest|interest capitalized)', lb): return 'IEcap'  # SCCO: an offset to gross interest; neither other income nor gross IE
     if MIXED_LB.search(lb) or t in ('InterestAndOtherIncome', 'InterestAndOtherNet', 'InterestAndOtherFinancialCharges', 'InterestAndOtherIncomeExpenseNet'): return 'mixed'
     if NETINT_LB.search(lb) or (NET_TAG.match(t) and not IE_LB.search(lb) and not II_LB.search(lb)): return 'netint'
     if re.search(r'(?i)\b(and|&)\s+other', lb) or t in ('OtherNonoperatingIncomeExpense', 'NonoperatingIncomeExpense', 'OtherNonoperatingIncome'): return 'other'
@@ -62,18 +63,31 @@ def band(L, arcs):
     if pt is None: return None
     raw = [l for l in fl if oi['ln'] < l['ln'] < pt['ln'] and l['val'] is not None]
     by = {l['tag']: l for l in raw}
+    pw = weights(arcs, pt['tag'], {l['tag']: l for l in fl if l['val'] is not None})
+    sgn = lambda p: pw[p['tag']] * p['val'] if p['tag'] in pw else (-p['val'] if p['neg'] else p['val'])
     drop = set()
     for i, l in enumerate(raw):
         kids = [c for c, w in (children(arcs, l['tag'], by) or []) if c in by and c != l['tag']]
         if len(kids) >= 2: drop.add(l['tag']); continue
         # no calc: a total line equal to the sum of the lines above it within the band
         prev = raw[:i]
-        if len(prev) >= 2 and 'total' in (l['prole'] or '').lower():
+        if len(prev) >= 2 and ('total' in (l['prole'] or '').lower() or re.match(r'(?i)total\b', l['lb'] or '')):  # RTX 'Total non-operating expense, net' (terseLabel)
             for k in range(len(prev) - 1):
-                s = sum((-p['val'] if p['neg'] else p['val']) for p in prev[k:])
+                s = sum(sgn(p) for p in prev[k:])
                 if min(abs(s - l['val']), abs(s + l['val'])) <= tol(s, l['val']): drop.add(l['tag']); break
     keep = [l for l in raw if l['tag'] not in drop]
     return oi, pt, keep, [l for l in raw if l['tag'] in drop]
+
+
+def weights(arcs, root, onface, w=D(1), seen=None):
+    """{tag: signed weight toward `root`} through the face calc tree (the group children() picks at each level)."""
+    out = {}; seen = seen or set()
+    if root in seen: return out
+    seen.add(root)
+    for c, cw in (children(arcs, root, onface) or []):
+        out.setdefault(c, w * cw)
+        for k, v in weights(arcs, c, onface, w * cw, seen).items(): out.setdefault(k, v)
+    return out
 
 
 def mk(dp, status, lines, why, flags='', value=None, tags=None, note=False):
@@ -91,12 +105,23 @@ def resolve_band(L, arcs, notes):
     ie = [l for k, l in ks if k == 'IE']; ii = [l for k, l in ks if k == 'II']; mx = [l for k, l in ks if k == 'mixed']
     nt = [l for k, l in ks if k == 'netint']; ot = [l for k, l in ks if k == 'other']
     where = f"IS lines between {oi['tag']} (R{oi['rep']}:{oi['ln']}) and pretax (R{pt['rep']}:{pt['ln']})"
+    # polarity: a band line enters with its calc weight toward pretax (AVGO 'Impairment on investment' 106 is weight -1), the
+    # fact's own sign otherwise; a negated label only flips the display, never the fact (ruling 2026-11-14, resolver-vs-served)
+    onf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
+    wt = weights(arcs, pt['tag'], onf)
+    sv = lambda ls: sum((wt.get(l['tag'], D(1)) * l['val'] for l in ls), D(0))
+    if wt and oi['tag'] in wt and wt[oi['tag']] == 1:
+        # identity guard: operating income + the signed band must equal pretax, or the band is not the face's own (WFC bank face)
+        s = oi['val'] + sv(keep)
+        brk = abs(s - pt['val']) > tol(s, pt['val'], *[l['val'] for l in keep])
+    else: brk = False
+    idf = ',identity_break' if brk else ''   # T 2019: equity income tagged -6 where the printed total needs +6 (filer sign)
     if mx:
         out['other_income_expense_net'] = mk('other_income_expense_net', 'combined', mx + ot, f"{where}: '{mx[0]['lb']}' holds interest together with other items; no separate other-income line")
     elif len(ot) == 1 and not (ie or ii or nt) and ot[0]['tag'] == 'NonoperatingIncomeExpense':
         out['other_income_expense_net'] = mk('other_income_expense_net', 'combined', ot, f"{where}: a single nonoperating total ('{ot[0]['lb']}') is printed; it holds interest and other items together")
     elif ot:
-        out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(ot) == 1 else 'component_sum', ot, f"{where}: the line(s) that are not interest expense or interest income", flags='band')
+        out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(ot) == 1 else 'component_sum', ot, f"{where}: the line(s) that are not interest expense or interest income" + (' (signed by calc weight toward pretax)' if any(wt.get(l['tag'], 1) < 0 for l in ot) else ''), flags='band' + idf, value=sv(ot))
     else:
         out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; no other nonoperating line")
     if ie and (nt or mx) and all(AFFIL_LB.search(l['lb'] or '') or l['tag'].startswith('RelatedParty') for l in ie):
@@ -104,8 +129,10 @@ def resolve_band(L, arcs, notes):
     if ie:
         out['interest_expense'] = mk('interest_expense', 'mapped' if len(ie) == 1 else 'component_sum', ie, f"{where}: interest expense line(s), gross", flags='band')
     elif nt or mx:
-        note_ie = next((t for t in ('InterestExpense', 'InterestExpenseNonoperating', 'InterestExpenseDebt', 'InterestAndDebtExpense') if notes.get((t, 4)) is not None), None)
         src = (nt + mx)[0]
+        cands = [t for t in ('InterestExpense', 'InterestExpenseNonoperating', 'InterestExpenseDebt', 'InterestAndDebtExpense') if notes.get((t, 4)) is not None]
+        own = {l['tag'] for l in nt + mx}
+        note_ie = next((t for t in cands if t not in own), None) or next(iter(cands), None)   # LIN: a gross tag other than the net line's own tag wins; MCD 'net of capitalized interest' keeps its own
         if note_ie:
             v = notes[(note_ie, 4)]
             out['interest_expense'] = dict(data_point='interest_expense', status='mapped', tags=note_ie, value=v, r_page='NOTE', nodes=f'{note_ie}={v} [NOTE]',
@@ -265,7 +292,7 @@ def resolve_amort(L, notes):
         return mk('amortization_of_intangibles', 'mapped', [l], f"CF face line {l['tag']} (R{l['rep']}:{l['ln']}) equals the filing's intangible-amortization note fact {t}={n} within the note's rounding; the face value is the precise one", flags='face;amort_by_note_equality')
     for src, lines in (('CF', cfo), ('IS', isf)):
         dl = dup_labels(lines) if src == 'CF' else set()  # the IS legitimately repeats a caption in the cost and opex sections
-        ls = [l for l in lines if (l['lb'] or '').strip().lower() not in dl and INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] or '') and not CAPSW.search(l['tag']) and not re.search(r'(?i)above|below|lease|debt|financing', l['lb'] or '')]
+        ls = [l for l in lines if (l['lb'] or '').strip().lower() not in dl and INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] or '') and not CAPSW.search(l['tag']) and not re.search(r'(?i)above|below|lease|debt|financing|incentive|right[- ]of[- ]use', l['lb'] or '') and not re.search(r'(?i)incentive|rightofuse|excluding\w*cost', l['tag'])]
         if ls:
             tagrank = [l for l in ls if l['tag'] in NOTE_AMORT or AMORT_TAG.match(l['tag'])] or ls
             return mk('amortization_of_intangibles', 'mapped' if len(tagrank) == 1 else 'component_sum', tagrank, f"{src} face line(s) naming intangible amortization", flags='face')

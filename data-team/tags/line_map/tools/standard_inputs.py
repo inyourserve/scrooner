@@ -192,7 +192,10 @@ def comparative_fill(rows, compfacts, instant_dps):
                 if r['data_point'] not in NOTE_FILL_OK and not FACE_NODE.search(b.get('nodes') or ''): continue   # PM SG&A 162M: a note figure is not the face line
                 vals = {D(v) for t, qq, v, dd in _facts(compfacts.get(b['accession']), 4) if t == tag and int(qq) == q and dd == str(r['period_end'])}
                 if len(vals) == 1:
-                    out[(r['accession'], r['data_point'])] = dict(accession=b['accession'], tag=tag, value=str(vals.pop()), window=w)
+                    v = vals.pop()
+                    m = re.match(re.escape(tag) + r'=(-?[\d.]+)', b.get('nodes') or '')
+                    if m and b.get('value') not in (None, '') and D(b['value']) == -D(m.group(1)) != 0: v = -v   # the later cell is the fact signed by its calc weight (MDT OTTI, weight -1 toward pretax)
+                    out[(r['accession'], r['data_point'])] = dict(accession=b['accession'], tag=tag, value=str(v), window=w)
                     break
     return out
 

@@ -136,3 +136,65 @@ def test_opex_is_not_presented_when_only_other_income_sits_between_gross_profit_
     calc = '~'.join(['1|GrossProfit|Revenues|1', '1|GrossProfit|CostOfGoodsAndServicesSold|-1', '2|OperatingIncomeLoss|GrossProfit|1', '2|OperatingIncomeLoss|OtherOperatingIncomeExpenseNet|1'])
     out, _ = RS.resolve(filing(lines, calc))
     assert out['operating_expenses']['status'] == 'not_presented' and 'no expense line' in out['operating_expenses']['path']
+
+
+PT = 'IncomeLossFromContinuingOperationsBeforeIncomeTaxes'
+def calc(*kids): return '~'.join(f'1|{PT}|{t}|{w}' for t, w in kids)
+
+
+def test_band_line_takes_its_calc_weight_toward_pretax_not_the_fact_sign():
+    # AVGO FY2018: 'Impairment on investment' 106 (weight -1) beside 'Other income, net' 144 -> 38, not 250
+    lines = [('IS', 'Revenues', 'Net revenue', 1000), ('IS', 'OperatingIncomeLoss', 'Operating income', 500),
+             ('IS', 'InterestExpense', 'Interest expense', 100), ('IS', 'CostmethodInvestmentsOtherThanTemporaryImpairment', 'Impairment on investment', 106),
+             ('IS', 'OtherNonoperatingIncomeExpense', 'Other income, net', 144), ('IS', PT, 'Income before income taxes', 438)]
+    f = filing(lines, calc(('OperatingIncomeLoss', 1), ('InterestExpense', -1), ('CostmethodInvestmentsOtherThanTemporaryImpairment', -1), ('OtherNonoperatingIncomeExpense', 1)))
+    o = R.resolve(f, {})['other_income_expense_net']
+    assert o['status'] == 'component_sum' and o['value'] == D(38) and 'identity_break' not in o['flags']
+    # a pension expense element printed alone (PM): positive expense with weight -1 is other expense
+    lines = [lines[0], lines[1], ('IS', 'NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent', 'Pension and other employee benefit costs', 41),
+             ('IS', PT, 'Income before income taxes', 459)]
+    f = filing(lines, calc(('OperatingIncomeLoss', 1), ('NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent', -1)))
+    assert R.resolve(f, {})['other_income_expense_net']['value'] == D(-41)
+
+
+def test_printed_total_with_a_plain_label_role_is_a_subtotal_of_the_band():
+    # RTX 2020: 'Total non-operating expense, net' (terseLabel, no calc) beside its parts
+    lines = [('IS', 'Revenues', 'Net sales', 1000), ('IS', 'OperatingIncomeLoss', 'Operating profit (loss)', -1889),
+             ('IS', 'NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent', 'Non-service pension benefit', -902),
+             ('IS', 'InterestExpense', 'Interest expense, net', 1366), ('IS', 'NonoperatingIncomeExpense', 'Total non-operating expense, net', 464),
+             ('IS', PT, 'Income (loss) before income taxes', -2353)]
+    f = filing(lines, calc(('OperatingIncomeLoss', 1), ('NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent', -1), ('InterestExpense', -1)))
+    f['lines'] = f['lines'].replace('|totalLabel|Total non-operating', '|terseLabel|Total non-operating')
+    o = R.resolve(f, {})['other_income_expense_net']
+    assert o['status'] == 'mapped' and o['value'] == D(902) and 'identity_break' not in o['flags']
+
+
+def test_capitalized_interest_is_neither_other_income_nor_gross_interest():
+    # SCCO: 'Capitalized interest' (InterestCostsCapitalized) between OI and pretax
+    lines = [('IS', 'Revenues', 'Net sales', 1000), ('IS', 'OperatingIncomeLoss', 'Operating income', 500),
+             ('IS', 'InterestExpense', 'Interest expense', 300), ('IS', 'InterestCostsCapitalized', 'Capitalized interest', -127),
+             ('IS', 'OtherNonoperatingIncomeExpense', 'Other income (expense)', -41), ('IS', PT, 'Income before income taxes', 286)]
+    r = R.resolve(filing(lines), {})
+    assert r['other_income_expense_net']['value'] == D(-41) and r['other_income_expense_net']['status'] == 'mapped'
+    assert r['interest_expense']['value'] == D(300)
+    # 'Interest expense, net of capitalized interest' stays interest expense (MCD, VLO)
+    assert R.kind(dict(tag='InterestExpense', lb='Interest expense, net of capitalized interest of $5')) != 'IEcap'
+
+
+def test_finance_lease_interest_is_gross_interest_and_operating_losses_is_not_operating_income():
+    lines = [('IS', 'Revenues', 'Total revenues', 1000), ('IS', 'OperatingIncomeLoss', 'Operating income', 500),
+             ('IS', 'InterestExpenseDebt', 'Debt', 200), ('IS', 'FinanceLeaseAndFinancingObligationInterestExpense', 'Finance lease and financing obligations', 30),
+             ('IS', 'NonoperatingIncomeExpense', 'Other (gains) and losses', 21), ('IS', PT, 'Income before income taxes', 249)]
+    r = R.resolve(filing(lines), {})
+    assert r['interest_expense']['value'] == D(230) and r['other_income_expense_net']['value'] == D(21)
+    assert not R.OI_LB.search('Operating losses') and R.OI_LB.search('Operating loss')
+
+
+def test_identity_break_is_flagged_not_dropped():
+    # T 2019: equity income tagged -6 where the printed total needs +6
+    lines = [('IS', 'Revenues', 'Total operating revenues', 1000), ('IS', 'OperatingIncomeLoss', 'Operating income', 27955),
+             ('IS', 'InterestExpense', 'Interest expense', 8422), ('IS', 'IncomeLossFromEquityMethodInvestments', 'Equity in net income (loss) of affiliates', -6),
+             ('IS', 'OtherNonoperatingIncomeExpense', 'Other income (expense) - net', -1071), ('IS', PT, 'Income before income taxes', 18468)]
+    f = filing(lines, calc(('OperatingIncomeLoss', 1), ('InterestExpense', -1), ('IncomeLossFromEquityMethodInvestments', 1), ('OtherNonoperatingIncomeExpense', 1)))
+    o = R.resolve(f, {})['other_income_expense_net']
+    assert o['value'] == D(-1077) and 'identity_break' in o['flags']
