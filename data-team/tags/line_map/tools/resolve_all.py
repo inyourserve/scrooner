@@ -635,6 +635,7 @@ if __name__ == '__main__':
             r.update(status='not_presented', why=f"statements of a predecessor co-registrant ({'LegalEntity ' + x['member'] if x else 'several LegalEntity members'}): the face carries no value of the filer (ruling 2026-11-14)")
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'coregistrant_face') if y)
     import resolve_is
+    resolve_is.MEMBER_FACTS = memberfacts
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_ci_parent(rows, clines, notefacts, memberfacts)
     rows = apply_cost_and_opex(rows, filings)

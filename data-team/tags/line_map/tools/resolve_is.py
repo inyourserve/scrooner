@@ -49,6 +49,7 @@ def kind(l):
 def fmt(l, st='IS'): return f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]"
 
 
+OTHER_IE_LB = re.compile(r'(?i)^other\s+(\(income\)|income|\(expense\)|expenses?)(\s*(/|and|\(|,)?\s*\(?(income|expense|loss)\)?)?(\s*\(net\)|,\s*net|\s+net)?$')  # never 'other operating ...'
 OPER_TAG = re.compile(r'^(Restructuring\w*|\w*Impairment\w*|AssetImpairmentCharges|OtherOperatingIncomeExpenseNet|LitigationSettlement\w*|GainLossRelatedToLitigationSettlement|BusinessCombinationAcquisitionRelatedCosts|SeveranceCosts1)$')
 OPER_LB = re.compile(r'(?i)^(restructuring|impairment|asset impairment|litigation|severance|acquisition[- ]related)')
 
@@ -106,7 +107,22 @@ def mk(dp, status, lines, why, flags='', value=None, tags=None, note=False):
                 r_page='+'.join(sorted({f"R{l['rep']}.htm" for l in lines})) if lines else '', nodes='; '.join(fmt(l) for l in lines), why=why, flags=flags)
 
 
-def resolve_band(L, arcs, notes):
+MEMBER_FACTS = {}   # accession -> 'tag|qtrs|value|Axis=Member;' (the standard extract's member facts plus rules/fsn_dropped_facts.csv)
+REV_TAG = re.compile(r'^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')
+
+
+def member_row_value(l, acc):
+    """A face row that is a revenue-table member (DE 'Other income' = ProductOrService=Other, WELL ProductAndServiceOther) takes its
+    revenue fact for that member, the twelve-month own-period one, when exactly one exists; the node keeps tag and member."""
+    if l['val'] is not None or not l['tag'].endswith('Member') or not acc: return l
+    m = l['tag'][:-6]
+    vals = {D(x[2]): x[0] for x in (e.split('|') for e in (MEMBER_FACTS.get(acc) or '').split('~')) if len(x) >= 4 and x[1] == '4' and REV_TAG.match(x[0]) and x[3].rstrip(';') == f'ProductOrService={m}'}
+    if len(vals) != 1: return l
+    (v, t), = vals.items()
+    return dict(l, tag=f'{t}[ProductOrService={m}]', val=v)
+
+
+def resolve_band(L, arcs, notes, acc=None):
     out = {}
     b = band(L, arcs)
     if b is None: return out
@@ -133,7 +149,24 @@ def resolve_band(L, arcs, notes):
     elif ot:
         out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(ot) == 1 else 'component_sum', ot, f"{where}: the line(s) that are not interest expense or interest income" + (' (signed by calc weight toward pretax)' if any(wt.get(l['tag'], 1) < 0 for l in ot) else ''), flags='band' + idf, value=sv(ot))
     else:
-        out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; no other nonoperating line")
+        # ruling 2026-11-14 (BMY, supersedes 'inside operating costs -> not_presented'): a line labelled other income/expense is the
+        # data point wherever the filer prints it (BMY inside total expenses, CVX inside revenues and other income, MDT above
+        # operating income); income convention through its calc weight toward pretax; OI stays as printed
+        oth = [l for l in face(L, 'IS') if l['ln'] < pt['ln'] and OTHER_IE_LB.match((l['lb'] or '').strip()) and not any(c in onf for c, _ in (children(arcs, l['tag'], onf) or []))]  # a face total, not a note breakdown (BMY)
+        # the alternate-sign twin of a valued line (RTX 2015 'Other (expense) income, net' as OtherExpenses 211 and OtherIncome) is the same line
+        oth = [l for l in oth if l['val'] is not None or not any(o['val'] is not None and o['lb'] == l['lb'] for o in oth)]
+        # a printed dash in the band (LMT 2016 'Other non-operating income, net') is the band's own other line: the printed-zero rule serves it
+        if any(l['val'] is None and kind(l) == 'other' and not l['tag'].endswith(('Abstract', 'Member')) for l in face(L, 'IS') if oi['ln'] < l['ln'] < pt['ln']): oth = []
+        oth = [member_row_value(l, acc) for l in oth]
+        if oth and all(l['val'] is not None for l in oth):
+            sg = lambda l: wt[l['tag']] if l['tag'] in wt else (D(-1) if re.search(r'Expenses?$', l['tag']) and 'IncomeExpense' not in l['tag'] else D(1))
+            out['other_income_expense_net'] = mk('other_income_expense_net', 'mapped' if len(oth) == 1 else 'component_sum', oth,
+                f"{where} holds only interest lines; the filer prints other income/expense outside it ('{oth[0]['lb']}'), served in the income convention",
+                flags='presented_within_expenses', value=sum((sg(l) * l['val'] for l in oth), D(0)))
+        elif oth:
+            out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; other income/expense lines " + ', '.join(f"'{l['lb']}' (R{l['rep']}:{l['ln']})" for l in oth) + " are printed but " + ', '.join(f"'{l['lb']}'" for l in oth if l['val'] is None) + " has no consolidated fact; an incomplete group is never summed", flags='other_part_no_fact')
+        else:
+            out['other_income_expense_net'] = mk('other_income_expense_net', 'not_presented', [], f"{where} holds only interest lines; no other nonoperating line")
     if ie and (nt or mx) and all(AFFIL_LB.search(l['lb'] or '') or l['tag'].startswith('RelatedParty') for l in ie):
         ie = []   # CEG: 'Interest expense to affiliates' beside 'Interest expense, net' is a part, not the data point: the net-line path below
     if ie:
@@ -323,7 +356,7 @@ def resolve_amort(L, notes):
 def resolve(f, notes):
     L, arcs = parse(f)
     out = {}
-    out.update(resolve_band(L, arcs, notes))
+    out.update(resolve_band(L, arcs, notes, f.get('a')))
     ci = resolve_ci(L, notes)
     if ci: out['comprehensive_income'] = ci
     for fn in (resolve_da, resolve_amort):

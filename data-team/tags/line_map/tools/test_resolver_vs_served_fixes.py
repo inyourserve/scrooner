@@ -403,3 +403,59 @@ def test_printed_total_expenses_line_is_the_opex():
     f2 = filing([isl[0], ('IS', 'CostsAndExpenses', 'Total costs and expenses', 18937000000), ('IS', 'OperatingIncomeLoss', 'Operating income', 7000000000)])
     rows2 = [dict(accession=f2['a'], data_point='operating_expenses', status='not_presented', value=None, tags='', nodes='', why='no node', flags='')]
     assert resolve_all.apply_cost_and_opex(rows2, [f2])[0]['value'] != D(18937000000)
+
+
+def _bmy(other=('IS', 'OtherNonoperatingIncomeExpense', 'Other (income)/expense, net', 1158000000), extra=(), after=()):
+    isl = [('IS', 'Revenues', 'Total Revenues', 45006000000), ('IS', 'CostOfGoodsAndServicesSold', 'Cost of products sold', 10693000000), other,
+           ('IS', 'CostsAndExpenses', 'Total Expenses', 35400000000), *extra,
+           ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Earnings before income taxes', 9606000000),
+           ('IS', 'IncomeTaxExpenseBenefit', 'Income tax provision', 400000000), *after]
+    calc = '~'.join(['1|IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest|Revenues|1',
+                     '1|IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest|CostsAndExpenses|-1',
+                     '2|CostsAndExpenses|CostOfGoodsAndServicesSold|1', '2|CostsAndExpenses|OtherNonoperatingIncomeExpense|-1', '2|CostsAndExpenses|OtherCostAndExpenseOperating|1',
+                     '3|OtherNonoperatingIncomeExpense|GainLossOnInvestments|1', '3|OtherNonoperatingIncomeExpense|InvestmentIncomeInterest|1'])
+    return resolve_is.resolve(filing(isl, calc), {})['other_income_expense_net']
+
+
+def test_other_income_expense_printed_inside_total_expenses_is_the_data_point():
+    # ruling 2026-11-14 (BMY): served in the income convention through its calc weight; its note breakdown does not make it a total
+    r = _bmy()
+    assert r['status'] == 'mapped' and r['value'] == D(1158000000) and 'presented_within_expenses' in r['flags']
+    # an expense-named element with no calc weight enters negated (RTX 2015 OtherExpenses 211 = other expense)
+    r = _bmy(('IS', 'OtherExpenses', 'Other expenses', 211000000))
+    assert r['value'] == D(-211000000)
+    # the calc weight decides the sign: an expense element added into total expenses is other expense
+    assert _bmy(('IS', 'OtherCostAndExpenseOperating', 'Other expense, net', 50000000))['value'] == D(-50000000)
+    # 'Other operating expense' is opex, and a line below pretax is not in the income band
+    assert _bmy(('IS', 'OtherCostAndExpenseOperating', 'Other operating expense, net', 50000000))['status'] == 'not_presented'
+    assert _bmy(('IS', 'CostOfServices', 'Cost of services', 5), after=(('IS', 'OtherNonoperatingIncomeExpense', 'Other income', 9),))['status'] == 'not_presented'
+
+
+def test_other_income_guards_twin_dash_and_incomplete_group():
+    # the alternate-sign twin with no value is the same printed line (RTX 2015)
+    twin = resolve_is.resolve(filing([('IS', 'Revenues', 'Net sales', 100), ('IS', 'OtherExpenses', 'Other (expense) income, net', 7), ('IS', 'OtherIncome', 'Other (expense) income, net', None),
+                                      ('IS', 'OperatingIncomeLoss', 'Operating profit', 93), ('IS', 'InterestExpense', 'Interest expense', 3),
+                                      ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Income before income taxes', 90)]), {})['other_income_expense_net']
+    assert twin['status'] == 'mapped' and twin['value'] == D(-7)
+    # a dash printed in the band (LMT 2016) stays for the printed-zero rule
+    dash = _bmy(extra=(('IS', 'OtherNonoperatingIncome', 'Other non-operating income, net', None),))
+    assert dash['status'] == 'not_presented'
+    # a part with no consolidated fact: an incomplete group is never summed
+    inc = resolve_is.resolve(filing([('IS', 'OtherMember', 'Other income', None), ('IS', 'Revenues', 'Net sales and revenues', 100),
+                                                                 ('IS', 'OtherExpenses', 'Other expenses', 4), ('IS', 'CostsAndExpenses', 'Total', 60),
+                                                                 ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Income before income taxes', 40)]), {})['other_income_expense_net']
+    assert inc['status'] == 'not_presented' and 'other_part_no_fact' in inc['flags']
+
+
+def test_revenue_member_row_takes_its_member_fact():
+    # DE FY2024: 'Other Income' is a ProductOrService=Other row; its fact comes from rules/fsn_dropped_facts.csv
+    f = filing([('IS', 'OtherMember', 'Other Income', None), ('IS', 'Revenues', 'Net sales and revenues', 51716000000), ('IS', 'CostsAndExpenses', 'Total', 42510000000),
+                ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments', 'Income before Income Taxes', 9206000000)])
+    old = dict(resolve_is.MEMBER_FACTS)
+    try:
+        resolve_is.MEMBER_FACTS[f['a']] = 'Revenues|4|1198000000|ProductOrService=Other;~Revenues|1|300000000|ProductOrService=Other;'
+        r = resolve_is.resolve(f, {})['other_income_expense_net']
+        assert r['status'] == 'mapped' and r['value'] == D(1198000000) and r['nodes'] == 'Revenues[ProductOrService=Other]=1198000000 [R2.htm:1]'
+        assert resolve_all.NODE_GRAMMAR.match(r['nodes'])
+    finally:
+        resolve_is.MEMBER_FACTS.clear(); resolve_is.MEMBER_FACTS.update(old)
