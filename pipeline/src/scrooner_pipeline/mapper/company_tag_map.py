@@ -2043,6 +2043,20 @@ def resolve_for_company(
             [str(r.tag) for r in rows if r.decision == "component" and r.tag],
         ),
     )
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    with conn.cursor() as cur:
+        cur.execute("select cik from core.company where id = %s", (company_id,))
+        crow = cur.fetchone()
+    direct, dstats = sd.direct_cells(
+        conn, company_id, crow[0] if crow else None, rows, periods, concept_info
+    )
+    stats["structural_direct"] = {
+        k: (len(v) if isinstance(v, list) else v) for k, v in dstats.items()
+    }
+    stats["structural_direct_rejected"] = dstats["rejected"]
+    sd.apply_direct(conn, cells, stats, direct)
+
     from scrooner_pipeline.mapper.derived_cells import (
         add_derived_cells,
     )  # circular via dqc_checks

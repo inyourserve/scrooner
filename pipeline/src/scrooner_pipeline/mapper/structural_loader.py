@@ -101,6 +101,7 @@ class Claim:
         ""  # the resolver's value for the cell (checked against the parts' SEC facts)
     )
     node_values: tuple[str, ...] = ()  # per part, when the nodes print them
+    grain: str = ""  # FY (duration) or I (instant) of the resolver row; '' for other file shapes
 
 
 def _split(s: str) -> list[str]:
@@ -346,6 +347,7 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                         source=p.name,
                         file_rank=rank,
                         value=r.get("value", ""),
+                        grain=r.get("grain", ""),
                         node_values=tuple(
                             x.strip() for x in r.get("node_values", "").split("+")
                         )
