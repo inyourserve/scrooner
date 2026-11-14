@@ -25,6 +25,42 @@ def apply_polarity(rows):
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
             r['why'] = (r.get('why') or '') + f"; polarity: the filer reports {v} on an element of the opposite sign; {r['data_point']} is positive (rules/polarity.csv), value normalised"
     return rows
+def _here(name):
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', name)
+def fill_printed_zero_and_comparative(rows, td):
+    """Rulings 2026-11-14 (Dhairya). (a) A line printed on the own face with a dash or zero is served as 0, flag printed_zero
+    with its R:line (_printed-zero-2026-11-14.csv: the line is on the face, no own-period fact exists in any dimension, the
+    line has values in other columns); a line absent from the face stays not_presented. (b) A value the next 10-K prints in its
+    comparative column fills a cell the own filing does not present: column=comparative, that filing's accession and R page
+    (_comparative-fill-2026-11-14.csv; total_debt from the comparative column of total_debt_all)."""
+    pz = {(r['accession'], r['data_point']): r for r in csv.DictReader(open(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))))} if os.path.exists(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))) else {}
+    cfp = os.environ.get('COMPARATIVE_FILL', _here('_comparative-fill-2026-11-14.csv'))
+    cf = {(r['own_accession'], r['data_point']): r for r in csv.DictReader(open(cfp))} if os.path.exists(cfp) else {}
+    nxt = {}
+    by = collections.defaultdict(list)
+    for (a, col), t in td.items():
+        if col == 'comparative': by[t['ticker']].append(t)
+    for r in rows:
+        if r['status'] != 'not_presented': continue
+        k = (r['accession'], r['data_point'])
+        if k in pz:
+            z = pz[k]
+            r.update(status='mapped', value=D(0), tags=z['tag'], nodes=f"{z['tag']}=0 [{z['r_line']}]",
+                     why=f"the own face prints '{z['label']}' with a dash or zero for this period (ruling 2026-11-14: printed dash = 0)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'printed_zero') if x)
+        elif k in cf:
+            c = cf[k]; v = D(c['value'])
+            r.update(status='mapped', value=v, tags=c['tag'], accession=c['accession'], column='comparative',
+                     nodes=f"{c['tag']}={c['value']} [{c['loc']} of {c['accession']}, comparative column]",
+                     why='the own filing does not present the line; the next 10-K prints it in its comparative column (ruling 2026-11-14, FY-1 comparative rule)')
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if v == 0 else '') if x)
+        elif r['data_point'] == 'total_debt':
+            t = next((t for t in by.get(r['ticker'], []) if t['period_end'] == r['period_end'] and t['status'] in ('mapped', 'component_sum')), None)
+            if t:
+                r.update(status=t['status'], value=D(t['value']), tags=t['tags'], accession=t['accession'], column='comparative', nodes=t['parts'] + f" [comparative column of {t['accession']}]",
+                         why='total_debt rule on the next 10-K comparative column (the own filing presents no debt line; ruling 2026-11-14)')
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if D(t['value']) == 0 else '') if x)
+    return rows
 def family_rows(f, notes, raw):
     """Family modules (tools/resolve_bs.py, tools/resolve_cf.py): position logic per family; rows replace the role rows of their data points."""
     out = {}
@@ -170,6 +206,7 @@ if __name__ == '__main__':
     rows = run(filings, notefacts, tick, td)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
     for r in rows:   # lineage of member-only face facts
         t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
@@ -190,7 +227,7 @@ if __name__ == '__main__':
         spec.append(dict(cik=r['cik'], ticker=r['ticker'], data_point=r['data_point'], period_end=r['period_end'], grain='I' if r['data_point'] in INSTANT else 'FY',
                          decision=DEC.get(r['status'], r['status']), nodes=(r.get('nodes') or '') + (' | why: ' + r['why'] if r.get('why') else ''),
                          value='' if v is None or r['status'] in ('combined', 'not_presented', 'no_role') else str(D(v).normalize() if D(v) != D(v).to_integral() else D(v).to_integral()),
-                         accession=r['accession'], column='own', calc_check=r.get('calc_check', ''), flags=';'.join(x for x in (r['source'], r.get('flags', '')) if x),
+                         accession=r['accession'], column=r.get('column') or 'own', calc_check=r.get('calc_check', ''), flags=';'.join(x for x in (r['source'], r.get('flags', '')) if x),
                          resolver_version=sys.argv[1] if len(sys.argv) > 1 else 'dev'))
     import os
     name = sys.argv[2] if len(sys.argv) > 2 else 'resolver-all110.csv'
