@@ -822,9 +822,20 @@ accession,tag,report,n_reports,line,plabel
 0000109198-23-000004,InterestPaidNet,99,1,,
 0000109198-23-000004,InvestmentIncomeInterest,47,1,3,Interest (income)
 0000109198-24-000014,CommonStockDividendsPerShareDeclared,63,1,11,Cash dividends declared per share (in dollars per share)
+0000109198-24-000014,IncomeTaxesPaid,103,1,,
+0000109198-24-000014,InterestExpense,49,1,,
+0000109198-24-000014,InterestPaidNet,103,1,,
+0000109198-24-000014,InvestmentIncomeInterest,49,1,,
 0000109198-25-000010,CommonStockDividendsPerShareDeclared,65,1,11,Cash dividends declared per share (in dollars per share)
+0000109198-25-000010,IncomeTaxesPaid,105,1,,
+0000109198-25-000010,InterestExpense,51,1,,
+0000109198-25-000010,InterestPaidNet,105,1,,
+0000109198-25-000010,InvestmentIncomeInterest,51,1,,
 0000109198-26-000008,CommonStockDividendsPerShareDeclared,64,1,11,Cash dividends declared per share (in dollars per share)
 0000109198-26-000008,IncomeTaxesPaidNet,95,1,12,Total income taxes paid
+0000109198-26-000008,InterestExpense,49,1,,
+0000109198-26-000008,InterestPaidNet,106,1,,
+0000109198-26-000008,InvestmentIncomeInterest,49,1,,
 0000200406-16-000071,AmortizationOfIntangibleAssets,59,1,11,Amortization expense of amortizable intangible assets
 0000200406-17-000006,AmortizationOfIntangibleAssets,60,1,8,Amortization expense of amortizable intangible assets
 0000200406-18-000005,AmortizationOfIntangibleAssets,60,1,17,Amortization expense of amortizable intangible assets
@@ -834,6 +845,7 @@ accession,tag,report,n_reports,line,plabel
 0000200406-24-000013,AmortizationOfIntangibleAssets,64,1,8,Amortization expense of amortizable intangible assets
 0000200406-25-000038,AmortizationOfIntangibleAssets,66,1,8,Amortization expense of amortizable intangible assets
 0000200406-26-000016,AmortizationOfIntangibleAssets,65,1,8,Amortization expense of amortizable intangible assets
+0000200406-26-000016,IncomeTaxesPaidNet,83,1,,
 0000310158-16-000063,IncomeTaxesPaid,98,1,27,Income taxes paid
 0000310158-16-000063,InterestExpense,97,2,2,Interest expense
 0000310158-16-000063,InterestPaid,96,1,30,Interest paid
@@ -884,9 +896,13 @@ accession,tag,report,n_reports,line,plabel
 0000313616-24-000052,IncomeTaxesPaidNet,68,1,35,Income tax payments
 0000313616-25-000043,IncomeTaxesPaidNet,66,1,32,Income tax payments
 0000313616-26-000062,IncomeTaxesPaidNet,68,1,33,Income tax payments
+0000316709-16-000067,AccountsReceivableNet,81,1,,
 0000316709-16-000067,AmortizationOfIntangibleAssets,77,1,1,"Intangible asset, amortization expense"
+0000316709-17-000010,AccountsReceivableNet,82,1,,
 0000316709-17-000010,AmortizationOfIntangibleAssets,78,1,1,"Intangible asset, amortization expense"
+0000316709-18-000009,AccountsReceivableNet,78,1,,
 0000316709-18-000009,AmortizationOfIntangibleAssets,75,1,1,"Intangible asset, amortization expense"
+0000316709-19-000008,AccountsReceivableNet,84,1,,
 0000316709-19-000008,AmortizationOfIntangibleAssets,84,1,14,"Intangible asset, amortization expense"
 0000316709-20-000012,AmortizationOfIntangibleAssets,81,1,23,"Intangible asset, amortization expense"
 0000316709-21-000012,DepreciationAndAmortization,136,1,20,Depreciation and amortization
@@ -1024,6 +1040,7 @@ accession,tag,report,n_reports,line,plabel
 0000707549-18-000115,InterestExpense,54,1,2,Interest expense
 0000707549-18-000115,InvestmentIncomeInterest,54,1,1,Interest income
 0000707549-18-000115,LongTermDebtAndCapitalLeaseObligations,4,1,,
+0000707549-19-000124,AmortizationOfIntangibleAssets,78,1,,
 0000707549-19-000124,InterestExpense,59,1,2,Interest expense
 0000707549-19-000124,InvestmentIncomeInterest,59,1,1,Interest income
 0000707549-20-000138,AmortizationOfIntangibleAssets,76,1,4,Intangible asset amortization expense
@@ -1037,6 +1054,7 @@ accession,tag,report,n_reports,line,plabel
 0000707549-22-000107,InvestmentIncomeInterest,55,1,1,Interest income
 0000707549-23-000102,AmortizationOfIntangibleAssets,77,1,4,Intangible asset amortization expense
 0000707549-23-000102,InvestmentIncomeInterest,59,1,1,Interest income
+0000707549-24-000106,AmortizationOfIntangibleAssets,73,1,,
 0000707549-24-000106,InterestExpenseNonoperating,60,1,2,Interest expense
 0000707549-24-000106,InvestmentIncomeInterest,60,1,1,Interest income
 0000707549-25-000075,InterestExpenseNonoperating,58,1,2,Interest expense
@@ -1179,10 +1197,14 @@ accession,tag,report,n_reports,line,plabel
 0000753308-26-000015,WeightedAverageNumberOfSharesOutstandingBasic,95,1,4,Weighted-average number of common shares outstanding  basic
 0000764180-16-000128,AmortizationOfIntangibleAssets,51,2,12,Amortization of intangibles
 0000764180-16-000128,CommonStockSharesOutstanding,68,1,4,"Beginning balance, Shares Outstanding (in shares)"
+0000764180-16-000128,InterestExpense,99,1,,
 0000764180-16-000128,InterestIncomeOther,99,1,4,Interest income
+0000764180-16-000128,ResearchAndDevelopmentExpense,99,1,,
 0000764180-16-000128,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,72,1,4,Weighted-average shares for basic and diluted EPS
 0000764180-17-000028,AmortizationOfIntangibleAssets,53,2,12,Amortization of intangibles
+0000764180-17-000028,InterestExpense,105,1,,
 0000764180-17-000028,InterestIncomeOther,105,1,4,Interest income
+0000764180-17-000028,ResearchAndDevelopmentExpense,105,1,,
 0000764180-17-000028,WeightedAverageNumberOfShareOutstandingBasicAndDiluted,78,1,4,Weighted-average shares for basic and diluted EPS
 0000764180-18-000028,AmortizationOfIntangibleAssets,51,2,12,Amortization of intangibles
 0000764180-18-000028,InterestIncomeOther,105,1,4,Interest income
