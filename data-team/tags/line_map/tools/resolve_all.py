@@ -25,6 +25,7 @@ def apply_polarity(rows):
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
             r['why'] = (r.get('why') or '') + f"; polarity: the filer reports {v} on an element of the opposite sign; {r['data_point']} is positive (rules/polarity.csv), value normalised"
     return rows
+EXT = {'ap': {}, 'ar': {}, 'cf': {}}   # derived from the standard extract (tools/standard_inputs.py); the side files below stay the fallback
 def _here(name):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', name)
 def fill_printed_zero_and_comparative(rows, td):
@@ -36,6 +37,10 @@ def fill_printed_zero_and_comparative(rows, td):
     pz = {(r['accession'], r['data_point']): r for r in csv.DictReader(open(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))))} if os.path.exists(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))) else {}
     cfp = os.environ.get('COMPARATIVE_FILL', _here('_comparative-fill-2026-11-14.csv'))
     cf = {(r['own_accession'], r['data_point']): r for r in csv.DictReader(open(cfp))} if os.path.exists(cfp) else {}
+    for (own_a, dp), c in EXT['cf'].items():   # extract-derived first; loc = where the later filing itself resolved the data point
+        nodes_loc = next((x.get('nodes') or '' for x in rows if x['accession'] == c['accession'] and x['data_point'] == dp), '')
+        m = re.search(r'\[(R[^\]]*|NOTE)\]', nodes_loc)
+        cf[(own_a, dp)] = dict(c, loc=m.group(1) if m else 'NOTE')
     nxt = {}
     by = collections.defaultdict(list)
     for (a, col), t in td.items():
@@ -70,6 +75,7 @@ def apply_ar_related(rows, filings):
     (including related parties)' line (SCCO) and 'Due from related party' without 'receivable' (DELL) are not added."""
     sp = os.environ.get('AR_RELATED_SPLIT', _here('_ar-related-split-2026-11-14.csv'))
     split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    split.update(EXT['ar'])
     F = {f['a']: f for f in filings}
     for r in rows:
         if r['data_point'] != 'accounts_receivable' or r['status'] not in ('mapped',) or r['value'] is None: continue
@@ -204,6 +210,7 @@ def apply_ap_related(rows, filings):
     'Due to related party' without 'payable' (DELL) and a line already 'including related parties' (SCCO) are not added."""
     sp = os.environ.get('AP_RELATED_SPLIT', _here('_ap-related-split-2026-11-14.csv'))
     split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    split.update(EXT['ap'])
     F = {f['a']: f for f in filings}
     for r in rows:
         if r['data_point'] != 'accounts_payable': continue
@@ -360,6 +367,14 @@ if __name__ == '__main__':
     # fact carries one equity-statement column member (EquityComponents=RetainedEarnings / CommonStock ...) is the consolidated value;
     # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
     MF = {}
+    import standard_inputs
+    def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
+    memberfacts, compfacts = _read('memberfacts.json'), _read('compfacts.json')
+    for m in standard_inputs.member_facts(notefacts, memberfacts):   # the standard extract first (single-member own-period face facts)
+        notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
+        MF[(m['accession'], m['tag'])] = m['member']
+    EXT['ap'] = standard_inputs.related_splits(memberfacts, r'AccountsPayable\w*')
+    EXT['ar'] = standard_inputs.related_splits(memberfacts, r'(AccountsAndNotesReceivableNet|AccountsReceivable\w*|Receivables\w*)')
     _mf = os.environ.get('MEMBER_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '_member-face-facts-2026-11-14.csv'))
     if os.path.exists(_mf):
         for m in csv.DictReader(open(_mf)):
@@ -373,6 +388,7 @@ if __name__ == '__main__':
     rows = apply_cost_and_opex(rows, filings)
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
+    EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = derive_gross_profit(rows)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
