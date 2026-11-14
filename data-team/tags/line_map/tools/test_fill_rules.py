@@ -52,6 +52,17 @@ def test_opex_from_printed_totals_when_the_tree_has_no_node():
     assert p['value'] == D(26738) and q['value'] == D(9705) and 'opex_from_printed_totals' in q['flags']
 
 
+def test_gross_profit_not_printed_is_derived_and_corroborated():
+    # ruling C1: revenue - cost of revenue, derived_not_printed; an unpresented GrossProfit fact that differs makes it DISAGREE
+    os.environ['GP_CORROBORATION'] = _csv([dict(accession='G1', tag='GrossProfit', value='1607.6', source='s')])
+    rows = [dict(ticker='SCCO', accession='G1', period_end='2015-12-31', data_point=dp, status=st, value=v, flags='', calc_check='')
+            for dp, st, v in (('gross_profit', 'not_presented', None), ('revenue', 'mapped', D('5045.9')), ('cost_of_revenue', 'mapped', D('2927.6')))]
+    g = RA.derive_gross_profit(rows)[0]
+    assert g['status'] == 'derived' and g['value'] == D('2118.3') and 'derived_not_printed' in g['flags'] and 'DISAGREE' in g['calc_check']
+    rows[2]['status'] = 'not_presented'; rows[0].update(status='not_presented', value=None, flags='', calc_check='')
+    assert RA.derive_gross_profit(rows)[0]['status'] == 'not_presented'   # cost of revenue not resolvable (ORCL)
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):

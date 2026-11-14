@@ -5,7 +5,7 @@ only when its own label names the role). Output: one row per filing x data point
 import csv, json, os, re, sys, collections
 from decimal import Decimal as D
 sys.path.insert(0, '.')
-from resolve import parse, face, children, resolve, DPS as CORE_DPS
+from resolve import parse, face, children, resolve, tol, DPS as CORE_DPS
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
 INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
@@ -122,6 +122,28 @@ def apply_cost_and_opex(rows, filings):
             continue
         r.update(status='component_sum', value=v, tags='printed totals', nodes=nodes, why=f'operating expenses = the lines between the top line and operating income, from {how}')
         r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+    return rows
+def derive_gross_profit(rows):
+    """Ruling C1 (Dhairya 2026-11-14): gross profit not printed, revenue and cost of revenue printed and resolved in the same
+    filing -> DERIVED revenue - cost of revenue (derived_not_printed). An unpresented GrossProfit fact of the same filing
+    (_gp-corroboration) is recorded in calc_check; a difference makes the cell DISAGREE until a reader looks. Cost of revenue
+    not resolvable (ORCL: interleaved cost lines) -> gross profit stays not_presented."""
+    cp = os.environ.get('GP_CORROBORATION', _here('_gp-corroboration-2026-11-14.csv'))
+    corr = {r['accession']: D(r['value']) for r in csv.DictReader(open(cp))} if os.path.exists(cp) else {}
+    by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    for r in rows:
+        if r['data_point'] != 'gross_profit' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
+        rev, cor = by.get((r['accession'], 'revenue')), by.get((r['accession'], 'cost_of_revenue'))
+        if not (rev and cor and rev['status'] in ('mapped', 'component_sum') and cor['status'] in ('mapped', 'component_sum')
+                and rev['value'] is not None and cor['value'] is not None and (cor.get('column') or 'own') == 'own'): continue
+        v = D(rev['value']) - D(cor['value'])
+        r.update(status='derived', value=v, tags='revenue-cost_of_revenue', nodes=f"revenue={rev['value']}; -cost_of_revenue={cor['value']}",
+                 why='the income statement prints no gross profit; revenue and cost of revenue are printed in the same filing: revenue - cost of revenue (ruling C1)')
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'derived_not_printed') if x)
+        if r['accession'] in corr:
+            g = corr[r['accession']]; ok = abs(g - v) <= tol(g, v)
+            r['calc_check'] = ';'.join(x for x in (r.get('calc_check', ''), f"GP corroboration: unpresented GrossProfit fact {g} {'ok' if ok else 'DISAGREE'}") if x)
+            if not ok: r['flags'] += ';gp_corroboration_disagree'
     return rows
 def apply_ap_related(rows, filings):
     """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
@@ -301,6 +323,7 @@ if __name__ == '__main__':
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
     rows = fill_printed_zero_and_comparative(rows, td)
+    rows = derive_gross_profit(rows)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
     # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of
     # intangible amortization; the cost-of-sales part is a member): the location total (_amortization-location-total)

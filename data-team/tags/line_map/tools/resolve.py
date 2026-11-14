@@ -55,7 +55,7 @@ def node(l, why): return dict(tag=l['tag'], val=l['val'], ln=l['ln'], rep=l['rep
 
 REV_HINT = re.compile(r'Revenue|Sales')
 COR_HINT = re.compile(r'^CostOf|CostOfRevenue|CostOfGoods|CostOfServices|CostDirect')
-COS_LABEL = re.compile(r'(?i)^(total )?costs? of|^food (and|&) paper')
+COS_LABEL = re.compile(r'(?i)^(total )?costs? of(?!.*(business combination|merger|acquisition|integration|restructur))|^food (and|&) paper')  # 'Cost of MetroPCS business combination' (TMUS) is not cost of sales
 def cos_nature(tag, lb): return bool(COR_HINT.search(tag) or COS_LABEL.search(lb or ''))
 
 def resolve(f):
@@ -257,6 +257,11 @@ def resolve(f):
                         cn = [x for x, ww in order[:idx[-1] + 1] if ww > 0]
                     else:                     # scattered (UNH): only the lines that are cost of sales by nature
                         cn = [order[i][0] for i in idx if order[i][1] > 0]
+                        # interleaved: another cost line sits between two cost-of-sales lines (ORCL prints its cloud and
+                        # hardware costs on custom lines between support and services costs): no cost-of-revenue total exists
+                        if idx and (len(idx) > 1 and any(i not in idx for i in range(idx[0], idx[-1] + 1))) or idx and any(i not in idx and iby[order[i][0]].get('custom') for i in range(0, idx[-1])):
+                            put('cost_of_revenue', 'not_presented', [], None, f"IS: the cost lines under {c} interleave cost-of-sales lines with the filer's own cost lines (custom elements before the last cost-of-sales line): no cost-of-revenue total is printed", 'cor_indeterminate')
+                            cor_tags |= set(cn); cn = []
                     cn = cor_top(cn, iby, kids, onis) if cn else cn
                     cn = cor_top(cn, iby, kids, onis) if cn else cn
                     if cn and not any(COR_HINT.search(x) for x in cn):
