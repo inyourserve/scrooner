@@ -106,13 +106,10 @@ def test_accretion_tag_is_combined_when_the_filing_reports_accretion():
     assert run(cf, {('PreferredStockAccretionOfRedemptionDiscount', 4): D(4)})['depreciation_and_amortization']['status'] == 'mapped'
 
 
-def test_comprehensive_income_including_nci_is_the_parent_when_the_filing_has_no_nci():
-    # V, UNP: only the NCI-inclusive CI figure is reported (note fact); the pretax total's element name mentions MinorityInterest
-    # and the BS total is ...IncludingPortionAttributableToNoncontrollingInterest - neither is an NCI line
+def test_comprehensive_income_including_nci_stays_a_point_reason_without_nci_lines():
+    # ruling 2026-11-14 (JNJ, V, UNP): the NCI-inclusive element names more than the parent figure: combined (ci_incl_nci)
     lines = [('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments', 'Income before taxes', 8),
              ('BS', 'StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest', 'Total equity', 30)]
     notes = {('ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest', 4): D(56)}
     c = run(lines, notes)['comprehensive_income']
-    assert c['status'] == 'mapped' and c['value'] == D(56)
-    c2 = run(lines + [('IS', 'NetIncomeLossAttributableToNoncontrollingInterest', 'NCI', 2)], notes)['comprehensive_income']
-    assert c2['status'] == 'combined'
+    assert c['status'] == 'combined' and c['flags'] == 'ci_incl_nci'

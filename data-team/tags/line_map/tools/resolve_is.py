@@ -134,12 +134,9 @@ def resolve_ci(L, notes):
     if inc is not None or notes.get((INCL, 4)) is not None:
         # an NCI line is an attribution or balance element; a pretax total whose name merely mentions MinorityInterest (UNP, V) is not
         nci_line = any(NCI_TAG.search(l['tag']) and l['val'] for l in L if l['st'] in ('CI', 'IS', 'BS', 'EQ'))
-        if not nci_line and not any(NCI_TAG.search(t) and v for (t, q), v in notes.items()):
-            if inc is not None:
-                return mk('comprehensive_income', 'mapped', [inc], f"CI statement prints {INCL} and the statements carry no noncontrolling-interest line: the figure is the parent's", flags='ci_no_nci_line')
-            v = notes[(INCL, 4)]
-            return dict(data_point='comprehensive_income', status='mapped', tags=INCL, value=v, r_page='NOTE', nodes=f'{INCL}={v} [NOTE]',
-                        why='only the figure including noncontrolling interest is reported, and the filing has no noncontrolling interest: it is the parent figure', flags='ci_no_nci_line')
+        # ruling 2026-11-14 (Dhairya; MSFT/JNJ, Ritwik certified): a line whose element or label names items beyond the data
+        # point is combined. The NCI-inclusive element names the noncontrolling portion, so it stays the ci_incl_nci point reason
+        # even when the filing shows no NCI line (the earlier no-NCI -> parent rule is withdrawn)
         return dict(data_point='comprehensive_income', status='combined', tags=INCL, value=None, r_page=f"R{inc['rep']}.htm" if inc else 'NOTE', nodes=fmt(inc) if inc else f'{INCL} [NOTE]',
                     why='only the figure including noncontrolling interest is printed; the parent figure is not (ruling: point reason)', flags='ci_incl_nci')
     pn = notes.get(('ComprehensiveIncomeNetOfTax', 4))

@@ -63,6 +63,18 @@ def test_gross_profit_not_printed_is_derived_and_corroborated():
     assert RA.derive_gross_profit(rows)[0]['status'] == 'not_presented'   # cost of revenue not resolvable (ORCL)
 
 
+def test_a_line_whose_label_names_items_beyond_the_data_point_is_combined():
+    # MSFT CF 'Depreciation, amortization, and other' -> combined; CVX 'Sales and other operating revenues' stays revenue
+    fm = dict(cik='1', a='M1', p='2024-06-30', fd='', calc='', lines='CF|6|4|DepreciationAmortizationAndOther|1|0||Depreciation, amortization, and other|22287')
+    fc = dict(cik='2', a='C1', p='2024-12-31', fd='', calc='', lines='IS|2|2|Revenues|0|0||Sales and other operating revenues|193414')
+    rows = [dict(ticker='MSFT', accession='M1', period_end='2024-06-30', data_point='depreciation_and_amortization', status='mapped', value=D(22287), nodes='DepreciationAmortizationAndOther=22287 [R6.htm:4]', flags=''),
+            dict(ticker='MSFT', accession='M1', period_end='2024-06-30', data_point='interest_income', status='mapped', value=D(3157), nodes='InvestmentIncomeNet=3157 [NOTE]', flags=''),
+            dict(ticker='CVX', accession='C1', period_end='2024-12-31', data_point='revenue', status='mapped', value=D(193414), nodes='Revenues=193414 [R2.htm:2]', flags='')]
+    da, ii, rev = RA.apply_label_beyond(rows, [fm, fc])
+    assert da['status'] == 'combined' and da['value'] is None and 'label_beyond' in da['flags']
+    assert ii['status'] == 'combined' and rev['status'] == 'mapped'
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):

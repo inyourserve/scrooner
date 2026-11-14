@@ -145,6 +145,38 @@ def derive_gross_profit(rows):
             r['calc_check'] = ';'.join(x for x in (r.get('calc_check', ''), f"GP corroboration: unpresented GrossProfit fact {g} {'ok' if ok else 'DISAGREE'}") if x)
             if not ok: r['flags'] += ';gp_corroboration_disagree'
     return rows
+OTHER_BEYOND = re.compile(r'(?i)\b(and|&|,)\s+other\b|\bothers?\s*$')
+WITHIN = {'revenue': r'other (operating )?(revenues?|sales)', 'intangible_assets': r'other intangible', 'ppe_net': r'other property',
+          'capex': r'other property', 'depreciation_and_amortization': r'other amortization', 'goodwill': r'other intangible'}
+II_BEYOND_TAG = re.compile(r'^(InvestmentIncomeNet|InvestmentIncomeInterestAndDividend|InterestAndDividendIncome\w*|InvestmentIncomeNonoperating)$')
+def apply_label_beyond(rows, filings):
+    """Ruling 2026-11-14 (Dhairya; MSFT certified by Ritwik): a line whose label (or, for a note fact, whose element) names
+    items beyond the data point is combined: 'Depreciation, amortization, and other' (D&A), 'Interest and dividends income' /
+    'Investment income' (interest income), 'Receivables - trade and other', 'Repurchase of ... shares and other', 'Total
+    revenues and other income'. 'Other X' where X is the data point itself is within it ('Sales and other operating revenues',
+    'Trademarks and other intangible assets', 'Parks, resorts and other property', 'other amortization')."""
+    F = {f['a']: f for f in filings}
+    cache = {}
+    for r in rows:
+        dp = r['data_point']
+        if r['status'] != 'mapped' or (r.get('column') or 'own') != 'own' or dp in ('other_income_expense_net', 'comprehensive_income'): continue
+        nodes = r.get('nodes') or ''
+        m = re.match(r'-?(\w+)=[-\d.]+ \[R(\d+)(?:\.htm)?:(\d+)\]', nodes)
+        lb = None
+        if m and r['accession'] in F:
+            if r['accession'] not in cache: cache[r['accession']] = parse(F[r['accession']])[0]
+            lb = next((l['lb'] or '' for l in cache[r['accession']] if l['tag'] == m.group(1) and l['ln'] == int(m.group(3))), None)
+        beyond = None
+        if lb is not None:
+            if OTHER_BEYOND.search(lb) and not (dp in WITHIN and re.search(WITHIN[dp], lb, re.I)): beyond = f"its label '{lb}' names other items"
+            elif dp == 'interest_income' and re.search(r'(?i)dividend|investment(?! income, interest)|and other', lb): beyond = f"its label '{lb}' names more than interest"
+        elif dp == 'interest_income':
+            t = re.match(r'-?(\w+)=', nodes)
+            if t and II_BEYOND_TAG.match(t.group(1)): beyond = f"the element {t.group(1)} reports investment income (interest with dividends and other items)"
+        if beyond:
+            r.update(status='combined', value=None, why=f"the line holding the role is wider than {dp}: {beyond} (ruling 2026-11-14: a line whose label names items beyond the data point is combined)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'label_beyond') if x)
+    return rows
 def apply_ap_related(rows, filings):
     """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
     related-party (component_sum). A separate current line whose own label names a payable to related parties
@@ -342,6 +374,15 @@ if __name__ == '__main__':
             if mf:
                 t = mf[0][0]; v = next(D(x.split('|')[2]) for x in notefacts[r['accession']].split('~') if x.startswith(t + '|0|'))
                 r.update(value=v, tags=t, nodes=f'{t}={v} [NOTE]', status='mapped')
+    rows = apply_label_beyond(rows, filings)
+    # the ci_incl_nci point reason cites the own 10-K's CI statement line (_ci-face-lines: fsn.line stmt CI; the extract
+    # carries the figure as a note fact)
+    _cl = os.environ.get('CI_FACE_LINES', _here('_ci-face-lines-2026-11-14.csv'))
+    CL = {x['accession']: x for x in csv.DictReader(open(_cl))} if os.path.exists(_cl) else {}
+    for r in rows:
+        x = CL.get(r['accession'])
+        if x and r['data_point'] == 'comprehensive_income' and r['status'] == 'combined' and '[NOTE]' in (r.get('nodes') or ''):
+            r['nodes'] = r['nodes'].replace('[NOTE]', f"[R{x['report']}.htm:{x['line']} '{x['label']}', own 10-K {r['accession']}]")
     for r in rows:   # lineage of member-only face facts
         t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
         if (r['accession'], t) in MF and r['status'] == 'mapped' and not re.search(r'\[R\d+', r.get('nodes') or ''):
