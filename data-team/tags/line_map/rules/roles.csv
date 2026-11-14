@@ -29,10 +29,10 @@ weighted_diluted_shares,IS,,WeightedAverageNumberOfDilutedSharesOutstanding|Weig
 comprehensive_income,NOTE,,ComprehensiveIncomeNetOfTax,ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest,Y,,parent comprehensive income (CI statement),
 dividends_per_share,NOTE,,CommonStockDividendsPerShareDeclared|CommonStockDividendsPerShareCashPaid,,Y,,declared per share (EQ or note),
 deposits,BS,,Deposits,,N,^(total )?deposits$,bank deposits total,
-loans_net,BS,,LoansAndLeasesReceivableNetReportedAmount|FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss|NotesReceivableNet,,N,loans.*net,bank net loans,
+loans_net,BS,,LoansAndLeasesReceivableNetReportedAmount|FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss|NotesReceivableNet,,Y,loans.*net,"bank net loans; note fact per §AG (Dhairya 2026-11-14): bank-loan elements, or trade elements on a bank face",
 noninterest_expense,IS,,NoninterestExpense,,N,noninterest expense,bank noninterest expense total,
 noninterest_income,IS,,NoninterestIncome,,N,noninterest income,bank noninterest income total,
-provision_for_credit_losses,IS,,ProvisionForLoanLeaseAndOtherLosses|ProvisionForLoanAndLeaseLosses|ProvisionForCreditLosses|ProvisionForLoanLossesExpensed|FinancingReceivableCreditLossExpenseReversal|ProvisionForDoubtfulAccounts,,N,provision for credit losses,bank provision line,
+provision_for_credit_losses,IS,,ProvisionForLoanLeaseAndOtherLosses|ProvisionForLoanAndLeaseLosses|ProvisionForCreditLosses|ProvisionForLoanLossesExpensed|FinancingReceivableCreditLossExpenseReversal|ProvisionForDoubtfulAccounts,,Y,provision for credit losses,"bank provision line; note fact per §AG (Dhairya 2026-11-14): bank-loan elements, or trade elements on a bank face",
 total_interest_income,IS,,InterestAndDividendIncomeOperating,,N,total interest income,bank interest income total,
 net_interest_income,IS,,InterestIncomeExpenseNet,,N,net interest income,bank net interest income,
 income_before_tax,IS,,IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest|IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments|IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic+IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign,,Y,^(income|earnings) before (provision for )?income tax,fallback when the calc tree gives no pretax node,Y

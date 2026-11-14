@@ -261,6 +261,48 @@ def apply_expenses_by_nature(rows, filings):
     return rows
 
 
+IE_PART_LB = re.compile(r'(?i)^interest expense,? (of|excluding) (.+?)\s*$')
+
+
+def apply_complement_interest(rows, filings, memberfacts):
+    """Ruling 2026-11-14 (Dhairya, CAT): consolidated gross interest expense includes the finance arm's interest even where it sits in
+    operating costs. The income statement prints the two parts as 'Interest expense of Financial Products' and 'Interest expense
+    excluding Financial Products' (lines, or ProductOrService members AllOtherExcluding<X> and <X> of one line): a part and its
+    complement are exhaustive by their own names (member-sum ruling 4), so interest_expense is their sum (flag member_sum)."""
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'interest_expense' or r['accession'] not in F: continue
+        isf = [l for l in face(parse(F[r['accession']])[0], 'IS') if not l['tag'].endswith('Abstract')]
+        mem = {}
+        for e in (memberfacts.get(r['accession']) or '').split('~'):
+            x = e.split('|')
+            if len(x) >= 4 and x[1] == '4':
+                m = re.fullmatch(r'ProductOrService=(\w+);', x[3])
+                if m: mem.setdefault(x[0], {})[m.group(1)] = D(x[2])
+        parts = []
+        lab = {l['ln']: IE_PART_LB.match((l['lb'] or '').strip()) for l in isf}
+        of = [l for l in isf if lab[l['ln']] and lab[l['ln']].group(1).lower() == 'of']
+        ex = [l for l in isf if lab[l['ln']] and lab[l['ln']].group(1).lower() == 'excluding']
+        if len(of) == 1 and len(ex) == 1 and lab[of[0]['ln']].group(2).lower() == lab[ex[0]['ln']].group(2).lower():
+            for l in (of[0], ex[0]):
+                if l['val'] is not None: parts.append((l['tag'], l['val'], l))
+                elif len(mem.get(l['tag'], {})) == 1:
+                    (k, v), = mem[l['tag']].items(); parts.append((f"{l['tag']}[ProductOrService={k}]", v, l))
+        else:
+            for l in isf:
+                d = mem.get(l['tag'], {})
+                if l['val'] is None and re.match(r'^(InterestExpense\w*|InterestAndDebtExpense)$', l['tag']) and len(d) == 2:
+                    a_, b_ = sorted(d)
+                    if a_ == f'AllOtherExcluding{b_}' or b_ == f'AllOtherExcluding{a_}':
+                        parts = [(f"{l['tag']}[ProductOrService={k}]", v, l) for k, v in sorted(d.items())]
+        if len(parts) != 2: continue
+        r.update(status='component_sum', value=sum(v for _, v, _ in parts), tags='+'.join(t.split('[')[0] for t, _, _ in parts),
+                 nodes='; '.join(f"{t}={v} [R{l['rep']}.htm:{l['ln']}]" for t, v, l in parts),
+                 why="consolidated gross interest expense: the finance arm's part and its complement as printed (ruling 2026-11-14, CAT: Financial Products interest is interest expense although it sits in operating costs)")
+        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'member_sum') if x)
+    return rows
+
+
 def apply_alt(rows):
     """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
     for r in rows:
@@ -522,6 +564,17 @@ def descendants(arcs, root, onface):
         for c, w in (children(arcs, p, onface) or []):
             if c not in out: out.add(c); stack.append(c)
     return out
+# Ruling 2026-11-14 (Dhairya): the note-only rule (§AG) serves provision_for_credit_losses and loans_net from undimensioned note facts.
+# They are bank data points: a trade element (ProvisionForDoubtfulAccounts, NotesReceivableNet) is served from a note only on a bank
+# income statement (net interest income printed: MS loans as NotesReceivableNet); CVS / VZ bad-debt provisions are not bank provisions
+BANK_NOTE = {'provision_for_credit_losses': re.compile(r'^(ProvisionForLoan\w*|ProvisionForCreditLosses|FinancingReceivableCreditLoss\w*)$'),
+             'loans_net': re.compile(r'^(LoansAndLeases\w*|FinancingReceivable\w*)$')}
+
+
+def bank_face(L):
+    return any(l['st'] == 'IS' and (l['tag'] == 'InterestIncomeExpenseAfterProvisionForLoanLoss' or re.match(r'(?i)^net interest( income| revenue)?$', (l['lb'] or '').strip())) for l in L)
+
+
 def role(f, L, arcs, notes, R):
     dp, stmt = R['data_point'], R['stmt']
     alts = [a.split('+') for a in R['alternatives'].split('|') if a]
@@ -557,10 +610,14 @@ def role(f, L, arcs, notes, R):
         # instants (balance-sheet items) read the note fact at qtrs 0; durations at qtrs 4
         q = 0 if (stmt == 'BS' or dp in INSTANT_DPS) else 4
         for parts in alts:
+            if dp in BANK_NOTE and any(not BANK_NOTE[dp].match(t) for t in parts) and not bank_face(L): continue
             vs = [notes.get((t, q)) for t in parts]
             if all(v is not None for v in vs):
-                return dict(status='mapped' if len(parts) == 1 else 'component_sum', tags='+'.join(parts), value=sum(vs), r_page='NOTE', nodes='; '.join(f"{t}={v} [NOTE]" for t, v in zip(parts, vs)),
-                            why=f"undimensioned consolidated fact {'+'.join(parts)} at the filing's own column (§AG)")
+                hit = dict(status='mapped' if len(parts) == 1 else 'component_sum', tags='+'.join(parts), value=sum(vs), r_page='NOTE', nodes='; '.join(f"{t}={v} [NOTE]" for t, v in zip(parts, vs)),
+                           why=f"undimensioned consolidated fact {'+'.join(parts)} at the filing's own column (§AG)")
+                if dp in BANK_NOTE:   # after a later 10-K's printed line for the year (GS 2016: face 182, note -138; C 2023: face 1,762, note 7,786)
+                    return dict(status='not_presented', tags='', value=None, r_page='', why=f"no {dp} line on the {stmt} of this filing", alt=hit)
+                return hit
     return dict(status='not_presented', tags='', value=None, r_page='',
                 why=f"no {dp} line on the {stmt if stmt != 'NOTE' else 'statements'} of this filing" + (' nor an undimensioned note fact' if R['note_ok'] == 'Y' or stmt == 'NOTE' else ''))
 def run(filings, notefacts, tick, td_rows):
@@ -689,7 +746,8 @@ if __name__ == '__main__':
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'coregistrant_face') if y)
     import resolve_is
     resolve_is.MEMBER_FACTS = memberfacts
-    rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = resolve_is.apply(rows, filings, notefacts, tick)
+    rows = apply_complement_interest(rows, filings, memberfacts)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_ci_parent(rows, clines, notefacts, memberfacts)
     rows = apply_cost_and_opex(rows, filings)
     rows = apply_expenses_by_nature(rows, filings)

@@ -10,7 +10,7 @@ turnarounds, REIT improvements, CIP; never oil and gas property or acreage); buy
 import csv, json, re, sys, os, collections
 from decimal import Decimal as D
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from resolve import parse, face, note_facts
+from resolve import parse, face, note_facts, tol
 
 TOTAL = re.compile(r'^NetCashProvidedByUsedIn(Operating|Investing|Financing)Activities(ContinuingOperations|DiscontinuedOperations)?$')
 SEC = {'Operating': 'O', 'Investing': 'I', 'Financing': 'F'}
@@ -74,6 +74,36 @@ def class_member_lines(f, cf, sec, tags):
     return out
 
 
+def has_member_facts(f, tag):
+    return any(e.split('|')[0] == tag and e.split('|')[1:2] == ['4'] for e in (MEMBER_FACTS.get(f.get('a')) or '').split('~') if e)
+
+
+def entity_member_tie(f, cf, sec, unvalued):
+    """Member-sum ruling 2026-11-14 (Dhairya): a member sum is served only when the members demonstrably make up the consolidated figure.
+    The valueless capex lines' ConsolidatedEntities members (VLO FY2025: excluding VIEs + Diamond Green Diesel + other VIEs), with every
+    valued investing line, must reproduce the printed investing total. Returns ([(tag, member, value, line)], total line) or None."""
+    tot = next((l for l in cf if l['tag'] == 'NetCashProvidedByUsedInInvestingActivities' and l['val'] is not None), None)
+    if tot is None: return None
+    parts = []
+    for l in unvalued:
+        ms = {}
+        for e in (MEMBER_FACTS.get(f.get('a')) or '').split('~'):
+            x = e.split('|')
+            if len(x) >= 4 and x[0] == l['tag'] and x[1] == '4':
+                m = re.fullmatch(r'ConsolidatedEntities=(\w+);', x[3])
+                if not m: return None
+                ms.setdefault(m.group(1), set()).add(D(x[2]))
+        if not ms or any(len(v) != 1 for v in ms.values()): return None
+        parts += [(l['tag'], m, v.pop(), l) for m, v in sorted(ms.items())]
+    out = sum(v for _, _, v, _ in parts)
+    for l in cf:
+        if sec.get(l['ln']) != 'I' or l['val'] is None or l is tot or l['tag'].endswith('Abstract'): continue
+        if l['tag'].startswith('Proceeds'): out -= l['val']
+        elif l['tag'].startswith('Payments'): out += l['val']
+        else: return None   # a line of unknown direction: no tie can be shown
+    return (parts, tot) if abs(out + tot['val']) <= tol(out, tot['val'], *[v for _, _, v, _ in parts]) else None
+
+
 def resolve_cf(f, notes):
     """Returns {data_point: dict(status, tags, value, nodes, why, flags)} for one 10-K."""
     L, arcs = parse(f)
@@ -102,6 +132,16 @@ def resolve_cf(f, notes):
     cmb = [l for l in mem if re.search(r'(?i)\band (other )?investments\b', l['lb'] or '')]
     if cmb and len(cmb) == len(mem):   # NEE: a combined segment line beside other capex lines stays in the sum (Dhairya ruling: NEE capex = sum of the segment lines); PSX 'Capital expenditures and investments': capex printed together with investments in affiliates (founder ruling 2026-11-01 item 3: a combined line is never one concept)
         put('capex', 'combined', '+'.join(l['tag'] for l in cmb), None, fmt(cmb), "CF investing section: the capital-purchase line also holds investments ('" + cmb[0]['lb'] + "'): combined")
+    elif mem and (gap := [l for l in cf if sections(cf).get(l['ln']) == 'I' and l['val'] is None and l['tag'] in CORE_PPE and not HARD_NOT.search(l['lb'] or '') and has_member_facts(f, l['tag'])]):   # a dash line has no facts (GLW 2020)
+        # VLO 2018: 'Deferred turnaround' 915 is valued, 'Capital expenditures' carries members only; never sum an incomplete group
+        tie = entity_member_tie(f, cf, sections(cf), gap)
+        if tie:
+            parts, tot = tie
+            put('capex', 'component_sum', '+'.join([l['tag'] for l in mem] + [t for t, _, _, _ in parts]), sum(l['val'] for l in mem) + sum(v for _, _, v, _ in parts),
+                '; '.join([fmt([l]) for l in mem] + [f"{t}[ConsolidatedEntities={m}]={v} [R{l['rep']}.htm:{l['ln']}]" for t, m, v, l in parts]),
+                f"capital-purchase lines, '{gap[0]['lb']}' by its ConsolidatedEntities members; with the other investing lines they tie to '{tot['lb']}' {tot['val']} (member-sum ruling 2026-11-14)", flags='member_sum')
+        else:
+            put('capex', 'not_presented', '', None, fmt(mem), f"the investing section prints '{gap[0]['lb']}' with no consolidated value beside {', '.join(repr(l['lb']) for l in mem[:2])}; an incomplete group is never summed")
     elif mem:
         put('capex', 'mapped' if len(mem) == 1 else 'component_sum', '+'.join(l['tag'] for l in mem), sum(l['val'] for l in mem), fmt(mem),
             "CF investing section: capital-purchase line(s) (register 2026-11-04 item 3)" + ('; sum of ' + str(len(mem)) if len(mem) > 1 else ''))
@@ -114,6 +154,11 @@ def resolve_cf(f, notes):
         if unvalued and n:
             put('capex', 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]',
                 f"the investing section prints {', '.join(repr(l['lb']) for l in unvalued[:2])} with no undimensioned value (member facts only); the filing's undimensioned capex-class fact", flags='face_lines_member_only')
+        elif unvalued and (tie := entity_member_tie(f, cf, sec_all, unvalued)):
+            parts, tot = tie
+            put('capex', 'component_sum', '+'.join(t for t, _, _, _ in parts), sum(v for _, _, v, _ in parts),
+                '; '.join(f"{t}[ConsolidatedEntities={m}]={v} [R{l['rep']}.htm:{l['ln']}]" for t, m, v, l in parts),
+                f"the capex lines carry ConsolidatedEntities members only; their sum with the other investing lines ties to '{tot['lb']}' {tot['val']}, so the members make up the consolidated figure (member-sum ruling 2026-11-14)", flags='member_sum')
         else:
             put('capex', 'not_presented', '', None, '', 'no capital-purchase line in the investing section of this filing')
     # ---- buybacks: own common stock, financing section

@@ -471,7 +471,7 @@ def test_revenue_table_member_is_never_the_consolidated_revenue():
 
 def test_extract_selects_revenue_rows_by_product_or_service_member():
     sql = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'extract_notefacts.sql')).read()
-    assert "RevenueFromContractWithCustomer\\w*|SalesRevenueNet)$'" in sql and "'^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$)'" in sql
+    assert "RevenueFromContractWithCustomer\\w*|SalesRevenueNet)$'" in sql and "'^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$|" in sql
 
 
 # ---- false-reason sweep 2026-11-14 (_false-reason-candidates-2026-11-14.csv)
@@ -602,3 +602,115 @@ def test_opex_lines_rule_needs_two_lines_and_no_oi():
     base = [('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'R&D', 530)]
     assert run(base + [('IS', 'InterestExpense', 'Interest expense', 106)]) == 'not_presented'
     assert run(base + [('IS', 'SellingGeneralAndAdministrativeExpense', 'SG&A', 406), ('IS', 'OperatingIncomeLoss', 'Operating income', 663), ('IS', 'InterestExpense', 'Interest expense', 106)]) == 'not_presented'
+
+
+# ---- Dhairya rulings on the sweep, 2026-11-14
+
+def _role(dp):
+    return next(r for r in resolve_all.ROLES if r['data_point'] == dp)
+
+
+def test_bank_note_facts_are_served_after_the_fill_and_trade_elements_only_on_a_bank_face():
+    ind = filing([('IS', 'Revenues', 'Revenues', 100), ('IS', 'InterestIncomeExpenseNet', 'Interest expense, net', -5)])
+    L, arcs = resolve.parse(ind)
+    r = resolve_all.role(ind, L, arcs, {('ProvisionForLoanAndLeaseLosses', 4): D(48)}, _role('provision_for_credit_losses'))
+    assert r['status'] == 'not_presented' and r['alt']['value'] == D(48) and r['alt']['nodes'] == 'ProvisionForLoanAndLeaseLosses=48 [NOTE]'
+    # a trade bad-debt provision is not a bank provision on an industrial face (CVS, VZ)
+    r = resolve_all.role(ind, L, arcs, {('ProvisionForDoubtfulAccounts', 4): D(256)}, _role('provision_for_credit_losses'))
+    assert 'alt' not in r and r['status'] == 'not_presented'
+    # on a bank face (MS prints 'Net interest') the trade element is the bank's loans
+    bank = filing([('IS', 'InterestIncomeExpenseNet', 'Net interest', 1735)])
+    L, arcs = resolve.parse(bank)
+    r = resolve_all.role(bank, L, arcs, {('NotesReceivableNet', 0): D(137784)}, _role('loans_net'))
+    assert r['alt']['value'] == D(137784)
+    # other data points keep serving the note fact directly
+    r = resolve_all.role(ind, L, arcs, {('PaymentsForRepurchaseOfCommonStock', 4): D(7)}, dict(_role('provision_for_credit_losses'), data_point='x', alternatives='PaymentsForRepurchaseOfCommonStock'))
+    assert r['status'] == 'mapped'
+
+
+def test_interest_expense_of_the_finance_arm_and_its_complement_are_summed():
+    # CAT 2019: two valued lines; 2020: one line with AllOtherExcludingFinancialProducts + FinancialProducts members
+    f = filing([('IS', 'InterestExpenseOfFinancialProducts', 'Interest expense of Financial Products', 754), ('IS', 'OperatingIncomeLoss', 'Operating profit', 8290),
+                ('IS', 'InterestExpenseExcludingFinancialProducts', 'Interest Expense Excluding Financial Products', 421)])
+    row = dict(accession=f['a'], data_point='interest_expense', status='mapped', value=D(421), flags='')
+    r = resolve_all.apply_complement_interest([row], [f], {})[0]
+    assert r['value'] == D(1175) and r['status'] == 'component_sum' and 'member_sum' in r['flags']
+    g = filing([('IS', 'Revenues', 'Sales', 41748), ('IS', 'InterestExpense', 'Interest Expense', None)])
+    mf = {g['a']: 'InterestExpense|4|514|ProductOrService=AllOtherExcludingFinancialProducts;~InterestExpense|4|589|ProductOrService=FinancialProducts;'}
+    r = resolve_all.apply_complement_interest([dict(accession=g['a'], data_point='interest_expense', status='not_presented', value=None, flags='')], [g], mf)[0]
+    assert r['value'] == D(1103) and r['nodes'].startswith('InterestExpense[ProductOrService=AllOtherExcludingFinancialProducts]=514 [R2.htm:2]')
+    # members that are not a part and its complement are not exhaustive
+    mf2 = {g['a']: 'InterestExpense|4|514|ProductOrService=Products;~InterestExpense|4|589|ProductOrService=FinancialProducts;'}
+    assert resolve_all.apply_complement_interest([dict(accession=g['a'], data_point='interest_expense', status='not_presented', value=None, flags='')], [g], mf2)[0]['status'] == 'not_presented'
+    # 'of X' beside 'excluding Y' is not a complement
+    h = filing([('IS', 'InterestExpenseOfFinancialProducts', 'Interest expense of Financial Products', 754), ('IS', 'InterestExpenseExcludingFinancialProducts', 'Interest expense excluding Insurance', 421)])
+    assert resolve_all.apply_complement_interest([dict(accession=h['a'], data_point='interest_expense', status='mapped', value=D(421), flags='')], [h], {})[0]['value'] == D(421)
+
+
+def _vlo(capex_val=None, other=-40, mf=None):
+    rows = [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5000),
+            ('CF', 'PaymentsToAcquirePropertyPlantAndEquipment', 'Capital expenditures', capex_val),
+            ('CF', 'PaymentsForCapitalImprovements', 'Deferred turnaround and catalyst cost expenditures', None),
+            ('CF', 'PaymentsToAcquireAvailableForSaleSecuritiesDebt', 'Purchases of AFS debt securities', 27),
+            ('CF', 'ProceedsFromSaleAndMaturityOfAvailableForSaleSecurities', 'Proceeds from AFS', 30),
+            ('CF', 'PaymentsForProceedsFromOtherInvestingActivities', 'Other investing activities, net', other),
+            ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -1842),
+            ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -100)]
+    f = filing(rows)
+    old = dict(resolve_cf_mod.MEMBER_FACTS)
+    try:
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = mf if mf is not None else ('PaymentsToAcquirePropertyPlantAndEquipment|4|719|ConsolidatedEntities=ExcludingVIE;~PaymentsToAcquirePropertyPlantAndEquipment|4|77|ConsolidatedEntities=VIE;'
+                                                                      '~PaymentsForCapitalImprovements|4|990|ConsolidatedEntities=ExcludingVIE;~PaymentsForCapitalImprovements|4|99|ConsolidatedEntities=VIE;')
+        return resolve_cf(f, {})['capex']
+    finally:
+        resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
+
+
+def test_entity_member_capex_is_served_only_when_it_ties_to_the_investing_total():
+    c = _vlo()   # 796 + 1089 + 27 - 30 - 40 = 1842
+    assert c['status'] == 'component_sum' and c['value'] == D(1885) and 'member_sum' in c['flags']
+    assert _vlo(other=-10)['status'] == 'not_presented'   # off by 30: the members are not shown to be complete
+    assert _vlo(mf='PaymentsToAcquirePropertyPlantAndEquipment|4|796|BusinessSegments=Refining;~PaymentsForCapitalImprovements|4|1089|ConsolidatedEntities=ExcludingVIE;')['status'] == 'not_presented'
+
+
+def test_a_member_only_capex_line_beside_a_valued_one_is_never_left_out():
+    # VLO 2018: 'Deferred turnaround' valued, 'Capital expenditures' member-only and not tying: a reason, not the turnaround alone
+    rows = [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5000),
+            ('CF', 'PaymentsToAcquirePropertyPlantAndEquipment', 'Capital expenditures', None),
+            ('CF', 'PaymentsForCapitalImprovements', 'Deferred turnaround and catalyst costs', 915),
+            ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -3376),
+            ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -100)]
+    f = filing(rows)
+    old = dict(resolve_cf_mod.MEMBER_FACTS)
+    try:
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = 'PaymentsToAcquirePropertyPlantAndEquipment|4|1628|ConsolidatedEntities=ExcludingCertainVIE;'
+        c = resolve_cf(f, {})['capex']
+        assert c['status'] == 'not_presented' and 'incomplete group' in c['why']
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = 'PaymentsToAcquirePropertyPlantAndEquipment|4|2461|ConsolidatedEntities=ExcludingCertainVIE;'
+        c = resolve_cf(f, {})['capex']
+        assert c['status'] == 'component_sum' and c['value'] == D(3376)
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = ''   # a dash line with no facts at all (GLW 2020) is not a gap
+        assert resolve_cf(f, {})['capex']['value'] == D(915)
+    finally:
+        resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
+
+
+def test_complement_pair_needs_both_parts_and_tie_needs_known_directions():
+    # CAT 2021: 'of Financial Products' member-only with no stored member: one part is not consolidated interest
+    f = filing([('IS', 'Revenues', 'Sales', 1), ('IS', 'FinancingInterestExpense', 'Interest expense of Financial Products', None),
+                ('IS', 'InterestExpense', 'Interest expense excluding Financial Products', 488)])
+    row = dict(accession=f['a'], data_point='interest_expense', status='mapped', value=D(488), flags='')
+    r = resolve_all.apply_complement_interest([row], [f], {})[0]
+    assert r['value'] == D(488) and r['status'] == 'mapped' and 'member_sum' not in r['flags']
+    # an investing line whose direction is unknown ('Change in restricted cash') blocks the tie
+    rows = [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Operating', 5000), ('CF', 'PaymentsToAcquirePropertyPlantAndEquipment', 'Capital expenditures', None),
+            ('CF', 'IncreaseDecreaseInRestrictedCash', 'Change in restricted cash', 0),
+            ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -796),
+            ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Financing', -100)]
+    g = filing(rows)
+    old = dict(resolve_cf_mod.MEMBER_FACTS)
+    try:
+        resolve_cf_mod.MEMBER_FACTS[g['a']] = 'PaymentsToAcquirePropertyPlantAndEquipment|4|796|ConsolidatedEntities=ExcludingVIE;'
+        assert resolve_cf(g, {})['capex']['status'] == 'not_presented'
+    finally:
+        resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
