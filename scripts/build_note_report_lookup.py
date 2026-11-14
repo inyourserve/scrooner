@@ -37,6 +37,33 @@ def wanted_pairs(covs: list[Path]) -> set[tuple[str, str]]:
     return wanted
 
 
+def edgar_cik(acc: str, ciks: dict[str, str]) -> int:
+    """The CIK for an EDGAR archive path. The accession prefix is the FILER AGENT's id, not the company's
+    (0001628280-26-005939 is PM's, under agent 1628280: the path 404s), so the company CIK comes first (fsn.filing.cik)
+    and the prefix is only the fallback for an accession the store does not know."""
+    return int(ciks.get(acc) or acc.split("-")[0])
+
+
+def read_ciks(accessions: set[str]) -> dict[str, str]:
+    """accession -> registrant CIK from fsn.filing (read-only; empty when the database is not reachable)."""
+    if not accessions:
+        return {}
+    try:
+        from scrooner_pipeline.db.connection import get_connection
+
+        with get_connection() as conn:
+            conn.execute("set transaction read only")
+            return dict(
+                conn.execute(
+                    "select accession, cik from fsn.filing where accession = any(%s)",
+                    (sorted(accessions),),
+                ).fetchall()
+            )
+    except Exception as e:  # noqa: BLE001
+        print("cik lookup failed, using accession prefixes:", repr(e)[:100], flush=True)
+        return {}
+
+
 def write_rows(out: Path, rows: list[dict[str, object]]) -> None:
     rows = sorted(rows, key=lambda r: (str(r["accession"]), str(r["tag"])))
     tmp = out.with_suffix(".tmp")
@@ -73,9 +100,14 @@ def main(covs: list[Path], cache: Path, out: Path, attempted: Path | None) -> in
         for a, t in missing:
             by_acc.setdefault(a, set()).add(t)
         todo = [a for a in sorted(by_acc) if a not in done]
+        if (
+            "--limit" in sys.argv
+        ):  # at most N filings per run (the driver commits between runs)
+            todo = todo[: int(sys.argv[sys.argv.index("--limit") + 1])]
+        ciks = read_ciks(set(todo))
         for i, a in enumerate(todo, 1):
             try:
-                got = nl.scan_edgar(client, int(a.split("-")[0]), a, by_acc[a])
+                got = nl.scan_edgar(client, edgar_cik(a, ciks), a, by_acc[a])
             except Exception as e:  # noqa: BLE001
                 print("edgar failed", a, repr(e)[:120], flush=True)
                 continue
@@ -112,6 +144,8 @@ if __name__ == "__main__":
     )
     covs = [Path(x) for x in sorted(glob.glob(sys.argv[1]))]
     att = None
-    if "--attempted" in sys.argv:  # accessions already scanned (found or not): skipped on restart
+    if (
+        "--attempted" in sys.argv
+    ):  # accessions already scanned (found or not): skipped on restart
         att = Path(sys.argv[sys.argv.index("--attempted") + 1])
     sys.exit(main(covs, Path(sys.argv[2]), out, att))
