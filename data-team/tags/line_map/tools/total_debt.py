@@ -149,11 +149,12 @@ def run(filings, vals, flloc):
                             tags='+'.join(t for t, *_ in nodes), parts='; '.join(f'{t}={v} [{loc_} {why}]' for t, v, loc_, why in nodes),
                             r_pages='+'.join(loc_ for _, _, loc_, _ in nodes), value=str(total) if nodes else '', flags='; '.join(flags), fl_loc=loc or ''))
     return out
-def load_evidence(root=None):
+def load_evidence(root=None, cache_dir=None):
     """Committed instance evidence (SEC instances; FSN drops these dimensioned/extensible-list facts):
     - finance-lease location (FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList): exam/eras/inputs-notes-eras.jsonl per
       accession, exam/inputs/notes.jsonl for the latest 10-K of each company ('FY0:' + cik);
     - pre-842 capital leases by BalanceSheetLocationAxis: line_map/_lease-locations-pre842-2026-11-14.csv (fills LEASES).
+    Plus the per-accession instance cache of standard_run (instance_evidence.py, cache_dir) for every other filing.
     Returns flloc."""
     import os
     root = root or os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
@@ -167,11 +168,16 @@ def load_evidence(root=None):
     LEASES.clear()
     for r in csv.DictReader(open(os.path.join(root, 'line_map', '_lease-locations-pre842-2026-11-14.csv'))):
         LEASES.setdefault(r['adsh'], {}).setdefault(r['ddate'], []).append((r['tag'], r['balance_sheet_location_member'], D(r['value'])))
+    import instance_evidence
+    cf, cl = instance_evidence.load(cache_dir)
+    for a, v in cf.items(): flloc.setdefault(a, v)
+    for a, v in cl.items():
+        if a not in LEASES: LEASES[a] = v
     return flloc
-def total_debt_all(filings, vals, tick):
+def total_debt_all(filings, vals, tick, cache_dir=None):
     """total_debt rows for every filing (own and comparative column) from the standard extract (vals: standard_inputs.debt_vals) and the
     committed instance evidence; the former total_debt_all.csv."""
-    rows = run(filings, vals, load_evidence())
+    rows = run(filings, vals, load_evidence(cache_dir=cache_dir))
     for r in rows: r['ticker'] = tick.get(r['cik'].zfill(10), '')
     return rows
 if __name__ == '__main__':

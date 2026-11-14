@@ -63,6 +63,8 @@ def fill_printed_zero_and_comparative(rows, td):
                          why='total_debt rule on the next 10-K comparative column (the own filing presents no debt line; ruling 2026-11-14)')
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if D(t['value']) == 0 else '') if x)
     return rows
+COR_MX_LB = re.compile(r'(?i)^(total )?costs? of (revenues?|sales|goods sold|goods and services sold)$')
+COR_ANY_LB = re.compile(r'(?i)\bcosts? of (revenues?|sales|goods)')
 AP_RELATED = re.compile(r'^(AccountsPayableRelatedPartiesCurrent|DueToRelatedPartiesCurrent)$')
 AR_RELATED = re.compile(r'^(DueFromRelatedPartiesCurrent|DueFromRelatedParties|DueFromAffiliateCurrent|AccountsReceivableRelatedPartiesCurrent|RelatedPartyTransactionDueFromToRelatedPartyCurrent|NotesAndLoansReceivableRelatedPartiesCurrent)$')
 def apply_ar_related(rows, filings):
@@ -108,6 +110,25 @@ def apply_cost_and_opex(rows, filings):
                      nodes=f"{t}[Product]={p} [IS face line]; {t}[Service]={sv} [IS face line]",
                      why='the income statement prints the cost of products and the cost of services as separate lines carrying ProductOrServiceAxis members only: sum')
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
+    for r in rows:   # a matrix income statement (MAR): the cost line carries ProductOrService column members only (ruling 2026-11-14)
+        x = EXT.get('cor_mx', {}).get(r['accession'])
+        if r['data_point'] != 'cost_of_revenue' or r['status'] not in ('not_presented', 'no_role') or not x or r['accession'] not in F: continue
+        L, _ = parse(F[r['accession']]); isf = face(L, 'IS')
+        cl = next((l for l in isf if l['tag'] == x['tag']), None)
+        ce = next((l for l in isf if l['tag'] in ('CostsAndExpenses', 'OperatingCostsAndExpenses', 'OperatingExpenses') and l['val'] is not None and cl and l['ln'] > cl['ln']), None)
+        rv = max((l['ln'] for l in isf if l['val'] is not None and cl and l['ln'] < cl['ln'] and re.match(r'^Revenue', l['tag'])), default=None)
+        if not (cl and ce and rv is not None): continue
+        # the members are columns of one cost-of-revenue line (MAR), not rows of different costs filed under one element: the line's own
+        # label names cost of revenue (DE 'Costs and expenses' = cost of sales + other operating expenses, NEM 'Costs applicable to sales'
+        # = + reclamation + exploration are rows) and no other face line names a cost of revenue (AT&T 'Other cost of revenues')
+        if not COR_MX_LB.match((cl['lb'] or '').strip()) or any(l is not cl and COR_ANY_LB.search(l['lb'] or '') for l in isf if not l['tag'].endswith('Abstract')): continue
+        others = [l for l in isf if rv < l['ln'] < ce['ln'] and l is not cl and l['val'] is not None and not l['tag'].endswith('Abstract')]
+        tot = D(x['total']); chk = tot + sum((l['val'] for l in others), D(0))
+        if abs(chk - ce['val']) > tol(ce['val'], tot, *[l['val'] for l in others]): continue
+        r.update(status='component_sum', value=tot, tags='+'.join([x['tag']] * len(x['members'])),
+                 nodes='; '.join(f"{x['tag']}[{k}]={v} [IS face line R{cl['rep']}.htm:{cl['ln']}]" for k, v in x['members'].items()),
+                 why=f"the income statement is a matrix: '{cl['lb']}' carries only ProductOrService column members; their sum, which with the other cost lines ties to '{ce['lb']}' {ce['val']} (ruling 2026-11-14)")
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
     for r in rows:
         if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
         L, _ = parse(F[r['accession']])
@@ -355,20 +376,35 @@ if __name__ == '__main__':
     def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
     memberfacts, compfacts, zlines, clines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json'), _read('clines.json')
     # total_debt from the standard extract (own + comparative columns) and the committed instance evidence (total_debt.load_evidence)
-    td = {(r['accession'], r['column']): r for r in total_debt.total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tick)}
+    td = {(r['accession'], r['column']): r for r in total_debt.total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tick, os.environ.get('INSTANCE_CACHE', 'instances'))}
     # member-only face facts (_member-face-facts-2026-11-14.csv): a DPS, share count or CI printed on the face whose only own-period
     # fact carries one equity-statement column member (EquityComponents=RetainedEarnings / CommonStock ...) is the consolidated value;
     # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
     MF = {}
     EXT['lt'] = standard_inputs.amortization_location_total(notefacts, memberfacts)
     EXT['cor'] = standard_inputs.product_service_cor(notefacts, memberfacts)
+    EXT['cor_mx'] = {a: x for a, x in standard_inputs.cost_member_sums(notefacts, memberfacts).items() if a not in EXT['cor']}
     EXT['gp'] = standard_inputs.gross_profit_facts(notefacts)
     for m in standard_inputs.member_facts(notefacts, memberfacts, standard_inputs.class_share_filings(filings)):   # the standard extract first
         notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
         MF[(m['accession'], m['tag'])] = m['member']
     EXT['ap'] = standard_inputs.related_splits(memberfacts, r'AccountsPayable(Current|TradeCurrent|CurrentAndNoncurrent)')   # the AP role elements; payable+accrued (GEV) is combined, not AP
     EXT['ar'] = standard_inputs.related_splits(memberfacts, r'(AccountsAndNotesReceivableNet|AccountsReceivable\w*|Receivables\w*)')
+    # a face whose values all carry one LegalEntity member (combined filings, ruling 2026-11-14): the filer's member fills the face;
+    # a co-registrant's (CEG FY2021: the predecessor Constellation Energy Generation LLC) or several members is a reason
+    LE = standard_inputs.legal_entity_faces(_read('lentity.json'))
+    PRED = {}
+    for i, f in enumerate(filings):
+        if f['a'] not in LE: continue
+        x = LE[f['a']]
+        if x and not x['coregistrant']: filings[i] = standard_inputs.fill_face_values(f, x['facts'])
+        else: PRED[f['a']] = x
     rows = run(filings, notefacts, tick, td)
+    for r in rows:
+        if r['accession'] in PRED and r['status'] in ('no_role', 'not_presented'):
+            x = PRED[r['accession']]
+            r.update(status='not_presented', why=f"statements of a predecessor co-registrant ({'LegalEntity ' + x['member'] if x else 'several LegalEntity members'}): the face carries no value of the filer (ruling 2026-11-14)")
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'coregistrant_face') if y)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_cost_and_opex(rows, filings)

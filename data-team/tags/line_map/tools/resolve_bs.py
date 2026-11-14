@@ -71,6 +71,36 @@ def cash_subtotal(r, lines, arcs):
                 flags='cash_face_subtotal' + (';label_parenthetical' if paren else '') + (';includes_restricted' if restr else ''))
 
 
+INV_CLASS_LB = re.compile(r'(?i)inventor|materials?|suppl(y|ies)|stockpiles?|products?|finished goods|work[- ]in[- ]process|raw|merchandise|fuel|crude|ore\b|metals?|parts|spares|land held|homes?')   # FSN marks some new standard elements custom (CEG RenewableEnergyCredits)
+INV_HEADER = re.compile(r'(?i)^inventor(y|ies)\s*:?$')
+
+
+def inventory_header_sum(bs, r, notes=None):
+    """Ruling 2026-11-14 (Dhairya, FCX): lines printed under an 'Inventories:' header with no inventory total are a component_sum,
+    flag header_sum. The group is the run of valued lines after the header while each line is an inventory element or a custom
+    line whose label names an inventory class (FCX 'Product', 'Mill and leach stockpiles'; not CEG 'Renewable energy credits'); it ends at the
+    first other line, abstract or total
+    label; when the filing reports an undimensioned InventoryNet, the group is the shortest run that sums to it (none ties: no header sum).
+    A picked face line outside the group (a printed total) stands; a pick inside it, a note fact or none is replaced."""
+    hs = [i for i, l in enumerate(bs) if l['tag'].endswith('Abstract') and (INV_HEADER.match((l['lb'] or '').strip()) or re.match(r'^Inventor\w*Abstract$', l['tag']))]
+    if len(hs) != 1: return None
+    grp = []
+    for l in bs[hs[0] + 1:]:
+        if l['tag'].endswith('Abstract') or l['prole'] == 'totalLabel' and not re.search(r'(?i)inventor', l['lb'] or '') and grp: break
+        if l['prole'] == 'totalLabel' and re.search(r'(?i)inventor', l['lb'] or ''): return None   # an inventory total is printed: the normal pick
+        if not (re.search(r'Inventor|Stockpile', l['tag']) or (l['custom'] and INV_CLASS_LB.search(l['lb'] or ''))): break
+        if l['val'] is not None: grp.append(l)
+    tot = (notes or {}).get('InventoryNet')
+    if tot is not None:   # the filing reports its inventory total: the group is the run from the header that sums to it (CEG: RECs follow)
+        k = next((k for k in range(2, len(grp) + 1) if abs(sum(l['val'] for l in grp[:k]) - tot) <= tol(tot, *[l['val'] for l in grp[:k]])), None)
+        if k is None: return None
+        grp = grp[:k]
+    if len(grp) < 2: return None
+    if r and r.get('rule') == 'face' and not any(l['tag'] in (r.get('nodes') or '') for l in grp): return None
+    return dict(status='component_sum', value=sum(l['val'] for l in grp), nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in grp),
+                why=f"BS face lines under the '{bs[hs[0]]['lb']}' header with no inventory total: their sum (ruling 2026-11-14)", rule='face', flags='header_sum')
+
+
 def pick(R, lines, notes, dp):
     """First alternative (rank order) that holds the role among `lines`; then combined; then custom label; then the instant note fact."""
     alts = [a.split('+') for a in R['alternatives'].split('|') if a]
@@ -148,6 +178,7 @@ def resolve_family(f, notes):
             else: lines = whole_assets
             r = pick(R, lines, notes, dp)
             if dp == 'cash_and_equivalents': r = cash_subtotal(r, lines, arcs)
+            if dp == 'inventory': r = inventory_header_sum(bs, r, notes) or r
         if r is None:
             r = dict(status='not_presented', value=None, nodes='', rule='', why=f"no {dp} line on the balance sheet face in its position, and no undimensioned note fact at the balance-sheet date")
         out[dp] = r

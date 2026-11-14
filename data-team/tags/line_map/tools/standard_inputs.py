@@ -302,3 +302,56 @@ def ci_face_lines(clines):
         ls = sorted((x for x in _facts(raw, 4) if x[0] == CI_INCL), key=lambda x: (int(x[1]), int(x[2])))
         if ls: out[a] = dict(report=ls[0][1], line=ls[0][2], label=ls[0][3])
     return out
+
+
+def cost_member_sums(notefacts, memberfacts):
+    """A CostOf* line with no undimensioned own-period fact whose own-period facts are ProductOrService column members (MAR prints its
+    income statement as a matrix: Reimbursements, Owned/leased): {accession: dict(tag, members {member: value}, total)}. The resolver
+    serves the total only when it ties to the costs-and-expenses total with the other cost lines (ruling 2026-11-14)."""
+    out = {}
+    for a, raw in memberfacts.items():
+        und = _undim(notefacts, a)
+        by = {}
+        for t, q, v, seg in _facts(raw, 4):
+            m = re.fullmatch(r'ProductOrService=(\w+);', seg)
+            if m and int(q) == 4 and t.startswith('CostOf') and (t, 4) not in und: by.setdefault(t, {}).setdefault(m.group(1), set()).add(D(v))
+        if len(by) != 1: continue
+        (t, ms), = by.items()
+        if len(ms) < 2 or any(len(v) != 1 for v in ms.values()): continue
+        mem = {k: ms[k].pop() for k in sorted(ms)}
+        out[a] = dict(tag=t, members={k: _plain(v) for k, v in mem.items()}, total=_plain(sum(mem.values())))
+    return out
+
+
+def no_face_value(filings):
+    """Accessions whose BS/IS/CF face carries no undimensioned own-period value (extract_legalentity.sql runs for these)."""
+    out = []
+    for f in filings:
+        ls = [l.split('|') for l in (f.get('lines') or '').split('~')]
+        if not any(len(x) > 8 and x[0] in ('BS', 'IS', 'CF') and x[8] for x in ls): out.append(f['a'])
+    return out
+
+
+def legal_entity_faces(lentity):
+    """{accession: dict(member, coregistrant, facts {(tag, qtrs): value})} from extract_legalentity.sql; None for an accession whose face
+    values carry more than one LegalEntity member (ambiguous)."""
+    out = {}
+    for a, raw in lentity.items():
+        fs = list(_facts(raw, 5))
+        mem = {(m, c) for _, _, _, m, c in fs}
+        if len(mem) != 1: out[a] = None; continue
+        (m, c), = mem
+        out[a] = dict(member=m, coregistrant=c, facts={(t, int(q)): D(v) for t, q, v, _, _ in fs})
+    return out
+
+
+def fill_face_values(f, facts):
+    """The filing's face lines with the filer member's own-period values (BS: qtrs 0, IS/CF: qtrs 4) where the line has none."""
+    out = []
+    for s in (f.get('lines') or '').split('~'):
+        x = s.split('|')
+        if len(x) > 8 and x[0] in ('BS', 'IS', 'CF') and not x[8]:
+            v = facts.get((x[3], 0 if x[0] == 'BS' else 4))
+            if v is not None: x[8] = str(v)
+        out.append('|'.join(x))
+    return dict(f, lines='~'.join(out))

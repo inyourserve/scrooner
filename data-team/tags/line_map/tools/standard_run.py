@@ -3,10 +3,15 @@
   python3 standard_run.py sql CIKS OUTDIR [--batch 4]
       writes OUTDIR/{lines,bs,notes,face}-NN.sql: the four standard queries per CIK batch
       (extract.sql: face lines + calc; extract_bs.sql: balance-sheet parenthetical cpv; extract_notefacts.sql; extract_facelines.sql).
+  python3 standard_run.py sql-le OUTDIR      (after assemble) writes OUTDIR/le-00.sql for the filings whose face has no undimensioned value
+      (extract_legalentity.sql); save its rows to OUTDIR/le.jsonl and assemble again.
   python3 standard_run.py assemble OUTDIR
       reads OUTDIR/{lines,bs,notes,face}.jsonl (one JSON object per result row, the query's column names) and writes
-      filings.json, notefacts.json, memberfacts.json, compfacts.json, zlines.json, clines.json into OUTDIR.
-Then: cd OUTDIR && python3 resolve_all.py VERSION OUT.csv (with tk.csv: ticker,cik10 per line)."""
+      filings.json, notefacts.json, memberfacts.json, compfacts.json, zlines.json, clines.json, lentity.json into OUTDIR.
+  python3 instance_evidence.py fetch OUTDIR/filings.json OUTDIR/instances
+      the instance evidence total_debt needs (finance-lease location list, pre-842 lease locations): sec.gov only, <= 3 req/s,
+      cached per accession (a second run fetches only new filings).
+Then: cd OUTDIR && python3 resolve_all.py VERSION OUT.csv (tk.csv: ticker,cik10 per line; instances/ is read from OUTDIR, or INSTANCE_CACHE)."""
 import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -51,7 +56,8 @@ def assemble(outdir):
     face = [(r['a'], r.get('vals'), r.get('cvals'), r.get('clines')) for r in J('face')]
     rows = si.merge_rows(main, face)
     nf, mf, cf = si.split_rows(rows)
-    out = dict(filings=filings, notefacts=nf, memberfacts=mf, compfacts=cf, zlines=si.zero_lines(rows), clines=si.face_clines(face))
+    out = dict(filings=filings, notefacts=nf, memberfacts=mf, compfacts=cf, zlines=si.zero_lines(rows), clines=si.face_clines(face),
+               lentity={r['a']: r['lvals'] for r in J('le') if r.get('lvals')})
     for k, v in out.items(): json.dump(v, open(os.path.join(outdir, k + '.json'), 'w'))
     return {k: len(v) for k, v in out.items()}
 
@@ -61,5 +67,12 @@ if __name__ == '__main__':
         ciks = [c for c in re.split(r'[,\s]+', sys.argv[2]) if c]
         b = int(sys.argv[sys.argv.index('--batch') + 1]) if '--batch' in sys.argv else 4
         print(write_sql(ciks, sys.argv[3], b), 'batches')
+    elif sys.argv[1] == 'sql-le':
+        accs = si.no_face_value(json.load(open(os.path.join(sys.argv[2], 'filings.json'))))
+        assert all(re.fullmatch(r'\d{10}-\d{2}-\d{6}', a) for a in accs)
+        if accs:
+            sql = open(os.path.join(HERE, 'extract_legalentity.sql')).read().replace('/* ACCESSIONS */', ','.join(f"'{a}'" for a in accs))
+            open(os.path.join(sys.argv[2], 'le-00.sql'), 'w').write(sql[sql.index('set statement_timeout'):])
+        print(len(accs), 'filings without an undimensioned face value')
     elif sys.argv[1] == 'assemble':
         print(assemble(sys.argv[2]))
