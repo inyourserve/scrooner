@@ -514,6 +514,20 @@ def _load_proof_disagree(
     it, and a real disagreement is written at the current version and holds it again. Empty when the table is absent."""
     if conn.execute("select to_regclass('analytics.cell_proof')").fetchone()[0] is None:
         return {}
+    # A filer_arithmetic_fails row holds the cell only while the check it cites still fails in fsn.filing_check
+    # (the check was recomputed, e.g. an FX fix: the quarantine reason is gone, so the cell is served and re-proved).
+    has_check = (
+        conn.execute("select to_regclass('fsn.filing_check')").fetchone()[0] is not None
+    )
+    still_fails = (
+        """and (reason_code is distinct from 'filer_arithmetic_fails' or exists (
+                select 1 from fsn.filing_check fc join fsn.filing ff on ff.id = fc.filing_id
+                where ff.accession = checks->'identity'->>'accession'
+                  and fc.check_id = checks->'identity'->>'check_id'
+                  and fc.ddate = cell_proof.period_end and not fc.ok))"""
+        if has_check
+        else ""
+    )
     return {
         (n, g, s, e): Decimal(v)
         for n, g, s, e, v in conn.execute(
@@ -522,7 +536,8 @@ def _load_proof_disagree(
             from analytics.cell_proof
             where company_id = %s and basis = 'latest' and verdict = 'DISAGREE' and shown_value is not null
               and detector_version = %s
-            """,
+            """
+            + still_fails,
             (company_id, DETECTOR_VERSION),
         ).fetchall()
     }
