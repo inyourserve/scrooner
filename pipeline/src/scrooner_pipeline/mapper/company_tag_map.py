@@ -1032,9 +1032,21 @@ def build_cells(
             if fact.derived and concept_info[target][0] in NEVER_DERIVED:
                 stats["derived_eps_skipped"] += 1
                 continue
-            (comp if row.decision == "component" else direct)[
+            bucket = (comp if row.decision == "component" else direct)[
                 (target, period_id)
-            ].append((row, fact))
+            ]
+            if row.decision == "component" and any(
+                r.taxonomy == row.taxonomy
+                and r.tag == row.tag
+                and f.fact_id == fact.fact_id
+                and f.source == fact.source
+                for r, f in bucket
+            ):
+                # The same tag listed by two adjacent era rows (a 52/53-week year end such as 2018-01-28 sits in the
+                # era ending on it AND, by month-end rounding, in the stub era 2018-01-29..2018-01-31) is ONE part
+                # of the sum, never two: HD total_debt FY2017 served 54,056 = 2 x 27,028.
+                continue
+            bucket.append((row, fact))
 
     def hold(key, reason):
         stats["held"].append(
