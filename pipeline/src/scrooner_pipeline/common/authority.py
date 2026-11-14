@@ -307,6 +307,33 @@ def load_calc_ties(
     return out
 
 
+def load_calc_parents(
+    conn: Any, company_id: int, tags: list[str]
+) -> dict[str, set[str]]:
+    """local tag -> local calc parents the company's filings give it (fsn.calc_arc, any filing): where a part is absent
+    from the period's filing, its calc parent is learnt from the filings that do print it. Empty before the FSN store."""
+    out: dict[str, set[str]] = {}
+    if (
+        not tags
+        or conn.execute("select to_regclass('fsn.calc_arc')").fetchone()[0] is None
+    ):
+        return out
+    local = sorted({t.rsplit(":", 1)[-1] for t in tags})
+    for child, parent in conn.execute(
+        """
+        select distinct ct.tag, pt.tag
+        from fsn.calc_arc a
+        join fsn.filing f on f.id = a.filing_id
+        join fsn.tag ct on ct.id = a.child_tag_id
+        join fsn.tag pt on pt.id = a.parent_tag_id
+        where f.company_id = %s and substring(ct.tag from '[^:]*$') = any(%s)
+        """,
+        (company_id, local),
+    ).fetchall():
+        out.setdefault(child.rsplit(":", 1)[-1], set()).add(parent.rsplit(":", 1)[-1])
+    return out
+
+
 def absent_part_is_zero(
     face: FaceIndex,
     ties: dict[tuple[str, str], list[tuple[date, int, bool]]],

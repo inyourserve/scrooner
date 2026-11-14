@@ -53,6 +53,7 @@ from scrooner_pipeline.common.authority import (
     FaceIndex,
     face_column_eligible,
     absent_part_is_zero,
+    load_calc_parents,
     load_calc_ties,
     load_face_indexes,
     latest_complete_filing,
@@ -998,6 +999,7 @@ def build_cells(
     proof_disagree: dict[tuple[str, str, date, date], Decimal] | None = None,
     face: FaceIndex | None = None,
     ties: dict[tuple[str, str], list[tuple[date, int, bool]]] | None = None,
+    calc_parents: dict[str, set[str]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
     vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
@@ -1182,7 +1184,8 @@ def build_cells(
                     ties,
                     acc0,
                     str(zr.tag),
-                    {_local(p) for p in (zr.evidence_cal_parent or "").split(";")},
+                    {_local(p) for p in (zr.evidence_cal_parent or "").split(";")}
+                    | (calc_parents or {}).get(str(zr.tag), set()),
                     zstart,
                     zend,
                     ztype,
@@ -1763,6 +1766,11 @@ def resolve_for_company(
         _load_proof_disagree(conn, company_id),
         face,
         load_calc_ties(conn, [company_id]),
+        load_calc_parents(
+            conn,
+            company_id,
+            [str(r.tag) for r in rows if r.decision == "component" and r.tag],
+        ),
     )
     from scrooner_pipeline.mapper.derived_cells import (
         add_derived_cells,

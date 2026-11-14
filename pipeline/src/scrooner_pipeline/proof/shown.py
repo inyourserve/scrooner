@@ -23,6 +23,7 @@ from scrooner_pipeline.common.authority import (
     absent_part_is_zero,
     latest_complete_filing,
     latest_eligible,
+    load_calc_parents,
     load_calc_ties,
 )
 from scrooner_pipeline.common.fsn_dates import era_holds
@@ -433,6 +434,12 @@ def load_shown(
     face = load_face_indexes(conn, [company_id])[company_id]
     ties = load_calc_ties(conn, [company_id])
     part_parents = load_part_parents(conn, company_id)
+    for t, ps in load_calc_parents(
+        conn,
+        company_id,
+        [r[3] for r in map_rows if r[1] == "component" and r[3]],
+    ).items():
+        part_parents[t] |= ps
     copies_by, auth_by, filed_by, por_by = _periodic_copies(
         conn, company_id, floor, face
     )

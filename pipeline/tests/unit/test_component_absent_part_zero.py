@@ -46,7 +46,7 @@ FACTS = {("us-gaap", "DebtCurrent"): {7: Fact(Decimal("100"), 1, END, False, 10,
 TIES = {(ACC, "Liabilities"): [(END, 0, True)]}
 
 
-def _build(face, ties, parent="Liabilities"):
+def _build(face, ties, parent="Liabilities", calc_parents=None):
     return build_cells(
         _rows(parent),
         FACTS,
@@ -56,6 +56,7 @@ def _build(face, ties, parent="Liabilities"):
         PERIODS,
         face=face,
         ties=ties,
+        calc_parents=calc_parents,
     )
 
 
@@ -110,3 +111,15 @@ def test_evidence_function_requires_face_omission_and_a_tie():
         )
         is None
     )
+
+
+def test_calc_parent_learnt_from_other_filings_arcs_when_the_map_row_has_none():
+    # docmap component rows carry no evidence_cal_parent: the part's parent comes from the company's calc arcs
+    cells, _ = _build(
+        _face(False), TIES, None, {"LongTermDebtNoncurrent": {"Liabilities"}}
+    )
+    assert [c["value"] for c in cells] == [Decimal("100")]
+    cells, _ = _build(
+        _face(False), TIES, None, {"LongTermDebtNoncurrent": {"OtherParent"}}
+    )
+    assert cells == []
