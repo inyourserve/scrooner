@@ -17,8 +17,8 @@ The rules are BUILT FROM CODE, never copied, so they cannot drift from what the 
   3. the concept library's member / class-sum rules (data-team/tags/rules/*.csv): the tags they name, single-dimension.
 The CTE's "a statement line exists" condition is dropped on purpose: that condition is the very gap being closed.
 
-Regenerate with `python3 scripts/gen_dim_note_allowlist.py` whenever the resolver or a rule changes; `--check` fails
-when the committed dim_note_rules.json is stale (a CI test runs it).
+The rules are rebuilt at run time by `current()` on every run of the shard and of `scrooner-fsn add-dim-notes`;
+dim_note_rules.json is only a REPORT of what the generator (`python3 scripts/gen_dim_note_allowlist.py`) built.
 """
 
 from __future__ import annotations
@@ -196,6 +196,7 @@ def render(rules: list[dict[str, Any]]) -> str:
 
 class Rules:
     def __init__(self, rules: list[dict[str, Any]]):
+        self.spec = rules
         self.rules = [
             (re.compile(r["tag_re"]), re.compile(r["seg_re"]), r.get("qtrs"))
             for r in rules
@@ -214,9 +215,22 @@ class Rules:
         )
 
 
+REPO_ROOT = Path(__file__).resolve().parents[4]
+
+
 @lru_cache(maxsize=1)
-def load() -> Rules:
-    return Rules(json.loads(RULES_FILE.read_text(encoding="utf-8")))
+def current(root: Path | None = None) -> Rules:
+    """The rules, REBUILT from the current extract_notefacts.sql / resolver / library at run time (once per process).
+    There is no committed snapshot to lag: dim_note_rules.json is only a report written by the generator."""
+    root = root or REPO_ROOT
+    if not (root / STANDARD_INPUTS).exists():
+        raise FileNotFoundError(
+            f"{root / STANDARD_INPUTS}: run from a repo checkout (the allowlist is built from it)"
+        )
+    return Rules(build(root))
+
+
+load = current  # the name the shard and the insert-only load use
 
 
 def keep_dimensional(
@@ -230,6 +244,6 @@ def keep_dimensional(
 ) -> bool:
     """A dimensional num row is kept when its tag has a statement pre row in the filing, or an allowlist rule matches
     its tag, dimension segments and qtrs."""
-    return (adsh, tag, version) in on_stmt or (rules or load()).matches(
+    return (adsh, tag, version) in on_stmt or (rules or current()).matches(
         tag, segments, qtrs
     )

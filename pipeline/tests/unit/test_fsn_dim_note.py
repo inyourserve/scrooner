@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
-import warnings
 from pathlib import Path
 from uuid import uuid4
 
@@ -77,16 +77,31 @@ def _period(cache: Path, period: str = "2023q1") -> dict[str, Path]:
 
 
 @pytest.mark.unit
-def test_committed_rules_follow_the_extract_and_warn_when_resolver_parts_moved():
-    """The CTE-derived rules must equal what extract_notefacts.sql says now (they are the authoritative member list).
-    A resolver commit that adds a member part makes the resolver/library rules stale: that is a warning, not a red CI
-    (a resolver commit must never break the build); `scripts/gen_dim_note_allowlist.py --check` is the strict check."""
-    committed = json.loads(al.RULES_FILE.read_text(encoding="utf-8"))
-    built = al.build(ROOT)
-    pick = lambda rules, strict: [r for r in rules if r["source"].startswith("extract_") == strict]  # noqa: E731
-    assert pick(committed, True) == pick(built, True)
-    if pick(committed, False) != pick(built, False):
-        warnings.warn("dim_note_rules.json: resolver/library member parts changed; run scripts/gen_dim_note_allowlist.py", stacklevel=1)
+def test_rules_are_rebuilt_at_run_time_never_read_from_a_snapshot(monkeypatch):
+    """The load step must see the CURRENT extract_notefacts.sql: a committed snapshot (dim_note_rules.json) could lag."""
+    calls = []
+    fresh = [{"source": "t", "tag_re": "^OnlyInTheFreshBuild$", "seg_re": "^A=[^;=]+;$", "qtrs": None}]
+    monkeypatch.setattr(al, "build", lambda root: calls.append(root) or fresh)
+    monkeypatch.setattr(al, "RULES_FILE", Path("/nonexistent/snapshot.json"))
+    al.current.cache_clear()
+    try:
+        r = al.current()
+        assert calls == [al.REPO_ROOT] and r.matches("OnlyInTheFreshBuild", "A=m;", 4)
+        assert not r.matches("AmortizationOfIntangibleAssets", "IncomeStatementLocation=CostOfSales;", 4)
+        assert al.keep_dimensional("a", "OnlyInTheFreshBuild", "v", "A=m;", 4, set())  # the shard's predicate uses it
+    finally:
+        al.current.cache_clear()
+
+
+@pytest.mark.unit
+def test_the_current_rules_follow_the_mem_cte_axes_incl_capex_and_interest():
+    al.current.cache_clear()
+    r = al.current()
+    assert r.matches("AmortizationOfIntangibleAssets", "IncomeStatementLocation=CostOfSales;", 4)
+    sql = (ROOT / "data-team/tags/line_map/tools/extract_notefacts.sql").read_text(encoding="utf-8")
+    for axis in re.findall(r"d\.segments ~ '\^\(?([A-Za-z|]+)", sql):  # every axis the CTE names is in the rules
+        first = axis.split("|")[0]
+        assert any(first in x["seg_re"] for x in r.spec), first
 
 
 @pytest.mark.unit
@@ -129,6 +144,7 @@ def test_rules_match_tag_segments_and_qtrs():
 
 @pytest.mark.unit
 def test_shard_keeps_allowlisted_dimensional_note_facts_and_drops_the_rest(tmp_path):
+    al.current.cache_clear()
     cache = tmp_path / "cache"
     _period(cache)
     w = shard.Writer(tmp_path / "out")

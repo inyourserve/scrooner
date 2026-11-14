@@ -213,6 +213,9 @@ def run(
 ) -> dict[str, Any]:
     """Dry-run (default) or apply, period by period; each period is one transaction on its own connection
     (read-only when not apply), so a pooler drop costs at most one period and a rerun resumes (idempotent)."""
+    allow = (
+        allow or dim_note_rules()
+    )  # rebuilt from the current extract/resolver/library: never a snapshot
     with connect() as conn, conn.cursor() as cur:
         cur.execute(
             "select accession, id, company_id, fsn_set from fsn.filing "
@@ -268,4 +271,5 @@ def run(
         "per_company": dict(sorted(per_company.items(), key=lambda kv: -kv[1])),
         "per_period": per_period,
         "periods_missing_in_bucket": missing,
+        "allowlist_rules": allow.spec,
     }

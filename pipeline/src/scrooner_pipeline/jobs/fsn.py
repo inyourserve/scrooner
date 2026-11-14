@@ -237,10 +237,23 @@ def add_dim_notes_cmd(
         ids += [int(r["company_id"]) for r in csv.DictReader(summary_csv.open())]
     if not ids:
         raise typer.BadParameter("give --summary-csv or --company-ids")
+    import httpx
+
+    def fetch(period: str, table: str, cache_dir: Path, prefix: str) -> Path:
+        for attempt in range(
+            5
+        ):  # a dropped bucket connection must not lose a period (FileNotFoundError is final)
+            try:
+                return shard.download(period, table, cache_dir, prefix)
+            except httpx.TransportError:
+                if attempt == 4:
+                    raise
+        raise AssertionError("unreachable")
+
     res = dim_note.run(
         lambda: psycopg.connect(settings.database_url),
         sorted(set(ids)),
-        shard.download,
+        fetch,
         Path(cache),
         apply=apply,
         periods=[p for p in periods.split(",") if p] or None,
