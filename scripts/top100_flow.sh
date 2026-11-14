@@ -11,7 +11,11 @@ IDS=${1:?ids}; TAG=${2:?tag}
 REPO=$(cd "$(dirname "$0")/.." && pwd); S=$REPO/.runs/top100_flow; mkdir -p $S
 W=$S/wt-$TAG; O=$S/run_$TAG; rm -rf $O; mkdir -p $O
 NOFILE=2115436,1996810,1594805,2023554,2012383
-cd $REPO && git fetch -q && rm -rf $W && git worktree prune && git worktree add -q --detach $W origin/main || exit 2
+cd $REPO
+# parallel workers fetch at once; a ref-lock collision is retried, never fatal
+for t in 1 2 3 4 5 6; do git fetch -q 2>/dev/null && break; sleep $((RANDOM % 7 + 2)); done
+for t in 1 2 3; do rm -rf $W; git worktree prune 2>/dev/null; git worktree add -q --detach $W origin/main 2>/dev/null && break; sleep $((RANDOM % 5 + 2)); done
+[ -d $W/pipeline ] || exit 2
 ln -s $REPO/pipeline/.venv $W/pipeline/.venv; cd $W
 set -a; source $REPO/pipeline/.env; set +a
 export SCROONER_RULES_ENABLED=company_tag_map.select@1 PYTHONPATH=pipeline/src
