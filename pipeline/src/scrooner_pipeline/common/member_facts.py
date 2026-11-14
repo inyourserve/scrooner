@@ -35,7 +35,9 @@ _PART_RE = re.compile(r"^(?P<neg>-?)(?P<tag>[^\[\]]+)\[(?P<body>[^\[\]]+)\]$")
 class MemberSpec:
     prefix: str  # taxonomy prefix as written ('' when none)
     base: str  # tag name
-    segs: str | None  # normalised segments when the axis is named ('Axis=Member;'), else None
+    segs: (
+        str | None
+    )  # normalised segments when the axis is named ('Axis=Member;'), else None
     member: str | None  # the member (no 'Member' suffix) when only the member is named
     sign: int = 1
 
@@ -177,7 +179,9 @@ def resolve_member_part(
     if len(values) > 1 and want is not None and want in values:
         values = {want: values[want]}
     if len(values) > 1:
-        return "two stored values for the member in that filing (units or a restated copy)"
+        return (
+            "two stored values for the member in that filing (units or a restated copy)"
+        )
     ((v, ids),) = values.items()
     segs = axes[0]
     return MemberHit(v, tuple(sorted(ids)), segs, part_text(spec.base, segs, None))

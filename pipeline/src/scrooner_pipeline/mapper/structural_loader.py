@@ -265,7 +265,9 @@ def from_resolver(r: dict[str, str], role_stmt: dict[str, str]) -> dict[str, str
             continue
         loc0 = (m.group("loc") or "").strip()
         mem = m.group("mem")
-        if mem is None:  # face fact whose only own-period fact carries one member (member_face_fact)
+        if (
+            mem is None
+        ):  # face fact whose only own-period fact carries one member (member_face_fact)
             fm = FACE_MEMBER_RE.search(loc0)
             mem = f"{fm.group(1)}={fm.group(2)}" if fm else None
         tags.append(
@@ -1196,18 +1198,19 @@ def load(
             first_filed = {a: d for a, d in cur.fetchall() if d is not None}
     member_rows = {}
     for cid in {r[3] for r in resolved}:
-        accs = {r[0].accession for r in resolved if r[3] == cid and r[0].decision in ("mapped", "component_sum")}
-        bases = {
-            b
+        accs = {
+            r[0].accession
             for r in resolved
-            if r[3] == cid
-            for b in member_bases(r[0].parts)
+            if r[3] == cid and r[0].decision in ("mapped", "component_sum")
         }
+        bases = {b for r in resolved if r[3] == cid for b in member_bases(r[0].parts)}
         if bases:
             member_rows.update(
                 {
                     (cid, k[0], k[1]): v
-                    for k, v in member_facts.read_member_rows(conn, cid, accs, bases).items()
+                    for k, v in member_facts.read_member_rows(
+                        conn, cid, accs, bases
+                    ).items()
                 }
             )
     for c, a, b, cid, cik in resolved:
