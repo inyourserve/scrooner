@@ -34,6 +34,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.mapper.note_report_lookup import load_lookup
 from scrooner_pipeline.proof.prove import DETECTOR_VERSION
 
@@ -297,12 +298,40 @@ def load_fix_pages(
     return out
 
 
+def instance_part_page(
+    acc: str,
+    tag: str,
+    facts: dict[Any, instance_facts.InstanceFact] | None = None,
+) -> str:
+    """'R<n>.htm' of an instance-sourced part `Tag[Axis=Member]` in filing `acc`, from the instance-facts file's
+    r_page (any column of that filing: the page is the filing's). Unknown: ''. Never another filing's page."""
+    pages = {
+        f.r_page
+        for f in (facts if facts is not None else instance_facts.load()).values()
+        if f.adsh == acc and f.part_tag == tag and f.r_page
+    }
+    return next(iter(pages)) if len(pages) == 1 else ""
+
+
+def statement_page_fallback(
+    acc: str, stmt: str, instant: bool, idx: LocatorIndex
+) -> tuple[str, str]:
+    """(R page, source) of the cell's statement in filing `acc` ONLY: the docmap statement if it is a main
+    statement, else (a parenthetical or off-face share count of an instant data point) the balance sheet."""
+    for st in [stmt] + (["BS"] if instant else []):
+        rep = idx.stmt_report(acc, st) if st else None
+        if rep is not None:
+            return _page(rep), "evidence_acc_stmt_page"
+    return "", ""
+
+
 def parts_locator(
     checks: Any,
     acc: str | None,
     idx: LocatorIndex,
     note_lookup: dict[tuple[str, str], int] | None,
     fix_pages: dict[str, int] | None,
+    inst_facts: dict[Any, instance_facts.InstanceFact] | None = None,
 ) -> tuple[str, int]:
     """(parts text, parts whose page is unknown) of a component-sum cell: ';'-joined tag=value@acc#R<page>, one per
     part of the proof's checks.component_parts. The accession is the proof's shown accession and every page is of
@@ -332,13 +361,14 @@ def parts_locator(
                 rep = (note_lookup or {}).get((acc, tag))
         if rep is None and fix_pages:
             rep = fix_pages.get(tag)
-        if rep is None:
+        page = "" if rep is None else f"R{rep}"
+        if rep is None and instance_facts.is_instance_part(tag):
+            # an instance-sourced part (Tag[Axis=Member]): the page of the committed instance-facts file, for THIS filing
+            page = instance_part_page(acc, tag, inst_facts).replace(".htm", "")
+        if not page:
             blank += 1
         sign = "-" if p.get("sign") == -1 else ""
-        out.append(
-            f"{sign}{tag}={_num(p.get('value'))}@{acc}#"
-            + ("" if rep is None else f"R{rep}")
-        )
+        out.append(f"{sign}{tag}={_num(p.get('value'))}@{acc}#{page}")
     return ";".join(out), blank
 
 
@@ -774,6 +804,14 @@ def build_rows(
                         acc, page, lsrc = own_acc, own_page, "own_year"
                     elif own_acc and acc == own_acc and own_page:
                         page, lsrc = own_page, "own_year"
+                if cls == "REASON" and acc and not page:
+                    # accession without a page: the page of the cell's statement in THAT filing (a parenthetical
+                    # share count is placed on the balance sheet of an instant data point); never another filing's
+                    page_, lsrc_ = statement_page_fallback(
+                        acc, dstmt, ptype == "instant", idx
+                    )
+                    if page_:
+                        page, lsrc = page_, lsrc_
                 # a REASON is evidence only from the cell's own-period filing (or a later one that presents the
                 # period); a reason cited from any other filing is not evidence for this period
                 cls, code = own_period_reason(

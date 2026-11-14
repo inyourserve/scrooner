@@ -489,3 +489,64 @@ def test_reason_is_evidence_only_from_the_cells_own_period_filing():
         OWN_UNVERIFIED,
     )
     assert own_period_reason("PROVEN", None, "A19", f, fy16, False) == ("PROVEN", None)
+
+
+def test_instance_part_gets_the_r_page_of_the_instance_facts_file():
+    from datetime import date
+    from decimal import Decimal
+    from scrooner_pipeline.common.instance_facts import InstanceFact, Key, part_tag
+    from scrooner_pipeline.mapper.top100_coverage import parts_locator
+
+    B = "0001564590-17-014900"
+    segs = "BalanceSheetLocation=OtherCurrentLiabilities;"
+    f = InstanceFact(
+        B,
+        "x.xml",
+        date(2016, 6, 30),
+        "CapitalLeaseObligationsCurrent",
+        segs,
+        "us-gaap:OtherCurrentLiabilitiesMember",
+        Decimal(25000000),
+        -6,
+        "R102.htm",
+    )
+    facts: dict[Key, InstanceFact] = {(B, f.tag, segs, f.ddate): f}
+    tag = part_tag(f.tag, segs)
+    ch = _checks([tag])
+    got, blank = parts_locator(ch, B, _idx(), None, None, facts)
+    assert got == f"{tag}=1000000@{B}#R102" and blank == 0
+    # another filing's page is never used
+    got, blank = parts_locator(ch, "0000000000-00-000001", _idx(), None, None, facts)
+    assert got.endswith("#") and blank == 1
+
+
+def test_msft_fy2016_capital_lease_parts_have_r102_from_the_committed_file():
+    from scrooner_pipeline.mapper.top100_coverage import instance_part_page
+
+    B = "0001564590-17-014900"
+    for t in (
+        "CapitalLeaseObligationsCurrent[BalanceSheetLocation=OtherCurrentLiabilities]",
+        "CapitalLeaseObligationsNoncurrent[BalanceSheetLocation=OtherNoncurrentLiabilities]",
+    ):
+        assert instance_part_page(B, t) == "R102.htm"
+
+
+def test_reason_with_accession_and_no_page_gets_that_filings_balance_sheet_page():
+    from scrooner_pipeline.mapper.top100_coverage import (
+        LocatorIndex,
+        statement_page_fallback,
+    )
+
+    A, Z = "0001564590-17-002142", "0000000000-00-000001"
+    i = LocatorIndex()
+    for ln in range(1, 6):
+        i.add(A, 5, ln, "BS", "Assets", "x")
+    i.add(A, 6, 1, "PAR", "CommonStockSharesIssued", "p")
+    i.add(Z, 9, 1, "BS", "Assets", "x")
+    assert statement_page_fallback(A, "PAR", True, i) == (
+        "R5.htm",
+        "evidence_acc_stmt_page",
+    )
+    assert statement_page_fallback(A, "PAR", False, i) == ("", "")
+    # a filing without the statement stays blank: no other filing's page
+    assert statement_page_fallback("0000000000-00-000002", "PAR", True, i) == ("", "")
