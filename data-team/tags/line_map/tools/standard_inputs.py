@@ -244,6 +244,10 @@ def amortization_location_total(notefacts, memberfacts):
             tot = [k for k, v in d.items() if len(d) >= 3 and v == sum(d.values()) - v]
             if len(tot) == 1:
                 out[a] = dict(value=d[tot[0]], parts={k: v for k, v in d.items() if k != tot[0]}, total_member=tot[0], axis=ax); break
+            if und is None and not tot and len(d) >= 2 and ax != 'FiniteLivedIntangibleAssetsByMajorClass':
+                s_ = sum(d.values())
+                if s_ in {D(v) for t, q, v, seg in _facts(raw, 4) if t == 'AmortizationOfIntangibleAssets' and int(q) == 4}:
+                    out[a] = dict(value=s_, parts=d, total_member=None, axis=ax, corroborated=True); break   # PM FY2022: the class-axis 159 = 58 + 101
     return out
 
 
@@ -396,6 +400,20 @@ def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
                                 nodes='', why=f"no 10-K covers this year: it is before the company's first 10-K ({f['a']}), and that 10-K's FY-{w} column does not print the line",
                                 source='before_first_10k', calc_check='', flags='before_first_10k'))
     return out
+
+
+def fsn_dropped_facts(path, memberfacts, notefacts):
+    """rules/fsn_dropped_facts.csv: filing-checked facts the FSN set does not store (PM FY2022 R60 amortization by location). Added to
+    the member facts (a segment) or the note facts (no segment) of the accession; returns the number added."""
+    n = 0
+    if not path or not os.path.exists(path): return n
+    for r in csv.DictReader(open(path)):
+        if r['segment']:
+            memberfacts[r['accession']] = '~'.join(x for x in (memberfacts.get(r['accession']), f"{r['tag']}|{r['qtrs']}|{r['value']}|{r['segment']}") if x)
+        else:
+            notefacts[r['accession']] = '~'.join(x for x in (notefacts.get(r['accession']), f"{r['tag']}|{r['qtrs']}|{r['value']}") if x)
+        n += 1
+    return n
 
 
 def filer_xbrl_errors(path):

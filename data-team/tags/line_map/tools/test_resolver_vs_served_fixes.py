@@ -329,3 +329,49 @@ def test_calc_check_names_children_without_a_value():
           ('BS', EQ, 'Total Equity', 44231000000, 'totalLabel'), ('BS', LSE, 'Total Liabilities and Equity', 139716000000, 'totalLabel')]
     _, checks = resolve.resolve(filing(bs, f'3|{LSE}|Liabilities|1~3|{LSE}|{EQ}|1'))
     assert f'calc {LSE}: FAIL [no value: Liabilities]' in checks
+
+
+# ---- false reasons (PM, approvals/PM-final-draw-2026-11-14.md)
+def _ci_row(a, status='combined'):
+    return dict(accession=a, data_point='comprehensive_income', status=status, value=None, tags='', nodes='', why='parent not printed', flags='ci_incl_nci', column='own')
+
+
+def test_ci_parent_line_printed_on_the_ci_statement_is_served():
+    # PM FY2016 R5: 'Comprehensive earnings attributable to PMI' (ComprehensiveIncomeNetOfTax 6,810) below 'Total comprehensive earnings'
+    a = 'PM16'
+    clines = {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|5|13|Total comprehensive earnings~'
+                 'ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|5|15|Noncontrolling interests~ComprehensiveIncomeNetOfTax|5|16|Comprehensive earnings attributable to PMI'}
+    nf = {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|4|7043000000~ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|233000000~ComprehensiveIncomeNetOfTax|4|6810000000'}
+    r = resolve_all.apply_ci_parent([_ci_row(a)], clines, nf)[0]
+    assert r['status'] == 'mapped' and r['value'] == D(6810000000) and r['nodes'] == 'ComprehensiveIncomeNetOfTax=6810000000 [R5.htm:16]' and 'ci_incl_nci' not in r['flags']
+    # a custom-tagged line labelled 'attributable to <company>' counts too; the NCI line never does
+    clines2 = {a: 'xx_ComprehensiveEarningsPmi|5|16|Comprehensive earnings attributable to PMI~ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|5|15|Comprehensive earnings attributable to noncontrolling interests'}
+    nf2 = {a: 'xx_ComprehensiveEarningsPmi|4|6810000000~ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|233000000'}
+    assert resolve_all.apply_ci_parent([_ci_row(a)], clines2, nf2)[0]['value'] == D(6810000000)
+    nci_only = {a: 'ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|5|15|Comprehensive earnings attributable to noncontrolling interests'}
+    assert resolve_all.apply_ci_parent([_ci_row(a)], nci_only, {a: 'ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|233000000'})[0]['status'] == 'combined'
+    # an NCI-inclusive element is never the parent, whatever its label says
+    incl = {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|5|13|Comprehensive income attributable to shareholders'}
+    assert resolve_all.apply_ci_parent([_ci_row(a)], incl, {a: 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest|4|7043000000'})[0]['status'] == 'combined'
+    # WFC FY2021: the parent line's fact carries only parent-scoped members
+    mf = {a: 'ComprehensiveIncomeNetOfTax|4|19652000000|EquityComponents=Parent;~ComprehensiveIncomeNetOfTax|4|19652000000|ConsolidatedEntities=ParentCompany;'}
+    w = resolve_all.apply_ci_parent([_ci_row(a)], {a: 'ComprehensiveIncomeNetOfTax|4|17|Wells Fargo comprehensive income'}, {}, mf)[0]
+    assert w['value'] == D(19652000000) and w['nodes'].startswith('ComprehensiveIncomeNetOfTax[')
+
+
+def test_amortization_by_location_without_a_total_is_summed_when_corroborated():
+    # PM FY2022 R60: CostOfSales 58 + MA&R 101; the class-axis member 159 corroborates the sum
+    mf = {'A': 'AmortizationOfIntangibleAssets|4|58000000|IncomeStatementLocation=CostOfSales;~AmortizationOfIntangibleAssets|4|101000000|IncomeStatementLocation=MarketingAdministrationAndResearchCosts;~'
+               'AmortizationOfIntangibleAssets|4|159000000|FiniteLivedIntangibleAssetsByMajorClass=TrademarksandDistributionNetworks;'}
+    x = standard_inputs.amortization_location_total({}, mf)['A']
+    assert x['value'] == D(159000000) and x['axis'] == 'IncomeStatementLocation' and x.get('corroborated')
+    # no corroborating fact: no sum (two location rows alone may be a partial split)
+    assert 'A' not in standard_inputs.amortization_location_total({}, {'A': mf['A'].rsplit('~', 1)[0]})
+
+
+def test_fsn_dropped_facts_are_added_to_the_member_facts(tmp_path):
+    p = tmp_path / 'f.csv'
+    p.write_text('accession,tag,qtrs,segment,value,evidence\nA,AmortizationOfIntangibleAssets,4,IncomeStatementLocation=CostOfSales;,58000000,e\nA,X,4,,5,e\n')
+    mf, nf = {}, {}
+    assert standard_inputs.fsn_dropped_facts(str(p), mf, nf) == 2
+    assert mf['A'] == 'AmortizationOfIntangibleAssets|4|58000000|IncomeStatementLocation=CostOfSales;' and nf['A'] == 'X|4|5'

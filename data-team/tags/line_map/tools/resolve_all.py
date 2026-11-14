@@ -185,6 +185,37 @@ def normalize_nodes(rows, filings):
     return bad
 
 
+CI_PARENT_LB = re.compile(r'(?i)comprehensive (income|earnings|\(loss\) income|income \(loss\)|loss)\b.*\battributable to (?!.*\b(non-?controlling|minority|redeemable)\b)')
+NCI_IN_TAG = re.compile(r'Noncontrolling|MinorityInterest|IncludingPortion')
+
+
+PARENT_SEG = re.compile(r'^(EquityComponents=Parent|ConsolidatedEntities=ParentCompany);$')
+
+
+def apply_ci_parent(rows, clines, notefacts, memberfacts=None):
+    """Ruling 2026-11-14 (PM): 'parent figure not printed' is false when the CI statement prints the parent line: the element
+    ComprehensiveIncomeNetOfTax, or a line whose label reads 'attributable to <company>' / '<ticker>' (PM: 'Comprehensive earnings
+    attributable to PMI'), with an undimensioned own-period fact. The parent line is served; the reason is never given then."""
+    for r in rows:
+        if r['data_point'] != 'comprehensive_income' or r['status'] not in ('combined', 'not_presented', 'no_role') or r.get('column', 'own') != 'own': continue
+        und = standard_inputs._undim(notefacts, r['accession'])
+        cand = []
+        for t, rep, ln, lb in standard_inputs._facts(clines.get(r['accession']), 4):
+            if NCI_IN_TAG.search(t): continue
+            if t == 'ComprehensiveIncomeNetOfTax' or CI_PARENT_LB.search(lb or ''):
+                v = und.get((t, 4)); seg = ''
+                if v is None:   # WFC FY2021: the parent line's fact carries only parent-scoped members, all equal (19,652)
+                    pv = {(sg, D(x)) for t_, q, x, sg in standard_inputs._facts((memberfacts or {}).get(r['accession']), 4) if t_ == t and int(q) == 4 and PARENT_SEG.match(sg)}
+                    if pv and len({x for _, x in pv}) == 1: seg, v = sorted(pv)[0][0].rstrip(';'), next(iter(pv))[1]
+                if v is not None: cand.append((t != 'ComprehensiveIncomeNetOfTax', int(rep), int(ln), t, lb, v, seg))
+        if not cand: continue
+        _, rep, ln, t, lb, v, seg = sorted(cand)[0]
+        r.update(status='mapped', value=D(standard_inputs._plain(v)), tags=t, nodes=f"{t}{'[' + seg + ']' if seg else ''}={standard_inputs._plain(v)} [R{rep}.htm:{ln}]",
+                 why=f"CI statement prints the parent line '{lb}' (R{rep}.htm:{ln}) (ruling 2026-11-14: a line attributable to the company is the parent figure)")
+        r['flags'] = ';'.join(x for x in (r.get('flags', '').replace('ci_incl_nci', ''), 'ci_parent_line') if x).replace(';;', ';').strip(';')
+    return rows
+
+
 def finalize_calc(chk, accession, compfacts):
     """Ruling 2026-11-14: never sum an incomplete group. A calc child with no value in this column is MISSING when the filing tags it in
     another column (RTX FY2019: Liabilities 2018 tagged, 2019 printed but untagged): the check is 'skipped: child missing (...)'. A child
@@ -558,6 +589,7 @@ if __name__ == '__main__':
     import standard_inputs, total_debt
     def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
     memberfacts, compfacts, zlines, clines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json'), _read('clines.json')
+    standard_inputs.fsn_dropped_facts(os.environ.get('FSN_DROPPED_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'fsn_dropped_facts.csv')), memberfacts, notefacts)
     # total_debt from the standard extract (own + comparative columns) and the committed instance evidence (total_debt.load_evidence)
     td = {(r['accession'], r['column']): r for r in total_debt.total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tick, os.environ.get('INSTANCE_CACHE', 'instances'))}
     # member-only face facts (_member-face-facts-2026-11-14.csv): a DPS, share count or CI printed on the face whose only own-period
@@ -593,6 +625,7 @@ if __name__ == '__main__':
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'coregistrant_face') if y)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = apply_ci_parent(rows, clines, notefacts, memberfacts)
     rows = apply_cost_and_opex(rows, filings)
     rows = apply_expenses_by_nature(rows, filings)
     rows = apply_ap_related(rows, filings)
@@ -612,6 +645,14 @@ if __name__ == '__main__':
     # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of
     # intangible amortization; the cost-of-sales part is a member): the location total (standard_inputs.amortization_location_total)
     LT = {}
+    for r in rows:   # ruling 2026-11-14 (PM FY2022): no line and no undimensioned fact, but the filing reports the amortization by location: the member sum
+        x = EXT.get('lt', {}).get(r['accession'])
+        if x and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'not_presented' and r.get('column', 'own') == 'own':
+            parts = [(k, v) for k, v in x['parts'].items()] if not x['total_member'] else [(x['total_member'], x['value'])]
+            r.update(status='component_sum' if len(parts) > 1 else 'mapped', value=D(x['value']), tags='+'.join(['AmortizationOfIntangibleAssets'] * len(parts)),
+                     nodes='; '.join(f"AmortizationOfIntangibleAssets[{x['axis']}={k}]={v} [NOTE]" for k, v in parts),
+                     why=f"the filing reports intangible amortization by income-statement location only: the members' sum" + (' (another own-period fact of the element equals it)' if x.get('corroborated') else ''))
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'location_total') if y)
     for a_, x in EXT.get('lt', {}).items():   # served when the mapped face line is smaller than the location total
         fv = next((D(r['value']) for r in rows if r['accession'] == a_ and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None), None)
         if fv is not None and x['value'] > fv:

@@ -1,0 +1,4 @@
+accession,tag,qtrs,segment,value,evidence
+0001413329-23-000025,AmortizationOfIntangibleAssets,4,IncomeStatementLocation=CostOfSales;,58000000,"PM FY2022 10-K R60.htm: Amortization of intangibles, IncomeStatementLocationAxis=us-gaap_CostOfSalesMember, 12 months to Dec. 31 2022: 58 (us-gaap_AmortizationOfIntangibleAssets); the FSN set stores no such fact"
+0001413329-23-000025,AmortizationOfIntangibleAssets,4,IncomeStatementLocation=MarketingAdministrationAndResearchCosts;,101000000,"PM FY2022 10-K R60.htm: Amortization of intangibles, IncomeStatementLocationAxis=pm_MarketingAdministrationAndResearchCostsMember: 101"
+0001413329-23-000025,AmortizationOfIntangibleAssets,4,FiniteLivedIntangibleAssetsByMajorClass=TrademarksandDistributionNetworks;,159000000,"PM FY2022 10-K R60.htm: Amortization of intangibles, FiniteLivedIntangibleAssetsByMajorClassAxis=pm_TrademarksandDistributionNetworksMember: 159 (= 58 + 101)"
