@@ -381,8 +381,11 @@ def statement_page_fallback(
     acc: str, stmt: str, instant: bool, idx: LocatorIndex
 ) -> tuple[str, str]:
     """(R page, source) of the cell's statement in filing `acc` ONLY: the docmap statement if it is a main
-    statement, else (a parenthetical or off-face share count of an instant data point) the balance sheet."""
-    for st in [stmt] + (["BS"] if instant else []):
+    statement, else (a parenthetical or off-face share count of an instant data point) the balance sheet. A cell with
+    no statement (a not_presented reason: the line is absent) cites the statement where its absence is shown: the
+    balance sheet for an instant data point, the income statement otherwise (Dhairya, 2026-11-14)."""
+    fallback = ["BS"] if instant else ([] if stmt else ["IS"])
+    for st in [stmt] + fallback:
         rep = idx.stmt_report(acc, st) if st else None
         if rep is not None:
             return _page(rep), "evidence_acc_stmt_page"

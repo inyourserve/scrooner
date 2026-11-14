@@ -537,6 +537,36 @@ def test_reason_with_accession_and_no_page_gets_that_filings_balance_sheet_page(
     assert statement_page_fallback("0000000000-00-000002", "PAR", True, i) == ("", "")
 
 
+def test_reason_without_statement_cites_that_filings_income_statement_or_balance_sheet():
+    from scrooner_pipeline.mapper.top100_coverage import (
+        LocatorIndex,
+        statement_page_fallback,
+    )
+
+    A = "0001413329-23-000025"
+    i = LocatorIndex()
+    i.add(A, 3, 1, "IS", "Revenues", "x")
+    i.add(A, 6, 1, "BS", "Assets", "x")
+    i.add(A, 8, 1, "CF", "NetIncomeLoss", "x")
+    # a not_presented duration cell with no statement: the IS page of THAT filing
+    assert statement_page_fallback(A, "", False, i) == (
+        "R3.htm",
+        "evidence_acc_stmt_page",
+    )
+    # an instant one: the balance sheet
+    assert statement_page_fallback(A, "", True, i) == (
+        "R6.htm",
+        "evidence_acc_stmt_page",
+    )
+    # a cell whose own statement is known keeps it, never IS
+    assert statement_page_fallback(A, "CF", False, i) == (
+        "R8.htm",
+        "evidence_acc_stmt_page",
+    )
+    # a filing not in the index stays blank
+    assert statement_page_fallback("0000000000-00-000009", "", False, i) == ("", "")
+
+
 def test_period_no_filing_has_reached_is_not_a_cell():
     """A cover-page instant labelled FY (2026-09-12) after the last 10-K (2025-12-31) is not a cell period."""
     from datetime import date
