@@ -51,8 +51,8 @@ def fill_printed_zero_and_comparative(rows, td):
         elif k in cf:
             c = cf[k]; v = D(c['value'])
             r.update(status='mapped', value=v, tags=c['tag'], accession=c['accession'], column='comparative',
-                     nodes=f"{c['tag']}={c['value']} [{c['loc']} of {c['accession']}, comparative column]",
-                     why='the own filing does not present the line; the next 10-K prints it in its comparative column (ruling 2026-11-14, FY-1 comparative rule)')
+                     nodes=f"{c['tag']}={c['value']} [{c['loc']} of {c['accession']}, {c.get('window') or 'FY-1'} column]",
+                     why=f"the own filing does not present the line; a later 10-K prints it in its {c.get('window') or 'FY-1'} column (rulings 2026-11-14: comparative fill from the latest face-eligible filing)")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if v == 0 else '') if x)
         elif r['data_point'] == 'total_debt':
             t = next((t for t in by.get(r['ticker'], []) if t['period_end'] == r['period_end'] and t['status'] in ('mapped', 'component_sum')), None)
@@ -62,6 +62,35 @@ def fill_printed_zero_and_comparative(rows, td):
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if D(t['value']) == 0 else '') if x)
     return rows
 AP_RELATED = re.compile(r'^(AccountsPayableRelatedPartiesCurrent|DueToRelatedPartiesCurrent)$')
+AR_RELATED = re.compile(r'^(DueFromRelatedPartiesCurrent|DueFromRelatedParties|DueFromAffiliateCurrent|AccountsReceivableRelatedPartiesCurrent|RelatedPartyTransactionDueFromToRelatedPartyCurrent|NotesAndLoansReceivableRelatedPartiesCurrent)$')
+def apply_ar_related(rows, filings):
+    """Ruling 2026-11-14 (AR mirrors AP): accounts_receivable = the trade line + a current face line whose own label names a
+    receivable from related parties or affiliates (COP, PSX, TMUS, DE, AMD 2020-22), flag ar_related_sum; member splits from
+    _ar-related-split (COP 2023-24, GEV). A mixed line ('Prepayment and receivables', AMD 2017-19), an 'other receivables
+    (including related parties)' line (SCCO) and 'Due from related party' without 'receivable' (DELL) are not added."""
+    sp = os.environ.get('AR_RELATED_SPLIT', _here('_ar-related-split-2026-11-14.csv'))
+    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'accounts_receivable' or r['status'] not in ('mapped',) or r['value'] is None: continue
+        a = r['accession']
+        if a in split:
+            s = split[a]; n, rel = D(s['nonrelated']), D(s['related'])
+            r.update(status='component_sum', value=n + rel, tags=f"{s['tag']}+{s['tag']}",
+                     nodes=f"{s['tag']}[NonrelatedParty]={n} [face line]; {s['tag']}[RelatedParty]={rel} [face line]",
+                     why='the face prints receivables from third parties and from related parties on two lines (RelatedPartyTransactionsByRelatedPartyAxis members): sum (ruling 2026-11-14)')
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
+            continue
+        if a not in F: continue
+        L, _ = parse(F[a])
+        rel = [l for l in face(L, 'BS') if l['val'] and AR_RELATED.match(l['tag']) and re.search(r'(?i)receivable', l['lb'] or '') and re.search(r'(?i)related part|affiliate', l['lb'] or '') and not re.search(r'(?i)prepay|other|noncurrent|long-term', l['lb'] or '')]
+        if rel:
+            l = rel[0]
+            r['nodes'] = (r.get('nodes') or '').split(' | why')[0] + f"; {l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]"
+            r.update(status='component_sum', value=D(r['value']) + l['val'], tags=(r.get('tags') or '') + '+' + l['tag'],
+                     why=f"accounts receivable = the trade line plus '{l['lb']}' (ruling 2026-11-14: AR mirrors AP)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
+    return rows
 def apply_ap_related(rows, filings):
     """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
     related-party (component_sum). A separate current line whose own label names a payable to related parties
@@ -237,6 +266,7 @@ if __name__ == '__main__':
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_ap_related(rows, filings)
+    rows = apply_ar_related(rows, filings)
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
     # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of

@@ -25,6 +25,21 @@ def test_printed_dash_is_zero_and_comparative_fills_with_the_next_filing():
     assert n['status'] == 'not_presented'   # a line absent from the face stays not_presented
 
 
+def test_receivables_and_payables_include_the_related_party_face_line():
+    # COP FY2016: 'Accounts and notes receivable-related parties' (DueFromRelatedPartiesCurrent 165) beside the trade line;
+    # AMD FY2018 'Prepayment and receivables - related parties' is a mixed line and is not added
+    lines = '~'.join(['BS|5|4|AccountsAndNotesReceivableNet|0|0||Accounts and notes receivable|3249', 'BS|5|5|DueFromRelatedPartiesCurrent|0|0||Accounts and notes receivable-related parties|165',
+                      'BS|5|6|RelatedPartyTransactionPrepaidExpenseCurrent|0|0||Prepayment and receivables - related parties|52',
+                      'BS|5|15|AccountsPayableCurrent|0|0||Accounts payable|3631', 'BS|5|16|DueToRelatedPartiesCurrent|0|0||Accounts payable-related parties|22'])
+    f = dict(cik='1', a='A9', p='2016-12-31', fd='2017-02-01', lines=lines, calc='')
+    rows = [dict(ticker='COP', accession='A9', period_end='2016-12-31', data_point=dp, status='mapped', value=D(v), tags=t, nodes=f'{t}={v} [R5.htm:4]', why='', flags='roles')
+            for dp, t, v in (('accounts_receivable', 'AccountsAndNotesReceivableNet', 3249), ('accounts_payable', 'AccountsPayableCurrent', 3631))]
+    rows = RA.apply_ar_related(RA.apply_ap_related(rows, [f]), [f])
+    ar, ap = rows
+    assert ar['value'] == D(3414) and 'ar_related_sum' in ar['flags'] and ar['status'] == 'component_sum'
+    assert ap['value'] == D(3653) and 'ap_related_sum' in ap['flags']
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):
