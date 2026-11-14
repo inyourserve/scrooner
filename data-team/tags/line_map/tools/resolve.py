@@ -297,6 +297,8 @@ def resolve(f):
             neg = [c for c, w in rest if w < 0]
             if miss:
                 put('operating_expenses', 'combined', [], None, f"a line between the top line and OI has no consolidated value ({'+'.join(miss)}): no component sum")
+            elif not neg:
+                put('operating_expenses', 'not_presented', [], None, f"no expense line between {'/'.join(top)} and OI: the lines there ({'+'.join(c for c, _ in rest)}) add to operating income (other income / gains); the filer reports its costs in cost of sales (LMT)")
             elif len(neg) == 1 and not opened:
                 x = iby[neg[0]]; put('operating_expenses', 'mapped', [dict(node(x, ''), st='IS')], x['val'], f"IS line {x['ln']}: the expense node between {'/'.join(top)} and OI" + (' (other lines there are gains/income)' if len(rest) > 1 else ''))
             else:

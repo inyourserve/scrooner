@@ -89,3 +89,15 @@ def test_instance_evidence_reads_location_list_and_lease_facts():
     assert IE.loc_of([], ["us-gaap_LongTermDebtAndCapitalLeaseObligations"]) == "in" and IE.loc_of([], []) == "none"
     with pytest.raises(AssertionError):
         IE._get("https://example.com/x")   # sec.gov only
+
+
+def test_interest_role_takes_the_gross_note_fact_beside_a_combined_face_line():
+    # KLAC FY2017: the only face line is InterestAndOtherIncome labelled 'Other expense (income), net' (19.5M); interest income is the note fact 23.3M
+    R = next(r for r in RA.ROLES if r["data_point"] == "interest_income")
+    assert "InterestAndOtherIncome" not in R["alternatives"].split("|") and "InterestAndOtherIncome" in R["combined_if"].split("|")
+    f = dict(cik="1", a="K", p="2017-06-30", fd="", calc="",
+             lines="~".join(["IS|4|1|Revenues|0|0|totalLabel|Total revenues|3480", "IS|4|11|InterestAndOtherIncome|0|0|terseLabel|Other expense (income), net|19.461"]))
+    L, arcs = RA.parse(f)
+    got = RA.role(f, L, arcs, {("InvestmentIncomeInterest", 4): D("23.27")}, R)
+    assert got["status"] == "mapped" and got["value"] == D("23.27") and got["r_page"] == "NOTE"
+    assert RA.role(f, L, arcs, {}, R)["status"] == "combined"      # no note fact: the combined line is the reason

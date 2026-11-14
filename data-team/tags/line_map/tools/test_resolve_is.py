@@ -125,3 +125,14 @@ def test_affiliate_interest_beside_a_net_line_is_a_part_not_the_data_point():
     r = run(lines, {('InterestExpense', 4): D(250)})['interest_expense']
     assert r['value'] == D(250) and r['r_page'] == 'NOTE'
     assert run(lines)['interest_expense']['status'] == 'combined'          # no gross fact: the net line is a point reason
+
+
+def test_opex_is_not_presented_when_only_other_income_sits_between_gross_profit_and_oi():
+    # LMT: Net sales - Cost of sales = Gross profit; 'Other income (expense), net' (+) -> Operating profit. No expense line: not presented, never -487
+    import resolve as RS
+    lines = [('IS', 'Revenues', 'Total net sales', 47248), ('IS', 'CostOfGoodsAndServicesSold', 'Total cost of sales', 42186),
+             ('IS', 'GrossProfit', 'Gross profit', 5062), ('IS', 'OtherOperatingIncomeExpenseNet', 'Other income (expense), net', 487),
+             ('IS', 'OperatingIncomeLoss', 'Operating profit', 5549)]
+    calc = '~'.join(['1|GrossProfit|Revenues|1', '1|GrossProfit|CostOfGoodsAndServicesSold|-1', '2|OperatingIncomeLoss|GrossProfit|1', '2|OperatingIncomeLoss|OtherOperatingIncomeExpenseNet|1'])
+    out, _ = RS.resolve(filing(lines, calc))
+    assert out['operating_expenses']['status'] == 'not_presented' and 'no expense line' in out['operating_expenses']['path']

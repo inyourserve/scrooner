@@ -131,6 +131,7 @@ def apply_cost_and_opex(rows, filings):
         r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
     for r in rows:
         if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
+        if 'no expense line between' in (r.get('why') or ''): continue   # LMT: only other income sits between GP and OI; GP - OI is not an expense
         L, _ = parse(F[r['accession']])
         isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
         gp, oi = isf.get('GrossProfit'), isf.get('OperatingIncomeLoss')
@@ -281,6 +282,11 @@ def role(f, L, arcs, notes, R):
                             r_page='+'.join(sorted({f"R{l['rep']}.htm" for l in ls})), why=f"{stmt} face {'+'.join(parts)}" + (f" under {R['parent']}" if scope else ''))
         for t in comb:
             if ok(t):
+                if dp in ('interest_income', 'interest_expense') and R['note_ok'] == 'Y':   # per-series ruling: the gross note fact beside a combined face line (KLAC)
+                    n = next(((p, notes.get((p, 4))) for parts in alts for p in parts if len(parts) == 1 and notes.get((p, 4)) is not None), None)
+                    if n:
+                        return dict(status='mapped', tags=n[0], value=n[1], r_page='NOTE', nodes=f"{n[0]}={n[1]} [NOTE]",
+                                    why=f"{stmt} face prints only the combined line {t} '{by[t]['lb']}'; the gross figure is the undimensioned note fact {n[0]} (per-series ruling)")
                 return dict(status='combined', tags=t, value=by[t]['val'], r_page=f"R{by[t]['rep']}.htm", why=f"{stmt} face prints only the combined line {t} '{by[t]['lb']}'")
         if R['custom_label']:
             cl = [l for l in fl if l['custom'] and l['val'] is not None and re.search(R['custom_label'], l['lb'], re.I) and (scope is None or l['tag'] in scope or not scope)]
