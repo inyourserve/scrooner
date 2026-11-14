@@ -300,6 +300,17 @@ def apply_cost_and_opex(rows, filings):
                  nodes='; '.join(f"{x['tag']}[ProductOrService={k}]={v} [R{cl['rep']}.htm:{cl['ln']}]" for k, v in x['members'].items()),
                  why=f"the income statement is a matrix: '{cl['lb']}' carries only ProductOrService column members; their sum, which with the other cost lines ties to '{ce['lb']}' {ce['val']} (ruling 2026-11-14)")
         r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
+    # (not 'Total costs and expenses': QCOM's includes cost of revenue)
+    for r in rows:   # PLD 2024-25: a printed 'Total expenses' line between the top line and an operating-income line is the opex (false 'no node' reason)
+        if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
+        isf_ = [l for l in face(parse(F[r['accession']])[0], 'IS') if l['val'] is not None]
+        te = next((l for l in isf_ if re.match(r'(?i)^total (operating )?expenses$', (l['lb'] or '').strip())), None)
+        oi_ = next((l for l in isf_ if te and l['ln'] > te['ln'] and re.match(r'(?i)^operating (income|loss|profit)', l['lb'] or '')), None)
+        rv_ = next((l for l in isf_ if te and l['ln'] < te['ln'] and re.match(r'(?i)^total revenues?$', (l['lb'] or '').strip())), None)
+        if te and oi_ and rv_:
+            r.update(status='mapped', value=te['val'], tags=te['tag'], nodes=f"{te['tag']}={te['val']} [R{te['rep']}.htm:{te['ln']}]",
+                     why=f"IS prints '{te['lb']}' between '{rv_['lb']}' and '{oi_['lb']}'")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'printed_total_expenses') if x)
     for r in rows:
         if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
         if 'no expense line between' in (r.get('why') or ''): continue   # LMT: only other income sits between GP and OI; GP - OI is not an expense

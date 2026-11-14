@@ -375,3 +375,31 @@ def test_fsn_dropped_facts_are_added_to_the_member_facts(tmp_path):
     mf, nf = {}, {}
     assert standard_inputs.fsn_dropped_facts(str(p), mf, nf) == 2
     assert mf['A'] == 'AmortizationOfIntangibleAssets|4|58000000|IncomeStatementLocation=CostOfSales;' and nf['A'] == 'X|4|5'
+
+
+def test_member_only_capex_lines_take_the_filings_capex_fact():
+    # VLO 2019: 'Capital expenditures' and 'Deferred turnaround and catalyst cost expenditures' print with member facts only
+    rows = [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 5531),
+            ('CF', 'PaymentsToAcquirePropertyPlantAndEquipment', 'Capital expenditures', None),
+            ('CF', 'PaymentsForCapitalImprovements', 'Deferred turnaround and catalyst cost expenditures', None),
+            ('CF', 'PaymentsToAcquireInterestInJointVenture', 'Investments in unconsolidated joint ventures', 164),
+            ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -3001),
+            ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -2997)]
+    c = resolve_cf(filing(rows), {('PaymentsToAcquireProductiveAssets', 4): D(2846)})['capex']
+    assert c['status'] == 'mapped' and c['value'] == D(2846) and 'member facts only' in c['why']
+    assert resolve_cf(filing(rows), {})['capex']['status'] == 'not_presented'
+
+
+def test_printed_total_expenses_line_is_the_opex():
+    # PLD 2024: 'Total expenses' between 'Total revenues' and 'Operating income before gains on real estate transactions'
+    isl = [('IS', 'Revenues', 'Total revenues', 8201610000), ('IS', 'GeneralAndAdministrativeExpense', 'General and administrative', 418765000),
+           ('IS', 'pld_OperatingExpensesBeforeGains', 'Total expenses', 5103569000),
+           ('IS', 'pld_OperatingIncomeBeforeGains', 'Operating income before gains on real estate transactions, net', 3098041000)]
+    f = filing(isl)
+    rows = [dict(accession=f['a'], data_point='operating_expenses', status='not_presented', value=None, tags='', nodes='', why='no node', flags='')]
+    r = resolve_all.apply_cost_and_opex(rows, [f])[0]
+    assert r['value'] == D(5103569000) and r['status'] == 'mapped'
+    # 'Total costs and expenses' holds cost of revenue (QCOM): not the opex
+    f2 = filing([isl[0], ('IS', 'CostsAndExpenses', 'Total costs and expenses', 18937000000), ('IS', 'OperatingIncomeLoss', 'Operating income', 7000000000)])
+    rows2 = [dict(accession=f2['a'], data_point='operating_expenses', status='not_presented', value=None, tags='', nodes='', why='no node', flags='')]
+    assert resolve_all.apply_cost_and_opex(rows2, [f2])[0]['value'] != D(18937000000)

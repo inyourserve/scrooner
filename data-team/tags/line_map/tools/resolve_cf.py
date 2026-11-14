@@ -85,7 +85,16 @@ def resolve_cf(f, notes):
         put('capex', 'mapped' if len(mem) == 1 else 'component_sum', '+'.join(l['tag'] for l in mem), sum(l['val'] for l in mem), fmt(mem),
             "CF investing section: capital-purchase line(s) (register 2026-11-04 item 3)" + ('; sum of ' + str(len(mem)) if len(mem) > 1 else ''))
     else:
-        put('capex', 'not_presented', '', None, '', 'no capital-purchase line in the investing section of this filing')
+        # VLO 2019-25: the investing section prints 'Capital expenditures' / 'Deferred turnaround and catalyst cost expenditures' whose facts
+        # carry members only; the filing's undimensioned capex-class fact is the figure (a false 'no line' reason otherwise, ruling 2026-11-14)
+        sec_all = sections(cf)
+        unvalued = [l for l in cf if sec_all.get(l['ln']) == 'I' and l['val'] is None and (l['tag'] in CAPEX or (l['custom'] and CAPEX_LABEL.search(l['lb'] or '')))]
+        n = note([t for t in ('PaymentsToAcquireProductiveAssets', 'PaymentsToAcquirePropertyPlantAndEquipment') if t])
+        if unvalued and n:
+            put('capex', 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]',
+                f"the investing section prints {', '.join(repr(l['lb']) for l in unvalued[:2])} with no undimensioned value (member facts only); the filing's undimensioned capex-class fact", flags='face_lines_member_only')
+        else:
+            put('capex', 'not_presented', '', None, '', 'no capital-purchase line in the investing section of this filing')
     # ---- buybacks: own common stock, financing section
     fin = in_sec('F')
     bb = [l for l in fin if l['tag'] in ('PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity')]
