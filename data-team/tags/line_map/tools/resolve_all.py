@@ -237,7 +237,7 @@ def family_rows(f, notes, raw):
     out = {}
     bsraw = '~'.join(x for x in (raw or '').split('~') if x.count('|') == 2 and x.split('|')[1] == '0')
     for dp, r in resolve_bs.resolve_family(f, resolve_bs.notes_for(bsraw)).items():
-        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=r.get('rule', ''))
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=';'.join(x for x in (r.get('rule', ''), r.get('flags', '')) if x))
     for dp, r in resolve_cf.resolve_cf(f, notes).items():
         out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='')
     return out

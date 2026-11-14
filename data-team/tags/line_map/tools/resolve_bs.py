@@ -21,7 +21,7 @@ import csv, json, os, re, sys, collections
 from decimal import Decimal as D
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from resolve import parse, face, tol
+from resolve import parse, face, tol, children
 
 ROLES_CSV = os.environ.get('ROLES_CSV', os.path.join(HERE, '..', 'rules', 'roles.csv'))
 ROLES = {r['data_point']: r for r in csv.DictReader(open(ROLES_CSV))}
@@ -43,6 +43,28 @@ def regions(bs):
     l_end = lc['ln'] if lc else (lse['ln'] if lse else 10 ** 6)
     liab = [l for l in bs if l['val'] is not None and l_start < l['ln'] < l_end]
     return by, asset, liab, ac is not None, lc is not None
+
+
+CASH_TOTAL = re.compile(r'(?i)^(total )?cash and (cash )?equivalents$')
+
+
+def cash_subtotal(r, lines, arcs):
+    """Ruling 2026-11-14 (Dhairya, AXP 2023 46,596): cash = the face TOTAL labelled cash and cash equivalents. When the picked line is a component
+    whose calc parent on the face (in the same asset region) is labelled '(Total) cash and cash equivalents', the parent is the role; climb while
+    that holds. A parenthetical in the label ('(includes restricted cash: ...)', AXP 2024) is disclosure of what the printed total contains and is
+    flagged; a total whose label names other items (short-term investments, marketable securities, restricted cash) is not cash and stays out."""
+    if not arcs or r is None or r.get('rule') != 'face' or r['status'] != 'mapped': return r
+    on = {l['tag']: l for l in lines}
+    t = r['nodes'].split('=')[0]; climbed = []
+    while True:
+        par = [p for p in on if p != t and t in {c for c, w in (children(arcs, p, on) or [])} and CASH_TOTAL.match(on[p]['lb'].split('(')[0].strip())]
+        if len(par) != 1: break
+        climbed.append(t); t = par[0]
+    if not climbed: return r
+    l = on[t]; paren = '(' in l['lb']
+    return dict(status='mapped', value=l['val'], nodes=f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]", rule='face',
+                why=f"BS face total '{l['lb']}' (calc parent of {', '.join(climbed)}): cash is the face total labelled cash and cash equivalents, not its first component (ruling 2026-11-14)",
+                flags='cash_face_subtotal' + (';label_parenthetical' if paren else ''))
 
 
 def pick(R, lines, notes, dp):
@@ -121,6 +143,7 @@ def resolve_family(f, notes):
             elif dp == 'accounts_payable': lines = liab
             else: lines = whole_assets
             r = pick(R, lines, notes, dp)
+            if dp == 'cash_and_equivalents': r = cash_subtotal(r, lines, arcs)
         if r is None:
             r = dict(status='not_presented', value=None, nodes='', rule='', why=f"no {dp} line on the balance sheet face in its position, and no undimensioned note fact at the balance-sheet date")
         out[dp] = r
