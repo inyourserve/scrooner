@@ -449,3 +449,43 @@ def test_parts_list_every_part_with_its_own_page_of_the_same_filing_only():
         "",
         0,
     )
+
+
+def test_reason_is_evidence_only_from_the_cells_own_period_filing():
+    from datetime import date
+
+    from scrooner_pipeline.mapper.top100_coverage import (
+        OWN_UNVERIFIED,
+        eligible_filings,
+        own_period_reason,
+    )
+
+    f = [
+        (date(2016, 12, 31), "A16"),
+        (date(2017, 12, 31), "A17"),
+        (date(2018, 12, 31), "A18"),
+        (date(2019, 12, 31), "A19"),
+    ]
+    fy16 = date(2016, 12, 31)
+    assert eligible_filings(f, fy16, False) == {
+        "A16",
+        "A17",
+        "A18",
+    }  # three printed years
+    assert eligible_filings(f, fy16, True) == {
+        "A16",
+        "A17",
+    }  # a balance sheet prints two
+    assert own_period_reason("REASON", "not_presented", "A16", f, fy16, False) == (
+        "REASON",
+        "not_presented",
+    )
+    assert own_period_reason("REASON", "not_presented", "A19", f, fy16, False) == (
+        "UNCHECKED",
+        OWN_UNVERIFIED,
+    )
+    assert own_period_reason("REASON", "x", "", f, fy16, False) == (
+        "UNCHECKED",
+        OWN_UNVERIFIED,
+    )
+    assert own_period_reason("PROVEN", None, "A19", f, fy16, False) == ("PROVEN", None)

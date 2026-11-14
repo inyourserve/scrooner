@@ -160,6 +160,47 @@ class LocatorIndex:
         return -max(best)[1] if best else None
 
 
+OWN_UNVERIFIED = "reason_own_filing_unverified"
+# A 10-K ending at P prints the balance sheet for P and P-1 and the income and cash-flow statements for P, P-1, P-2.
+_DAY_TOL = 12
+
+
+def eligible_filings(
+    filings: list[tuple[date, str]], period_end: date, instant: bool
+) -> set[str]:
+    """Accessions of the company's annual filings that present the fiscal year ending `period_end`: its own 10-K
+    (period == year end) or a later one whose face columns still carry the year (one more year for a balance-sheet
+    instant, two more for a duration). Pure."""
+    span = (366 if instant else 2 * 366) + _DAY_TOL
+    return {acc for p, acc in filings if -_DAY_TOL <= (p - period_end).days <= span}
+
+
+def own_period_reason(
+    cls: str,
+    code: str | None,
+    acc: str,
+    filings: list[tuple[date, str]],
+    period_end: date,
+    instant: bool,
+) -> tuple[str, str | None]:
+    """A REASON stays REASON only when its locator accession presents the cell's own period; else UNCHECKED."""
+    if cls == "REASON" and acc not in eligible_filings(filings, period_end, instant):
+        return "UNCHECKED", OWN_UNVERIFIED
+    return cls, code
+
+
+def _annual_filings(conn: Any, ids: list[int]) -> dict[int, list[tuple[date, str]]]:
+    out: dict[int, list[tuple[date, str]]] = defaultdict(list)
+    for cid, period, acc in conn.execute(
+        """select company_id, period, accession from fsn.filing
+           where company_id = any(%s) and period is not null
+             and form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')""",
+        (ids,),
+    ).fetchall():
+        out[cid].append((period, acc))
+    return out
+
+
 def _page(report: int | None) -> str:
     return "" if report is None else f"R{report}.htm"
 
@@ -614,6 +655,7 @@ def build_rows(
         t.strip() for p in proofs.values() if p[4] for t in p[4].split(",") if t.strip()
     }
     idx = _locator_index(conn, cited, shown_tags)
+    annual = _annual_filings(conn, ids)
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -704,6 +746,11 @@ def build_rows(
                 dstmt = dm.get("stmt", "")
                 label = ""
                 if cls == "REASON" and covering:
+                    # only evidence of a filing that presents THIS period counts; prefer such a row
+                    ok_accs = eligible_filings(
+                        annual.get(c.company_id, []), e, ptype == "instant"
+                    )
+                    covering = [x for x in covering if x[1][0] in ok_accs] or covering
                     pref = sorted(
                         covering,
                         key=lambda x: (x[0] != (code == COMBINED), x[1][1] is None),
@@ -727,6 +774,11 @@ def build_rows(
                         acc, page, lsrc = own_acc, own_page, "own_year"
                     elif own_acc and acc == own_acc and own_page:
                         page, lsrc = own_page, "own_year"
+                # a REASON is evidence only from the cell's own-period filing (or a later one that presents the
+                # period); a reason cited from any other filing is not evidence for this period
+                cls, code = own_period_reason(
+                    cls, code, acc, annual.get(c.company_id, []), e, ptype == "instant"
+                )
                 # reason text only on a non-PROVEN cell; a combined reason quotes the printed label of its evidence
                 reason_text = reason_fields(
                     cls,

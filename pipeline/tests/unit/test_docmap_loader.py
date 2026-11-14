@@ -581,3 +581,30 @@ def test_fix_eras_close_a_small_gap_between_52_and_53_week_years():
     assert dl.assign_fix_eras([fy19, far])[1].era_from == date(2020, 3, 1)
     over = _fix(date(2019, 12, 29), date(2021, 1, 2))
     assert dl.assign_fix_eras([fy19, over])[1].era_from == date(2019, 12, 30)
+
+
+def test_absent_extension_rows_carry_each_years_own_evidence():
+    d = dl.replace(
+        _doc("", status="not_presented"),
+        era_from=date(2018, 1, 1),
+        base_era=date(2021, 1, 1),
+        ext_note="n",
+        ext_slices=(
+            (date(2020, 1, 1), date(2020, 12, 31), "A-2020", (("IS", 4),)),
+            (date(2019, 1, 1), date(2019, 12, 31), "A-2019", (("IS", 5),)),
+            (date(2018, 1, 1), date(2018, 12, 31), "A-2018", (("IS", 6),)),
+        ),
+    )
+    rows = dl.table_rows(
+        d, 5, "0000000001", {"revenue_sanity_resolved": "income_statement"}
+    )
+    ext = [r for r in rows if r["rule_id"].endswith("era_extend@1")]
+    assert [
+        (r["era_from"].year, r["evidence_adsh"], r["evidence_report"]) for r in ext
+    ] == [
+        (2020, "A-2020", 4),
+        (2019, "A-2019", 5),
+        (2018, "A-2018", 6),
+    ]
+    main = [r for r in rows if not r["rule_id"].endswith("era_extend@1")]
+    assert [r["evidence_adsh"] for r in main] == ["0000000001-26-000001"]
