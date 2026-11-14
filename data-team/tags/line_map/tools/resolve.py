@@ -62,8 +62,10 @@ def resolve(f):
     L, arcs = parse(f)
     out = {}
     def put(dp, status, nodes, value, path, note=''):
+        # every node with its own value and position; a leading '-' marks a node that enters the sum with a negative weight
+        nv = '; '.join(f"{'-' if n.get('neg') else ''}{n['tag']}={n['val']} [R{n['rep']}:{n['ln']}]" for n in nodes)
         out[dp] = dict(status=status, tags='+'.join(n['tag'] for n in nodes), value=value, path=path,
-                       stmt=nodes[0].get('st', '') if nodes else '', line=';'.join(f"R{n['rep']}:{n['ln']}" for n in nodes), note=note)
+                       stmt=nodes[0].get('st', '') if nodes else '', line=';'.join(f"R{n['rep']}:{n['ln']}" for n in nodes), note=note, nodes=nv)
     # ---------------- balance sheet
     bs = face(L, 'BS'); by = {l['tag']: l for l in bs if l['val'] is not None}
     onbs = by
@@ -107,7 +109,7 @@ def resolve(f):
             ncis = [c for c in by if re.search(r'Noncontrolling|MinorityInterest', c) and c != eq_incl and by[c]['val'] and 'Redeemable' not in c and 'Temporary' not in c and by[c]['ln'] < by[eq_incl]['ln']]
             if ncis:
                 v = by[eq_incl]['val'] - sum(by[c]['val'] for c in ncis)
-                put('stockholders_equity', 'derived', [dict(node(by[eq_incl], ''), st='BS')] + [dict(node(by[c], ''), st='BS') for c in ncis], v,
+                put('stockholders_equity', 'derived', [dict(node(by[eq_incl], ''), st='BS')] + [dict(node(by[c], ''), st='BS', neg=True) for c in ncis], v,
                     f"parent equity not printed: {eq_incl} {by[eq_incl]['val']} - {'+'.join(ncis)} (same filing; Dhairya ruling 2026-11-13: parent equity excludes NCI)", 'DERIVED')
             else:
                 put('stockholders_equity', 'combined', [], None, f"parent equity not printed: only {eq_incl} (includes NCI) on the face")
@@ -279,7 +281,7 @@ def resolve(f):
                 x = iby[neg[0]]; put('operating_expenses', 'mapped', [dict(node(x, ''), st='IS')], x['val'], f"IS line {x['ln']}: the expense node between {'/'.join(top)} and OI" + (' (other lines there are gains/income)' if len(rest) > 1 else ''))
             else:
                 v = -sum(iby[c]['val'] * w for c, w in rest)
-                put('operating_expenses', 'component_sum', [dict(node(iby[c], ''), st='IS') for c, _ in rest], v, f"IS: -sum(weight x value) of the lines between {'/'.join(top)} and OI" + (f" (opened {'+'.join(opened)} without cost of revenue)" if opened else ''))
+                put('operating_expenses', 'component_sum', [dict(node(iby[c], ''), st='IS', neg=w > 0) for c, w in rest], v, f"IS: -sum(weight x value) of the lines between {'/'.join(top)} and OI" + (f" (opened {'+'.join(opened)} without cost of revenue)" if opened else ''))
     elif 'NoninterestExpense' in iby and rev is not None and re.search(r'(?i)interest', rev['tag'] + rev['lb'] + ' '.join(c for c, _ in kids(rev['tag']))):
         x = iby['NoninterestExpense']; put('operating_expenses', 'mapped', [dict(node(x, ''), st='IS')], x['val'], 'bank IS: the noninterest expense total (ruling: bank opex = NoninterestExpense)')
     # pretax / tax / net income

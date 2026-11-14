@@ -6,8 +6,20 @@ import csv, json, re, sys, collections
 from decimal import Decimal as D
 sys.path.insert(0, '.')
 from resolve import parse, face, children, resolve, DPS as CORE_DPS
-import os
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
+INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
+               'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
+import resolve_bs, resolve_cf
+FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
+def family_rows(f, notes, raw):
+    """Family modules (tools/resolve_bs.py, tools/resolve_cf.py): position logic per family; rows replace the role rows of their data points."""
+    out = {}
+    bsraw = '~'.join(x for x in (raw or '').split('~') if x.count('|') == 2 and x.split('|')[1] == '0')
+    for dp, r in resolve_bs.resolve_family(f, resolve_bs.notes_for(bsraw)).items():
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=r.get('rule', ''))
+    for dp, r in resolve_cf.resolve_cf(f, notes).items():
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='')
+    return out
 def descendants(arcs, root, onface):
     out, stack = set(), [root]
     while stack:
@@ -42,7 +54,8 @@ def role(f, L, arcs, notes, R):
                 l = cl[0]
                 return dict(status='mapped', tags=l['tag'], value=l['val'], r_page=f"R{l['rep']}.htm", why=f"{stmt} face custom line whose own label names the role: '{l['lb']}'")
     if R['note_ok'] == 'Y' or stmt == 'NOTE':
-        q = 0 if dp in ('shares_outstanding',) else 4
+        # instants (balance-sheet items) read the note fact at qtrs 0; durations at qtrs 4
+        q = 0 if (stmt == 'BS' or dp in INSTANT_DPS) else 4
         for parts in alts:
             vs = [notes.get((t, q)) for t in parts]
             if all(v is not None for v in vs):
@@ -65,11 +78,15 @@ def run(filings, notefacts, tick, td_rows):
         for dp in CORE_DPS:
             r = core.get(dp)
             if dp == 'mezzanine_and_nci': continue
-            if r: out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=dp, status=r['status'], tags=r['tags'], value=r['value'], r_page='+'.join(sorted({'R' + x.split(':')[0][1:] + '.htm' for x in r['line'].split(';') if x.startswith('R')})), nodes='; '.join(f"{t} [{x}]" for t, x in zip(r['tags'].split('+'), r['line'].split(';'))) if r['tags'] else '', why=r['path'], source='core', calc_check=chk, flags=r.get('note', '')))
+            if r: out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=dp, status=r['status'], tags=r['tags'], value=r['value'], r_page='+'.join(sorted({'R' + x.split(':')[0][1:] + '.htm' for x in r['line'].split(';') if x.startswith('R')})), nodes=r.get('nodes') or ('; '.join(f"{t} [{x}]" for t, x in zip(r['tags'].split('+'), r['line'].split(';'))) if r['tags'] else ''), why=r['path'], source='core', calc_check=chk, flags=r.get('note', '')))
             else: out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=dp, status='no_role', tags='', value=None, r_page='', nodes='', why='no node holds this role on the face/calc tree', source='core', calc_check=chk, flags=''))
         t = td_rows.get((f['a'], 'own'))
         if t: out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point='total_debt', status=t['status'], tags=t['tags'], value=D(t['value']) if t['value'] else None, r_page=t['r_pages'], nodes=t['parts'], why='total_debt rule (tools/total_debt.py)', source='total_debt', calc_check=chk, flags=t['flags']))
         corestat = {o['data_point']: o for o in out if o['accession'] == f['a'] and o['source'] == 'core'}
+        fam = family_rows(f, notes, notefacts.get(f['a']))
+        for dp in ('current_assets', 'current_liabilities'):
+            if dp in fam and corestat.get(dp, {}).get('status') in ('no_role', None):
+                corestat[dp].update(status=fam[dp]['status'], value=None, why=fam[dp]['why'], source='bs_family')
         for R in ROLES:
             if R.get('fallback') == 'Y':
                 c = corestat.get(R['data_point'])
@@ -78,9 +95,42 @@ def run(filings, notefacts, tick, td_rows):
                 if r['status'] == 'not_presented': continue
                 c.update(dict(status=r['status'], tags=r['tags'], value=r['value'], r_page=r['r_page'], nodes=r.get('nodes', r['tags']), why='FALLBACK (no calc node): ' + r['why'], source='core_fallback'))
                 continue
+            if R['data_point'] in fam:
+                r = dict(fam.pop(R['data_point'])); src = r.pop('source'); fl_ = r.pop('flags')
+                out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=R['data_point'], source=src, calc_check=chk, flags=fl_, **r))
+                continue
             r = role(f, L, arcs, notes, R)
             r.setdefault('nodes', f"{r['tags']} [{r['r_page']}]" if r['tags'] else '')
             out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=R['data_point'], source='roles', calc_check=chk, flags='', **r))
+        for dp, r in fam.items():   # family data points with no roles.csv row (e.g. intangible_assets)
+            if dp in ('current_assets', 'current_liabilities'): continue
+            r = dict(r); src = r.pop('source'); fl_ = r.pop('flags')
+            out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=dp, source=src, calc_check=chk, flags=fl_, **r))
+        # no calc arcs under the balance sheet: total liabilities from the face by position (the printed Liabilities total),
+        # else DERIVED = L&SE - equity incl. NCI (or parent equity + NCI) - temporary/redeemable equity, all from this face (C2)
+        tl = corestat.get('total_liabilities')
+        if tl is not None and tl['status'] == 'no_role':
+            bs = face(L, 'BS'); bb = {}
+            for l in bs:
+                if l['val'] is not None: bb.setdefault(l['tag'], l)
+            if 'Liabilities' in bb:
+                l = bb['Liabilities']
+                tl.update(status='mapped', tags='Liabilities', value=l['val'], r_page=f"R{l['rep']}.htm", nodes=f"Liabilities={l['val']} [R{l['rep']}:{l['ln']}]", why='FALLBACK (no calc arcs): the printed Liabilities total between the asset total and equity', source='core_fallback')
+            elif 'LiabilitiesAndStockholdersEquity' in bb:
+                lse = bb['LiabilitiesAndStockholdersEquity']
+                eq = [bb[t] for t in ('StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest',) if t in bb] or [bb[t] for t in ('StockholdersEquity', 'MinorityInterest') if t in bb]
+                mez = [l for t, l in bb.items() if re.match(r'^(TemporaryEquity|RedeemableNoncontrollingInterest)\w*(CarryingAmount|Value)\w*$', t)]
+                if eq:
+                    v = lse['val'] - sum(l['val'] for l in eq + mez)
+                    tl.update(status='derived', tags='+'.join(l['tag'] for l in eq + mez), value=v, r_page=f"R{lse['rep']}.htm",
+                              nodes=f"LiabilitiesAndStockholdersEquity={lse['val']} [R{lse['rep']}:{lse['ln']}]; " + '; '.join(f"-{l['tag']}={l['val']} [R{l['rep']}:{l['ln']}]" for l in eq + mez),
+                              why='FALLBACK (no calc arcs, total liabilities not printed): L&SE minus the printed equity side (C2)', source='core_fallback')
+        ni = corestat.get('net_income')
+        if ni is not None and ni['status'] == 'no_role':
+            isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
+            if 'ProfitLoss' in isf and not any('Noncontrolling' in t for t in isf):
+                l = isf['ProfitLoss']
+                ni.update(status='mapped', tags='ProfitLoss', value=l['val'], r_page=f"R{l['rep']}.htm", nodes=f"ProfitLoss={l['val']} [R{l['rep']}:{l['ln']}]", why='FALLBACK: the IS ends at ProfitLoss and prints no NCI line, so ProfitLoss is the parent net income', source='core_fallback')
         # rule (C1/S12 generalised): a statement role with no node on a filing whose statement was read is a reason,
         # not a gap: gross profit, opex, operating income, cost of revenue not printed -> not_presented
         isread = any(o['data_point'] == 'revenue' and o['status'] in ('mapped', 'component_sum') for o in out if o['accession'] == f['a'])
