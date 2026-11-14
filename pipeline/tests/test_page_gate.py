@@ -95,3 +95,29 @@ def test_pageless_counts_per_company():
         "parts_blank": 2,
     }
     assert p[2] == dict.fromkeys(p[1], 0)
+
+
+def test_member_part_cites_the_report_of_its_base_tag_in_that_filing():
+    """META/MA/CRWD shares by class, TMO cost of revenue by product, SNDK/COP related-party lines: 82 blank pages."""
+    from scrooner_pipeline.mapper.top100_coverage import LocatorIndex, parts_locator
+
+    A = "0001326801-16-000043"
+    i = LocatorIndex()
+    i.add(A, 3, 9, "BS", "CommonStockSharesOutstanding", "shares")
+    found = [
+        {
+            "tag": f"CommonStockSharesOutstanding[ClassOfStock=Class{c}Member]",
+            "value": 100,
+            "sign": 1,
+        }
+        for c in "AB"
+    ]
+    checks = {
+        "claim": {"kind": "component", "stmt": "BS"},
+        "component_parts": {"found": found},
+    }
+    text, blank = parts_locator(checks, A, i, {}, None)
+    assert blank == 0 and text.count(f"@{A}#R3") == 2
+    # another filing: no page is borrowed
+    text, blank = parts_locator(checks, "0000000000-00-000009", i, {}, None)
+    assert blank == 2

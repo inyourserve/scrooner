@@ -437,6 +437,18 @@ def parts_locator(
         if rep is None and instance_facts.is_instance_part(tag):
             # an instance-sourced part (Tag[Axis=Member]): the page of the committed instance-facts file, for THIS filing
             page = instance_part_page(acc, tag, inst_pages).replace(".htm", "")
+        if not page and "[" in tag:
+            # a member part (Tag[Axis=Member]: shares by class on the balance-sheet parenthetical, cost of revenue by
+            # product on the income statement, a related-party line): its member row is printed on the report that
+            # prints the BASE tag in THIS filing (statement line first, then the note lookup)
+            base = tag.split("[", 1)[0]
+            hits = idx.tag.get((acc, base), [])
+            same = [r for s_, r in hits if s_ == stmt] or [
+                r for s_, r in hits if s_ in STATEMENT_STMTS
+            ]
+            brep = min(same) if same else (note_lookup or {}).get((acc, base))
+            if brep is not None:
+                page = f"R{brep}"
         if not page:
             blank += 1
         sign = "-" if p.get("sign") == -1 else ""
