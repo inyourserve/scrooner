@@ -207,6 +207,26 @@ def map_forbids(rows, concept_id: int, end: date) -> str | None:
 
 
 STRUCTURAL_RULE_ID = sl.RULE_ID
+PRINTED_ZERO = "printed_zero"
+NO_STORED_FACT = "no stored fact for the part in that filing and column"
+
+
+def printed_zero_ok(claim: sl.Claim, why: str) -> bool:
+    """Ruling 2026-11-14 (Dhairya): a line printed on the face with a dash or a zero is served as 0 with no fact id,
+    the resolver's R page and line being the evidence. Only for a `mapped` claim flagged printed_zero whose value and
+    node are exactly 0 and whose filing stores no fact for the part (a stored fact is read as any other part). Pure."""
+    if (
+        claim.decision != "mapped"
+        or PRINTED_ZERO not in {f.strip() for f in claim.flags.split(";")}
+        or why != NO_STORED_FACT
+    ):
+        return False
+    try:
+        return Decimal(claim.value) == 0 and all(
+            Decimal(v) == 0 for v in claim.node_values if v
+        )
+    except (ArithmeticError, ValueError):
+        return False
 
 
 def unclaimed(rows, cells: list[dict], periods, concept_info) -> list[dict]:
@@ -467,6 +487,9 @@ def direct_cells(
                 else None
             )
             got = _part_value(stored[(c.accession, tag, te)], want)
+            if isinstance(got, str) and printed_zero_ok(c, got):
+                parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
+                continue
             if isinstance(got, str):
                 bad = f"{tag}: {got}"
                 break
@@ -494,6 +517,7 @@ def direct_cells(
         if c.value and Decimal(c.value) != served:
             reject(f"stored value {served} differs from the resolver value {c.value}")
             continue
+        zero_src = any(p[3] == PRINTED_ZERO for p in parts)
         fsn_src = any(p[3] == "fsn_xbrl" for p in parts)
         core_ids = sorted({i for p in parts if p[3] == "sec_api" for i in p[4]})
         vids = sorted({i for p in parts if p[3] == "fsn_xbrl" for i in p[4]})
@@ -504,13 +528,18 @@ def direct_cells(
         )
         if flipped:
             note += "; " + flip_note(parts[0][2])
+        if zero_src:
+            rp, ln = c.locs[0] if c.locs else (None, None)
+            note += f"; printed_zero: the line is printed with a dash or 0 (R{rp}:{ln}), served as 0 with no fact id"
         fid = meta[c.accession][0]
         cells.append(
             {
                 "canonical_concept_id": cid,
                 "period_id": pid,
                 "value": served,
-                "value_source": "fsn_xbrl" if fsn_src else "sec_api",
+                "value_source": PRINTED_ZERO
+                if zero_src
+                else ("fsn_xbrl" if fsn_src else "sec_api"),
                 "source_fact_ids": [] if fsn_src else core_ids,
                 "source_value_ids": vids if fsn_src else [],
                 "serve_note": note,

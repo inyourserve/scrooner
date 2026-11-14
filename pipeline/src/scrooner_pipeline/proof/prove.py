@@ -390,6 +390,9 @@ class Shown:
     # parts of a component claim that the cell's filing omits on its face while its own calc parent ties without
     # them (common/authority.absent_part_is_zero, evidence absent_on_face_parent_ties): counted as 0, never guessed
     zero_parts: tuple[str, ...] = ()
+    # the cell is a printed zero (ruling 2026-11-14): served as 0 with no fact id, from a line the own filing prints with
+    # a dash or 0 (canonical_fact family company_tag_map:printed_zero); the claim's evidence accession is `accession`
+    printed_zero: bool = False
 
 
 @dataclass
@@ -1004,6 +1007,11 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     )
 
 
+def printed_zero_proven(shown: Shown) -> bool:
+    """A printed_zero cell holds only the value 0, never another number. Pure."""
+    return shown.printed_zero and shown.value == 0
+
+
 def prove_cell(
     shown: Shown,
     structure: FilingStructure | None,
@@ -1120,6 +1128,15 @@ def prove_cell(
                 "found_qtrs": sorted({v.qtrs for v in alt}),
             }
             p.reason_text = f"the printed {line.tag} at {shown.period_end} covers {sorted({v.qtrs for v in alt})} quarter(s), the cell needs {qtrs}"
+        elif printed_zero_proven(shown):
+            # the statement prints the line and the filing stores no value for the column: a dash, served as 0
+            p.verdict, p.reason_code = PROVEN, None
+            p.position_value = Decimal(0)
+            p.checks["printed_zero"] = {
+                "status": "pass",
+                "why": f"{line.tag} is a line of the {stmt} with no stored value for the column: a printed dash or 0",
+            }
+            p.reason_text = f"the {stmt} prints {line.tag} with no value for the column; served as 0 (printed_zero)"
         else:
             p.verdict, p.reason_code = NOT_PRESENTED, "no_value_for_this_column"
             p.reason_text = f"{line.tag} is presented but carries no value for the column ending {shown.period_end}"

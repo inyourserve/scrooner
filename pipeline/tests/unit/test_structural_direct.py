@@ -629,3 +629,31 @@ def test_direct_serve_refuses_a_cell_the_map_calls_a_combined_line(
         cells, st = w.cells([ban])
         assert cells == []
         assert any("combined line" in r["why"] for r in st["rejected"])
+
+
+@pytest.mark.integration
+def test_printed_zero_serves_as_zero_with_no_fact_id_only_when_no_fact_is_stored(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """Ruling 2026-11-14: a dash or 0 printed on the face is served as 0, lineage = the resolver row (no fact id)."""
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        w.filing(ACC1, date(2019, 2, 1), END)
+        row = _row(ACC1, "0", node="0").replace(
+            ",core,r.1", ",cf_family;printed_zero,r.1"
+        )
+        _csv(tmp_path, row, monkeypatch=monkeypatch)
+        cells, st = w.cells()
+        (c,) = cells
+        assert c["value"] == Decimal(0) and c["value_source"] == "printed_zero"
+        assert c["source_fact_ids"] == [] and c["source_value_ids"] == []
+        assert "printed_zero" in c["serve_note"] and c["_accession"] == ACC1
+        # a stored fact of another value is read as any other part, never replaced by the zero
+        w.core_fact(ACC1, "InvestmentIncomeNet", "7")
+        cells, st = w.cells()
+        assert cells == [] and "differs" in st["rejected"][0]["why"]
+        # without the flag a missing fact stays a rejected claim
+        w.filing(ACC2, date(2020, 2, 1), END)
+        _csv(tmp_path, _row(ACC2, "0", node="0"), monkeypatch=monkeypatch)
+        cells, st = w.cells()
+        assert cells == [] and "no stored fact" in st["rejected"][0]["why"]

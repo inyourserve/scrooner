@@ -1,4 +1,2 @@
 data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-cost_of_revenue,2015,2015-12-31,mapped,us-gaap:CostOfGoodsSold,IS,0001413329-16-000076,R4.htm,9365000000,the face prints 'Cost of goods sold'/'Cost of sales' on CostOfGoodsSold in this year's own 10-K: the claim extends to this era (same line as the nearest year's CostOfGoodsAndServicesSold) | value_source sec_api
-cost_of_revenue,2016,2016-12-31,mapped,us-gaap:CostOfGoodsSold,IS,0001413329-17-000014,R4.htm,9391000000,the face prints 'Cost of goods sold'/'Cost of sales' on CostOfGoodsSold in this year's own 10-K: the claim extends to this era (same line as the nearest year's CostOfGoodsAndServicesSold) | value_source sec_api
 share_buybacks,2020,2020-12-31,mapped,us-gaap:PaymentsForRepurchaseOfCommonStock,CF,0001413329-22-000011,R8.htm,0,the next 10-K's CF prints 'Repurchases of common stock' = 0 for this year (comparative column) | value_source sec_api

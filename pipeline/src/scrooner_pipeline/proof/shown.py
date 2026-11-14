@@ -59,6 +59,29 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
         return [tuple(r) for r in cur.fetchall()]  # type: ignore[misc]
 
 
+PRINTED_ZERO_FAMILY = "company_tag_map:printed_zero"
+
+
+def printed_zero_accession(
+    conn: psycopg.Connection, company_id: int, name: str, end: date
+) -> str | None:
+    """The accession a printed-zero cell cites: the evidence_adsh of the structural claim row of its concept whose
+    era holds the period end (the filing the resolver read the dash from; a later 10-K for a comparative fill)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select m.era_from, m.era_to, m.evidence_adsh
+               from analytics.company_tag_map m
+               join analytics.canonical_concept cc on cc.id = m.canonical_concept_id
+               where m.company_id = %s and cc.name = %s and m.decision = 'concept' and m.evidence_adsh is not null
+               order by m.era_from desc""",
+            (company_id, name),
+        )
+        for ef, et, adsh in cur.fetchall():
+            if era_holds(ef, et, end):
+                return adsh
+    return None
+
+
 def load_part_parents(conn: psycopg.Connection, company_id: int) -> dict[str, set[str]]:
     """tag -> local calc-parent tags of the company's component rows (evidence_cal_parent 'A;B'): what rule 1 ties."""
     out: dict[str, set[str]] = defaultdict(set)
@@ -491,7 +514,7 @@ def load_shown(
         cur.execute(
             """
             select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id,
-                   cf.source_value_ids
+                   cf.source_value_ids, cf.family
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
             join core.period p on p.id = cf.period_id
@@ -549,7 +572,7 @@ def load_shown(
     copies_by, auth_by, filed_by, por_by, scale_by = _periodic_copies(
         conn, company_id, floor, face
     )
-    for name, ptype, fp, start, end, value, src, period_id, src_vals in rows:
+    for name, ptype, fp, start, end, value, src, period_id, src_vals, family in rows:
         if name not in names:
             continue
         grain = _grain(ptype, fp, start, end)
@@ -574,6 +597,9 @@ def load_shown(
         ]
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
+        pz = family == PRINTED_ZERO_FAMILY and Decimal(value) == 0
+        if pz and accession is None:
+            accession = printed_zero_accession(conn, company_id, name, end)
         all_copies = copies_by.get((_base_name(name), period_id), [])
         # per-filing tag era: a later filing may print the period under the tag ITS OWN era row uses (MSFT revenue)
         cell_triples = (
@@ -709,6 +735,7 @@ def load_shown(
                 claim=claim,
                 combined=combined_for(combined_rows, name, end),
                 zero_parts=zero_parts,
+                printed_zero=pz,
             )
         )
     return out
