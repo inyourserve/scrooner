@@ -336,3 +336,76 @@ def test_docmap_reload_leaves_structural_rows_and_clips_around_them(
         once = _snapshot(conn, cid)
         _docmap(conn, tmp_path)  # docmap-load again, after the structural load
         assert _snapshot(conn, cid) == once
+
+
+MEMBER_TAG = "RevenueFromContractWithCustomerExcludingAssessedTax"
+MEM23 = (
+    f"ZZT,revenue,component_sum,2023-12-31,0000000099-24-000011,"
+    f"us-gaap:{MEMBER_TAG}[Product]+us-gaap:{MEMBER_TAG}[Service],IS,R5:3,members sum,{CHK}\n"
+)
+
+
+def _fsn_member_facts(conn, cid: int, products: dict[str, str]) -> None:
+    fid = conn.execute(
+        "insert into fsn.filing (accession, cik, form, fsn_set, accepted, period) values "
+        "('0000000099-24-000011','0000000099','10-K','t','2024-02-01','2023-12-31') returning id"
+    ).fetchone()[0]
+    tid = conn.execute(
+        "insert into fsn.tag (tag, version, custom) values (%s,'2023',false) returning id",
+        (MEMBER_TAG,),
+    ).fetchone()[0]
+    for segs, value in products.items():
+        did = conn.execute(
+            "insert into fsn.dim (dimh, segments, segt) values (%s,%s,false) returning id",
+            (segs, segs),
+        ).fetchone()[0]
+        conn.execute(
+            "insert into fsn.value (filing_id, company_id, tag_id, ddate, qtrs, uom, dim_id, iprx, coreg, value) "
+            "values (%s,%s,%s,'2023-12-31',4,'USD',%s,0,'',%s)",
+            (fid, cid, tid, did, value),
+        )
+    conn.commit()
+
+
+@pytest.mark.integration
+def test_member_claim_is_written_with_the_resolved_axis(
+    isolated_database_url, tmp_path: Path
+):
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _setup(conn)
+        _fsn_member_facts(
+            conn,
+            cid,
+            {"ProductOrService=Product;": "60", "ProductOrService=Service;": "40"},
+        )
+        stats = sl.load(conn, _src(tmp_path, MEM23), apply=True)
+        assert stats["rejects"] == [] and stats["blocked"] == {}
+        rows = conn.execute(
+            "select decision, taxonomy, tag from analytics.company_tag_map where rule_id = %s order by tag",
+            (sl.RULE_ID,),
+        ).fetchall()
+        assert rows == [
+            ("component", "us-gaap", f"{MEMBER_TAG}[ProductOrService=Product]"),
+            ("component", "us-gaap", f"{MEMBER_TAG}[ProductOrService=Service]"),
+        ]
+
+
+@pytest.mark.integration
+def test_member_claim_without_a_stored_member_fact_is_rejected_and_writes_nothing(
+    isolated_database_url, tmp_path: Path
+):
+    with psycopg.connect(isolated_database_url) as conn:
+        cid = _setup(conn)
+        _fsn_member_facts(conn, cid, {"ProductOrService=Product;": "60"})  # no Service
+        stats = sl.load(conn, _src(tmp_path, MEM23), apply=True)
+        assert (
+            len(stats["rejects"]) == 1
+            and "no stored dimensioned fact" in stats["rejects"][0]["why"]
+        )
+        assert (
+            conn.execute(
+                "select count(*) from analytics.company_tag_map where rule_id = %s",
+                (sl.RULE_ID,),
+            ).fetchone()[0]
+            == 0
+        )

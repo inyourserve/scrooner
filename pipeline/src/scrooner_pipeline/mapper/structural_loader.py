@@ -50,6 +50,7 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper.company_tag_map import STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_seed import (
@@ -140,11 +141,6 @@ def _split(s: str) -> list[str]:
     return [t.strip() for t in re.split(r"[+;]", s or "") if t.strip()]
 
 
-MEMBER_NODE_RE = re.compile(
-    r"^[A-Za-z0-9_:]+\[[^\]]*\]="
-)  # Tag[Member]=value: a dimensioned part
-
-
 def split_nodes(left: str) -> list[str]:
     """The resolver's `nodes` text up to ` | why:` -> one string per node. Nodes are joined by `; `, and a node's own
     bracket text may hold `;` (`FinanceLeaseLiability=1 [NOTE note lease; no ExtensibleList ...]`): split only at
@@ -167,10 +163,17 @@ def split_nodes(left: str) -> list[str]:
 
 
 def parse_claim_parts(tags: str) -> tuple[tuple[int, str | None, str], ...]:
+    """Claim text -> (sign, taxonomy or None, tag). A dimensioned part `Tag[Member]` / `Tag[Axis=Member]` is kept as that
+    literal text (common/member_facts): it resolves to one stored dimensioned fact in load() and in direct serving."""
     out = []
     for t in _split(tags):
-        if dl.MEMBER_RE.search(t) or MEMBER_NODE_RE.match(t.lstrip("-")):
-            raise ValueError("member_not_supported")
+        if "[" in t or "]" in t:
+            try:
+                spec = member_facts.split_member_part(t)
+            except ValueError:
+                raise ValueError("member_not_supported") from None
+            out.append((spec.sign, spec.prefix or None, spec.text()))
+            continue
         sign = -1 if t.startswith("-") else 1
         prefix, sep, local = t.lstrip("-").partition(":")
         tax, tag = (prefix, local) if sep else (None, prefix)
@@ -178,6 +181,11 @@ def parse_claim_parts(tags: str) -> tuple[tuple[int, str | None, str], ...]:
             raise ValueError(f"bad tag {t!r}")
         out.append((sign, tax, tag))
     return tuple(out)
+
+
+def base_tag(tag: str) -> str:
+    """The tag name of a claim part (a member part's text before its bracket)."""
+    return tag.partition("[")[0]
 
 
 def parse_locs(
@@ -235,7 +243,7 @@ def _date(v: str) -> date | None:
 
 
 NODE_RE = re.compile(
-    r"^(?P<neg>-)?(?:(?P<tax>[\w.-]+):)?(?P<tag>[A-Za-z0-9_]+)(?:=(?P<val>-?[\d.]+))?\s*(?:\[(?P<loc>[^\]]*)\])?$"
+    r"^(?P<neg>-)?(?:(?P<tax>[\w.-]+):)?(?P<tag>[A-Za-z0-9_]+)(?:\[(?P<mem>[^\]]*)\](?==|\s|$))?(?:=(?P<val>-?[\d.]+))?\s*(?:\[(?P<loc>[^\]]*)\])?$"
 )
 
 
@@ -255,10 +263,16 @@ def from_resolver(r: dict[str, str], role_stmt: dict[str, str]) -> dict[str, str
             vals.append("")
             stmts.append("")
             continue
+        loc0 = (m.group("loc") or "").strip()
+        mem = m.group("mem")
+        if mem is None:  # face fact whose only own-period fact carries one member (member_face_fact)
+            fm = FACE_MEMBER_RE.search(loc0)
+            mem = f"{fm.group(1)}={fm.group(2)}" if fm else None
         tags.append(
             (m.group("neg") or "")
             + (m.group("tax") + ":" if m.group("tax") else "")
             + m.group("tag")
+            + (f"[{mem}]" if mem else "")
         )
         vals.append(m.group("val") or "")
         loc = (m.group("loc") or "").strip()
@@ -286,6 +300,7 @@ def from_resolver(r: dict[str, str], role_stmt: dict[str, str]) -> dict[str, str
     return out
 
 
+FACE_MEMBER_RE = re.compile(r"\bmember\s+([A-Za-z0-9_]+)=([A-Za-z0-9_.:-]+)")
 LOC_RE_FREE = re.compile(r"R(\d+)(?:\.htm)?(?::(\d+))?")
 
 
@@ -617,7 +632,7 @@ def build_rows(
         ]
     rows = []
     for i, (sign, tax, tag) in enumerate(c.parts):
-        taxonomy = tax or taxonomy_of.get(tag)
+        taxonomy = tax or taxonomy_of.get(base_tag(tag))
         if not taxonomy:
             raise ValueError(f"taxonomy unresolved for tag {tag}")
         rep, line = c.locs[i]
@@ -1007,6 +1022,44 @@ def taxonomies(
     return out, []
 
 
+def member_bases(parts) -> set[str]:
+    """Tag names of the member parts among (sign, tax, tag) claim parts."""
+    return {base_tag(t) for _s, _x, t in parts if member_facts.is_member_part(t)}
+
+
+def resolve_member_claim(
+    c: Claim,
+    company_id: int,
+    member_rows: dict[tuple[int, str, str], list],
+) -> tuple[Claim, str]:
+    """The claim with each member part's text replaced by the resolved `Tag[Axis=Member]` of the ONE stored fact in the
+    claim's own accession and column (the same resolution direct serving reads its value from), or (claim, reason).
+    The resolver node value, when printed, must equal the stored value. Pure given the rows."""
+    parts = list(c.parts)
+    for i, (sign, tax, tag) in enumerate(c.parts):
+        if not member_facts.is_member_part(tag):
+            continue
+        spec = member_facts.split_member_part(tag)
+        want = (
+            Decimal(c.node_values[i])
+            if i < len(c.node_values) and c.node_values[i]
+            else None
+        )
+        hit = member_facts.resolve_member_part(
+            member_rows.get((company_id, c.accession, spec.base), []),
+            spec,
+            c.period_end,
+            want,
+            member_facts.axis_hint_of(c.flags),
+        )
+        if isinstance(hit, str):
+            return c, f"{tag}: {hit}"
+        if want is not None and want != hit.value:
+            return c, f"{tag}: stored {hit.value} differs from the resolver node {want}"
+        parts[i] = (sign, tax, hit.part_tag)
+    return replace(c, parts=tuple(parts)), ""
+
+
 def solve_signs(
     claim: Claim, options: list[set[Decimal]]
 ) -> tuple[tuple[int, ...] | None, str]:
@@ -1108,7 +1161,7 @@ def load(
         resolved.append((c, a, b, cid, cik))
     need_tax: dict[int, set[str]] = {cid: set() for cid in {r[3] for r in resolved}}
     for c, _, _, cid, _ in resolved:
-        need_tax[cid] |= {tag for _, tax, tag in c.parts if tax is None}
+        need_tax[cid] |= {base_tag(tag) for _, tax, tag in c.parts if tax is None}
     all_tags = set().union(*need_tax.values()) if need_tax else set()
     tax_of, _ = taxonomies(conn, set(need_tax), all_tags)
     by_company: dict[
@@ -1141,6 +1194,22 @@ def load(
                 (sorted({c.accession for c, _ in nf}),),
             )
             first_filed = {a: d for a, d in cur.fetchall() if d is not None}
+    member_rows = {}
+    for cid in {r[3] for r in resolved}:
+        accs = {r[0].accession for r in resolved if r[3] == cid and r[0].decision in ("mapped", "component_sum")}
+        bases = {
+            b
+            for r in resolved
+            if r[3] == cid
+            for b in member_bases(r[0].parts)
+        }
+        if bases:
+            member_rows.update(
+                {
+                    (cid, k[0], k[1]): v
+                    for k, v in member_facts.read_member_rows(conn, cid, accs, bases).items()
+                }
+            )
     for c, a, b, cid, cik in resolved:
 
         def reject(why: str, c: Claim = c) -> None:
@@ -1166,6 +1235,11 @@ def load(
         if q:
             reject(f"filing quarantined, its own calc check failed: {q}")
             continue
+        if any(member_facts.is_member_part(t) for _, _, t in c.parts):
+            c, why = resolve_member_claim(c, cid, member_rows)
+            if why:
+                reject(f"member part: {why}")
+                continue
         if check_values and c.decision == "component_sum" and c.value:
             if (
                 c.node_values

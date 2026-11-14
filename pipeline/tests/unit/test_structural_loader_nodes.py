@@ -12,8 +12,10 @@ from __future__ import annotations
 
 import csv
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
+from scrooner_pipeline.common import member_facts as mf
 from scrooner_pipeline.mapper import era_predictor
 from scrooner_pipeline.mapper import structural_loader as sl
 from scrooner_pipeline.mapper import top100_coverage as tc
@@ -95,10 +97,116 @@ def test_signed_node_and_lease_note_node_become_parts(tmp_path: Path):
     assert c.node_values == ("75000000.0000", "4567000000.0000", "1000000000.0000")
 
 
-def test_member_part_is_rejected_with_its_own_reason(tmp_path: Path):
-    nodes = "CostOfGoodsAndServicesSold[Product]=9682000000 [IS face line] | why: x"
+def test_member_parts_are_parsed_with_their_node_values_and_pages(tmp_path: Path):
+    nodes = (
+        "CommonStockSharesOutstanding[CommonClassA]=2354000000.0000 [R3.htm:13]; "
+        "CommonStockSharesOutstanding[ClassOfStock=CommonClassB]=538000000.0000 [R3.htm:13] | why: class sum"
+    )
+    claims, rejects, _ = sl.read_claims(
+        _write(tmp_path, _row(nodes=nodes, value="2892000000", flags="class_sum"))
+    )
+    assert rejects == []
+    (c,) = claims
+    assert [t for _s, _x, t in c.parts] == [
+        "CommonStockSharesOutstanding[CommonClassA]",
+        "CommonStockSharesOutstanding[ClassOfStock=CommonClassB]",
+    ]
+    assert c.node_values == ("2354000000.0000", "538000000.0000")
+    assert c.locs == ((3, 13), (3, 13))
+
+
+def test_member_face_fact_node_becomes_a_member_part(tmp_path: Path):
+    nodes = (
+        "CommonStockSharesOutstanding=4366000000 [face line, member EquityComponents=CommonStock] "
+        "| why: member-only face fact rule"
+    )
+    claims, rejects, _ = sl.read_claims(
+        _write(tmp_path, _row(nodes=nodes, value="4366000000", decision="mapped"))
+    )
+    assert rejects == []
+    assert [t for _s, _x, t in claims[0].parts] == [
+        "CommonStockSharesOutstanding[EquityComponents=CommonStock]"
+    ]
+    assert claims[0].node_values == ("4366000000",)
+
+
+def test_a_malformed_member_part_is_rejected(tmp_path: Path):
+    nodes = "CostOfGoodsAndServicesSold[a=b=c]=1 [IS face line] | why: x"
     claims, rejects, _ = sl.read_claims(_write(tmp_path, _row(nodes=nodes, value="1")))
     assert claims == [] and [r["why"] for r in rejects] == ["member_not_supported"]
+
+
+def _rows(*items):
+    return [
+        mf.MemberRow(date(2016, 12, 31), q, "shares", segs, Decimal(v), i)
+        for i, (q, segs, v) in enumerate(items, start=1)
+    ]
+
+
+def test_member_resolves_to_exactly_one_stored_fact():
+    rows = _rows(
+        (0, "ClassOfStock=CommonClassA;", "5"),
+        (0, "ClassOfStock=CommonClassB;", "7"),
+        (0, "ClassOfStock=CommonClassA;EquityComponents=Retained;", "9"),
+    )
+    spec = mf.split_member_part("Tag[CommonClassA]")
+    hit = mf.resolve_member_part(rows, spec, date(2016, 12, 31), None)
+    assert (hit.value, hit.ids, hit.part_tag) == (
+        Decimal(5),
+        (1,),
+        "Tag[ClassOfStock=CommonClassA]",
+    )
+    # another member, another column, and a fact with extra axes are never a stand-in
+    assert isinstance(
+        mf.resolve_member_part(rows, mf.split_member_part("Tag[CommonClassC]"), date(2016, 12, 31), None), str
+    )
+    assert isinstance(mf.resolve_member_part(rows, spec, date(2015, 12, 31), None), str)
+
+
+def test_member_under_two_axes_is_ambiguous_unless_the_rule_names_the_axis():
+    rows = _rows(
+        (0, "ClassOfStock=CommonClassX;", "5"),
+        (0, "EquityComponents=CommonClassX;", "5"),
+    )
+    spec = mf.split_member_part("Tag[CommonClassX]")
+    assert "ambiguous" in mf.resolve_member_part(rows, spec, date(2016, 12, 31), None)
+    hit = mf.resolve_member_part(rows, spec, date(2016, 12, 31), None, "ClassOfStock")
+    assert hit.part_tag == "Tag[ClassOfStock=CommonClassX]"
+    assert mf.axis_hint_of("bs_family;class_sum") == "ClassOfStock"
+    assert mf.axis_hint_of("bs_family") is None
+    # a named axis is exact: the hint never overrides it
+    named = mf.split_member_part("Tag[EquityComponents=CommonClassX]")
+    assert (
+        mf.resolve_member_part(rows, named, date(2016, 12, 31), None, "ClassOfStock").part_tag
+        == "Tag[EquityComponents=CommonClassX]"
+    )
+
+
+def test_two_stored_values_for_a_member_resolve_only_by_the_node_value():
+    rows = _rows((0, "A=M;", "5"), (0, "A=M;", "6"))
+    spec = mf.split_member_part("Tag[M]")
+    assert "two stored values" in mf.resolve_member_part(rows, spec, date(2016, 12, 31), None)
+    assert mf.resolve_member_part(rows, spec, date(2016, 12, 31), Decimal(6)).value == Decimal(6)
+
+
+def test_loader_replaces_member_text_by_the_resolved_part_and_checks_the_node(tmp_path: Path):
+    nodes = "Tag[CommonClassA]=5 [R3.htm:13]; Tag[CommonClassB]=7 [R3.htm:13] | why: class sum"
+    (c,) = sl.read_claims(_write(tmp_path, _row(nodes=nodes, value="12", flags="class_sum", period_end="2016-12-31")))[0]
+    rows = {
+        (1, c.accession, "Tag"): _rows(
+            (0, "ClassOfStock=CommonClassA;", "5"), (0, "ClassOfStock=CommonClassB;", "7")
+        )
+    }
+    got, why = sl.resolve_member_claim(c, 1, rows)
+    assert why == "" and [t for _s, _x, t in got.parts] == [
+        "Tag[ClassOfStock=CommonClassA]",
+        "Tag[ClassOfStock=CommonClassB]",
+    ]
+    rows[(1, c.accession, "Tag")][0] = mf.MemberRow(
+        date(2016, 12, 31), 0, "shares", "ClassOfStock=CommonClassA;", Decimal(6), 1
+    )
+    assert "differs from the resolver node" in sl.resolve_member_claim(c, 1, rows)[1]
+    assert "no stored dimensioned fact" in sl.resolve_member_claim(c, 1, {})[1]
 
 
 FIRST = "0001193125-21-060650"

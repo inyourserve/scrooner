@@ -32,6 +32,7 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.common.authority import face_column_eligible, latest_eligible
+from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.mapper import docmap_loader as dl
@@ -399,7 +400,19 @@ def direct_cells(
             )
             for a, i, acc, form, per in cur.fetchall():
                 meta[a] = (-i, acc.date() if acc else None, form, per)
-    tags = {tag for cs in groups.values() for c in cs for _s, _t, tag in c.parts}
+    tags = {
+        tag
+        for cs in groups.values()
+        for c in cs
+        for _s, _t, tag in c.parts
+        if not member_facts.is_member_part(tag)
+    }
+    member_rows = member_facts.read_member_rows(
+        conn,
+        company_id,
+        accessions,
+        {b for cs in groups.values() for c in cs for b in sl.member_bases(c.parts)},
+    )
 
     def por_hints(cs: list[sl.Claim]) -> frozenset[date]:
         return frozenset(
@@ -479,6 +492,7 @@ def direct_cells(
                 reject("instant component sum refused (only total_debt)")
                 continue
         parts: list[tuple[int, str, Decimal, str, set[int]]] = []
+        member_cites: dict[str, str] = {}
         bad = None
         for i, (sign, _tax, tag) in enumerate(c.parts):
             want = (
@@ -486,14 +500,32 @@ def direct_cells(
                 if i < len(c.node_values) and c.node_values[i]
                 else None
             )
-            got = _part_value(stored[(c.accession, tag, te)], want)
-            if isinstance(got, str) and printed_zero_ok(c, got):
-                parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
-                continue
-            if isinstance(got, str):
-                bad = f"{tag}: {got}"
-                break
-            v, src, got_ids = got
+            if member_facts.is_member_part(tag):
+                spec = member_facts.split_member_part(tag)
+                hit = member_facts.resolve_member_part(
+                    member_rows.get((c.accession, spec.base), []),
+                    spec,
+                    te,
+                    want,
+                    member_facts.axis_hint_of(c.flags),
+                )
+                if isinstance(hit, str):
+                    bad = f"{tag}: {hit}"
+                    break
+                v, src, got_ids = hit.value, "fsn_xbrl", set(hit.ids)
+                tag = hit.part_tag
+                rp, ln = c.locs[i] if i < len(c.locs) else (None, None)
+                if rp:
+                    member_cites[tag] = f"R{rp}" + (f":{ln}" if ln else "")
+            else:
+                got = _part_value(stored[(c.accession, tag, te)], want)
+                if isinstance(got, str) and printed_zero_ok(c, got):
+                    parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
+                    continue
+                if isinstance(got, str):
+                    bad = f"{tag}: {got}"
+                    break
+                v, src, got_ids = got
             if i < len(c.node_values) and c.node_values[i]:
                 if Decimal(c.node_values[i]) != v:
                     bad = f"{tag}: stored {v} differs from the resolver node {c.node_values[i]}"
@@ -523,7 +555,10 @@ def direct_cells(
         vids = sorted({i for p in parts if p[3] == "fsn_xbrl" for i in p[4]})
         note = (
             f"structural resolver direct: {c.accession} column {end.isoformat()} "
-            + "; ".join(f"{t}={v}" for _s, t, v, _x, _f in parts)
+            + "; ".join(
+                f"{t}={v}" + (f" [{member_cites[t]}]" if t in member_cites else "")
+                for _s, t, v, _x, _f in parts
+            )
             + (f"; filing checks: {c.checks}" if c.checks else "")
         )
         if flipped:
