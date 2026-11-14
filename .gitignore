@@ -46,3 +46,6 @@ venv/
 # Supplied design-reference PDFs (large binaries, not project content)
 doc/design/*.pdf
 .claude/settings.local.json
+
+# top-100 per-company flow run state (scripts/top100_flow.sh)
+.runs/
