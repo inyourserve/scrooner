@@ -49,6 +49,10 @@ def kind(l):
 def fmt(l, st='IS'): return f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]"
 
 
+OPER_TAG = re.compile(r'^(Restructuring\w*|\w*Impairment\w*|AssetImpairmentCharges|OtherOperatingIncomeExpenseNet|LitigationSettlement\w*|GainLossRelatedToLitigationSettlement|BusinessCombinationAcquisitionRelatedCosts|SeveranceCosts1)$')
+OPER_LB = re.compile(r'(?i)^(restructuring|impairment|asset impairment|litigation|severance|acquisition[- ]related)')
+
+
 def band(L, arcs):
     """The valued face lines between operating income and pretax, subtotals removed (a line whose calc children, or whose
     preceding band lines, sum to it is a subtotal of lines already in the band)."""
@@ -59,6 +63,12 @@ def band(L, arcs):
         # no operating-income line (NEM): the band starts after the printed operating-costs total
         oi = next((l for l in reversed(fl) if l['val'] is not None and l['tag'] in ('CostsAndExpenses', 'OperatingExpenses', 'BenefitsLossesAndExpenses')), None)
         if oi is None: return None
+        # ruling 2026-11-14 (a), DIS: operating items printed after the costs total (restructuring and impairment charges) are
+        # never other income; the band starts after the last such line
+        for l in fl:
+            if l['ln'] <= oi['ln'] or l['val'] is None: continue
+            if OPER_TAG.search(l['tag']) or OPER_LB.search(l['lb'] or ''): oi = l
+            else: break
     pt = next((l for l in fl if l['val'] is not None and l['ln'] > oi['ln'] and (PRETAX.search(l['tag']) or PRETAX_LB.search(l['lb'] or ''))), None)
     if pt is None: return None
     raw = [l for l in fl if oi['ln'] < l['ln'] < pt['ln'] and l['val'] is not None]
@@ -241,6 +251,9 @@ def proven_amort(cfo, notes):
     return None
 
 
+WIDER_DA = re.compile(r'Including\w*(OtherIncome|Nonoperating|OtherExpense)')
+
+
 def resolve_da(L, notes):
     cfo, cf = cfo_lines(L)
     isf = [l for l in face(L, 'IS') if l['val'] is not None]
@@ -253,6 +266,8 @@ def resolve_da(L, notes):
         # accretion AND the filing reports no accretion of its own (no ARO accretion fact, no accretion line); otherwise combined (DUK)
         acc_rep = accretion_reported(L, notes)
         tot = [l for l in tot if not (l['tag'] == 'DepreciationAmortizationAndAccretionNet' or ACC.search(l['tag'])) or (DA_TOT_LB.search(l['lb'] or '') and not ACC_LB.search(l['lb'] or '') and not acc_rep)]
+        if src == 'CF' and tot and all(WIDER_DA.search(l['tag']) for l in tot) and any((DA_TOT.match(l['tag']) or DA_TOT_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '') for l in isf):
+            continue   # UBER: the CF line includes D&A recorded in other income; the purest line is the IS D&A (ruling 2026-11-14 e)
         if len(tot) >= 1:
             tot.sort(key=lambda l: (not DA_TOT_LB.search(l['lb'] or ''), l['tag'] not in ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'), l['ln']))
             t0 = tot[0]

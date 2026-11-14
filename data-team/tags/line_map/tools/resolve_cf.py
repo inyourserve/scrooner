@@ -109,7 +109,7 @@ def resolve_cf(f, notes):
     # a label naming only preferred means no common dividend line (BA, TMUS)
     pref = [l for l in L if l['val'] and re.search(r'Preferred\w*Dividend|Dividend\w*Preferred', l['tag']) and (not re.search(r'OtherAdjustments', l['tag']) or re.search(r'(?i)preferred', l['lb'] or ''))]  # 'and other adjustments' counts only when its label names preferred (GOOG's Class C adjustment does not)
     cfpref = [l for l in fin if re.search(r'Preferred', l['tag']) and re.search(r'Dividend', l['tag']) or (DIV_LABEL.search(l['lb'] or '') and re.search(r'(?i)preferred', l['lb'] or '') and not re.search(r'(?i)common', l['lb'] or ''))]
-    if len(pick) == 1 and pick[0]['tag'] in ('PaymentsOfOrdinaryDividends', 'PaymentsOfDividends') and pref:
+    if len(pick) == 1 and pick[0]['tag'] in ('PaymentsOfOrdinaryDividends', 'PaymentsOfDividends', 'CashDistributionsToStockholders', 'PaymentsOfCapitalDistribution') and pref:   # WELL 2014-18 'Cash distributions to stockholders' while preferred was outstanding (Dhairya ruling 2026-11-14 b)
         lb = pick[0]['lb'] or ''
         names_c, names_p = bool(re.search(r'(?i)common', lb)), bool(re.search(r'(?i)preferred', lb))
         if names_p and not names_c:

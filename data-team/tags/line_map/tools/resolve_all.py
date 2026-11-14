@@ -94,6 +94,30 @@ def apply_ar_related(rows, filings):
                      why=f"accounts receivable = the trade line plus '{l['lb']}' (ruling 2026-11-14: AR mirrors AP)")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
     return rows
+PERSONNEL_LB = re.compile(r'(?i)^(personnel|salaries|compensation and benefits|employee compensation)')
+
+
+def apply_expenses_by_nature(rows, filings):
+    """Dhairya ruling 2026-11-14 (c): an IS that classifies operating expenses by nature (a personnel line spanning functions,
+    BKNG: marketing, sales and other, personnel, G&A) and prints no SG&A line has no SG&A: not_presented, expenses_by_nature.
+    SG&A is never built from parts that mix functions."""
+    nat = {}
+    for f in filings:
+        L, _ = parse(f)
+        isf = [l for l in face(L, 'IS') if l['val'] is not None]
+        tags = {l['tag'] for l in isf}
+        per = next((l for l in isf if l['tag'] == 'LaborAndRelatedExpense' or PERSONNEL_LB.search(l['lb'] or '')), None)
+        if per and not any(t.startswith('SellingGeneralAndAdministrativeExpense') for t in tags):
+            nat[f['a']] = per
+    for r in rows:
+        p = nat.get(r['accession'])
+        if p is not None and r['data_point'] == 'sga_expense' and r.get('column', 'own') != 'comparative':
+            r.update(status='not_presented', value=None, tags='', nodes=f"{p['tag']}={p['val']} [R{p['rep']}:{p['ln']}]",
+                     why=f"the IS classifies operating expenses by nature ('{p['lb']}' spans functions) and prints no SG&A line: SG&A is not built from parts (ruling 2026-11-14 c)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'expenses_by_nature') if x)
+    return rows
+
+
 def apply_cost_and_opex(rows, filings):
     """(1) cost_of_revenue printed as product and service lines that carry only ProductOrServiceAxis member facts (DIS, GE,
     TMUS, VZ): the sum of the members (EXT['cor'] = standard_inputs.product_service_cor). (2) operating_expenses with no node in the tree: from the printed
@@ -442,6 +466,8 @@ if __name__ == '__main__':
         x = LE[f['a']]
         if x and not x['coregistrant']: filings[i] = standard_inputs.fill_face_values(f, x['facts'])
         else: PRED[f['a']] = x
+    FERR = standard_inputs.filer_xbrl_errors(os.environ.get('FILER_XBRL_ERRORS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'filer_xbrl_errors.csv')))
+    standard_inputs.apply_filer_errors(filings, notefacts, FERR)
     rows = run(filings, notefacts, tick, td)
     for r in rows:
         if r['accession'] in PRED and r['status'] in ('no_role', 'not_presented'):
@@ -451,6 +477,7 @@ if __name__ == '__main__':
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
     rows = apply_cost_and_opex(rows, filings)
+    rows = apply_expenses_by_nature(rows, filings)
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
     rows += standard_inputs.before_first_10k_rows(rows, filings, compfacts)   # years printed only in the first 10-K's comparative columns
@@ -458,7 +485,13 @@ if __name__ == '__main__':
     EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = derive_gross_profit(rows)
-    rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
+    rows = apply_polarity(rows)
+    for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence
+        for (a, tag, q), e in FERR.items():
+            if r['accession'] == a and re.search(r'(^|; |-)' + tag + '=', r.get('nodes') or ''):
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'filer_xbrl_error') if x)
+                r['why'] = (r.get('why') or '') + f" | filer XBRL error: {tag} stored {e['xbrl']}, printed {e['printed']} served ({e['evidence']})"
+  # one sign per concept (rules/polarity.csv)
     # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of
     # intangible amortization; the cost-of-sales part is a member): the location total (standard_inputs.amortization_location_total)
     LT = {}

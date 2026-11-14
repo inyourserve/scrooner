@@ -21,12 +21,16 @@ DEBT_MEMBER = re.compile(r'(?i)(Debt|Borrowing|NotesPayable|CommercialPaper|Line
 LEASES = {}
 NOTDEBT = re.compile(r'(?i)interest payable|accrued interest|operating lease|FairValue|DebtInstrumentCarryingAmount')
 AFFIL = re.compile(r'^(DueToAffiliate\w*|DueToRelatedParties\w*|NotesPayableRelatedParties\w*|DueToOfficersOrStockholders\w*)$')
+REPO = re.compile(r'^(FederalFundsPurchased\w*|SecuritiesSoldUnderAgreementsToRepurchase\w*|SecuritiesLoaned\w*)$')   # secured funding like deposits: never debt (Dhairya ruling 2026-11-14 d)
 LABEL_DEBT = re.compile(r'(?i)\b(debt|borrowings|notes payable|commercial paper|term loans?|senior notes|bonds payable|finance lease|capital lease)\b')
 def run(filings, vals, flloc):
     V = {r['a']: r for r in vals}
     out = []
     latest = {}
     for f in filings: latest[f['cik']] = max(latest.get(f['cik'], ''), f['p'] + '|' + f['a'])
+    co_loc = collections.defaultdict(set)   # the company's own lease location in its other filings (IBM 2021-23 'in')
+    for f in filings:
+        if flloc.get(f['a']) in ('in', 'out'): co_loc[f['cik']].add(flloc[f['a']])
     for f in filings:
         L, arcs = parse(f); bs = face(L, 'BS')
         if not bs: continue
@@ -49,6 +53,18 @@ def run(filings, vals, flloc):
                 cand.append((l, 'debt from affiliates/related parties: the own label names debt'))   # TMUS 'Long-term debt to affiliates'
             elif l['custom'] and (LABEL_DEBT.search(l['lb']) or LABEL_DEBT.search(header)) and not re.search(r'(?i)interest|operating', l['lb'] + ' ' + l['tag']):
                 cand.append((l, 'custom line, debt label' + ('' if LABEL_DEBT.search(l['lb']) else f" (under header '{header}')")))
+        # a debt total whose calc children include fed funds purchased / repos (COF 'Total other debt'): its other children
+        # replace it when every child is printed on the face; when the repo part is not printed separately, the line is combined
+        onbs0 = {l['tag']: l for l in lines if l['val'] is not None}
+        repo_comb = []
+        for l, why in list(cand):
+            kids = [c for c, w in (children(arcs, l['tag'], onbs0) or [])]
+            if not any(REPO.match(c) for c in kids): continue
+            cand.remove((l, why))
+            if all(c in onbs0 for c in kids):
+                cand += [(onbs0[c], f"part of '{l['lb']}' without fed funds purchased / repos (ruling 2026-11-14 d)") for c in kids if not REPO.match(c) and c not in {x['tag'] for x, _ in cand}]
+            else:
+                repo_comb.append(l)
         tags = {l['tag'] for l, _ in cand}
         # dedupe through the calc tree: drop a node whose calc parent is also a selected debt node
         onbs = {l['tag']: l for l in lines if l['val'] is not None}
@@ -85,6 +101,23 @@ def run(filings, vals, flloc):
                 nodes.append((l['tag'], v, f"BS R{l['rep']}:{l['ln']}", why + ('' if not l['custom'] else ', custom')))
             # a face debt line whose tag or label names leases already contains them (e.g. LongTermDebtAndCapitalLeaseObligations)
             on_face_lease = any(re.search(r'CapitalLease|FinanceLease|LeaseObligation', t) for t, *_ in nodes) or any(re.search(r'(?i)lease', l['lb']) for l, _ in cand)
+            # a face lease line that is one part only (VRTX 2019-24, ANET 2018: FinanceLeaseLiabilityNoncurrent): the other part is added
+            # (total minus the face part when the note total exists, else the note part), unless the filing places it inside a debt line
+            # (Dhairya 2026-11-14: one figure per location member, Current + Noncurrent)
+            for fam in ('FinanceLeaseLiability', 'CapitalLeaseObligations'):
+                face_parts = [t for t, *_ in nodes if t in (fam + 'Current', fam + 'Noncurrent')]
+                if len(face_parts) != 1 or loc == 'in': continue
+                other = fam + ('Current' if face_parts[0].endswith('Noncurrent') else 'Noncurrent')
+                fv = next(v for t, v, *_ in nodes if t == face_parts[0]); tot_ = vv[col].get(fam)
+                ov = tot_ - fv if tot_ is not None and tot_ >= fv else vv[col].get(other)
+                pars = lease_parent.get(other, set())
+                if ov and fam == 'CapitalLeaseObligations' and not (pars and pars & set(onbs) and not pars & tags):
+                    # pre-842: absence is not evidence (CVX keeps current capital leases in short-term debt); a non-debt calc parent is
+                    flags.append(f'READER CHECK: {other} {ov} beside the face {face_parts[0]} with no location member or non-debt calc parent: not added')
+                elif ov and not (pars & tags):
+                    nodes.append((other, ov, 'NOTE', f"the other part of the face {face_parts[0]}" + (f" ({fam} {tot_} - {fv})" if tot_ is not None and tot_ >= fv else '') + ('; ExtensibleList: out' if loc == 'out' else '')))
+                elif ov:
+                    flags.append(f'{other} inside a debt line (calc parent): not added')
             fl = vv[col].get('FinanceLeaseLiability')
             if fl is None and ('FinanceLeaseLiabilityCurrent' in vv[col] or 'FinanceLeaseLiabilityNoncurrent' in vv[col]):
                 fl = vv[col].get('FinanceLeaseLiabilityCurrent', D(0)) + vv[col].get('FinanceLeaseLiabilityNoncurrent', D(0))
@@ -99,6 +132,10 @@ def run(filings, vals, flloc):
                     ltd = vv[col].get('LongTermDebt'); face_ltd = sum((v for t, v, *_ in nodes if t.startswith('LongTermDebt')), D(0))
                     if ltd is not None and face_ltd and abs(face_ltd - ltd - fl) <= tol(face_ltd, ltd, fl):
                         flags.append('finance lease inside long-term debt (face LTD = note LongTermDebt + lease): not added')
+                    elif co_loc.get(f['cik']) == {'in'}:
+                        flags.append("finance lease inside a debt line in the company's other filings (ExtensibleList 'in'): not added")
+                    elif any(v == fl for t, v, *_ in nodes):   # COF 2020/2024: 'Other borrowings' 75 / 29 = the note finance lease: the lease is that line
+                        flags.append('finance lease equals a face debt line (' + next(t for t, v, *_ in nodes if v == fl) + '): inside it, not added')
                     elif any(re.search(r'FinanceLease', t) and not t.startswith('FinanceLease') and DEBT.match(t) for t in vv[col]):   # a debt-AND-lease total (LongTermDebtAndFinanceLease*), not the lease schedule (FinanceLeaseLiabilityPaymentsDue*)
                         flags.append('a debt-and-finance-lease total exists: not added')
                     else:
@@ -144,6 +181,11 @@ def run(filings, vals, flloc):
                         # totals, so absence is not evidence for capital leases; a reader decides
                         flags.append(f'READER CHECK: capital lease {cl} in a note with no location member, calc arc or lease-named debt line: not added')
             total = sum((v for _, v, *_ in nodes), D(0))
+            if repo_comb:
+                out.append(dict(cik=f['cik'], accession=f['a'], filing_period=f['p'], column=kind, period_end=col, status='combined',
+                                tags='+'.join(l['tag'] for l in repo_comb), parts='; '.join(f"{l['tag']} [BS R{l['rep']}:{l['ln']} holds fed funds purchased / repos with other borrowings]" for l in repo_comb),
+                                r_pages='', value='', flags='debt_incl_repos (ruling 2026-11-14 d)', fl_loc=loc or ''))
+                continue
             out.append(dict(cik=f['cik'], accession=f['a'], filing_period=f['p'], column=kind, period_end=col,
                             status=('component_sum' if len(nodes) > 1 else 'mapped') if nodes else 'not_presented',
                             tags='+'.join(t for t, *_ in nodes), parts='; '.join(f'{t}={v} [{loc_} {why}]' for t, v, loc_, why in nodes),

@@ -1,0 +1,5 @@
+accession,tag,qtrs,xbrl_value,printed_value,evidence
+0001562762-20-000064,IncomeLossFromEquityMethodInvestments,4,-6000000,6000000,"T FY2019 10-K t-20191231.htm consolidated statements of income: Equity in net income (loss) of affiliates 6 (2018: (48)); the XBRL fact is -6 and the printed total other income (expense) (9,487) = (8,422) + 6 + (1,071) needs +6"
+0000040545-17-000010,IncomeTaxesPaidNet,4,-7469000000,7469000000,"GE FY2016 10-K R7.htm statement of cash flows: Cash recovered (paid) during the year for income taxes (7,469): 7,469 paid; IncomeTaxesPaidNet is positive for taxes paid (GE FY2017 onward stores it positive)"
+0000040545-16-000145,IncomeTaxesPaidNet,4,-2486000000,2486000000,"GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2015 column: Cash recovered (paid) during the year for income taxes (2,486): 2,486 paid; the FY2015 10-K stores IncomeTaxesPaidNet -2,486"
+0000040545-15-000030,IncomeTaxesPaidNet,4,-2955000000,2955000000,"GE FY2016 10-K R7.htm (0000040545-17-000010) prints the FY2014 column: Cash recovered (paid) during the year for income taxes (2,955): 2,955 paid; the FY2014 10-K stores IncomeTaxesPaidNet -2,955"

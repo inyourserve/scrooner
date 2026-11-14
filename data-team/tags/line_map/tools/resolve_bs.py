@@ -101,6 +101,9 @@ def inventory_header_sum(bs, r, notes=None):
                 why=f"BS face lines under the '{bs[hs[0]]['lb']}' header with no inventory total: their sum (ruling 2026-11-14)", rule='face', flags='header_sum')
 
 
+SALE_RECV = re.compile(r'(?i)from the sale of|commercialization rights')   # MO 2022: 'Receivable from the sale of IQOS System commercialization rights' is not a trade receivable
+
+
 def pick(R, lines, notes, dp):
     """First alternative (rank order) that holds the role among `lines`; then combined; then custom label; then the instant note fact."""
     alts = [a.split('+') for a in R['alternatives'].split('|') if a]
@@ -116,7 +119,7 @@ def pick(R, lines, notes, dp):
             return dict(status='mapped' if len(ls) == 1 else 'component_sum', value=sum(l['val'] for l in ls), nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ls),
                         why=f"BS face {'+'.join(parts)} by position (printed {'above AssetsCurrent' if dp in ('cash_and_equivalents', 'accounts_receivable', 'inventory') else 'in its section'}; the tag ranks)", rule='face')
     if R['custom_label']:
-        cl = [l for l in lines if l['custom'] and re.search(R['custom_label'], l['lb'], re.I)]
+        cl = [l for l in lines if l['custom'] and re.search(R['custom_label'], l['lb'], re.I) and not SALE_RECV.search(l['lb'])]
         if len(cl) == 1:
             l = cl[0]
             return dict(status='mapped', value=l['val'], nodes=f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]", why=f"BS face custom line whose own label names the role: '{l['lb']}'", rule='face')
