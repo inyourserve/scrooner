@@ -651,6 +651,51 @@ def fetch_quarter_prints(
     return tenqs, printed
 
 
+def fetch_quarter_mapped(
+    conn: psycopg.Connection, company_id: int, concept_ids: set[int]
+) -> dict[str, dict[int, dict[str, str]]]:
+    """{10-Q accession: {concept id: {full tag 'prefix:Local': statement code}}} from fsn.line_map (status mapped)
+    and fsn.line: the tag each of the company's 10-Qs prints on a face line mapped to the concept."""
+    out: dict[str, dict[int, dict[str, str]]] = {}
+    if not concept_ids:
+        return out
+    with conn.cursor() as cur:
+        cur.execute(
+            """select f.accession, lm.canonical_concept_id, t.tag, l.stmt
+               from fsn.filing f
+               join fsn.line_map lm on lm.filing_id = f.id and lm.status = 'mapped'
+               join fsn.line l on l.filing_id = lm.filing_id and l.report = lm.report and l.line = lm.line
+               join fsn.tag t on t.id = l.tag_id
+               where f.company_id = %s and f.form in ('10-Q', '10-Q/A') and lm.canonical_concept_id = any(%s)""",
+            (company_id, sorted(concept_ids)),
+        )
+        for acc, cid, tag, stmt in cur.fetchall():
+            out.setdefault(acc, {}).setdefault(cid, {})[tag] = stmt
+    return out
+
+
+def fetch_quarter_face(
+    conn: psycopg.Connection, company_id: int, tags: set[str]
+) -> dict[str, tuple[str, str]]:
+    """{local tag: (full 'prefix:Local' tag, statement code)} of `tags` (local names) printed on a face statement line
+    (BS/IS/CF/CI/EQ) of one of the company's 10-Qs."""
+    out: dict[str, tuple[str, str]] = {}
+    if not tags:
+        return out
+    with conn.cursor() as cur:
+        cur.execute(
+            """select distinct t.tag, l.stmt
+               from fsn.filing f join fsn.line l on l.filing_id = f.id
+               join fsn.tag t on t.id = l.tag_id
+               where f.company_id = %s and f.form in ('10-Q', '10-Q/A') and l.stmt in ('BS', 'IS', 'CF', 'CI', 'EQ')
+                 and substring(t.tag from '[^:]*$') = any(%s)""",
+            (company_id, sorted(tags)),
+        )
+        for full, stmt in cur.fetchall():
+            out.setdefault(full.rsplit(":", 1)[-1], (full, stmt))
+    return out
+
+
 @dataclass(frozen=True)
 class QuarterSplit:
     tags: frozenset  # the tag set the year's own 10-Qs print

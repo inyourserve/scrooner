@@ -1217,6 +1217,7 @@ def load(
                 kept + new,
                 concept_ids,
                 stats.setdefault("comparative_log", []),
+                global_cands,
             )
             stats.setdefault("comparative", []).extend(
                 {
@@ -1453,6 +1454,7 @@ def comparative_rows(
     rows: list[dict],
     concept_ids: dict[str, int],
     log: list[dict],
+    global_cands: dict[str, set[str]] | None = None,
 ) -> list[dict]:
     """The comparative-column extension rows (era_extend@1, decided_by era_comparative) for one company's merged map.
     Evidence: the next 10-K's accession (the year is its prior-year column)."""
@@ -1491,19 +1493,61 @@ def comparative_rows(
     for k, eras in by_era.items():
         for rs in eras.values():
             cand_rows[k].setdefault(frozenset(r["tag"] for r in rs), rs)
-    q_tags = {t for k in cand_rows for g in cand_rows[k] for t in g}
+    # the tags the year's own 10-Qs print on a face line mapped to the concept (fsn.line_map): candidates too, cloned
+    # from the comparative row with the 10-Q line's taxonomy, tag and statement
+    qmapped = era_extend.fetch_quarter_mapped(
+        conn, cid, {i for s in base_ids.values() for i in s}
+    )
+    glob = {k: (global_cands or {}).get(_base(names.get(k, "")), set()) for k in groups}
+    q_tags = (
+        {t for k in cand_rows for g in cand_rows[k] for t in g}
+        | {t for ts in glob.values() for t in ts}
+        | {
+            full.rsplit(":", 1)[-1]
+            for per in qmapped.values()
+            for tags in per.values()
+            for full in tags
+        }
+    )
     tenqs, qprinted = (
         era_extend.fetch_quarter_prints(conn, cid, q_tags) if q_tags else ({}, {})
     )
+    qface = era_extend.fetch_quarter_face(conn, cid, q_tags)
     split_slices = []
     for s in slices:
+        cands = dict(cand_rows.get(s.key, {}))
+        extra: dict[frozenset, tuple[str, str]] = {}
+        year_q = [
+            a for a, p in tenqs.items() if s.era_from <= p < s.era_to and a in qmapped
+        ]
+        mapped_sets = [
+            qmapped[a].get(k) or {}
+            for a in year_q
+            for k in base_ids.get(s.key, {s.key})
+            if qmapped[a].get(k)
+        ]
+        if year_q and len(mapped_sets) == len(year_q):
+            common = set.intersection(*(set(m) for m in mapped_sets))
+            for full in sorted(common):
+                local = full.rsplit(":", 1)[-1]
+                fs = frozenset({local})
+                if (
+                    fs != s.tags
+                    and fs not in cands
+                    and mapped_sets[0][full] in FACE_CODES
+                    and s.source.payload
+                    and s.source.payload[0]["decision"] == "concept"
+                ):
+                    cands[fs] = []
+                    extra[fs] = (full, mapped_sets[0][full])
+        if s.source.payload and s.source.payload[0]["decision"] == "concept":
+            for local in sorted(glob.get(s.key, set())):
+                fs = frozenset({local})
+                if fs != s.tags and fs not in cands and local in qface:
+                    cands[fs] = []
+                    extra[fs] = qface[local]
         sp = era_extend.quarter_split(
-            s.era_from,
-            s.era_to,
-            s.tags,
-            list(cand_rows.get(s.key, {})),
-            tenqs,
-            qprinted,
+            s.era_from, s.era_to, s.tags, list(cands), tenqs, qprinted
         )
         if sp is None or sp.last_quarter_end >= s.era_to:
             split_slices.append(s)
@@ -1516,7 +1560,25 @@ def comparative_rows(
             f"10-Qs print (last {sp.adsh}); the next 10-K's comparative tag(s) {'+'.join(sorted(s.tags))} "
             f"cover the fiscal-year cell only"
         )
-        for r in cand_rows[s.key][sp.tags]:
+        if (
+            sp.tags in extra
+        ):  # a tag only the 10-Qs' mapped face lines name: the comparative row, retagged
+            full, st = extra[sp.tags]
+            tax = full.rsplit(":", 1)[0] if ":" in full else "us-gaap"
+            q_rows = [
+                {
+                    **r,
+                    "taxonomy": tax,
+                    "tag": full.rsplit(":", 1)[-1],
+                    "stmt": st,
+                    "decision": "concept",
+                    "components": None,
+                }
+                for r in s.source.payload[:1]
+            ]
+        else:
+            q_rows = cand_rows[s.key][sp.tags]
+        for r in q_rows:
             n = {
                 **r,
                 "company_id": cid,

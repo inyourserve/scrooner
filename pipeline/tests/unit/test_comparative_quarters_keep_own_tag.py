@@ -86,6 +86,8 @@ def test_comparative_rows_give_the_quarters_the_10q_tag_and_the_fy_cell_the_comp
         "fetch_quarter_prints",
         lambda conn, cid, tags: (TENQS, {k: {"IncomeLossBeforeTaxOld"} for k in TENQS}),
     )
+    monkeypatch.setattr(ee, "fetch_quarter_mapped", lambda conn, cid, ids: {})
+    monkeypatch.setattr(ee, "fetch_quarter_face", lambda conn, cid, tags: {})
     out = dl.comparative_rows(None, 1, "0000000001", rows, {"income_before_tax": 9}, [])
     got = {(r["tag"], r["era_from"], r["era_to"]) for r in out}
     assert (
@@ -94,3 +96,86 @@ def test_comparative_rows_give_the_quarters_the_10q_tag_and_the_fy_cell_the_comp
         date(2019, 11, 3),
     ) in got
     assert ("IncomeLossBeforeTaxNew", date(2019, 11, 4), date(2020, 1, 31)) in got
+
+
+def test_candidate_tag_from_the_10qs_mapped_face_lines_when_no_row_names_it(
+    monkeypatch,
+):
+    rows = [_row("IncomeLossBeforeTaxNew", date(2021, 1, 31), None, "docmap")]
+    nxt = "0000000001-21-000001"
+    monkeypatch.setattr(
+        ee,
+        "fetch_printed",
+        lambda conn, cid, tags, ids=None: (
+            {nxt: date(2021, 1, 31)},
+            {
+                (nxt, "IncomeLossBeforeTaxNew"): {
+                    date(2020, 1, 31): {"annual"},
+                    date(2021, 1, 31): {"annual"},
+                }
+            },
+            {(nxt, "IncomeLossBeforeTaxNew"): {"annual"}},
+            {},
+        ),
+    )
+    monkeypatch.setattr(ee, "fetch_quarter_face", lambda conn, cid, tags: {})
+    monkeypatch.setattr(
+        ee,
+        "fetch_quarter_mapped",
+        lambda conn, cid, ids: {
+            k: {9: {"us-gaap:IncomeLossBeforeTaxOld": "IS"}} for k in TENQS
+        },
+    )
+    monkeypatch.setattr(
+        ee,
+        "fetch_quarter_prints",
+        lambda conn, cid, tags: (TENQS, {k: {"IncomeLossBeforeTaxOld"} for k in TENQS}),
+    )
+    out = dl.comparative_rows(None, 1, "0000000001", rows, {"income_before_tax": 9}, [])
+    got = {(r["tag"], r["stmt"], r["era_from"], r["era_to"]) for r in out}
+    assert ("IncomeLossBeforeTaxOld", "IS", date(2019, 2, 1), date(2019, 11, 3)) in got
+
+
+def test_candidate_tag_from_the_global_map_tags_printed_on_the_10qs_face(monkeypatch):
+    # HD cash taxes: no map row and no mapped 10-Q line names the tag; the library's tag for the concept does
+    rows = [_row("IncomeLossBeforeTaxNew", date(2021, 1, 31), None, "docmap")]
+    nxt = "0000000001-21-000001"
+    monkeypatch.setattr(
+        ee,
+        "fetch_printed",
+        lambda conn, cid, tags, ids=None: (
+            {nxt: date(2021, 1, 31)},
+            {
+                (nxt, "IncomeLossBeforeTaxNew"): {
+                    date(2020, 1, 31): {"annual"},
+                    date(2021, 1, 31): {"annual"},
+                }
+            },
+            {(nxt, "IncomeLossBeforeTaxNew"): {"annual"}},
+            {},
+        ),
+    )
+    monkeypatch.setattr(ee, "fetch_quarter_mapped", lambda conn, cid, ids: {})
+    monkeypatch.setattr(
+        ee,
+        "fetch_quarter_face",
+        lambda conn, cid, tags: {
+            t: ("us-gaap:" + t, "CF") for t in tags if t == "IncomeLossBeforeTaxOld"
+        },
+    )
+    monkeypatch.setattr(
+        ee,
+        "fetch_quarter_prints",
+        lambda conn, cid, tags: (TENQS, {k: {"IncomeLossBeforeTaxOld"} for k in TENQS}),
+    )
+    out = dl.comparative_rows(
+        None,
+        1,
+        "0000000001",
+        rows,
+        {"income_before_tax": 9},
+        [],
+        {"income_before_tax": {"IncomeLossBeforeTaxOld", "IncomeLossBeforeTaxNew"}},
+    )
+    got = {(r["tag"], r["stmt"], r["era_from"], r["era_to"]) for r in out}
+    assert ("IncomeLossBeforeTaxOld", "CF", date(2019, 2, 1), date(2019, 11, 3)) in got
