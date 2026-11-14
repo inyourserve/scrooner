@@ -127,7 +127,14 @@ def resolve_cf(f, notes):
     if not sb:
         cl = [l for l in op if l['custom'] and SBC_LABEL.search(l['lb']) and not re.search(r'And', re.sub(r'ShareBased|StockBased', '', l['tag']))]
         sb = cl if len(cl) == 1 else []
-    if sb:
+    # a ShareBasedCompensation line whose own label names no compensation/expense ('Share-based payments', MA FY2014-16: -15 / 22 / 50)
+    # and whose value is not the filing's own SBC expense (AllocatedShareBasedCompensationExpense 111 / 122 / 148) is not the
+    # add-back (10-K 0001141391-15-000011 note: 'Share-based compensation expense ... $111'): the SBC ruling takes the note fact
+    exp = note(['AllocatedShareBasedCompensationExpense'])
+    if sb and exp and not re.search(r'(?i)compensation|expense|award|plans?\b', sb[0]['lb'] or '') and sb[0]['val'] != exp[0][1]:
+        put('sbc', 'mapped', exp[0][0], exp[0][1], f"{exp[0][0]}={exp[0][1]} [NOTE]; face {fmt(sb)} not used",
+            f"the CF line '{sb[0]['lb']}' ({sb[0]['val']}) names no compensation expense and differs from the filing's SBC expense: note fact (SBC ruling)", flags='sbc_face_not_addback')
+    elif sb:
         put('sbc', 'mapped', sb[0]['tag'], sb[0]['val'], fmt(sb), 'CF operating section: share-based compensation add-back')
     else:
         n = note(['ShareBasedCompensation', 'AllocatedShareBasedCompensationExpense', 'RestrictedStockExpense'])

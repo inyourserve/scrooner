@@ -151,15 +151,16 @@ NOT_DA = re.compile(r'(?i)accretion|impairment|debt (discount|issuance)|deferred
 INT_LB = re.compile(r'(?i)^(?!.*inventory)(amortization.*intangible|intangible.*amortization|amortization of (acquired|purchased|acquisition|customer|developed|other acquired)|acquired intangible)')
 ACC = re.compile(r'Accretion|Impairment')
 ACC_LB = re.compile(r'(?i)accretion|impairment')
-# accretion the filing itself reports (ruling 2026-11-14, DUK): liability (ARO) accretion expense, CF accretion lines, discount and
-# acquired-loan accretion. Equity accretion (preferred, temporary equity, redeemable NCI) is not an income-statement item: excluded
-ACC_EVID = re.compile(r'^(AssetRetirementObligationAccretionExpense|AccretionExpense\w*|AccretionAmortizationOfDiscountsAndPremiums\w*|\w*AccretableYieldAccretion\w*|CarryingAmountOf\w*Accretion)$')
+# accretion the filing itself reports (rulings 2026-11-14, DUK): liability (ARO) accretion expense and CF accretion lines; discount
+# accretion only as a CF line. Acquired-loan accretable yield is interest income, equity accretion is not an IS item: neither counts
+ACC_EVID = re.compile(r'^(AssetRetirementObligationAccretionExpense|AccretionExpense\w*)$')
+ACC_EVID_CF = re.compile(r'^AccretionAmortizationOfDiscountsAndPremiums\w*$')  # discount accretion counts only as a CF line
 
 
 def accretion_reported(L, notes):
     """The filing reports accretion for its own period: a nonzero fact or line of an accretion element (ACC_EVID)."""
     if any(ACC_EVID.match(t) and q == 4 and v for (t, q), v in notes.items()): return True
-    return any(ACC_EVID.match(l['tag']) and l['val'] for l in L)
+    return any(l['val'] and (ACC_EVID.match(l['tag']) or (l['st'] == 'CF' and ACC_EVID_CF.match(l['tag']))) for l in L)
 CAPSW = re.compile(r'(?i)software|CapitalizedComputer')
 NOTE_AMORT = ('AmortizationOfIntangibleAssets', 'FiniteLivedIntangibleAssetsAmortizationExpense', 'AmortizationOfAcquiredIntangibleAssets')
 NOTE_DA = ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization', 'DepreciationAmortizationAndOther')

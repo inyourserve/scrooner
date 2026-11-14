@@ -77,6 +77,15 @@ def test_generic_dividend_line_holding_preferred_is_combined():
     assert resolve_cf(_with_is(rp, pref), {})['dividends_paid']['status'] == 'not_presented'
 
 
+def test_share_based_payments_line_that_is_not_the_expense_takes_the_note_fact():
+    # MA FY2014 (0001141391-15-000011): CF 'Share-based payments' (15) while the note's SBC expense is 111
+    rows = [('ShareBasedCompensation', -15, False, False, 'Share-based payments'), OP, INV, FIN]
+    r = resolve_cf(filing(rows), {('AllocatedShareBasedCompensationExpense', 4): D(111)})
+    assert r['sbc']['value'] == D(111) and 'NOTE' in r['sbc']['nodes']
+    rows2 = [('ShareBasedCompensation', 100, False, False, 'Share-based compensation'), OP, INV, FIN]
+    assert resolve_cf(filing(rows2), {('AllocatedShareBasedCompensationExpense', 4): D(111)})['sbc']['value'] == D(100)
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):
