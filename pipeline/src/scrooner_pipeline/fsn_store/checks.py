@@ -110,6 +110,33 @@ def tol_of(items: Iterable[Print | int | None]) -> Decimal:
     return t
 
 
+def index_values(
+    values: list[tuple], stmt_of: dict, line_of: dict
+) -> tuple[dict, dict]:
+    """Prints per column. A tag may carry several copies of one column (iprx 0, 1, 2 ...: the face copy, then
+    copies that include an adjustment member, ADI RetainedEarnings FY2018: 5,982,697,000 on the face, 6,313,723,000
+    at iprx 3): the check reads the FACE copy, the lowest iprx, never the last. Rows come ordered by iprx; the first
+    copy of a key wins."""
+    flat: dict[tuple[str, date, int], Print] = {}
+    by_col: dict[tuple[str, date, int], dict[tuple[str, str], Print]] = defaultdict(
+        dict
+    )
+    for tag, version, ddate, qtrs, value, dcml, iprx in sorted(
+        values, key=lambda r: r[6] or 0
+    ):
+        flat.setdefault(
+            (tag, ddate, qtrs), Print(tag, version, Decimal(value), dcml, None)
+        )
+        stmt = stmt_of.get((tag, version))
+        if stmt is None:
+            continue
+        by_col[(stmt, ddate, qtrs)].setdefault(
+            (tag, version),
+            Print(tag, version, Decimal(value), dcml, line_of.get((tag, version))),
+        )
+    return flat, by_col
+
+
 def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
     """Statement lines, non-dimensional values per (stmt, ddate, qtrs) column, and calc arcs of one filing."""
     with conn.cursor() as cur:
@@ -128,9 +155,10 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
         lines = cur.fetchall()
         cur.execute(
             """
-            select t.tag, t.version, v.ddate, v.qtrs, v.value, v.dcml
+            select t.tag, t.version, v.ddate, v.qtrs, v.value, v.dcml, v.iprx
             from fsn.value v join fsn.tag t on t.id = v.tag_id
             where v.filing_id = %s and v.dim_id = 0 and v.value is not null and v.uom = 'USD'
+            order by v.iprx
             """,
             (filing_id,),
         )
@@ -155,21 +183,7 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
         stmt_of.setdefault((tag, version), stmt)
         line_of.setdefault((tag, version), line)
         on[stmt].add(tag)
-    flat: dict[tuple[str, date, int], Print] = {}
-    for tag, version, ddate, qtrs, value, dcml in values:
-        flat.setdefault(
-            (tag, ddate, qtrs), Print(tag, version, Decimal(value), dcml, None)
-        )
-    by_col: dict[tuple[str, date, int], dict[tuple[str, str], Print]] = defaultdict(
-        dict
-    )
-    for tag, version, ddate, qtrs, value, dcml in values:
-        stmt = stmt_of.get((tag, version))
-        if stmt is None:
-            continue
-        by_col[(stmt, ddate, qtrs)][(tag, version)] = Print(
-            tag, version, Decimal(value), dcml, line_of.get((tag, version))
-        )
+    flat, by_col = index_values(values, stmt_of, line_of)
     groups: dict[tuple[str, str, int], list[tuple[str, str, int]]] = defaultdict(list)
     for grp, _arc, ptag, pver, ctag, cver, w in arcs:
         groups[(ptag, pver, grp)].append((ctag, cver, w))

@@ -119,16 +119,20 @@ def claim_for(
     'component' rows. The statement is the latest era's; the tags are those rows of that statement (latest era
     first). Other statements the live concept rows name are kept as `alts` (S16: the printed line may sit on
     another statement than the latest row's). Parts of a component claim are (sign, tag)."""
-    live = [
-        r
-        for r in rows
-        if era_holds(r[7], r[8], period_end)
-        or (
-            filing_por is not None
-            and r[1] == "concept"
-            and era_holds(r[7], r[8], filing_por)
-        )
-    ]
+    held = [r for r in rows if era_holds(r[7], r[8], period_end)]
+    # the claim is made by the rows whose era holds the CELL's period. The filing's own period only adds concept rows
+    # of the same kind (a per-filing tag era), never over rows that hold the cell's period as components: SHOP
+    # total_debt FY2023, read from the FY2024 10-K, is the component sum of FY2023's rows, not the FY2024 era's
+    # current-line concept row (916 judged against 0).
+    mine = [r for r in held if r[4] == name or r[5] == name]
+    cell_has_concept = any(r[1] == "concept" and r[4] == name for r in mine)
+    live = list(held)
+    if filing_por is not None and (cell_has_concept or not mine):
+        live += [
+            r
+            for r in rows
+            if r not in held and r[1] == "concept" and era_holds(r[7], r[8], filing_por)
+        ]
     concept = sorted(
         (r for r in live if r[1] == "concept" and r[4] == name),
         key=lambda r: (r[7], r[0]),
