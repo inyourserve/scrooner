@@ -42,6 +42,7 @@ ENV_PATH = "SCROONER_STRUCTURAL_RESOLVER"
 ENV_OFF = "SCROONER_STRUCTURAL_DIRECT"  # "off" disables the path
 LINE_MAP_DIR = Path(__file__).resolve().parents[4] / "data-team" / "tags" / "line_map"
 SERVED = ("mapped", "component_sum")
+CASH = "cash_and_equivalents"  # ruling 2026-11-14 (Dhairya): the BS face 'cash and cash equivalents' total line only
 
 
 def resolver_path() -> Path | None:
@@ -66,24 +67,84 @@ def enabled() -> bool:
     return os.environ.get(ENV_OFF, "on").lower() != "off"
 
 
-def _period_id(
+def _period_hits(
     periods: dict[int, tuple[date, date, str]], end: date, grain: str
-) -> tuple[int, date] | None:
-    """The unique core.period (id, true end) of the claim's column: instants (grain I) or about-a-year durations (FY).
-    The resolver's period_end is the FSN date, rounded to a month end (a 52/53-week year ending 2015-12-26 is
-    2015-12-31 there): matched by common/fsn_dates, the exact end preferred when two periods match."""
+) -> list[int]:
+    """Every core.period that can stand for the claim's column: instants (grain I) or about-a-year durations (FY)
+    whose end the FSN date (rounded to a month end) stands for (common/fsn_dates)."""
     want = "instant" if grain == "I" else "duration"
-    hits = [
+    return [
         pid
         for pid, (start, e, ptype) in periods.items()
         if ptype == want
         and fsn_end_matches(end, e)
         and (want == "instant" or 330 <= (e - start).days <= 400)
     ]
+
+
+def _period_id(
+    periods: dict[int, tuple[date, date, str]],
+    end: date,
+    grain: str,
+    por_hints: frozenset[date] = frozenset(),
+) -> tuple[int, date] | None:
+    """The unique core.period (id, true end) of the claim's column. The resolver's period_end is the FSN date,
+    rounded to a month end (a 52/53-week year ending 2015-12-26 is 2015-12-31 there), so several periods can match:
+    the real year end and stray instants a few days around it (subsequent-event dates, 2018-02-02 vs 2018-02-03).
+    Chosen by evidence in order: the exact end; then the period_of_report of a filing the claim is read from
+    (por_hints); else ambiguous (None here: direct_cells then tries the stored facts, see _by_stored_facts)."""
+    hits = _period_hits(periods, end, grain)
     if len(hits) > 1:
         exact = [pid for pid in hits if periods[pid][1] == end]
         hits = exact if len(exact) == 1 else hits
+    if len(hits) > 1 and por_hints:
+        by_por = [pid for pid in hits if periods[pid][1] in por_hints]
+        hits = by_por if len(by_por) == 1 else hits
     return (hits[0], periods[hits[0]][1]) if len(hits) == 1 else None
+
+
+def _by_stored_facts(
+    periods: dict[int, tuple[date, date, str]],
+    hits: list[int],
+    claims: list[sl.Claim],
+    core_pids: set[tuple[str, str, int]],
+) -> tuple[int, date] | None:
+    """Last evidence for an ambiguous column: exactly one candidate period holds a stored core.fact of a claim part
+    in a claim's own accession (a stray period, e.g. a start one day off with a handful of facts, carries none of
+    the filing's face facts). Keyed by period id, so two periods with the SAME end are told apart too."""
+    keep = [
+        pid
+        for pid in hits
+        if any(
+            (c.accession, tag, pid) in core_pids
+            for c in claims
+            for _s, _t, tag in c.parts
+        )
+    ]
+    return (keep[0], periods[keep[0]][1]) if len(keep) == 1 else None
+
+
+def _core_period_hits(
+    conn: psycopg.Connection,
+    company_id: int,
+    accessions: set[str],
+    tags: set[str],
+    pids: set[int],
+) -> set[tuple[str, str, int]]:
+    """(accession, tag, period_id) of the stored non-derived core.facts of the pinned filings on the given periods."""
+    if not (accessions and tags and pids):
+        return set()
+    with conn.cursor() as cur:
+        cur.execute(
+            """select distinct fl.accession_number, c.tag, f.period_id
+               from core.fact f
+               join core.concept c on c.id = f.concept_id
+               join core.filing fl on fl.id = f.filing_id
+               where f.company_id = %s and f.period_id = any(%s) and fl.accession_number = any(%s)
+                 and c.tag = any(%s) and not f.is_derived""",
+            (company_id, sorted(pids), sorted(accessions), sorted(tags)),
+        )
+        return {(a, t, p) for a, t, p in cur.fetchall()}
 
 
 def pick_claim(
@@ -116,6 +177,29 @@ def _fix_covers(rows, concept_id: int, end: date) -> bool:
         and era_holds(r.era_from, r.era_to, end)
         for r in rows
     )
+
+
+def _cash_components(
+    conn: psycopg.Connection, accessions: set[str]
+) -> set[tuple[str, str]]:
+    """(accession, tag) of every tag that the filing's own calc tree makes a COMPONENT of a cash total printed on the
+    balance-sheet face (AXP 2023: CashAndDueFromBanks 7,118 under 'Total cash and cash equivalents' 46,596). Such a
+    node is a part of the face total, not the total: a cash_and_equivalents claim on it is not served."""
+    if not accessions:
+        return set()
+    with conn.cursor() as cur:
+        cur.execute(
+            """select distinct f.accession, c.tag
+               from fsn.calc_arc a
+               join fsn.filing f on f.id = a.filing_id
+               join fsn.tag p on p.id = a.parent_tag_id
+               join fsn.tag c on c.id = a.child_tag_id
+               where f.accession = any(%s) and p.tag like 'Cash%%' and p.tag <> c.tag
+                 and exists (select 1 from fsn.line l
+                             where l.filing_id = a.filing_id and l.stmt = 'BS' and l.tag_id = a.parent_tag_id)""",
+            (sorted(accessions),),
+        )
+        return {(acc, tag) for acc, tag in cur.fetchall()}
 
 
 def _stored_values(
@@ -240,9 +324,34 @@ def direct_cells(
             for a, i, acc, form, per in cur.fetchall():
                 meta[a] = (-i, acc.date() if acc else None, form, per)
     tags = {tag for cs in groups.values() for c in cs for _s, _t, tag in c.parts}
-    col = {k: _period_id(periods, k[1], k[2]) for k in groups}
-    ends = {v[1] for v in col.values() if v}
-    stored = _stored_values(conn, company_id, accessions, tags, ends)
+
+    def por_hints(cs: list[sl.Claim]) -> frozenset[date]:
+        return frozenset(
+            m[3] for c in cs if (m := meta.get(c.accession)) and isinstance(m[3], date)
+        )
+
+    col = {
+        k: _period_id(periods, k[1], k[2], por_hints(cs)) for k, cs in groups.items()
+    }
+    ambiguous = {
+        k: _period_hits(periods, k[1], k[2]) for k, v in col.items() if v is None
+    }
+    amb_pids = {p for hs in ambiguous.values() for p in hs}
+    core_pids = _core_period_hits(conn, company_id, accessions, tags, amb_pids)
+    for k, hs in ambiguous.items():
+        if len(hs) > 1:
+            col[k] = _by_stored_facts(periods, hs, groups[k], core_pids)
+    stored = _stored_values(
+        conn,
+        company_id,
+        accessions,
+        tags,
+        {v[1] for v in col.values() if v},
+    )
+    cash_parts = _cash_components(
+        conn,
+        {c.accession for k, cs in groups.items() if k[0] == CASH for c in cs},
+    )
     cells: list[dict] = []
     for (name, end, grain), cs in sorted(groups.items(), key=lambda kv: repr(kv[0])):
         cid = ids[name]
@@ -254,7 +363,13 @@ def direct_cells(
 
         located = col[(name, end, grain)]
         if located is None:
-            reject("no unique core.period for the claim's column")
+            cand = sorted(
+                periods[p][1].isoformat() for p in _period_hits(periods, end, grain)
+            )
+            reject(
+                "no unique core.period for the claim's column: "
+                + (f"candidate ends {cand}" if cand else "no matching period")
+            )
             continue
         pid, te = located
         if _fix_covers(rows, cid, te):
@@ -269,6 +384,13 @@ def direct_cells(
             reject("no filing that prints the column as a face column")
             continue
         c = picked
+        if name == CASH and any(
+            (c.accession, tag) in cash_parts for _s, _t, tag in c.parts
+        ):
+            reject(
+                "cash node is a component of the BS face total cash line, not the total"
+            )
+            continue
         if c.decision == "component_sum" and periods[pid][2] == "instant":
             if sl.instant_sum_refused(name, concept_info[cid][1]):
                 reject("instant component sum refused (only total_debt)")
