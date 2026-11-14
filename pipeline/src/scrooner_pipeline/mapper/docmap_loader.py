@@ -452,8 +452,7 @@ def assign_fix_eras(rows: list[DocmapRow]) -> list[DocmapRow]:
         # overlap, or a small gap (53-week year starting days after the previous 52-week end, JNJ FY2019/FY2020): no
         # gap, or the rounded month-end of the gap days would let a guard row hold the earlier year
         if prev is not None and (
-            d.era_from <= prev
-            or (d.era_from - prev).days <= GAP_CLOSE_DAYS
+            d.era_from <= prev or (d.era_from - prev).days <= GAP_CLOSE_DAYS
         ):
             d = replace(d, era_from=prev + timedelta(days=1))
         last[d.data_point] = d.era_to or date.max
