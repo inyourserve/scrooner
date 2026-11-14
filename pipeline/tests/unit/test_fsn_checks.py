@@ -338,3 +338,19 @@ def test_tolerance_follows_the_filers_whole_million_rounding_not_a_wrong_decimal
     assert checks.tol_of([checks.Print("a", "v", Decimal(1000), 0, None)]) == Decimal(
         "0.5"
     )
+
+
+def test_a_column_with_several_copies_of_a_tag_reads_the_face_copy_not_the_last():
+    # ADI FY2018 StockholdersEquity: RetainedEarnings iprx 0,1,2 = 5,982,697,000 (face), iprx 3 = 6,313,723,000
+    # (includes an adjustment member); the calc check must foot the face copy
+    d = date(2018, 11, 3)
+    re_ = "RetainedEarningsAccumulatedDeficit"
+    rows = [
+        (re_, "us-gaap/2018", d, 0, 6313723000, -3, 3),
+        (re_, "us-gaap/2018", d, 0, 5982697000, -3, 0),
+        (re_, "us-gaap/2018", d, 0, 5982697000, -3, 1),
+    ]
+    stmt_of = {(re_, "us-gaap/2018"): "BS"}
+    flat, by_col = checks.index_values(rows, stmt_of, {(re_, "us-gaap/2018"): 9})
+    assert by_col[("BS", d, 0)][(re_, "us-gaap/2018")].value == Decimal(5982697000)
+    assert flat[(re_, d, 0)].value == Decimal(5982697000)

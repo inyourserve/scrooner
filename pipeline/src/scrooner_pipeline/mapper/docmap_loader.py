@@ -439,6 +439,9 @@ def parse_fixes(csv_text: str, source: str) -> tuple[list[DocmapRow], list[dict]
     return rows, rejects
 
 
+GAP_CLOSE_DAYS = 10
+
+
 def assign_fix_eras(rows: list[DocmapRow]) -> list[DocmapRow]:
     """A fix's era must not overlap its neighbor's of the same data point (52/53-week years end 364 days apart, so
     the nominal start of one year is the previous period end)."""
@@ -446,7 +449,12 @@ def assign_fix_eras(rows: list[DocmapRow]) -> list[DocmapRow]:
     last: dict[str, date] = {}
     for d in sorted(rows, key=lambda d: (d.data_point, d.era_to or date.max)):
         prev = last.get(d.data_point)
-        if prev is not None and d.era_from <= prev:
+        # overlap, or a small gap (53-week year starting days after the previous 52-week end, JNJ FY2019/FY2020): no
+        # gap, or the rounded month-end of the gap days would let a guard row hold the earlier year
+        if prev is not None and (
+            d.era_from <= prev
+            or (d.era_from - prev).days <= GAP_CLOSE_DAYS
+        ):
             d = replace(d, era_from=prev + timedelta(days=1))
         last[d.data_point] = d.era_to or date.max
         out.append(d)

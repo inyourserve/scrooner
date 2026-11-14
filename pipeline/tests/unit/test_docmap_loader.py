@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import date
 
 from scrooner_pipeline.mapper import docmap_loader as dl
@@ -560,3 +561,23 @@ def test_fix_files_include_versioned_names_and_a_later_version_wins(tmp_path):
     ]
     m = FIX_FILE_RE.match("JNJ-fixes-v2-2026-11-13.csv")
     assert m and m.group(1) == "JNJ" and m.group(2) == "2026-11-13"
+
+
+def _fix(era_from: date, era_to: date) -> dl.DocmapRow:
+    return replace(_doc("us-gaap:OperatingExpenses"), era_from=era_from, era_to=era_to)
+
+
+def test_fix_eras_close_a_small_gap_between_52_and_53_week_years():
+    """JNJ: FY2019 ends 2019-12-29, FY2020 (53 weeks) starts nominally 2020-01-04: no gap days may be left, or a guard
+    row on 2019-12-30..31 (month-end rounding) would hold FY2019."""
+    fy19 = _fix(date(2018, 12, 31), date(2019, 12, 29))
+    fy20 = _fix(date(2020, 1, 4), date(2021, 1, 2))
+    out = dl.assign_fix_eras([fy20, fy19])
+    assert [(d.era_from, d.era_to) for d in out] == [
+        (date(2018, 12, 31), date(2019, 12, 29)),
+        (date(2019, 12, 30), date(2021, 1, 2)),
+    ]
+    far = _fix(date(2020, 3, 1), date(2021, 1, 2))
+    assert dl.assign_fix_eras([fy19, far])[1].era_from == date(2020, 3, 1)
+    over = _fix(date(2019, 12, 29), date(2021, 1, 2))
+    assert dl.assign_fix_eras([fy19, over])[1].era_from == date(2019, 12, 30)

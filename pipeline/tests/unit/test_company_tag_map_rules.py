@@ -790,3 +790,32 @@ def test_every_held_cell_gets_a_written_reason():
     assert cells == [] and [(b["reason_code"], b["owner"]) for b in stats["blanks"]] == [
         ("component_without_authoritative_fact", "data_engineer_l1")
     ]
+
+
+def _shop(gp, oi, arcs):
+    # SHOP: opex is the PRINTED OperatingExpenses total (no components); sga = S&M + G&A face lines
+    rows = [
+        MapRow("us-gaap", "GrossProfit", "IS", "concept", GP_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingIncomeLoss", "IS", "concept", OI_ID, None, 1, ERA, None),
+        MapRow("us-gaap", "OperatingExpenses", "IS", "concept", OPEX_ID, None, 1, ERA, None),
+        *(MapRow("us-gaap", t, "IS", "component", None, SGA_ID, 1, ERA, None, "Other") for t in "SG"),
+    ]
+    facts = {
+        ("us-gaap", "GrossProfit"): {7: fact(gp, 1)},
+        ("us-gaap", "OperatingIncomeLoss"): {7: fact(oi, 2)},
+        ("us-gaap", "OperatingExpenses"): {7: fact("60", 3)},
+        ("us-gaap", "S"): {7: fact("40", 4)},
+        ("us-gaap", "G"): {7: fact("20", 5)},
+    }
+    return build_cells(rows, facts, SGA_INFO, arcs, {})
+
+
+def test_sga_sum_stands_beside_a_printed_opex_total_that_ties_gp_to_oi():
+    arcs = {"A-10": {("OperatingExpenses", "S"), ("OperatingExpenses", "G"), ("OperatingIncomeLoss", "OperatingExpenses")}}
+    cells, stats = _shop("100", "40", arcs)
+    got = {c["canonical_concept_id"]: c["value"] for c in cells}
+    assert got[SGA_ID] == Decimal("60") and got[OPEX_ID] == Decimal("60")
+    cells, stats = _shop("100", "30", arcs)  # printed opex does not tie GP - opex = OI: sga held
+    assert SGA_ID not in {c["canonical_concept_id"] for c in cells} and stats["held"]
+    cells, stats = _shop("100", "40", {"A-10": {("OperatingExpenses", "S")}})  # G&A not a line of the filing
+    assert SGA_ID not in {c["canonical_concept_id"] for c in cells}

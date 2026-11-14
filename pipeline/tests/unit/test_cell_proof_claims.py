@@ -175,3 +175,29 @@ def test_without_filer_decimals_shares_and_cents_never_fall_back_to_the_money_sc
         pv.prove_cell(cell("basic_eps_resolved", "7.60", eclaim), es, "q").verdict
         == pv.DISAGREE
     )
+
+
+@pytest.mark.unit
+def test_claim_for_a_comparative_column_is_made_by_the_rows_holding_the_cells_period():
+    # SHOP total_debt: FY2023 (read from the FY2024 10-K) is held by component rows; the FY2024 era has a
+    # concept row (ConvertibleDebtCurrent). The FY2023 cell must be claimed by its own components.
+    d = date
+    rows = [
+        (1, "component", "BS", "ConvertibleDebtNoncurrent", None, "total_debt", 1, d(2015, 1, 1), d(2023, 12, 31)),
+        (2, "component", "BS", "OtherDebt", None, "total_debt", 1, d(2015, 1, 1), d(2023, 12, 31)),
+        (3, "concept", "BS", "ConvertibleDebtCurrent", "total_debt", None, 1, d(2024, 1, 1), None),
+    ]
+    c = claim_for(rows, "total_debt", d(2023, 12, 31), d(2024, 12, 31))
+    assert c.kind == "component" and c.parts == ((1, "ConvertibleDebtNoncurrent"), (1, "OtherDebt"))
+    assert claim_for(rows, "total_debt", d(2024, 12, 31), d(2024, 12, 31)).tags == ("ConvertibleDebtCurrent",)
+
+
+@pytest.mark.unit
+def test_claim_for_per_filing_tag_era_still_adds_the_filings_concept_row():
+    # MSFT revenue FY2016 printed in the FY2018 10-K: the row of that filing's era joins the cell's own row
+    d = date
+    rows = [
+        (1, "concept", "IS", "OldTag", "x", None, 1, d(2015, 1, 1), d(2017, 12, 31)),
+        (2, "concept", "IS", "NewTag", "x", None, 1, d(2018, 1, 1), None),
+    ]
+    assert set(claim_for(rows, "x", d(2016, 12, 31), d(2018, 12, 31)).tags) == {"OldTag", "NewTag"}

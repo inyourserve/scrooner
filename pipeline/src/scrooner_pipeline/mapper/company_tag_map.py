@@ -964,9 +964,60 @@ def _held_reasons(stats: dict, concept_info, periods) -> None:
         )
 
 
-def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[dict]:
+def _printed_opex_ties(
+    c: dict,
+    by_name: dict,
+    tie_prints: dict,
+    dcml: dict,
+    arcs: dict[str, set[tuple[str, str]]],
+) -> bool:
+    """SHOP FY2023-25: opex is the PRINTED OperatingExpenses total (no components), so there is no built opex cell
+    to contain the sga lines. The sga sum then stands when, in the sga sum's own filing, the printed opex ties
+    gross profit - opex = operating income within the rounding tolerance and every sga line is a calculation child
+    (a line of the statement) in that filing (the S9 face-lines evidence)."""
+    acc, pid = c["_accession"], c["period_id"]
+    opex = tie_prints.get(("operating_expenses", pid, acc))
+    if opex is None:
+        cand = by_name.get(("operating_expenses", pid))
+        opex = cand if cand is not None and cand.get("_accession") == acc else None
+    gp = _span_start(by_name, tie_prints, pid, acc)
+    oi = tie_prints.get(("operating_income", pid, acc))
+    if oi is None:
+        cand = by_name.get(("operating_income", pid))
+        oi = cand if cand is not None and cand.get("_accession") == acc else None
+    if opex is None or gp is None or oi is None:
+        return False
+    children = {child for _p, child in arcs.get(acc, set())}
+    if not children or not all(k[1] in children for k in c["_dcml_keys"]):
+        return False
+    tol = tol_of(
+        [
+            dcml.get(k)
+            for k in c["_dcml_keys"]
+            + opex["_dcml_keys"]
+            + gp["_dcml_keys"]
+            + oi["_dcml_keys"]
+        ]
+    )
+    return abs(gp["value"] - opex["value"] - oi["value"]) <= tol
+
+
+def _sga_inside_tied_opex(
+    cells: list[dict],
+    concept_info,
+    stats: dict,
+    tie_prints: dict | None = None,
+    dcml: dict | None = None,
+    arcs: dict[str, set[tuple[str, str]]] | None = None,
+) -> list[dict]:
     """An sga sum without calc arcs stands only when the same period's opex was built from components of the same
-    filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line."""
+    filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line; or,
+    when opex is the printed total, when that total ties and every sga line is a calc child (_printed_opex_ties)."""
+    by_name: dict[tuple[str, int], dict] = {}
+    for c in cells:
+        by_name.setdefault(
+            (_tie_base(concept_info[c["canonical_concept_id"]][0]), c["period_id"]), c
+        )
     opex = {
         c["period_id"]: c
         for c in cells
@@ -982,6 +1033,11 @@ def _sga_inside_tied_opex(cells: list[dict], concept_info, stats: dict) -> list[
             kept.append(c)
             continue
         o = opex.get(c["period_id"])
+        if o is None and _printed_opex_ties(
+            c, by_name, tie_prints or {}, dcml or {}, arcs or {}
+        ):
+            kept.append(c)
+            continue
         if (
             o is None
             or o["_accession"] != c["_accession"]
@@ -1260,7 +1316,7 @@ def build_cells(
                             },
                         )
     cells = _opex_tie(cells, concept_info, dcml, stats, tie_prints)
-    cells = _sga_inside_tied_opex(cells, concept_info, stats)
+    cells = _sga_inside_tied_opex(cells, concept_info, stats, tie_prints, dcml, arcs)
     cells = _scale_sanity(cells, concept_info, periods, stats)
     cells = _proof_guard(cells, concept_info, periods, stats, proof_disagree or {})
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}
@@ -1580,7 +1636,13 @@ def _scale_sanity(cells: list[dict], concept_info, periods, stats: dict) -> list
     return kept
 
 
-TIE_BASES = ("gross_profit", "operating_income", "revenue", "cost_of_revenue")
+TIE_BASES = (
+    "gross_profit",
+    "operating_income",
+    "revenue",
+    "cost_of_revenue",
+    "operating_expenses",
+)
 
 
 def _tie_base(name: str) -> str:
