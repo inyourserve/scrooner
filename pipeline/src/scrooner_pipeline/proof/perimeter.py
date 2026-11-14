@@ -16,6 +16,19 @@ the PERIMETER: a PROVEN total_debt cell stays PROVEN only if its claim names
        - the lease tag is a calc child of a claim part in the filing.
      The location list is a text fact the FSN num file does not keep, so with no `lease_locations` the last two
      rules are the only guard.
+  3. pre-ASC 842 capital lease obligations disclosed only in a note (R07 extension, Dhairya 2026-11-14, MSFT FY2016:
+     25M in other current + 761M in other long-term liabilities, total_debt 54,247 not 53,461). Filers often tag
+     them CapitalLeaseObligations{Current,Noncurrent} with a single us-gaap:BalanceSheetLocationAxis member and
+     no undimensioned fact; the FSN load drops those dimensioned facts, so they come from the filing's instance
+     (data-team/tags/line_map/_lease-locations-pre842-2026-11-14.csv: adsh, ddate, tag, member, value). Rule:
+       - member names a non-debt line (OtherCurrentLiabilities, OtherNoncurrentLiabilities, AccruedLiabilities...):
+         the obligation is outside debt and owed (one figure per member: Current + Noncurrent, else the total);
+       - member names a debt line (Debt, Borrowings, NotesPayable, CommercialPaper...): inside, not owed;
+       - no member: owed only when a calc arc puts it under a non-debt face line; inside when a calc arc puts it
+         under a debt line or the claim carries a lease-named debt line (LongTermDebtAndCapitalLeaseObligations*);
+         with no location evidence at all it is NOT owed and the cell goes to a reader (TMUS, WFC, CVS, DIS keep
+         capital leases inside their debt-note totals, so absence is not evidence).
+     Facts on any other axis (segment, class) are never consolidated amounts and are ignored.
 
 A missing part turns PROVEN into DISAGREE, reason perimeter_incomplete, with checks.perimeter =
 {status, missing: [{tag, value, kind}]}. Operating leases are never debt. The pass only ever lowers a verdict.

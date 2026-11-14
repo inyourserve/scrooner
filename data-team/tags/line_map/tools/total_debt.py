@@ -17,6 +17,8 @@ DEBT = re.compile(r'^(ShortTermBorrowings|OtherShortTermBorrowings|CommercialPap
                   r'SeniorNotes\w*|ConvertibleNotesPayable\w*|ConvertibleDebt\w*|ConvertibleLongTermNotesPayable|SecuredDebt\w*|UnsecuredDebt\w*|OtherLongTermDebt\w*|'
                   r'SubordinatedDebt\w*|DebtLongtermAndShorttermCombinedAmount|UnsecuredLongTermDebt|SecuredLongTermDebt|LongTermNotesAndLoans|LongTermLoansPayable|ShortTermNonBankLoansAndNotesPayable|OtherBorrowings|BankBorrowings|FederalHomeLoanBankAdvances\w*|AdvancesFromFederalHomeLoanBanks|LongTermFederalHomeLoanBankAdvances\w*|'
                   r'FinanceLeaseLiability\w*|CapitalLeaseObligations\w*|DebtInstrumentCarryingAmount|LongTermDebtFairValue)$')
+DEBT_MEMBER = re.compile(r'(?i)(Debt|Borrowing|NotesPayable|CommercialPaper|LineOfCredit|Bonds)')
+LEASES = {}
 NOTDEBT = re.compile(r'(?i)interest payable|accrued interest|operating lease|FairValue|DebtInstrumentCarryingAmount')
 LABEL_DEBT = re.compile(r'(?i)\b(debt|borrowings|notes payable|commercial paper|term loans?|senior notes|bonds payable|finance lease|capital lease)\b')
 def run(filings, vals, flloc):
@@ -94,15 +96,43 @@ def run(filings, vals, flloc):
                         flags.append('a debt-and-finance-lease total exists: not added')
                     else:
                         nodes.append(('FinanceLeaseLiability', fl, 'NOTE', 'note lease; no ExtensibleList and no debt line contains it (location by absence: CHECK)'))
-            cl = vv[col].get('CapitalLeaseObligations')
-            if cl is None and ('CapitalLeaseObligationsCurrent' in vv[col] or 'CapitalLeaseObligationsNoncurrent' in vv[col]):
-                cl = vv[col].get('CapitalLeaseObligationsCurrent', D(0)) + vv[col].get('CapitalLeaseObligationsNoncurrent', D(0))
-            if cl and not on_face_lease and not fl:
+            # pre-842 capital leases (founder perimeter; Dhairya 2026-11-14 MSFT FY2016): note-only obligations, consolidated,
+            # whose location is not inside a debt line. Location evidence, strongest first:
+            #   1. the instance's BalanceSheetLocationAxis member on the fact (OtherCurrentLiabilities / OtherNoncurrent
+            #      Liabilities -> outside debt, added; a debt member -> inside, skipped)  [FSN drops these dimensioned facts]
+            #   2. a calc arc from a face debt line (inside) or from a non-debt face line (outside)
+            #   3. a face debt line whose tag/label names leases (inside)
+            #   4. none of these: not added, flagged READER CHECK (absence is not evidence: TMUS/WFC/CVS/DIS keep them in debt)
+            lf = (LEASES.get(f['a']) or {}).get(col, [])
+            if not on_face_lease and not fl:
+                cap_loc = [(t, m, v) for t, m, v in lf if t.startswith('CapitalLeaseObligations') and m]
+                cap_und = {t: v for t, m, v in lf if t.startswith('CapitalLeaseObligations') and not m}
+                cl = vv[col].get('CapitalLeaseObligations') or cap_und.get('CapitalLeaseObligations')
+                if cl is None and any(t in vv[col] or t in cap_und for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')):
+                    cl = sum((vv[col].get(t, cap_und.get(t, D(0))) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')), D(0))
                 pars = set().union(*[lease_parent.get(t, set()) for t in ('CapitalLeaseObligations', 'CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')])
-                if pars and not pars & tags and pars & set(onbs):
-                    nodes.append(('CapitalLeaseObligations', cl, 'NOTE', f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"))
-                elif pars & tags: flags.append('capital lease inside a debt line (calc parent): not added')
-                else: flags.append(f'capital lease {cl} in a note, calc parent unknown: not added')
+                if cap_loc:
+                    # one figure per location member: Current + Noncurrent when tagged, else the total; duplicates once
+                    bym = {}
+                    for t, m, v in sorted(set(cap_loc)):
+                        bym.setdefault(m, {})[t] = v
+                    cap_loc = []
+                    for m, d in bym.items():
+                        parts = [t for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent') if t in d]
+                        cap_loc += [(t, m, d[t]) for t in parts] if parts else [('CapitalLeaseObligations', m, d['CapitalLeaseObligations'])]
+                    outs = [(t, m, v) for t, m, v in cap_loc if not DEBT_MEMBER.search(m)]
+                    ins = [(t, m, v) for t, m, v in cap_loc if DEBT_MEMBER.search(m)]
+                    for t, m, v in outs:
+                        nodes.append((t, v, 'NOTE', f"pre-842 capital lease located in {m.split(':')[-1]} (instance BalanceSheetLocationAxis): outside debt"))
+                    if ins: flags.append('capital lease located in a debt line (' + ','.join(m.split(':')[-1] for _, m, _ in ins) + '): not added')
+                elif cl:
+                    if pars & tags: flags.append('capital lease inside a debt line (calc parent): not added')
+                    elif pars and pars & set(onbs):
+                        nodes.append(('CapitalLeaseObligations', cl, 'NOTE', f"pre-842 capital lease, calc parent {'/'.join(sorted(pars))} is not a debt line"))
+                    else:
+                        # no location evidence: TMUS, WFC, CVS and DIS keep capital leases inside their debt-note
+                        # totals, so absence is not evidence for capital leases; a reader decides
+                        flags.append(f'READER CHECK: capital lease {cl} in a note with no location member, calc arc or lease-named debt line: not added')
             total = sum((v for _, v, *_ in nodes), D(0))
             out.append(dict(cik=f['cik'], accession=f['a'], filing_period=f['p'], column=kind, period_end=col,
                             status=('component_sum' if len(nodes) > 1 else 'mapped') if nodes else 'not_presented',
@@ -111,6 +141,18 @@ def run(filings, vals, flloc):
     return out
 if __name__ == '__main__':
     filings = json.load(open('filings.json')); vals = json.load(open('debtvals.json')); flloc = json.load(open('flloc.json'))
+    import os
+    if os.path.exists('../leasefetch/leases.jsonl'):
+        for l in open('../leasefetch/leases.jsonl'):
+            o = json.loads(l)
+            for t, dt, dims, v, dec in o['facts']:
+                if not dt or not re.match(r'^CapitalLeaseObligations(Current|Noncurrent)?$', t): continue
+                loc = [m for ax, m in dims if ax.endswith('BalanceSheetLocationAxis')]
+                if dims and not loc: continue          # other axes (segments, classes): not consolidated
+                if len(dims) > 1: continue
+                try: val = D(v)
+                except Exception: continue
+                LEASES.setdefault(o['acc'], {}).setdefault(dt, []).append((t, loc[0] if loc else '', val))
     for l in open('../exam/notes.jsonl'):
         o = json.loads(l)
         if o.get('fl_loc'): flloc['FY0:' + o['cik']] = o['fl_loc']
