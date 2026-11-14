@@ -9,7 +9,7 @@ from resolve import parse, face, children, resolve, tol, note_facts, DPS as CORE
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
 INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
-import resolve_bs, resolve_cf
+import resolve_bs, resolve_cf, standard_inputs
 FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
 POLARITY = {r['data_point']: r for r in csv.DictReader(open(os.environ.get('POLARITY_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'polarity.csv'))))}
 def apply_polarity(rows):
@@ -148,24 +148,50 @@ def apply_cost_and_opex(rows, filings):
     return rows
 def derive_gross_profit(rows):
     """Ruling C1 (Dhairya 2026-11-14): gross profit not printed, revenue and cost of revenue printed and resolved in the same
-    filing -> DERIVED revenue - cost of revenue (derived_not_printed). An unpresented GrossProfit fact of the same filing
-    (EXT['gp'] = standard_inputs.gross_profit_facts) is recorded in calc_check; a difference makes the cell DISAGREE until a reader looks. Cost of revenue
-    not resolvable (ORCL: interleaved cost lines) -> gross profit stays not_presented."""
-    corr = EXT.get('gp', {})
-    by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    filing -> DERIVED revenue - cost of revenue (derived_not_printed). Also when both come from the same later filing's column
+    (COP 2016-17: cost of revenue is not in the own 10-K; the later 10-K prints revenue and cost of revenue for the year): cite that
+    filing, column comparative, when that column's revenue ties to the own revenue cell. An unpresented GrossProfit fact of the same filing (EXT['gp']) is recorded in calc_check; equal to
+    revenue - cost of revenue - D&A is an explained difference (gp_filer_fact_excludes_da: SCCO's cost of sales excludes D&A, SAB 11.B),
+    any other difference makes the cell DISAGREE until a reader looks. Cost of revenue not resolvable (ORCL) -> not_presented."""
+    corr = EXT.get('gp', {}); comp = EXT.get('comp', {})
+    co = lambda r: r.get('cik') or r.get('ticker')
+    by = {(co(r), r['period_end'], r['data_point']): r for r in rows}
+    own_by_acc = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
+    ok_st = ('mapped', 'component_sum')
     for r in rows:
         if r['data_point'] != 'gross_profit' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
-        rev, cor = by.get((r['accession'], 'revenue')), by.get((r['accession'], 'cost_of_revenue'))
-        if not (rev and cor and rev['status'] in ('mapped', 'component_sum') and cor['status'] in ('mapped', 'component_sum')
-                and rev['value'] is not None and cor['value'] is not None and (cor.get('column') or 'own') == 'own'): continue
-        v = D(rev['value']) - D(cor['value'])
-        r.update(status='derived', value=v, tags='revenue-cost_of_revenue', nodes=f"revenue={rev['value']}; -cost_of_revenue={cor['value']}",
-                 why='the income statement prints no gross profit; revenue and cost of revenue are printed in the same filing: revenue - cost of revenue (ruling C1)')
-        r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'derived_not_printed') if x)
-        if r['accession'] in corr:
-            g = corr[r['accession']]; ok = abs(g - v) <= tol(g, v)
-            r['calc_check'] = ';'.join(x for x in (r.get('calc_check', ''), f"GP corroboration: unpresented GrossProfit fact {g} {'ok' if ok else 'DISAGREE'}") if x)
-            if not ok: r['flags'] += ';gp_corroboration_disagree'
+        rev, cor = by.get((co(r), r['period_end'], 'revenue')), by.get((co(r), r['period_end'], 'cost_of_revenue'))
+        if not (rev and cor and rev['status'] in ok_st and cor['status'] in ok_st and rev['value'] is not None and cor['value'] is not None): continue
+        rc, cc = rev.get('column') or 'own', cor.get('column') or 'own'
+        if rc == cc == 'own' and rev['accession'] == cor['accession'] == r['accession']:
+            v = D(rev['value']) - D(cor['value']); src = None
+            nodes = f"revenue={rev['value']}; -cost_of_revenue={cor['value']}"
+            why = 'the income statement prints no gross profit; revenue and cost of revenue are printed in the same filing: revenue - cost of revenue (ruling C1)'
+        elif cc == 'comparative':
+            x = cor['accession']; xr = own_by_acc.get((x, 'revenue'))
+            t = standard_inputs._one_element(xr) if xr and xr['status'] == 'mapped' else None
+            if t is None: continue
+            vals = {D(vv) for tt, q, vv, dd in standard_inputs._facts(comp.get(x), 4) if tt == t and int(q) == 4 and dd == str(r['period_end'])} if t else set()
+            if len(vals) != 1: continue
+            rv = vals.pop()
+            if abs(rv - D(rev['value'])) > tol(rv, D(rev['value'])): continue   # one revenue definition: the later column ties to the own revenue cell (not MPC, NEM)
+            v = rv - D(cor['value']); src = x
+            nodes = f"revenue {t}={rv}; -cost_of_revenue={cor['value']} [comparative column of {x}]"
+            why = f'the own filing prints no cost of revenue; the later 10-K {x} prints revenue and cost of revenue for the year: revenue - cost of revenue from that one column (ruling C1, 2026-11-14)'
+        else:
+            continue
+        r.update(status='derived', value=v, tags='revenue-cost_of_revenue', nodes=nodes, why=why)
+        if src: r.update(accession=src, column='comparative')
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'derived_not_printed', 'comparative_fill' if src else '') if y)
+        g = corr.get(r['accession'])
+        if g is not None and not src:
+            da = by.get((co(r), r['period_end'], 'depreciation_and_amortization'))
+            if abs(g - v) <= tol(g, v): verdict = 'ok'
+            elif da and da.get('value') is not None and abs(g - (v - D(da['value']))) <= tol(g, v, D(da['value'])): verdict = 'explained: the filer fact deducts D&A, which its cost of revenue excludes (gp_filer_fact_excludes_da)'
+            else: verdict = 'DISAGREE'
+            r['calc_check'] = ';'.join(y for y in (r.get('calc_check', ''), f"GP corroboration: unpresented GrossProfit fact {g} {verdict}") if y)
+            if verdict == 'DISAGREE': r['flags'] += ';gp_corroboration_disagree'
+            elif verdict != 'ok': r['flags'] += ';gp_filer_fact_excludes_da'
     return rows
 OTHER_BEYOND = re.compile(r'(?i)\b(and|&|,)\s+other\b|\bothers?\s*$')
 WITHIN = {'revenue': r'other (operating )?(revenues?|sales)', 'intangible_assets': r'other intangible', 'ppe_net': r'other property',
@@ -391,6 +417,7 @@ if __name__ == '__main__':
     EXT['cor'] = standard_inputs.product_service_cor(notefacts, memberfacts)
     EXT['cor_mx'] = {a: x for a, x in standard_inputs.cost_member_sums(notefacts, memberfacts).items() if a not in EXT['cor']}
     EXT['gp'] = standard_inputs.gross_profit_facts(notefacts)
+    EXT['comp'] = compfacts
     for m in standard_inputs.member_facts(notefacts, memberfacts, standard_inputs.class_share_filings(filings)):   # the standard extract first
         notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
         MF[(m['accession'], m['tag'])] = m['member']
@@ -416,6 +443,7 @@ if __name__ == '__main__':
     rows = apply_cost_and_opex(rows, filings)
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
+    rows += standard_inputs.before_first_10k_rows(rows, filings, compfacts)   # years printed only in the first 10-K's comparative columns
     EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
     EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
@@ -457,6 +485,8 @@ if __name__ == '__main__':
             r['why'] = f"the face line's only own-period fact carries the equity-statement column member {mem}: the consolidated value (member-only face fact rule)"
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'member_face_fact') if x)
     for r in rows: r.setdefault('nodes', '')
+    for r in rows:
+        if str(r.get('accession', '')).startswith('BEFORE:'): r['accession'] = ''   # a year no 10-K covers and no later column printed
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
     w = csv.DictWriter(open('resolved_all.csv', 'w', newline=''), fieldnames=keys, extrasaction='ignore'); w.writeheader(); w.writerows(rows)
     INSTANT = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents', 'accounts_receivable',

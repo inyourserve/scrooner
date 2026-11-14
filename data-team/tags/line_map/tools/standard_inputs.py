@@ -355,3 +355,39 @@ def fill_face_values(f, facts):
             if v is not None: x[8] = str(v)
         out.append('|'.join(x))
     return dict(f, lines='~'.join(out))
+
+
+EXTRACT_FROM = '2014-06-01'   # the extract's period window (extract_notefacts.sql: period>='2014-06-01')
+
+
+def before_first_10k_rows(rows, filings, compfacts, start=EXTRACT_FROM):
+    """Years before a company's first 10-K that its first 10-K prints in the comparative columns (GEV FY2022-23, CRWD FY2018, SNDK FY2023-24):
+    one not_presented row per data point and year (flag before_first_10k), so comparative_fill serves what that 10-K prints (instants FY-1 only,
+    flows FY-1 and FY-2) and the rest keeps the reason. The year's date is the first 10-K's own earlier column (the most frequent fact date
+    330-400 days (FY-1) or 695-765 days (FY-2) before its period)."""
+    first = {}
+    for f in filings:
+        if f['cik'] not in first or f['p'] < first[f['cik']]['p']: first[f['cik']] = f
+    tmpl = {}
+    for r in rows:
+        if (r.get('column') or 'own') == 'own' and r.get('cik'): tmpl.setdefault(r['cik'].zfill(10), (r['ticker'], set()))[1].add(r['data_point'])
+    out = []
+    for cik, f in first.items():
+        per = date.fromisoformat(f['p']); key = cik.zfill(10)
+        if key not in tmpl: continue
+        dates = {}
+        for t, q, v, dd in _facts(compfacts.get(f['a']), 4):
+            try: d = date.fromisoformat(dd)
+            except ValueError: continue
+            k = (per - d).days
+            w = 1 if 330 <= k <= 400 else 2 if 695 <= k <= 765 and int(q) == 4 else None
+            if w: dates.setdefault(w, {}).setdefault(dd, 0); dates[w][dd] += 1
+        ticker, dps = tmpl[key]
+        for w, c in sorted(dates.items()):
+            dd = max(c, key=lambda x: (c[x], x))
+            if dd < start: continue   # before the extract window: a 10-K outside the window covers it
+            for dp in sorted(dps):
+                out.append(dict(ticker=ticker, cik=key, accession=f'BEFORE:{key}:{dd}', period_end=dd, data_point=dp, status='not_presented', tags='', value=None, r_page='',
+                                nodes='', why=f"no 10-K covers this year: it is before the company's first 10-K ({f['a']}), and that 10-K's FY-{w} column does not print the line",
+                                source='before_first_10k', calc_check='', flags='before_first_10k'))
+    return out

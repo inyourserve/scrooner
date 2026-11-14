@@ -101,3 +101,17 @@ def test_interest_role_takes_the_gross_note_fact_beside_a_combined_face_line():
     got = RA.role(f, L, arcs, {("InvestmentIncomeInterest", 4): D("23.27")}, R)
     assert got["status"] == "mapped" and got["value"] == D("23.27") and got["r_page"] == "NOTE"
     assert RA.role(f, L, arcs, {}, R)["status"] == "combined"      # no note fact: the combined line is the reason
+
+
+def test_before_first_10k_rows_cover_the_comparative_years_inside_the_window():
+    # GEV: first 10-K FY2024 prints FY2023 (balance sheet and flows) and FY2022 (flows); a CVS-like FY2013 column is outside the extract window
+    filings = [dict(cik="0001996810", a="G24", p="2024-12-31"), dict(cik="0001996810", a="G25", p="2025-12-31"), dict(cik="0000064803", a="V15", p="2014-12-31")]
+    rows = [dict(ticker="GEV", cik="0001996810", accession="G24", period_end="2024-12-31", data_point=dp, column="own") for dp in ("revenue", "total_assets")]
+    rows += [dict(ticker="CVS", cik="0000064803", accession="V15", period_end="2014-12-31", data_point="revenue", column="own")]
+    comp = {"G24": "Revenues|4|33239|2023-12-31~Revenues|4|29654|2022-12-31~Assets|0|49000|2023-12-31", "V15": "Revenues|4|126761|2013-12-31"}
+    out = si.before_first_10k_rows(rows, filings, comp)
+    assert {(r["ticker"], r["period_end"], r["data_point"]) for r in out} == {("GEV", y, dp) for y in ("2023-12-31", "2022-12-31") for dp in ("revenue", "total_assets")}
+    assert all(r["status"] == "not_presented" and r["accession"].startswith("BEFORE:") and "before_first_10k" in r["flags"] for r in out)
+    # a year a 10-K covers is never created
+    got = si.before_first_10k_rows(rows, filings + [dict(cik="0001996810", a="G23", p="2023-12-31")], dict(comp, G23="Revenues|4|29654|2022-12-31~Assets|0|45000|2022-12-31"))
+    assert {(r["period_end"], r["data_point"]) for r in got} == {("2022-12-31", "revenue"), ("2022-12-31", "total_assets")}   # FY2023 has its own 10-K

@@ -65,6 +65,30 @@ def test_gross_profit_not_printed_is_derived_and_corroborated():
     assert RA.derive_gross_profit(rows)[0]['status'] == 'not_presented'   # cost of revenue not resolvable (ORCL)
 
 
+def test_gross_profit_rulings_scco_explained_difference_and_cop_later_column():
+    # SCCO 2015: the filer's GrossProfit fact (1,607.6) = revenue - COR - D&A; the cell stays derived 2,118.3 with an explained difference
+    RA.EXT['gp'] = {'S1': D('1607.6')}
+    rows = [dict(ticker='SCCO', cik='1', accession='S1', period_end='2015-12-31', data_point=dp, status=st, value=v, flags='', calc_check='')
+            for dp, st, v in (('gross_profit', 'not_presented', None), ('revenue', 'mapped', D('5045.9')), ('cost_of_revenue', 'mapped', D('2927.6')),
+                              ('depreciation_and_amortization', 'mapped', D('510.7')))]
+    g = RA.derive_gross_profit(rows)[0]
+    assert g['value'] == D('2118.3') and 'gp_filer_fact_excludes_da' in g['flags'] and 'DISAGREE' not in g['calc_check']
+    # COP 2016: cost of revenue from the later 10-K's FY-2 column; revenue from the same column ties to the own revenue cell -> derived, cites that filing
+    RA.EXT['gp'] = {}
+    RA.EXT['comp'] = {'L19': 'SalesX|4|23693|2016-12-31'}
+    def cop(rev_comp):
+        RA.EXT['comp'] = {'L19': f'SalesX|4|{rev_comp}|2016-12-31'}
+        rows = [dict(ticker='COP', cik='2', accession='C16', period_end='2016-12-31', data_point='gross_profit', status='not_presented', value=None, flags=''),
+                dict(ticker='COP', cik='2', accession='C16', period_end='2016-12-31', data_point='revenue', status='mapped', value=D(23693), tags='SalesRevenueNet', flags=''),
+                dict(ticker='COP', cik='2', accession='L19', period_end='2016-12-31', data_point='cost_of_revenue', status='mapped', value=D(9994), column='comparative', flags=''),
+                dict(ticker='COP', cik='2', accession='L19', period_end='2018-12-31', data_point='revenue', status='mapped', value=D(36417), tags='SalesX', flags='')]
+        return RA.derive_gross_profit(rows)[0]
+    g = cop(23693)
+    assert g['value'] == D(13699) and g['accession'] == 'L19' and g['column'] == 'comparative'
+    assert cop(23718)['status'] == 'not_presented'      # the later column's revenue does not tie to the own revenue cell (MPC)
+    RA.EXT['comp'] = {}
+
+
 def test_a_line_whose_label_names_items_beyond_the_data_point_is_combined():
     # MSFT CF 'Depreciation, amortization, and other' -> combined; CVX 'Sales and other operating revenues' stays revenue
     fm = dict(cik='1', a='M1', p='2024-06-30', fd='', calc='', lines='CF|6|4|DepreciationAmortizationAndOther|1|0||Depreciation, amortization, and other|22287')
