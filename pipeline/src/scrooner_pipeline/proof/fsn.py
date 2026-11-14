@@ -119,6 +119,8 @@ class FilingStructure:
     num: dict[tuple[str, date, int], list[NumValue]] = field(
         default_factory=lambda: defaultdict(list)
     )
+    # filer XBRL corrections applied to num (common/filer_xbrl_errors), kept for the proof's evidence
+    corrections: list = field(default_factory=list)
 
     # dimensional values (dimn > 0), kept only when load_quarter(with_dims=True): (tag, ddate, qtrs, segments) ->
     # values, segments in the fsn.dim.segments format ('ProductOrService=Product;') the map's dims uses

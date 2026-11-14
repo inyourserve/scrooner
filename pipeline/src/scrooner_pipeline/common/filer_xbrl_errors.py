@@ -140,6 +140,17 @@ def for_accession(
     return {(c.tag, c.qtrs): c for c in load(path).values() if c.accession == accession}
 
 
+def corrected_value(
+    accession: str, tag: str, qtrs: int, value: Decimal, path: Path | None = None
+) -> Decimal:
+    """The printed value when a correcting row covers this stored fact (same accession, tag, qtrs and the stored wrong
+    value), else the value unchanged. A supplying row has no stored fact to replace. Pure."""
+    c = load(path).get((accession, tag, qtrs))
+    if c is not None and not c.supplies and c.xbrl_value == value:
+        return c.printed_value
+    return value
+
+
 def stored_problems(c: Correction, stored: Iterable[Decimal]) -> str | None:
     """Why a correction does not fit the stored undimensioned facts of its (accession, tag, qtrs), or None. A correcting
     row needs the stored wrong value among them; a supplying row needs the printed value NOT among them. Pure."""

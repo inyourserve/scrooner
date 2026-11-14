@@ -45,7 +45,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v19_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v20_2026-11-14"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -1013,6 +1013,33 @@ def printed_zero_proven(shown: Shown) -> bool:
 
 
 def prove_cell(
+    shown: Shown,
+    structure: FilingStructure | None,
+    fsn_set: str | None,
+    prior_structure: FilingStructure | None = None,
+) -> Proof:
+    """_prove_cell, plus the evidence of a filer XBRL correction the verdict stood on: the structure's printed values
+    were corrected before the comparison (proof/fsn_db.apply_filer_corrections), so a cell equal to the filing's
+    printed line is PROVEN; the check records which correction and its evidence."""
+    p = _prove_cell(shown, structure, fsn_set, prior_structure)
+    if structure is not None and structure.corrections:
+        tags = {
+            *(t for t in (p.position_tag,) if t),
+            *shown.tags,
+            *(t.split("[")[0] for _s, t in (shown.claim.parts if shown.claim else ())),
+        }
+        used = [
+            c for c in structure.corrections if c.tag in tags
+        ]  # corrections and dropped facts
+        if used:
+            p.checks["filer_xbrl_correction"] = {
+                "status": "applied",
+                "corrections": [c.as_detail() for c in used],
+            }
+    return p
+
+
+def _prove_cell(
     shown: Shown,
     structure: FilingStructure | None,
     fsn_set: str | None,

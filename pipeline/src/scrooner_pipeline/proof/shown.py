@@ -26,6 +26,8 @@ from scrooner_pipeline.common.authority import (
     load_calc_parents,
     load_calc_ties,
 )
+from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common import fsn_dropped_facts as fdf
 from scrooner_pipeline.common.fsn_dates import era_holds
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
 from scrooner_pipeline.proof.fsn import fsn_ddate
@@ -60,6 +62,10 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
 
 
 PRINTED_ZERO_FAMILY = "company_tag_map:printed_zero"
+CORRECTION_FAMILIES = (
+    "company_tag_map:" + fxe.VALUE_SOURCE,
+    "company_tag_map:" + fdf.VALUE_SOURCE,
+)
 
 
 def printed_zero_accession(
@@ -354,6 +360,12 @@ def _periodic_copies(
             # of a later 10-Q is no copy of the cell); note-claimed tags and filings outside the FSN store are exempt
             if face is not None and not face.printed_ok(acc, tag, pstart, end, ptype):
                 continue
+            # the filer's XBRL error, corrected to the printed value (common/filer_xbrl_errors): the stored copy
+            # is the filer's mistake, not a vintage that disagrees with the cell
+            qtrs = (
+                0 if ptype == "instant" else (4 if (end - pstart).days >= 330 else -1)
+            )
+            value = fxe.corrected_value(acc, tag, qtrs, Decimal(value))
             out[(name, pid)].append((acc, Decimal(value), tag))
             filed[acc] = fdate
             por_of[acc] = por
@@ -598,7 +610,9 @@ def load_shown(
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
         pz = family == PRINTED_ZERO_FAMILY and Decimal(value) == 0
-        if pz and accession is None:
+        if (
+            pz or family in CORRECTION_FAMILIES
+        ) and accession is None:  # no fact id: the claim's evidence filing
             accession = printed_zero_accession(conn, company_id, name, end)
         all_copies = copies_by.get((_base_name(name), period_id), [])
         # per-filing tag era: a later filing may print the period under the tag ITS OWN era row uses (MSFT revenue)

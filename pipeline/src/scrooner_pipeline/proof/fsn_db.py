@@ -18,13 +18,75 @@ from __future__ import annotations
 
 import psycopg
 
+from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common import fsn_dropped_facts as fdf
 from scrooner_pipeline.proof.fsn import (
     STATEMENTS,
     STD_PREFIXES,
     FilingStructure,
     NumValue,
     PreLine,
+    fsn_ddate,
 )
+
+
+def apply_filer_corrections(s: FilingStructure) -> None:
+    """The filer's XBRL is wrong where data-team/tags/line_map/rules/filer_xbrl_errors.csv says so: a correcting row
+    replaces the stored undimensioned value that equals its xbrl_value (that tag and qtrs) with the printed one; a
+    supplying row adds the printed value the filer left untagged, at the filing's own period end, when the tag is a
+    line of one of its statements and carries no value there. The proof then reads the printed line. Pure on `s`."""
+    for (tag, qtrs), c in sorted(fxe.for_accession(s.adsh).items()):
+        if c.supplies:
+            line = next((p for p in s.pre if p.tag == tag), None)
+            if line is None or s.period is None:
+                continue
+            dd = fsn_ddate(s.period)
+            if s.num.get((tag, dd, qtrs)):
+                continue
+            s.num[(tag, dd, qtrs)].append(
+                NumValue(tag, line.version, dd, qtrs, "USD", c.printed_value, None)
+            )
+            s.corrections.append(c)
+            continue
+        hit = False
+        for key, vals in s.num.items():
+            if key[0] != tag or key[2] != qtrs:
+                continue
+            for i, v in enumerate(vals):
+                if v.value == c.xbrl_value:
+                    vals[i] = NumValue(
+                        v.tag,
+                        v.version,
+                        v.ddate,
+                        v.qtrs,
+                        v.uom,
+                        c.printed_value,
+                        v.dcml,
+                    )
+                    hit = True
+        if hit:
+            s.corrections.append(c)
+    for f in fdf.for_accession(s.adsh):
+        # a fact the filing prints and the FSN ingest dropped: read as stored, unless the store has caught up
+        if f.segment:
+            if s.period is None:
+                continue
+            key = (f.tag, fsn_ddate(s.period), f.qtrs, f.segment)
+            if not s.dim_num.get(key):
+                s.dim_num[key].append(
+                    NumValue(f.tag, "", key[1], f.qtrs, "USD", f.value, None)
+                )
+                s.corrections.append(f)
+        else:
+            line = next((p for p in s.pre if p.tag == f.tag), None)
+            if line is None or s.period is None:
+                continue
+            dd = fsn_ddate(s.period)
+            if not s.num.get((f.tag, dd, f.qtrs)):
+                s.num[(f.tag, dd, f.qtrs)].append(
+                    NumValue(f.tag, line.version, dd, f.qtrs, "USD", f.value, None)
+                )
+                s.corrections.append(f)
 
 
 def load_filings(
@@ -116,5 +178,7 @@ def load_filings(
                     s.num[(tag, ddate, int(qtrs))].append(nv)
             else:
                 s.dim_num[(tag, ddate, int(qtrs), segments)].append(nv)
+    for acc in out:
+        apply_filer_corrections(out[acc])
     # a filing row with neither lines nor values (a co-registrant copy loaded under another company) is not held
     return {acc: s for acc, s in out.items() if id_of[acc] in has_rows}
