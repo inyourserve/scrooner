@@ -287,11 +287,6 @@ def resolve(f, notes):
     return out
 
 
-ACC_FACTS = {}
-_af = os.environ.get('ACCRETION_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '_accretion-facts-2026-11-14.csv'))
-if os.path.exists(_af):
-    import csv as _csv
-    for _r in _csv.DictReader(open(_af)): ACC_FACTS.setdefault(_r['accession'], []).append((_r['tag'], int(_r['qtrs']), D(_r['value'])))
 
 
 def apply(rows, filings, notefacts, tick):
@@ -304,7 +299,6 @@ def apply(rows, filings, notefacts, tick):
         a = r['accession']
         if a not in cache:
             notes = note_facts(notefacts.get(a))
-            for t, q, v in ACC_FACTS.get(a, []): notes.setdefault((t, q), v)
             cache[a] = resolve(F[a], notes)
         m = cache[a].get(r['data_point'])
         if m is None: new.append(r); continue

@@ -25,9 +25,7 @@ def apply_polarity(rows):
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
             r['why'] = (r.get('why') or '') + f"; polarity: the filer reports {v} on an element of the opposite sign; {r['data_point']} is positive (rules/polarity.csv), value normalised"
     return rows
-EXT = {'ap': {}, 'ar': {}, 'cf': {}, 'pz': {}, 'lt': {}}   # derived from the standard extract (tools/standard_inputs.py); the side files below stay the fallback
-def _here(name):
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', name)
+EXT = {'ap': {}, 'ar': {}, 'cf': {}, 'pz': {}, 'lt': {}, 'cor': {}, 'gp': {}}   # derived from the standard extract (tools/standard_inputs.py); the side files below stay the fallback
 def fill_printed_zero_and_comparative(rows, td):
     """Rulings 2026-11-14 (Dhairya). (a) A line printed on the own face with a dash or zero is served as 0, flag printed_zero
     with its R:line (EXT['pz'] = standard_inputs.printed_zero over the extract's zlines: the line is on the face, no own-period fact
@@ -96,18 +94,18 @@ def apply_ar_related(rows, filings):
     return rows
 def apply_cost_and_opex(rows, filings):
     """(1) cost_of_revenue printed as product and service lines that carry only ProductOrServiceAxis member facts (DIS, GE,
-    TMUS, VZ): the sum of the members (_cor-member-split). (2) operating_expenses with no node in the tree: from the printed
+    TMUS, VZ): the sum of the members (EXT['cor'] = standard_inputs.product_service_cor). (2) operating_expenses with no node in the tree: from the printed
     totals, gross profit - operating income (PEP: OI's calc tree skips GP) or total costs and expenses - cost of revenue (QCOM:
     the itemized lines do not tie because 'Other' is filed with the wrong sign). Both are the lines between the top line and OI."""
-    sp = os.environ.get('COR_MEMBER_SPLIT', _here('_cor-member-split-2026-11-14.csv'))
-    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    split = EXT.get('cor', {})
     F = {f['a']: f for f in filings}
     by = {(r['accession'], r['data_point']): r for r in rows}
     for r in rows:
         if r['data_point'] == 'cost_of_revenue' and r['status'] in ('not_presented', 'no_role') and r['accession'] in split:
             x = split[r['accession']]; p, sv = D(x['product']), D(x['service'])
-            r.update(status='component_sum', value=p + sv, tags='CostOfGoodsAndServicesSold+CostOfGoodsAndServicesSold',
-                     nodes=f"CostOfGoodsAndServicesSold[Product]={p} [IS face line]; CostOfGoodsAndServicesSold[Service]={sv} [IS face line]",
+            t = x.get('tag') or 'CostOfGoodsAndServicesSold'
+            r.update(status='component_sum', value=p + sv, tags=f'{t}+{t}',
+                     nodes=f"{t}[Product]={p} [IS face line]; {t}[Service]={sv} [IS face line]",
                      why='the income statement prints the cost of products and the cost of services as separate lines carrying ProductOrServiceAxis members only: sum')
             r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
     for r in rows:
@@ -129,10 +127,9 @@ def apply_cost_and_opex(rows, filings):
 def derive_gross_profit(rows):
     """Ruling C1 (Dhairya 2026-11-14): gross profit not printed, revenue and cost of revenue printed and resolved in the same
     filing -> DERIVED revenue - cost of revenue (derived_not_printed). An unpresented GrossProfit fact of the same filing
-    (_gp-corroboration) is recorded in calc_check; a difference makes the cell DISAGREE until a reader looks. Cost of revenue
+    (EXT['gp'] = standard_inputs.gross_profit_facts) is recorded in calc_check; a difference makes the cell DISAGREE until a reader looks. Cost of revenue
     not resolvable (ORCL: interleaved cost lines) -> gross profit stays not_presented."""
-    cp = os.environ.get('GP_CORROBORATION', _here('_gp-corroboration-2026-11-14.csv'))
-    corr = {r['accession']: D(r['value']) for r in csv.DictReader(open(cp))} if os.path.exists(cp) else {}
+    corr = EXT.get('gp', {})
     by = {(r['accession'], r['data_point']): r for r in rows if (r.get('column') or 'own') == 'own'}
     for r in rows:
         if r['data_point'] != 'gross_profit' or r['status'] != 'not_presented' or (r.get('column') or 'own') != 'own': continue
@@ -356,7 +353,7 @@ if __name__ == '__main__':
     tick = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
     import standard_inputs, total_debt
     def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
-    memberfacts, compfacts, zlines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json')
+    memberfacts, compfacts, zlines, clines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json'), _read('clines.json')
     # total_debt from the standard extract (own + comparative columns) and the committed instance evidence (total_debt.load_evidence)
     td = {(r['accession'], r['column']): r for r in total_debt.total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tick)}
     # member-only face facts (_member-face-facts-2026-11-14.csv): a DPS, share count or CI printed on the face whose only own-period
@@ -364,6 +361,8 @@ if __name__ == '__main__':
     # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
     MF = {}
     EXT['lt'] = standard_inputs.amortization_location_total(notefacts, memberfacts)
+    EXT['cor'] = standard_inputs.product_service_cor(notefacts, memberfacts)
+    EXT['gp'] = standard_inputs.gross_profit_facts(notefacts)
     for m in standard_inputs.member_facts(notefacts, memberfacts, standard_inputs.class_share_filings(filings)):   # the standard extract first
         notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
         MF[(m['accession'], m['tag'])] = m['member']
@@ -401,10 +400,9 @@ if __name__ == '__main__':
                 t = mf[0][0]; v = note_facts(notefacts[r['accession']])[(t, 0)]
                 r.update(value=v, tags=t, nodes=f'{t}={v} [NOTE]', status='mapped')
     rows = apply_label_beyond(rows, filings)
-    # the ci_incl_nci point reason cites the own 10-K's CI statement line (_ci-face-lines: fsn.line stmt CI; the extract
-    # carries the figure as a note fact)
-    _cl = os.environ.get('CI_FACE_LINES', _here('_ci-face-lines-2026-11-14.csv'))
-    CL = {x['accession']: x for x in csv.DictReader(open(_cl))} if os.path.exists(_cl) else {}
+    # the ci_incl_nci point reason cites the own 10-K's CI statement line (standard_inputs.ci_face_lines over the extract's clines:
+    # fsn.line stmt CI; the figure itself arrives as a note fact)
+    CL = standard_inputs.ci_face_lines(clines)
     for r in rows:
         x = CL.get(r['accession'])
         if x and r['data_point'] == 'comprehensive_income' and r['status'] in ('combined', 'mapped') and 'IncludingPortion' in (r.get('nodes') or '') and '[NOTE]' in (r.get('nodes') or ''):

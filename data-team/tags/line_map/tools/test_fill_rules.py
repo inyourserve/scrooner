@@ -56,7 +56,7 @@ def test_opex_from_printed_totals_when_the_tree_has_no_node():
 
 def test_gross_profit_not_printed_is_derived_and_corroborated():
     # ruling C1: revenue - cost of revenue, derived_not_printed; an unpresented GrossProfit fact that differs makes it DISAGREE
-    os.environ['GP_CORROBORATION'] = _csv([dict(accession='G1', tag='GrossProfit', value='1607.6', source='s')])
+    RA.EXT['gp'] = {'G1': D('1607.6')}   # standard_inputs.gross_profit_facts over the extract (unpresented GrossProfit fact)
     rows = [dict(ticker='SCCO', accession='G1', period_end='2015-12-31', data_point=dp, status=st, value=v, flags='', calc_check='')
             for dp, st, v in (('gross_profit', 'not_presented', None), ('revenue', 'mapped', D('5045.9')), ('cost_of_revenue', 'mapped', D('2927.6')))]
     g = RA.derive_gross_profit(rows)[0]

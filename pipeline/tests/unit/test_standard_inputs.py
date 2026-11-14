@@ -208,3 +208,25 @@ def test_total_debt_reads_the_year_end_column_and_adds_the_note_lease():
     out = {r["column"]: r for r in TD.run([f], [dict(cik="9", a="X1", p="2015-12-31", vals=vals)], {})}
     assert out["comparative"]["period_end"] == "2014-12-31" and D(out["comparative"]["value"]) == D(90)   # not the 334-day-old 2015-01-31 instant
     assert D(out["own"]["value"]) == D(106) and "FinanceLeaseLiability" in out["own"]["tags"]           # the payment schedule is not a debt-and-lease total
+
+
+def test_product_service_cor_needs_member_only_product_and_service_lines():
+    C = "CostOfGoodsAndServicesSold"
+    mf = {"TMUS": f"{C}|4|6622|ProductOrService=Service;~{C}|4|6622|ProductOrService=Service;~{C}|4|11899|ProductOrService=Product;~{C}|4|11899|ProductOrService=ProductEquipment;",
+          "UND": f"{C}|4|1|ProductOrService=Product;~{C}|4|2|ProductOrService=Service;",
+          "SEG": f"{C}|4|1|ProductOrService=Product;~{C}|4|2|ProductOrService=Service;~{C}|4|3|ProductOrService=Licenses;",
+          "ONE": f"{C}|4|1|ProductOrService=Product;",
+          "TWO": f"{C}|4|1|ProductOrService=Product;~{C}|4|5|ProductOrService=ProductEquipment;~{C}|4|2|ProductOrService=Service;"}
+    got = si.product_service_cor({"UND": f"{C}|4|3"}, mf)
+    assert got == {"TMUS": dict(tag=C, product="11899", service="6622")}   # an undimensioned total, another member, one side, or two product figures: no split
+
+
+def test_gross_profit_facts_and_ci_face_lines_from_the_extract():
+    assert si.gross_profit_facts({"A": "GrossProfit|4|11947000000.0000~Revenues|4|5", "B": "GrossProfit|0|3"}) == {"A": D(11947000000)}
+    cl = {"BA": f"{si.CI_INCL}|4|22|Comprehensive income, net of tax~ComprehensiveIncomeNetOfTaxAttributableToNoncontrollingInterest|4|21|NCI",
+          "X": f"{si.CI_INCL}|5|9|second~{si.CI_INCL}|4|30|first"}
+    got = si.ci_face_lines(cl)
+    assert got["BA"] == dict(report="4", line="22", label="Comprehensive income, net of tax") and got["X"]["label"] == "first"
+    assert si.face_clines([("A", "v", "c", "cl"), ("B", "v", "c")]) == {"A": "cl"}
+    face = (TOOLS / "extract_facelines.sql").read_text(); main = (TOOLS / "extract_notefacts.sql").read_text()
+    assert "l.stmt='CI'" in face and "cl.clines" in face and "ProductOrService=[^;=]+;$" in main

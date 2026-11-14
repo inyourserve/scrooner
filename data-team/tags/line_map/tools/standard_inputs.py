@@ -71,8 +71,8 @@ def split_rows(rows):
 
 
 def merge_rows(rows, face_rows):
-    """Append the companion query's rows (accession, vals, cvals; extract_facelines.sql) to the main extract's vals / cvals."""
-    face = {a: (v, c) for a, v, c in face_rows}
+    """Append the companion query's rows (accession, vals, cvals[, clines]; extract_facelines.sql) to the main extract's vals / cvals."""
+    face = {a: (v, c) for a, v, c, *_ in face_rows}
     out = []
     for r in rows:
         a, vals, mvals, cvals, *rest = r
@@ -80,6 +80,11 @@ def merge_rows(rows, face_rows):
         out.append((a, '~'.join(x for x in (vals, v) if x) or None, mvals, '~'.join(x for x in (cvals, c) if x) or None, *rest))
     out += [(a, v, None, c) for a, (v, c) in face.items()]
     return out
+
+
+def face_clines(face_rows):
+    """The companion query's clines column -> {accession: string} (read by ci_face_lines)."""
+    return {r[0]: r[3] for r in face_rows if len(r) > 3 and r[3]}
 
 
 def zero_lines(rows):
@@ -247,4 +252,53 @@ def debt_vals(filings, notefacts, compfacts):
         a, p = f['a'], f['p']
         v = [f"{t}|{q}|{p}|{x}" for t, q, x in _facts(notefacts.get(a), 3)] + [f"{t}|{q}|{d}|{x}" for t, q, x, d in _facts(compfacts.get(a), 4)]
         out.append(dict(cik=f['cik'], a=a, p=p, vals='~'.join(v)))
+    return out
+
+
+def _plain(v):
+    return str(v.to_integral_value() if v == v.to_integral_value() else v.normalize())
+
+
+PRODUCT = re.compile(r'Product\w*')
+SERVICE = re.compile(r'Service\w*')
+
+
+def product_service_cor(notefacts, memberfacts):
+    """Cost of revenue printed as a product line and a service line that carry only ProductOrServiceAxis member facts (GE, MMM, TMUS, DIS):
+    one CostOf* element with no undimensioned own-period fact, members only Product* (Product / ProductEquipment) and Service*, one distinct
+    value per side. {accession: dict(tag, product, service)} (the former _cor-member-split file)."""
+    out = {}
+    for a, raw in memberfacts.items():
+        und = _undim(notefacts, a)
+        by = {}
+        for t, q, v, seg in _facts(raw, 4):
+            m = re.fullmatch(r'ProductOrService=(\w+);', seg)
+            if m and int(q) == 4 and t.startswith('CostOf') and (t, 4) not in und: by.setdefault(t, []).append((m.group(1), D(v)))
+        if len(by) != 1: continue
+        (t, fs), = by.items()
+        p = {v for k, v in fs if PRODUCT.fullmatch(k)}; s = {v for k, v in fs if SERVICE.fullmatch(k)}
+        if len(p) == 1 and len(s) == 1 and all(PRODUCT.fullmatch(k) or SERVICE.fullmatch(k) for k, _ in fs):
+            out[a] = dict(tag=t, product=_plain(p.pop()), service=_plain(s.pop()))
+    return out
+
+
+def gross_profit_facts(notefacts):
+    """{accession: GrossProfit} undimensioned own-period fact (the corroboration of a derived gross profit; the former _gp-corroboration file)."""
+    out = {}
+    for a, raw in notefacts.items():
+        v = _undim(notefacts, a).get(('GrossProfit', 4))
+        if v is not None: out[a] = D(_plain(v))
+    return out
+
+
+CI_INCL = 'ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest'
+
+
+def ci_face_lines(clines):
+    """{accession: dict(report, line, label)}: the first line (report, line) of the comprehensive-income statement that carries the CI figure
+    including NCI (extract_facelines.sql clines; the former _ci-face-lines file)."""
+    out = {}
+    for a, raw in clines.items():
+        ls = sorted((x for x in _facts(raw, 4) if x[0] == CI_INCL), key=lambda x: (int(x[1]), int(x[2])))
+        if ls: out[a] = dict(report=ls[0][1], line=ls[0][2], label=ls[0][3])
     return out
