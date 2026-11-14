@@ -1,0 +1,32 @@
+cash_and_equivalents | 2015 | 1000000000 | MATCH | 0001564590-16-013126 | R5.htm | CashAndCashEquivalentsAtCarryingValue=1000000000 (R5)
+sga_expense | 2015 | 1728000000 | MATCH | 0001564590-18-002832 | R2.htm | SellingGeneralAndAdministrativeExpense=1728000000 (R2)
+cash_flow_investing | 2016 | -650000000 | MISMATCH | 0001564590-19-003839 | R7.htm | NetCashProvidedByUsedInInvestingActivities=-1127000000 (R7)
+operating_income | 2023 | 7331000000 | MATCH | 0000097476-24-000007 | R3.htm | OperatingIncomeLoss=7331000000 (R3)
+accounts_payable | 2018 | 478000000 | MATCH | 0001564590-19-003839 | R5.htm | AccountsPayableCurrent=478000000 (R5)
+weighted_basic_shares | 2016 | 1003000000 | MATCH | 0001564590-17-002142 | R2.htm | WeightedAverageNumberOfSharesOutstandingBasic=1003000000 (R2)
+diluted_eps | 2017 | 3.61 | MISMATCH | 0001564590-18-002832 | R2.htm | EarningsPerShareDiluted=0.34 (R2)
+dividends_paid | 2021 | 3886000000 | NOT_FOUND | 0000097476-22-000009 | R8.htm | PaymentsOfDividends: not found
+cost_of_revenue | 2023 | 6500000000 | MATCH | 0000097476-24-000007 | R3.htm | CostOfGoodsAndServicesSold=6500000000 (R3)
+amortization_of_intangibles | 2021 | 142000000 | NOT_FOUND | 0000097476-22-000009 | R8.htm | AmortizationOfIntangibleAssets: not found
+weighted_diluted_shares | 2018 | 990000000 | MATCH | 0001564590-19-003839 | R2.htm | WeightedAverageNumberOfDilutedSharesOutstanding=990000000 (R2)
+ppe_net | 2017 | 2664000000 | MATCH | 0001564590-18-002832 | R5.htm | PropertyPlantAndEquipmentNet=2664000000 (R5)
+capex | 2018 | 1131000000 | NOT_FOUND | 0001564590-19-003839 | R7.htm | PaymentsToAcquirePropertyPlantAndEquipment: not found
+cf_inventory_change | 2023 | 1242000000 | NOT_FOUND | 0000097476-24-000007 | R8.htm | IncreaseDecreaseInInventories: not found
+cash_and_equivalents | 2023 | 2964000000 | MATCH | 0000097476-24-000007 | R6.htm | CashAndCashEquivalentsAtCarryingValue=2964000000 (R6)
+basic_eps | 2017 | 3.68 | MISMATCH | 0001564590-18-002832 | R2.htm | EarningsPerShareBasic=0.35 (R2)
+cost_of_revenue | 2016 | 5113000000 | MATCH | 0001564590-19-003839 | R2.htm | CostOfGoodsAndServicesSold=5113000000 (R2)
+accounts_receivable | 2020 | 1414000000 | MATCH | 0000097476-21-000006 | R5.htm | AccountsReceivableNetCurrent=1414000000 (R5)
+diluted_eps | 2023 | 7.07 | MATCH | 0000097476-24-000007 | R3.htm | EarningsPerShareDiluted=7.07 (R3)
+income_tax_expense | 2019 | 711000000 | MATCH | 0000097476-20-000009 | R2.htm | IncomeTaxExpenseBenefit=711000000 (R2)
+cash_paid_for_interest | 2018 | 114000000 | MATCH | 0001564590-19-003839 | R84.htm | InterestPaid=114000000 (R84)
+other_income_expense_net | 2025 | 230000000 | MATCH | 0000097476-26-000059 | R3.htm | OtherNonoperatingIncomeExpense=230000000 (R3)
+cash_flow_investing | 2022 | -3583000000 | NOT_FOUND | 0000097476-23-000007 | R8.htm | NetCashProvidedByUsedInInvestingActivities: not found
+amortization_of_intangibles | 2025 | 81000000 | NOT_FOUND | 0000097476-26-000059 | R7.htm | CapitalizedComputerSoftwareAmortization1: not found
+other_income_expense_net | 2019 | 175000000 | MATCH | 0000097476-20-000009 | R2.htm | OtherNonoperatingIncomeExpense=175000000 (R2)
+cf_inventory_change | 2024 | 528000000 | NOT_FOUND | 0000097476-25-000007 | R8.htm | IncreaseDecreaseInInventories: not found
+cf_ar_change | 2021 | 287000000 | NOT_FOUND | 0000097476-22-000009 | R8.htm | IncreaseDecreaseInAccountsReceivable: not found
+operating_expenses | 2016 | 3402000000.0000 | NOT_FOUND | 0001564590-19-003839 | R2.htm | BusinessCombinationAcquisitionRelatedCosts=319000000 (R2); ResearchAndDevelopmentExpense=1356000000 (R2); RestructuringChargesOther: not found; SellingGeneralAndAdministrativeExpense=1742000000 (R2)
+accounts_receivable | 2017 | 1278000000 | MATCH | 0001564590-18-002832 | R5.htm | AccountsReceivableNetCurrent=1278000000 (R5)
+other_income_expense_net | 2022 | 106000000 | MATCH | 0000097476-23-000007 | R3.htm | OtherNonoperatingIncomeExpense=106000000 (R3)
+current_assets | 2021 | 13685000000 | MATCH | 0000097476-22-000009 | R6.htm | AssetsCurrent=13685000000 (R6)
+revenue | 2021 | 18344000000 | MATCH | 0000097476-22-000009 | R3.htm | RevenueFromContractWithCustomerExcludingAssessedTax=18344000000 (R3)
