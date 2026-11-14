@@ -34,6 +34,9 @@ def run(filings, vals, flloc):
         a_ln = next((l['ln'] for l in lines if l['tag'] == 'Assets'), None) or 0
         e_ln = next((l['ln'] for l in lines if l['ln'] > a_ln and (re.match(r'^(StockholdersEquity|CommitmentsAndContingencies|TemporaryEquity|RedeemableNoncontrolling)', l['tag']))), 10 ** 6)
         region = [l for l in lines if a_ln < l['ln'] < e_ln]
+        # utilities print a CAPITALIZATION section (equity, then long-term debt) before current liabilities (NEE): a standard
+        # debt-role element after the first equity line is still debt; custom lines there are not taken (equity labels)
+        region += [l for l in lines if l['ln'] >= e_ln and DEBT.match(l['tag']) and not l['custom']]
         cand = []; header = ''
         for l in region:
             if l['tag'].endswith('Abstract'): header = l['lb']

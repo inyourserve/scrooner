@@ -288,6 +288,8 @@ def resolve(f):
     ni = iby.get('NetIncomeLoss')
     if ni is not None: put('net_income', 'mapped', [dict(node(ni, ''), st='IS')], ni['val'], f"IS line {ni['ln']} (attributable to parent)")
     after = next((iby[t] for t in ('IncomeLossFromContinuingOperations', 'ProfitLoss', 'NetIncomeLoss') if t in iby and any(w < 0 and 'IncomeTax' in c for c, w in kids(t))), None)
+    if after is None:   # position, not the name: any IS face node that subtracts income tax (COP: ...IncludingPortionAttributableToNoncontrollingInterest)
+        after = next((l for l in sorted(iby.values(), key=lambda l: l['ln']) if any(w < 0 and 'IncomeTax' in c for c, w in kids(l['tag']))), None)
     if after is not None:
         k = kids(after['tag'])
         tx = [iby[c] for c, w in k if w < 0 and 'IncomeTax' in c]

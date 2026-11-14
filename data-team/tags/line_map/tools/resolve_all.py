@@ -156,10 +156,28 @@ if __name__ == '__main__':
     filings = json.load(open('filings.json')); notefacts = json.load(open('notefacts.json'))
     tick = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
     td = {(r['accession'], r['column']): r for r in csv.DictReader(open('total_debt_all.csv'))}
+    # member-only face facts (_member-face-facts-2026-11-14.csv): a DPS, share count or CI printed on the face whose only own-period
+    # fact carries one equity-statement column member (EquityComponents=RetainedEarnings / CommonStock ...) is the consolidated value;
+    # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
+    MF = {}
+    _mf = os.environ.get('MEMBER_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '_member-face-facts-2026-11-14.csv'))
+    if os.path.exists(_mf):
+        for m in csv.DictReader(open(_mf)):
+            have = {tuple(x.split('|')[:2]) for x in (notefacts.get(m['accession']) or '').split('~')}
+            if (m['tag'], m['qtrs']) not in have:
+                notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
+                MF[(m['accession'], m['tag'])] = m['member']
     rows = run(filings, notefacts, tick, td)
     import resolve_is
-    rows = resolve_is.apply(rows, filings, notefacts, tick)
-    rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
+    for r in rows:   # lineage of member-only face facts
+        t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
+        if (r['accession'], t) in MF and r['status'] == 'mapped' and not re.search(r'\[R\d+', r.get('nodes') or ''):
+            mem = MF[(r['accession'], t)]
+            r['nodes'] = re.sub(r'\[[^\]]*NOTE[^\]]*\]', f'[face line, member {mem}]', r.get('nodes') or '')
+            r['why'] = f"the face line's only own-period fact carries the equity-statement column member {mem}: the consolidated value (member-only face fact rule)"
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'member_face_fact') if x)
     for r in rows: r.setdefault('nodes', '')
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
     w = csv.DictWriter(open('resolved_all.csv', 'w', newline=''), fieldnames=keys, extrasaction='ignore'); w.writeheader(); w.writerows(rows)
