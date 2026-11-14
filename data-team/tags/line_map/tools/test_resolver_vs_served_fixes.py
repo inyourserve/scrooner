@@ -459,3 +459,15 @@ def test_revenue_member_row_takes_its_member_fact():
         assert resolve_all.NODE_GRAMMAR.match(r['nodes'])
     finally:
         resolve_is.MEMBER_FACTS.clear(); resolve_is.MEMBER_FACTS.update(old)
+
+
+def test_revenue_table_member_is_never_the_consolidated_revenue():
+    # the extract now carries revenue facts by ProductOrService member on an IS line (DE, WELL 'Other income'); a lone member is a row
+    mf = {'0000000001-26-000001': 'RevenueFromContractWithCustomerExcludingAssessedTax|4|19429000|ProductOrService=ProductAndServiceOther;'}
+    assert standard_inputs.member_facts({}, mf) == []
+    assert len(standard_inputs.member_facts({}, {'0000000001-26-000001': 'NetIncomeLoss|4|5|Scenario=Previously Reported;'.replace(' ', '')})) == 1
+
+
+def test_extract_selects_revenue_rows_by_product_or_service_member():
+    sql = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'extract_notefacts.sql')).read()
+    assert "RevenueFromContractWithCustomer\\w*|SalesRevenueNet)$'" in sql and "'^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$)'" in sql

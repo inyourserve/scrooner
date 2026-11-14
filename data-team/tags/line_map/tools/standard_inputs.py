@@ -117,6 +117,9 @@ def class_share_filings(filings):
     return {f['a'] for f in filings if re.search(r'\|CommonStockSharesOutstanding\|[^~]*ClassOfStock=', f.get('cpv') or '')}
 
 
+REV_ROW = re.compile(r'^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')
+
+
 def member_facts(notefacts, memberfacts, class_shares=()):
     """A tag whose own-period column has no undimensioned fact and exactly ONE single-member fact on a statement line: that fact is the
     consolidated value (the former _member-face-facts file). Not the consolidated value, so rejected:
@@ -134,6 +137,7 @@ def member_facts(notefacts, memberfacts, class_shares=()):
             if (t, q) in und or len(fs) != 1: continue
             seg, v = fs[0]
             if COMPONENT_COLUMN.match(seg): continue
+            if seg.startswith('ProductOrService=') and REV_ROW.match(t): continue   # a revenue-table row, never the consolidated revenue
             if t == 'CommonStockSharesOutstanding' and a in class_shares: continue
             iss = und.get(('CommonStockSharesIssued', q))
             treasury = any(re.fullmatch(r'TreasuryStock\w*(Value|Shares)', k) and x != 0 for (k, _), x in und.items())
