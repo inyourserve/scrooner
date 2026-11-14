@@ -1328,11 +1328,13 @@ accession,tag,report,n_reports,line,plabel
 0000950170-24-014539,PropertyPlantAndEquipmentNet,71,1,8,Fixed assets
 0000950170-24-075605,InvestmentIncomeInterest,44,1,7,Interest income
 0000950170-24-087843,AmortizationOfIntangibleAssets,79,1,1,Intangible assets amortization expense
+0000950170-24-087843,FinanceLeaseLiability,100,2,,
 0000950170-24-087843,IncomeTaxesPaidNet,88,1,23,"Income taxes paid, net of refunds"
 0000950170-24-087843,InterestPaid,83,1,14,Cash paid for interest
 0000950170-25-021272,PropertyPlantAndEquipmentNet,73,1,8,Fixed assets
 0000950170-25-087926,InvestmentIncomeInterest,44,1,7,Interest income
 0000950170-25-100235,AmortizationOfIntangibleAssets,70,1,1,Intangible assets amortization expense
+0000950170-25-100235,FinanceLeaseLiability,90,2,,
 0000950170-25-100235,IncomeTaxesPaidNet,79,1,19,"Income taxes paid, net of refunds"
 0000950170-25-100235,InterestExpenseNonoperating,48,1,2,Interest expense
 0000950170-25-100235,InterestPaid,74,1,14,Cash paid for interest
@@ -1574,6 +1576,9 @@ accession,tag,report,n_reports,line,plabel
 0001193125-15-272806,IncomeTaxesPaidNet,96,1,18,Income taxes paid
 0001193125-15-272806,InterestExpense,58,1,4,Interest expense
 0001193125-15-272806,InterestPaid,89,1,23,Cash paid for interest
+0001193125-15-272806,LongTermDebtCurrent,5,1,23,Current portion of long-term debt
+0001193125-15-272806,LongTermDebtNoncurrent,5,1,30,Long-term debt
+0001193125-15-272806,ShortTermBorrowings,5,1,22,Short-term debt
 0001193125-15-290023,AmortizationOfIntangibleAssets,71,1,12,Intangible asset amortization expense
 0001193125-15-290023,InterestExpense,52,1,4,Interest expense
 0001193125-15-290023,InvestmentIncomeInterest,52,1,3,Interest income
@@ -1666,6 +1671,7 @@ accession,tag,report,n_reports,line,plabel
 0001193125-26-051453,PropertyPlantAndEquipmentNet,66,1,8,Fixed assets
 0001193125-26-277521,InvestmentIncomeInterest,44,1,2,Interest income
 0001193125-26-323660,AmortizationOfIntangibleAssets,71,1,1,Intangible assets amortization expense
+0001193125-26-323660,FinanceLeaseLiability,92,2,,
 0001193125-26-323660,IncomeTaxesPaidNet,80,2,18,"Income taxes paid, net of refunds"
 0001193125-26-323660,InterestExpenseNonoperating,48,1,2,Interest expense
 0001193125-26-323660,InterestPaid,75,1,4,Cash paid for interest
@@ -2018,6 +2024,7 @@ accession,tag,report,n_reports,line,plabel
 0001564590-18-002832,IncomeTaxesPaidNet,65,1,16,Cash payments for income taxes
 0001564590-18-002832,InterestPaid,87,1,24,Interest paid
 0001564590-18-019062,AmortizationOfIntangibleAssets,82,1,7,Intangible assets amortization expense
+0001564590-18-019062,FinanceLeaseLiability,103,2,,
 0001564590-18-019062,IncomeTaxesPaidNet,88,1,29,"Income taxes paid, net of refunds"
 0001564590-18-019062,InterestExpense,56,1,2,Interest expense
 0001564590-18-019062,InterestPaid,85,1,23,Cash paid for interest
@@ -2026,23 +2033,27 @@ accession,tag,report,n_reports,line,plabel
 0001564590-19-023119,InvestmentIncomeInterest,45,1,34,Interest income
 0001564590-19-023119,Revenues,86,1,11,Revenues
 0001564590-19-027952,AmortizationOfIntangibleAssets,81,1,1,Intangible assets amortization expense
+0001564590-19-027952,FinanceLeaseLiability,101,2,,
 0001564590-19-027952,IncomeTaxesPaidNet,86,1,24,"Income taxes paid, net of refunds"
 0001564590-19-027952,InterestExpense,52,1,2,Interest expense
 0001564590-19-027952,InterestPaid,83,1,4,Cash paid for interest
 0001564590-20-004096,PropertyPlantAndEquipmentNet,69,1,6,Fixed assets
 0001564590-20-030125,InvestmentIncomeInterest,44,1,8,Interest income
 0001564590-20-034944,AmortizationOfIntangibleAssets,75,1,1,Intangible assets amortization expense
+0001564590-20-034944,FinanceLeaseLiability,95,2,,
 0001564590-20-034944,IncomeTaxesPaidNet,81,1,25,"Income taxes paid, net of refunds"
 0001564590-20-034944,InterestExpense,51,1,2,Interest expense
 0001564590-21-005312,PropertyPlantAndEquipmentNet,71,1,7,Fixed assets
 0001564590-21-033616,InvestmentIncomeInterest,45,1,7,Interest income
 0001564590-21-039151,AmortizationOfIntangibleAssets,73,1,1,Intangible assets amortization expense
+0001564590-21-039151,FinanceLeaseLiability,93,2,,
 0001564590-21-039151,IncomeTaxesPaidNet,79,1,29,"Income taxes paid, net of refunds"
 0001564590-21-039151,InterestExpense,49,1,2,Interest expense
 0001564590-21-039151,InterestPaid,77,1,2,Cash paid for interest
 0001564590-22-004436,PropertyPlantAndEquipmentNet,68,1,9,Fixed assets
 0001564590-22-023675,InvestmentIncomeInterest,43,1,7,Interest income
 0001564590-22-026876,AmortizationOfIntangibleAssets,74,1,1,Intangible assets amortization expense
+0001564590-22-026876,FinanceLeaseLiability,94,2,,
 0001564590-22-026876,IncomeTaxesPaidNet,83,1,27,"Income taxes paid, net of refunds"
 0001564590-22-026876,InterestExpense,49,1,2,Interest expense
 0001564590-22-026876,InterestPaid,78,1,2,Cash paid for interest
