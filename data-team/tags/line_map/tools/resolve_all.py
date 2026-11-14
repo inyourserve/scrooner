@@ -91,6 +91,38 @@ def apply_ar_related(rows, filings):
                      why=f"accounts receivable = the trade line plus '{l['lb']}' (ruling 2026-11-14: AR mirrors AP)")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
     return rows
+def apply_cost_and_opex(rows, filings):
+    """(1) cost_of_revenue printed as product and service lines that carry only ProductOrServiceAxis member facts (DIS, GE,
+    TMUS, VZ): the sum of the members (_cor-member-split). (2) operating_expenses with no node in the tree: from the printed
+    totals, gross profit - operating income (PEP: OI's calc tree skips GP) or total costs and expenses - cost of revenue (QCOM:
+    the itemized lines do not tie because 'Other' is filed with the wrong sign). Both are the lines between the top line and OI."""
+    sp = os.environ.get('COR_MEMBER_SPLIT', _here('_cor-member-split-2026-11-14.csv'))
+    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    F = {f['a']: f for f in filings}
+    by = {(r['accession'], r['data_point']): r for r in rows}
+    for r in rows:
+        if r['data_point'] == 'cost_of_revenue' and r['status'] in ('not_presented', 'no_role') and r['accession'] in split:
+            x = split[r['accession']]; p, sv = D(x['product']), D(x['service'])
+            r.update(status='component_sum', value=p + sv, tags='CostOfGoodsAndServicesSold+CostOfGoodsAndServicesSold',
+                     nodes=f"CostOfGoodsAndServicesSold[Product]={p} [IS face line]; CostOfGoodsAndServicesSold[Service]={sv} [IS face line]",
+                     why='the income statement prints the cost of products and the cost of services as separate lines carrying ProductOrServiceAxis members only: sum')
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'cor_member_sum') if y)
+    for r in rows:
+        if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
+        L, _ = parse(F[r['accession']])
+        isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
+        gp, oi = isf.get('GrossProfit'), isf.get('OperatingIncomeLoss')
+        ce = isf.get('CostsAndExpenses') or isf.get('CostsAndExpensesAbstract')
+        cor = by.get((r['accession'], 'cost_of_revenue'))
+        if gp and oi:
+            v = gp['val'] - oi['val']; nodes = f"GrossProfit={gp['val']} [R{gp['rep']}.htm:{gp['ln']}]; -OperatingIncomeLoss={oi['val']} [R{oi['rep']}.htm:{oi['ln']}]"; how = 'gross profit - operating income (both printed)'
+        elif ce and cor and cor['status'] in ('mapped', 'component_sum') and cor['value'] is not None and oi:
+            v = ce['val'] - D(cor['value']); nodes = f"CostsAndExpenses={ce['val']} [R{ce['rep']}.htm:{ce['ln']}]; -cost_of_revenue={cor['value']}"; how = 'total costs and expenses - cost of revenue (both printed)'
+        else:
+            continue
+        r.update(status='component_sum', value=v, tags='printed totals', nodes=nodes, why=f'operating expenses = the lines between the top line and operating income, from {how}')
+        r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+    return rows
 def apply_ap_related(rows, filings):
     """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
     related-party (component_sum). A separate current line whose own label names a payable to related parties
@@ -265,6 +297,7 @@ if __name__ == '__main__':
     rows = run(filings, notefacts, tick, td)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = apply_cost_and_opex(rows, filings)
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
     rows = fill_printed_zero_and_comparative(rows, td)

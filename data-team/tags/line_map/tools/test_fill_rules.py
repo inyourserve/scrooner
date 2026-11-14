@@ -40,6 +40,18 @@ def test_receivables_and_payables_include_the_related_party_face_line():
     assert ap['value'] == D(3653) and 'ap_related_sum' in ap['flags']
 
 
+def test_opex_from_printed_totals_when_the_tree_has_no_node():
+    # PEP FY2019: OI's calc children are Revenues, COGS and SG&A (no GP node); opex = GP - OI = 26,738
+    # QCOM FY2022: 'Other' is filed +1,059 but the printed total ties at -1,059; opex = total costs - cost of revenue = 9,705
+    pep = dict(cik='1', a='P1', p='2019-12-31', fd='', calc='', lines='~'.join(['IS|2|3|GrossProfit|0|0||Gross profit|37029', 'IS|2|5|OperatingIncomeLoss|0|0||Operating Profit|10291']))
+    qcom = dict(cik='2', a='Q1', p='2022-09-30', fd='', calc='', lines='~'.join(['IS|4|9|CostsAndExpenses|0|0||Total costs and expenses|28340', 'IS|4|10|OperatingIncomeLoss|0|0||Operating income|15860']))
+    rows = [dict(ticker='PEP', accession='P1', period_end='2019-12-31', data_point='operating_expenses', status='not_presented', value=None, flags=''),
+            dict(ticker='QCOM', accession='Q1', period_end='2022-09-30', data_point='operating_expenses', status='not_presented', value=None, flags=''),
+            dict(ticker='QCOM', accession='Q1', period_end='2022-09-30', data_point='cost_of_revenue', status='mapped', value=D(18635), flags='')]
+    p, q, _ = RA.apply_cost_and_opex(rows, [pep, qcom])
+    assert p['value'] == D(26738) and q['value'] == D(9705) and 'opex_from_printed_totals' in q['flags']
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):
