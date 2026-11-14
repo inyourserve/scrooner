@@ -812,10 +812,23 @@ def plan_company(
             or (r["decision"] == "combined" and dp_name in (r["components"] or []))
         ]
         lib = [r for r in lib if r["decision"] != "excluded"]
-        if not combined and any(
+        lib_combined = any(
             r["decision"] == "combined" and _overlap(a, b, r["era_from"], r["era_to"])
             for r in lib
-        ):
+        )
+        if lib_combined and kind == "value":
+            # claim sync (Dhairya, option 1): the resolver found a value in the filing, so direct serving serves it; the
+            # map must carry the claim too (a combined line with no covering value claim forbids the cell)
+            plan.conflicts.append(
+                info(
+                    {
+                        "winner": "structural",
+                        "why": "resolver prints a value where the library has a combined line: the claim is kept",
+                        "existing": "",
+                    }
+                )
+            )
+        elif lib_combined and not combined:
             plan.conflicts.append(
                 info(
                     {
@@ -952,10 +965,18 @@ def taxonomies(
     if unknown:
         with conn.cursor() as cur:
             cur.execute(
-                "select distinct tag from fsn.tag where custom and tag = any(%s)",
+                "select tag, custom, version from fsn.tag where tag = any(%s)",
                 (sorted(unknown),),
             )
-            custom = {t for (t,) in cur.fetchall()}
+            custom: set[str] = set()
+            std_tax: dict[str, set[str]] = defaultdict(set)
+            for t, is_custom, version in cur.fetchall():
+                if is_custom:
+                    custom.add(t)
+                elif (
+                    version and "/" in version
+                ):  # 'us-gaap/2023': the taxonomy the tag was filed under
+                    std_tax[t].add(version.split("/")[0])
             cur.execute(
                 "select id, lower(primary_ticker) from core.company where id = any(%s)",
                 (sorted(company_ids),),
@@ -973,6 +994,16 @@ def taxonomies(
                 continue
             for t in custom:
                 out[cid].setdefault(t, prefix)
+    for cid in company_ids:
+        for t, taxes in std_tax.items() if unknown else ():
+            if t not in custom and t not in out[cid]:
+                pick = (
+                    "us-gaap"
+                    if "us-gaap" in taxes
+                    else (next(iter(taxes)) if len(taxes) == 1 else None)
+                )
+                if pick in STANDARD_TAXONOMIES_LOCAL:
+                    out[cid][t] = pick
     return out, []
 
 

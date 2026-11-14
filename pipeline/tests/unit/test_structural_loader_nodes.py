@@ -354,19 +354,90 @@ def test_extension_tag_takes_the_company_prefix_only_when_the_store_knows_it_cus
         {
             "from analytics.company_sec_tag": [],
             "from core.concept": [("Known", ["us-gaap"])],
-            "from fsn.tag": [("MarketingAdministrationAndResearchCosts",)],
+            "from fsn.tag": [
+                (
+                    "MarketingAdministrationAndResearchCosts",
+                    True,
+                    "0000063908-19-000001",
+                ),
+                ("NewStdTag", False, "us-gaap/2024"),
+            ],
             "from core.company": [(5, "mcd")],
             "from analytics.company_tag_map": [],
         }
     )
     out, _ = sl.taxonomies(
-        conn, {5}, {"Known", "MarketingAdministrationAndResearchCosts", "TypoTag"}
+        conn,
+        {5},
+        {"Known", "MarketingAdministrationAndResearchCosts", "TypoTag", "NewStdTag"},
     )
-    assert out[5] == {
-        "Known": "us-gaap",
-        "MarketingAdministrationAndResearchCosts": "mcd",
-    }  # TypoTag is not custom in the store: left out, its row is rejected alone
+    assert (
+        out[5]
+        == {
+            "Known": "us-gaap",
+            "MarketingAdministrationAndResearchCosts": "mcd",
+            "NewStdTag": "us-gaap",  # a standard tag the API feed lacks: the taxonomy of the FSN version
+        }
+    )  # TypoTag is not custom in the store: left out, its row is rejected alone
     # the company's own existing extension prefix wins over the ticker
     conn.answers["from analytics.company_tag_map"] = [(5, ["mcdonalds"])]
     out, _ = sl.taxonomies(conn, {5}, {"MarketingAdministrationAndResearchCosts"})
     assert out[5]["MarketingAdministrationAndResearchCosts"] == "mcdonalds"
+
+
+def test_value_claim_beside_a_library_combined_line_is_kept_as_a_claim():
+    combined_line = _lib(
+        "combined",
+        "line_presented_combined_with_others",
+        rule="company_tag_map.library@1",
+        era=(date(2015, 3, 31), date(2026, 6, 30)),
+        concept=None,
+        components=["accounts_payable", "interest_income"],
+    )
+    claim = sl.Claim(
+        ticker="TST",
+        cik="0000000301",
+        data_point="accounts_payable",
+        decision="mapped",
+        parts=((1, "us-gaap", "AccountsPayableCurrent"),),
+        stmts=("BS",),
+        locs=((5, 15),),
+        accession="0000000301-19-000001",
+        period_end=date(2018, 12, 31),
+    )
+    plan = _plan(claim, [combined_line], {7: "accounts_payable"})
+    assert plan.dropped == 0 and plan.value_cells == 1
+    assert any(c["winner"] == "structural" for c in plan.conflicts)
+
+
+def test_unclaimed_lists_served_cells_without_a_structural_value_claim():
+    from types import SimpleNamespace as NS
+
+    from scrooner_pipeline.mapper import structural_direct as sd
+
+    def row(rule, decision, concept=7):
+        return NS(
+            rule_id=rule,
+            decision=decision,
+            canonical_concept_id=concept,
+            parent_concept_id=None,
+            era_from=date(2018, 1, 1),
+            era_to=date(2018, 12, 31),
+        )
+
+    cells = [{"canonical_concept_id": 7, "period_id": 1}]
+    periods = {1: (date(2018, 1, 1), date(2018, 12, 31), "duration")}
+    info = {7: ("accounts_payable", "balance_sheet")}
+    claim = row(sl.RULE_ID, "concept")
+    assert sd.unclaimed([claim], cells, periods, info) == []
+    for other in (
+        [],  # no map row at all
+        [row("company_tag_map.era_extend@1", "not_presented")],  # era_unmapped
+        [
+            row("company_tag_map.docmap@1", "concept")
+        ],  # another rule's value row is no claim
+        [row(sl.RULE_ID, "not_presented")],  # a structural reason is no value claim
+    ):
+        assert sd.unclaimed(other, cells, periods, info) == [
+            {"concept": "accounts_payable", "period_end": "2018-12-31"}
+        ]

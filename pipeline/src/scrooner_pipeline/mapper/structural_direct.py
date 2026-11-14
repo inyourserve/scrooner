@@ -206,6 +206,28 @@ def map_forbids(rows, concept_id: int, end: date) -> str | None:
     return None
 
 
+STRUCTURAL_RULE_ID = sl.RULE_ID
+
+
+def unclaimed(rows, cells: list[dict], periods, concept_info) -> list[dict]:
+    """Claim sync: every cell served from the resolver must have a covering structural@1 value claim row in the map
+    (company_tag_map.structural@1, decision concept/component). The cells that have none, as {concept, period_end}:
+    structural-load did not write their claim (reject or conflict in its CSVs), so the serve and the map diverge. Pure."""
+    out = []
+    for c in cells:
+        cid = c["canonical_concept_id"]
+        end = periods[c["period_id"]][1]
+        if not any(
+            r.rule_id == STRUCTURAL_RULE_ID
+            and r.decision in ("concept", "component")
+            and cid in (r.canonical_concept_id, r.parent_concept_id)
+            and era_holds(r.era_from, r.era_to, end)
+            for r in rows
+        ):
+            out.append({"concept": concept_info[cid][0], "period_end": end.isoformat()})
+    return out
+
+
 def _cash_components(
     conn: psycopg.Connection, accessions: set[str]
 ) -> set[tuple[str, str]]:
@@ -326,6 +348,7 @@ def direct_cells(
         "rejected": [],
         "fix_won": 0,
         "fix_won_cells": [],
+        "no_claim_row": [],
     }
     path = path or resolver_path()
     if not enabled() or path is None or not cik:
@@ -500,6 +523,7 @@ def direct_cells(
             }
         )
     stats["served"] = len(cells)
+    stats["no_claim_row"] = unclaimed(rows, cells, periods, concept_info)
     return cells, stats
 
 
