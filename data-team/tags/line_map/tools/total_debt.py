@@ -72,8 +72,9 @@ def run(filings, vals, flloc):
                 if cur is None or (unit(v) < unit(cur)): vv[x[2]][x[0]] = v
         per = date.fromisoformat(f['p'])
         cols = sorted(vv.keys(), reverse=True)
-        own = next((d for d in cols if abs((date.fromisoformat(d) - per).days) <= 20), f['p'])
-        prior = next((d for d in cols if 330 <= (per - date.fromisoformat(d)).days <= 400), None)
+        # the columns closest to the period end and to one year before it (a filing also carries other instants: BAC 2015-01-31 is 334 days back)
+        own = min((d for d in cols if abs((date.fromisoformat(d) - per).days) <= 20), key=lambda d: abs((date.fromisoformat(d) - per).days), default=f['p'])
+        prior = min((d for d in cols if 330 <= (per - date.fromisoformat(d)).days <= 400), key=lambda d: abs((per - date.fromisoformat(d)).days - 365), default=None)
         loc = flloc.get(f['a']) or (flloc.get('FY0:' + f['cik']) if latest[f['cik']].endswith(f['a']) else None)
         for col, kind in ((own, 'own'), (prior, 'comparative')):
             if col is None: continue
@@ -98,7 +99,7 @@ def run(filings, vals, flloc):
                     ltd = vv[col].get('LongTermDebt'); face_ltd = sum((v for t, v, *_ in nodes if t.startswith('LongTermDebt')), D(0))
                     if ltd is not None and face_ltd and abs(face_ltd - ltd - fl) <= tol(face_ltd, ltd, fl):
                         flags.append('finance lease inside long-term debt (face LTD = note LongTermDebt + lease): not added')
-                    elif any(re.search(r'FinanceLease', t) for t in vv[col] if t not in ('FinanceLeaseLiability', 'FinanceLeaseLiabilityCurrent', 'FinanceLeaseLiabilityNoncurrent') and DEBT.match(t)):
+                    elif any(re.search(r'FinanceLease', t) and not t.startswith('FinanceLease') and DEBT.match(t) for t in vv[col]):   # a debt-AND-lease total (LongTermDebtAndFinanceLease*), not the lease schedule (FinanceLeaseLiabilityPaymentsDue*)
                         flags.append('a debt-and-finance-lease total exists: not added')
                     else:
                         nodes.append(('FinanceLeaseLiability', fl, 'NOTE', 'note lease; no ExtensibleList and no debt line contains it (location by absence: CHECK)'))
@@ -148,25 +149,36 @@ def run(filings, vals, flloc):
                             tags='+'.join(t for t, *_ in nodes), parts='; '.join(f'{t}={v} [{loc_} {why}]' for t, v, loc_, why in nodes),
                             r_pages='+'.join(loc_ for _, _, loc_, _ in nodes), value=str(total) if nodes else '', flags='; '.join(flags), fl_loc=loc or ''))
     return out
-if __name__ == '__main__':
-    filings = json.load(open('filings.json')); vals = json.load(open('debtvals.json')); flloc = json.load(open('flloc.json'))
+def load_evidence(root=None):
+    """Committed instance evidence (SEC instances; FSN drops these dimensioned/extensible-list facts):
+    - finance-lease location (FinanceLeaseLiability*StatementOfFinancialPositionExtensibleList): exam/eras/inputs-notes-eras.jsonl per
+      accession, exam/inputs/notes.jsonl for the latest 10-K of each company ('FY0:' + cik);
+    - pre-842 capital leases by BalanceSheetLocationAxis: line_map/_lease-locations-pre842-2026-11-14.csv (fills LEASES).
+    Returns flloc."""
     import os
-    if os.path.exists('../leasefetch/leases.jsonl'):
-        for l in open('../leasefetch/leases.jsonl'):
-            o = json.loads(l)
-            for t, dt, dims, v, dec in o['facts']:
-                if not dt or not re.match(r'^CapitalLeaseObligations(Current|Noncurrent)?$', t): continue
-                loc = [m for ax, m in dims if ax.endswith('BalanceSheetLocationAxis')]
-                if dims and not loc: continue          # other axes (segments, classes): not consolidated
-                if len(dims) > 1: continue
-                try: val = D(v)
-                except Exception: continue
-                LEASES.setdefault(o['acc'], {}).setdefault(dt, []).append((t, loc[0] if loc else '', val))
-    for l in open('../exam/notes.jsonl'):
+    root = root or os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+    flloc = {}
+    for l in open(os.path.join(root, 'exam', 'eras', 'inputs-notes-eras.jsonl')):
+        o = json.loads(l)
+        if 'fl_loc' in o: flloc[o['acc']] = o['fl_loc']
+    for l in open(os.path.join(root, 'exam', 'inputs', 'notes.jsonl')):
         o = json.loads(l)
         if o.get('fl_loc'): flloc['FY0:' + o['cik']] = o['fl_loc']
+    LEASES.clear()
+    for r in csv.DictReader(open(os.path.join(root, 'line_map', '_lease-locations-pre842-2026-11-14.csv'))):
+        LEASES.setdefault(r['adsh'], {}).setdefault(r['ddate'], []).append((r['tag'], r['balance_sheet_location_member'], D(r['value'])))
+    return flloc
+def total_debt_all(filings, vals, tick):
+    """total_debt rows for every filing (own and comparative column) from the standard extract (vals: standard_inputs.debt_vals) and the
+    committed instance evidence; the former total_debt_all.csv."""
+    rows = run(filings, vals, load_evidence())
+    for r in rows: r['ticker'] = tick.get(r['cik'].zfill(10), '')
+    return rows
+if __name__ == '__main__':
+    import standard_inputs
+    filings = json.load(open('filings.json')); notefacts = json.load(open('notefacts.json'))
+    compfacts = json.load(open('compfacts.json')) if __import__('os').path.exists('compfacts.json') else {}
     tk = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
-    rows = run(filings, vals, flloc)
-    for r in rows: r['ticker'] = tk.get(r['cik'].zfill(10), '')
+    rows = total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tk)
     w = csv.DictWriter(open('total_debt_all.csv', 'w', newline=''), fieldnames=['ticker'] + [k for k in rows[0] if k != 'ticker']); w.writeheader(); w.writerows(rows)
     print(len(rows), collections.Counter(r['status'] for r in rows))

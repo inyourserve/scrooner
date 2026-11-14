@@ -21,7 +21,7 @@ import csv, json, os, re, sys, collections
 from decimal import Decimal as D
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from resolve import parse, face, tol, children
+from resolve import parse, face, tol, children, note_facts
 
 ROLES_CSV = os.environ.get('ROLES_CSV', os.path.join(HERE, '..', 'rules', 'roles.csv'))
 ROLES = {r['data_point']: r for r in csv.DictReader(open(ROLES_CSV))}
@@ -160,13 +160,8 @@ def resolve_family(f, notes):
 
 
 def notes_for(raw):
-    # duplicate facts for one tag (a rounded text variant beside the XBRL count): keep the most precise (fewest trailing zeros)
-    out = {}
-    for x in (raw or '').split('~'):
-        if x.count('|') != 2: continue
-        t, _, v = x.split('|'); v = D(v)
-        if t not in out or (len(str(int(v))) - len(str(int(v)).rstrip('0'))) < (len(str(int(out[t]))) - len(str(int(out[t])).rstrip('0'))): out[t] = v
-    return out
+    # duplicate facts for one tag (a rounded text variant beside the XBRL count): resolve.note_facts (most precise, order-independent)
+    return {t: v for (t, _), v in note_facts(raw).items()}
 
 
 def run(filings, notes_all, c2t, version):

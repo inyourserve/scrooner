@@ -5,7 +5,7 @@ only when its own label names the role). Output: one row per filing x data point
 import csv, json, os, re, sys, collections
 from decimal import Decimal as D
 sys.path.insert(0, '.')
-from resolve import parse, face, children, resolve, tol, DPS as CORE_DPS
+from resolve import parse, face, children, resolve, tol, note_facts, DPS as CORE_DPS
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
 INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
@@ -25,21 +25,20 @@ def apply_polarity(rows):
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
             r['why'] = (r.get('why') or '') + f"; polarity: the filer reports {v} on an element of the opposite sign; {r['data_point']} is positive (rules/polarity.csv), value normalised"
     return rows
-EXT = {'ap': {}, 'ar': {}, 'cf': {}}   # derived from the standard extract (tools/standard_inputs.py); the side files below stay the fallback
+EXT = {'ap': {}, 'ar': {}, 'cf': {}, 'pz': {}, 'lt': {}}   # derived from the standard extract (tools/standard_inputs.py); the side files below stay the fallback
 def _here(name):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', name)
 def fill_printed_zero_and_comparative(rows, td):
     """Rulings 2026-11-14 (Dhairya). (a) A line printed on the own face with a dash or zero is served as 0, flag printed_zero
-    with its R:line (_printed-zero-2026-11-14.csv: the line is on the face, no own-period fact exists in any dimension, the
-    line has values in other columns); a line absent from the face stays not_presented. (b) A value the next 10-K prints in its
-    comparative column fills a cell the own filing does not present: column=comparative, that filing's accession and R page
-    (_comparative-fill-2026-11-14.csv; total_debt from the comparative column of total_debt_all)."""
-    pz = {(r['accession'], r['data_point']): r for r in csv.DictReader(open(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))))} if os.path.exists(os.environ.get('PRINTED_ZERO', _here('_printed-zero-2026-11-14.csv'))) else {}
-    cfp = os.environ.get('COMPARATIVE_FILL', _here('_comparative-fill-2026-11-14.csv'))
-    cf = {(r['own_accession'], r['data_point']): r for r in csv.DictReader(open(cfp))} if os.path.exists(cfp) else {}
-    for (own_a, dp), c in EXT['cf'].items():   # extract-derived first; loc = where the later filing itself resolved the data point
+    with its R:line (EXT['pz'] = standard_inputs.printed_zero over the extract's zlines: the line is on the face, no own-period fact
+    exists in any dimension, the line has values in other columns); a line absent from the face stays not_presented. (b) A value the
+    next 10-K prints in its comparative column fills a cell the own filing does not present: column=comparative, that filing's accession
+    and R page (EXT['cf'] = standard_inputs.comparative_fill over the extract's cvals; total_debt from total_debt's comparative column)."""
+    pz = dict(EXT.get('pz', {}))
+    cf = {}
+    for (own_a, dp), c in EXT.get('cf', {}).items():   # loc = where the later filing itself resolved the data point
         nodes_loc = next((x.get('nodes') or '' for x in rows if x['accession'] == c['accession'] and x['data_point'] == dp), '')
-        m = re.search(r'\[(R[^\]]*|NOTE)\]', nodes_loc)
+        m = re.search(r'\[(R[^\]]*|NOTE|BS parenthetical[^\]]*)\]', nodes_loc)
         cf[(own_a, dp)] = dict(c, loc=m.group(1) if m else 'NOTE')
     nxt = {}
     by = collections.defaultdict(list)
@@ -70,24 +69,22 @@ AP_RELATED = re.compile(r'^(AccountsPayableRelatedPartiesCurrent|DueToRelatedPar
 AR_RELATED = re.compile(r'^(DueFromRelatedPartiesCurrent|DueFromRelatedParties|DueFromAffiliateCurrent|AccountsReceivableRelatedPartiesCurrent|RelatedPartyTransactionDueFromToRelatedPartyCurrent|NotesAndLoansReceivableRelatedPartiesCurrent)$')
 def apply_ar_related(rows, filings):
     """Ruling 2026-11-14 (AR mirrors AP): accounts_receivable = the trade line + a current face line whose own label names a
-    receivable from related parties or affiliates (COP, PSX, TMUS, DE, AMD 2020-22), flag ar_related_sum; member splits from
-    _ar-related-split (COP 2023-24, GEV). A mixed line ('Prepayment and receivables', AMD 2017-19), an 'other receivables
+    receivable from related parties or affiliates (COP, PSX, TMUS, DE, AMD 2020-22), flag ar_related_sum; member splits
+    (EXT['ar'] = standard_inputs.related_splits: COP 2023-24, GEV, DELL 2024). A mixed line ('Prepayment and receivables', AMD 2017-19), an 'other receivables
     (including related parties)' line (SCCO) and 'Due from related party' without 'receivable' (DELL) are not added."""
-    sp = os.environ.get('AR_RELATED_SPLIT', _here('_ar-related-split-2026-11-14.csv'))
-    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
-    split.update(EXT['ar'])
+    split = dict(EXT.get('ar', {}))
     F = {f['a']: f for f in filings}
     for r in rows:
-        if r['data_point'] != 'accounts_receivable' or r['status'] not in ('mapped',) or r['value'] is None: continue
+        if r['data_point'] != 'accounts_receivable': continue
         a = r['accession']
-        if a in split:
+        if a in split and r['status'] in ('mapped', 'not_presented'):   # member-only face lines leave the row not_presented (GEV, DELL 2024)
             s = split[a]; n, rel = D(s['nonrelated']), D(s['related'])
             r.update(status='component_sum', value=n + rel, tags=f"{s['tag']}+{s['tag']}",
                      nodes=f"{s['tag']}[NonrelatedParty]={n} [face line]; {s['tag']}[RelatedParty]={rel} [face line]",
                      why='the face prints receivables from third parties and from related parties on two lines (RelatedPartyTransactionsByRelatedPartyAxis members): sum (ruling 2026-11-14)')
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ar_related_sum') if x)
             continue
-        if a not in F: continue
+        if a not in F or r['status'] != 'mapped' or r['value'] is None: continue
         L, _ = parse(F[a])
         rel = [l for l in face(L, 'BS') if l['val'] and AR_RELATED.match(l['tag']) and re.search(r'(?i)receivable', l['lb'] or '') and re.search(r'(?i)related part|affiliate', l['lb'] or '') and not re.search(r'(?i)prepay|other|noncurrent|long-term', l['lb'] or '')]
         if rel:
@@ -206,11 +203,9 @@ def apply_ap_related(rows, filings):
     """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
     related-party (component_sum). A separate current line whose own label names a payable to related parties
     (AccountsPayableRelatedPartiesCurrent / DueToRelatedPartiesCurrent: AMD, WDC, COP, PSX) is added; a face split by the
-    RelatedPartyTransactionsByRelatedPartyAxis members (COP 2023-24, PSX 2023-25) is summed from _ap-related-split.
+    RelatedPartyTransactionsByRelatedPartyAxis members (COP 2023-24, PSX 2023-25, SNDK) is summed (EXT['ap'] = standard_inputs.related_splits).
     'Due to related party' without 'payable' (DELL) and a line already 'including related parties' (SCCO) are not added."""
-    sp = os.environ.get('AP_RELATED_SPLIT', _here('_ap-related-split-2026-11-14.csv'))
-    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
-    split.update(EXT['ap'])
+    split = dict(EXT.get('ap', {}))
     F = {f['a']: f for f in filings}
     for r in rows:
         if r['data_point'] != 'accounts_payable': continue
@@ -290,10 +285,7 @@ def run(filings, notefacts, tick, td_rows):
         tk = tick.get(f['cik'].zfill(10))
         if not tk: continue
         L, arcs = parse(f)
-        notes = {}
-        for s in (notefacts.get(f['a']) or '').split('~'):
-            x = s.split('|')
-            if len(x) == 3: notes.setdefault((x[0], int(x[1])), D(x[2]))
+        notes = note_facts(notefacts.get(f['a']))
         core, checks = resolve(f)
         chk = ';'.join(checks)
         for dp in CORE_DPS:
@@ -362,26 +354,21 @@ def run(filings, notefacts, tick, td_rows):
 if __name__ == '__main__':
     filings = json.load(open('filings.json')); notefacts = json.load(open('notefacts.json'))
     tick = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
-    td = {(r['accession'], r['column']): r for r in csv.DictReader(open('total_debt_all.csv'))}
+    import standard_inputs, total_debt
+    def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
+    memberfacts, compfacts, zlines = _read('memberfacts.json'), _read('compfacts.json'), _read('zlines.json')
+    # total_debt from the standard extract (own + comparative columns) and the committed instance evidence (total_debt.load_evidence)
+    td = {(r['accession'], r['column']): r for r in total_debt.total_debt_all(filings, standard_inputs.debt_vals(filings, notefacts, compfacts), tick)}
     # member-only face facts (_member-face-facts-2026-11-14.csv): a DPS, share count or CI printed on the face whose only own-period
     # fact carries one equity-statement column member (EquityComponents=RetainedEarnings / CommonStock ...) is the consolidated value;
     # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
     MF = {}
-    import standard_inputs
-    def _read(n): p_ = os.environ.get(n.upper().replace('.', '_'), n); return json.load(open(p_)) if os.path.exists(p_) else {}
-    memberfacts, compfacts = _read('memberfacts.json'), _read('compfacts.json')
-    for m in standard_inputs.member_facts(notefacts, memberfacts):   # the standard extract first (single-member own-period face facts)
+    EXT['lt'] = standard_inputs.amortization_location_total(notefacts, memberfacts)
+    for m in standard_inputs.member_facts(notefacts, memberfacts, standard_inputs.class_share_filings(filings)):   # the standard extract first
         notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
         MF[(m['accession'], m['tag'])] = m['member']
-    EXT['ap'] = standard_inputs.related_splits(memberfacts, r'AccountsPayable\w*')
+    EXT['ap'] = standard_inputs.related_splits(memberfacts, r'AccountsPayable(Current|TradeCurrent|CurrentAndNoncurrent)')   # the AP role elements; payable+accrued (GEV) is combined, not AP
     EXT['ar'] = standard_inputs.related_splits(memberfacts, r'(AccountsAndNotesReceivableNet|AccountsReceivable\w*|Receivables\w*)')
-    _mf = os.environ.get('MEMBER_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '_member-face-facts-2026-11-14.csv'))
-    if os.path.exists(_mf):
-        for m in csv.DictReader(open(_mf)):
-            have = {tuple(x.split('|')[:2]) for x in (notefacts.get(m['accession']) or '').split('~')}
-            if (m['tag'], m['qtrs']) not in have:
-                notefacts[m['accession']] = '~'.join(x for x in (notefacts.get(m['accession']), f"{m['tag']}|{m['qtrs']}|{m['value']}") if x)
-                MF[(m['accession'], m['tag'])] = m['member']
     rows = run(filings, notefacts, tick, td)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
@@ -389,13 +376,17 @@ if __name__ == '__main__':
     rows = apply_ap_related(rows, filings)
     rows = apply_ar_related(rows, filings)
     EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
+    EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = derive_gross_profit(rows)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
     # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of
-    # intangible amortization; the cost-of-sales part is a member): the location total (_amortization-location-total)
-    _lt = os.environ.get('AMORT_LOCATION_TOTAL', _here('_amortization-location-total-2026-11-14.csv'))
-    LT = {x['accession']: x for x in csv.DictReader(open(_lt))} if os.path.exists(_lt) else {}
+    # intangible amortization; the cost-of-sales part is a member): the location total (standard_inputs.amortization_location_total)
+    LT = {}
+    for a_, x in EXT.get('lt', {}).items():   # served when the mapped face line is smaller than the location total
+        fv = next((D(r['value']) for r in rows if r['accession'] == a_ and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None), None)
+        if fv is not None and x['value'] > fv:
+            LT[a_] = dict(value=str(x['value']), check=' + '.join(f"{k} {v / 10**6:f}".rstrip('0').rstrip('.') for k, v in x['parts'].items()) + (f" = {x['total_member']}" if x['total_member'] else ''))
     for r in rows:
         x = LT.get(r['accession'])
         if x and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None and D(x['value']) > D(r['value']):
@@ -407,7 +398,7 @@ if __name__ == '__main__':
         if r['data_point'] in ('accounts_receivable',) and '[NOTE]' in (r.get('nodes') or '') and r['status'] == 'mapped':
             mf = [(t, m) for (a_, t), m in MF.items() if a_ == r['accession'] and t in ('AccountsAndNotesReceivableNet', 'AccountsReceivableNetCurrent', 'ReceivablesNetCurrent')]
             if mf:
-                t = mf[0][0]; v = next(D(x.split('|')[2]) for x in notefacts[r['accession']].split('~') if x.startswith(t + '|0|'))
+                t = mf[0][0]; v = note_facts(notefacts[r['accession']])[(t, 0)]
                 r.update(value=v, tags=t, nodes=f'{t}={v} [NOTE]', status='mapped')
     rows = apply_label_beyond(rows, filings)
     # the ci_incl_nci point reason cites the own 10-K's CI statement line (_ci-face-lines: fsn.line stmt CI; the extract

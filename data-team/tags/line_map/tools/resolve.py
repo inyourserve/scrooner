@@ -41,6 +41,21 @@ def unit(v):
     while k < 9 and v != 0 and v % (10 ** (k + 1)) == 0: k += 1
     return D(10) ** k
 
+def note_facts(raw):
+    """{(tag, qtrs): value} from 'tag|qtrs|value~...'. Several facts of one tag and period (a rounded text figure beside the table figure:
+    CVS amortization 2,400 / 2,436, JPM taxes paid 5,300 / 5,309): an order-independent pick (the extract's order is not defined):
+    the most precise value (normalised exponent), then the most frequent, then the larger (a tie of two precise values: CB DPS 2.56 / 2.66)."""
+    by = {}
+    for s in (raw or '').split('~'):
+        x = s.split('|')
+        if len(x) == 3:
+            try: by.setdefault((x[0], int(x[1])), []).append(D(x[2]))
+            except Exception: continue
+    def key(v, vs):
+        e = v.normalize().as_tuple().exponent if v != 0 else 99
+        return (e, -vs.count(v), -abs(v))
+    return {k: min(vs, key=lambda v: key(v, vs)) for k, vs in by.items()}
+
 def tol(*vs): return sum((unit(v) / 2 for v in vs if v is not None), D(0)) or D(1)
 
 def cor_top(cn, iby, kids_fn, onis):

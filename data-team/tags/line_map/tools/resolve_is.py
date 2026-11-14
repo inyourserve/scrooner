@@ -11,7 +11,7 @@ keeping the resolve_all row when the family has no decisive evidence. Rulings (D
 import re, sys, os, collections
 from decimal import Decimal as D
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from resolve import parse, face, children, tol
+from resolve import parse, face, children, tol, note_facts
 
 MINE = ('other_income_expense_net', 'interest_expense', 'interest_income', 'comprehensive_income', 'depreciation_and_amortization', 'amortization_of_intangibles')
 PRETAX = re.compile(r'BeforeIncomeTax|IncomeLossFromContinuingOperationsBefore|PretaxIncome|(Income|Earnings)\w*BeforeTax')
@@ -303,10 +303,7 @@ def apply(rows, filings, notefacts, tick):
         if r['data_point'] not in MINE: new.append(r); continue
         a = r['accession']
         if a not in cache:
-            notes = {}
-            for s in (notefacts.get(a) or '').split('~'):
-                x = s.split('|')
-                if len(x) == 3: notes.setdefault((x[0], int(x[1])), D(x[2]))
+            notes = note_facts(notefacts.get(a))
             for t, q, v in ACC_FACTS.get(a, []): notes.setdefault((t, q), v)
             cache[a] = resolve(F[a], notes)
         m = cache[a].get(r['data_point'])

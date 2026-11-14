@@ -10,7 +10,7 @@ turnarounds, REIT improvements, CIP; never oil and gas property or acreage); buy
 import csv, json, re, sys, os, collections
 from decimal import Decimal as D
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from resolve import parse, face
+from resolve import parse, face, note_facts
 
 TOTAL = re.compile(r'^NetCashProvidedByUsedIn(Operating|Investing|Financing)Activities(ContinuingOperations|DiscontinuedOperations)?$')
 SEC = {'Operating': 'O', 'Investing': 'I', 'Financing': 'F'}
@@ -170,10 +170,7 @@ def run(filings, cfnotes, tick, version='resolver-cf-2026-11-14.1'):
     for f in filings:
         tk = tick.get(f['cik'].zfill(10))
         if not tk: continue
-        notes = {}
-        for s in (cfnotes.get(f['a']) or '').split('~'):
-            x = s.split('|')
-            if len(x) == 3: notes.setdefault((x[0], int(x[1])), D(x[2]))
+        notes = note_facts(cfnotes.get(f['a']))
         res = resolve_cf(f, notes)
         for dp in DPS:
             r = res[dp]; v = r['value']

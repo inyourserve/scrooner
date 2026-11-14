@@ -16,12 +16,14 @@ def _row(acc, dp, ticker='IBM', pe='2020-12-31'):
 
 
 def test_printed_dash_is_zero_and_comparative_fills_with_the_next_filing():
-    os.environ['PRINTED_ZERO'] = _csv([dict(ticker='IBM', period_end='2020-12-31', data_point='share_buybacks', accession='A1', tag='PaymentsForRepurchaseOfCommonStock', stmt='CF', r_line='R6:30', label='Common stock repurchases', evidence='e')])
-    os.environ['COMPARATIVE_FILL'] = _csv([dict(ticker='CAT', period_end='2018-12-31', data_point='dividends_per_share', own_accession='A2', accession='N2', tag='CommonStockDividendsPerShareDeclared', loc='R5.htm:9', value='3.36', source='s')])
-    rows = RA.fill_printed_zero_and_comparative([_row('A1', 'share_buybacks'), _row('A2', 'dividends_per_share', 'CAT', '2018-12-31'), _row('A3', 'capex')], {})
+    # inputs from the standard extract (standard_inputs.printed_zero / comparative_fill); no side files
+    RA.EXT['pz'] = {('A1', 'share_buybacks'): dict(tag='PaymentsForRepurchaseOfCommonStock', stmt='CF', r_line='R6:30', label='Common stock repurchases')}
+    RA.EXT['cf'] = {('A2', 'dividends_per_share'): dict(accession='N2', tag='CommonStockDividendsPerShareDeclared', value='3.36', window='FY-1')}
+    nxt = dict(ticker='CAT', accession='N2', period_end='2019-12-31', data_point='dividends_per_share', status='mapped', value=D('3.48'), nodes='CommonStockDividendsPerShareDeclared=3.48 [R5.htm:9]', flags='')
+    rows = RA.fill_printed_zero_and_comparative([_row('A1', 'share_buybacks'), _row('A2', 'dividends_per_share', 'CAT', '2018-12-31'), _row('A3', 'capex'), nxt], {})[:3]
     z, c, n = rows
     assert z['status'] == 'mapped' and z['value'] == D(0) and 'printed_zero' in z['flags'] and 'R6:30' in z['nodes']
-    assert c['value'] == D('3.36') and c['accession'] == 'N2' and c['column'] == 'comparative' and 'comparative_fill' in c['flags']
+    assert c['value'] == D('3.36') and c['accession'] == 'N2' and c['column'] == 'comparative' and 'comparative_fill' in c['flags'] and '[R5.htm:9 of N2' in c['nodes']
     assert n['status'] == 'not_presented'   # a line absent from the face stays not_presented
 
 

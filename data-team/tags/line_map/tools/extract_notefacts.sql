@@ -8,11 +8,15 @@
 --                                         (NonrelatedParty / RelatedParty: COP AP) and Scenario (ORCL comprehensive income). memberfacts.json.
 --   cvals 'tag|qtrs|value|ddate~...'      undimensioned facts of the filing's earlier columns (FY-1, FY-2), face or note, incl. parenthetical
 --                                         per-share lines (LLY DPS 2016 sits in the FY2018 equity parenthetical). compfacts.json.
+--   zlines 'tag|stmt|report|line|label~...' statement lines of the family elements with no own-period fact in any dimension but
+--                                         values in other columns: printed dash / zero evidence (ruling 2026-11-14).
+--   mvals also carries AmortizationOfIntangibleAssets by income-statement location (CSCO prints only the opex part on the face).
 -- Families: the element regex of rules/roles.csv plus the balance-sheet / cash-flow family modules; mvals also takes the AP/AR names.
 set statement_timeout='55s';
-with fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form='10-K' and period>='2014-06-01'),
-tg as (select id, tag from fsn.tag where not custom and (tag ~ '^(/* element families from rules/roles.csv */)$' or tag like '%Accretion%')),
-tgm as (select id, tag from fsn.tag where not custom and (tag ~ '^(/* element families from rules/roles.csv */)$' or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)')),
+with rx as (select '^(/* element families from rules/roles.csv */)$'::text r),
+fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form='10-K' and period>='2014-06-01'),
+tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
+tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
   where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
@@ -20,13 +24,19 @@ own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
 mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,d.segments),'~') mvals
   from fsn.value v join fl on fl.id=v.filing_id join tgm t on t.id=v.tag_id join fsn.dim d on d.id=v.dim_id
   where v.dim_id<>0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
-    and d.segments ~ '^(EquityComponents|RelatedPartyTransactionsByRelatedParty|Scenario)=[^;=]+;$'
+    and (d.segments ~ '^(EquityComponents|RelatedPartyTransactionsByRelatedParty|Scenario)=[^;=]+;$'
+         or (t.tag='AmortizationOfIntangibleAssets' and d.segments ~ '^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLivedIntangibleAssetsByMajorClass)=[^;=]+;$'))
     and exists (select 1 from fsn.line l where l.filing_id=fl.id and l.tag_id=v.tag_id)
   group by 1),
 cmp as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text,v.ddate::text),'~') cvals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
   where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate<fl.period and v.ddate>=fl.period-interval '3 years 2 months' and v.qtrs in (0,4) and v.value is not null
+  group by 1),
+zl as (select fl.accession a, string_agg(concat_ws('|',t.tag,l.stmt,l.report,l.line,translate(coalesce(l.plabel,''),'|~','/-')),'~') zlines
+  from fl join fsn.line l on l.filing_id=fl.id and l.stmt in ('BS','IS','CF') join tg t on t.id=l.tag_id
+  where not exists (select 1 from fsn.value v where v.filing_id=fl.id and v.tag_id=l.tag_id and v.ddate=fl.period)
+    and exists (select 1 from fsn.value v where v.filing_id=fl.id and v.tag_id=l.tag_id and v.ddate<>fl.period)
   group by 1)
-select fl.accession a, own.vals, mem.mvals, cmp.cvals
-from fl left join own on own.a=fl.accession left join mem on mem.a=fl.accession left join cmp on cmp.a=fl.accession
-where own.vals is not null or mem.mvals is not null or cmp.cvals is not null;
+select fl.accession a, own.vals, mem.mvals, cmp.cvals, zl.zlines
+from fl left join own on own.a=fl.accession left join mem on mem.a=fl.accession left join cmp on cmp.a=fl.accession left join zl on zl.a=fl.accession
+where own.vals is not null or mem.mvals is not null or cmp.cvals is not null or zl.zlines is not null;
