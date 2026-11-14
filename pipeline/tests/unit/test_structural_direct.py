@@ -32,11 +32,12 @@ def _row(
     end=END,
     check="calc A: ok",
     tags=None,
+    grain="FY",
 ):
     nodes = (
         tags or f"{tag}={node if node is not None else value} [NOTE] | why: note fact"
     )
-    return f'{CIK},TST,{dp},{end},FY,{decision},"{nodes}",{value},{acc},own,{check},core,r.1\n'
+    return f'{CIK},TST,{dp},{end},{grain},{decision},"{nodes}",{value},{acc},own,{check},core,r.1\n'
 
 
 def _csv(tmp_path, *rows, monkeypatch):
@@ -416,3 +417,158 @@ def test_two_stored_units_resolve_only_by_evidence(
         )
         cells, st = w.cells()
         assert cells == [] and "two stored values" in st["rejected"][0]["why"]
+
+
+def test_period_id_disambiguates_stray_instants_by_the_filings_period_of_report():
+    """Lowe's shape: the FSN date 2018-01-31 stands for the real year end 2018-02-02 and for a stray instant 2018-02-03
+    (a subsequent-event date): no exact end, so the filing's period_of_report picks; without that evidence: None."""
+    periods = {
+        1: (date(2018, 2, 2), date(2018, 2, 2), "instant"),
+        2: (date(2018, 2, 3), date(2018, 2, 3), "instant"),
+    }
+    jan31 = date(2018, 1, 31)
+    assert sd._period_id(periods, jan31, "I") is None
+    assert sd._period_id(periods, jan31, "I", frozenset({date(2018, 2, 2)})) == (
+        1,
+        date(2018, 2, 2),
+    )
+    assert sd._period_id(periods, date(2018, 2, 3), "I") == (2, date(2018, 2, 3))
+
+
+@pytest.mark.integration
+def test_ambiguous_column_resolves_by_the_stored_fact_of_the_claims_own_filing(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """Two periods match the rounded date, the filing carries no usable period_of_report: only the real column holds
+    the filing's stored fact, the stray period holds none."""
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        conn.execute(
+            "update core.period set end_date = %s where id = %s",
+            (date(2018, 12, 29), w.pid),
+        )
+        stray = _one(
+            conn,
+            "insert into core.period (company_id, start_date, end_date, period_type) values (%s,%s,%s,'duration') returning id",
+            w.co,
+            date(2018, 1, 3),
+            date(2019, 1, 2),
+        )
+        w.filing(ACC1, date(2019, 2, 1), None)
+        w.core_fact(ACC1, "InvestmentIncomeNet", "100")
+        _csv(tmp_path, _row(ACC1, "100"), monkeypatch=monkeypatch)
+        periods = {
+            pid: (s, e, "duration")
+            for pid, s, e in conn.execute(
+                "select id, start_date, end_date from core.period where company_id = %s",
+                (w.co,),
+            ).fetchall()
+        }
+        assert len(periods) == 2 and stray in periods
+        cells, stats = sd.direct_cells(conn, w.co, CIK, [], periods, w.info())
+        assert [(c["period_id"], c["value"]) for c in cells] == [(w.pid, Decimal(100))]
+        assert stats["rejected"] == []
+
+
+@pytest.mark.integration
+def test_two_periods_with_the_same_end_resolve_by_the_stored_fact_of_the_own_filing(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """BofA shape: a stray year period with the SAME end and a start one day later holds a few facts of another
+    filing only; the claim goes to the period that holds the claim's own filing's fact."""
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        stray = _one(
+            conn,
+            "insert into core.period (company_id, start_date, end_date, period_type) values (%s,%s,%s,'duration') returning id",
+            w.co,
+            date(2018, 1, 2),
+            END,
+        )
+        w.filing(ACC1, date(2019, 2, 1), END)
+        w.core_fact(ACC1, "InvestmentIncomeNet", "100")
+        _csv(tmp_path, _row(ACC1, "100"), monkeypatch=monkeypatch)
+        periods = {
+            pid: (s, e, "duration")
+            for pid, s, e in conn.execute(
+                "select id, start_date, end_date from core.period where company_id = %s",
+                (w.co,),
+            ).fetchall()
+        }
+        assert stray in periods and w.pid in periods
+        cells, stats = sd.direct_cells(conn, w.co, CIK, [], periods, w.info())
+        assert [(c["period_id"], c["value"]) for c in cells] == [(w.pid, Decimal(100))]
+        assert stats["rejected"] == []
+
+
+@pytest.mark.integration
+def test_cash_claim_on_a_component_of_the_bs_face_total_is_rejected(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    """AXP shape: the resolver picked CashAndDueFromBanks, the calc child of the BS face 'Total cash and cash
+    equivalents'; the cell is not served from it. A cash claim on the total itself is served."""
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        cc = _one(
+            conn,
+            "insert into analytics.canonical_concept (name, statement, combination_mode) values ('cash_and_equivalents','balance_sheet','first_match') returning id",
+        )
+        conn.execute(
+            "update core.period set start_date = end_date, period_type = 'instant' where id = %s",
+            (w.pid,),
+        )
+        w.filing(ACC1, date(2019, 2, 1), END)
+        w.core_fact(ACC1, "CashAndDueFromBanks", "7118")
+        w.core_fact(
+            ACC1,
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+            "46596",
+        )
+        fid = w.fsn_fact(ACC1, "CashAndDueFromBanks", "7118", custom=False)
+        filing = conn.execute(
+            "select id from fsn.filing where accession = %s", (ACC1,)
+        ).fetchone()[0]
+        tid = {
+            t: _one(conn, "select id from fsn.tag where tag = %s", t)
+            for t in ["CashAndDueFromBanks"]
+        }
+        parent = _one(
+            conn,
+            "insert into fsn.tag (tag, version, custom) values ('CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents','2018',false) returning id",
+        )
+        conn.execute(
+            "insert into fsn.line (filing_id, report, line, stmt, tag_id) values (%s,6,13,'BS',%s)",
+            (filing, parent),
+        )
+        conn.execute(
+            "insert into fsn.calc_arc (filing_id, grp, arc, parent_tag_id, child_tag_id, weight) values (%s,1,1,%s,%s,1)",
+            (filing, parent, tid["CashAndDueFromBanks"]),
+        )
+        assert fid
+        info = {cc: ("cash_and_equivalents", "balance_sheet")}
+        periods = {w.pid: (END, END, "instant")}
+        rows = [
+            _row(
+                ACC1,
+                "7118",
+                tag="CashAndDueFromBanks",
+                dp="cash_and_equivalents",
+                grain="I",
+            ),
+        ]
+        _csv(tmp_path, *rows, monkeypatch=monkeypatch)
+        cells, stats = sd.direct_cells(conn, w.co, CIK, [], periods, info)
+        assert cells == []
+        assert "component of the BS face total" in stats["rejected"][0]["why"]
+        rows = [
+            _row(
+                ACC1,
+                "46596",
+                tag="CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+                dp="cash_and_equivalents",
+                grain="I",
+            )
+        ]
+        _csv(tmp_path, *rows, monkeypatch=monkeypatch)
+        cells, stats = sd.direct_cells(conn, w.co, CIK, [], periods, info)
+        assert [c["value"] for c in cells] == [Decimal(46596)]
