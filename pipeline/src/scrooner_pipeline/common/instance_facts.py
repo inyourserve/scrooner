@@ -38,7 +38,6 @@ class InstanceFact:
     member: str
     value: Decimal
     decimals: int | None
-    r_page: str = ""  # 'R102.htm' of the filing's R page that prints the fact (FILING-CHECKED), '' unknown
 
     @property
     def part_tag(self) -> str:
@@ -111,7 +110,6 @@ def load(path: Path | None = None) -> dict[Key, InstanceFact]:
                     member,
                     Decimal(r["value"].strip()),
                     int(dec) if dec not in ("", "INF") else None,
-                    (r.get("r_page") or "").strip(),
                 )
                 k = (f.adsh, f.tag, f.segs, f.ddate)
                 if k in out and out[k].value != f.value:

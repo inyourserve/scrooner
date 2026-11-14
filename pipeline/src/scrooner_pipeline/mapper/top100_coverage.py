@@ -298,19 +298,43 @@ def load_fix_pages(
     return out
 
 
+def instance_pages(path: Path | None = None) -> dict[tuple[str, str], str]:
+    """(accession, 'Tag[Axis=Member]') -> 'R<n>.htm' from the r_page column of the committed instance-facts file
+    (read here, not in common/instance_facts.py, which is a hashed proof source). A conflicting page drops the key."""
+    out: dict[tuple[str, str], str] = {}
+    bad: set[tuple[str, str]] = set()
+    p = path or instance_facts.FACTS_PATH
+    if not p.exists():
+        return out
+    with p.open(newline="") as fh:
+        for r in csv.DictReader(fh):
+            member = (r.get("balance_sheet_location_member") or "").strip()
+            page = (r.get("r_page") or "").strip()
+            if not member or not page:
+                continue
+            name = member.rpartition(":")[2]
+            if name.endswith("Member") and name != "Member":
+                name = name[: -len("Member")]
+            k = (
+                r["adsh"].strip(),
+                instance_facts.part_tag(
+                    r["tag"].strip(), f"{instance_facts.LOCATION_AXIS}={name};"
+                ),
+            )
+            if k in out and out[k] != page:
+                bad.add(k)
+            out[k] = page
+    for k in bad:
+        del out[k]
+    return out
+
+
 def instance_part_page(
-    acc: str,
-    tag: str,
-    facts: dict[Any, instance_facts.InstanceFact] | None = None,
+    acc: str, tag: str, pages: dict[tuple[str, str], str] | None = None
 ) -> str:
     """'R<n>.htm' of an instance-sourced part `Tag[Axis=Member]` in filing `acc`, from the instance-facts file's
-    r_page (any column of that filing: the page is the filing's). Unknown: ''. Never another filing's page."""
-    pages = {
-        f.r_page
-        for f in (facts if facts is not None else instance_facts.load()).values()
-        if f.adsh == acc and f.part_tag == tag and f.r_page
-    }
-    return next(iter(pages)) if len(pages) == 1 else ""
+    r_page. Unknown: ''. Never another filing's page."""
+    return (pages if pages is not None else instance_pages()).get((acc, tag), "")
 
 
 def statement_page_fallback(
@@ -331,7 +355,7 @@ def parts_locator(
     idx: LocatorIndex,
     note_lookup: dict[tuple[str, str], int] | None,
     fix_pages: dict[str, int] | None,
-    inst_facts: dict[Any, instance_facts.InstanceFact] | None = None,
+    inst_pages: dict[tuple[str, str], str] | None = None,
 ) -> tuple[str, int]:
     """(parts text, parts whose page is unknown) of a component-sum cell: ';'-joined tag=value@acc#R<page>, one per
     part of the proof's checks.component_parts. The accession is the proof's shown accession and every page is of
@@ -364,7 +388,7 @@ def parts_locator(
         page = "" if rep is None else f"R{rep}"
         if rep is None and instance_facts.is_instance_part(tag):
             # an instance-sourced part (Tag[Axis=Member]): the page of the committed instance-facts file, for THIS filing
-            page = instance_part_page(acc, tag, inst_facts).replace(".htm", "")
+            page = instance_part_page(acc, tag, inst_pages).replace(".htm", "")
         if not page:
             blank += 1
         sign = "-" if p.get("sign") == -1 else ""

@@ -492,31 +492,16 @@ def test_reason_is_evidence_only_from_the_cells_own_period_filing():
 
 
 def test_instance_part_gets_the_r_page_of_the_instance_facts_file():
-    from datetime import date
-    from decimal import Decimal
-    from scrooner_pipeline.common.instance_facts import InstanceFact, Key, part_tag
     from scrooner_pipeline.mapper.top100_coverage import parts_locator
 
     B = "0001564590-17-014900"
-    segs = "BalanceSheetLocation=OtherCurrentLiabilities;"
-    f = InstanceFact(
-        B,
-        "x.xml",
-        date(2016, 6, 30),
-        "CapitalLeaseObligationsCurrent",
-        segs,
-        "us-gaap:OtherCurrentLiabilitiesMember",
-        Decimal(25000000),
-        -6,
-        "R102.htm",
-    )
-    facts: dict[Key, InstanceFact] = {(B, f.tag, segs, f.ddate): f}
-    tag = part_tag(f.tag, segs)
+    tag = "CapitalLeaseObligationsCurrent[BalanceSheetLocation=OtherCurrentLiabilities]"
+    pages = {(B, tag): "R102.htm"}
     ch = _checks([tag])
-    got, blank = parts_locator(ch, B, _idx(), None, None, facts)
+    got, blank = parts_locator(ch, B, _idx(), None, None, pages)
     assert got == f"{tag}=1000000@{B}#R102" and blank == 0
     # another filing's page is never used
-    got, blank = parts_locator(ch, "0000000000-00-000001", _idx(), None, None, facts)
+    got, blank = parts_locator(ch, "0000000000-00-000001", _idx(), None, None, pages)
     assert got.endswith("#") and blank == 1
 
 
