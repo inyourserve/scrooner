@@ -217,6 +217,7 @@ def _walk(
     test,  # accession -> (ok, why, shown, used_value)
     other,  # first accession of a failed year -> text for the log's other_tag column
     log: list[dict],
+    through_floor: bool = False,
 ) -> tuple[date, str | None, bool]:
     """Walk the earlier 10-Ks newest first; `test` decides each. Cut at the first failure or missing year."""
 
@@ -234,13 +235,17 @@ def _walk(
         )
 
     era, earliest, value_used = base_era, None, False
+    extra_done = False
     # the 10-K whose two columns start at base_era ends here; the next one tested is a year before it
     prev = _shift(base_era, 2) - timedelta(days=1)
     for period in sorted(
         (p for p in data.periods if _fy_start2(p) < base_era), reverse=True
     ):
         if era <= floor:
-            break
+            # absent evidence: the floor year's own 10-K is still tested (one more filing), to cite it
+            if not through_floor or extra_done:
+                break
+            extra_done = True
         gap = (prev - period).days
         if (
             gap < 300
@@ -411,8 +416,70 @@ def extend_absent(
             sorted((cands & line_tags(a)) | (cands & present.get(a, set())))
         ),
         log,
+        through_floor=True,
     )
     return era, earliest, log
+
+
+def absent_slices(
+    log: list[dict], base_era: date, floor: date = FLOOR
+) -> list[tuple[date, date, str]]:
+    """Per-year evidence of an ERA-EXT(absent) walk: [(era_from, era_to, adsh)] newest first, from extend_absent's log.
+    The 10-K ending P (a passing log entry) prints the year before it as a comparative, so it extends the era by that
+    one year. A REASON is evidence only from the year's own filing: the 10-K of the year itself when the walk tested it,
+    else (no such 10-K, or it carries no facts) the nearest later 10-K that presents the year. When the year's own 10-K
+    was tested and shows a candidate tag, or lacks the combined line, the year is dropped (never a reason). Pure."""
+    ok = [r for r in log if r["check"] == "pass"]
+    out: list[tuple[date, date, str]] = []
+    to = base_era - timedelta(days=1)
+    for j, r in enumerate(ok):
+        frm = max(floor, _fy_start2(r["period"]))
+        if frm > to:
+            continue
+        nxt = ok[j + 1] if j + 1 < len(ok) else None
+        if nxt is not None:
+            adsh = nxt["adsh"]
+        else:
+            fail = next((x for x in log[len(ok) :] if x["check"] == "fail"), None)
+            if (
+                fail is not None
+                and fail["adsh"]
+                and fail["period"] is not None
+                and 0 <= (r["period"] - fail["period"]).days <= GAP_DAYS
+                and (
+                    fail["detail"].startswith("candidate tag present")
+                    or fail["detail"] == "the combined line is not printed"
+                )
+            ):
+                break  # the year's own 10-K contradicts the reason
+            adsh = r["adsh"]
+        out.append((frm, to, adsh))
+        to = frm - timedelta(days=1)
+    return out
+
+
+def face_reports(
+    conn: psycopg.Connection, accessions: set[str]
+) -> dict[str, dict[str, int]]:
+    """accession -> {statement code: the report carrying most of that statement's lines} (fsn.line)."""
+    best: dict[tuple[str, str], tuple[int, int]] = {}
+    if not accessions:
+        return {}
+    with conn.cursor() as cur:
+        cur.execute(
+            """select f.accession, l.stmt, l.report, count(*) from fsn.filing f
+               join fsn.line l on l.filing_id = f.id
+               where f.accession = any(%s) and l.stmt in ('IS', 'BS', 'CF', 'CI', 'EQ')
+               group by 1, 2, 3""",
+            (sorted(accessions),),
+        )
+        for a, st, rep, n in cur.fetchall():
+            if (a, st) not in best or (n, -rep) > (best[(a, st)][0], -best[(a, st)][1]):
+                best[(a, st)] = (n, rep)
+    out: dict[str, dict[str, int]] = {}
+    for (a, st), (_, rep) in best.items():
+        out.setdefault(a, {})[st] = rep
+    return out
 
 
 # --- comparative-column extension (founder-approved rule, 2026-11-13) -------------------------------------------------

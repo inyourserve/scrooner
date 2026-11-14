@@ -53,7 +53,9 @@ def test_extends_back_across_continuous_years():
 def test_stops_at_a_tag_switch():
     ls = lines_for(YEARS)
     for y in (2020, 2019, 2018, 2017, 2016, 2015):
-        ls[acc(y)] = {"SalesRevenueNet": [L()]}  # the company printed another tag before 2021
+        ls[acc(y)] = {
+            "SalesRevenueNet": [L()]
+        }  # the company printed another tag before 2021
     era, adsh, log = run(data(YEARS, ls))
     assert era == date(2020, 1, 1)  # the FY2021 10-K prints FY2021 and FY2020
     assert adsh == acc(2021)
@@ -70,7 +72,9 @@ def test_stops_at_a_changed_line():
 
 
 def test_stops_at_a_gap_and_never_bridges():
-    years = {y: a for y, a in YEARS.items() if y != 2019}  # no FY2019 filing in the store
+    years = {
+        y: a for y, a in YEARS.items() if y != 2019
+    }  # no FY2019 filing in the store
     era, adsh, log = run(data(years, lines_for(years)))
     assert era == date(2019, 1, 1) and adsh == acc(2020)
     assert log[-1]["check"] == "fail" and log[-1]["detail"].startswith("gap")
@@ -89,10 +93,11 @@ def test_unknown_reference_extends_nothing():
     assert (era, adsh) == (BASE, None) and log[0]["check"] == "fail"
 
 
-
 def test_calc_parent_relaxed_only_when_the_earlier_filing_has_no_arc():
     ls = lines_for(YEARS)
-    ls[acc(2020)] = {TAG: [L(parents=())]}  # no calc arc in FY2020: passes on stmt + role/label
+    ls[acc(2020)] = {
+        TAG: [L(parents=())]
+    }  # no calc arc in FY2020: passes on stmt + role/label
     assert run(data(YEARS, ls))[0] == date(2015, 1, 1)
     ls[acc(2020)] = {TAG: [L(parents=("Other",))]}  # a different parent still cuts
     assert run(data(YEARS, ls))[0] == date(2020, 1, 1)
@@ -141,6 +146,7 @@ def test_not_printed_logs_the_other_tag_used():
     assert log[-1]["check"] == "fail"
     assert log[-1]["other_tag"] == "label:SalesRevenueNet;line_map:SalesRevenueNet"
 
+
 # ---- loader, DB-backed -------------------------------------------------------------------------------------------
 
 CSV = """ticker,data_point,status,tags,stmt,r_page,label,era_from_note,evidence_class,note
@@ -187,7 +193,9 @@ def test_loader_extends_and_records_evidence(isolated_database_url, tmp_path: Pa
     paths = sorted(tmp_path.glob("*-docmap-*.csv"))
     log = tmp_path / "era.csv"
     with psycopg.connect(isolated_database_url) as conn:
-        cid = _seed(conn, set(range(2019, 2026)))  # same tag FY2019-2025, another tag before
+        cid = _seed(
+            conn, set(range(2019, 2026))
+        )  # same tag FY2019-2025, another tag before
         conn.commit()
         plain = dl.load(conn, paths)
         assert plain["extended"] == []
@@ -199,15 +207,27 @@ def test_loader_extends_and_records_evidence(isolated_database_url, tmp_path: Pa
             (cid,),
         ).fetchall()
         assert [(r[0], r[1], r[2]) for r in rows] == [
-            (ee.EXT_RULE_ID, "2018-01-01", "2023-12-31"),  # FY2019 10-K prints FY2019 and FY2018
+            (
+                ee.EXT_RULE_ID,
+                "2018-01-01",
+                "2023-12-31",
+            ),  # FY2019 10-K prints FY2019 and FY2018
             (dl.RULE_ID, "2024-01-01", None),
         ]
-        assert rows[0][3] == REF and rows[0][4].startswith(ee.EXT_MARK) and acc(2019) in rows[0][4]
+        assert (
+            rows[0][3] == REF
+            and rows[0][4].startswith(ee.EXT_MARK)
+            and acc(2019) in rows[0][4]
+        )
         # idempotent: a second apply replaces both rules' rows
         dl.load(conn, paths, apply=True, extend_eras=True)
-        assert conn.execute(
-            "select count(*) from analytics.company_tag_map where company_id = %s", (cid,)
-        ).fetchone()[0] == 2
+        assert (
+            conn.execute(
+                "select count(*) from analytics.company_tag_map where company_id = %s",
+                (cid,),
+            ).fetchone()[0]
+            == 2
+        )
     assert "pass" in log.read_text() and "fail" in log.read_text()
 
 
@@ -234,10 +254,14 @@ def test_absence_extends_until_a_candidate_fact_or_line():
     era, adsh, log = absent()
     assert era == date(2015, 1, 1)
     assert all(r["check"] == "pass" for r in log)
-    era, adsh, log = absent(cand_fact_years=(2019,))  # a candidate among the FY2019 10-K's facts (a note)
+    era, adsh, log = absent(
+        cand_fact_years=(2019,)
+    )  # a candidate among the FY2019 10-K's facts (a note)
     assert (era, adsh) == (date(2019, 1, 1), acc(2020))
     assert log[-1]["check"] == "fail" and log[-1]["other_tag"] == "Cand"
-    era, _, _ = absent(lines_by_year={2018: {"Cand"}})  # a candidate on a statement line
+    era, _, _ = absent(
+        lines_by_year={2018: {"Cand"}}
+    )  # a candidate on a statement line
     assert era == date(2018, 1, 1)
 
 
@@ -252,9 +276,14 @@ def test_combined_row_needs_the_combined_line_printed():
     lines = {y: {"Comb"} for y in range(2018, 2026)}
     lines[2017] = {"Other"}
     era, _, log = absent(lines_by_year=lines, combined=["Comb"])
-    assert era == date(2017, 1, 1)  # FY2018 10-K prints FY2018 and FY2017; FY2017's own 10-K has no combined line
+    assert era == date(
+        2017, 1, 1
+    )  # FY2018 10-K prints FY2018 and FY2017; FY2017's own 10-K has no combined line
     assert "combined line is not printed" in log[-1]["detail"]
-    lines[2020] = {"Comb", "Cand"}  # the concept is tagged separately beside the combined line
+    lines[2020] = {
+        "Comb",
+        "Cand",
+    }  # the concept is tagged separately beside the combined line
     assert absent(lines_by_year=lines, combined=["Comb"])[0] == date(2020, 1, 1)
 
 
@@ -282,18 +311,25 @@ def test_loader_reason_row_extension(isolated_database_url, tmp_path: Path):
             "'2015-01-01', 'structure', 'company_tag_map.library@1')",
             (other, rev),
         )
-        conn.execute("insert into core.unit (unit_name) values ('usd') on conflict do nothing")
-        uid = conn.execute("select id from core.unit where unit_name = 'usd'").fetchone()[0]
+        conn.execute(
+            "insert into core.unit (unit_name) values ('usd') on conflict do nothing"
+        )
+        uid = conn.execute(
+            "select id from core.unit where unit_name = 'usd'"
+        ).fetchone()[0]
         rid = conn.execute(
             "insert into raw.sec_companyfacts (cik, source_url, sha256, storage_path, http_status) "
             "values ('0000000077', 'u', 'h', 'raw/77', 200) returning id"
         ).fetchone()[0]
         for tag in ("Dummy", "Revenues"):
             conn.execute(
-                "insert into core.concept (taxonomy, tag) values ('us-gaap', %s) on conflict do nothing", (tag,)
+                "insert into core.concept (taxonomy, tag) values ('us-gaap', %s) on conflict do nothing",
+                (tag,),
             )
         cdummy, crev = (
-            conn.execute("select id from core.concept where tag = %s", (t,)).fetchone()[0]
+            conn.execute("select id from core.concept where tag = %s", (t,)).fetchone()[
+                0
+            ]
             for t in ("Dummy", "Revenues")
         )
         for y in range(2015, 2026):
@@ -316,14 +352,16 @@ def test_loader_reason_row_extension(isolated_database_url, tmp_path: Path):
         conn.commit()
         dl.load(conn, paths, apply=True, extend_eras=True)
         rows = conn.execute(
-            "select rule_id, decision, era_from::text, era_to::text, serve_note from analytics.company_tag_map "
+            "select rule_id, decision, era_from::text, era_to::text, serve_note, evidence_adsh from analytics.company_tag_map "
             "where company_id = %s order by era_from",
             (cid,),
         ).fetchall()
+    # FY2019's own 10-K carries the candidate fact: FY2019 is not a reason; FY2020..FY2023 each cite their own 10-K
     assert [r[:4] for r in rows] == [
-        (ee.EXT_RULE_ID, "not_presented", "2019-01-01", "2023-12-31"),
-        (dl.RULE_ID, "not_presented", "2024-01-01", None),
-    ]
+        (ee.EXT_RULE_ID, "not_presented", f"{y}-01-01", f"{y}-12-31")
+        for y in range(2020, 2024)
+    ] + [(dl.RULE_ID, "not_presented", "2024-01-01", None)]
+    assert [r[5] for r in rows[:4]] == [acc(y) for y in range(2020, 2024)]
     assert rows[0][4].startswith(ee.EXT_MARK_ABSENT)
 
 
@@ -533,3 +571,36 @@ def test_loader_comparative_extension_from_the_next_10k(
         assert rows[0][5].startswith(ee.COMP_MARK)
         dl.load(conn, paths, apply=True, extend_eras=True)  # idempotent
         assert conn.execute(q, (cid,)).fetchall() == rows
+
+
+def test_absent_slices_cite_each_years_own_filing_not_the_read():
+    d, wf, pr = absent_data(YEARS)
+    _, _, log = ee.extend_absent({"Cand"}, [], BASE, d, wf, pr)
+    sl = ee.absent_slices(log, BASE)
+    # FY2023 is extended by the FY2024 10-K's comparative but cites its own FY2023 10-K; FY2015 cites acc(2015)
+    assert sl[0] == (date(2023, 1, 1), date(2023, 12, 31), acc(2023))
+    assert sl[-1] == (date(2015, 1, 1), date(2015, 12, 31), acc(2015))
+    assert [x[2] for x in sl] == [acc(y) for y in range(2023, 2014, -1)]
+    assert acc(2025) not in [x[2] for x in sl]
+
+
+def test_absent_slices_drop_a_year_whose_own_10k_shows_the_line():
+    d, wf, pr = absent_data(YEARS, cand_fact_years=(2019,))
+    _, _, log = ee.extend_absent({"Cand"}, [], BASE, d, wf, pr)
+    sl = ee.absent_slices(log, BASE)
+    # extend_absent alone stops at 2019-01-01 (FY2020 10-K's comparative); FY2019's own 10-K has the tag: dropped
+    assert sl[-1][0] == date(2020, 1, 1) and sl[-1][2] == acc(2020)
+    # combined line missing in the own 10-K of FY2017
+    lines = {y: {"Comb"} for y in range(2018, 2026)}
+    lines[2017] = {"Other"}
+    d, wf, pr = absent_data(YEARS, lines_by_year=lines)
+    _, _, log = ee.extend_absent({"Cand", "Comb"}, ["Comb"], BASE, d, wf, pr)
+    assert ee.absent_slices(log, BASE)[-1][0] == date(2018, 1, 1)
+
+
+def test_absent_slices_use_the_comparative_filing_when_the_own_10k_is_unusable():
+    d, wf, pr = absent_data(YEARS, facts_years=[y for y in YEARS if y != 2020])
+    _, _, log = ee.extend_absent({"Cand"}, [], BASE, d, wf, pr)
+    sl = ee.absent_slices(log, BASE)
+    # FY2020's own 10-K has no facts: the FY2021 10-K (which presents FY2020) is the evidence
+    assert sl[-1] == (date(2020, 1, 1), date(2020, 12, 31), acc(2021))

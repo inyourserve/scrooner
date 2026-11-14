@@ -115,6 +115,9 @@ class DocmapRow:
     # for FY2016, the FY2016 10-K and that year's 10-Qs print AllocatedShareBasedCompensationExpense)
     comparative_start: bool = False
     prior_tags: tuple[str, ...] = ()
+    # ERA-EXT(absent) per-year evidence: (era_from, era_to, adsh, ((stmt, report), ...)) newest first; each slice cites
+    # the filing of its own year (or the nearest later one presenting it), never the docmap read's latest 10-K
+    ext_slices: tuple[tuple[date, date, str, tuple[tuple[str, int], ...]], ...] = ()
 
     @property
     def cites_page(self) -> bool:
@@ -581,6 +584,25 @@ def table_rows(
             }
             for r in ref
         ]
+        if d.ext_slices and d.status in TAGLESS_STATUS:
+            ext = []
+            for sf, st_, adsh, reps in d.ext_slices:
+                lo, hi = max(sf, d.era_from), min(st_, ext_to)
+                if lo > hi:
+                    continue
+                for r in ref:
+                    ext.append(
+                        {
+                            **r,
+                            "era_from": lo,
+                            "era_to": hi,
+                            "rule_id": era_extend.EXT_RULE_ID,
+                            "decided_by": "era_extend",
+                            "serve_note": d.ext_note,
+                            "evidence_adsh": adsh,
+                            "evidence_report": dict(reps).get(r["stmt"]),
+                        }
+                    )
         return main + ext
     st = concept_statement[d.data_point]
     if d.status in TAGLESS_STATUS:
@@ -972,6 +994,14 @@ def extend_company(
                 with_facts,
                 present,
             )
+            slices = era_extend.absent_slices(rlog, d.era_from)
+            era = slices[-1][0] if slices else d.era_from
+            adsh = slices[-1][2] if slices else None
+            reps = era_extend.face_reports(conn, {x[2] for x in slices})
+            ext_slices = tuple(
+                (a_, b_, c_, tuple(sorted(reps.get(c_, {}).items())))
+                for a_, b_, c_ in slices
+            )
             note = (
                 f"{era_extend.EXT_MARK_ABSENT}: in each 10-K back to {adsh} (FY from {era}) no candidate tag of the "
                 f"concept on a statement line or in the facts"
@@ -996,7 +1026,13 @@ def extend_company(
                 }
             )
         if adsh is not None and era < d.era_from:
-            d = replace(d, era_from=era, base_era=d.era_from, ext_note=note)
+            d = replace(
+                d,
+                era_from=era,
+                base_era=d.era_from,
+                ext_note=note,
+                ext_slices=ext_slices if d.status in TAGLESS_STATUS else (),
+            )
         out.append(d)
     return out
 
