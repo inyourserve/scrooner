@@ -61,6 +61,36 @@ def fill_printed_zero_and_comparative(rows, td):
                          why='total_debt rule on the next 10-K comparative column (the own filing presents no debt line; ruling 2026-11-14)')
                 r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'comparative_fill', 'printed_zero' if D(t['value']) == 0 else '') if x)
     return rows
+AP_RELATED = re.compile(r'^(AccountsPayableRelatedPartiesCurrent|DueToRelatedPartiesCurrent)$')
+def apply_ap_related(rows, filings):
+    """Ruling 2026-11-14 (Dhairya): accounts_payable is the sum of every accounts-payable line on the face, third-party and
+    related-party (component_sum). A separate current line whose own label names a payable to related parties
+    (AccountsPayableRelatedPartiesCurrent / DueToRelatedPartiesCurrent: AMD, WDC, COP, PSX) is added; a face split by the
+    RelatedPartyTransactionsByRelatedPartyAxis members (COP 2023-24, PSX 2023-25) is summed from _ap-related-split.
+    'Due to related party' without 'payable' (DELL) and a line already 'including related parties' (SCCO) are not added."""
+    sp = os.environ.get('AP_RELATED_SPLIT', _here('_ap-related-split-2026-11-14.csv'))
+    split = {r['accession']: r for r in csv.DictReader(open(sp))} if os.path.exists(sp) else {}
+    F = {f['a']: f for f in filings}
+    for r in rows:
+        if r['data_point'] != 'accounts_payable': continue
+        a = r['accession']
+        if a in split and r['status'] in ('mapped', 'not_presented', 'component_sum'):
+            s = split[a]; n, rel = D(s['nonrelated']), D(s['related'])
+            r.update(status='component_sum', value=n + rel, tags='AccountsPayableCurrent+AccountsPayableCurrent',
+                     nodes=f"AccountsPayableCurrent[NonrelatedParty]={n} [face line]; AccountsPayableCurrent[RelatedParty]={rel} [face line]",
+                     why='the face prints accounts payable to third parties and to related parties on two lines (members of RelatedPartyTransactionsByRelatedPartyAxis): sum (ruling 2026-11-14)')
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ap_related_sum') if x)
+            continue
+        if r['status'] != 'mapped' or a not in F: continue
+        L, _ = parse(F[a])
+        rel = [l for l in face(L, 'BS') if l['val'] and AP_RELATED.match(l['tag']) and re.search(r'(?i)payable', l['lb'] or '') and re.search(r'(?i)related part', l['lb'] or '')]
+        if rel and not re.search(r'(?i)including related', r.get('nodes', '')):
+            l = rel[0]
+            r['nodes'] = (r.get('nodes') or '').split(' | why')[0] + f"; {l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]"
+            r.update(status='component_sum', value=D(r['value']) + l['val'], tags=(r.get('tags') or '') + '+' + l['tag'],
+                     why=f"accounts payable = every accounts-payable line on the face: the trade line plus '{l['lb']}' (ruling 2026-11-14)")
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'ap_related_sum') if x)
+    return rows
 def family_rows(f, notes, raw):
     """Family modules (tools/resolve_bs.py, tools/resolve_cf.py): position logic per family; rows replace the role rows of their data points."""
     out = {}
@@ -206,8 +236,26 @@ if __name__ == '__main__':
     rows = run(filings, notefacts, tick, td)
     import resolve_is
     rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = apply_ap_related(rows, filings)
     rows = fill_printed_zero_and_comparative(rows, td)
     rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)
+    # a face line that is only part of a total the filing reports by income-statement location (CSCO prints the opex part of
+    # intangible amortization; the cost-of-sales part is a member): the location total (_amortization-location-total)
+    _lt = os.environ.get('AMORT_LOCATION_TOTAL', _here('_amortization-location-total-2026-11-14.csv'))
+    LT = {x['accession']: x for x in csv.DictReader(open(_lt))} if os.path.exists(_lt) else {}
+    for r in rows:
+        x = LT.get(r['accession'])
+        if x and r['data_point'] == 'amortization_of_intangibles' and r['status'] == 'mapped' and r['value'] is not None and D(x['value']) > D(r['value']):
+            r.update(value=D(x['value']), nodes=f"AmortizationOfIntangibleAssets={x['value']} [location total: {x['check']}]; face part {r.get('nodes', '').split(' | why')[0]}",
+                     why='the IS face line is the operating-expense part only; the filing reports the total by income-statement location (members sum to it)')
+            r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'location_total') if y)
+    # a receivable/payable read from a note fact while the face line carries a member-only fact: the face line wins (COP AR)
+    for r in rows:
+        if r['data_point'] in ('accounts_receivable',) and '[NOTE]' in (r.get('nodes') or '') and r['status'] == 'mapped':
+            mf = [(t, m) for (a_, t), m in MF.items() if a_ == r['accession'] and t in ('AccountsAndNotesReceivableNet', 'AccountsReceivableNetCurrent', 'ReceivablesNetCurrent')]
+            if mf:
+                t = mf[0][0]; v = next(D(x.split('|')[2]) for x in notefacts[r['accession']].split('~') if x.startswith(t + '|0|'))
+                r.update(value=v, tags=t, nodes=f'{t}={v} [NOTE]', status='mapped')
     for r in rows:   # lineage of member-only face facts
         t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
         if (r['accession'], t) in MF and r['status'] == 'mapped' and not re.search(r'\[R\d+', r.get('nodes') or ''):

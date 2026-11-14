@@ -20,6 +20,7 @@ DEBT = re.compile(r'^(ShortTermBorrowings|OtherShortTermBorrowings|CommercialPap
 DEBT_MEMBER = re.compile(r'(?i)(Debt|Borrowing|NotesPayable|CommercialPaper|LineOfCredit|Bonds)')
 LEASES = {}
 NOTDEBT = re.compile(r'(?i)interest payable|accrued interest|operating lease|FairValue|DebtInstrumentCarryingAmount')
+AFFIL = re.compile(r'^(DueToAffiliate\w*|DueToRelatedParties\w*|NotesPayableRelatedParties\w*|DueToOfficersOrStockholders\w*)$')
 LABEL_DEBT = re.compile(r'(?i)\b(debt|borrowings|notes payable|commercial paper|term loans?|senior notes|bonds payable|finance lease|capital lease)\b')
 def run(filings, vals, flloc):
     V = {r['a']: r for r in vals}
@@ -44,6 +45,8 @@ def run(filings, vals, flloc):
             if l['val'] is None and l['tag'].endswith('Abstract'): continue
             if l['tag'].endswith('Abstract') or NOTDEBT.search(l['tag'] + ' ' + l['lb']): continue
             if DEBT.match(l['tag']): cand.append((l, 'debt-role tag'))
+            elif AFFIL.match(l['tag']) and LABEL_DEBT.search(l['lb']):
+                cand.append((l, 'debt from affiliates/related parties: the own label names debt'))   # TMUS 'Long-term debt to affiliates'
             elif l['custom'] and (LABEL_DEBT.search(l['lb']) or LABEL_DEBT.search(header)) and not re.search(r'(?i)interest|operating', l['lb'] + ' ' + l['tag']):
                 cand.append((l, 'custom line, debt label' + ('' if LABEL_DEBT.search(l['lb']) else f" (under header '{header}')")))
         tags = {l['tag'] for l, _ in cand}
@@ -110,7 +113,10 @@ def run(filings, vals, flloc):
             if not on_face_lease and not fl:
                 cap_loc = [(t, m, v) for t, m, v in lf if t.startswith('CapitalLeaseObligations') and m]
                 cap_und = {t: v for t, m, v in lf if t.startswith('CapitalLeaseObligations') and not m}
-                cl = vv[col].get('CapitalLeaseObligations') or cap_und.get('CapitalLeaseObligations')
+                # the balance-sheet amount is the present value split current + noncurrent; a CapitalLeaseObligations total beside
+                # both parts can be the gross minimum payments (AMZN 2015: 7,452 gross = 7,239 present value + 213 imputed interest)
+                both = all(t in vv[col] or t in cap_und for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent'))
+                cl = None if both else (vv[col].get('CapitalLeaseObligations') or cap_und.get('CapitalLeaseObligations'))
                 if cl is None and any(t in vv[col] or t in cap_und for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')):
                     cl = sum((vv[col].get(t, cap_und.get(t, D(0))) for t in ('CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')), D(0))
                 pars = set().union(*[lease_parent.get(t, set()) for t in ('CapitalLeaseObligations', 'CapitalLeaseObligationsCurrent', 'CapitalLeaseObligationsNoncurrent')])

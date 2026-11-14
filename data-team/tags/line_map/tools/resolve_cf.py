@@ -96,7 +96,7 @@ def resolve_cf(f, notes):
         else: put('share_buybacks', 'not_presented', '', None, '', 'no own-stock repurchase line in the financing section nor an undimensioned note fact')
     # ---- dividends: financing section; common (or the unlabelled total) beside no separate common line
     com = [l for l in fin if l['tag'] in ('PaymentsOfDividendsCommonStock', 'PaymentsOfOrdinaryDividends')]
-    tot = [l for l in fin if l['tag'] in ('PaymentsOfDividends', 'PaymentsOfCapitalDistribution')]
+    tot = [l for l in fin if l['tag'] in ('PaymentsOfDividends', 'PaymentsOfCapitalDistribution', 'CashDistributionsToStockholders')]  # REIT 'Cash distributions to stockholders' (WELL)
     cus = [l for l in fin if l['custom'] and DIV_LABEL.search(l['lb']) and not DIV_NOT.search(l['lb'])]
     ncom = note(['PaymentsOfDividendsCommonStock'])
     pick = com or tot or ([] if ncom else (cus if len(cus) == 1 else []))

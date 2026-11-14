@@ -148,7 +148,7 @@ def resolve_ci(L, notes):
 
 
 DA_TOT = re.compile(r'^(DepreciationDepletionAndAmortization|DepreciationAndAmortization|DepreciationAmortizationAndOther|DepreciationAndAmortizationExcludingIntangibleAssetsAndDeferredContractAcquisitionCosts|DepreciationAndAmortizationExcludingAmortizationOfIntangibleAssets|OtherDepreciationAndAmortization|DepreciationAndDepletion|DepreciationAmortizationAndAccretionNet)$')
-DA_TOT_LB = re.compile(r'(?i)^(total )?depreciation[,]? (depletion )?(and|&) amortization|^depreciation(, depletion)?(,)? (and|&) (amortization|depletion)|^depreciation, amortization|^depreciation and depletion')
+DA_TOT_LB = re.compile(r'(?i)^(total )?depreciation[,]? (expense )?(depletion )?(and|&) amortization|^depreciation(, depletion)?(,)? (and|&) (amortization|depletion)|^depreciation, amortization|^depreciation and depletion')
 DEP_TAG = re.compile(r'^(Depreciation|DepreciationNonproduction|DepreciationDepletionAndAmortizationPropertyPlantAndEquipment|DepreciationOfPropertyPlantAndEquipment|DepreciationExpense)$')
 DEP_LB = re.compile(r'(?i)^depreciation( expense)?( and depletion)?$|^depreciation of')
 AMORT_TAG = re.compile(r'^(AmortizationOfIntangibleAssets|AmortizationOfAcquiredIntangibleAssets|AdjustmentForAmortization|CapitalizedComputerSoftwareAmortization1?|AmortizationOfDeferredCharges|Amortization)$')

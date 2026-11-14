@@ -29,6 +29,25 @@ def test_pretax_is_found_by_position_under_any_node_that_subtracts_tax():
     assert out['income_before_tax']['value'] == D(-7239)
 
 
+def test_debt_to_affiliates_is_debt_when_its_label_names_debt():
+    # TMUS FY2016: 'Long-term debt to affiliates' (DueToAffiliateNoncurrent); 'Payables to affiliates' is not debt
+    f = _f([('BS', 'Assets', 'Total assets', 65), ('BS', 'DueToAffiliateCurrent', 'Payables to affiliates', 125), ('BS', 'DebtCurrent', 'Short-term debt', 354),
+            ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 21832), ('BS', 'DueToAffiliateNoncurrent', 'Long-term debt to affiliates', 5600),
+            ('BS', 'StockholdersEquity', 'Total stockholders equity', 20)])
+    own = next(r for r in total_debt.run([f], [], {}) if r['column'] == 'own')
+    assert D(own['value']) == D(27786)
+
+
+def test_pre842_capital_lease_is_the_present_value_not_the_gross_total():
+    # AMZN FY2015: CapitalLeaseObligations 7,452 (gross) beside Current 3,027 + Noncurrent 4,212 (present value 7,239)
+    calc = 'g|OtherLiabilitiesNoncurrent|CapitalLeaseObligationsNoncurrent|1'
+    f = _f([('BS', 'Assets', 'Total assets', 65), ('BS', 'LongTermDebtNoncurrent', 'Long-term debt', 8235), ('BS', 'OtherLiabilitiesNoncurrent', 'Other long-term liabilities', 9249),
+            ('BS', 'StockholdersEquity', 'Total stockholders equity', 13)], calc)
+    vals = [dict(a=f['a'], vals='~'.join(f"{t}|0|2017-12-31|{v}" for t, v in (('CapitalLeaseObligations', 7452), ('CapitalLeaseObligationsCurrent', 3027), ('CapitalLeaseObligationsNoncurrent', 4212))))]
+    own = next(r for r in total_debt.run([f], vals, {}) if r['column'] == 'own')
+    assert D(own['value']) == D(8235 + 7239), own
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):
