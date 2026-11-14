@@ -36,9 +36,11 @@ A missing part turns PROVEN into DISAGREE, reason perimeter_incomplete, with che
 
 from __future__ import annotations
 
+import re
 from decimal import Decimal
 from typing import Any
 
+from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.fsn import FilingStructure, fsn_ddate
 from scrooner_pipeline.proof.prove import (
@@ -77,6 +79,50 @@ LEASE_FAMILIES = (
     ),
 )
 LEASE_IN_DEBT_PREFIX = "LongTermDebtAndCapitalLeaseObligations"
+DEBT_MEMBER_RE = re.compile(r"Debt|Borrowing|Notes|CommercialPaper|Loan|Credit")
+OUTSIDE_MEMBER_RE = re.compile(r"Liabilit")
+
+
+def member_kind(member: str) -> str:
+    """'us-gaap:OtherCurrentLiabilitiesMember' -> 'outside_debt'; a debt-line member -> 'inside_debt'; else 'other'
+    (rule 3: only a member naming a non-debt liability line makes the obligation owed)."""
+    name = member.rpartition(":")[2]
+    if DEBT_MEMBER_RE.search(name):
+        return "inside_debt"
+    return "outside_debt" if OUTSIDE_MEMBER_RE.search(name) else "other"
+
+
+def instance_missing(
+    s: FilingStructure,
+    claim_tags: set[str],
+    ddate,
+    facts: dict[instance_facts.Key, instance_facts.InstanceFact] | None = None,
+) -> list[dict[str, Any]]:
+    """R07 rule 3: located note capital leases of this filing and column (the committed instance-facts file) that sit
+    outside debt and that the claim does not name (as the located part, or the plain lease tag). One figure per
+    member: Current + Noncurrent, else the total. A lease with no location member is not in the file's located
+    set: it is never owed here (absence is not evidence; it goes to a reader)."""
+    by_member: dict[str, list[instance_facts.InstanceFact]] = {}
+    for f in instance_facts.at_column(s.adsh, ddate, facts):
+        if f.value == 0 or member_kind(f.member) != "outside_debt":
+            continue
+        if not any(f.tag == t for fam in LEASE_FAMILIES for t in fam):
+            continue
+        by_member.setdefault(f.member, []).append(f)
+    out: list[dict[str, Any]] = []
+    for fs in by_member.values():
+        parts = [f for f in fs if f.tag.endswith(("Current", "Noncurrent"))] or fs
+        for f in parts:
+            if f.part_tag in claim_tags or _names(claim_tags, f.tag):
+                continue
+            out.append(
+                {
+                    "tag": f.part_tag,
+                    "value": str(f.value),
+                    "kind": "instance_capital_lease",
+                }
+            )
+    return out
 
 
 def _names(claim_tags: set[str], tag: str) -> bool:
@@ -99,6 +145,7 @@ def missing_parts(
     claim_tags: set[str],
     ddate,
     lease_locations: dict[str, tuple[str, ...]] | None = None,
+    instance: dict[instance_facts.Key, instance_facts.InstanceFact] | None = None,
 ) -> list[dict[str, Any]]:
     """Perimeter parts the filing prints at the column that the claim does not name."""
     out: list[dict[str, Any]] = []
@@ -146,6 +193,7 @@ def missing_parts(
             if any(_names(claim_tags, p) for p in s.calc_parents.get(t, set())):
                 continue
             out.append({"tag": t, "value": str(v), "kind": "finance_lease"})
+    out.extend(instance_missing(s, claim_tags, ddate, instance))
     return out
 
 
@@ -153,6 +201,7 @@ def apply_perimeter(
     proofs: list[Proof],
     structures: dict[str, FilingStructure],
     lease_locations: dict[str, dict[str, tuple[str, ...]]] | None = None,
+    instance: dict[instance_facts.Key, instance_facts.InstanceFact] | None = None,
 ) -> int:
     """Post-pass over a company's proofs (in place). Returns the number of cells turned DISAGREE."""
     n = 0
@@ -172,6 +221,7 @@ def apply_perimeter(
             claim_tags,
             fsn_ddate(sh.period_end),
             (lease_locations or {}).get(s.adsh),
+            instance,
         )
         if not missing:
             p.checks["perimeter"] = {"status": "pass"}

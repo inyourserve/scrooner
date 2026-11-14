@@ -58,6 +58,7 @@ from scrooner_pipeline.common.authority import (
     load_face_indexes,
     latest_complete_filing,
 )
+from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
@@ -144,9 +145,15 @@ class Fact:
     # form of the filing the fact was printed in ('10-Q', '10-K', ...): a quarter fact is judged by its own 10-Q's
     # era (rule 2, Dhairya 2026-11-14), a fiscal-year fact by its 10-K's. None = unknown.
     form: str | None = None
+    # instance-sourced part (value_source fsn_xbrl:instance): 'accession tag[Axis=Member] decimals n'; no fsn.value id
+    instance: str = ""
 
 
 STANDARD_TAXONOMIES = {"us-gaap", "ifrs-full", "dei", "srt"}
+
+
+def _is_instance_key(k: tuple[str | None, str | None]) -> bool:
+    return instance_facts.is_instance_part(k[1])
 
 
 def is_custom(taxonomy: str | None) -> bool:
@@ -391,6 +398,19 @@ def _merge_predecessor_facts(conn, company_id, tags, out) -> None:
                 out[(taxonomy, tag)][period_id] = new
 
 
+def _prefer_exact_end(
+    match: list[int], periods: dict[int, tuple[date, date, str]], ddate: date
+) -> list[int]:
+    """The SEC's month-end rounding of ddate can match two core.periods (an instant ending 2016-06-30 and one ending
+    2016-07-01: MSFT). When exactly one of them ends ON ddate that one is the column; otherwise the match is
+    unchanged (still never a guess)."""
+    if len(match) > 1:
+        exact = [pid for pid in match if periods[pid][1] == ddate]
+        if len(exact) == 1:
+            return exact
+    return match
+
+
 def _load_fsn_facts(
     conn: psycopg.Connection,
     company_id: int,
@@ -465,6 +485,7 @@ def _load_fsn_vintages(
                 and qtrs * 91 - 20 <= (end - start).days <= qtrs * 91 + 20
             )
         ]
+        match = _prefer_exact_end(match, periods, ddate)
         if len(match) != 1:
             continue  # no unique core.period for it: never guess
         mstart, mend, mtype = periods[match[0]]
@@ -498,6 +519,73 @@ def _load_fsn_vintages(
                 por=first[7],
             )
         )
+    return out
+
+
+def _load_instance_vintages(
+    conn: psycopg.Connection,
+    tags: set[tuple[str | None, str | None]],
+    periods: dict[int, tuple[date, date, str]],
+    facts: dict[instance_facts.Key, instance_facts.InstanceFact] | None = None,
+) -> dict[tuple[str | None, str | None], dict[int, list[Fact]]]:
+    """(taxonomy, 'Tag[Axis=Member]') -> period_id -> one Fact per filing, from the committed instance-facts file
+    (common/instance_facts.py) for the filings fsn knows. Instants only; the period is the unique core.period whose
+    end the SEC's month-end rounding of ddate matches. The filing must print that column (authority v2). Source
+    fsn_xbrl, on_face True (the file row IS the evidence), instance = the lineage text."""
+    out: dict[tuple[str | None, str | None], dict[int, list[Fact]]] = defaultdict(dict)
+    wanted = {
+        g: t for t, g in tags if g is not None and instance_facts.is_instance_part(g)
+    }
+    if not wanted:
+        return out
+    rows = [
+        f
+        for f in (facts if facts is not None else instance_facts.load()).values()
+        if f.part_tag in wanted
+    ]
+    if not rows:
+        return out
+    with conn.cursor() as cur:
+        cur.execute(
+            "select accession, id, accepted, form, period from fsn.filing where accession = any(%s)",
+            (sorted({f.adsh for f in rows}),),
+        )
+        filings = {a: (i, acc, form, per) for a, i, acc, form, per in cur.fetchall()}
+    for f in rows:
+        fil = filings.get(f.adsh)
+        if fil is None:
+            continue
+        fid, accepted, form, fperiod = fil
+        match = [
+            pid
+            for pid, (_start, end, ptype) in periods.items()
+            if ptype == "instant" and fsn_end_matches(f.ddate, end)
+        ]
+        match = _prefer_exact_end(match, periods, f.ddate)
+        if len(match) != 1:
+            continue
+        _start, mend, mtype = periods[match[0]]
+        if not face_column_eligible(form, fperiod, mend, mtype):
+            continue
+        out[(wanted[f.part_tag], f.part_tag)].setdefault(match[0], []).append(
+            Fact(
+                f.value,
+                0,
+                mend,
+                False,
+                -fid,
+                f.adsh,
+                accepted.date() if accepted else None,
+                source="fsn_xbrl",
+                on_face=True,
+                por=fperiod,
+                form=form,
+                instance=f"{f.adsh} {f.part_tag} decimals {f.decimals}",
+            )
+        )
+    for by_period in out.values():
+        for lst in by_period.values():
+            lst.sort(key=lambda x: x.filed or date.min, reverse=True)
     return out
 
 
@@ -700,9 +788,12 @@ def _lineage(pairs) -> dict:
     """value_source and lineage of a cell: core.fact ids (source_fact_ids) for sec_api, fsn.value ids
     (source_value_ids) for fsn_xbrl. canonical_fact has no value_source column: the family carries it."""
     src = "fsn_xbrl" if any(f.source == "fsn_xbrl" for _, f in pairs) else "sec_api"
-    ids = sorted({f.fact_id for _, f in pairs if f.source == src})
+    ids = sorted({f.fact_id for _, f in pairs if f.source == src and not f.instance})
     return {
-        "value_source": src,
+        # an instance-sourced part has no fsn.value id: the family says so, the cell's serve_note names the fact
+        "value_source": "fsn_xbrl:instance"
+        if any(f.instance for _, f in pairs)
+        else src,
         "source_fact_ids": ids if src == "sec_api" else [],
         "source_value_ids": ids if src == "fsn_xbrl" else [],
     }
@@ -719,6 +810,12 @@ def _note(pairs) -> str | None:
             notes_set.add(
                 f"filer printed in scaled units, stored unscaled; scale x{r.scale:,} from override "
                 f"{r.evidence_adsh} R{r.evidence_report}"
+            )
+    for r, f in pairs:
+        if f.instance:  # lineage of an instance-sourced part: accession, tag, member, decimals, R page
+            notes_set.add(
+                f"instance fact {f.instance}"
+                + (f" R{r.evidence_report}" if r.evidence_report else "")
             )
     notes = sorted(notes_set)
     return "; ".join(notes) or None
@@ -1765,11 +1862,19 @@ def resolve_for_company(
     periods = _load_periods(conn, company_id)
     face = load_face_indexes(conn, [company_id])[company_id]
     facts = _load_facts(
-        conn, company_id, {k for k in used if not is_custom(k[0])}, face
+        conn,
+        company_id,
+        {k for k in used if not is_custom(k[0]) and not _is_instance_key(k)},
+        face,
     )
-    custom_used = {k for k in used if is_custom(k[0])}
+    custom_used = {k for k in used if is_custom(k[0]) and not _is_instance_key(k)}
     for k, by_period in _load_fsn_facts(conn, company_id, custom_used, periods).items():
         facts[k] = by_period
+    inst_vintages = _load_instance_vintages(
+        conn, {k for k in used if _is_instance_key(k)}, periods
+    )
+    for k, by_period in inst_vintages.items():
+        facts[k] = {pid: prints[0] for pid, prints in by_period.items()}
     alt_tags: set[tuple[str | None, str | None]] = set()
     for r in rows:
         if (
@@ -1784,13 +1889,17 @@ def resolve_for_company(
     )  # read only to detect winner-tag gaps, never a value
     comp_tags = {(r.taxonomy, r.tag) for r in rows if r.decision == "component"}
     vintages = _load_fact_vintages(
-        conn, company_id, {k for k in comp_tags if not is_custom(k[0])}, face=face
+        conn,
+        company_id,
+        {k for k in comp_tags if not is_custom(k[0]) and not _is_instance_key(k)},
+        face=face,
     )
     # standard parts of a sum that has a custom part are also read from the filings' own XBRL (one source a cell)
     custom_parents = {
         r.parent_concept_id
         for r in rows
-        if r.decision == "component" and is_custom(r.taxonomy)
+        if r.decision == "component"
+        and (is_custom(r.taxonomy) or instance_facts.is_instance_part(r.tag))
     }
     tie_tags = {
         (r.taxonomy, r.tag)
@@ -1814,10 +1923,14 @@ def resolve_for_company(
             and r.parent_concept_id in custom_parents
             and r.tag is not None
             for alias in with_aliases(r.tag)
+            if not instance_facts.is_instance_part(alias)
         }
         | (tie_tags if custom_parents else set()),
         periods,
     )
+    for k, by_period in inst_vintages.items():
+        for pid, prints in by_period.items():
+            fsn_vintages.setdefault(k, {}).setdefault(pid, []).extend(prints)
     accessions = {
         f.accession for k in comp_tags | used for f in facts.get(k, {}).values()
     } | {

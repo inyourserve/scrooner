@@ -32,6 +32,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
+from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
@@ -43,7 +44,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v13_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v14_2026-11-14"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -903,7 +904,14 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         ):  # a malformed member claim is unknown, never read as a plain tag
             missing.append(tag)
             continue
-        if segs:  # member claim: ONLY the value under exactly these members, never the total (proof/dims.py)
+        inst = None
+        if segs and qtrs == 0 and cls == "money":
+            # an instance-sourced part: the committed instance-facts row of THIS filing and column (the FSN load
+            # drops facts that carry only a BalanceSheetLocationAxis member); same accession, column, value
+            inst = instance_facts.lookup(structure.adsh, base, segs, ddate)
+        if inst is not None:
+            nv = inst.num_value()
+        elif segs:  # member claim: ONLY the value under exactly these members, never the total (proof/dims.py)
             nv = find_value_dim(structure, base, ddate, qtrs, cls, segs)
         else:  # plain claim: the non-dimensional value only; a renamed extension tag is the same line
             nv = None
@@ -930,7 +938,14 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
                 notes.append(tag)
         total += sign * nv.value
         dcmls.append(nv.dcml)
-        found.append({"tag": tag, "sign": sign, "value": str(nv.value)})
+        found.append(
+            {
+                "tag": tag,
+                "sign": sign,
+                "value": str(nv.value),
+                **({"source": f"instance:{inst.instance}"} if inst is not None else {}),
+            }
+        )
     p.checks["claim"] = _claim_check(claim)
     p.checks["component_parts"] = {
         "status": "n/a" if (missing or off_face) else "pass",

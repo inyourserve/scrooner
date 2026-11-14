@@ -37,6 +37,7 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.common import instance_facts
 from scrooner_pipeline.mapper import era_extend
 from scrooner_pipeline.mapper.company_tag_map import EXTRA_STMT, STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_plan import (
@@ -44,6 +45,7 @@ from scrooner_pipeline.mapper.company_tag_map_plan import (
     reporting_period_ends,
     unread_tail_concepts,
 )
+from scrooner_pipeline.proof.fsn import fsn_ddate
 from scrooner_pipeline.mapper.company_tag_map_seed import (
     INSERT,
     check_overlaps,
@@ -153,16 +155,37 @@ def _fy_start(end: date, years: int = 1) -> date:
 MEMBER_RE = re.compile(r"\[[^\]]*=[^\]]*\]")
 
 
-def parse_parts(tags: str) -> tuple[tuple[int, str, str], ...]:
+def parse_parts(
+    tags: str, instance_of: tuple[str, date] | None = None
+) -> tuple[tuple[int, str, str], ...]:
+    """Parts as (sign, taxonomy, local tag). A `tag[Axis=Member]` part is accepted ONLY with instance_of = (accession,
+    period end) and only when it resolves to a row of the committed instance-facts file for that accession and column
+    (common/instance_facts.py); it is stored as the literal `Tag[Axis=Member]` (the instance-sourced part). Otherwise
+    member_not_supported: company_tag_map has no axis/member key (Dhairya 2026-11-13)."""
     out = []
     for t in re.split(r"[+;]", tags):
         t = t.strip()
         if not t:
             continue
         if MEMBER_RE.search(t):
-            # tag[Axis=Member]: a dimensional line; company_tag_map has no axis/member key yet (Dhairya 2026-11-13).
-            # Stored as a literal tag it would never match a value.
-            raise ValueError("member_not_supported")
+            if instance_of is None:
+                raise ValueError("member_not_supported")
+            try:
+                sign, prefix, base, segs = instance_facts.split_instance_part(t)
+            except ValueError:
+                raise ValueError("member_not_supported") from None
+            accn, end = instance_of
+            if (
+                not prefix
+                or instance_facts.lookup(accn, base, segs, fsn_ddate(end)) is None
+            ):
+                raise ValueError("member_not_supported")
+            out.append((sign, prefix, instance_facts.part_tag(base, segs)))
+            continue
+        if "[" in t or "]" in t:
+            raise ValueError(
+                f"member_syntax: {t!r}"
+            )  # a stray bracket is never part of a tag
         sign = -1 if t.startswith("-") else 1
         prefix, _, local = t.lstrip("-").partition(":")
         if not local:
@@ -399,7 +422,7 @@ def parse_fixes(csv_text: str, source: str) -> tuple[list[DocmapRow], list[dict]
             continue
         seen.add(key)
         try:
-            parts = parse_parts(r.get("tags", r.get("tag", "")))
+            parts = parse_parts(r.get("tags", r.get("tag", "")), (accn, end))
         except ValueError as exc:
             reject(str(exc))
             continue
@@ -669,6 +692,8 @@ def table_rows(
         # total, audit R06); one value, or a count that is not the part count, applies to every part as before
         raws = [x.strip() for x in d.stmt_raw.split("+")]
         per = raws if len(raws) == len(d.parts) and len(set(raws)) > 1 else None
+        pages = [x.strip() for x in d.r_page.split("+")]
+        per_page = pages if len(pages) == len(d.parts) else None
         return [
             {
                 **base,
@@ -680,6 +705,12 @@ def table_rows(
                 "stmt": stmt_code(per[i], d.data_point, st, value_row=True)
                 if per
                 else stmt,
+                # each part keeps its own R page when the row lists one per part ('R4.htm+R4.htm+R102.htm')
+                **(
+                    {"evidence_report": int(m.group(1))}
+                    if per_page and (m := re.match(r"R(\d+)", per_page[i]))
+                    else {}
+                ),
             }
             for i, (sign, tax, tag) in enumerate(d.parts)
         ]
