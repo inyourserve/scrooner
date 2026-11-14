@@ -119,6 +119,14 @@ def candidates(dp: str) -> list[str]:
 
 
 STATEMENT_STMTS = ("IS", "BS", "CF", "CI", "EQ")
+# report titles that name a main statement (fsn.report.shortname), used only when fsn.line holds none of it
+TITLE_PATTERNS = {
+    "BS": re.compile(r"balance sheet|financial position|financial condition", re.I),
+    "IS": re.compile(
+        r"statements? of (consolidated )?(operations|income|earnings)|income statements?|results of operations",
+        re.I,
+    ),
+}
 
 
 @dataclass
@@ -141,6 +149,9 @@ class LocatorIndex:
     stmt_n: dict[tuple[str, str, int], int] = field(
         default_factory=lambda: defaultdict(int)
     )  # (acc, stmt, report) -> lines
+    titles: dict[tuple[str, int], str] = field(
+        default_factory=dict
+    )  # (acc, report) -> the report's short name (fsn.report)
 
     def add(
         self, acc: str, report: int, line: int, stmt: str, tag: str, plabel: str | None
@@ -154,11 +165,24 @@ class LocatorIndex:
             self.stmt_n[(acc, stmt, report)] += 1
 
     def stmt_report(self, acc: str, stmt: str) -> int | None:
-        """The report that carries most of the statement's lines in THIS filing (a parenthetical has few)."""
+        """The report that carries most of the statement's lines in THIS filing (a parenthetical has few). A filing
+        whose FSN load stored no lines for the statement (SHOP's 40-F balance sheet) falls back to the filing's own
+        report list (fsn.report): the lowest report whose title names the statement."""
         best = [
             (n, -r) for (a, s, r), n in self.stmt_n.items() if a == acc and s == stmt
         ]
-        return -max(best)[1] if best else None
+        if best:
+            return -max(best)[1]
+        pat = TITLE_PATTERNS.get(stmt)
+        named = sorted(
+            r
+            for (a, r), title in self.titles.items()
+            if a == acc
+            and pat
+            and pat.search(title)
+            and "parenthetical" not in title.lower()
+        )
+        return named[0] if named else None
 
 
 OWN_UNVERIFIED = "reason_own_filing_unverified"
@@ -689,6 +713,13 @@ def _locator_index(conn: Any, accessions: set[str], tags: set[str]) -> LocatorIn
             (accs[i : i + 200], list(STATEMENT_STMTS), sorted(tags)),
         ).fetchall():
             idx.add(acc, report, line, stmt, tag, plabel)
+        for acc, report, title in conn.execute(
+            """select f.accession, r.report, r.shortname
+               from fsn.report r join fsn.filing f on f.id = r.filing_id
+               where f.accession = any(%s) and r.shortname is not null""",
+            (accs[i : i + 200],),
+        ).fetchall():
+            idx.titles[(acc, report)] = title
     return idx
 
 

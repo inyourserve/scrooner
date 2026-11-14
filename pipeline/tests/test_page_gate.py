@@ -121,3 +121,30 @@ def test_member_part_cites_the_report_of_its_base_tag_in_that_filing():
     # another filing: no page is borrowed
     text, blank = parts_locator(checks, "0000000000-00-000009", i, {}, None)
     assert blank == 2
+
+
+def test_statement_with_no_stored_lines_falls_back_to_the_filings_report_titles():
+    """SHOP FY2021 (40-F): the FSN load stored no BS lines, the report list names R3 'Consolidated Balance Sheets'."""
+    from scrooner_pipeline.mapper.top100_coverage import (
+        LocatorIndex,
+        statement_page_fallback,
+    )
+
+    A = "0001594805-22-000011"
+    i = LocatorIndex()
+    i.add(A, 5, 1, "IS", "Revenues", "x")
+    i.titles.update(
+        {
+            (A, 3): "Consolidated Balance Sheets",
+            (A, 4): "Consolidated Balance Sheets (Parenthetical)",
+            (A, 8): "Consolidated Statements of Cash Flows",
+        }
+    )
+    assert i.stmt_report(A, "BS") == 3
+    assert statement_page_fallback(A, "BS", True, i) == (
+        "R3.htm",
+        "evidence_acc_stmt_page",
+    )
+    # lines win over titles; another filing borrows nothing
+    assert i.stmt_report(A, "IS") == 5
+    assert i.stmt_report("0000000000-00-000009", "BS") is None

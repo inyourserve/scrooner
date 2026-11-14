@@ -335,12 +335,15 @@ def test_locator_index_fetch_is_keyed_by_accession():
 
             class C:
                 def fetchall(self):
+                    if "fsn.report" in sql:
+                        return [("A", 3, "Consolidated Balance Sheets")]
                     return [("A", 4, 9, "BS", "AssetsCurrent", "Total current assets")]
 
             return C()
 
     idx = _locator_index(Conn(), {"A", ""}, {"AssetsCurrent"})
     assert idx.line[("A", "BS", 9)] == 4
+    assert idx.titles[("A", 3)] == "Consolidated Balance Sheets"
 
 
 def test_proven_cell_carries_no_reason_code_or_text():
