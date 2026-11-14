@@ -951,6 +951,29 @@ def seed_expanded_concepts_cmd() -> None:
     typer.echo(f"seed-expanded-concepts: {stats}")
 
 
+@app.command("seed-bank-concepts")
+def seed_bank_concepts_cmd(
+    apply: bool = typer.Option(
+        False, "--apply", help="Write the missing rows (default: dry run, prints them)."
+    ),
+) -> None:
+    """Additive seed of the 6 bank canonical concepts (deposits, loans_net, noninterest_*,
+    provision_for_credit_losses, total_interest_income). Never touches an existing row."""
+    from scrooner_pipeline.mapper import bank_concepts
+
+    with get_connection() as conn:
+        rows, present = bank_concepts.plan(conn)
+        for r in rows:
+            typer.echo(f"would insert: {r[0]} | {r[1]} | {r[2]} | {r[3]}")
+        typer.echo(f"already present (untouched): {present}")
+        if apply:
+            typer.echo(f"seed-bank-concepts: {bank_concepts.seed(conn)}")
+        else:
+            typer.echo(
+                f"seed-bank-concepts: dry run, {len(rows)} to insert (use --apply)"
+            )
+
+
 @app.command("seed-expanded-definitions")
 def seed_expanded_definitions_cmd() -> None:
     """Doc 18 Tier A / doc 26 (2026-08-18): seed roa/quick_ratio/

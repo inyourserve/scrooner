@@ -484,6 +484,13 @@ GROUP_OUT: dict[str, frozenset[str]] = {
 GROUP_ONLY: dict[str, frozenset[str]] = {
     "bdc_total_investment_income": frozenset({"bdc"}),
     "net_interest_income": frozenset({"bank", "lender"}),
+    # bank concepts (mapper/bank_concepts.py, 2026-11-14): bank rows only
+    "deposits": frozenset({"bank"}),
+    "loans_net": frozenset({"bank"}),
+    "noninterest_expense": frozenset({"bank"}),
+    "noninterest_income": frozenset({"bank"}),
+    "provision_for_credit_losses": frozenset({"bank"}),
+    "total_interest_income": frozenset({"bank"}),
 }
 COMPANY_GROUP = {"0001287750": "bdc", "0001736035": "bdc", "0002065601": "bank"}
 

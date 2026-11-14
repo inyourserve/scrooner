@@ -82,3 +82,9 @@ total_liabilities,balance_sheet,first_match
 total_liabilities_resolved,balance_sheet,first_match
 weighted_basic_shares,income_statement,first_match
 weighted_diluted_shares,income_statement,first_match
+deposits,balance_sheet,first_match
+loans_net,balance_sheet,first_match
+noninterest_expense,income_statement,first_match
+noninterest_income,income_statement,first_match
+provision_for_credit_losses,income_statement,first_match
+total_interest_income,income_statement,first_match
