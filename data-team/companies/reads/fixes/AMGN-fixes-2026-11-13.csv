@@ -1,2 +1,0 @@
-data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-total_liabilities,2025,2025-12-31,not_presented,,BS,0000318154-26-000010,,,"source=line_map; structural total_liabilities: not printed in 0000318154-26-000010 (derived_not_printed, ruling C2); rekey_docmap_hand; derived by mapper/derived_cells.py when its operands are PROVEN"

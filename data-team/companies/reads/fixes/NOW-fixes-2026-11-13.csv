@@ -1,3 +1,0 @@
-data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-total_debt,2017,2017-12-31,component sum,us-gaap:ConvertibleNotesPayableCurrent+us-gaap:ConvertibleLongTermNotesPayable,BS+BS,0001373715-19-000070,R2.htm+R2.htm,1173436000,structural line_map total_debt (tools/total_debt.py); source=line_map; replace; comparative column of 0001373715-19-000070; sum 1173436000.0000
-total_debt,2021,2021-12-31,component sum,us-gaap:LongTermDebtCurrent+us-gaap:ConvertibleLongTermNotesPayable,BS+BS,0001373715-23-000035,R3.htm+R3.htm,1576000000,structural line_map total_debt (tools/total_debt.py); source=line_map; replace; comparative column of 0001373715-23-000035; sum 1576000000.0000

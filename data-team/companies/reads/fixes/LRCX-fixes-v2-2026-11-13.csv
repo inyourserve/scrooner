@@ -1,5 +1,0 @@
-data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-ppe_net,2019,2019-06-30,mapped,us-gaap:PropertyPlantAndEquipmentNet,BS,0000707549-19-000124,R4.htm,1059077000,"BS face line 'Property and equipment, net' | value_source sec_api"
-revenue,2015,2015-06-28,mapped,us-gaap:SalesRevenueNet,IS,0001193125-15-290023,R2.htm,5259312000,the face prints 'Revenue' on SalesRevenueNet in this year's own 10-K: era extension of the revenue claim | value_source sec_api
-revenue,2016,2016-06-26,mapped,us-gaap:SalesRevenueNet,IS,0000707549-16-000050,R2.htm,5885893000,the face prints 'Revenue' on SalesRevenueNet in this year's own 10-K: era extension of the revenue claim | value_source sec_api
-revenue,2017,2017-06-25,mapped,us-gaap:SalesRevenueNet,IS,0000707549-17-000100,R2.htm,8013620000,the face prints 'Revenue' on SalesRevenueNet in this year's own 10-K: era extension of the revenue claim | value_source sec_api

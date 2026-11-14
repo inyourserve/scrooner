@@ -1,5 +1,0 @@
-data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-operating_expenses,2021,2021-12-31,component_sum,us-gaap:SellingGeneralAndAdministrativeExpense;us-gaap:ResearchAndDevelopmentExpense;us-gaap:OtherCostAndExpenseOperating,IS,0000313616-22-000061,R4.htm,10487000000,"red cell v2, read by hand: SG&A 8,198 + R&D 1,742 + other operating expense 547 = 10,487 = gross profit 17,952 - operating profit 7,465"
-revenue,2016,2016-12-31,mapped,us-gaap:SalesRevenueNet,IS,0000313616-17-000066,R4.htm,16882400000,"red cell v2 (served value is the predictor candidate; the tag-map has no ): R4.htm 'Sales' read from 0000313616-17-000066 (FY0 column), printed 16882400000 = store value 16882400000; companyfacts 16882400000; check: machine read of the R page"
-revenue,2017,2017-12-31,mapped,us-gaap:SalesRevenueNet,IS,0000313616-18-000038,R4.htm,18329700000,"red cell v2, read by hand: 'Sales' 18,329.7 on the own FY2017 10-K; store 15,518.8 is the later recast after the Envista separation"
-share_buybacks,2022,2022-12-31,not_presented,,CF,0000313616-23-000087,R7.htm,,"red cell v2, read by hand: no repurchase line on the cash-flow statement for 2022"

@@ -1,4 +1,3 @@
 data_point,fiscal_year,period_end,decision,tags,stmt,accession,r_page,printed_value,note
-cash_paid_for_income_taxes,2024,2024-12-31,mapped,us-gaap:IncomeTaxesPaid,NOTE,0000018230-25-000008,,3126000000,the FY2024 10-K carries IncomeTaxesPaid undimensioned and consolidated in a note (ruling AB); note R page to confirm | value_source sec_api
 comprehensive_income,2024,2024-12-31,mapped,us-gaap:ComprehensiveIncomeNetOfTax,CI,0000018230-25-000008,R4.htm,10141000000,"the CI statement prints 'Comprehensive income (loss) attributable to shareholders' (ComprehensiveIncomeNetOfTax 10,141,000,000) beside the total including NCI | value_source sec_api"
 dividends_per_share,2018,2018-12-31,mapped,us-gaap:CommonStockDividendsPerShareDeclared,EQ,0000018230-20-000056,R7.htm,3.36,the next 10-K's equity statement prints 'Dividends per share declared' for 2018 | value_source sec_api
