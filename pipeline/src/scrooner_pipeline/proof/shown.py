@@ -213,6 +213,7 @@ def _periodic_copies(
     dict[tuple[str, int], set[tuple[str, str]]],
     dict[str, date | None],
     dict[str, date | None],
+    dict[str, int],
 ]:
     """(base canonical name, period_id) -> every periodic-form copy (accession,
     value, xbrl tag) of the cell in core.fact, authoritative or not: the resolver keeps
@@ -222,6 +223,7 @@ def _periodic_copies(
     auth: dict[tuple[str, int], set[tuple[str, str]]] = defaultdict(set)
     filed: dict[str, date | None] = {}
     por_of: dict[str, date | None] = {}
+    vals_by_acc: dict[str, list[Decimal]] = defaultdict(list)
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -267,7 +269,13 @@ def _periodic_copies(
             por_of[acc] = por
             if is_auth:
                 auth[(name, pid)].add((acc, tag))
-    return out, auth, filed, por_of
+            vals_by_acc[acc].append(Decimal(value))
+    # a filing's own rounding: the median trailing-zero exponent of its printed values (LLY FY2024 10-K prints
+    # 96.7M, its FY2025 10-K prints the same figure as 97M)
+    from scrooner_pipeline.common.presentation_scale import presentation_scale
+
+    scale_by = {a: presentation_scale(vs) for a, vs in vals_by_acc.items()}
+    return out, auth, filed, por_of, scale_by
 
 
 def _same_number(a: Decimal, b: Decimal, scale: int) -> bool:
@@ -358,13 +366,39 @@ def era_tag_copies(
     return out
 
 
+def rounding_equal(
+    a: Decimal, b: Decimal, scale_a: int | None, scale_b: int | None
+) -> bool:
+    """One figure printed at two precisions: the values differ by at most half a unit of the COARSER filing's own
+    rounding scale (96.7M vs 97M, the later filing prints whole millions). Only when the coarser value really sits on
+    that grid (a multiple of the unit), so a genuine restatement is never absorbed."""
+    s = max(scale_a or 0, scale_b or 0)
+    if s <= 0:
+        return False
+    unit = Decimal(10) ** s
+    coarse = a if (scale_a or 0) >= (scale_b or 0) else b
+    if coarse % unit != 0:
+        return False
+    return abs(a - b) <= unit / 2
+
+
 def disagreeing_copies(
-    copies: list[tuple[str, Decimal]], shown_value: Decimal, scale: int
+    copies: list[tuple[str, Decimal]],
+    shown_value: Decimal,
+    scale: int,
+    copy_scales: dict[str, int] | None = None,
+    shown_scale: int | None = None,
 ) -> list[tuple[str, str]]:
     from scrooner_pipeline.common.presentation_scale import same_number
 
+    cs = copy_scales or {}
     return sorted(
-        {(a, str(v)) for a, v in copies if not same_number(v, shown_value, scale)}
+        {
+            (a, str(v))
+            for a, v in copies
+            if not same_number(v, shown_value, scale)
+            and not rounding_equal(v, shown_value, cs.get(a), shown_scale)
+        }
     )
 
 
@@ -444,7 +478,7 @@ def load_shown(
         [r[3] for r in map_rows if r[1] == "component" and r[3]],
     ).items():
         part_parents[t] |= ps
-    copies_by, auth_by, filed_by, por_by = _periodic_copies(
+    copies_by, auth_by, filed_by, por_by, scale_by = _periodic_copies(
         conn, company_id, floor, face
     )
     for name, ptype, fp, start, end, value, src, period_id, src_vals in rows:
@@ -481,7 +515,13 @@ def load_shown(
             else list(all_copies)
         )
         copies = [(a, v) for a, v, _t in cell_triples]
-        disagreeing = disagreeing_copies(copies, shown_value, scale)
+        disagreeing = disagreeing_copies(
+            copies,
+            shown_value,
+            scale,
+            scale_by,
+            scale_by.get(accession) if accession else None,
+        )
         # the authoritative copies OF THIS CELL: only flags of the cell's own copies (its tags, and the tags its
         # filings' eras name) count; flags of OTHER tags say nothing about the cell (JNJ cash 2022: the
         # restricted-cash tag's FY2022 copy was taken for the cell's authority). A flagged copy under one tag is

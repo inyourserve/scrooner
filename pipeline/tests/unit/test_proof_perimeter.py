@@ -156,3 +156,45 @@ def test_operating_lease_and_other_cells_untouched():
         1, "revenue", "I", END, END, Decimal(1), (), ADSH, (1,), claim=q.shown.claim
     )
     assert apply_perimeter([q], {ADSH: struct({}, LEASE)}) == 0
+
+
+@pytest.mark.unit
+def test_lease_total_is_carried_by_its_current_and_noncurrent_parts():
+    """WMT FY2016: the claim names CapitalLeaseObligationsCurrent + Noncurrent and the note total is their sum."""
+    face = {"ShortTermBorrowings": 3, "LongTermDebtNoncurrent": 40}
+    notes = {
+        "CapitalLeaseObligations": 7,
+        "CapitalLeaseObligationsCurrent": 1,
+        "CapitalLeaseObligationsNoncurrent": 6,
+    }
+    parts = [
+        "ShortTermBorrowings",
+        "LongTermDebtNoncurrent",
+        "CapitalLeaseObligationsCurrent",
+        "CapitalLeaseObligationsNoncurrent",
+    ]
+    p, n = run(parts, 50, face, notes)
+    assert (p.verdict, n) == (PROVEN, 0)
+    # the parts do not add up to the total (a piece sits elsewhere): still incomplete
+    p, n = run(parts, 50, face, {**notes, "CapitalLeaseObligations": 9})
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)
+    # VRTX shape: the claim names only the noncurrent part
+    p, n = run(
+        ["LongTermDebtNoncurrent", "CapitalLeaseObligationsNoncurrent"],
+        46,
+        {"LongTermDebtNoncurrent": 40},
+        notes,
+    )
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)
+
+
+@pytest.mark.unit
+def test_one_current_debt_line_under_two_tags_is_not_owed_twice():
+    """AMAT FY2019: face ShortTermBorrowings 600 and note LongTermDebtCurrent 600 are one line."""
+    face = {"ShortTermBorrowings": 6, "LongTermDebtNoncurrent": 47}
+    parts = ["LongTermDebtCurrent", "LongTermDebtNoncurrent"]
+    p, n = run(parts, 53, face, {"LongTermDebtCurrent": 6})
+    assert (p.verdict, n) == (PROVEN, 0)
+    # a different amount is a second line
+    p, n = run(parts, 53, face, {"LongTermDebtCurrent": 5})
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)

@@ -535,3 +535,35 @@ def test_reason_with_accession_and_no_page_gets_that_filings_balance_sheet_page(
     assert statement_page_fallback(A, "PAR", False, i) == ("", "")
     # a filing without the statement stays blank: no other filing's page
     assert statement_page_fallback("0000000000-00-000002", "PAR", True, i) == ("", "")
+
+
+def test_period_no_filing_has_reached_is_not_a_cell():
+    """A cover-page instant labelled FY (2026-09-12) after the last 10-K (2025-12-31) is not a cell period."""
+    from datetime import date
+
+    from scrooner_pipeline.mapper.top100_coverage import _fy_periods, reached_by_filing
+
+    today = date(2026, 11, 14)
+    f = [(date(2024, 12, 31), "A24"), (date(2025, 12, 31), "A25")]
+    assert reached_by_filing(date(2025, 12, 31), f, today)
+    assert reached_by_filing(date(2023, 12, 31), f, today)
+    assert not reached_by_filing(date(2026, 9, 12), f, today)
+    assert not reached_by_filing(date(2026, 12, 31), f, today)  # future
+    assert reached_by_filing(date(2026, 9, 12), None, today)  # no filing in the store: unfiltered
+
+    class Conn:
+        def execute(self, *_a):
+            return self
+
+        def fetchall(self):
+            D = date
+            return [
+                (1, 2025, "instant", D(2025, 12, 31), D(2025, 12, 31)),
+                (1, 2026, "instant", D(2026, 9, 12), D(2026, 9, 12)),
+                (1, 2025, "duration", D(2025, 1, 1), D(2025, 12, 31)),
+            ]
+
+    got = _fy_periods(Conn(), [1], today, {1: f})
+    assert set(got) == {(1, 2025, "instant"), (1, 2025, "duration")}
+    # without the annual map the stray instant is kept (old behaviour), so the filter is what removes it
+    assert (1, 2026, "instant") in _fy_periods(Conn(), [1], today)

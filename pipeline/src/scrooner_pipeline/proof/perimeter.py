@@ -140,6 +140,28 @@ def _value(s: FilingStructure, tag: str, ddate, qtrs: int) -> Decimal | None:
     return None
 
 
+def _parts_carry_total(
+    s: FilingStructure,
+    claim_tags: set[str],
+    parts: tuple[str, str],
+    total: Decimal,
+    ddate,
+) -> bool:
+    printed: list[tuple[str, Decimal]] = []
+    for t in parts:
+        pv = _value(s, t, ddate, 0)
+        if pv is not None:
+            printed.append((t, pv))
+    if not printed or not all(_names(claim_tags, t) for t, _v in printed):
+        return False
+    from scrooner_pipeline.common.presentation_scale import presentation_scale
+
+    unit = Decimal(10) ** presentation_scale([total, *(v for _t, v in printed)])
+    return (
+        abs(sum((v for _t, v in printed), Decimal(0)) - total) <= Decimal("1.5") * unit
+    )
+
+
 def missing_parts(
     s: FilingStructure,
     claim_tags: set[str],
@@ -168,6 +190,14 @@ def missing_parts(
             continue
         if children and any(c in required or _names(claim_tags, c) for c in children):
             continue
+        # one current-debt line printed under two tags (AMAT: the face's ShortTermBorrowings and the note's
+        # LongTermDebtCurrent are both 600M; AMD: DebtCurrent and LinesOfCreditCurrent both 136M): when a
+        # claim-named current-debt tag carries the identical figure in the column, it is that line, not a second one
+        if any(
+            t != tag and _names(claim_tags, t) and _value(s, t, ddate, 0) == v
+            for t in SHORT_FACE_TAGS
+        ):
+            continue
         out.append({"tag": tag, "value": str(v), "kind": "face_short_term_debt"})
     in_debt_family = any(c.startswith(LEASE_IN_DEBT_PREFIX) for c in claim_tags)
     for total, cur, noncur in LEASE_FAMILIES:
@@ -181,6 +211,12 @@ def missing_parts(
                 if v is not None:
                     owed.append((t, v))
         if not owed:
+            continue
+        # the claim names every printed part of the family and the parts add up to the printed total (WMT: Current
+        # 551M + Noncurrent 5,816M = CapitalLeaseObligations 6,367M): the total is carried through its parts
+        if tv is not None and _parts_carry_total(
+            s, claim_tags, (cur, noncur), tv, ddate
+        ):
             continue
         for t, v in owed:
             if _names(claim_tags, t):

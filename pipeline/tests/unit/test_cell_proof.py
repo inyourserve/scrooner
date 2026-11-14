@@ -677,3 +677,21 @@ def test_every_position_source_the_engine_sets_is_allowed_by_migration_0114():
         )
     )
     assert set_values and set_values <= allowed, set_values - allowed
+
+
+def test_copies_differing_only_by_the_coarser_filings_rounding_agree():
+    from decimal import Decimal as D
+
+    from scrooner_pipeline.proof.shown import disagreeing_copies
+
+    # LLY FY2024 10-K prints 96.7M (scale 5), the FY2025 10-K prints 97M (scale 6)
+    scales = {"A25": 6}
+    assert (
+        disagreeing_copies([("A25", D(97_000_000))], D(96_700_000), 5, scales, 5) == []
+    )
+    # a real restatement of 1.3M is not rounding
+    assert disagreeing_copies([("A25", D(98_000_000))], D(96_700_000), 5, scales, 5)
+    # the coarse value is not on its grid: a genuine 97.3M figure is not absorbed
+    assert disagreeing_copies([("A25", D(97_300_000))], D(96_700_000), 5, scales, 5)
+    # no scale information: the old rule
+    assert disagreeing_copies([("A25", D(97_000_000))], D(96_700_000), 5)

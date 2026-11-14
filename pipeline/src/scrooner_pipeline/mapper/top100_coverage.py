@@ -29,7 +29,7 @@ import csv
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -535,10 +535,29 @@ def load_docmap(reads_dir: Path, ticker: str) -> dict[str, dict[str, str]]:
         return {r["data_point"]: r for r in csv.DictReader(fh)}
 
 
+def reached_by_filing(
+    end: date, filings: list[tuple[date, str]] | None, today: date
+) -> bool:
+    """True when `end` can be a cell period: it is not in the future and some annual filing has reached it (a 10-K whose
+    period ends on or after `end`, within the day tolerance). The period table also holds cover-page instants that
+    carry fiscal_period 'FY' (e.g. 2026-09-12 for a company whose last 10-K ends 2025-12-31); no filing has reached
+    them, so they are not cells. A company with no annual filing in the store is left unfiltered (no evidence either
+    way; the template check reports it). Pure."""
+    if end > today:
+        return False
+    if not filings:
+        return True
+    return end <= max(p for p, _ in filings) + timedelta(days=_DAY_TOL)
+
+
 def _fy_periods(
-    conn: Any, ids: list[int], today: date
+    conn: Any,
+    ids: list[int],
+    today: date,
+    annual: dict[int, list[tuple[date, str]]] | None = None,
 ) -> dict[tuple[int, int, str], tuple[date, date]]:
-    """(company, fiscal_year, 'duration'|'instant') -> (start, end) of the FY period ending last (duration >= 300 days)."""
+    """(company, fiscal_year, 'duration'|'instant') -> (start, end) of the FY period ending last (duration >= 300 days)
+    among the periods an annual filing has reached (reached_by_filing)."""
     cur = conn.execute(
         """select company_id, fiscal_year, period_type, start_date, end_date from core.period
            where company_id = any(%s) and fiscal_period = 'FY' and fiscal_year >= %s and end_date <= %s""",
@@ -547,6 +566,8 @@ def _fy_periods(
     best: dict[tuple[int, int, str], tuple[date, date]] = {}
     for cid, fy, ptype, s, e in cur.fetchall():
         if ptype == "duration" and (e - s).days < 300:
+            continue
+        if annual is not None and not reached_by_filing(e, annual.get(cid), today):
             continue
         key = (cid, fy, ptype)
         if key not in best or e > best[key][1]:
@@ -622,7 +643,8 @@ def build_rows(
     templates = {c.company_id: load_docmap(reads_dir, c.ticker) for c in companies}
     live = [c for c in companies if templates[c.company_id]]
     ids = [c.company_id for c in live]
-    periods = _fy_periods(conn, ids, today)
+    annual = _annual_filings(conn, ids)
+    periods = _fy_periods(conn, ids, today, annual)
     names = sorted(
         {n for c in live for dp in templates[c.company_id] for n in candidates(dp)}
     )
@@ -709,7 +731,6 @@ def build_rows(
         t.strip() for p in proofs.values() if p[4] for t in p[4].split(",") if t.strip()
     }
     idx = _locator_index(conn, cited, shown_tags)
-    annual = _annual_filings(conn, ids)
 
     rows: list[dict[str, Any]] = []
     for c in live:
