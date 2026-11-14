@@ -547,6 +547,57 @@ def tagmap_plan_cmd(
         typer.echo(f"expected cells with neither value nor reason: {bad}")
 
 
+@app.command("certified-guard")
+def certified_guard_cmd(
+    company_id: int = typer.Option(..., "--company-id"),
+    certified_csv: Path = typer.Option(..., "--certified-csv"),
+    coverage_csv: Path = typer.Option(..., "--coverage-csv"),
+    report: Path = typer.Option(
+        None, "--report", help="Regression report csv (written only on a regression)."
+    ),
+) -> None:
+    """Exit 1 when a certified cell (PROVEN/REASON/DERIVED) left those classes or changed its shown_value."""
+    from scrooner_pipeline.mapper import certified_guard as cg
+
+    regs = cg.guard(company_id, certified_csv, coverage_csv, report)
+    if regs:
+        typer.echo(
+            f"certified-guard: REGRESSED {len(regs)} cells of company {company_id}"
+            f"{f' -> {report}' if report else ''}"
+        )
+        for r in regs[:20]:
+            typer.echo(
+                f"  {r['data_point']} FY{r['fiscal_year']} {r['regression']} "
+                f"{r['certified_class']}->{r['new_class']} {r['certified_value']}->{r['new_value']} "
+                f"reason_code={r['reason_code']} checks={r['proof_verdict']}/{r['verdict']}"
+            )
+        raise typer.Exit(1)
+    typer.echo(f"certified-guard: company {company_id} holds every certified cell")
+
+
+@app.command("restore-before-image")
+def restore_before_image_cmd(
+    company_id: int = typer.Option(..., "--company-id"),
+    directory: Path = typer.Option(
+        ..., "--dir", help="tagmap-plan --before-image-dir."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Commit (default: dry run, rolled back)."
+    ),
+    statement_timeout: str = typer.Option("300s", help="Per-statement cap."),
+) -> None:
+    """Put exactly this company's canonical_fact, cell_blank_reason and slot_protected_cell rows back from a
+    tagmap-plan before-image: one transaction, batched copy through temp tables."""
+    from scrooner_pipeline.mapper import certified_guard as cg
+
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        rep = cg.restore_before_image(conn, company_id, directory, apply=apply)
+    typer.echo(
+        f"restore-before-image [{rep['mode']}] company {company_id}: {rep['counts']}"
+    )
+
+
 @app.command("dqc-check")
 def dqc_check_cmd(
     company_ids: str = typer.Option(
