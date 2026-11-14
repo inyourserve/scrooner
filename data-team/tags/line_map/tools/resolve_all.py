@@ -81,6 +81,12 @@ def run(filings, notefacts, tick, td_rows):
             r = role(f, L, arcs, notes, R)
             r.setdefault('nodes', f"{r['tags']} [{r['r_page']}]" if r['tags'] else '')
             out.append(dict(ticker=tk, cik=f['cik'], accession=f['a'], period_end=f['p'], data_point=R['data_point'], source='roles', calc_check=chk, flags='', **r))
+        # rule (C1/S12 generalised): a statement role with no node on a filing whose statement was read is a reason,
+        # not a gap: gross profit, opex, operating income, cost of revenue not printed -> not_presented
+        isread = any(o['data_point'] == 'revenue' and o['status'] in ('mapped', 'component_sum') for o in out if o['accession'] == f['a'])
+        for o in out:
+            if o['accession'] == f['a'] and o['status'] == 'no_role' and isread and o['data_point'] in ('gross_profit', 'operating_expenses', 'operating_income', 'cost_of_revenue'):
+                o.update(status='not_presented', why=f"the income statement of this filing has no {o['data_point']} node (no line holds the role in the filer's tree; rulings C1/S12)", flags='rule:not_printed_statement_role')
     return out
 if __name__ == '__main__':
     filings = json.load(open('filings.json')); notefacts = json.load(open('notefacts.json'))
