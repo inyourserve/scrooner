@@ -1976,6 +1976,7 @@ accession,tag,report,n_reports,line,plabel
 0001413329-24-000013,WeightedAverageNumberOfDilutedSharesOutstanding,84,1,7,Weighted-average shares for diluted EPS (in shares)
 0001413329-24-000013,WeightedAverageNumberOfSharesOutstandingBasic,84,1,5,Weighted-average shares for basic EPS (in shares)
 0001413329-25-000013,AmortizationOfIntangibleAssets,70,1,35,Amortization of intangibles
+0001413329-25-000013,InterestExpenseNonoperating,116,1,,
 0001413329-25-000013,ResearchAndDevelopmentExpense,116,1,2,Research and development expense
 0001413329-25-000013,WeightedAverageNumberOfDilutedSharesOutstanding,92,1,7,Weighted-average shares for diluted EPS (in shares)
 0001413329-25-000013,WeightedAverageNumberOfSharesOutstandingBasic,92,1,5,Weighted-average shares for basic EPS (in shares)

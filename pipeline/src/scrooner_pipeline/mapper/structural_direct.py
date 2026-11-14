@@ -38,6 +38,7 @@ from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.mapper import docmap_loader as dl
+from scrooner_pipeline.mapper import reason_guard as rg
 from scrooner_pipeline.mapper import structural_loader as sl
 
 FIX_RULE_ID = "company_tag_map.docmap_fix@1"
@@ -232,6 +233,69 @@ def printed_zero_ok(claim: sl.Claim, why: str) -> bool:
         return False
 
 
+def refuted_map_reasons(
+    conn: psycopg.Connection,
+    company_id: int,
+    cik: str | None,
+    rows,
+    periods: dict[int, tuple[date, date, str]],
+    concept_info: dict[int, tuple[str, str]],
+    path: Path | None = None,
+) -> list[dict]:
+    """False-reason guard on the serving side (reason_guard): the covering not_presented / combined map rows whose
+    cited filing's own column holds evidence of the line, as {canonical_concept_id, period_id, ...}. Those reasons
+    are not served (their blanks are dropped, they never forbid a value): the cell stays open. Read-only."""
+    cand = []
+    for r in rows:
+        kind = rg.kind_of(r.decision, r.reason_class)
+        cid = r.canonical_concept_id
+        if kind and r.evidence_adsh and cid in concept_info:
+            cand.append((r, kind, cid))
+    if not cand:
+        return []
+    names = {concept_info[cid][0] for _r, _k, cid in cand}
+    ctags = rg.concept_tags(conn, names)
+    path = path or resolver_path()
+    own: dict[tuple[str, str], set[str]] = {}
+    if enabled() and path is not None and cik:
+        own = sl.claim_tags(list(_claims_by_cik(str(path)).get(cik.zfill(10), ())))
+    todo = []  # (row, kind, cid, pid, end, instant, tags)
+    for r, kind, cid in cand:
+        name = rg.base_name(concept_info[cid][0])
+        instant = concept_info[cid][1] == "balance_sheet"
+        tags = ctags.get(name, set()) | own.get((cik or "", name), set())
+        for pid, (_s, end, ptype) in periods.items():
+            if (ptype == "instant") == instant and era_holds(r.era_from, r.era_to, end):
+                todo.append((r, kind, cid, pid, end, instant, tags))
+    facts = rg.read_facts(
+        conn, company_id, {(t[0].evidence_adsh, g) for t in todo for g in t[6]}
+    )
+    out = []
+    for r, kind, cid, pid, end, instant, tags in todo:
+        ev = rg.evidence_for(
+            kind,
+            end,
+            instant,
+            tags,
+            f"{r.reason or ''} {r.evidence_plabel or ''}",
+            {g: facts.get((r.evidence_adsh, g), []) for g in tags},
+        )
+        if ev:
+            out.append(
+                {
+                    "canonical_concept_id": cid,
+                    "period_id": pid,
+                    "concept": concept_info[cid][0],
+                    "period_end": end.isoformat(),
+                    "accession": r.evidence_adsh,
+                    "tag": ev[0]["tag"],
+                    "value": str(ev[0]["value"]),
+                    "decision": r.decision,
+                }
+            )
+    return out
+
+
 def unclaimed(rows, cells: list[dict], periods, concept_info) -> list[dict]:
     """Claim sync: every cell served from the resolver must have a covering structural@1 value claim row in the map
     (company_tag_map.structural@1, decision concept/component). The cells that have none, as {concept, period_end}:
@@ -395,6 +459,12 @@ def direct_cells(
         "fix_won_cells": [],
         "no_claim_row": [],
     }
+    stats["refuted_reasons"] = refuted_map_reasons(
+        conn, company_id, cik, rows, periods, concept_info, path
+    )
+    refuted_keys = {
+        (x["canonical_concept_id"], x["period_id"]) for x in stats["refuted_reasons"]
+    }
     path = path or resolver_path()
     if not enabled() or path is None or not cik:
         return [], stats
@@ -493,7 +563,7 @@ def direct_cells(
                 {"concept": name, "period_end": te.isoformat()}
             )
             continue
-        forbid = map_forbids(rows, cid, te)
+        forbid = None if (cid, pid) in refuted_keys else map_forbids(rows, cid, te)
         if forbid:
             reject(forbid)
             continue
@@ -663,7 +733,11 @@ def direct_cells(
 
 
 def apply_direct(
-    conn: psycopg.Connection, cells: list[dict], stats: dict, direct: list[dict]
+    conn: psycopg.Connection,
+    cells: list[dict],
+    stats: dict,
+    direct: list[dict],
+    refuted: list[dict] | None = None,
 ) -> int:
     """Splice direct cells into the tag-era cells, and drop the held/blank entries of a replaced key (the resolver
     found the value). Authority v2 still rules between the two paths: a resolver row speaks for its own filing, so a
@@ -709,9 +783,12 @@ def apply_direct(
         for h in stats.get("held", [])
         if (h["canonical_concept_id"], h["period_id"]) not in keys
     ]
+    gone = keys | {
+        (x["canonical_concept_id"], x["period_id"]) for x in (refuted or [])
+    }
     stats["blanks"] = [
         b
         for b in stats.get("blanks", [])
-        if (b.get("canonical_concept_id"), b.get("period_id")) not in keys
+        if (b.get("canonical_concept_id"), b.get("period_id")) not in gone
     ]
     return len(use)

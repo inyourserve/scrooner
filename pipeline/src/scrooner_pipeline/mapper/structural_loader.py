@@ -53,6 +53,7 @@ import psycopg
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
+from scrooner_pipeline.mapper import reason_guard as rg
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper.company_tag_map import STATEMENT_CODE
 from scrooner_pipeline.mapper.company_tag_map_seed import (
@@ -556,6 +557,72 @@ def no_filing_evidence(
     if first_10k_filed is not None and first_10k_filed <= period_end:
         return f"the named first 10-K was filed {first_10k_filed}, not after the period end"
     return None
+
+
+def claim_tags(claims: list[Claim]) -> dict[tuple[str, str], set[str]]:
+    """(cik, data_point) -> base tags of the resolver's own value claims (mapped / component_sum, no member part)."""
+    out: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for c in claims:
+        if c.decision in ("mapped", "component_sum") and c.cik:
+            out[(c.cik, c.data_point)] |= {
+                base_tag(t) for _, _, t in c.parts if not member_facts.is_member_part(t)
+            }
+    return out
+
+
+def reason_evidence(
+    conn: psycopg.Connection,
+    company_id: int,
+    cik: str,
+    todo: list[Claim],
+    all_claims: list[Claim],
+    concept_names: set[str],
+) -> dict[Claim, tuple[list[dict], dict[str, int]]]:
+    """Claim -> (evidence rows, tag -> R page) for the not_presented / combined claims `todo` of one company whose
+    cited filing's own column holds the line (reason_guard). Claims with no evidence are absent. Read-only."""
+    own = claim_tags(all_claims)
+    ctags = rg.concept_tags(
+        conn, {dl.served_concept(c.data_point, concept_names) for c in todo}
+    )
+    tagsets = {
+        c: (
+            ctags.get(
+                rg.base_name(dl.served_concept(c.data_point, concept_names)), set()
+            )
+            | ctags.get(c.data_point, set())
+            | own.get((cik, c.data_point), set())
+        )
+        for c in todo
+    }
+    pairs = {(c.accession, t) for c in todo for t in tagsets[c]}
+    facts = rg.read_facts(conn, company_id, pairs)
+    found: dict[Claim, list[dict]] = {}
+    for c in todo:
+        by_tag = {t: facts.get((c.accession, t), []) for t in tagsets[c]}
+        ev = rg.evidence_for(
+            rg.kind_of(c.decision) or rg.COMBINED,
+            c.period_end,
+            c.grain == "I",
+            tagsets[c],
+            f"{c.path} {c.label}",
+            by_tag,
+        )
+        if ev:
+            found[c] = ev
+    pages = rg.read_pages(
+        conn, {(c.accession, e["tag"]) for c, ev in found.items() for e in ev}
+    )
+    return {
+        c: (
+            ev,
+            {
+                e["tag"]: pages[(c.accession, e["tag"])]
+                for e in ev
+                if (c.accession, e["tag"]) in pages
+            },
+        )
+        for c, ev in found.items()
+    }
 
 
 def quarantined(c: Claim) -> str | None:
@@ -1231,6 +1298,20 @@ def load(
                     ).items()
                 }
             )
+    refuted: dict[Claim, tuple[list[dict], dict[str, int]]] = {}
+    if check_values:
+        for cid in {r[3] for r in resolved}:
+            todo = [
+                r[0]
+                for r in resolved
+                if r[3] == cid and not r[0].no_filing and rg.kind_of(r[0].decision)
+            ]
+            if todo:
+                cik_ = next(r[4] for r in resolved if r[3] == cid)
+                refuted.update(
+                    reason_evidence(conn, cid, cik_, todo, claims, set(concept_ids))
+                )
+    stats["refused_false_reasons"] = 0
     for c, a, b, cid, cik in resolved:
 
         def reject(why: str, c: Claim = c) -> None:
@@ -1255,6 +1336,15 @@ def load(
         q = quarantined(c)
         if q:
             reject(f"filing quarantined, its own calc check failed: {q}")
+            continue
+        if c in refuted:
+            e = refuted[c][0][0]
+            stats["refused_false_reasons"] += 1
+            reject(
+                f"false reason refused: the cited filing's own column holds {e['tag']}={e['value']}"
+                + (" (member rows)" if e["member"] else "")
+                + f" ({c.decision}); the cell stays open"
+            )
             continue
         if any(member_facts.is_member_part(t) for _, _, t in c.parts):
             c, why = resolve_member_claim(c, cid, member_rows)

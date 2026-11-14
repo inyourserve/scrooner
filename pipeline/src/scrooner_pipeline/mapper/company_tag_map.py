@@ -2056,7 +2056,7 @@ def resolve_for_company(
     }
     stats["structural_direct_rejected"] = dstats["rejected"]
     stats["structural_direct_no_claim_row"] = dstats["no_claim_row"]
-    sd.apply_direct(conn, cells, stats, direct)
+    sd.apply_direct(conn, cells, stats, direct, dstats.get("refuted_reasons"))
 
     from scrooner_pipeline.mapper.derived_cells import (
         add_derived_cells,

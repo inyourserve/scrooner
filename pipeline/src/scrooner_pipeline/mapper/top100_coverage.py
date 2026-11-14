@@ -384,6 +384,9 @@ def statement_page_fallback(
     statement, else (a parenthetical or off-face share count of an instant data point) the balance sheet. A cell with
     no statement (a not_presented reason: the line is absent) cites the statement where its absence is shown: the
     balance sheet for an instant data point, the income statement otherwise (Dhairya, 2026-11-14)."""
+    # a note stmt (NOTE, UN: the data point lives in a note, so this filing's faces do not print it) is "no
+    # statement" here: the live PM amortization FY2022 REASON has stmt NOTE and cited no page (2026-11-14)
+    stmt = "" if stmt in ("NOTE", "UN") else stmt
     fallback = ["BS"] if instant else ([] if stmt else ["IS"])
     for st in [stmt] + fallback:
         rep = idx.stmt_report(acc, st) if st else None
@@ -885,7 +888,11 @@ def build_rows(
                     "none",
                     "note_fact_report_not_stored",
                     "evidence_acc_no_page",
-                ) and not (acc and page):
+                ) and not (acc and page) and not (
+                    # a PROVEN cell whose shown tag is a note fact cites that filing's NOTE page, never the
+                    # statement page of the year (PM interest_expense: IS prints only 'Interest expense, net')
+                    cls == "PROVEN" and lsrc == "note_fact_report_not_stored"
+                ):
                     own_acc, own_page = stmt_pages.get(
                         (c.company_id, e, dstmt), ("", "")
                     )
@@ -1114,6 +1121,28 @@ def resolve_derived(
             r["class"], r["reason_code"] = "UNCHECKED", DERIVED_UNPROVEN
 
 
+def pageless_counts(rows: list[dict[str, Any]]) -> dict[int, dict[str, int]]:
+    """Per company: PROVEN / REASON / DERIVED cells with no r_page, and the component parts whose page is blank
+    (the page gate, Ritwik 2026-11-14). Pure."""
+    out: dict[int, dict[str, int]] = defaultdict(
+        lambda: dict.fromkeys(PAGELESS_COLS, 0)
+    )
+    for r in rows:
+        o = out[r["company_id"]]
+        if r["class"] in ("PROVEN", "REASON", "DERIVED") and not r.get("r_page"):
+            o["pageless_" + r["class"].lower()] += 1
+        o["parts_blank"] += r.get("_parts_blank", 0) or 0
+    return out
+
+
+PAGELESS_COLS = [
+    "pageless_proven",
+    "pageless_reason",
+    "pageless_derived",
+    "parts_blank",
+]
+
+
 def summarize(
     rows: list[dict[str, Any]],
     companies: list[Company],
@@ -1123,6 +1152,7 @@ def summarize(
     by: dict[int, dict[str, int]] = defaultdict(lambda: dict.fromkeys(CLASSES, 0))
     for r in rows:
         by[r["company_id"]][r["class"]] += 1
+    pl = pageless_counts(rows)
     out = []
     for c in companies:
         t = by.get(c.company_id, dict.fromkeys(CLASSES, 0))
@@ -1134,6 +1164,7 @@ def summarize(
                 "company_id": c.company_id,
                 "cells": total,
                 **t,
+                **pl.get(c.company_id, dict.fromkeys(PAGELESS_COLS, 0)),
                 "pct_proven_plus_reason": f"{100 * (t['PROVEN'] + t['REASON'] + t['DERIVED']) / total:.1f}"
                 if total
                 else "",
@@ -1176,6 +1207,7 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
         "company_id",
         "cells",
         *CLASSES,
+        *PAGELESS_COLS,
         "pct_proven_plus_reason",
         "note",
         "as_of",
@@ -1184,7 +1216,17 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
     pc = sum(1 for r in rows if r.get("parts"))
     pb = sum(r.get("_parts_blank", 0) for r in rows)
+    pg = {k: sum(r[k] for r in summary) for k in PAGELESS_COLS}
     print(
         f"top100 coverage as of {as_of}: {len(rows)} cells {tot}; component_sum cells {pc}, part pages blank {pb}"
     )
+    print(f"page gate (cells with no r_page): {pg}")
+    for r in summary:
+        if any(r[k] for k in PAGELESS_COLS):
+            print(
+                "  "
+                + r["ticker"]
+                + " "
+                + " ".join(f"{k}={r[k]}" for k in PAGELESS_COLS)
+            )
     return 0
