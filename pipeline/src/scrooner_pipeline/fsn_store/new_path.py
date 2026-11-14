@@ -137,6 +137,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             # the new system (tag map seed and write path)
             "seed-company-tag-map",
             "docmap-load",
+            "structural-load",  # the new system: the structural resolver's rows into company_tag_map
             "era-guard",  # the new system: holds unproven predictor slices of company_tag_map
             "tagmap-plan",
             "dqc-check",  # read-only DQC report over served cells
@@ -155,6 +156,7 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "calculate-dividend-streak",
             # seeds, reports, coverage, tag library: no company values
             "seed-concepts",
+            "seed-bank-concepts",
             "seed-definitions",
             "seed-statements",
             "seed-expanded-concepts",
