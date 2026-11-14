@@ -318,3 +318,55 @@ def test_combined_claim_is_not_dropped_by_a_library_combined_line():
     # a non-combined claim is still left to the Tag Expert
     plan2 = _plan(_claim("not_presented"), [combined_line])
     assert plan2.dropped == 1
+
+
+class _Cur:
+    def __init__(self, answers):
+        self.answers, self.rows = answers, []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def execute(self, sql, params=None):
+        for key, rows in self.answers.items():
+            if key in sql:
+                self.rows = rows
+                return
+        raise AssertionError(f"unexpected query: {sql[:80]}")
+
+    def fetchall(self):
+        return self.rows
+
+
+class _Conn:
+    def __init__(self, answers):
+        self.answers = answers
+
+    def cursor(self):
+        return _Cur(self.answers)
+
+
+def test_extension_tag_takes_the_company_prefix_only_when_the_store_knows_it_custom():
+    conn = _Conn(
+        {
+            "from analytics.company_sec_tag": [],
+            "from core.concept": [("Known", ["us-gaap"])],
+            "from fsn.tag": [("MarketingAdministrationAndResearchCosts",)],
+            "from core.company": [(5, "mcd")],
+            "from analytics.company_tag_map": [],
+        }
+    )
+    out, _ = sl.taxonomies(
+        conn, {5}, {"Known", "MarketingAdministrationAndResearchCosts", "TypoTag"}
+    )
+    assert out[5] == {
+        "Known": "us-gaap",
+        "MarketingAdministrationAndResearchCosts": "mcd",
+    }  # TypoTag is not custom in the store: left out, its row is rejected alone
+    # the company's own existing extension prefix wins over the ticker
+    conn.answers["from analytics.company_tag_map"] = [(5, ["mcdonalds"])]
+    out, _ = sl.taxonomies(conn, {5}, {"MarketingAdministrationAndResearchCosts"})
+    assert out[5]["MarketingAdministrationAndResearchCosts"] == "mcdonalds"

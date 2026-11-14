@@ -944,29 +944,34 @@ def taxonomies(
         for t, p in glob.items():
             if p and t not in out[cid]:
                 out[cid][t] = p
-    # a tag core.concept (the SEC API's standard tags) does not know is the company's own extension tag: its taxonomy is
-    # the company's extension prefix (the one its existing map rows use, else the lower-case ticker, the SEC prefix
-    # convention). The value is read by tag name from the filing's own XBRL (fsn.value), so a wrong guess never makes
-    # a value: a tag with no stored fact stays a held/blank cell. (An fsn.tag.custom check costs ~35 s a company.)
-    unknown = {cid for cid in company_ids if any(t not in out[cid] for t in tags)}
+    # a tag core.concept (the SEC API's standard tags) does not know is the company's own extension tag only when the
+    # FSN store marks that tag custom (any filer): its taxonomy is the company's extension prefix (the one its existing
+    # map rows use, else the lower-case ticker, the SEC prefix convention). The value is still read by tag name from the
+    # filing's own XBRL, so the prefix is a label. A tag the store does not know as custom stays rejected alone.
+    unknown = {t for t in tags if any(t not in out[cid] for cid in company_ids)}
     if unknown:
         with conn.cursor() as cur:
             cur.execute(
-                "select id, lower(primary_ticker) from core.company where id = any(%s)",
+                "select distinct tag from fsn.tag where custom and tag = any(%s)",
                 (sorted(unknown),),
+            )
+            custom = {t for (t,) in cur.fetchall()}
+            cur.execute(
+                "select id, lower(primary_ticker) from core.company where id = any(%s)",
+                (sorted(company_ids),),
             )
             ticker_of = dict(cur.fetchall())
             cur.execute(
                 """select company_id, array_agg(distinct taxonomy) from analytics.company_tag_map
                    where company_id = any(%s) and taxonomy is not null and taxonomy <> all(%s) group by 1""",
-                (sorted(unknown), sorted(STANDARD_TAXONOMIES_LOCAL)),
+                (sorted(company_ids), sorted(STANDARD_TAXONOMIES_LOCAL)),
             )
             own_prefix = {c: x[0] for c, x in cur.fetchall() if len(x) == 1}
-        for cid in unknown:
+        for cid in company_ids:
             prefix = own_prefix.get(cid) or ticker_of.get(cid)
             if not prefix:
                 continue
-            for t in tags:
+            for t in custom:
                 out[cid].setdefault(t, prefix)
     return out, []
 
