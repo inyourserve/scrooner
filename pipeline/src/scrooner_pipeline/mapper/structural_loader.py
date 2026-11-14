@@ -521,8 +521,13 @@ def assign_eras(
 
 # Instant component sums beyond doc 02's two exceptions (total_debt, shares_outstanding): a resolver row flagged with a
 # ruling it cites. `ap_related_sum` = accounts payable is every payable line on the face (trade line + related-party
-# line), ruling 2026-11-14 cited by the resolver (RESOLVER-OUTPUT-FORMAT / resolve_all). Narrow: this flag, this concept.
-INSTANT_SUM_RULED = {"ap_related_sum": "accounts_payable"}
+# line), ruling 2026-11-14 cited by the resolver (RESOLVER-OUTPUT-FORMAT / resolve_all). `ar_related_sum` = the same for
+# accounts receivable. Both under doc 02 (Dhairya ruling 2026-11-14, commit ac531753): a sum of printed instant lines from
+# ONE filing's own column is not "derived". Narrow: this flag, this concept.
+INSTANT_SUM_RULED = {
+    "ap_related_sum": "accounts_payable",
+    "ar_related_sum": "accounts_receivable",
+}
 
 
 def instant_sum_refused_for(claim: Claim, name: str, statement: str | None) -> bool:

@@ -349,6 +349,17 @@ def test_instant_sum_ruling_is_narrow():
     )
 
 
+def test_instant_sum_ruling_covers_ar_related_sum_for_receivables_only():
+    c = _claim("component_sum", flags="bs_family;face;ar_related_sum")
+    assert not sl.instant_sum_refused_for(
+        c, "accounts_receivable_resolved", "balance_sheet"
+    )
+    assert sl.instant_sum_refused_for(c, "accounts_payable", "balance_sheet")
+    assert sl.instant_sum_refused_for(
+        _claim("component_sum", flags="core"), "accounts_receivable", "balance_sheet"
+    )
+
+
 def _lib(
     decision,
     reason_class,
