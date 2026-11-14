@@ -15,7 +15,7 @@ for k, rs in by.items():
 def num(s):
     try: return D(str(s).replace(',', ''))
     except Exception: return None
-def close(a, b): return a is not None and b is not None and abs(abs(a) - abs(b)) <= max(D(1000000), abs(b) * D('0.0005'))
+def close(a, b): return a is not None and b is not None and abs(a - b) <= max(D(1000000), abs(b) * D('0.0005'))
 res = collections.Counter(); rows = []
 # hand keys: fix files and docmap FY0 rows for total_debt
 for p in glob.glob('fx/*-fixes-*.csv'):

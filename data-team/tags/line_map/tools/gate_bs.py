@@ -13,8 +13,8 @@ def unit(v):
     return D(10) ** k
 def same(a, b):
     if a is None or b is None: return False
-    if abs(b) < 1000: return abs(abs(a) - abs(b)) <= D('0.011')
-    return abs(abs(a) - abs(b)) <= max(unit(a), unit(b)) * D('1.5')
+    if abs(b) < 1000: return abs(a - b) <= D('0.011')
+    return abs(a - b) <= max(unit(a), unit(b)) * D('1.5')
 def num(s):
     try: return D(str(s).replace(',', '').strip())
     except Exception: return None
