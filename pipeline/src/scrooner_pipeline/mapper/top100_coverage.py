@@ -109,6 +109,7 @@ CSV_COLUMNS = [
     "tag",
     "value_source",
     "docmap_status",
+    "parts",
 ]
 
 
@@ -203,6 +204,89 @@ def proven_locator(
     return acc, "", "note_fact_report_not_stored"
 
 
+def _num(v: Any) -> str:
+    d = Decimal(str(v))
+    return format(d.quantize(Decimal(1)) if d == d.to_integral_value() else d, "f")
+
+
+def load_fix_pages(
+    reads_dir: Path, lines_dir: Path | None = None
+) -> dict[tuple[str, str, str, str], dict[str, int]]:
+    """(ticker, data_point, period_end, accession) -> {tag: R page} from the per-part evidence of the fix rows
+    (reads/fixes/*.csv, node text 'Tag=value [BS R4:20 ...]') and of the structural total_debt CSV
+    (tags/line_map/total_debt-*.csv). A NOTE node carries no page, so it is never in the result. Keyed by accession:
+    a page is used only for the same filing."""
+    out: dict[tuple[str, str, str, str], dict[str, int]] = {}
+    node = re.compile(r"(?:^|;\s*)([A-Za-z0-9]+)=[-0-9.]+ \[(?:IS|BS|CF|CI|EQ) R(\d+):")
+
+    def take(t: str, dp: str, pe: str, acc: str, nodes: str) -> None:
+        for m in node.finditer(nodes or ""):
+            out.setdefault((t, dp, pe, acc), {})[m.group(1)] = int(m.group(2))
+
+    for f in sorted((reads_dir / "fixes").glob("*-fixes-*.csv")):
+        t = f.name.split("-fixes-")[0]
+        with f.open(newline="") as fh:
+            for r in csv.DictReader(fh):
+                tags = (r.get("tags") or "").split("+")
+                pages = (r.get("r_page") or "").split("+")
+                if len(tags) == len(pages):
+                    for tg, pg in zip(tags, pages):
+                        m = re.fullmatch(r"R(\d+)\.htm", pg.strip())
+                        if m:
+                            out.setdefault(
+                                (t, r.get("data_point", ""), r.get("period_end", ""), r.get("accession", "")),
+                                {},
+                            )[tg.split(":")[-1].strip()] = int(m.group(1))
+    ld = lines_dir or reads_dir.parent.parent / "tags" / "line_map"
+    for f in sorted(ld.glob("total_debt-*.csv")):
+        with f.open(newline="") as fh:
+            for r in csv.DictReader(fh):
+                take(r.get("ticker", ""), "total_debt", r.get("period_end", ""), r.get("accession", ""), r.get("nodes", ""))
+    return out
+
+
+def parts_locator(
+    checks: Any,
+    acc: str | None,
+    idx: LocatorIndex,
+    note_lookup: dict[tuple[str, str], int] | None,
+    fix_pages: dict[str, int] | None,
+) -> tuple[str, int]:
+    """(parts text, parts whose page is unknown) of a component-sum cell: ';'-joined tag=value@acc#R<page>, one per
+    part of the proof's checks.component_parts. The accession is the proof's shown accession and every page is of
+    THAT filing: a face part from fsn.line, a note part (checks.note_facts) from the same filing's pre.tsv lookup,
+    then the fix rows' per-part page of that same accession. Unknown page: blank after '#'."""
+    if not acc or not isinstance(checks, dict):
+        return "", 0
+    cp = checks.get("component_parts") or {}
+    found = cp.get("found") or []
+    if not found or (checks.get("claim") or {}).get("kind") != "component":
+        return "", 0
+    stmt = (checks.get("claim") or {}).get("stmt")
+    notes = set(cp.get("note_facts") or [])
+    out, blank = [], 0
+    for p in found:
+        tag = p.get("tag") or ""
+        rep: int | None = None
+        if tag in notes:
+            rep = (note_lookup or {}).get((acc, tag))
+        else:
+            hits = idx.tag.get((acc, tag), [])
+            same = [r for s_, r in hits if s_ == stmt] or [
+                r for s_, r in hits if s_ in STATEMENT_STMTS
+            ]
+            rep = min(same) if same else None
+            if rep is None:
+                rep = (note_lookup or {}).get((acc, tag))
+        if rep is None and fix_pages:
+            rep = fix_pages.get(tag)
+        if rep is None:
+            blank += 1
+        sign = "-" if p.get("sign") == -1 else ""
+        out.append(f"{sign}{tag}={_num(p.get('value'))}@{acc}#" + ("" if rep is None else f"R{rep}"))
+    return ";".join(out), blank
+
+
 def reason_locator(
     evidence: list[tuple], stmt: str | None, idx: LocatorIndex
 ) -> tuple[str, str, str, str]:
@@ -244,6 +328,11 @@ def combined_reason_text(text: str | None, label: str) -> str:
             else "combined line (printed label not recorded)",
         )
     return text
+
+
+def cls_is_value(svalue: Any, verdict: str | None) -> bool:
+    """Parts are listed for a cell that serves a value with a proof row."""
+    return svalue is not None and verdict is not None
 
 
 def classify(
@@ -366,7 +455,7 @@ def load_current_proofs(
     for row in conn.execute(
         """select distinct on (company_id, data_point_name, period_start, period_end)
                   company_id, data_point_name, period_start, period_end, verdict, reason_code, reason_text,
-                  shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line
+                  shown_value, shown_tag, shown_accession, position_source, fsn_stmt, fsn_line, checks
            from analytics.cell_proof
            where company_id = any(%s) and data_point_name = any(%s) and basis = 'latest'
              and detector_version = %s
@@ -419,6 +508,7 @@ def build_rows(
     reads_dir: Path,
     today: date,
     note_lookup: dict[tuple[str, str], int] | None = None,
+    fix_pages: dict[tuple[str, str, str, str], dict[str, int]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
     templates = {c.company_id: load_docmap(reads_dir, c.ticker) for c in companies}
     live = [c for c in companies if templates[c.company_id]]
@@ -554,8 +644,28 @@ def build_rows(
                                 covering.append((is_comb, evt))
                             if dec != "combined":
                                 tm = (dec, why, rcl)
-                verdict, preason, ptext, pval, ptag, pacc, psrc, pstmt, pline = (
-                    prow if prow else (None,) * 9
+                (
+                    verdict,
+                    preason,
+                    ptext,
+                    pval,
+                    ptag,
+                    pacc,
+                    psrc,
+                    pstmt,
+                    pline,
+                    pchecks,
+                ) = prow if prow else (None,) * 10
+                parts, parts_blank = (
+                    parts_locator(
+                        pchecks,
+                        pacc,
+                        idx,
+                        note_lookup,
+                        (fix_pages or {}).get((c.ticker, dp, e.isoformat(), pacc or "")),
+                    )
+                    if cls_is_value(svalue, verdict)
+                    else ("", 0)
                 )
                 cls, code = classify(
                     verdict,
@@ -654,6 +764,8 @@ def build_rows(
                         "value_source": psrc
                         or ("canonical_fact" if svalue is not None else ""),
                         "docmap_status": dm["status"],
+                        "parts": parts,
+                        "_parts_blank": parts_blank,
                     }
                 )
     resolve_derived(rows)
@@ -755,7 +867,9 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     with get_connection() as conn:
         conn.execute("set transaction read only")
         conn.execute("set statement_timeout = '10min'")
-        rows, notes = build_rows(conn, companies, reads_dir, now.date(), load_lookup())
+        rows, notes = build_rows(
+            conn, companies, reads_dir, now.date(), load_lookup(), load_fix_pages(reads_dir)
+        )
     as_of = now.strftime("%Y-%m-%dT%H:%MZ")
     summary = summarize(rows, companies, notes, as_of)
     write_csv(out_dir / "top100-coverage.csv", rows, CSV_COLUMNS)
@@ -771,5 +885,7 @@ def main(out_dir: Path, shards: Path, reads_dir: Path, n: int = 100) -> int:
     ]
     write_csv(out_dir / "top100-coverage-summary.csv", summary, scols)
     tot = {k: sum(r[k] for r in summary) for k in CLASSES}
-    print(f"top100 coverage as of {as_of}: {len(rows)} cells {tot}")
+    pc = sum(1 for r in rows if r.get("parts"))
+    pb = sum(r.get("_parts_blank", 0) for r in rows)
+    print(f"top100 coverage as of {as_of}: {len(rows)} cells {tot}; component_sum cells {pc}, part pages blank {pb}")
     return 0

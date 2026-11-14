@@ -404,3 +404,48 @@ def test_scan_pre_keeps_only_wanted_pairs_and_lookup_roundtrip(tmp_path):
         w.writeheader()
         w.writerows(rows)
     assert nl.load_lookup(p) == {("A-1", "InterestPaid"): 53}
+
+
+def _checks(tags, note=()):
+    return {
+        "claim": {"kind": "component", "stmt": "BS", "tags": tags},
+        "component_parts": {
+            "found": [
+                {"tag": t, "sign": 1, "value": f"{i + 1}000000.0000"}
+                for i, t in enumerate(tags)
+            ],
+            "note_facts": list(note),
+        },
+    }
+
+
+def test_parts_list_every_part_with_its_own_page_of_the_same_filing_only():
+    from scrooner_pipeline.mapper.top100_coverage import parts_locator
+
+    A, B = "0001564590-18-019062", "0001564590-17-014900"
+    ch = _checks(
+        ["AssetsCurrent", "Assets", "FinanceLeaseLiability"],
+        note=["FinanceLeaseLiability"],
+    )
+    look = {(A, "FinanceLeaseLiability"): 90, (B, "FinanceLeaseLiability"): 7}
+    got, blank = parts_locator(ch, A, _idx(), look, None)
+    assert got == (
+        f"AssetsCurrent=1000000@{A}#R4;Assets=2000000@{A}#R4;"
+        f"FinanceLeaseLiability=3000000@{A}#R90"
+    )
+    assert blank == 0
+    # another filing's page is never borrowed: unknown stays blank and is counted
+    Z = "0000000000-00-000001"
+    got, blank = parts_locator(ch, Z, _idx(), look, None)
+    assert got == (
+        f"AssetsCurrent=1000000@{Z}#;Assets=2000000@{Z}#;"
+        f"FinanceLeaseLiability=3000000@{Z}#"
+    )
+    assert blank == 3
+    # the fix rows' page of the same accession fills a part; a non-component claim lists nothing
+    got, _ = parts_locator(_checks(["X"]), "Z", _idx(), None, {"X": 21})
+    assert got == "X=1000000@Z#R21"
+    assert parts_locator({"claim": {"kind": "concept"}}, A, _idx(), look, None) == (
+        "",
+        0,
+    )
