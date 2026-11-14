@@ -18,7 +18,7 @@ The file is `data-team/tags/line_map/resolver-all110-<YYYY-MM-DD>.csv`: UTF-8 CS
 | `accession` | the own-period 10-K the value is read from |
 | `column` | `own` (this file); `comparative` is reserved for the latest-filed-copy pass |
 | `calc_check` | the filer's own calc arithmetic on its own numbers in this filing (`calc <root>: ok\|FAIL;...`). A FAIL quarantines the filing |
-| `flags` | rule source (`core`, `core_fallback`, `roles`, `total_debt`) plus rule flags (`hint_ranked`, `hint_only`, `DERIVED`, `READER CHECK ...`, `location by absence: CHECK`) |
+| `flags` | rule source (`core`, `core_fallback`, `roles`, `total_debt`) plus rule flags (`hint_ranked`, `hint_only`, `DERIVED`, `READER CHECK ...`, `location by absence: CHECK`, `polarity_flip`: the value was normalised to the concept's sign from rules/polarity.csv; the node keeps the filer's raw value) |
 | `resolver_version` | version tag of the run (`resolver-YYYY-MM-DD.n`); the code is `tools/resolve.py` + `tools/resolve_all.py` + `tools/total_debt.py` + `rules/roles.csv` at the commit that adds the file |
 
 ## Decisions

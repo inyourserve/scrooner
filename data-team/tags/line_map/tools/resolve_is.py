@@ -151,6 +151,15 @@ NOT_DA = re.compile(r'(?i)accretion|impairment|debt (discount|issuance)|deferred
 INT_LB = re.compile(r'(?i)^(?!.*inventory)(amortization.*intangible|intangible.*amortization|amortization of (acquired|purchased|acquisition|customer|developed|other acquired)|acquired intangible)')
 ACC = re.compile(r'Accretion|Impairment')
 ACC_LB = re.compile(r'(?i)accretion|impairment')
+# accretion the filing itself reports (ruling 2026-11-14, DUK): liability (ARO) accretion expense, CF accretion lines, discount and
+# acquired-loan accretion. Equity accretion (preferred, temporary equity, redeemable NCI) is not an income-statement item: excluded
+ACC_EVID = re.compile(r'^(AssetRetirementObligationAccretionExpense|AccretionExpense\w*|AccretionAmortizationOfDiscountsAndPremiums\w*|\w*AccretableYieldAccretion\w*|CarryingAmountOf\w*Accretion)$')
+
+
+def accretion_reported(L, notes):
+    """The filing reports accretion for its own period: a nonzero fact or line of an accretion element (ACC_EVID)."""
+    if any(ACC_EVID.match(t) and q == 4 and v for (t, q), v in notes.items()): return True
+    return any(ACC_EVID.match(l['tag']) and l['val'] for l in L)
 CAPSW = re.compile(r'(?i)software|CapitalizedComputer')
 NOTE_AMORT = ('AmortizationOfIntangibleAssets', 'FiniteLivedIntangibleAssetsAmortizationExpense', 'AmortizationOfAcquiredIntangibleAssets')
 NOTE_DA = ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization', 'DepreciationAmortizationAndOther')
@@ -201,7 +210,10 @@ def resolve_da(L, notes):
         # an accretion/impairment tag is the filer's element choice; the printed label says what the line holds. A line tagged
         # DepreciationAmortizationAndAccretionNet but printed 'Depreciation and amortization' (AAPL, JPM, WMT, RTX, GE ...) is the
         # D&A line; only a label that names accretion or impairment makes it combined (WFC, TSLA, GOOG)
-        tot = [l for l in tot if not (l['tag'] == 'DepreciationAmortizationAndAccretionNet' or ACC.search(l['tag'])) or (DA_TOT_LB.search(l['lb'] or '') and not ACC_LB.search(l['lb'] or ''))]
+        # ruling 2026-11-14: label plus evidence. The accretion-tagged line is the D&A line only when its label names D&A and not
+        # accretion AND the filing reports no accretion of its own (no ARO accretion fact, no accretion line); otherwise combined (DUK)
+        acc_rep = accretion_reported(L, notes)
+        tot = [l for l in tot if not (l['tag'] == 'DepreciationAmortizationAndAccretionNet' or ACC.search(l['tag'])) or (DA_TOT_LB.search(l['lb'] or '') and not ACC_LB.search(l['lb'] or '') and not acc_rep)]
         if len(tot) >= 1:
             tot.sort(key=lambda l: (not DA_TOT_LB.search(l['lb'] or ''), l['tag'] not in ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'), l['ln']))
             t0 = tot[0]
@@ -215,7 +227,7 @@ def resolve_da(L, notes):
                 ls = [t0] + ia
                 return mk('depreciation_and_amortization', 'component_sum', ls, f"CF face: {t0['lb']} excludes intangibles; plus the intangible amortization line(s)", flags='face')
             return mk('depreciation_and_amortization', 'mapped', [t0], f"{src} face: the depreciation and amortization line (R{t0['rep']}:{t0['ln']})", flags='face')
-        accl = [l for l in lines if (re.match(r'^DepreciationAmortizationAndAccretion', l['tag']) or (ACC.search(l['tag']) and re.search(r'Depreciation', l['tag']))) and ACC_LB.search(l['lb'] or '')]
+        accl = [l for l in lines if (re.match(r'^DepreciationAmortizationAndAccretion', l['tag']) or (ACC.search(l['tag']) and re.search(r'Depreciation', l['tag']))) and (ACC_LB.search(l['lb'] or '') or accretion_reported(L, notes))]
         if src == 'CF' and accl:
             return mk('depreciation_and_amortization', 'combined', accl[:1], f"CF face prints depreciation and amortization together with accretion/impairment (R{accl[0]['rep']}:{accl[0]['ln']}): combined", flags='da_incl_accretion')
         dep = [l for l in lines if (DEP_TAG.match(l['tag']) or DEP_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '')]
@@ -266,6 +278,13 @@ def resolve(f, notes):
     return out
 
 
+ACC_FACTS = {}
+_af = os.environ.get('ACCRETION_FACTS', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '_accretion-facts-2026-11-14.csv'))
+if os.path.exists(_af):
+    import csv as _csv
+    for _r in _csv.DictReader(open(_af)): ACC_FACTS.setdefault(_r['accession'], []).append((_r['tag'], int(_r['qtrs']), D(_r['value'])))
+
+
 def apply(rows, filings, notefacts, tick):
     """Replace this family's rows with the structural result where it is decisive."""
     F = {f['a']: f for f in filings}
@@ -279,6 +298,7 @@ def apply(rows, filings, notefacts, tick):
             for s in (notefacts.get(a) or '').split('~'):
                 x = s.split('|')
                 if len(x) == 3: notes.setdefault((x[0], int(x[1])), D(x[2]))
+            for t, q, v in ACC_FACTS.get(a, []): notes.setdefault((t, q), v)
             cache[a] = resolve(F[a], notes)
         m = cache[a].get(r['data_point'])
         if m is None: new.append(r); continue

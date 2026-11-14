@@ -11,6 +11,20 @@ INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'curr
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
 import resolve_bs, resolve_cf
 FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
+POLARITY = {r['data_point']: r for r in csv.DictReader(open(os.environ.get('POLARITY_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'polarity.csv'))))}
+def apply_polarity(rows):
+    """Ruling 2026-11-14: every concept has one sign. An expense (or payment) read from a single element whose filer polarity
+    is reversed (DIS InterestExpense -1,973; V InterestIncomeExpenseNet printed 'Interest expense') is normalised to the
+    concept's sign; the flip is recorded in flags (polarity_flip) and the why. Component sums keep their computed sign."""
+    for r in rows:
+        p = POLARITY.get(r['data_point'])
+        v = r.get('value')
+        if not p or p['normalise'] != 'Y' or v is None or r['status'] != 'mapped': continue
+        if p['sign'] == '+' and D(v) < 0:
+            r['value'] = -D(v)
+            r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'polarity_flip') if x)
+            r['why'] = (r.get('why') or '') + f"; polarity: the filer reports {v} on an element of the opposite sign; {r['data_point']} is positive (rules/polarity.csv), value normalised"
+    return rows
 def family_rows(f, notes, raw):
     """Family modules (tools/resolve_bs.py, tools/resolve_cf.py): position logic per family; rows replace the role rows of their data points."""
     out = {}
@@ -144,7 +158,8 @@ if __name__ == '__main__':
     td = {(r['accession'], r['column']): r for r in csv.DictReader(open('total_debt_all.csv'))}
     rows = run(filings, notefacts, tick, td)
     import resolve_is
-    rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
+    rows = resolve_is.apply(rows, filings, notefacts, tick)
+    rows = apply_polarity(rows)  # one sign per concept (rules/polarity.csv)  # IS family (resolve_is.py) replaces its six data points where decisive
     for r in rows: r.setdefault('nodes', '')
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
     w = csv.DictWriter(open('resolved_all.csv', 'w', newline=''), fieldnames=keys, extrasaction='ignore'); w.writeheader(); w.writerows(rows)

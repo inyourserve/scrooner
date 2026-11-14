@@ -1,0 +1,27 @@
+data_point,sign,normalise,why
+interest_expense,+,Y,gross expense (ruling R-IE); a net element (InterestIncomeExpenseNet) or a filer-negated InterestExpense is flipped
+cost_of_revenue,+,Y,expense
+sga_expense,+,Y,expense
+research_and_development,+,Y,expense
+depreciation_and_amortization,+,Y,expense
+amortization_of_intangibles,+,Y,expense
+noninterest_expense,+,Y,expense (banks)
+operating_expenses,+,Y,expense; a component sum keeps its computed sign (a band of net operating gains is a real negative: LMT; TMUS)
+sbc,+,Y,non-cash expense add-back
+capex,+,Y,CF payment element (raw-fact convention is positive)
+share_buybacks,+,Y,CF payment element
+dividends_paid,+,Y,CF payment element
+cash_paid_for_interest,+,Y,supplemental payment element
+dividends_per_share,+,Y,declared per share
+income_tax_expense,±,N,a benefit is a real negative
+cash_paid_for_income_taxes,±,N,net of refunds can be negative
+provision_for_credit_losses,±,N,a release is a real negative
+other_income_expense_net,±,N,net
+net_interest_income,±,N,non-banks print interest net (expense) as negative
+interest_income,±,N,investment income net can be a loss; only gross interest income elements are positive
+cf_ar_change,raw,N,raw XBRL fact sign (served convention)
+cf_inventory_change,raw,N,raw XBRL fact sign
+cf_ap_change,raw,N,raw XBRL fact sign
+cfo,±,N,net
+cash_flow_investing,±,N,net
+cash_flow_financing,±,N,net

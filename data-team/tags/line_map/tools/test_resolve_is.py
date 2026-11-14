@@ -94,3 +94,13 @@ def test_accretion_tag_printed_as_plain_depreciation_and_amortization_is_the_da_
     sp = [cf[0], ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation', 86), ('CF', 'AmortizationOfIntangibleAssets', 'Amortization of intangibles', 98), cf[2]]
     d = run(sp)['depreciation_and_amortization']
     assert d['status'] == 'component_sum' and d['value'] == D(184)
+
+
+def test_accretion_tag_is_combined_when_the_filing_reports_accretion():
+    # ruling 2026-11-14 (DUK): label plus evidence; an ARO accretion fact of the same filing makes the line combined
+    cf = [('CF', 'NetIncomeLoss', 'Net income', 10), ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation and amortization', 7),
+          ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash from operating activities', 22)]
+    assert run(cf, {('AssetRetirementObligationAccretionExpense', 4): D(1)})['depreciation_and_amortization']['status'] == 'combined'
+    assert run(cf)['depreciation_and_amortization']['status'] == 'mapped'
+    # equity accretion (preferred, redeemable NCI) is not accretion inside D&A
+    assert run(cf, {('PreferredStockAccretionOfRedemptionDiscount', 4): D(4)})['depreciation_and_amortization']['status'] == 'mapped'
