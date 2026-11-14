@@ -75,6 +75,15 @@ def test_a_line_whose_label_names_items_beyond_the_data_point_is_combined():
     assert ii['status'] == 'combined' and rev['status'] == 'mapped'
 
 
+def test_trade_and_other_is_receivables_when_it_is_the_only_receivables_line():
+    # AR single-line ruling: CAT 'Receivables - trade and other' alone on the face stays mapped; beside a trade line it is combined
+    one = dict(cik='1', a='A1', p='2024-12-31', fd='', calc='', lines='BS|2|3|AccountsReceivableNetCurrent|0|0||Receivables - trade and other|9282')
+    two = dict(cik='2', a='A2', p='2024-12-31', fd='', calc='', lines='~'.join(['BS|2|3|AccountsReceivableNetCurrent|0|0||Receivables - trade and other|9282', 'BS|2|4|AccountsReceivableTradeCurrent|0|0||Trade receivables|8000']))
+    rows = [dict(ticker='CAT', accession=a, period_end='2024-12-31', data_point='accounts_receivable', status='mapped', value=D(9282), nodes='AccountsReceivableNetCurrent=9282 [R2.htm:3]', flags='') for a in ('A1', 'A2')]
+    r1, r2 = RA.apply_label_beyond(rows, [one, two])
+    assert r1['status'] == 'mapped' and r2['status'] == 'combined'
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):

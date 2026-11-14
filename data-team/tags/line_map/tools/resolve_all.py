@@ -173,6 +173,25 @@ def apply_label_beyond(rows, filings):
         elif dp == 'interest_income':
             t = re.match(r'-?(\w+)=', nodes)
             if t and II_BEYOND_TAG.match(t.group(1)): beyond = f"the element {t.group(1)} reports investment income (interest with dividends and other items)"
+        if beyond and dp in ('accounts_receivable', 'cf_ar_change'):
+            # AR single-line ruling wins: 'trade and other' is combined only when the face also prints a separate trade line
+            L = cache.get(r['accession']) or (parse(F[r['accession']])[0] if r['accession'] in F else [])
+            bs = [l for l in face(L, 'BS') if l['val'] is not None]
+            trade = [l for l in bs if re.search(r'(?i)^(trade |customer )?(accounts )?receivables?\b|accounts receivable|trade receivables?', l['lb'] or '')
+                     and not re.search(r'(?i)\bother\b|related|affiliate|financ|notes?\b|unbilled|income tax', l['lb'] or '')]
+            if not trade: beyond = None
+        if beyond and dp == 'revenue':
+            # ruling 3: the sales / operating-revenue lines printed above 'Total revenues and other income' are revenue
+            L = cache.get(r['accession']) or parse(F[r['accession']])[0]
+            isf = face(L, 'IS'); ln = int(m.group(3)) if m else 10 ** 6
+            sl = [l for l in isf if l['val'] is not None and l['ln'] < ln and re.search(r'(?i)sales|revenues?', l['lb'] or '')
+                  and not re.search(r'(?i)other income|equity|gain|interest', l['lb'] or '') and not re.search(r'(?i)^total', l['lb'] or '')]
+            if sl:
+                r.update(status='mapped' if len(sl) == 1 else 'component_sum', value=sum(l['val'] for l in sl), tags='+'.join(l['tag'] for l in sl),
+                         nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in sl),
+                         why="the face prints sales / operating-revenue lines above 'Total revenues and other income': those lines are revenue (ruling 3)")
+                r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'revenue_above_other_income') if x)
+                continue
         if beyond:
             r.update(status='combined', value=None, why=f"the line holding the role is wider than {dp}: {beyond} (ruling 2026-11-14: a line whose label names items beyond the data point is combined)")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'label_beyond') if x)
@@ -381,7 +400,7 @@ if __name__ == '__main__':
     CL = {x['accession']: x for x in csv.DictReader(open(_cl))} if os.path.exists(_cl) else {}
     for r in rows:
         x = CL.get(r['accession'])
-        if x and r['data_point'] == 'comprehensive_income' and r['status'] == 'combined' and '[NOTE]' in (r.get('nodes') or ''):
+        if x and r['data_point'] == 'comprehensive_income' and r['status'] in ('combined', 'mapped') and 'IncludingPortion' in (r.get('nodes') or '') and '[NOTE]' in (r.get('nodes') or ''):
             r['nodes'] = r['nodes'].replace('[NOTE]', f"[R{x['report']}.htm:{x['line']} '{x['label']}', own 10-K {r['accession']}]")
     for r in rows:   # lineage of member-only face facts
         t = (r.get('tags') or '').split('+')[0] or (re.match(r'(\w+)=', r.get('nodes') or '') or [None, ''])[1]
