@@ -9,7 +9,7 @@ from resolve import parse, face, children, resolve, tol, note_facts, DPS as CORE
 ROLES = list(csv.DictReader(open(os.environ.get('ROLES_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'roles.csv')))))
 INSTANT_DPS = {'total_assets', 'total_liabilities', 'stockholders_equity', 'current_assets', 'current_liabilities', 'total_debt', 'cash_and_equivalents',
                'accounts_receivable', 'accounts_payable', 'inventory', 'goodwill', 'intangible_assets', 'ppe_net', 'shares_outstanding', 'deposits', 'loans_net'}
-import resolve_bs, resolve_cf, standard_inputs
+import resolve_bs, resolve_cf, resolve_is, standard_inputs
 FAMILY_DPS = set(resolve_bs.FAMILY) | {'current_assets', 'current_liabilities'} | set(resolve_cf.DPS)
 POLARITY = {r['data_point']: r for r in csv.DictReader(open(os.environ.get('POLARITY_CSV', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rules', 'polarity.csv'))))}
 def apply_polarity(rows):
@@ -261,6 +261,14 @@ def apply_expenses_by_nature(rows, filings):
     return rows
 
 
+def apply_alt(rows):
+    """Last-resort values a family module offered (class-member sums), only where no fill served the year."""
+    for r in rows:
+        a_ = r.pop('alt', None)
+        if a_ and r['status'] == 'not_presented': r.update(a_)
+    return rows
+
+
 def apply_cost_and_opex(rows, filings):
     """(1) cost_of_revenue printed as product and service lines that carry only ProductOrServiceAxis member facts (DIS, GE,
     TMUS, VZ): the sum of the members (EXT['cor'] = standard_inputs.product_service_cor). (2) operating_expenses with no node in the tree: from the printed
@@ -312,7 +320,10 @@ def apply_cost_and_opex(rows, filings):
                      why=f"IS prints '{te['lb']}' between '{rv_['lb']}' and '{oi_['lb']}'")
             r['flags'] = ';'.join(x for x in (r.get('flags', ''), 'printed_total_expenses') if x)
     for r in rows:
-        if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
+        # also the 'a line between the top line and OI has no consolidated value' combined reason (ABBV, ACN, CAT, GLW, RTX 2015, SCCO):
+        # the printed totals hold the valueless line, so they need no component sum (false-reason sweep 2026-11-14)
+        nocv = r['status'] == 'combined' and (r.get('why') or '').startswith('a line between the top line and OI has no consolidated value')
+        if r['data_point'] != 'operating_expenses' or (r['status'] not in ('not_presented', 'no_role') and not nocv) or r['accession'] not in F: continue
         if 'no expense line between' in (r.get('why') or ''): continue   # LMT: only other income sits between GP and OI; GP - OI is not an expense
         L, _ = parse(F[r['accession']])
         isf = {l['tag']: l for l in face(L, 'IS') if l['val'] is not None}
@@ -327,7 +338,39 @@ def apply_cost_and_opex(rows, filings):
             continue
         r.update(status='component_sum', value=v, tags='printed totals', nodes=nodes, why=f'operating expenses = the lines between the top line and operating income, from {how}')
         r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_from_printed_totals') if y)
+    for r in rows:   # false-reason sweep 2026-11-14: a 'no node' reason where the filing prints opex lines or a wider costs total
+        if r['data_point'] != 'operating_expenses' or r['status'] not in ('not_presented', 'no_role') or r['accession'] not in F: continue
+        isf = [l for l in face(parse(F[r['accession']])[0], 'IS') if l['val'] is not None]
+        cor = by.get((r['accession'], 'cost_of_revenue'))
+        tot = next((l for l in isf if l['tag'] in ('CostsAndExpenses', 'BenefitsLossesAndExpenses') or re.match(r'(?i)^total (costs|expenses|costs and (other )?(expenses|deductions))$', (l['lb'] or '').strip())), None)
+        cl = next((l for l in isf if cor and cor['status'] == 'mapped' and l['tag'] == cor.get('tags')), None)
+        if tot is None and cl is not None:
+            # KLAC: no costs total; the operating lines printed after cost of revenue, up to the first
+            # nonoperating line (interest, debt extinguishment, other income/expense), are the operating expenses
+            ops = []
+            for l in (x for x in isf if x['ln'] > cl['ln']):
+                if OPEX_LINE.match(l['tag']) or resolve_is.OPER_TAG.match(l['tag']): ops.append(l); continue
+                break
+            nxt = next((l for l in isf if l['ln'] > (ops[-1]['ln'] if ops else 10**9)), None)
+            if len(ops) >= 2 and nxt is not None and NONOP_NEXT.search(nxt['tag'] + ' ' + (nxt['lb'] or '')):
+                r.update(status='component_sum', value=sum((l['val'] for l in ops), D(0)), tags='+'.join(l['tag'] for l in ops),
+                         nodes='; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ops),
+                         why=f"no operating-income line and no costs total: the operating lines printed after '{cl['lb']}' up to '{nxt['lb']}' (the first nonoperating line)")
+                r['flags'] = ';'.join(y for y in (r.get('flags', ''), 'opex_component_lines') if y)
+                continue
+        if tot is not None:
+            isf_all = [l for l in face(parse(F[r['accession']])[0], 'IS') if not l['tag'].endswith(('Abstract', 'Axis', 'Domain', 'Table', 'LineItems'))]   # DIS: cost rows carry members only
+            inside = [l for l in isf_all if l['ln'] < tot['ln'] and l['ln'] > max((x['ln'] for x in isf if x['ln'] < tot['ln'] and re.match(r'^(Revenues|RevenuesAndOtherIncome|SalesRevenueNet)$', x['tag'])), default=0)]
+            wider = [l['lb'] for l in inside if (cl is not None and l is cl) or COSTLIKE.search(l['tag'] + ' ' + (l['lb'] or ''))]
+            if not wider: continue
+            r.update(status='combined', value=None, tags=tot['tag'], nodes=f"{tot['tag']}={tot['val']} [R{tot['rep']}.htm:{tot['ln']}]",
+                     why=f"the only expense total printed, '{tot['lb']}', also holds " + ', '.join(f"'{w}'" for w in wider[:3]) + " (cost of revenue or nonoperating items); no operating-expense total is printed")
     return rows
+
+
+OPEX_LINE = re.compile(r'^(SellingGeneralAndAdministrativeExpense|ResearchAndDevelopmentExpense\w*|GeneralAndAdministrativeExpense|SellingAndMarketingExpense|MarketingAndAdvertisingExpense|AmortizationOfIntangibleAssets|GoodwillImpairmentLoss)$')
+NONOP_NEXT = re.compile(r'(?i)InterestExpense|ExtinguishmentOfDebt|OtherNonoperating|InterestAndOtherIncome|OtherExpenseIncome|other (expense|income)')
+COSTLIKE = re.compile(r'(?i)^(CostOf\w*|CostOfPurchased\w*|\w*Costs\b|RefiningAndMarketingCosts|MineralExtraction\w*|CostOfGoods\w*|InterestExpense\w*|InterestAndDebtExpense|InterestAndOtherFinancialCharges|OtherNonoperating\w*|CostOfServices\w*)\b|cost of (sales|revenues?|products|goods|services)|costs applicable to sales|purchased (crude|commodities)|interest expense|interest and debt|other \(income\)')
 def derive_gross_profit(rows):
     """Ruling C1 (Dhairya 2026-11-14): gross profit not printed, revenue and cost of revenue printed and resolved in the same
     filing -> DERIVED revenue - cost of revenue (derived_not_printed). Also when both come from the same later filing's column
@@ -410,6 +453,15 @@ def apply_label_beyond(rows, filings):
             trade = [l for l in bs if re.search(r'(?i)^(trade |customer )?(accounts )?receivables?\b|accounts receivable|trade receivables?', l['lb'] or '')
                      and not re.search(r'(?i)\bother\b|related|affiliate|financ|notes?\b|unbilled|income tax', l['lb'] or '')]
             if not trade: beyond = None
+        if beyond and dp == 'income_before_tax' and m:
+            # NEM 'Income (loss) before income and mining tax and other items': the 'other items' are the lines printed after it
+            # (income tax, equity income of affiliates) before the continuing-operations result; it is the pretax line itself
+            L = cache.get(r['accession']) or parse(F[r['accession']])[0]
+            after = []
+            for l in (x for x in face(L, 'IS') if x['val'] is not None and x['ln'] > int(m.group(3))):
+                if re.match(r'^(ProfitLoss|NetIncomeLoss|IncomeLossFromContinuingOperations\w*)$', l['tag']): break
+                after.append(l)
+            if after and all(re.search(r'IncomeTax|EquityMethod', l['tag']) for l in after) and any('EquityMethod' in l['tag'] for l in after): beyond = None
         if beyond and dp == 'revenue':
             # ruling 3: the sales / operating-revenue lines printed above 'Total revenues and other income' are revenue
             L = cache.get(r['accession']) or parse(F[r['accession']])[0]
@@ -461,7 +513,7 @@ def family_rows(f, notes, raw):
     for dp, r in resolve_bs.resolve_family(f, resolve_bs.notes_for(bsraw)).items():
         out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='bs_family', flags=';'.join(x for x in (r.get('rule', ''), r.get('flags', '')) if x))
     for dp, r in resolve_cf.resolve_cf(f, notes).items():
-        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='')
+        out[dp] = dict(status=r['status'], tags=r.get('tags', ''), value=r['value'], r_page='', nodes=r.get('nodes', ''), why=r['why'], source='cf_family', flags='', alt=r.get('alt'))
     return out
 def descendants(arcs, root, onface):
     out, stack = set(), [root]
@@ -607,6 +659,7 @@ if __name__ == '__main__':
     # fact carries one equity-statement column member (EquityComponents=RetainedEarnings / CommonStock ...) is the consolidated value;
     # share counts equal to shares issued (VZ, C, TMO) were rejected in the file. They enter as note facts, lineage keeps the member
     MF = {}
+    resolve_cf.MEMBER_FACTS = memberfacts
     EXT['lt'] = standard_inputs.amortization_location_total(notefacts, memberfacts)
     EXT['cor'] = standard_inputs.product_service_cor(notefacts, memberfacts)
     EXT['cor_mx'] = {a: x for a, x in standard_inputs.cost_member_sums(notefacts, memberfacts).items() if a not in EXT['cor']}
@@ -646,6 +699,7 @@ if __name__ == '__main__':
     EXT['cf'] = standard_inputs.comparative_fill(rows, compfacts, INSTANT_DPS)
     EXT['pz'] = {k: dict(v, accession=k[0], data_point=k[1]) for k, v in standard_inputs.printed_zero(rows, zlines, {r['data_point']: (r['stmt'], [x for x in (r.get('alternatives') or '').split('|') if x]) for r in ROLES}).items()}
     rows = fill_printed_zero_and_comparative(rows, td)
+    rows = apply_alt(rows)
     rows = derive_gross_profit(rows)
     rows = apply_polarity(rows)
     for r in rows:   # cells whose node is a listed filer XBRL error carry the evidence

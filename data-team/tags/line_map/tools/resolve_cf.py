@@ -53,6 +53,27 @@ WC = {
 def fmt(ls):
     return '; '.join(f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]" for l in ls)
 
+MEMBER_FACTS = {}   # accession -> member facts (resolve_all sets it from the standard extract)
+
+
+def class_member_lines(f, cf, sec, tags):
+    """A financing face line with no consolidated value whose own-period facts are ClassOfStock members only (V 2016 'Repurchase of
+    common stock': Class A + Class C): [(tag, member, value, line)] when two or more members, one value each."""
+    out = []
+    for l in cf:
+        if l['tag'] not in tags or l['val'] is not None or sec.get(l['ln']) != 'F': continue
+        ms = {}
+        for e in (MEMBER_FACTS.get(f.get('a')) or '').split('~'):
+            x = e.split('|')
+            if len(x) >= 4 and x[0] == l['tag'] and x[1] == '4':
+                m = re.fullmatch(r'ClassOfStock=(\w+);', x[3])
+                if not m: return []
+                ms.setdefault(m.group(1), set()).add(D(x[2]))
+        if len(ms) >= 2 and all(len(v) == 1 for v in ms.values()):
+            out += [(l['tag'], m, v.pop(), l) for m, v in sorted(ms.items())]
+    return out
+
+
 def resolve_cf(f, notes):
     """Returns {data_point: dict(status, tags, value, nodes, why, flags)} for one 10-K."""
     L, arcs = parse(f)
@@ -65,8 +86,8 @@ def resolve_cf(f, notes):
         return [(t, v) for t, v in vs if v is not None]
     in_sec = lambda s: [l for l in val if sec.get(l['ln']) == s and not TOTAL.match(l['tag'])]
     out = {}
-    def put(dp, status, tags, value, nodes, why, flags=''):
-        out[dp] = dict(status=status, tags=tags, value=value, nodes=nodes, why=why, flags=flags)
+    def put(dp, status, tags, value, nodes, why, flags='', alt=None):
+        out[dp] = dict(status=status, tags=tags, value=value, nodes=nodes, why=why, flags=flags, alt=alt)
     # ---- capex: every capital-purchase line of the investing section
     inv = in_sec('I')
     mem = [l for l in inv if l['tag'] in CAPEX and not HARD_NOT.search(l['lb'])]
@@ -104,8 +125,18 @@ def resolve_cf(f, notes):
         put('share_buybacks', 'mapped' if len(bb) == 1 else 'component_sum', '+'.join(l['tag'] for l in bb), sum(l['val'] for l in bb), fmt(bb), 'CF financing: repurchase of own common stock (register item 4)')
     else:
         n = note(['PaymentsForRepurchaseOfCommonStock', 'PaymentsForRepurchaseOfEquity'])
+        comb = [l for l in fin if l['tag'].startswith('PaymentsRelatedToCommonStockRepurchase') or (BUY_LABEL.search(l['lb']) and re.search(r'(?i)withh|employee tax', l['lb']))]
+        cls = class_member_lines(f, cf, sec, ('PaymentsForRepurchaseOfCommonStock',))
+        # a line carrying ClassOfStock members only: their sum is a last resort, after a later 10-K's consolidated figure for the year
+        # (the comparative fill; DELL FY2017 class sum 711 where the FY2019 10-K prints 611)
+        alt = dict(status='component_sum', tags='+'.join(t for t, _, _, _ in cls), value=sum(v for _, _, v, _ in cls),
+                   nodes='; '.join(f"{t}[ClassOfStock={m}]={v} [R{l['rep']}.htm:{l['ln']}]" for t, m, v, l in cls),
+                   why=f"CF financing: '{cls[0][3]['lb']}' carries ClassOfStock member facts only and no later 10-K prints the year consolidated; their sum",
+                   flags='class_member_sum') if cls else None
         if n: put('share_buybacks', 'mapped', n[0][0], n[0][1], f'{n[0][0]}={n[0][1]} [NOTE]', 'undimensioned consolidated note fact at the filing own column (par. AG)')
-        else: put('share_buybacks', 'not_presented', '', None, '', 'no own-stock repurchase line in the financing section nor an undimensioned note fact')
+        elif comb:
+            put('share_buybacks', 'combined', comb[0]['tag'], None, fmt(comb[:1]), f"CF financing prints '{comb[0]['lb']}' only: it holds the repurchase of common stock together with employee tax withholdings (a combined line is a reason, never a value)")
+        else: put('share_buybacks', 'not_presented', '', None, '', 'no own-stock repurchase line in the financing section nor an undimensioned note fact', alt=alt)
     # ---- dividends: financing section; common (or the unlabelled total) beside no separate common line
     com = [l for l in fin if l['tag'] in ('PaymentsOfDividendsCommonStock', 'PaymentsOfOrdinaryDividends')]
     tot = [l for l in fin if l['tag'] in ('PaymentsOfDividends', 'PaymentsOfCapitalDistribution', 'CashDistributionsToStockholders')]  # REIT 'Cash distributions to stockholders' (WELL)

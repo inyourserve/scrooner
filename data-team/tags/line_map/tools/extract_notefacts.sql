@@ -12,13 +12,14 @@
 --                                         values in other columns: printed dash / zero evidence (ruling 2026-11-14).
 --   mvals also carries AmortizationOfIntangibleAssets by income-statement location (CSCO prints only the opex part on the face) and
 --   CostOf* by ProductOrService member on an IS line (GE, RTX, TMO, TMUS print product and service cost lines with members only), and
+--   PaymentsForRepurchaseOfCommonStock by ClassOfStock (V 2016: the CF line carries class members only), and
 --   revenue elements by ProductOrService member on an IS line (DE 'Other Income', WELL 'Other income' rows: resolve_is.member_row_value).
 -- Families: the element regex of rules/roles.csv plus the balance-sheet / cash-flow family modules; mvals also takes the AP/AR names.
 set statement_timeout='55s';
 with rx as (select '^(/* element families from rules/roles.csv */)$'::text r),
 fl as (select id, accession, period from fsn.filing where cik::bigint in (/* CIKs */) and form='10-K' and period>='2014-06-01'),
 tg as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag like '%Accretion%')),
-tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
+tgm as (select id, tag from fsn.tag where not custom and (tag ~ (select r from rx) or tag ~ '^(AccountsPayable|AccountsReceivable|AccountsAndNotesReceivable|Receivables|DueTo|DueFrom)' or tag = 'PaymentsForRepurchaseOfCommonStock' or tag ~ '^(Revenues|RevenueFromContractWithCustomer\w*|SalesRevenueNet)$')),
 own as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::text),'~') vals
   from fsn.value v join fl on fl.id=v.filing_id join tg t on t.id=v.tag_id
   where v.dim_id=0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
@@ -28,6 +29,7 @@ mem as (select fl.accession a, string_agg(concat_ws('|',t.tag,v.qtrs,v.value::te
   where v.dim_id<>0 and coalesce(v.coreg,'')='' and v.ddate=fl.period and v.qtrs in (0,4) and v.value is not null
     and (d.segments ~ '^(EquityComponents|RelatedPartyTransactionsByRelatedParty|Scenario)=[^;=]+;$'
          or (t.tag='AmortizationOfIntangibleAssets' and d.segments ~ '^(IncomeStatementLocation|StatementOfIncomeLocationBalance|FiniteLivedIntangibleAssetsByMajorClass)=[^;=]+;$')
+         or (t.tag='PaymentsForRepurchaseOfCommonStock' and v.qtrs=4 and d.segments ~ '^ClassOfStock=[^;=]+;$')
          or (t.tag ~ '^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$)' and v.qtrs=4 and d.segments ~ '^ProductOrService=[^;=]+;$'
              and exists (select 1 from fsn.line l2 where l2.filing_id=fl.id and l2.tag_id=v.tag_id and l2.stmt='IS')))
     and exists (select 1 from fsn.line l where l.filing_id=fl.id and l.tag_id=v.tag_id)

@@ -5,6 +5,7 @@ from decimal import Decimal as D
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import resolve, resolve_all, resolve_is
 from resolve_cf import resolve_cf
+import resolve_cf as resolve_cf_mod
 
 
 def filing(lines, calc=''):
@@ -471,3 +472,133 @@ def test_revenue_table_member_is_never_the_consolidated_revenue():
 def test_extract_selects_revenue_rows_by_product_or_service_member():
     sql = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'extract_notefacts.sql')).read()
     assert "RevenueFromContractWithCustomer\\w*|SalesRevenueNet)$'" in sql and "'^(CostOf|Revenues$|RevenueFromContractWithCustomer|SalesRevenueNet$)'" in sql
+
+
+# ---- false-reason sweep 2026-11-14 (_false-reason-candidates-2026-11-14.csv)
+
+def _cf_fin(line):
+    return [('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 100),
+            ('CF', 'NetCashProvidedByUsedInInvestingActivities', 'Net cash used in investing activities', -50),
+            ('CF', 'PaymentsOfDividendsCommonStock', 'Dividends paid', 20), line,
+            ('CF', 'NetCashProvidedByUsedInFinancingActivities', 'Net cash used in financing activities', -40)]
+
+
+def test_repurchase_line_with_employee_tax_withholdings_is_combined_not_missing():
+    # MS: 'Repurchases of common stock and employee tax withholdings' is the only repurchase line
+    b = resolve_cf(filing(_cf_fin(('CF', 'PaymentsRelatedToCommonStockRepurchaseAndTaxWithholdingForShareBasedCompensation', 'Repurchases of common stock and employee tax withholdings', 3933))), {})['share_buybacks']
+    assert b['status'] == 'combined' and 'employee tax withholdings' in b['why'] and b['value'] is None
+
+
+def test_class_member_repurchase_line_is_a_last_resort_sum():
+    # V 2016: 'Repurchase of common stock' carries Class A and Class C members only; DELL: a later 10-K's consolidated figure wins
+    f = filing(_cf_fin(('CF', 'PaymentsForRepurchaseOfCommonStock', 'Repurchase of common stock', None)))
+    old = dict(resolve_cf_mod.MEMBER_FACTS)
+    try:
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = 'PaymentsForRepurchaseOfCommonStock|4|6987000000|ClassOfStock=CommonClassA;~PaymentsForRepurchaseOfCommonStock|4|170000000|ClassOfStock=CommonClassC;'
+        b = resolve_cf(f, {})['share_buybacks']
+        assert b['status'] == 'not_presented' and b['alt']['value'] == D(7157000000) and b['alt']['status'] == 'component_sum'
+        resolve_cf_mod.MEMBER_FACTS[f['a']] = 'PaymentsForRepurchaseOfCommonStock|4|6987000000|ClassOfStock=CommonClassA;'
+        assert resolve_cf(f, {})['share_buybacks']['alt'] is None   # one class is not the total
+    finally:
+        resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
+    # one ClassOfStock member is never read as the consolidated value (DELL FY2020 class V 0; classes A-D repurchased 8)
+    assert standard_inputs.member_facts({}, {f['a']: 'PaymentsForRepurchaseOfCommonStock|4|0|ClassOfStock=CommonClassV;'}) == []
+
+
+def _opex_row(f, why='no node'):
+    return dict(accession=f['a'], data_point='operating_expenses', status='not_presented', value=None, tags='', nodes='', why=why, flags='')
+
+
+def test_operating_lines_without_a_total_or_oi_are_summed_up_to_the_first_nonoperating_line():
+    # KLAC: Costs of revenues, R&D, SG&A, then 'Loss on extinguishment of debt' and 'Interest expense'; no costs total, no OI
+    f = filing([('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'Engineering, research and development', 530),
+                ('IS', 'SellingGeneralAndAdministrativeExpense', 'Selling, general and administrative', 406), ('IS', 'GainsLossesOnExtinguishmentOfDebt', 'Loss on extinguishment of debt', 131),
+                ('IS', 'InterestExpense', 'Interest expense', 106), ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Total income before income taxes', 426)])
+    cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(1215), tags='CostOfRevenue', nodes='', why='', flags='')
+    r = resolve_all.apply_cost_and_opex([_opex_row(f), cor], [f])[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(936) and 'opex_component_lines' in r['flags']
+    # a line the rule does not know as operating stops the run before two lines: no sum
+    g = filing([('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'R&D', 530),
+                ('IS', 'OtherCostAndExpenseOperating', 'Other', 9), ('IS', 'InterestExpense', 'Interest expense', 106)])
+    cor_g = dict(cor, accession=g['a'])
+    assert resolve_all.apply_cost_and_opex([_opex_row(g), cor_g], [g])[0]['status'] == 'not_presented'
+
+
+def test_a_costs_total_holding_cost_of_revenue_makes_opex_combined():
+    # BMY: 'Total Expenses' holds 'Cost of products sold' and 'Other (income)/expense'; no OI line
+    f = filing([('IS', 'Revenues', 'Total Revenues', 15879), ('IS', 'CostOfGoodsSold', 'Cost of products sold', 3932), ('IS', 'ResearchAndDevelopmentExpense', 'Research and development', 4534),
+                ('IS', 'CostsAndExpenses', 'Total Expenses', 13498), ('IS', 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest', 'Earnings Before Income Taxes', 2381)])
+    cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(3932), tags='CostOfGoodsSold', nodes='', why='', flags='')
+    r = resolve_all.apply_cost_and_opex([_opex_row(f), cor], [f])[0]
+    assert r['status'] == 'combined' and r['nodes'] == 'CostsAndExpenses=13498 [R2.htm:4]' and 'Cost of products sold' in r['why']
+    # a total with only operating lines in it is not called combined
+    g = filing([('IS', 'Revenues', 'Total Revenues', 100), ('IS', 'ResearchAndDevelopmentExpense', 'Research and development', 40), ('IS', 'CostsAndExpenses', 'Total Expenses', 40)])
+    assert resolve_all.apply_cost_and_opex([_opex_row(g)], [g])[0]['status'] == 'not_presented'
+
+
+def test_printed_totals_cover_a_valueless_line_inside_them():
+    # ABBV 2015: OtherExpenses has no consolidated value; total costs and expenses - cost of products sold, both printed, with OI printed
+    f = filing([('IS', 'CostOfGoodsSold', 'Cost of products sold', 4500), ('IS', 'SellingGeneralAndAdministrativeExpense', 'SG&A', 6387), ('IS', 'OtherExpenses', 'Other', None),
+                ('IS', 'CostsAndExpenses', 'Total costs and expenses', 15322), ('IS', 'OperatingIncomeLoss', 'Operating earnings', 7537)])
+    cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(4500), tags='CostOfGoodsSold', nodes='', why='', flags='')
+    row = dict(_opex_row(f), status='combined', why='a line between the top line and OI has no consolidated value (OtherExpenses): no component sum')
+    r = resolve_all.apply_cost_and_opex([row, cor], [f])[0]
+    assert r['status'] == 'component_sum' and r['value'] == D(10822)
+    other = dict(_opex_row(f), status='combined', why='the line holding the role is wider than operating_expenses')
+    assert resolve_all.apply_cost_and_opex([other, cor], [f])[0]['status'] == 'combined'
+
+
+def test_related_party_split_ignores_an_equal_equity_method_investee_member():
+    # WDC FY2023: NonrelatedParty 1,293 + RelatedParty 292; EquityMethodInvestee 292 is the same related party
+    mf = {'a1': 'AccountsPayableCurrent|0|1293|RelatedPartyTransactionsByRelatedParty=NonrelatedParty;~AccountsPayableCurrent|0|292|RelatedPartyTransactionsByRelatedParty=RelatedParty;'
+                '~AccountsPayableCurrent|0|292|RelatedPartyTransactionsByRelatedParty=EquityMethodInvestee;'}
+    assert standard_inputs.related_splits(mf, r'AccountsPayableCurrent')['a1']['related'] == '292'
+    mf['a1'] = mf['a1'].replace('|0|292|RelatedPartyTransactionsByRelatedParty=EquityMethodInvestee', '|0|50|RelatedPartyTransactionsByRelatedParty=EquityMethodInvestee')
+    assert standard_inputs.related_splits(mf, r'AccountsPayableCurrent') == {}
+
+
+def test_pretax_line_naming_the_equity_income_below_it_is_not_combined():
+    # NEM: 'Income (loss) before income and mining tax and other items'; the other items are tax and equity income printed below it
+    pt = 'IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments'
+    def run(after):
+        f = filing([('IS', 'Revenues', 'Sales', 7292), ('IS', pt, 'Income (loss) before income and mining tax and other items', 506), *after,
+                    ('IS', 'IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest', 'Income from continuing operations', 369)])
+        row = dict(accession=f['a'], data_point='income_before_tax', status='mapped', value=D(506), tags=pt, nodes=f'{pt}=506 [R2.htm:2]', why='', flags='', column='own')
+        return resolve_all.apply_label_beyond([row], [f])[0]['status']
+    assert run([('IS', 'IncomeTaxExpenseBenefit', 'Income and mining tax', 133), ('IS', 'IncomeLossFromEquityMethodInvestments', 'Equity income (loss) of affiliates', -4)]) == 'mapped'
+    assert run([('IS', 'IncomeTaxExpenseBenefit', 'Income and mining tax', 133)]) == 'combined'
+    assert run([('IS', 'IncomeLossFromEquityMethodInvestments', 'Equity income', -4), ('IS', 'OtherNonoperatingIncomeExpense', 'Other', 2)]) == 'combined'
+
+
+def test_other_income_label_may_cite_its_note():
+    # GE 2014: 'Other income (Note 17)'
+    assert resolve_is.OTHER_IE_LB.match('Other income (Note 17)') and not resolve_is.OTHER_IE_LB.match('Other operating income (Note 17)')
+
+
+def test_buyback_combined_by_element_or_by_label_and_alt_only_after_fill():
+    tag_only = resolve_cf(filing(_cf_fin(('CF', 'PaymentsRelatedToCommonStockRepurchaseAndTaxWithholdingForShareBasedCompensation', 'Share repurchases and related payments', 9))), {})['share_buybacks']
+    assert tag_only['status'] == 'combined'
+    lab = ('CF', 'ms_RepurchasesOfCommonStock', 'Repurchases of common stock and employee tax withholdings', 9)
+    f = filing(_cf_fin(lab)); f['lines'] = f['lines'].replace('|ms_RepurchasesOfCommonStock|0|', '|ms_RepurchasesOfCommonStock|1|')
+    assert resolve_cf(f, {})['share_buybacks']['status'] == 'combined'
+    # a class member beside a member of another axis: not a class-only line
+    g = filing(_cf_fin(('CF', 'PaymentsForRepurchaseOfCommonStock', 'Repurchase of common stock', None)))
+    old = dict(resolve_cf_mod.MEMBER_FACTS)
+    try:
+        resolve_cf_mod.MEMBER_FACTS[g['a']] = 'PaymentsForRepurchaseOfCommonStock|4|5|ClassOfStock=CommonClassA;~PaymentsForRepurchaseOfCommonStock|4|6|ClassOfStock=CommonClassC;~PaymentsForRepurchaseOfCommonStock|4|11|ConsolidatedEntities=Parent;'
+        assert resolve_cf(g, {})['share_buybacks']['alt'] is None
+    finally:
+        resolve_cf_mod.MEMBER_FACTS.clear(); resolve_cf_mod.MEMBER_FACTS.update(old)
+    alt = dict(status='component_sum', value=D(7157))
+    rows = resolve_all.apply_alt([dict(status='mapped', value=D(611), alt=alt), dict(status='not_presented', value=None, alt=alt)])
+    assert rows[0]['value'] == D(611) and rows[1]['value'] == D(7157) and 'alt' not in rows[0]
+
+
+def test_opex_lines_rule_needs_two_lines_and_no_oi():
+    def run(lines):
+        f = filing(lines)
+        cor = dict(accession=f['a'], data_point='cost_of_revenue', status='mapped', value=D(1215), tags='CostOfRevenue', nodes='', why='', flags='')
+        return resolve_all.apply_cost_and_opex([_opex_row(f), cor], [f])[0]['status']
+    base = [('IS', 'Revenues', 'Total revenues', 2814), ('IS', 'CostOfRevenue', 'Costs of revenues', 1215), ('IS', 'ResearchAndDevelopmentExpense', 'R&D', 530)]
+    assert run(base + [('IS', 'InterestExpense', 'Interest expense', 106)]) == 'not_presented'
+    assert run(base + [('IS', 'SellingGeneralAndAdministrativeExpense', 'SG&A', 406), ('IS', 'OperatingIncomeLoss', 'Operating income', 663), ('IS', 'InterestExpense', 'Interest expense', 106)]) == 'not_presented'

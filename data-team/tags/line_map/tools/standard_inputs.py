@@ -137,7 +137,8 @@ def member_facts(notefacts, memberfacts, class_shares=()):
             if (t, q) in und or len(fs) != 1: continue
             seg, v = fs[0]
             if COMPONENT_COLUMN.match(seg): continue
-            if seg.startswith('ProductOrService=') and REV_ROW.match(t): continue   # a revenue-table row, never the consolidated revenue
+            if seg.startswith('ProductOrService=') and REV_ROW.match(t): continue
+            if seg.startswith('ClassOfStock='): continue   # one class is never the total (DELL FY2020 class V 0; classes A-D repurchased 8)   # a revenue-table row, never the consolidated revenue
             if t == 'CommonStockSharesOutstanding' and a in class_shares: continue
             iss = und.get(('CommonStockSharesIssued', q))
             treasury = any(re.fullmatch(r'TreasuryStock\w*(Value|Shares)', k) and x != 0 for (k, _), x in und.items())
@@ -156,6 +157,8 @@ def related_splits(memberfacts, tag_re):
             m = re.fullmatch(r'RelatedPartyTransactionsByRelatedParty=(\w+);', seg)
             if m and int(q) == INSTANT_Q and re.fullmatch(tag_re, t): by.setdefault(t, {})[m.group(1)] = D(v)
         for t, d in sorted(by.items()):
+            # WDC FY2023: EquityMethodInvestee (Kioxia) is a subtype of RelatedParty with the same value, not a third part
+            if 'EquityMethodInvestee' in d and d.get('RelatedParty') == d['EquityMethodInvestee']: d = {k: v for k, v in d.items() if k != 'EquityMethodInvestee'}
             if set(d) == {'NonrelatedParty', 'RelatedParty'}:
                 out[a] = dict(accession=a, tag=t, nonrelated=str(d['NonrelatedParty']), related=str(d['RelatedParty']))
     return out

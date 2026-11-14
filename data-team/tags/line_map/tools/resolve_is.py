@@ -49,7 +49,7 @@ def kind(l):
 def fmt(l, st='IS'): return f"{l['tag']}={l['val']} [R{l['rep']}.htm:{l['ln']}]"
 
 
-OTHER_IE_LB = re.compile(r'(?i)^other\s+(\(income\)|income|\(expense\)|expenses?)(\s*(/|and|\(|,)?\s*\(?(income|expense|loss)\)?)?(\s*\(net\)|,\s*net|\s+net)?$')  # never 'other operating ...'
+OTHER_IE_LB = re.compile(r'(?i)^other\s+(\(income\)|income|\(expense\)|expenses?)(\s*(/|and|\(|,)?\s*\(?(income|expense|loss)\)?)?(\s*\(net\)|,\s*net|\s+net)?(\s*\(notes? [\d, and]+\))?$')  # never 'other operating ...'; GE 'Other income (Note 17)'
 OPER_TAG = re.compile(r'^(Restructuring\w*|\w*Impairment\w*|AssetImpairmentCharges|OtherOperatingIncomeExpenseNet|LitigationSettlement\w*|GainLossRelatedToLitigationSettlement|BusinessCombinationAcquisitionRelatedCosts|SeveranceCosts1)$')
 OPER_LB = re.compile(r'(?i)^(restructuring|impairment|asset impairment|litigation|severance|acquisition[- ]related)')
 
