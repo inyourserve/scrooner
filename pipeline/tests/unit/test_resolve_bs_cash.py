@@ -42,11 +42,23 @@ def test_component_climbs_to_the_face_total_labelled_cash_and_cash_equivalents()
 
 def test_a_total_that_names_other_items_or_no_calc_arc_keeps_the_pick():
     r = B.pick(B.ROLES["cash_and_equivalents"], *_axp("x")[:1], {}, "cash_and_equivalents")
-    for lb in ("Total cash, cash equivalents, and restricted cash", "Total cash, cash equivalents and short-term investments"):
+    for lb in ("Total cash, cash equivalents and short-term investments", "Total cash, cash equivalents, and marketable securities"):
         lines, arcs = _axp(lb)
         assert B.cash_subtotal(r, lines, arcs) is r
     lines, _ = _axp("Total cash and cash equivalents")
     assert B.cash_subtotal(r, lines, {}) is r
+
+
+def test_restricted_inclusive_total_is_the_cell_when_the_face_has_no_cash_total():
+    # ruling 2026-11-14 (WFC 2019-22, PGR 2017-25; as GE, INTC, PG): mapped, flagged includes_restricted
+    r = B.pick(B.ROLES["cash_and_equivalents"], *_axp("x")[:1], {}, "cash_and_equivalents")
+    for lb in ("Total cash, cash equivalents, and restricted cash", "Total cash, cash equivalents, restricted cash, and restricte"):
+        out = B.cash_subtotal(r, *_axp(lb))
+        assert out["value"] == D(46596) and out["status"] == "mapped" and "includes_restricted" in out["flags"]
+    # a cash-and-cash-equivalents total printed elsewhere on the face wins: the restricted-inclusive parent is not climbed
+    lines, arcs = _axp("Total cash, cash equivalents, and restricted cash")
+    lines.append(_l("CashAndCashEquivalentsAtCarryingValue", 46000, "Cash and cash equivalents", 20))
+    assert B.cash_subtotal(r, lines, arcs) is r
 
 
 def test_climbs_every_level_and_refuses_two_candidate_parents():
