@@ -179,6 +179,33 @@ def _fix_covers(rows, concept_id: int, end: date) -> bool:
     )
 
 
+# a map row that says the company's filing prints this line as part of a combined line, or that the concept is not in
+# the template: a resolver claim must not override it (JPM accounts receivable is 'Accrued interest and accounts
+# receivable', 11 cells were served with no claim at all, 2026-11-14)
+NO_SERVE_CLASSES = frozenset({"line_presented_combined", "combined"})
+
+
+def map_forbids(rows, concept_id: int, end: date) -> str | None:
+    """The reason a covering company_tag_map row forbids serving the concept at `end`, or None. Forbidden: a
+    not_in_template / combined row (reason_class line_presented_combined or combined, or decision combined) that no
+    value-bearing claim row (concept / component) of the same concept covers. Pure."""
+    covering = [
+        r
+        for r in rows
+        if concept_id in (r.canonical_concept_id, r.parent_concept_id)
+        and era_holds(r.era_from, r.era_to, end)
+    ]
+    if any(r.decision in ("concept", "component") and r.tag for r in covering):
+        return None
+    for r in covering:
+        if r.decision == "combined" or (
+            r.decision == "not_in_template"
+            and (r.reason_class or "") in NO_SERVE_CLASSES
+        ):
+            return f"map row {r.decision}/{r.reason_class or '-'} covers this period: the line is a combined line, not this concept"
+    return None
+
+
 def _cash_components(
     conn: psycopg.Connection, accessions: set[str]
 ) -> set[tuple[str, str]]:
@@ -383,6 +410,10 @@ def direct_cells(
             stats["fix_won_cells"].append(
                 {"concept": name, "period_end": te.isoformat()}
             )
+            continue
+        forbid = map_forbids(rows, cid, te)
+        if forbid:
+            reject(forbid)
             continue
         live = [c for c in cs if sl.quarantined(c) is None]
         if not live:

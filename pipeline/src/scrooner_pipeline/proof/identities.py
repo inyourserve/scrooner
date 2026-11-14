@@ -278,14 +278,88 @@ def node_mismatch(
     }
 
 
-def related(row: CheckRow, dp: str, p: Proof) -> bool:
-    """Is the served cell a member of this check (named members, or the calc parent / one of its children)?"""
+def related_tags(row: CheckRow, dp: str, tags: tuple[str, ...]) -> bool:
+    """Is a cell (data point `dp`, source `tags`) a member of this check (named members, or the calc parent / one of
+    its children)?"""
     if row.check_id in CHECK_MEMBERS:
         return dp in CHECK_MEMBERS[row.check_id]
     if row.check_id.startswith("calc:"):
         parent = row.check_id.split(":")[1]
-        return any(t == parent or t in row.children for t in p.shown.tags)
+        return any(t == parent or t in row.children for t in tags)
     return False
+
+
+def related(row: CheckRow, dp: str, p: Proof) -> bool:
+    """Is the served cell a member of this check (named members, or the calc parent / one of its children)?"""
+    return related_tags(row, dp, p.shown.tags)
+
+
+# calc parents that are served totals the named identities (CHECK_MEMBERS) tie by data point
+PARENT_DP: dict[str, str] = {
+    "NetCashProvidedByUsedInOperatingActivities": "cfo",
+    "NetCashProvidedByUsedInInvestingActivities": "cash_flow_investing",
+    "NetCashProvidedByUsedInFinancingActivities": "cash_flow_financing",
+    "Assets": "total_assets",
+    "Liabilities": "total_liabilities",
+    "StockholdersEquity": "stockholders_equity",
+    "GrossProfit": "gross_profit",
+    "NetIncomeLoss": "net_income",
+}
+
+
+def lifting_row(
+    rows: list[CheckRow], failed: CheckRow, dp: str, tags: tuple[str, ...]
+) -> CheckRow | None:
+    """The independent tie that lifts a failed calc group's quarantine, ONLY from the SAME filing column (`rows`).
+    The group's parent total must be tied independently of the failed sum: a printed-totals identity of that column
+    that PASSES and names the parent's data point (cf_parts_eq_change for the three cash-flow totals, the balance-sheet
+    identity, gross profit), or an alternative calc group of the same parent that passes. The failed group then only
+    says the filer's calc linkbase omits a child (LLY CFO 2019: the Elanco discontinued-operations line is no calc
+    child). A cell that is the parent is lifted by that; a CHILD cell needs its own passing tie as well (net income
+    IS = CF), because a failed sum cannot say which child is wrong. Returns the tie row or None. Pure."""
+    if not failed.check_id.startswith("calc:"):
+        return None
+    parent = failed.check_id.split(":")[1]
+    tie: CheckRow | None = None
+    for r in rows:
+        if r is failed or r.check_id == failed.check_id or not r.ok:
+            continue
+        if r.check_id.startswith("calc:"):
+            if r.check_id.split(":")[1] == parent:
+                tie = r
+                break
+        elif PARENT_DP.get(parent) in CHECK_MEMBERS.get(r.check_id, ()):
+            tie = r
+            break
+    if tie is None:
+        return None
+    if parent in tags:
+        return tie
+    own = next(
+        (
+            r
+            for r in rows
+            if r.ok
+            and r.check_id != failed.check_id
+            and not r.check_id.startswith("calc:")
+            and related_tags(r, dp, tags)
+        ),
+        None,
+    )
+    return tie if own is not None else None
+
+
+def failing_unlifted(
+    rows: list[CheckRow], dp: str, tags: tuple[str, ...]
+) -> list[CheckRow]:
+    """The failed checks of a filing column the cell belongs to that no independent tie lifts."""
+    return [
+        r
+        for r in rows
+        if not r.ok
+        and related_tags(r, dp, tags)
+        and lifting_row(rows, r, dp, tags) is None
+    ]
 
 
 def _covered(rows: list[CheckRow], identity: str) -> bool:
@@ -380,6 +454,21 @@ def _check_period(
         rows_of[dp] = rows
         for r in rows:
             if not r.ok and related(r, dp, p):
+                lift = lifting_row(rows, r, dp, p.shown.tags)
+                if lift is not None:
+                    # the filing's own independent tie passes: the failed group is an incomplete calc linkbase
+                    p.checks.setdefault("quarantine_lifted", []).append(
+                        {
+                            "failed_check": r.check_id,
+                            "lifted_by": lift.check_id,
+                            "accession": acc,
+                            "lhs": str(r.lhs),
+                            "rhs": str(r.rhs),
+                            "tie_lhs": str(lift.lhs),
+                            "tie_rhs": str(lift.rhs),
+                        }
+                    )
+                    continue
                 rec = {
                     "name": r.check_id,
                     "source": "filing_check",

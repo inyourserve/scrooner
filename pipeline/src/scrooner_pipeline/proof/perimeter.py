@@ -140,6 +140,86 @@ def _value(s: FilingStructure, tag: str, ddate, qtrs: int) -> Decimal | None:
     return None
 
 
+LEASE_DEBT_PREFIXES = (
+    "LongTermDebtAndCapitalLeaseObligations",
+    "LongTermDebtAndFinanceLease",
+    "DebtAndCapitalLeaseObligations",
+    "DebtCurrentAndFinanceLease",
+    "LongTermDebtCurrentAndFinanceLease",
+)
+LEASE_LABEL_RE = re.compile(
+    r"(?i)\b(finance|capital) lease|lease obligations|including (finance|capital) leases"
+)
+CURRENT_LEASE_DEBT_PREFIXES = (
+    "LongTermDebtAndCapitalLeaseObligationsCurrent",
+    "DebtCurrentAndFinanceLease",
+    "LongTermDebtCurrentAndFinanceLease",
+)
+
+
+def _is_noncurrent_lease_debt(tag: str) -> bool:
+    return tag in (
+        "LongTermDebtAndCapitalLeaseObligations",
+        "DebtAndCapitalLeaseObligations",
+    ) or (tag.startswith("LongTermDebtAndFinanceLease") and tag.endswith("Noncurrent"))
+
+
+def lease_in_debt(
+    s: FilingStructure, claim_tags: set[str], ddate
+) -> dict[str, str] | None:
+    """Spec _perimeter-lease-in-debt-spec-2026-11-14 (IBM): the claim's debt lines already hold the finance leases.
+    L1 by name: a claim-named line carries a lease-including tag family, or its face label names leases.
+    L2 by value: a claim-named line equals a lease-including noncurrent fact of the same filing within rounding, and
+    (when the filing reports a lease-including current fact) the claim-named current-debt lines are at least that
+    figure minus rounding. Equality with a lease-including element is the evidence, never size. Returns
+    {resolved_by, tag, value} or None."""
+    for t in sorted(claim_tags):
+        if t.startswith(LEASE_DEBT_PREFIXES):
+            return {"resolved_by": "lease_in_debt_by_name", "tag": t, "value": ""}
+    for ln in s.lines_on("BS"):
+        if _names(claim_tags, ln.tag) and LEASE_LABEL_RE.search(ln.label or ""):
+            return {
+                "resolved_by": "lease_in_debt_by_name",
+                "tag": ln.tag,
+                "value": ln.label,
+            }
+    from scrooner_pipeline.common.presentation_scale import presentation_scale
+
+    def tol(*vals: Decimal) -> Decimal:
+        return Decimal("1.5") * Decimal(10) ** presentation_scale(list(vals))
+
+    facts: dict[str, Decimal] = {}
+    for (tag, dd, qtrs), vals in s.num.items():
+        if dd != ddate or qtrs != 0 or not vals:
+            continue
+        v = vals[0].value
+        if v != 0:
+            facts[tag] = v
+    claim_vals = {t: v for t in claim_tags if (v := _value(s, t, ddate, 0)) is not None}
+    match = next(
+        (
+            (lt, lv, ct)
+            for lt, lv in sorted(facts.items())
+            if _is_noncurrent_lease_debt(lt)
+            for ct, cv in sorted(claim_vals.items())
+            if abs(cv - lv) <= tol(cv, lv)
+        ),
+        None,
+    )
+    if match is None:
+        return None
+    lt, lv, _ct = match
+    current = [v for t, v in facts.items() if t.startswith(CURRENT_LEASE_DEBT_PREFIXES)]
+    if current:
+        need = max(current)
+        have = sum(
+            (v for t, v in claim_vals.items() if t in SHORT_FACE_TAGS), Decimal(0)
+        )
+        if have < need - tol(have, need):
+            return None
+    return {"resolved_by": "lease_in_debt_by_value", "tag": lt, "value": str(lv)}
+
+
 def _parts_carry_total(
     s: FilingStructure,
     claim_tags: set[str],
@@ -168,8 +248,10 @@ def missing_parts(
     ddate,
     lease_locations: dict[str, tuple[str, ...]] | None = None,
     instance: dict[instance_facts.Key, instance_facts.InstanceFact] | None = None,
+    resolved: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
-    """Perimeter parts the filing prints at the column that the claim does not name."""
+    """Perimeter parts the filing prints at the column that the claim does not name. `resolved` collects the
+    lease_in_debt evidence when a lease family is carried by a lease-including debt line."""
     out: list[dict[str, Any]] = []
     face = {ln.tag for ln in s.lines_on("BS")}
     required: dict[str, Decimal] = {}
@@ -218,6 +300,11 @@ def missing_parts(
             s, claim_tags, (cur, noncur), tv, ddate
         ):
             continue
+        held = lease_in_debt(s, claim_tags, ddate)
+        if held is not None:
+            if resolved is not None:
+                resolved.append(held)
+            continue
         for t, v in owed:
             if _names(claim_tags, t):
                 continue
@@ -252,15 +339,22 @@ def apply_perimeter(
             continue
         c = sh.claim
         claim_tags = set(c.tags) | {t for _sg, t in c.parts}
+        resolved: list[dict[str, str]] = []
         missing = missing_parts(
             s,
             claim_tags,
             fsn_ddate(sh.period_end),
             (lease_locations or {}).get(s.adsh),
             instance,
+            resolved,
         )
         if not missing:
             p.checks["perimeter"] = {"status": "pass"}
+            if resolved:
+                p.checks["perimeter"]["resolved_by"] = resolved[0]["resolved_by"]
+                p.checks["perimeter"]["matched"] = {
+                    k: resolved[0][k] for k in ("tag", "value")
+                }
             continue
         p.checks["perimeter"] = {"status": "fail", "missing": missing}
         p.verdict, p.reason_code = DISAGREE, REASON

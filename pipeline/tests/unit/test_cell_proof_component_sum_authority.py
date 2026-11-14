@@ -139,3 +139,67 @@ def test_component_sum_from_the_restating_filing_does_not_disagree(
     assert cells[0].accession == LATER and ADSH != LATER
     assert cells[0].authoritative_disagrees is None, cells[0].authoritative_disagrees
     assert cells[0].copies_disagree is None
+
+
+def test_component_sum_is_judged_with_the_parts_of_each_filings_own_era():
+    """MO cost of revenue FY2018: the FY2018 10-K prints COGS + ExciseAndSalesTaxes, the FY2020 10-K prints the same
+    column as COGS + OtherCostOfOperatingRevenue (excise moved to a renamed line)."""
+    from scrooner_pipeline.proof.shown import (
+        component_sum_authority_by_era,
+        era_component_parts,
+    )
+
+    def row(i, tag, f, t):
+        return (i, "component", "IS", tag, None, "cost_of_revenue_resolved", 1, f, t)
+
+    rows = [
+        row(1, "COGS", date(2018, 1, 1), date(2019, 12, 31)),
+        row(2, "Excise", date(2018, 1, 1), date(2019, 12, 31)),
+        row(3, "COGS", date(2020, 1, 1), date(2022, 12, 31)),
+        row(4, "Other", date(2020, 1, 1), date(2022, 12, 31)),
+    ]
+    assert era_component_parts(
+        rows, "cost_of_revenue_resolved", date(2020, 12, 31)
+    ) == (
+        (1, "COGS"),
+        (1, "Other"),
+    )
+    assert (
+        era_component_parts(rows, "cost_of_revenue_resolved", date(2030, 1, 1)) is None
+    )
+    copies = [
+        ("f18", Decimal(7373), "COGS"),
+        ("f18", Decimal(5737), "Excise"),
+        ("f20", Decimal(7373), "COGS"),
+        ("f20", Decimal(5737), "Other"),
+    ]
+    filed = {"f18": date(2019, 2, 1), "f20": date(2021, 2, 1)}
+    own = ((1, "COGS"), (1, "Excise"))
+    era = {
+        a: era_component_parts(rows, "cost_of_revenue_resolved", p)
+        for a, p in (("f18", date(2018, 12, 31)), ("f20", date(2020, 12, 31)))
+    }
+    # with the era parts the later filing is complete and its sum is the whole 13,110
+    assert component_sum_authority_by_era(copies, own, era, filed) == (
+        "f20",
+        Decimal(13110),
+    )
+    # without them the later filing's COGS alone is read as the sum (Excise absent counted from the cell's claim)
+    assert component_sum_authority_by_era(copies, own, {}, filed) == (
+        "f18",
+        Decimal(13110),
+    )
+
+
+def test_a_copy_whose_filing_fails_its_own_check_is_no_authority():
+    """AMD FY2021 financing: the FY2023 10-K carries +1,895M with its own cf check failing; the next copy wins."""
+    from scrooner_pipeline.proof.shown import authority_pool
+
+    copies = [
+        ("f22", Decimal(-1895), "T"),
+        ("f23", Decimal(1895), "T"),
+    ]
+    assert authority_pool(copies, lambda a, t: a == "f23") == [copies[0]]
+    assert authority_pool(copies, lambda a, t: False) == copies
+    # every copy fails: none is dropped (the verdict is not decided by an empty pool)
+    assert authority_pool(copies, lambda a, t: True) == copies

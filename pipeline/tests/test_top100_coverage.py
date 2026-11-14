@@ -549,7 +549,9 @@ def test_period_no_filing_has_reached_is_not_a_cell():
     assert reached_by_filing(date(2023, 12, 31), f, today)
     assert not reached_by_filing(date(2026, 9, 12), f, today)
     assert not reached_by_filing(date(2026, 12, 31), f, today)  # future
-    assert reached_by_filing(date(2026, 9, 12), None, today)  # no filing in the store: unfiltered
+    assert reached_by_filing(
+        date(2026, 9, 12), None, today
+    )  # no filing in the store: unfiltered
 
     class Conn:
         def execute(self, *_a):
@@ -567,3 +569,44 @@ def test_period_no_filing_has_reached_is_not_a_cell():
     assert set(got) == {(1, 2025, "instant"), (1, 2025, "duration")}
     # without the annual map the stray instant is kept (old behaviour), so the filter is what removes it
     assert (1, 2026, "instant") in _fy_periods(Conn(), [1], today)
+
+
+def test_derived_counts_when_one_filing_prints_both_served_inputs():
+    """C1 same-filing: inputs proven against different shown accessions still count when ONE annual filing prints
+    both served values under their tags (ETN gross profit 2017: revenue cited from one 10-K, cost from another)."""
+    from scrooner_pipeline.mapper.top100_coverage import DERIVED_FAMILY, resolve_derived
+
+    def run(prints):
+        rows = [
+            {
+                **_row("revenue", acc="B", val="20"),
+                "tag": "Revenues",
+                "period_end": "2024-12-31",
+            },
+            {
+                **_row("cost_of_revenue", acc="A", val="8"),
+                "tag": "CostOfRevenue",
+                "period_end": "2024-12-31",
+            },
+            {
+                **_row("gross_profit", cls="UNCHECKED", acc="", fam=DERIVED_FAMILY),
+                "tag": "",
+                "period_end": "2024-12-31",
+            },
+        ]
+        resolve_derived(rows, prints)
+        return rows[2]
+
+    both = {
+        (1, "2024-12-31", "Revenues", "20"): {"A", "B"},
+        (1, "2024-12-31", "CostOfRevenue", "8"): {"A"},
+    }
+    r = run(both)
+    assert (r["class"], r["accession"]) == ("DERIVED", "A")
+    assert r["evidence"] == "revenue=20@A; cost_of_revenue=8@A"
+    # no filing prints both
+    split = {**both, (1, "2024-12-31", "Revenues", "20"): {"B"}}
+    assert run(split)["class"] == "UNCHECKED"
+    # a filing prints a different value for the input: not a print of the served value
+    assert run({(1, "2024-12-31", "CostOfRevenue", "8"): {"A"}})["class"] == "UNCHECKED"
+    assert run(None)["class"] == "UNCHECKED"

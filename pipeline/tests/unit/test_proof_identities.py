@@ -406,7 +406,9 @@ def test_node_is_the_claimed_tag_not_a_source_record_tag():
         ps[0].checks["claim"] = {"kind": "concept", "tags": claim_tags}
         st = node_filing(100 * M, -6)
         st["acc"].num[("SomePartTag", FY[2], 4)].append(
-            NumValue("SomePartTag", "us-gaap/2017", FY[2], 4, "USD", Decimal(10 * M), -6)
+            NumValue(
+                "SomePartTag", "us-gaap/2017", FY[2], 4, "USD", Decimal(10 * M), -6
+            )
         )
         return apply_identities(ps, structures=st), ps
 
@@ -414,3 +416,70 @@ def test_node_is_the_claimed_tag_not_a_source_record_tag():
     assert c == {} and verdicts(ps) == [PROVEN]
     c, ps = run(["Revenues", "Other"])  # two claimed tags: no single node
     assert c == {} and verdicts(ps) == [PROVEN]
+
+
+# --- v18: a failed calc group is lifted only by an independent tie of the SAME filing column -----------------------
+
+
+def _cf_rows(calc_ok, parts_ok, ni_ok=True):
+    rows = [
+        CheckRow(
+            "CF",
+            "calc:NetCashProvidedByUsedInOperatingActivities:8",
+            calc_ok,
+            Decimal(48 * M),
+            Decimal(85 * M),
+            Decimal(M),
+            ("NetIncomeLoss", "ShareBasedCompensation"),
+        ),
+        CheckRow(
+            "CF", "cf_parts_eq_change", parts_ok, Decimal(5), Decimal(5), Decimal(1)
+        ),
+    ]
+    if ni_ok is not None:
+        rows.append(
+            CheckRow(
+                "CF", "cross_cf_ni_eq_is_ni", ni_ok, Decimal(5), Decimal(5), Decimal(1)
+            )
+        )
+    return {("acc", FY[2], 4): rows}
+
+
+def _cf_cells():
+    return [
+        mk(
+            "cfo_resolved", 48 * M, tags=("NetCashProvidedByUsedInOperatingActivities",)
+        ),
+        mk("net_income_resolved", 83 * M, tags=("NetIncomeLoss",)),
+    ]
+
+
+def test_failed_calc_group_is_lifted_by_the_printed_totals_tie_and_recorded():
+    # LLY CFO 2019: the group sums to 85 but the printed total ties the change in cash (cf_parts_eq_change passes)
+    ps = _cf_cells()
+    apply_identities(ps, checks=_cf_rows(False, True))
+    assert verdicts(ps) == [PROVEN, PROVEN]
+    lifted = ps[0].checks["quarantine_lifted"][0]
+    assert lifted["lifted_by"] == "cf_parts_eq_change"
+    assert lifted["failed_check"].startswith("calc:NetCashProvidedByUsedInOperating")
+    # the independent tie fails too (AMD FY2021 sign flip): the quarantine stays
+    ps = _cf_cells()
+    apply_identities(ps, checks=_cf_rows(False, False))
+    assert verdicts(ps) == [DISAGREE, DISAGREE]
+    assert {p.reason_code for p in ps} == {QUARANTINE_REASON}
+    # a child (net income) with no tie of its own stays quarantined even when the parent total is tied
+    for ni_ok in (False, None):
+        ps = _cf_cells()
+        apply_identities(ps, checks=_cf_rows(False, True, ni_ok=ni_ok))
+        assert verdicts(ps) == [PROVEN, DISAGREE]
+    ps = _cf_cells()
+    apply_identities(ps, checks=_cf_rows(False, True, ni_ok=True))
+    assert verdicts(ps) == [PROVEN, PROVEN]
+
+
+def test_failing_unlifted_is_the_copy_authority_test():
+    from scrooner_pipeline.proof.identities import failing_unlifted
+
+    tag = ("NetCashProvidedByUsedInOperatingActivities",)
+    assert failing_unlifted(_cf_rows(False, True)[("acc", FY[2], 4)], "cfo", tag) == []
+    assert failing_unlifted(_cf_rows(False, False)[("acc", FY[2], 4)], "cfo", tag)

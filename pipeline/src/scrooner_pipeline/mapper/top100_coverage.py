@@ -966,7 +966,7 @@ def build_rows(
                         "_parts_blank": parts_blank,
                     }
                 )
-    resolve_derived(rows)
+    resolve_derived(rows, load_input_prints(conn, rows))
     note = {
         c.company_id: (
             "TEMPLATE_UNAVAILABLE"
@@ -978,18 +978,78 @@ def build_rows(
     return rows, note
 
 
-def resolve_derived(rows: list[dict[str, Any]]) -> None:
-    """In place. A served cell of family derived_not_printed is DERIVED only when every input data point of the same
-    company and fiscal year is PROVEN and all inputs were proven against the same filing (the same shown_accession);
-    the row then lists the derivation as `dp=value@accession`. Any other case is UNCHECKED derived_inputs_unproven."""
+def _vkey(v: Any) -> str:
+    return format(Decimal(str(v)).normalize(), "f")
+
+
+def _pending_derived(
+    rows: list[dict[str, Any]],
+) -> list[tuple[dict[str, Any], list[dict[str, Any] | None]]]:
     by = {(r["company_id"], r["data_point"], r["fiscal_year"]): r for r in rows}
-    for r in rows:
-        if r.get("_family") != DERIVED_FAMILY or r["class"] in ("PROVEN", "DISAGREE"):
+    return [
+        (
+            r,
+            [
+                by.get((r["company_id"], dp, r["fiscal_year"]))
+                for dp in DERIVED_INPUTS.get(r["data_point"], ())
+            ],
+        )
+        for r in rows
+        if r.get("_family") == DERIVED_FAMILY
+        and r["class"] not in ("PROVEN", "DISAGREE")
+    ]
+
+
+def load_input_prints(
+    conn: Any, rows: list[dict[str, Any]]
+) -> dict[tuple[int, str, str, str], set[str]]:
+    """(company, period_end, tag, value) -> accessions of the annual filings that print that fact, for the single-tag
+    PROVEN inputs of the derived cells still unresolved (C1 same-filing: one filing must print both inputs)."""
+    want: set[tuple[int, str, str, str]] = set()
+    for _r, inputs in _pending_derived(rows):
+        for i in inputs:
+            tags = [t for t in (i["tag"] or "").split(",") if t] if i else []
+            if (
+                i
+                and i["class"] == "PROVEN"
+                and len(tags) == 1
+                and i["shown_value"] != ""
+            ):
+                want.add(
+                    (i["company_id"], i["period_end"], tags[0], _vkey(i["shown_value"]))
+                )
+    out: dict[tuple[int, str, str, str], set[str]] = defaultdict(set)
+    if not want:
+        return out
+    ids = sorted({k[0] for k in want})
+    tags = sorted({k[2] for k in want})
+    ends = sorted({date.fromisoformat(k[1]) for k in want})
+    for cid, tag, end, start, ptype, value, acc in conn.execute(
+        """select f.company_id, c.tag, p.end_date, p.start_date, p.period_type, f.value, fl.accession_number
+           from core.fact f join core.concept c on c.id = f.concept_id join core.period p on p.id = f.period_id
+           join core.filing fl on fl.id = f.filing_id
+           where f.company_id = any(%s) and c.tag = any(%s) and p.end_date = any(%s) and not f.is_derived
+             and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '20-F', '20-F/A', '40-F', '40-F/A')""",
+        (ids, tags, ends),
+    ).fetchall():
+        if ptype == "duration" and (end - start).days < 300:
             continue
-        inputs = [
-            by.get((r["company_id"], dp, r["fiscal_year"]))
-            for dp in DERIVED_INPUTS.get(r["data_point"], ())
-        ]
+        key = (cid, end.isoformat(), tag, _vkey(value))
+        if key in want:
+            out[key].add(acc)
+    return out
+
+
+def resolve_derived(
+    rows: list[dict[str, Any]],
+    prints: dict[tuple[int, str, str, str], set[str]] | None = None,
+) -> None:
+    """In place. A served cell of family derived_not_printed is DERIVED only when every input data point of the same
+    company and fiscal year is PROVEN and all inputs sit in ONE filing: either the same shown_accession, or (`prints`,
+    C1 same-filing) one annual filing that prints each input's served value under its tag, one of the inputs'
+    locators being in that filing. The row then lists the derivation as `dp=value@accession`. Any other case is
+    UNCHECKED derived_inputs_unproven."""
+    for r, inputs in _pending_derived(rows):
         ok = (
             bool(inputs)
             and all(
@@ -998,13 +1058,44 @@ def resolve_derived(rows: list[dict[str, Any]]) -> None:
             )
             and len({i["_shown_acc"] for i in inputs if i}) == 1
         )
+        host = None
+        if (
+            not ok
+            and prints
+            and inputs
+            and all(i is not None and i["class"] == "PROVEN" for i in inputs)
+        ):
+            sets: list[set[str]] = []
+            for i in inputs:
+                tags = [t for t in (i["tag"] or "").split(",") if t] if i else []
+                if i is None or len(tags) != 1 or i["shown_value"] == "":
+                    sets = []
+                    break
+                sets.append(
+                    prints.get(
+                        (
+                            i["company_id"],
+                            i["period_end"],
+                            tags[0],
+                            _vkey(i["shown_value"]),
+                        ),
+                        set(),
+                    )
+                )
+            common = set.intersection(*sets) if sets else set()
+            host = next(
+                (i for i in inputs if i and i["_shown_acc"] in common and i["r_page"]),
+                None,
+            )
+            ok = host is not None
         if inputs:
             r["evidence"] = "; ".join(
-                f"{i['data_point']}={i['shown_value']}@{i['_shown_acc'] or '?'}"
+                f"{i['data_point']}={i['shown_value']}@"
+                f"{(host['_shown_acc'] if host else i['_shown_acc']) or '?'}"
                 for i in inputs
                 if i is not None
             )
-        first = next((i for i in inputs if i is not None), None)
+        first = host or next((i for i in inputs if i is not None), None)
         if ok and first is not None:
             r["class"], r["reason_code"] = "DERIVED", DERIVED_CODE
             r["reason"] = (

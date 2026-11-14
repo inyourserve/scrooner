@@ -572,3 +572,60 @@ def test_cash_claim_on_a_component_of_the_bs_face_total_is_rejected(
         _csv(tmp_path, *rows, monkeypatch=monkeypatch)
         cells, stats = sd.direct_cells(conn, w.co, CIK, [], periods, info)
         assert [c["value"] for c in cells] == [Decimal(46596)]
+
+
+def test_a_combined_line_map_row_forbids_serving_the_concept():
+    """JPM accounts receivable: the map says the line is combined (line_presented_combined), yet the resolver claim
+    was served with no claim row. A value-bearing claim row of the concept lifts the ban; other classes never ban."""
+
+    def row(decision, rc=None, tag=None):
+        return ctm.MapRow(
+            "us-gaap",
+            tag,
+            "BS",
+            decision,
+            7,
+            None,
+            1,
+            date(2015, 1, 1),
+            None,
+            reason_class=rc,
+        )
+
+    end = date(2018, 12, 31)
+    banned = row("not_in_template", "line_presented_combined")
+    assert sd.map_forbids([banned], 7, end)
+    assert sd.map_forbids([row("not_in_template", "combined")], 7, end)
+    assert sd.map_forbids([row("combined")], 7, end)
+    assert sd.map_forbids([banned, row("concept", None, "X")], 7, end) is None
+    assert sd.map_forbids([row("not_presented", "era_unmapped")], 7, end) is None
+    assert sd.map_forbids([banned], 8, end) is None
+    assert sd.map_forbids([banned], 7, date(2014, 1, 1)) is None
+
+
+@pytest.mark.integration
+def test_direct_serve_refuses_a_cell_the_map_calls_a_combined_line(
+    isolated_database_url, tmp_path, monkeypatch
+):
+    with psycopg.connect(isolated_database_url) as conn:
+        w = W(conn)
+        w.filing(ACC1, date(2019, 2, 1), END)
+        w.core_fact(ACC1, "InvestmentIncomeNet", "100")
+        _csv(tmp_path, _row(ACC1, "100"), monkeypatch=monkeypatch)
+        (c,), _ = w.cells([])
+        assert c["value"] == Decimal(100)  # no map row: served
+        ban = ctm.MapRow(
+            "us-gaap",
+            None,
+            "BS",
+            "not_in_template",
+            w.cc["sd_inc"],
+            None,
+            1,
+            date(2015, 1, 1),
+            None,
+            reason_class="line_presented_combined",
+        )
+        cells, st = w.cells([ban])
+        assert cells == []
+        assert any("combined line" in r["why"] for r in st["rejected"])

@@ -198,3 +198,103 @@ def test_one_current_debt_line_under_two_tags_is_not_owed_twice():
     # a different amount is a second line
     p, n = run(parts, 53, face, {"LongTermDebtCurrent": 5})
     assert (p.verdict, p.reason_code) == (DISAGREE, REASON)
+
+
+# --- IBM: a debt line that already holds the finance leases (spec _perimeter-lease-in-debt-spec-2026-11-14) ----------
+Mn = 1_000_000
+
+
+def struct_m(
+    face: dict[str, int], notes: dict[str, int], labels: dict[str, str] | None = None
+) -> FilingStructure:
+    """Values in millions (IBM's own scale)."""
+    s = FilingStructure(ADSH, "0000051143", "10-K", date(2023, 2, 28), END)
+    for i, tag in enumerate(face):
+        s.pre.append(
+            PreLine(
+                4, i, "BS", tag, "us-gaap/2022", (labels or {}).get(tag, tag), False
+            )
+        )
+    for tag, v in {**face, **notes}.items():
+        s.num[(tag, END, 0)].append(
+            NumValue(tag, "us-gaap/2022", END, 0, "USD", Decimal(v * Mn), -6)
+        )
+    return s
+
+
+def run_m(parts, face, notes, labels=None):
+    claim = Claim("component", "BS", parts=tuple((1, t) for t in parts))
+    sh = Shown(
+        1,
+        "total_debt_resolved",
+        "I",
+        END,
+        END,
+        Decimal(0),
+        tuple(parts),
+        ADSH,
+        (1,),
+        claim=claim,
+    )
+    p = Proof(sh, PROVEN, position_accession=ADSH)
+    n = apply_perimeter([p], {ADSH: struct_m(face, notes, labels)}, None)
+    return p, n
+
+
+IBM22_FACE = {"ShortTermBorrowings": 4760, "LongTermDebtNoncurrent": 46189}
+IBM22_NOTE = {
+    "LongTermDebtAndCapitalLeaseObligations": 46189,
+    "LongTermDebtAndCapitalLeaseObligationsCurrent": 4751,
+    "FinanceLeaseLiability": 239,
+}
+IBM_PARTS = ["ShortTermBorrowings", "LongTermDebtNoncurrent"]
+
+
+@pytest.mark.unit
+def test_ibm_fy2022_lease_in_debt_by_value_is_proven_and_recorded():
+    p, n = run_m(IBM_PARTS, IBM22_FACE, IBM22_NOTE)
+    assert (p.verdict, n) == (PROVEN, 0)
+    assert p.checks["perimeter"]["resolved_by"] == "lease_in_debt_by_value"
+    assert (
+        p.checks["perimeter"]["matched"]["tag"]
+        == "LongTermDebtAndCapitalLeaseObligations"
+    )
+
+
+@pytest.mark.unit
+def test_ibm_mutants_long_term_line_off_or_current_short_stay_flagged():
+    # 2. the claim's long-term line is not the lease-including figure: the lease is owed
+    p, n = run_m(IBM_PARTS, {**IBM22_FACE, "LongTermDebtNoncurrent": 46000}, IBM22_NOTE)
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)
+    assert p.checks["perimeter"]["missing"][0]["tag"] == "FinanceLeaseLiability"
+    assert p.checks["perimeter"]["missing"][0]["value"] == str(239 * Mn)
+    # 3. the claim's current lines are below the lease-including current fact (4,700 < 4,751)
+    p, n = run_m(IBM_PARTS, {**IBM22_FACE, "ShortTermBorrowings": 4700}, IBM22_NOTE)
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)
+    assert p.checks["perimeter"]["missing"][0]["tag"] == "FinanceLeaseLiability"
+
+
+@pytest.mark.unit
+def test_ibm_fy2021_lease_named_tag_and_label_only_case_resolve_by_name():
+    # 4. the claim names the filer's own lease-including tag
+    p, n = run_m(
+        ["ShortTermBorrowings", "LongTermDebtAndCapitalLeaseObligations"],
+        {"ShortTermBorrowings": 6787, "LongTermDebtAndCapitalLeaseObligations": 44917},
+        {"FinanceLeaseLiability": 99},
+    )
+    assert (p.verdict, n) == (PROVEN, 0)
+    assert p.checks["perimeter"]["resolved_by"] == "lease_in_debt_by_name"
+    # 5. only the face label says so; the values do not match any lease-including fact
+    p, n = run_m(
+        IBM_PARTS,
+        IBM22_FACE,
+        {"FinanceLeaseLiability": 239},
+        {
+            "LongTermDebtNoncurrent": "Long-term debt, including finance lease obligations"
+        },
+    )
+    assert (p.verdict, n) == (PROVEN, 0)
+    assert p.checks["perimeter"]["resolved_by"] == "lease_in_debt_by_name"
+    # size alone is no evidence: a debt total above the lease with no equal lease-including element stays flagged
+    p, n = run_m(IBM_PARTS, IBM22_FACE, {"FinanceLeaseLiability": 239})
+    assert (p.verdict, p.reason_code) == (DISAGREE, REASON)

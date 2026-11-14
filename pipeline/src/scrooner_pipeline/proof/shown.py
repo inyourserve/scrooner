@@ -28,6 +28,8 @@ from scrooner_pipeline.common.authority import (
 )
 from scrooner_pipeline.common.fsn_dates import era_holds
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
+from scrooner_pipeline.proof.fsn import fsn_ddate
+from scrooner_pipeline.proof.identities import failing_unlifted, load_filing_checks
 from scrooner_pipeline.proof.prove import EXPECTED, Claim, Shown
 
 HISTORY_FLOOR = date(2015, 1, 1)
@@ -173,6 +175,71 @@ def claim_for(
             part_stmts=tuple(seen.values()),
         )
     return None
+
+
+def authority_pool(copies, check_failed):
+    """The copies that may be the authority: those whose own filing's checks hold (a copy whose filing fails a check
+    of its column, with no independent tie lifting it, is no authority; the next eligible copy wins). When every copy
+    fails, all stay eligible. `copies` are (accession, value, tag) triples."""
+    return [c for c in copies if not check_failed(c[0], c[2])] or list(copies)
+
+
+def era_component_parts(
+    rows: list[MapRow], name: str, filing_por: date | None
+) -> tuple[tuple[int, str], ...] | None:
+    """The (sign, tag) parts the company's component rows give `name` in the era of a FILING (its period of report):
+    the tags that filing prints the line under (MO cost of revenue: the FY2020 10-K prints COGS + OtherCost where the
+    FY2018 10-K printed COGS + ExciseAndSalesTaxes). None when no component row holds that period."""
+    if filing_por is None:
+        return None
+    comps = sorted(
+        (
+            r
+            for r in rows
+            if r[1] == "component"
+            and r[5] == name
+            and r[3]
+            and era_holds(r[7], r[8], filing_por)
+        ),
+        key=lambda r: r[0],
+    )
+    seen: dict[tuple[int, str], None] = {}
+    for r in comps:
+        seen.setdefault((r[6], str(r[3])), None)
+    return tuple(seen) or None
+
+
+def component_sum_authority_by_era(
+    copies: list[tuple[str, Decimal, str]],
+    own_parts: tuple[tuple[int, str], ...],
+    era_parts_of: dict[str, tuple[tuple[int, str], ...] | None],
+    filed: dict[str, date | None],
+    prefer: str | None = None,
+    zero_ok=None,
+) -> tuple[str, Decimal] | None:
+    """Every part is judged from ONE filing's own column, and each filing is read with the parts ITS era names
+    (`era_parts_of`: accession -> parts, None = the cell's own claim). The latest filing that prints every part of its
+    own era wins (the statement filing first). A part absent from the later filing's era is never counted as 0 there."""
+    groups: dict[tuple[tuple[int, str], ...], set[str]] = {}
+    for acc in {a for a, _v, _t in copies}:
+        groups.setdefault(era_parts_of.get(acc) or own_parts, set()).add(acc)
+    wins = []
+    for parts, accs in groups.items():
+        w = component_sum_authority(
+            [c for c in copies if c[0] in accs],
+            parts,
+            filed,
+            prefer if prefer in accs else None,
+            zero_ok,
+        )
+        if w is not None:
+            wins.append(w)
+    if not wins:
+        return None
+    for w in wins:
+        if prefer is not None and w[0] == prefer:
+            return w
+    return max(wins, key=lambda w: (filed.get(w[0]) or date.min, w[0]))
 
 
 def _grain(
@@ -469,6 +536,7 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
+    filing_checks = load_filing_checks(conn, company_id)
     face = load_face_indexes(conn, [company_id])[company_id]
     ties = load_calc_ties(conn, [company_id])
     part_parents = load_part_parents(conn, company_id)
@@ -515,6 +583,17 @@ def load_shown(
             else list(all_copies)
         )
         copies = [(a, v) for a, v, _t in cell_triples]
+
+        def check_failed(a: str, t: str, _g=grain, _e=end, _n=_base_name(name)) -> bool:
+            """The copy's own filing fails a check of the column the copy is a member of, and no independent tie in
+            that filing lifts it: that filing's print is no authority (AMD FY2021 cash flow in the FY2023 10-K)."""
+            rows = filing_checks.get(
+                (a, fsn_ddate(_e), {"I": 0, "FY": 4}.get(_g, 1)), []
+            )
+            return bool(failing_unlifted(rows, _n, (t,)))
+
+        # authority is read among the copies whose own filing's checks hold; none holds: all stay eligible
+        auth_triples = authority_pool(cell_triples, check_failed)
         disagreeing = disagreeing_copies(
             copies,
             shown_value,
@@ -530,7 +609,7 @@ def load_shown(
         # flagged copy: the latest eligible copy of the cell.
         flags = auth_by.get((_base_name(name), period_id), set())
         flagged: dict[str, set[str]] = defaultdict(set)
-        for a, _v, t in cell_triples:
+        for a, _v, t in auth_triples:
             if (a, t) in flags:
                 flagged[a].add(t)
         newest = latest_eligible({a: filed_by.get(a) for a in flagged})
@@ -542,7 +621,7 @@ def load_shown(
             or ts & flagged[newest]
         }
         if not flagged:
-            only = latest_eligible({a: filed_by.get(a) for a, _v, _t in cell_triples})
+            only = latest_eligible({a: filed_by.get(a) for a, _v, _t in auth_triples})
             auth_accs = {only} if only else set()
         claim = claim_for(
             map_rows, name, end, por_by.get(accession) if accession else None
@@ -565,13 +644,24 @@ def load_shown(
             if cstmt in ("BS", "IS", "CF")
             else None
         )
-        if sf is not None and any(a == sf for a, _v, _t in cell_triples):
+        if sf is not None and any(a == sf for a, _v, _t in auth_triples):
             auth_accs = {sf}
         if claim is not None and claim.kind == "component" and len(claim.parts) > 1:
             # a component sum is judged as a sum, never part against total
-            win = component_sum_authority(
-                copies_by.get((_base_name(name), period_id), []),
+            comp_copies = copies_by.get((_base_name(name), period_id), [])
+            comp_copies = authority_pool(comp_copies, check_failed)
+            win = component_sum_authority_by_era(
+                comp_copies,
                 tuple((s, t) for s, t in claim.parts),
+                {
+                    a: era_component_parts(map_rows, name, por_by.get(a))
+                    for a in {
+                        a
+                        for a, _v, _t in copies_by.get(
+                            (_base_name(name), period_id), []
+                        )
+                    }
+                },
                 filed_by,
                 sf,
                 zero_ok=lambda a, t, _s=start, _e=end, _p=ptype: (
@@ -586,7 +676,12 @@ def load_shown(
             if win is not None:
                 acc_w, total_w = win
                 auth_accs = {acc_w}
-                if not _same_number(total_w, shown_value, scale):
+                if not _same_number(total_w, shown_value, scale) and not rounding_equal(
+                    total_w,
+                    shown_value,
+                    scale_by.get(acc_w),
+                    scale_by.get(accession or ""),
+                ):
                     disagreeing = [(acc_w, str(total_w))]
         # the authoritative (latest accepted periodic filing) copy is what the cell must show; an
         # earlier copy that differs is restated history (audit R13)
