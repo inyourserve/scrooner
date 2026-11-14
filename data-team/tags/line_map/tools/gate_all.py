@@ -15,8 +15,8 @@ def num(s):
     except Exception: return None
 def same(a, b):
     if a is None or b is None: return False
-    if abs(b) < 1000: return abs(abs(a) - abs(b)) <= D('0.011')
-    return abs(abs(a) - abs(b)) <= max(unit(a), unit(b)) * D('1.5')
+    if abs(b) < 1000: return abs(a - b) <= D('0.011')
+    return abs(a - b) <= max(unit(a), unit(b)) * D('1.5')
 def find(tk, pe):
     pe = date.fromisoformat(pe)
     m = [acc for d, acc in own.get(tk, []) if abs((d - pe).days) <= 10]

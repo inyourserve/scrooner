@@ -26,7 +26,7 @@ def cmp(src, tk, dp, acc, key_status, key_val, key_tags, extra=''):
     ks = (key_status or '').strip().lower().replace(' ', '_')
     if ks in ('mapped', 'component_sum') and key_val is not None:
         if st == 'no_role': res = 'gap_no_role'
-        elif v is not None and abs(abs(v) - abs(key_val)) <= max(unit(v), unit(key_val)) * D('1.5'): res = 'agree' if st != 'derived' else 'agree_derived'
+        elif v is not None and abs(v - key_val) <= max(unit(v), unit(key_val)) * D('1.5'): res = 'agree' if st != 'derived' else 'agree_derived'
         else: res = 'DISAGREE_value'
     elif ks in ('not_presented', 'combined', 'out', 'not_in_template', 'not_located'):
         res = 'agree_no_value' if st in ('no_role', 'combined') else ('derived_where_key_' + ks if st == 'derived' else 'DISAGREE_value_where_key_' + ks)
