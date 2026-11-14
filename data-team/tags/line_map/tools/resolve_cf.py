@@ -100,7 +100,22 @@ def resolve_cf(f, notes):
     cus = [l for l in fin if l['custom'] and DIV_LABEL.search(l['lb']) and not DIV_NOT.search(l['lb'])]
     ncom = note(['PaymentsOfDividendsCommonStock'])
     pick = com or tot or ([] if ncom else (cus if len(cus) == 1 else []))
-    if pick:
+    # preferred inside a single generic dividend line: the data point is common dividends (roles.csv: never preferred). When the
+    # filing reports preferred dividends and the financing section prints no separate preferred line, a generic line ('Cash
+    # dividends paid', BAC; 'Dividends paid to shareholders', GE) holds both: combined. A label naming only common stays mapped;
+    # a label naming only preferred means no common dividend line (BA, TMUS)
+    pref = [l for l in L if l['val'] and re.search(r'Preferred\w*Dividend|Dividend\w*Preferred', l['tag']) and (not re.search(r'OtherAdjustments', l['tag']) or re.search(r'(?i)preferred', l['lb'] or ''))]  # 'and other adjustments' counts only when its label names preferred (GOOG's Class C adjustment does not)
+    cfpref = [l for l in fin if re.search(r'Preferred', l['tag']) and re.search(r'Dividend', l['tag']) or (DIV_LABEL.search(l['lb'] or '') and re.search(r'(?i)preferred', l['lb'] or '') and not re.search(r'(?i)common', l['lb'] or ''))]
+    if len(pick) == 1 and pick[0]['tag'] in ('PaymentsOfOrdinaryDividends', 'PaymentsOfDividends') and pref:
+        lb = pick[0]['lb'] or ''
+        names_c, names_p = bool(re.search(r'(?i)common', lb)), bool(re.search(r'(?i)preferred', lb))
+        if names_p and not names_c:
+            put('dividends_paid', 'not_presented', '', None, fmt(pick), f"the only financing dividend line '{lb}' is preferred dividends; no common dividend line", flags='dividends_preferred_only'); pick = None
+        elif (names_p and names_c) or (not names_c and not [l for l in cfpref if l is not pick[0]]):
+            put('dividends_paid', 'combined', pick[0]['tag'], None, fmt(pick) + '; ' + fmt(pref[:1]), f"the single financing line '{lb}' holds common and preferred dividends (the filing reports {pref[0]['tag']}={pref[0]['val']}; no separate preferred line): common dividends are not printed", flags='dividends_incl_preferred'); pick = None
+    if pick is None:
+        pass
+    elif pick:
         put('dividends_paid', 'mapped', '+'.join(l['tag'] for l in pick), sum(l['val'] for l in pick), fmt(pick), 'CF financing: common dividends / distributions (REIT and MLP distributions count; never NCI)')
     else:
         n = note(['PaymentsOfDividendsCommonStock', 'PaymentsOfDividends', 'PaymentsOfOrdinaryDividends'])

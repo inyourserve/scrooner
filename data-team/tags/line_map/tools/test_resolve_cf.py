@@ -54,6 +54,29 @@ def test_note_common_dividend_beats_custom_face_line():
     r = resolve_cf(f, {('PaymentsOfDividendsCommonStock', 4): D(18)})
     assert r['dividends_paid']['value'] == D(18)
 
+
+
+def _with_is(rows, is_rows):
+    f = filing(rows)
+    f['lines'] += '~' + '~'.join(f"IS|2|{i + 1}|{t}|0|0||{lb}|{v}" for i, (t, v, lb) in enumerate(is_rows))
+    return f
+
+
+def test_generic_dividend_line_holding_preferred_is_combined():
+    # BAC: one financing line 'Cash dividends paid' (PaymentsOfOrdinaryDividends) while the IS reports preferred dividends
+    pref = [('PreferredStockDividendsIncomeStatementImpact', 1421, 'Preferred stock dividends')]
+    rows = [OP, INV, ('PaymentsOfOrdinaryDividends', 7727, True, False, 'Cash dividends paid'), FIN]
+    r = resolve_cf(_with_is(rows, pref), {})
+    assert r['dividends_paid']['status'] == 'combined' and r['dividends_paid']['value'] is None
+    # the same line without preferred dividends in the filing is the common line
+    assert resolve_cf(filing(rows), {})['dividends_paid']['status'] == 'mapped'
+    # a label naming common stays mapped; a label naming only preferred means no common dividend line (TMUS)
+    rc = [OP, INV, ('PaymentsOfDividends', 500, True, False, 'Dividends paid on common stock'), FIN]
+    assert resolve_cf(_with_is(rc, pref), {})['dividends_paid']['status'] == 'mapped'
+    rp = [OP, INV, ('PaymentsOfDividends', 95, True, False, 'Dividends on preferred stock'), FIN]
+    assert resolve_cf(_with_is(rp, pref), {})['dividends_paid']['status'] == 'not_presented'
+
+
 if __name__ == '__main__':
     n = 0
     for k, v in list(globals().items()):

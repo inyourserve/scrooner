@@ -52,7 +52,7 @@ def test_comprehensive_income_including_nci_is_a_point_reason():
 
 
 def test_da_with_accretion_is_combined_and_intangible_amortization_excludes_capitalized_software():
-    cf = [('CF', 'NetIncomeLoss', 'Net income', 10), ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation and amortization', 7),
+    cf = [('CF', 'NetIncomeLoss', 'Net income', 10), ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation, amortization and accretion', 7),
           ('CF', 'AmortizationOfIntangibleAssets', 'Amortization of acquisition-related intangibles', 3),
           ('CF', 'CapitalizedComputerSoftwareAmortization1', 'Amortization of capitalized software', 2),
           ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash from operating activities', 22)]
@@ -82,3 +82,15 @@ def test_generic_amortization_line_equal_to_the_rounded_note_fact_is_intangible_
 def test_note_equality_respects_the_note_rounding():
     assert R.note_close(D(1780), D(1800)) and R.note_close(D(2393), D(2400))
     assert not R.note_close(D(1700), D(1800)) and not R.note_close(D(2399), D(2390)) and not R.note_close(D(5), D(100))
+
+
+def test_accretion_tag_printed_as_plain_depreciation_and_amortization_is_the_da_line():
+    # AAPL FY2014-17, JPM, WMT, RTX: the element is DepreciationAmortizationAndAccretionNet, the printed label names only D&A
+    cf = [('CF', 'NetIncomeLoss', 'Net income', 10), ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation and amortization', 7),
+          ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash from operating activities', 22)]
+    d = run(cf)['depreciation_and_amortization']
+    assert d['status'] == 'mapped' and d['value'] == D(7)
+    # SPGI FY2014: the same element printed 'Depreciation' beside an amortization line is depreciation, not the total
+    sp = [cf[0], ('CF', 'DepreciationAmortizationAndAccretionNet', 'Depreciation', 86), ('CF', 'AmortizationOfIntangibleAssets', 'Amortization of intangibles', 98), cf[2]]
+    d = run(sp)['depreciation_and_amortization']
+    assert d['status'] == 'component_sum' and d['value'] == D(184)

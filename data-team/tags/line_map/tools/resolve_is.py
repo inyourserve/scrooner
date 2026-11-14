@@ -150,6 +150,7 @@ AMORT_LB = re.compile(r'(?i)^amortization( expense)?( of (acquisition-related |p
 NOT_DA = re.compile(r'(?i)accretion|impairment|debt (discount|issuance)|deferred (financing|loan|compensation|income|tax|policy|acquisition)|right-of-use|above|below|premium|investments?\b|securities|bond|discount|contract cost|lease|financing cost|stock|share')
 INT_LB = re.compile(r'(?i)^(?!.*inventory)(amortization.*intangible|intangible.*amortization|amortization of (acquired|purchased|acquisition|customer|developed|other acquired)|acquired intangible)')
 ACC = re.compile(r'Accretion|Impairment')
+ACC_LB = re.compile(r'(?i)accretion|impairment')
 CAPSW = re.compile(r'(?i)software|CapitalizedComputer')
 NOTE_AMORT = ('AmortizationOfIntangibleAssets', 'FiniteLivedIntangibleAssetsAmortizationExpense', 'AmortizationOfAcquiredIntangibleAssets')
 NOTE_DA = ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization', 'DepreciationAmortizationAndOther')
@@ -197,7 +198,10 @@ def resolve_da(L, notes):
     isf = [l for l in face(L, 'IS') if l['val'] is not None]
     for src, lines in (('CF', cfo), ('IS', isf)):
         tot = [l for l in lines if (DA_TOT.match(l['tag']) or DA_TOT_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '') and not l['custom'] or (DA_TOT_LB.search(l['lb'] or '') and l['custom'] and not NOT_DA.search(l['lb'] or ''))]
-        tot = [l for l in tot if l['tag'] not in ('DepreciationAmortizationAndAccretionNet',) and not ACC.search(l['tag'])]
+        # an accretion/impairment tag is the filer's element choice; the printed label says what the line holds. A line tagged
+        # DepreciationAmortizationAndAccretionNet but printed 'Depreciation and amortization' (AAPL, JPM, WMT, RTX, GE ...) is the
+        # D&A line; only a label that names accretion or impairment makes it combined (WFC, TSLA, GOOG)
+        tot = [l for l in tot if not (l['tag'] == 'DepreciationAmortizationAndAccretionNet' or ACC.search(l['tag'])) or (DA_TOT_LB.search(l['lb'] or '') and not ACC_LB.search(l['lb'] or ''))]
         if len(tot) >= 1:
             tot.sort(key=lambda l: (not DA_TOT_LB.search(l['lb'] or ''), l['tag'] not in ('DepreciationDepletionAndAmortization', 'DepreciationAndAmortization'), l['ln']))
             t0 = tot[0]
@@ -211,7 +215,7 @@ def resolve_da(L, notes):
                 ls = [t0] + ia
                 return mk('depreciation_and_amortization', 'component_sum', ls, f"CF face: {t0['lb']} excludes intangibles; plus the intangible amortization line(s)", flags='face')
             return mk('depreciation_and_amortization', 'mapped', [t0], f"{src} face: the depreciation and amortization line (R{t0['rep']}:{t0['ln']})", flags='face')
-        accl = [l for l in lines if re.match(r'^DepreciationAmortizationAndAccretion', l['tag']) or (ACC.search(l['tag']) and re.search(r'Depreciation', l['tag']))]
+        accl = [l for l in lines if (re.match(r'^DepreciationAmortizationAndAccretion', l['tag']) or (ACC.search(l['tag']) and re.search(r'Depreciation', l['tag']))) and ACC_LB.search(l['lb'] or '')]
         if src == 'CF' and accl:
             return mk('depreciation_and_amortization', 'combined', accl[:1], f"CF face prints depreciation and amortization together with accretion/impairment (R{accl[0]['rep']}:{accl[0]['ln']}): combined", flags='da_incl_accretion')
         dep = [l for l in lines if (DEP_TAG.match(l['tag']) or DEP_LB.search(l['lb'] or '')) and not NOT_DA.search(l['lb'] or '')]
