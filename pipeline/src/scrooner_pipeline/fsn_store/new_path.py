@@ -140,6 +140,8 @@ NOT_WRITER_COMMANDS: dict[str, frozenset[str]] = {
             "structural-load",  # the new system: the structural resolver's rows into company_tag_map
             "era-guard",  # the new system: holds unproven predictor slices of company_tag_map
             "tagmap-plan",
+            "certified-guard",  # read-only comparison of coverage csv files
+            "restore-before-image",  # the new system's own undo of one tagmap-plan rewrite, by --company-id
             "dqc-check",  # read-only DQC report over served cells
             # derived metrics, recomputed from canonical_fact for every company
             "calculate",
