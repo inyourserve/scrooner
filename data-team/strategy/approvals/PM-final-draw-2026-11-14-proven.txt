@@ -1,0 +1,32 @@
+stockholders_equity | 2024 | -11750000000 | NOT_FOUND | 0001413329-25-000013 | R7.htm | StockholdersEquity: not found
+interest_expense | 2019 | 796000000 | MATCH | 0001413329-20-000007 | R2.htm | InterestExpense=796000000 (R98)
+cf_inventory_change | 2019 | 548000000 | NOT_FOUND | 0001413329-20-000007 | R7.htm | IncreaseDecreaseInInventories: not found
+share_buybacks | 2015 | 48000000 | MATCH | 0001413329-16-000076 | R9.htm | PaymentsForRepurchaseOfCommonStock=-48000000 (R9)
+operating_income | 2025 | 14892000000 | NOT_FOUND | 0001628280-26-005939 | R3.htm | OperatingIncomeLoss: not found
+dividends_per_share | 2016 | 4.1200 | MISMATCH | 0001413329-17-000014 | R8.htm | CommonStockDividendsPerShareDeclared=1.04 (R8)
+cash_and_equivalents | 2022 | 3207000000 | NOT_FOUND | 0001413329-23-000025 | R6.htm | CashAndCashEquivalentsAtCarryingValue: not found
+total_assets | 2018 | 39801000000 | MATCH | 0001413329-19-000007 | R5.htm | Assets=39801000000 (R5)
+cfo | 2023 | 9204000000 | NOT_FOUND | 0001413329-24-000013 | R8.htm | NetCashProvidedByUsedInOperatingActivities: not found
+cash_flow_financing | 2017 | -2769000000 | MATCH | 0001413329-18-000007 | R9.htm | NetCashProvidedByUsedInFinancingActivities=-2769000000 (R9)
+dividends_paid | 2019 | 7161000000 | NOT_FOUND | 0001413329-20-000007 | R7.htm | PaymentsOfDividends: not found
+current_assets | 2019 | 20514000000 | MATCH | 0001413329-20-000007 | R5.htm | AssetsCurrent=20514000000 (R5)
+interest_expense | 2024 | 1763000000 | MATCH | 0001413329-25-000013 | R3.htm | InterestExpenseNonoperating=1763000000 (R116)
+cash_paid_for_income_taxes | 2019 | 2430000000 | MISMATCH | 0001413329-21-000007 | R7.htm | IncomeTaxesPaidNet=2785000000 (R7)
+operating_expenses | 2025 | 12390000000.0000 | NOT_FOUND | 0001628280-26-005939 | R3.htm | MarketingAdministrationAndResearchCosts: not found
+cost_of_revenue | 2019 | 10513000000 | MATCH | 0001413329-20-000007 | R2.htm | CostOfGoodsAndServicesSold=10513000000 (R2)
+revenue | 2021 | 31405000000 | MATCH | 0001413329-22-000011 | R3.htm | RevenueFromContractWithCustomerExcludingAssessedTax=31405000000 (R3)
+other_income_expense_net | 2022 | 24000000 | MATCH | 0001413329-23-000025 | R3.htm | NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent=24000000 (R3)
+accounts_receivable | 2016 | 3499000000 | MATCH | 0001413329-17-000014 | R2.htm | AccountsReceivableNetCurrent=3499000000 (R2)
+accounts_receivable | 2025 | 4572000000 | MATCH | 0001628280-26-005939 | R7.htm | AccountsReceivableNetCurrent=4572000000 (R7)
+operating_expenses | 2018 | 7490000000.0000 | NOT_FOUND | 0001413329-21-000007 | R2.htm | AmortizationOfIntangibleAssets=82000000 (R2); MarketingAdministrationAndResearchCosts: not found
+capex | 2017 | 1548000000 | MATCH | 0001413329-18-000007 | R9.htm | PaymentsToAcquirePropertyPlantAndEquipment=-1548000000 (R9)
+interest_expense | 2021 | 737000000 | MATCH | 0001413329-22-000011 | R3.htm | InterestExpense=737000000 (R93)
+other_income_expense_net | 2018 | 41000000 | MATCH | 0001413329-19-000007 | R2.htm | NetPeriodicDefinedBenefitsExpenseReversalOfExpenseExcludingServiceCostComponent=41000000 (R2)
+revenue | 2025 | 40648000000 | MATCH | 0001628280-26-005939 | R3.htm | RevenueFromContractWithCustomerExcludingAssessedTax=40648000000 (R3)
+revenue | 2024 | 37878000000 | MATCH | 0001413329-25-000013 | R3.htm | RevenueFromContractWithCustomerExcludingAssessedTax=37878000000 (R3)
+cash_flow_investing | 2021 | -2358000000 | NOT_FOUND | 0001413329-22-000011 | R8.htm | NetCashProvidedByUsedInInvestingActivities: not found
+research_and_development | 2024 | 759000000 | MATCH | 0001413329-25-000013 | R116.htm | ResearchAndDevelopmentExpense=759000000 (R116)
+depreciation_and_amortization | 2023 | 1398000000 | MATCH | 0001413329-24-000013 | R8.htm | DepreciationDepletionAndAmortization=1398000000,333000000,309000000 (R93)
+cash_paid_for_income_taxes | 2017 | 3403000000 | MATCH | 0001413329-18-000007 | R9.htm | IncomeTaxesPaid=3403000000 (R9)
+revenue | 2015 | 73908000000.0000 | MATCH | 0001413329-16-000076 | R4.htm | SalesRevenueNet=73908000000 (R4)
+interest_income | 2022 | 180000000 | MATCH | 0001413329-23-000025 | R3.htm | InvestmentIncomeInterest=-180000000 (R99)
