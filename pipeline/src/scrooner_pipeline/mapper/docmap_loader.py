@@ -57,6 +57,9 @@ FIX_RULE_ID = "company_tag_map.docmap_fix@1"
 FIX_DECIDED_BY = "reader_fix"
 # rows this loader replaces per company
 OWN_RULES = (RULE_ID, era_extend.EXT_RULE_ID, FIX_RULE_ID)
+# structural resolver rows (mapper/structural_loader.py) override this loader's docmap/extension/predictor rows: they
+# are never replaced here and never compete in the library merge; this loader's own rows are clipped around them
+STRUCTURAL_RULE_ID = "company_tag_map.structural@1"
 STATUSES = {
     "mapped",
     "combined",
@@ -509,6 +512,36 @@ def clip_rows(
             for lo, hi in pieces:
                 kept.append({**r, "era_from": lo, "era_to": hi})
     return kept, updates, deletes, extras
+
+
+def clip_around_structural(
+    rows: list[dict], struct_rows: list[dict]
+) -> tuple[list[dict], list[tuple[int, date, date | None]], list[int], list[dict]]:
+    """clip_rows around the structural eras, kind-merged: a structural value cell clips value rows, a structural
+    reason cell clips reason rows (a value beside a reason coexists, as in docmap-load's merge). Pure."""
+    kept: list[dict] = []
+    ups: list[tuple[int, date, date | None]] = []
+    dels: list[int] = []
+    extras: list[dict] = []
+    for is_value in (True, False):
+        sub = [
+            r for r in rows if (r["decision"] in ("concept", "component")) == is_value
+        ]
+        spans = sorted(
+            {
+                (_key(x), x["era_from"], x["era_to"] or date.max)
+                for x in struct_rows
+                if _key(x) is not None
+                and (x["decision"] in ("concept", "component")) == is_value
+            },
+            key=repr,
+        )
+        k, u, d, e = clip_rows(sub, spans)
+        kept += k
+        ups += u
+        dels += d
+        extras += e
+    return kept, ups, dels, extras
 
 
 def stmt_code(
@@ -1230,7 +1263,12 @@ def load(
         own = [r for r in existing[cid] if r["rule_id"] in OWN_RULES]
         mine = [r for r in own if r["decided_by"] not in era_predictor.PRED_BY]
         pred_old = [r for r in own if r["decided_by"] in era_predictor.PRED_BY]
-        library = [r for r in existing[cid] if r["rule_id"] not in OWN_RULES]
+        struct_rows = [r for r in existing[cid] if r["rule_id"] == STRUCTURAL_RULE_ID]
+        library = [
+            r
+            for r in existing[cid]
+            if r["rule_id"] not in OWN_RULES and r["rule_id"] != STRUCTURAL_RULE_ID
+        ]
         plan = plan_company(library, rows, concept_ids)
         stats["conflicts"] += plan.conflicts
         warnings: list[str] = []
@@ -1248,7 +1286,7 @@ def load(
             {**r, "era_to": cut.get(r["id"], r["era_to"])}
             for r in library
             if r["id"] not in plan.delete
-        ]
+        ] + struct_rows
         # comparative-column extension: a year no row covers takes the next 10-K's prior-year column when that 10-K
         # prints the same tag(s) as the nearest covered year (predictor/guard rows are not evidence and do not cover)
         comp: list[dict] = []
@@ -1342,6 +1380,15 @@ def load(
         pnew = [
             n for n in pnew if not any(overlaps(n, k) for k in kept + new + keep_pred)
         ]
+        if (
+            struct_rows
+        ):  # structural cells beat this loader's docmap / extension / predictor rows
+            new, _, _, _ = clip_around_structural(new, struct_rows)
+            pnew, _, _, _ = clip_around_structural(pnew, struct_rows)
+            keep_pred, ed3, de3, x3 = clip_around_structural(keep_pred, struct_rows)
+            plan.edits += ed3
+            pred_delete += de3
+            new = new + x3
         fix_rows = fixes_by_cid.get(cid, [])
         if fix_rows:
             try:

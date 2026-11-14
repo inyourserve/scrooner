@@ -258,6 +258,78 @@ def docmap_load_cmd(
     typer.echo(f"changed company ids: {','.join(map(str, changed))}")
 
 
+@app.command("structural-load")
+def structural_load_cmd(
+    source: Path = typer.Argument(
+        ...,
+        help="Structural resolver output: a CSV file or a directory of them (data-team/tags/line_map). Format: mapper/structural_loader.py docstring.",
+    ),
+    company_ids: str = typer.Option(
+        "",
+        "--company-ids",
+        help="Comma-separated core.company ids (default: all in the input).",
+    ),
+    conflicts_out: Path = typer.Option(
+        None, "--conflicts-out", help="CSV of structural/existing-row disagreements."
+    ),
+    exceptions_out: Path = typer.Option(
+        None,
+        "--exceptions-out",
+        help="CSV of hand-fix (docmap_fix@1) cells that override or disagree with structural cells.",
+    ),
+    rejects_out: Path = typer.Option(
+        None, "--rejects-out", help="CSV of rejected rows."
+    ),
+    since: str = typer.Option(
+        "2015-01-01", "--since", help="Drop eras ending before this date."
+    ),
+    open_last: bool = typer.Option(
+        False, "--open-last", help="Leave each series' last era open-ended."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write (one transaction per company). Default: dry run."
+    ),
+) -> None:
+    """Load the structural resolver output as company_tag_map.structural@1 rows (decided_by structural_resolver).
+    Hand fixes win their cells (listed as exceptions); structural clips docmap, era_extend and predictor rows."""
+    from datetime import date as _date
+
+    from scrooner_pipeline.mapper.docmap_loader import write_listing
+    from scrooner_pipeline.mapper.structural_loader import load
+
+    ids = {int(c) for c in company_ids.split(",") if c.strip()} or None
+    with get_connection() as conn:
+        stats = load(
+            conn,
+            source,
+            apply=apply,
+            company_ids=ids,
+            since=_date.fromisoformat(since),
+            open_last=open_last,
+        )
+    if conflicts_out:
+        write_listing(conflicts_out, stats["conflicts"])
+    if exceptions_out:
+        write_listing(exceptions_out, stats["exceptions"])
+    if rejects_out:
+        write_listing(rejects_out, stats["rejects"])
+    comps = stats["companies"]
+    skipped = {k: v for k, v in stats.items() if k.startswith("skipped_")}
+    typer.echo(
+        f"structural-load: files_read={stats.get('files_read', 0)} claims={stats['claims']} "
+        f"decisions={stats['decisions']} {skipped} companies={len(comps)} "
+        f"inserted={sum(c['inserted'] for c in comps.values())} "
+        f"library_clipped={sum(c['library_clipped'] for c in comps.values())} "
+        f"library_deleted={sum(c['library_deleted'] for c in comps.values())} "
+        f"agree={sum(c['agree'] for c in comps.values())} conflicts={len(stats['conflicts'])} "
+        f"exceptions={len(stats['exceptions'])} "
+        f"exceptions_disagree={sum(1 for e in stats['exceptions'] if e['agrees'] == 'no')} "
+        f"rejects={len(stats['rejects'])} blocked={len(stats['blocked'])} applied={stats['applied']}"
+    )
+    for key, why in sorted(stats["blocked"].items()):
+        typer.echo(f"  blocked {key}: {why}")
+
+
 @app.command("era-guard")
 def era_guard_cmd(
     company_ids: str = typer.Option(
