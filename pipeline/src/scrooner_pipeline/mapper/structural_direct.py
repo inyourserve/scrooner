@@ -293,7 +293,13 @@ def direct_cells(
     path: Path | None = None,
 ) -> tuple[list[dict], dict[str, Any]]:
     """Cells served straight from the resolver, and counters (rejects carry the reason)."""
-    stats: dict[str, Any] = {"claims": 0, "served": 0, "rejected": [], "fix_won": 0}
+    stats: dict[str, Any] = {
+        "claims": 0,
+        "served": 0,
+        "rejected": [],
+        "fix_won": 0,
+        "fix_won_cells": [],
+    }
     path = path or resolver_path()
     if not enabled() or path is None or not cik:
         return [], stats
@@ -374,6 +380,9 @@ def direct_cells(
         pid, te = located
         if _fix_covers(rows, cid, te):
             stats["fix_won"] += 1
+            stats["fix_won_cells"].append(
+                {"concept": name, "period_end": te.isoformat()}
+            )
             continue
         live = [c for c in cs if sl.quarantined(c) is None]
         if not live:
@@ -392,7 +401,7 @@ def direct_cells(
             )
             continue
         if c.decision == "component_sum" and periods[pid][2] == "instant":
-            if sl.instant_sum_refused(name, concept_info[cid][1]):
+            if sl.instant_sum_refused_for(c, name, concept_info[cid][1]):
                 reject("instant component sum refused (only total_debt)")
                 continue
         parts: list[tuple[int, str, Decimal, str, set[int]]] = []

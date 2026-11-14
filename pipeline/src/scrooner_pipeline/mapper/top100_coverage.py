@@ -176,6 +176,26 @@ def eligible_filings(
     return {acc for p, acc in filings if -_DAY_TOL <= (p - period_end).days <= span}
 
 
+NO_FILING = (
+    "no_public_filing_for_period"  # = structural_loader.NO_FILING_REASON (tested)
+)
+# = structural_loader.PERIODIC_FORMS (tested): forms that prove the company was filing periodic reports
+PERIODIC_FORMS = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-QT/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+)
+
+
 def own_period_reason(
     cls: str,
     code: str | None,
@@ -183,8 +203,15 @@ def own_period_reason(
     filings: list[tuple[date, str]],
     period_end: date,
     instant: bool,
+    earliest_filing: date | None = None,
 ) -> tuple[str, str | None]:
-    """A REASON stays REASON only when its locator accession presents the cell's own period; else UNCHECKED."""
+    """A REASON stays REASON only when its locator accession presents the cell's own period; else UNCHECKED.
+    no_public_filing_for_period has no filing of its own period by definition: it stays REASON only when the company's
+    earliest 10-K/10-Q/20-F in core.filing (`earliest_filing`) was filed after the period end; otherwise UNCHECKED."""
+    if cls == "REASON" and code == NO_FILING:
+        if earliest_filing is not None and earliest_filing > period_end:
+            return cls, code
+        return "UNCHECKED", OWN_UNVERIFIED
     if cls == "REASON" and acc not in eligible_filings(filings, period_end, instant):
         return "UNCHECKED", OWN_UNVERIFIED
     return cls, code
@@ -200,6 +227,19 @@ def _annual_filings(conn: Any, ids: list[int]) -> dict[int, list[tuple[date, str
     ).fetchall():
         out[cid].append((period, acc))
     return out
+
+
+def _earliest_filings(conn: Any, ids: list[int]) -> dict[int, date]:
+    """company id -> filing date of its earliest periodic filing (10-K/10-Q/20-F/40-F and amendments) in core.filing."""
+    return {
+        cid: d
+        for cid, d in conn.execute(
+            "select company_id, min(filing_date) from core.filing "
+            "where company_id = any(%s) and form = any(%s) group by company_id",
+            (ids, list(PERIODIC_FORMS)),
+        ).fetchall()
+        if d is not None
+    }
 
 
 def _page(report: int | None) -> str:
@@ -731,6 +771,7 @@ def build_rows(
         t.strip() for p in proofs.values() if p[4] for t in p[4].split(",") if t.strip()
     }
     idx = _locator_index(conn, cited, shown_tags)
+    earliest = _earliest_filings(conn, ids)
 
     rows: list[dict[str, Any]] = []
     for c in live:
@@ -860,7 +901,13 @@ def build_rows(
                 # a REASON is evidence only from the cell's own-period filing (or a later one that presents the
                 # period); a reason cited from any other filing is not evidence for this period
                 cls, code = own_period_reason(
-                    cls, code, acc, annual.get(c.company_id, []), e, ptype == "instant"
+                    cls,
+                    code,
+                    acc,
+                    annual.get(c.company_id, []),
+                    e,
+                    ptype == "instant",
+                    earliest.get(c.company_id),
                 )
                 # reason text only on a non-PROVEN cell; a combined reason quotes the printed label of its evidence
                 reason_text = reason_fields(

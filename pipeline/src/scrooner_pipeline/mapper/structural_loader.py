@@ -65,6 +65,32 @@ HAND_FIX_RULE_ID = dl.FIX_RULE_ID
 # rows structural overrides outright (machine reads): docmap@1, era_extend@1 (and its predictor/guard rows)
 MACHINE_RULES = (dl.RULE_ID, dl.era_extend.EXT_RULE_ID)
 SINCE = date(2015, 1, 1)
+STANDARD_TAXONOMIES_LOCAL = (
+    "us-gaap",
+    "ifrs-full",
+    "dei",
+    "srt",
+)  # = company_tag_map.STANDARD_TAXONOMIES
+BEFORE_FIRST_10K = "before_first_10k"
+NO_FILING_REASON = (
+    "no_public_filing_for_period"  # equals era_predictor.NO_FILING_REASON (tested)
+)
+FIRST_10K_RE = re.compile(r"first 10-K \((\d{10}-\d{2}-\d{6})\)")
+# forms whose existence proves the company was filing periodic reports (an S-1 or an 8-K is not one)
+PERIODIC_FORMS = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-QT/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+)
 LOADABLE = {"mapped", "component_sum", "combined", "not_presented", "not_in_template"}
 NOT_A_DECISION = {"derived", "derived_not_printed", "no_role"}
 SKIP_ACTIONS = {"review_missing_column_value", "no_structural_node"}
@@ -104,16 +130,46 @@ class Claim:
     grain: str = (
         ""  # FY (duration) or I (instant) of the resolver row; '' for other file shapes
     )
+    flags: str = (
+        ""  # the resolver row's rule flags (`ap_related_sum`, `before_first_10k`, ...)
+    )
+    no_filing: bool = False  # a year before the company's first 10-K; accession is that first 10-K (FIRST_10K_RE)
 
 
 def _split(s: str) -> list[str]:
     return [t.strip() for t in re.split(r"[+;]", s or "") if t.strip()]
 
 
+MEMBER_NODE_RE = re.compile(
+    r"^[A-Za-z0-9_:]+\[[^\]]*\]="
+)  # Tag[Member]=value: a dimensioned part
+
+
+def split_nodes(left: str) -> list[str]:
+    """The resolver's `nodes` text up to ` | why:` -> one string per node. Nodes are joined by `; `, and a node's own
+    bracket text may hold `;` (`FinanceLeaseLiability=1 [NOTE note lease; no ExtensibleList ...]`): split only at
+    bracket depth 0. Pure."""
+    out: list[str] = []
+    depth = 0
+    cur: list[str] = []
+    for ch in left:
+        if ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth = max(depth - 1, 0)
+        if ch in ";+" and depth == 0:
+            out.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    out.append("".join(cur))
+    return [t.strip() for t in out if t.strip()]
+
+
 def parse_claim_parts(tags: str) -> tuple[tuple[int, str | None, str], ...]:
     out = []
     for t in _split(tags):
-        if dl.MEMBER_RE.search(t):
+        if dl.MEMBER_RE.search(t) or MEMBER_NODE_RE.match(t.lstrip("-")):
             raise ValueError("member_not_supported")
         sign = -1 if t.startswith("-") else 1
         prefix, sep, local = t.lstrip("-").partition(":")
@@ -179,7 +235,7 @@ def _date(v: str) -> date | None:
 
 
 NODE_RE = re.compile(
-    r"^(?:(?P<tax>[\w.-]+):)?(?P<tag>[A-Za-z0-9_]+)(?:=(?P<val>-?[\d.]+))?\s*(?:\[(?P<loc>[^\]]*)\])?$"
+    r"^(?P<neg>-)?(?:(?P<tax>[\w.-]+):)?(?P<tag>[A-Za-z0-9_]+)(?:=(?P<val>-?[\d.]+))?\s*(?:\[(?P<loc>[^\]]*)\])?$"
 )
 
 
@@ -191,7 +247,7 @@ def from_resolver(r: dict[str, str], role_stmt: dict[str, str]) -> dict[str, str
     locs: list[str] = []
     vals: list[str] = []
     stmts: list[str] = []
-    for node in _split(left.replace("; ", ";")):
+    for node in split_nodes(left):
         m = NODE_RE.match(node.strip())
         if not m:
             tags.append(node.strip())  # rejected downstream as a bad tag
@@ -199,7 +255,11 @@ def from_resolver(r: dict[str, str], role_stmt: dict[str, str]) -> dict[str, str
             vals.append("")
             stmts.append("")
             continue
-        tags.append((m.group("tax") + ":" if m.group("tax") else "") + m.group("tag"))
+        tags.append(
+            (m.group("neg") or "")
+            + (m.group("tax") + ":" if m.group("tax") else "")
+            + m.group("tag")
+        )
         vals.append(m.group("val") or "")
         loc = (m.group("loc") or "").strip()
         lm = LOC_RE_FREE.search(loc)
@@ -303,6 +363,20 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                     reject("period_end is not a date")
                     continue
                 accn = r.get("accession", "")
+                no_filing = False
+                if (
+                    not accn
+                    and decision == "not_presented"
+                    and BEFORE_FIRST_10K in r.get("flags", "")
+                ):
+                    # a year with no filing behind it (resolver-2026-11-14.20): the row names the company's first
+                    # 10-K in its `why`; load() serves it as no_public_filing_for_period only with evidence
+                    # (no earlier periodic filing in core.filing)
+                    fm = FIRST_10K_RE.search(r.get("path", ""))
+                    if not fm:
+                        reject("before_first_10k row names no first 10-K accession")
+                        continue
+                    accn, no_filing = fm.group(1), True
                 if not ACCN_RE.fullmatch(accn):
                     reject("accession is not an SEC accession number")
                     continue
@@ -350,6 +424,8 @@ def read_claims(path: Path) -> tuple[list[Claim], list[dict], dict[str, int]]:
                         file_rank=rank,
                         value=r.get("value", ""),
                         grain=r.get("grain", ""),
+                        flags=r.get("flags", ""),
+                        no_filing=no_filing,
                         node_values=tuple(
                             x.strip() for x in r.get("node_values", "").split("+")
                         )
@@ -426,6 +502,38 @@ def assign_eras(
     return out, log
 
 
+# Instant component sums beyond doc 02's two exceptions (total_debt, shares_outstanding): a resolver row flagged with a
+# ruling it cites. `ap_related_sum` = accounts payable is every payable line on the face (trade line + related-party
+# line), ruling 2026-11-14 cited by the resolver (RESOLVER-OUTPUT-FORMAT / resolve_all). Narrow: this flag, this concept.
+INSTANT_SUM_RULED = {"ap_related_sum": "accounts_payable"}
+
+
+def instant_sum_refused_for(claim: Claim, name: str, statement: str | None) -> bool:
+    """instant_sum_refused, except a component sum whose resolver flag carries a ruling for exactly this concept."""
+    if not instant_sum_refused(name, statement):
+        return False
+    flags = {f.strip() for f in claim.flags.replace(",", ";").split(";")}
+    return not any(
+        f in flags and name.removesuffix("_resolved") == base
+        for f, base in INSTANT_SUM_RULED.items()
+    )
+
+
+def no_filing_evidence(
+    period_end: date, earliest: date | None, first_10k_filed: date | None
+) -> str | None:
+    """None when the evidence holds that no periodic filing covers the year; else why the claim stays unloaded (the
+    cell then stays UNCHECKED). Evidence: the company's earliest 10-K/10-Q/20-F/40-F in core.filing was filed after the
+    period end, and the first 10-K the resolver names (when stored) was too. Pure."""
+    if earliest is None:
+        return "no periodic filing of the company in core.filing: cannot show that none covers the year"
+    if earliest <= period_end:
+        return f"a periodic filing filed {earliest} exists on or before the period end"
+    if first_10k_filed is not None and first_10k_filed <= period_end:
+        return f"the named first 10-K was filed {first_10k_filed}, not after the period end"
+    return None
+
+
 def quarantined(c: Claim) -> str | None:
     bad = [x.strip() for x in c.checks.split(";") if re.search(r"\bFAIL\b", x)]
     return "; ".join(bad) if bad else None
@@ -464,6 +572,24 @@ def build_rows(
     if c.decision in ("combined", "not_presented", "not_in_template"):
         rep, line = c.locs[0]
         reason = c.path or "not printed in this filing"
+        if c.no_filing:
+            return [
+                {
+                    **base,
+                    "evidence_report": None,
+                    "evidence_line": None,
+                    "decision": "not_presented",
+                    "canonical_concept": concept_name,
+                    "stmt": dl.stmt_code(
+                        c.stmts[0] or home,
+                        concept_name,
+                        concept_statement[concept_name],
+                        value_row=False,
+                    ),
+                    "reason": f"no periodic filing exists for the period: {reason}",
+                    "reason_class": NO_FILING_REASON,
+                }
+            ]
         if c.decision == "combined":
             reason = f"combined line: {reason}"
         return [
@@ -523,6 +649,12 @@ def _key(r: dict) -> int | None:
     return r["canonical_concept_id"] or r["parent_concept_id"]
 
 
+def _held(r: dict) -> bool:
+    """A library status row that HOLDS the cell (reason_class held_*: held_c6, held_tax_note, ...): a defect pending a
+    definition, not a reason. A not_presented claim of a filing is never 'the same' as such a hold."""
+    return (r.get("reason_class") or "").lower().startswith("held_")
+
+
 def _sig(rows: list[dict]) -> frozenset:
     return frozenset(
         (
@@ -530,6 +662,7 @@ def _sig(rows: list[dict]) -> frozenset:
             r["taxonomy"],
             r["tag"],
             r["sign"] if r["decision"] in VALUE_DECISIONS else 1,
+            _held(r),
         )
         for r in rows
     )
@@ -679,7 +812,7 @@ def plan_company(
             or (r["decision"] == "combined" and dp_name in (r["components"] or []))
         ]
         lib = [r for r in lib if r["decision"] != "excluded"]
-        if any(
+        if not combined and any(
             r["decision"] == "combined" and _overlap(a, b, r["era_from"], r["era_to"])
             for r in lib
         ):
@@ -811,6 +944,30 @@ def taxonomies(
         for t, p in glob.items():
             if p and t not in out[cid]:
                 out[cid][t] = p
+    # a tag core.concept (the SEC API's standard tags) does not know is the company's own extension tag: its taxonomy is
+    # the company's extension prefix (the one its existing map rows use, else the lower-case ticker, the SEC prefix
+    # convention). The value is read by tag name from the filing's own XBRL (fsn.value), so a wrong guess never makes
+    # a value: a tag with no stored fact stays a held/blank cell. (An fsn.tag.custom check costs ~35 s a company.)
+    unknown = {cid for cid in company_ids if any(t not in out[cid] for t in tags)}
+    if unknown:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select id, lower(primary_ticker) from core.company where id = any(%s)",
+                (sorted(unknown),),
+            )
+            ticker_of = dict(cur.fetchall())
+            cur.execute(
+                """select company_id, array_agg(distinct taxonomy) from analytics.company_tag_map
+                   where company_id = any(%s) and taxonomy is not null and taxonomy <> all(%s) group by 1""",
+                (sorted(unknown), sorted(STANDARD_TAXONOMIES_LOCAL)),
+            )
+            own_prefix = {c: x[0] for c, x in cur.fetchall() if len(x) == 1}
+        for cid in unknown:
+            prefix = own_prefix.get(cid) or ticker_of.get(cid)
+            if not prefix:
+                continue
+            for t in tags:
+                out[cid].setdefault(t, prefix)
     return out, []
 
 
@@ -932,6 +1089,22 @@ def load(
                 for _, _, tag in c.parts
             ],
         )
+    earliest: dict[int, date] = {}
+    first_filed: dict[str, date] = {}
+    nf = [(c, cid) for c, _, _, cid, _ in resolved if c.no_filing]
+    if nf:
+        with conn.cursor() as cur:
+            cur.execute(
+                "select company_id, min(filing_date) from core.filing "
+                "where company_id = any(%s) and form = any(%s) group by company_id",
+                (sorted({cid for _, cid in nf}), list(PERIODIC_FORMS)),
+            )
+            earliest = {i: d for i, d in cur.fetchall() if d is not None}
+            cur.execute(
+                "select accession_number, filing_date from core.filing where accession_number = any(%s)",
+                (sorted({c.accession for c, _ in nf}),),
+            )
+            first_filed = {a: d for a, d in cur.fetchall() if d is not None}
     for c, a, b, cid, cik in resolved:
 
         def reject(why: str, c: Claim = c) -> None:
@@ -946,6 +1119,13 @@ def load(
                 }
             )
 
+        if c.no_filing:
+            why = no_filing_evidence(
+                c.period_end, earliest.get(cid), first_filed.get(c.accession)
+            )
+            if why:
+                reject(f"no_public_filing_for_period not evidenced: {why}")
+                continue
         q = quarantined(c)
         if q:
             reject(f"filing quarantined, its own calc check failed: {q}")
@@ -975,8 +1155,8 @@ def load(
         if name not in concept_ids:
             reject("no canonical concept of that name")
             continue
-        if c.decision == "component_sum" and instant_sum_refused(
-            name, concept_statement[name]
+        if c.decision == "component_sum" and instant_sum_refused_for(
+            c, name, concept_statement[name]
         ):
             reject("instant component sum refused (only total_debt)")
             continue
