@@ -32,6 +32,7 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.common.authority import face_column_eligible, latest_eligible
+from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
@@ -323,6 +324,28 @@ def _stored_values(
     return out
 
 
+def _fix_fit(
+    fix: fxe.Correction, got: tuple[Decimal, str, set[int]] | str
+) -> str | None:
+    """Why a filer XBRL correction does not fit the part's stored facts, or None. The CSV cross-check stays: a correcting
+    row needs the stored value to be its xbrl_value (or already the printed one); a supplying row needs no stored fact
+    for the column at all (a different stored value there means the CSV is stale). Pure."""
+    if isinstance(got, str):
+        if fix.supplies and got.startswith("no stored fact"):
+            return None
+        return f"filer_xbrl_errors row does not fit the stored facts: {got}"
+    v = got[0]
+    if fix.supplies:
+        return (
+            None
+            if v == fix.printed_value
+            else (f"filer_xbrl_errors supplies {fix.printed_value} but {v} is stored")
+        )
+    if v in (fix.xbrl_value, fix.printed_value):
+        return None
+    return f"stored {v} is neither the CSV xbrl_value {fix.xbrl_value} nor the printed {fix.printed_value}"
+
+
 def _part_value(
     got: dict[str, dict[Decimal, set[int]]], want: Decimal | None
 ) -> tuple[Decimal, str, set[int]] | str:
@@ -442,6 +465,7 @@ def direct_cells(
         {c.accession for k, cs in groups.items() if k[0] == CASH for c in cs},
     )
     cells: list[dict] = []
+    fixes = fxe.load()
     for (name, end, grain), cs in sorted(groups.items(), key=lambda kv: repr(kv[0])):
         cid = ids[name]
 
@@ -492,6 +516,7 @@ def direct_cells(
                 reject("instant component sum refused (only total_debt)")
                 continue
         parts: list[tuple[int, str, Decimal, str, set[int]]] = []
+        used_fixes: list[fxe.Correction] = []
         member_cites: dict[str, str] = {}
         bad = None
         for i, (sign, _tax, tag) in enumerate(c.parts):
@@ -519,6 +544,21 @@ def direct_cells(
                     member_cites[tag] = f"R{rp}" + (f":{ln}" if ln else "")
             else:
                 got = _part_value(stored[(c.accession, tag, te)], want)
+                fix = fixes.get((c.accession, tag, 0 if grain == "I" else 4))
+                if fix is not None:
+                    why = _fix_fit(fix, got)
+                    if why:
+                        bad = f"{tag}: {why}"
+                        break
+                    parts.append(
+                        (sign, tag, fix.printed_value, fxe.VALUE_SOURCE, set())
+                    )
+                    used_fixes.append(fix)
+                    if i < len(c.node_values) and c.node_values[i]:
+                        if Decimal(c.node_values[i]) != fix.printed_value:
+                            bad = f"{tag}: printed {fix.printed_value} differs from the resolver node {c.node_values[i]}"
+                            break
+                    continue
                 if isinstance(got, str) and printed_zero_ok(c, got):
                     parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
                     continue
@@ -549,6 +589,7 @@ def direct_cells(
         if c.value and Decimal(c.value) != served:
             reject(f"stored value {served} differs from the resolver value {c.value}")
             continue
+        fix_src = any(p[3] == fxe.VALUE_SOURCE for p in parts)
         zero_src = any(p[3] == PRINTED_ZERO for p in parts)
         fsn_src = any(p[3] == "fsn_xbrl" for p in parts)
         core_ids = sorted({i for p in parts if p[3] == "sec_api" for i in p[4]})
@@ -563,6 +604,8 @@ def direct_cells(
         )
         if flipped:
             note += "; " + flip_note(parts[0][2])
+        for fx in used_fixes:
+            note += "; " + fx.note()
         if zero_src:
             rp, ln = c.locs[0] if c.locs else (None, None)
             note += f"; printed_zero: the line is printed with a dash or 0 (R{rp}:{ln}), served as 0 with no fact id"
@@ -574,7 +617,11 @@ def direct_cells(
                 "value": served,
                 "value_source": PRINTED_ZERO
                 if zero_src
-                else ("fsn_xbrl" if fsn_src else "sec_api"),
+                else (
+                    fxe.VALUE_SOURCE
+                    if fix_src
+                    else ("fsn_xbrl" if fsn_src else "sec_api")
+                ),
                 "source_fact_ids": [] if fsn_src else core_ids,
                 "source_value_ids": vids if fsn_src else [],
                 "serve_note": note,

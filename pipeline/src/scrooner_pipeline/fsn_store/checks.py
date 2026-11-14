@@ -17,6 +17,7 @@ from decimal import Decimal
 from typing import Any, Iterable
 
 import psycopg
+from scrooner_pipeline.common import filer_xbrl_errors as fxe
 from scrooner_pipeline.fsn_store.stmt_effective import effective_stmt_sql
 
 STATEMENTS = ("BS", "IS", "CF")
@@ -637,11 +638,76 @@ def check_ties(
     return out
 
 
+def apply_corrections(
+    data: dict[str, Any], corrections: dict[tuple[str, int], fxe.Correction]
+) -> dict[tuple[str, date, int], list[fxe.Correction]]:
+    """Apply a filing's filer XBRL corrections to load_filing() output IN PLACE, before any check runs.
+    A correcting row replaces the Print whose value equals its xbrl_value (that tag and qtrs, every column holding the
+    wrong value: only the printed column matches); a supplying row (no xbrl_value) adds the Print the filer left
+    untagged to the filing's own latest column of that statement and qtrs, when the tag sits on a statement.
+    Returns {(ddate-keyed column) -> corrections used}: (stmt, ddate, qtrs) for column checks and ('', ddate, qtrs)
+    for the cross-line ties. Printed values keep the decimals of the Print they replace (a supplied one has none)."""
+    used: dict[tuple[str, date, int], list[fxe.Correction]] = defaultdict(list)
+    for (tag, qtrs), c in sorted(corrections.items()):
+        versions = sorted({v for (t, v) in data["stmt_of"] if t == tag})
+        if c.supplies:
+            for ver in versions:
+                stmt = data["stmt_of"][(tag, ver)]
+                cols = [k for k in data["columns"] if k[0] == stmt and k[2] == qtrs]
+                if not cols:
+                    continue
+                key = max(cols, key=lambda k: k[1])
+                ddate = key[1]
+                if (tag, ver) in data["columns"][key] or (tag, ddate, qtrs) in data[
+                    "values"
+                ]:
+                    continue  # the filer did tag it: nothing to supply
+                pr = Print(tag, ver, c.printed_value, None, None)
+                data["columns"][key][(tag, ver)] = pr
+                data.setdefault("alts", {}).setdefault(key, {})[(tag, ver)] = [
+                    c.printed_value
+                ]
+                data["values"][(tag, ddate, qtrs)] = pr
+                used[key].append(c)
+                used[("", ddate, qtrs)].append(c)
+                break
+            continue
+        for key, col in data["columns"].items():
+            if key[2] != qtrs:
+                continue
+            for (t, ver), pr in list(col.items()):
+                if t == tag and pr.value == c.xbrl_value:
+                    npr = Print(t, ver, c.printed_value, pr.dcml, pr.line)
+                    col[(t, ver)] = npr
+                    data.get("alts", {}).get(key, {})[(t, ver)] = [c.printed_value]
+                    data["values"][(t, key[1], qtrs)] = npr
+                    used[key].append(c)
+                    used[("", key[1], qtrs)].append(c)
+    return used
+
+
 def check_filing(
     conn: psycopg.Connection, filing_id: int, *, write: bool = True
 ) -> dict[str, int]:
-    """Run every column check of one filing; replace its fsn.filing_check rows. Returns counts."""
+    """Run every column check of one filing; replace its fsn.filing_check rows. Returns counts.
+    The filing's filer XBRL corrections (common/filer_xbrl_errors) are applied first; a check on a corrected column
+    carries them in detail['filer_xbrl_corrections'] (accession, tag, xbrl and printed value, evidence)."""
     data = load_filing(conn, filing_id)
+    with conn.cursor() as cur:
+        cur.execute("select accession from fsn.filing where id = %s", (filing_id,))
+        got = cur.fetchone()
+    fixes = fxe.for_accession(got[0]) if got else {}
+    used = apply_corrections(data, fixes) if fixes else {}
+
+    def stamp(stmt: str, ddate, qtrs, detail: dict) -> dict:
+        hit = used.get((stmt, ddate, qtrs), [])
+        if hit:
+            detail = {
+                **detail,
+                "filer_xbrl_corrections": [c.as_detail() for c in hit],
+            }
+        return detail
+
     rows = []
     for (stmt, ddate, qtrs), col in data["columns"].items():
         key = (stmt, ddate, qtrs)
@@ -664,7 +730,7 @@ def check_filing(
                     c["lhs"],
                     c["rhs"],
                     c["tol"],
-                    c["detail"],
+                    stamp(stmt, ddate, qtrs, c["detail"]),
                 )
             )
     for stmt, ddate, qtrs, c in check_ties(data["on"], data["values"]):
@@ -679,13 +745,14 @@ def check_filing(
                 c["lhs"],
                 c["rhs"],
                 c["tol"],
-                c["detail"],
+                stamp("", ddate, qtrs, c["detail"]),
             )
         )
     counts = {
         "checks": len(rows),
         "failed": sum(1 for r in rows if not r[5]),
         "columns": len(data["columns"]),
+        "corrections_used": len({c.key for cs in used.values() for c in cs}),
     }
     if write:
         import json
