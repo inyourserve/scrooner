@@ -226,6 +226,29 @@ def _reason(note: str) -> str:
     return re.split(r"\s\|\s(?:accn|api ev|fy0=|API MISSING)", note)[0].strip()
 
 
+PPE_ROU_TAG_PREFIX = "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAsset"
+PPE_ROU_NOTE = (
+    "ppe_net ruling (Dhairya 2026-11-14): the face PP&E line that includes finance-lease right-of-use assets "
+    "IS ppe_net, mapped, never combined"
+)
+
+
+def ppe_rou_is_ppe_net(
+    status: str, data_point: str, parts: tuple[tuple[int, str, str], ...]
+) -> str:
+    """Rule 4: a 'combined' read of ppe_net on the single face tag PropertyPlantAndEquipmentAndFinanceLeaseRightOfUse
+    Asset... (PP&E including finance-lease ROU) is the company's ppe_net line: 'mapped'. Any other status or data
+    point, or a multi-tag line, keeps its status."""
+    if (
+        status == "combined"
+        and data_point == "ppe_net"
+        and len(parts) == 1
+        and parts[0][2].startswith(PPE_ROU_TAG_PREFIX)
+    ):
+        return "mapped"
+    return status
+
+
 def parse_docmap(
     csv_text: str, md_text: str, source: str
 ) -> tuple[list[DocmapRow], list[dict]]:
@@ -278,6 +301,7 @@ def parse_docmap(
         elif status != "component sum" and len(parts) > 1:
             reject(f"{status} row with {len(parts)} tags")
             continue
+        status = ppe_rou_is_ppe_net(status, r["data_point"], parts)
         fy0 = _fy0_end(r["note"], md_text)
         accn = _accession(r["note"], md_text)
         if fy0 is None or accn is None:
@@ -384,7 +408,11 @@ def parse_fixes(csv_text: str, source: str) -> tuple[list[DocmapRow], list[dict]
         elif status != "component sum" and len(parts) > 1:
             reject(f"{status} row with {len(parts)} tags")
             continue
+        was = status
+        status = ppe_rou_is_ppe_net(status, r.get("data_point", ""), parts)
         note = r.get("note", "")
+        if status != was:
+            note = f"{note} [{PPE_ROU_NOTE}]".strip()
         printed = r.get("printed_value", "")
         rows.append(
             DocmapRow(
@@ -1452,6 +1480,60 @@ def comparative_rows(
     slices, clog = era_extend.comparative_slices(groups, filings, printed, own, other)
     log.extend({"cik": cik, **x} for x in clog)
     out = []
+    # rule 3: the year's own quarters keep the tag their own 10-Qs print (candidates: every value row of the concept,
+    # predictor rows included, grouped by era and tag set); the comparative slice then covers the fiscal-year cell only
+    by_era: dict[int, dict[tuple, list[dict]]] = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        k = r["canonical_concept_id"] or r["parent_concept_id"]
+        if k in groups and r["decision"] in ("concept", "component") and r["tag"]:
+            by_era[k][(r["era_from"], r["era_to"])].append(r)
+    cand_rows: dict[int, dict[frozenset, list[dict]]] = defaultdict(dict)
+    for k, eras in by_era.items():
+        for rs in eras.values():
+            cand_rows[k].setdefault(frozenset(r["tag"] for r in rs), rs)
+    q_tags = {t for k in cand_rows for g in cand_rows[k] for t in g}
+    tenqs, qprinted = (
+        era_extend.fetch_quarter_prints(conn, cid, q_tags) if q_tags else ({}, {})
+    )
+    split_slices = []
+    for s in slices:
+        sp = era_extend.quarter_split(
+            s.era_from,
+            s.era_to,
+            s.tags,
+            list(cand_rows.get(s.key, {})),
+            tenqs,
+            qprinted,
+        )
+        if sp is None or sp.last_quarter_end >= s.era_to:
+            split_slices.append(s)
+            continue
+        split_slices.append(
+            replace(s, era_from=sp.last_quarter_end + timedelta(days=1))
+        )
+        qnote = (
+            f"{era_extend.COMP_MARK}: the quarters of the year keep the tag(s) {'+'.join(sorted(sp.tags))} their own "
+            f"10-Qs print (last {sp.adsh}); the next 10-K's comparative tag(s) {'+'.join(sorted(s.tags))} "
+            f"cover the fiscal-year cell only"
+        )
+        for r in cand_rows[s.key][sp.tags]:
+            n = {
+                **r,
+                "company_id": cid,
+                "cik": cik,
+                "era_from": s.era_from,
+                "era_to": sp.last_quarter_end,
+                "evidence_adsh": sp.adsh,
+                "evidence_report": None,
+                "evidence_line": None,
+                "evidence_plabel": None,
+                "evidence_cal_parent": None,
+                "rule_id": era_extend.EXT_RULE_ID,
+                "decided_by": era_extend.COMP_BY,
+                "serve_note": qnote,
+            }
+            out.append(normalize(n, {}, concept_ids, era_extend.EXT_RULE_ID, []))
+    slices = split_slices
     for s in slices:
         note = (
             f"{era_extend.COMP_MARK}: the 10-K {s.adsh} prints the year as its prior-year column with the same "

@@ -43,7 +43,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v10_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v11_2026-11-14"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -385,6 +385,9 @@ class Shown:
     # tags of the company's 'combined' map rows spanning this data point in this era: one printed
     # line over several concepts is never the data point (audit R15)
     combined: tuple[str, ...] = ()
+    # parts of a component claim that the cell's filing omits on its face while its own calc parent ties without
+    # them (common/authority.absent_part_is_zero, evidence absent_on_face_parent_ties): counted as 0, never guessed
+    zero_parts: tuple[str, ...] = ()
 
 
 @dataclass
@@ -887,6 +890,7 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
     total = Decimal(0)
     found: list[dict[str, Any]] = []
     missing: list[str] = []
+    zeroed: list[str] = []
     off_face: list[str] = []
     dcmls: list[int | None] = []
     all_face = {ln.tag for ln in structure.pre if ln.stmt not in NOTE_STMTS}
@@ -909,6 +913,9 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
                     tag = alt
                     break
         if nv is None:
+            if not segs and tag in shown.zero_parts:
+                zeroed.append(tag)  # rule 1: absent_on_face_parent_ties, counts as 0
+                continue
             missing.append(tag)
             continue
         if not segs:
@@ -931,6 +938,11 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         "missing": missing,
         "not_on_statement": off_face,
         "note_facts": notes,
+        **(
+            {"absent_zero": zeroed, "evidence": "absent_on_face_parent_ties"}
+            if zeroed
+            else {}
+        ),
     }
     if missing or off_face:
         p.reason_text = (

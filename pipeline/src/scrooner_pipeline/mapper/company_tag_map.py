@@ -41,7 +41,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 from typing import Any
@@ -52,6 +52,8 @@ import structlog
 from scrooner_pipeline.common.authority import (
     FaceIndex,
     face_column_eligible,
+    absent_part_is_zero,
+    load_calc_ties,
     load_face_indexes,
     latest_complete_filing,
 )
@@ -138,6 +140,9 @@ class Fact:
     # period_of_report of the filing the fact was printed in: the filing's OWN period decides which map row (tag era)
     # that filing speaks under (per-filing tag era, MSFT revenue). None = unknown (only the fact's period is judged).
     por: date | None = None
+    # form of the filing the fact was printed in ('10-Q', '10-K', ...): a quarter fact is judged by its own 10-Q's
+    # era (rule 2, Dhairya 2026-11-14), a fiscal-year fact by its 10-K's. None = unknown.
+    form: str | None = None
 
 
 STANDARD_TAXONOMIES = {"us-gaap", "ifrs-full", "dei", "srt"}
@@ -326,6 +331,7 @@ def _load_fact_vintages(
                 first[9],
                 ambiguous=len({Decimal(x[3]) for x in rs}) > 1,
                 por=first[12],
+                form=first[11],
             )
         )
     return out
@@ -634,6 +640,23 @@ def _filing_in_era(row: MapRow, fact: Fact) -> bool:
     period that some concept row of the same concept already covers (any tag): the rule picks the tag, it never
     extends the map's coverage to earlier periods."""
     return fact.por is not None and _in_era(row, fact.por)
+
+
+TENQ_ERA_SLACK = timedelta(days=370)
+
+
+def _tenq_in_era(row: MapRow, fact: Fact) -> bool:
+    """Per-filing tag era by period type (rule 2): the 10-Qs of a fiscal year print the tag THEIR OWN filings use, which
+    can differ from the 10-K's of the same year (HD cash taxes: 10-K note IncomeTaxesPaidNet, 10-Q face
+    IncomeTaxesPaid). A fiscal-year era row is cut at the 10-K's switch, so a quarter fact printed in an original
+    10-Q is a candidate for a row whose era lies within one fiscal year of the quarter; the fiscal-year cell is still
+    chosen by the 10-K's own row (only 10-Q facts get this slack). Like _filing_in_era it picks the tag only, and
+    build_cells requires another concept row to cover the period already."""
+    if fact.form is None or not fact.form.startswith("10-Q"):
+        return False
+    lo = row.era_from - TENQ_ERA_SLACK
+    hi = row.era_to + TENQ_ERA_SLACK if row.era_to else _FAR
+    return lo <= fact.end <= hi
 
 
 def _sign(row: MapRow) -> int:
@@ -974,6 +997,7 @@ def build_cells(
     | None = None,
     proof_disagree: dict[tuple[str, str, date, date], Decimal] | None = None,
     face: FaceIndex | None = None,
+    ties: dict[tuple[str, str], list[tuple[date, int, bool]]] | None = None,
 ) -> tuple[list[dict], dict]:
     """Pure core: map rows + facts + calc evidence -> canonical cells. concept_info: id -> (name, statement).
     vintages: every authoritative filing's print of the component tags (sec_api), so a sum whose parts' latest
@@ -1019,7 +1043,7 @@ def build_cells(
                 _in_era(row, fact.end)
                 or (
                     row.decision == "concept"
-                    and _filing_in_era(row, fact)
+                    and (_filing_in_era(row, fact) or _tenq_in_era(row, fact))
                     and any(
                         o.decision == "concept"
                         and o.canonical_concept_id == row.canonical_concept_id
@@ -1119,17 +1143,27 @@ def build_cells(
             and (r.taxonomy, r.tag) not in present
             and _in_era(r, end)
         ]
+        zero_rows: list[MapRow] = []
         if missing:
-            hold(
-                key,
+            miss_reason = (
                 "component_without_authoritative_fact"
                 if any(
                     (no_auth or {}).get((r.taxonomy, r.tag), {}).get(key[1])
                     for r in missing
                 )
-                else "component_missing_for_period",
+                else "component_missing_for_period"
             )
-            continue
+            # rule 1: a part absent from the filing counts as 0 only with evidence (checked below once the one
+            # filing the sum is read from is known); without face and calc-tie evidence the part stays unknown
+            if (
+                miss_reason != "component_missing_for_period"
+                or face is None
+                or not ties
+                or key[1] not in periods
+            ):
+                hold(key, miss_reason)
+                continue
+            zero_rows = missing
         sf = None
         if face is not None and key[1] in periods and pstmt in STATEMENT_CODE:
             pstart, pend, ptype_ = periods[key[1]]
@@ -1138,6 +1172,29 @@ def build_cells(
             c = _single_source_parts(c, fsn_vintages, key[1], sf) or c
         if len({f.filing_id for _, f in c}) > 1:
             c = _one_filing_parts(c, vintages, key[1], sf) or c
+        zero_notes: list[str] = []
+        if zero_rows:
+            zstart, zend, ztype = periods[key[1]]
+            acc0 = c[0][1].accession
+            for zr in zero_rows:
+                ev = absent_part_is_zero(
+                    face,
+                    ties,
+                    acc0,
+                    str(zr.tag),
+                    {_local(p) for p in (zr.evidence_cal_parent or "").split(";")},
+                    zstart,
+                    zend,
+                    ztype,
+                )
+                if ev is None:
+                    break
+                zero_notes.append(ev)
+            else:
+                zero_rows = []
+            if zero_rows:  # no evidence for some part: unknown, as before
+                hold(key, "component_missing_for_period")
+                continue
         reason = _check_components(c, arcs, _base(pname) == "total_debt")
         needs_tie = reason in TIE_REASONS and _base(pname) in TIE_EVIDENCE
         if (
@@ -1155,7 +1212,7 @@ def build_cells(
                 "period_id": key[1],
                 "value": sum((f.value * _mult(r) for r, f in c), Decimal(0)),
                 **_lineage(c),
-                "serve_note": _note(c),
+                "serve_note": "; ".join(filter(None, [_note(c), *zero_notes])) or None,
                 "_scaled": any(_scaled(r) for r, _ in c),
                 "_filing_id": c[0][1].filing_id,
                 "_accession": c[0][1].accession,
@@ -1705,6 +1762,7 @@ def resolve_for_company(
         fsn_vintages,
         _load_proof_disagree(conn, company_id),
         face,
+        load_calc_ties(conn, [company_id]),
     )
     from scrooner_pipeline.mapper.derived_cells import (
         add_derived_cells,

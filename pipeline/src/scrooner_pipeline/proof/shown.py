@@ -20,8 +20,10 @@ from scrooner_pipeline.common.authority import (
     FaceIndex,
     face_column_eligible,
     load_face_indexes,
+    absent_part_is_zero,
     latest_complete_filing,
     latest_eligible,
+    load_calc_ties,
 )
 from scrooner_pipeline.common.fsn_dates import era_holds
 from scrooner_pipeline.common.presentation_scale import company_presentation_scale
@@ -52,6 +54,24 @@ def load_map_rows(conn: psycopg.Connection, company_id: int) -> list[MapRow]:
             (company_id,),
         )
         return [tuple(r) for r in cur.fetchall()]  # type: ignore[misc]
+
+
+def load_part_parents(conn: psycopg.Connection, company_id: int) -> dict[str, set[str]]:
+    """tag -> local calc-parent tags of the company's component rows (evidence_cal_parent 'A;B'): what rule 1 ties."""
+    out: dict[str, set[str]] = defaultdict(set)
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select tag, evidence_cal_parent from analytics.company_tag_map
+            where company_id = %s and decision = 'component' and tag is not null and evidence_cal_parent is not null
+            """,
+            (company_id,),
+        )
+        for tag, parents in cur.fetchall():
+            out[tag].update(
+                p.strip().rsplit(":", 1)[-1] for p in parents.split(";") if p.strip()
+            )
+    return out
 
 
 def load_combined(
@@ -256,6 +276,7 @@ def component_sum_authority(
     parts: tuple[tuple[int, str], ...],
     filed: dict[str, date | None],
     prefer: str | None = None,
+    zero_ok=None,
 ) -> tuple[str, Decimal] | None:
     """(accession, sum) a component-sum cell is authoritatively read from: the latest face-column-eligible filing
     that prints EVERY part (common/authority.latest_complete_filing, the function the mapper picks its parts with).
@@ -272,6 +293,14 @@ def component_sum_authority(
         if any(len(vs) > 1 for vs in prints.values()):
             return None
         by_part.append({a: next(iter(vs)) for a, vs in prints.items()})
+    if zero_ok is not None:
+        # rule 1 (common/authority.absent_part_is_zero): a part absent from a filing whose face omits it and whose calc
+        # parent ties without it is 0 in that filing, so that filing prints every part
+        every = set().union(*(set(p) for p in by_part)) if by_part else set()
+        for (_sign, tag), p in zip(parts, by_part):
+            for a in every - set(p):
+                if zero_ok(a, tag):
+                    p[a] = Decimal(0)
     best = latest_complete_filing(
         [{a: filed.get(a) for a in p} for p in by_part], prefer
     )
@@ -402,6 +431,8 @@ def load_shown(
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
     face = load_face_indexes(conn, [company_id])[company_id]
+    ties = load_calc_ties(conn, [company_id])
+    part_parents = load_part_parents(conn, company_id)
     copies_by, auth_by, filed_by, por_by = _periodic_copies(
         conn, company_id, floor, face
     )
@@ -465,6 +496,14 @@ def load_shown(
         claim = claim_for(
             map_rows, name, end, por_by.get(accession) if accession else None
         )
+        # rule 1: the parts of a component claim the cell's own filing omits on its face while its calc parent ties
+        zero_parts = tuple(
+            t
+            for _s, t in (claim.parts if claim is not None else ())
+            if absent_part_is_zero(
+                face, ties, accession, t, part_parents.get(t), start, end, ptype
+            )
+        )
         # statement coherence: every member of the statement and period is read from the statement filing (the
         # latest face-eligible filing that prints the column, common/authority); its copy is THE authoritative one
         # of this cell when it has one. Notes-claimed cells follow their own note rule.
@@ -484,6 +523,12 @@ def load_shown(
                 tuple((s, t) for s, t in claim.parts),
                 filed_by,
                 sf,
+                zero_ok=lambda a, t, _s=start, _e=end, _p=ptype: (
+                    absent_part_is_zero(
+                        face, ties, a, t, part_parents.get(t), _s, _e, _p
+                    )
+                    is not None
+                ),
             )
             disagreeing = []
             auth_accs = set()
@@ -517,6 +562,7 @@ def load_shown(
                 copies=len(copies),
                 claim=claim,
                 combined=combined_for(combined_rows, name, end),
+                zero_parts=zero_parts,
             )
         )
     return out

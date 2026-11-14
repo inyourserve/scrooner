@@ -277,6 +277,70 @@ def load_face_indexes(conn: Any, company_ids: list[int]) -> dict[int, FaceIndex]
     return out
 
 
+ABSENT_ZERO_EVIDENCE = "absent_on_face_parent_ties"
+
+
+def load_calc_ties(
+    conn: Any, company_ids: list[int]
+) -> dict[tuple[str, str], list[tuple[date, int, bool]]]:
+    """(accession, calc parent local tag) -> [(ddate, qtrs, ok)] of the filing's own calculation checks
+    (fsn.filing_check, check_id 'calc:<parent>:<grp>': parent = sum of its children as printed in the column).
+    Empty before the FSN store exists."""
+    out: dict[tuple[str, str], list[tuple[date, int, bool]]] = {}
+    if (
+        not company_ids
+        or conn.execute("select to_regclass('fsn.filing_check')").fetchone()[0] is None
+    ):
+        return out
+    for acc, ddate, qtrs, check_id, ok in conn.execute(
+        """
+        select f.accession, c.ddate, c.qtrs, c.check_id, c.ok
+        from fsn.filing f join fsn.filing_check c on c.filing_id = f.id
+        where f.company_id = any(%s) and c.check_id like 'calc:%%'
+        """,
+        (company_ids,),
+    ).fetchall():
+        ptag = check_id[len("calc:") :].rsplit(":", 1)[0]
+        out.setdefault((acc, ptag.rsplit(":", 1)[-1]), []).append(
+            (ddate, int(qtrs), bool(ok))
+        )
+    return out
+
+
+def absent_part_is_zero(
+    face: FaceIndex,
+    ties: dict[tuple[str, str], list[tuple[date, int, bool]]],
+    accession: str | None,
+    part_tag: str,
+    cal_parents: Any,
+    start: date | None,
+    end: date,
+    period_type: str,
+) -> str | None:
+    """Rule 1 (Dhairya 2026-11-14): a part of a component sum that is absent from the period's filing counts as 0 ONLY
+    when (a) that filing is judged (its face statements are in the FSN store), its face omits the part's line in the
+    cell's column, the part is not a note claim, and (b) the filing's own calc parent of the part (`cal_parents`, local
+    tags from the map row's evidence) ties in that column: fsn.filing_check calc:<parent> ok, every such check ok. No
+    parent to tie, or a failing tie: None (the part stays unknown). ONE definition for the mapper and the proof.
+    Returns the evidence string (serve note / lineage) or None."""
+    if accession is None or not face.judged(accession) or part_tag in face.note_tags:
+        return None
+    if face.prints_column(accession, part_tag, start, end, period_type):
+        return None
+    for parent in sorted({p for p in (cal_parents or ()) if p}):
+        checks = [
+            ok
+            for d, q, ok in ties.get((accession, parent), ())
+            if column_matches(d, q, start, end, period_type)
+        ]
+        if checks and all(checks):
+            return (
+                f"{ABSENT_ZERO_EVIDENCE}: {part_tag} absent from the face of {accession} in this column, "
+                f"its calc parent {parent} ties without it; counted as 0"
+            )
+    return None
+
+
 def statement_filing(
     conn: Any,
     company_id: int,

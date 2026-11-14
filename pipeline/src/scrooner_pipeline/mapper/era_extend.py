@@ -623,6 +623,66 @@ def comparative_slices(
     return out, log
 
 
+def fetch_quarter_prints(
+    conn: psycopg.Connection, company_id: int, tags: set[str]
+) -> tuple[dict, dict]:
+    """(tenqs {accession: period end}, printed {accession: {tag}}): the company's 10-Q filings in FSN and, per 10-Q, the
+    `tags` it carries non-dimensionally at its own period end for a quarter or year-to-date column (qtrs 1-3)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select accession, period from fsn.filing
+               where company_id = %s and form in ('10-Q', '10-Q/A') and period is not null""",
+            (company_id,),
+        )
+        tenqs = {a: p for a, p in cur.fetchall()}
+        printed: dict = {}
+        if tags and tenqs:
+            cur.execute(
+                """select f.accession, t.tag
+                   from fsn.filing f join fsn.value v on v.filing_id = f.id and v.dim_id = 0
+                        and v.qtrs in (1, 2, 3) and v.ddate = f.period
+                   join fsn.tag t on t.id = v.tag_id
+                   where f.company_id = %s and f.form in ('10-Q', '10-Q/A') and t.tag = any(%s)
+                   group by 1, 2""",
+                (company_id, sorted(tags)),
+            )
+            for acc, tag in cur.fetchall():
+                printed.setdefault(acc, set()).add(tag)
+    return tenqs, printed
+
+
+@dataclass(frozen=True)
+class QuarterSplit:
+    tags: frozenset  # the tag set the year's own 10-Qs print
+    last_quarter_end: date  # the latest 10-Q period end inside the year
+    adsh: str  # that 10-Q: the evidence
+
+
+def quarter_split(
+    year_start: date,
+    year_end: date,
+    year_tags: frozenset,
+    candidates: list[frozenset],
+    tenqs: dict,
+    printed: dict,
+) -> QuarterSplit | None:
+    """Rule 3 (Dhairya 2026-11-14): a fiscal year the next 10-K's comparative column carries under `year_tags` keeps, for
+    its own quarters, the tag set its own 10-Qs print. Every 10-Q of the year (period in [year_start, year_end)) must
+    print exactly one candidate tag set other than `year_tags` (all its tags, and that set the same in every 10-Q); a
+    10-Q that already prints `year_tags` in full, no 10-Q in FSN, or no unique candidate gives None. Pure."""
+    qs = sorted((p, a) for a, p in tenqs.items() if year_start <= p < year_end)
+    if not qs:
+        return None
+    per = [printed.get(a, set()) for _p, a in qs]
+    if any(year_tags <= got for got in per):
+        return None
+    common = set.intersection(*per) if per else set()
+    fits = [c for c in candidates if c != year_tags and c and c <= common]
+    if len(fits) != 1:
+        return None
+    return QuarterSplit(fits[0], qs[-1][0], qs[-1][1])
+
+
 def _comparative_check(g, acc, p, printed, own, other_mapped, key) -> str:
     for tag in sorted(g.tags):
         at = printed.get((acc, tag), {}).get(p)
