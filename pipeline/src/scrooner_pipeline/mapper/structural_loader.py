@@ -51,6 +51,7 @@ from typing import Any
 import psycopg
 
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.mapper import docmap_loader as dl
 from scrooner_pipeline.mapper.company_tag_map import STATEMENT_CODE
@@ -1120,8 +1121,12 @@ def fact_options(
 def fixed_option(c: Claim, tag: str, stored: set[Decimal]) -> set[Decimal]:
     """The values a part may take in the sign solve: its stored facts, or ONLY the printed value when the filing's
     filer XBRL correction (common/filer_xbrl_errors) covers (accession, tag, qtrs). Pure."""
-    fix = fxe.load().get((c.accession, tag, 0 if c.grain == "I" else 4))
-    return {fix.printed_value} if fix is not None else stored
+    qtrs = 0 if c.grain == "I" else 4
+    fix = fxe.load().get((c.accession, tag, qtrs))
+    if fix is not None:
+        return {fix.printed_value}
+    drop = fsn_dropped.load().get((c.accession, tag, qtrs, ""))
+    return {drop.value} if drop is not None and not stored else stored
 
 
 def load(

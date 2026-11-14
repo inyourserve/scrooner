@@ -18,6 +18,7 @@ from typing import Any, Iterable
 
 import psycopg
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common import fsn_dropped_facts as fdf
 from scrooner_pipeline.fsn_store.stmt_effective import effective_stmt_sql
 
 STATEMENTS = ("BS", "IS", "CF")
@@ -638,6 +639,55 @@ def check_ties(
     return out
 
 
+def _supply(
+    data: dict[str, Any], tag: str, qtrs: int, value: Decimal
+) -> tuple[str, date, int] | None:
+    """Add an untagged / dropped undimensioned fact to the filing's own latest column of the tag's statement and qtrs
+    (in place). Returns the column key, or None when the tag is on no statement, no column exists, or a value is there."""
+    for ver in sorted({v for (t, v) in data["stmt_of"] if t == tag}):
+        stmt = data["stmt_of"][(tag, ver)]
+        cols = [k for k in data["columns"] if k[0] == stmt and k[2] == qtrs]
+        if not cols:
+            continue
+        key = max(cols, key=lambda k: k[1])
+        ddate = key[1]
+        if (tag, ver) in data["columns"][key] or (tag, ddate, qtrs) in data["values"]:
+            return None  # the filer did tag it: nothing to supply
+        pr = Print(tag, ver, value, None, None)
+        data["columns"][key][(tag, ver)] = pr
+        data.setdefault("alts", {}).setdefault(key, {})[(tag, ver)] = [value]
+        data["values"][(tag, ddate, qtrs)] = pr
+        return key
+    return None
+
+
+def apply_dropped(
+    data: dict[str, Any], facts: list[fdf.DroppedFact]
+) -> dict[tuple[str, date, int], list[fdf.DroppedFact]]:
+    """Apply a filing's FSN-dropped facts (common/fsn_dropped_facts) IN PLACE as supplied values: an undimensioned one
+    like a supplying correction; a dimensioned one as a member row of its tag's statement column (a calc child with
+    member rows, check_column's `members`). Same return shape as apply_corrections."""
+    used: dict[tuple[str, date, int], list[fdf.DroppedFact]] = defaultdict(list)
+    for f in facts:
+        if not f.segment:
+            key = _supply(data, f.tag, f.qtrs, f.value)
+        else:
+            key = None
+            for ver in sorted({v for (t, v) in data["stmt_of"] if t == f.tag}):
+                stmt = data["stmt_of"][(f.tag, ver)]
+                cols = [k for k in data["columns"] if k[0] == stmt and k[2] == f.qtrs]
+                if cols:
+                    key = max(cols, key=lambda k: k[1])
+                    data.setdefault("members", {}).setdefault(key, defaultdict(dict))[
+                        ("dropped", f.segment)
+                    ].setdefault((f.tag, ver), f.value)
+                    break
+        if key is not None:
+            used[key].append(f)
+            used[("", key[1], f.qtrs)].append(f)
+    return used
+
+
 def apply_corrections(
     data: dict[str, Any], corrections: dict[tuple[str, int], fxe.Correction]
 ) -> dict[tuple[str, date, int], list[fxe.Correction]]:
@@ -649,28 +699,11 @@ def apply_corrections(
     for the cross-line ties. Printed values keep the decimals of the Print they replace (a supplied one has none)."""
     used: dict[tuple[str, date, int], list[fxe.Correction]] = defaultdict(list)
     for (tag, qtrs), c in sorted(corrections.items()):
-        versions = sorted({v for (t, v) in data["stmt_of"] if t == tag})
         if c.supplies:
-            for ver in versions:
-                stmt = data["stmt_of"][(tag, ver)]
-                cols = [k for k in data["columns"] if k[0] == stmt and k[2] == qtrs]
-                if not cols:
-                    continue
-                key = max(cols, key=lambda k: k[1])
-                ddate = key[1]
-                if (tag, ver) in data["columns"][key] or (tag, ddate, qtrs) in data[
-                    "values"
-                ]:
-                    continue  # the filer did tag it: nothing to supply
-                pr = Print(tag, ver, c.printed_value, None, None)
-                data["columns"][key][(tag, ver)] = pr
-                data.setdefault("alts", {}).setdefault(key, {})[(tag, ver)] = [
-                    c.printed_value
-                ]
-                data["values"][(tag, ddate, qtrs)] = pr
+            key = _supply(data, tag, qtrs, c.printed_value)
+            if key is not None:
                 used[key].append(c)
-                used[("", ddate, qtrs)].append(c)
-                break
+                used[("", key[1], qtrs)].append(c)
             continue
         for key, col in data["columns"].items():
             if key[2] != qtrs:
@@ -698,6 +731,8 @@ def check_filing(
         got = cur.fetchone()
     fixes = fxe.for_accession(got[0]) if got else {}
     used = apply_corrections(data, fixes) if fixes else {}
+    dropped = fdf.for_accession(got[0]) if got else []
+    used_dropped = apply_dropped(data, dropped) if dropped else {}
 
     def stamp(stmt: str, ddate, qtrs, detail: dict) -> dict:
         hit = used.get((stmt, ddate, qtrs), [])
@@ -706,6 +741,9 @@ def check_filing(
                 **detail,
                 "filer_xbrl_corrections": [c.as_detail() for c in hit],
             }
+        hit_d = used_dropped.get((stmt, ddate, qtrs), [])
+        if hit_d:
+            detail = {**detail, "fsn_dropped_facts": [f.as_detail() for f in hit_d]}
         return detail
 
     rows = []
@@ -753,6 +791,7 @@ def check_filing(
         "failed": sum(1 for r in rows if not r[5]),
         "columns": len(data["columns"]),
         "corrections_used": len({c.key for cs in used.values() for c in cs}),
+        "dropped_used": len({f.key for fs in used_dropped.values() for f in fs}),
     }
     if write:
         import json

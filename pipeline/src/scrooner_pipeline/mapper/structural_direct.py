@@ -33,6 +33,7 @@ import psycopg
 
 from scrooner_pipeline.common.authority import face_column_eligible, latest_eligible
 from scrooner_pipeline.common import filer_xbrl_errors as fxe
+from scrooner_pipeline.common import fsn_dropped_facts as fsn_dropped
 from scrooner_pipeline.common import member_facts
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.polarity import apply_polarity, flip_note
@@ -466,6 +467,7 @@ def direct_cells(
     )
     cells: list[dict] = []
     fixes = fxe.load()
+    dropped_facts = fsn_dropped.load()
     for (name, end, grain), cs in sorted(groups.items(), key=lambda kv: repr(kv[0])):
         cid = ids[name]
 
@@ -517,6 +519,7 @@ def direct_cells(
                 continue
         parts: list[tuple[int, str, Decimal, str, set[int]]] = []
         used_fixes: list[fxe.Correction] = []
+        used_dropped: list[fsn_dropped.DroppedFact] = []
         member_cites: dict[str, str] = {}
         bad = None
         for i, (sign, _tax, tag) in enumerate(c.parts):
@@ -538,6 +541,9 @@ def direct_cells(
                     bad = f"{tag}: {hit}"
                     break
                 v, src, got_ids = hit.value, "fsn_xbrl", set(hit.ids)
+                if hit.dropped:  # the filing prints it, the FSN ingest dropped it: the CSV row is the source
+                    src = fsn_dropped.VALUE_SOURCE
+                    used_dropped.extend(hit.dropped)
                 tag = hit.part_tag
                 rp, ln = c.locs[i] if i < len(c.locs) else (None, None)
                 if rp:
@@ -558,6 +564,17 @@ def direct_cells(
                         if Decimal(c.node_values[i]) != fix.printed_value:
                             bad = f"{tag}: printed {fix.printed_value} differs from the resolver node {c.node_values[i]}"
                             break
+                    continue
+                drop = dropped_facts.get(
+                    (c.accession, tag, 0 if grain == "I" else 4, "")
+                )
+                if drop is not None and (
+                    isinstance(got, str) and got.startswith("no stored fact")
+                ):  # an undimensioned fact the filing prints and the FSN ingest dropped
+                    parts.append(
+                        (sign, tag, drop.value, fsn_dropped.VALUE_SOURCE, set())
+                    )
+                    used_dropped.append(drop)
                     continue
                 if isinstance(got, str) and printed_zero_ok(c, got):
                     parts.append((sign, tag, Decimal(0), PRINTED_ZERO, set()))
@@ -590,6 +607,7 @@ def direct_cells(
             reject(f"stored value {served} differs from the resolver value {c.value}")
             continue
         fix_src = any(p[3] == fxe.VALUE_SOURCE for p in parts)
+        drop_src = any(p[3] == fsn_dropped.VALUE_SOURCE for p in parts)
         zero_src = any(p[3] == PRINTED_ZERO for p in parts)
         fsn_src = any(p[3] == "fsn_xbrl" for p in parts)
         core_ids = sorted({i for p in parts if p[3] == "sec_api" for i in p[4]})
@@ -606,6 +624,8 @@ def direct_cells(
             note += "; " + flip_note(parts[0][2])
         for fx in used_fixes:
             note += "; " + fx.note()
+        for df in used_dropped:
+            note += "; " + df.note()
         if zero_src:
             rp, ln = c.locs[0] if c.locs else (None, None)
             note += f"; printed_zero: the line is printed with a dash or 0 (R{rp}:{ln}), served as 0 with no fact id"
@@ -620,7 +640,11 @@ def direct_cells(
                 else (
                     fxe.VALUE_SOURCE
                     if fix_src
-                    else ("fsn_xbrl" if fsn_src else "sec_api")
+                    else (
+                        fsn_dropped.VALUE_SOURCE
+                        if drop_src
+                        else ("fsn_xbrl" if fsn_src else "sec_api")
+                    )
                 ),
                 "source_fact_ids": [] if fsn_src else core_ids,
                 "source_value_ids": vids if fsn_src else [],

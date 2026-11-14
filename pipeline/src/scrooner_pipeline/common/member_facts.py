@@ -25,6 +25,7 @@ from decimal import Decimal
 
 import psycopg
 
+from scrooner_pipeline.common import fsn_dropped_facts as dropped
 from scrooner_pipeline.common.fsn_dates import fsn_end_matches
 from scrooner_pipeline.proof.dims import _segment_name, normalize_dims
 
@@ -99,6 +100,9 @@ class MemberRow:
     segments: str
     value: Decimal
     value_id: int
+    dropped: dropped.DroppedFact | None = (
+        None  # a fact the filing prints and the FSN ingest dropped (value_id 0)
+    )
 
 
 @dataclass(frozen=True)
@@ -107,6 +111,9 @@ class MemberHit:
     ids: tuple[int, ...]
     segments: str
     part_tag: str  # the resolved `Tag[Axis=Member]`
+    dropped: tuple[
+        dropped.DroppedFact, ...
+    ] = ()  # the dropped facts the value stands on (no fsn.value id)
 
 
 def read_member_rows(
@@ -115,7 +122,9 @@ def read_member_rows(
     accessions: set[str],
     bases: set[str],
 ) -> dict[tuple[str, str], list[MemberRow]]:
-    """(accession, tag) -> stored dimensioned numeric facts of exactly those filings (no coreg, iprx 0)."""
+    """(accession, tag) -> stored dimensioned numeric facts of exactly those filings (no coreg, iprx 0), plus the
+    filing's dimensioned facts the FSN ingest dropped (data-team/tags/line_map/rules/fsn_dropped_facts.csv), read as
+    rows with value_id 0 and the CSV row as evidence, at the filing's own period end."""
     out: dict[tuple[str, str], list[MemberRow]] = {}
     if not accessions or not bases:
         return out
@@ -134,6 +143,24 @@ def read_member_rows(
             out.setdefault((acc, tag), []).append(
                 MemberRow(ddate, qtrs, uom, segs or "", Decimal(value), vid)
             )
+        extra = [
+            f
+            for f in dropped.load().values()
+            if f.accession in accessions and f.tag in bases and f.segment
+        ]
+        if extra:
+            cur.execute(
+                "select accession, period from fsn.filing where accession = any(%s) and period is not null",
+                (sorted({f.accession for f in extra}),),
+            )
+            period = dict(cur.fetchall())
+            for f in extra:
+                if f.accession in period:
+                    out.setdefault((f.accession, f.tag), []).append(
+                        MemberRow(
+                            period[f.accession], f.qtrs, "USD", f.segment, f.value, 0, f
+                        )
+                    )
     return out
 
 
@@ -184,4 +211,23 @@ def resolve_member_part(
         )
     ((v, ids),) = values.items()
     segs = axes[0]
-    return MemberHit(v, tuple(sorted(ids)), segs, part_text(spec.base, segs, None))
+    stored = any(
+        i for i in ids
+    )  # the store caught up: the stored fact is the source, not the CSV row
+    used = (
+        ()
+        if stored
+        else tuple(
+            sorted(
+                {r.dropped for r in hit if r.dropped and r.value == v},
+                key=lambda f: f.key,
+            )
+        )
+    )
+    return MemberHit(
+        v,
+        tuple(sorted(i for i in ids if i)),
+        segs,
+        part_text(spec.base, segs, None),
+        used,
+    )
