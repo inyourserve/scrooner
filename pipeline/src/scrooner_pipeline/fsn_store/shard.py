@@ -29,6 +29,8 @@ from typing import Any
 import httpx
 import structlog
 
+from scrooner_pipeline.fsn_store.dim_note_allowlist import keep_dimensional
+from scrooner_pipeline.fsn_store.dim_note_allowlist import load as dim_note_rules
 from scrooner_pipeline.fsn_store.company_dir import (
     NO_DIM,
     PERIODIC_FORMS,
@@ -208,12 +210,26 @@ def shard_period(
             refs_tag[c].add((r["tag"], r["version"]))
         stats["pre"] += 1
     header = None
+    allow = dim_note_rules()
+    dim_seg = {  # only dimensions an allowlist rule could match: the full dim table is large
+        r["dimhash"]: r["segments"]
+        for r in zst_rows(paths["dim"])
+        if allow.any_segments(r["segments"])
+    }
     for r in zst_rows(paths["num"]):
         header = header or list(r.keys())
         a = r["adsh"]
         if a not in adshs:
             continue
-        if r["dimh"] != NO_DIM and (a, r["tag"], r["version"]) not in on_stmt:
+        if r["dimh"] != NO_DIM and not keep_dimensional(
+            a,
+            r["tag"],
+            r["version"],
+            dim_seg.get(r["dimh"], ""),
+            int(r["qtrs"] or 0),
+            on_stmt,
+            allow,
+        ):
             stats["num_dropped_dim_note"] += 1
             continue
         for c in owners[a]:

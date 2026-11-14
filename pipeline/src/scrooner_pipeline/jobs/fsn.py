@@ -204,6 +204,52 @@ def load_cmd(
     typer.echo(f"fsn load: {json.dumps(res, default=str)}")
 
 
+@app.command("add-dim-notes")
+def add_dim_notes_cmd(
+    summary_csv: Path = typer.Option(
+        None,
+        help="CSV with a company_id column (e.g. data-team/strategy/top100-coverage-summary.csv).",
+    ),
+    company_ids: str = typer.Option(
+        "", help="Comma-separated core.company ids (instead of --summary-csv)."
+    ),
+    periods: str = typer.Option(
+        "",
+        help="Comma-separated FSN sets (default: every set the companies' filings came from).",
+    ),
+    cache: str = typer.Option(
+        ".cache/fsn-dim-note", help="Download cache; each period is deleted after use."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Insert the rows (default: dry-run, read-only)."
+    ),
+    report: str = typer.Option(None, help="Write the run summary JSON here."),
+) -> None:
+    """INSERT-ONLY load of the allowlisted dimensional-note facts into fsn.value (fsn_store/dim_note.py).
+    Never deletes or reloads a filing; rerunning adds nothing. Dry-run by default."""
+    import psycopg
+
+    from scrooner_pipeline.common.config import settings
+    from scrooner_pipeline.fsn_store import dim_note, shard
+
+    ids = [int(x) for x in company_ids.split(",") if x.strip()]
+    if summary_csv:
+        ids += [int(r["company_id"]) for r in csv.DictReader(summary_csv.open())]
+    if not ids:
+        raise typer.BadParameter("give --summary-csv or --company-ids")
+    res = dim_note.run(
+        lambda: psycopg.connect(settings.database_url),
+        sorted(set(ids)),
+        shard.download,
+        Path(cache),
+        apply=apply,
+        periods=[p for p in periods.split(",") if p] or None,
+    )
+    if report:
+        Path(report).write_text(json.dumps(res, indent=1, default=str))
+    typer.echo(f"fsn add-dim-notes: {json.dumps(res, default=str)}")
+
+
 @app.command("seed-rules")
 def seed_rules_cmd(
     files: list[str] = typer.Argument(
