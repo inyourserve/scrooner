@@ -101,7 +101,9 @@ class Claim:
         ""  # the resolver's value for the cell (checked against the parts' SEC facts)
     )
     node_values: tuple[str, ...] = ()  # per part, when the nodes print them
-    grain: str = ""  # FY (duration) or I (instant) of the resolver row; '' for other file shapes
+    grain: str = (
+        ""  # FY (duration) or I (instant) of the resolver row; '' for other file shapes
+    )
 
 
 def _split(s: str) -> list[str]:
