@@ -93,26 +93,51 @@ def build_rows(
 DEFREF = re.compile(r"defref_[A-Za-z0-9\-]+_([A-Za-z0-9]+)'")
 
 
-def scan_edgar(
-    client: object, cik: str | int, adsh: str, tags: set[str]
-) -> dict[str, tuple[int, int]]:
-    """Option B, for a filing newer than the published SEC FSN data sets: sec.gov FilingSummary.xml, then each
-    R page of the filing; a tag is on a page when the page links its definition (defref_<prefix>_<Tag>).
-    Returns tag -> (lowest report number, number of reports). `client` is fsn_store.edgar_fetch.EdgarClient."""
+def report_pages(summary: bytes) -> list[tuple[int, str]]:
+    """FilingSummary.xml -> [(report number, MenuCategory)] ascending."""
     import xml.etree.ElementTree as ET
 
-    from scrooner_pipeline.fsn_store.edgar_fetch import filing_base
-
-    base = filing_base(cik, adsh)
-    summary = client.get(f"{base}/FilingSummary.xml").content  # type: ignore[attr-defined]
-    pages = []
+    out: dict[int, str] = {}
     for r in ET.fromstring(summary).iter("Report"):
         m = re.match(r"R(\d+)\.htm$", (r.findtext("HtmlFileName") or "").strip())
         if m:
-            pages.append(int(m.group(1)))
-    seen: dict[str, list[int]] = defaultdict(list)
-    for n in sorted(set(pages)):
-        html = client.get(f"{base}/R{n}.htm").text  # type: ignore[attr-defined]
-        for t in set(DEFREF.findall(html)) & tags:
-            seen[t].append(n)
-    return {t: (min(v), len(v)) for t, v in seen.items()}
+            out[int(m.group(1))] = (r.findtext("MenuCategory") or "").strip()
+    return sorted(out.items())
+
+
+# The primary statements first (a part the coverage export has no page for can still sit on the face:
+# ADI FY2021 DebtCurrent / UnsecuredLongTermDebt are on R6, the balance sheet), then the detail pages
+# (tagged note values), then the remaining note categories. The cover page cannot hold a note value.
+SKIP_CATEGORIES = {"Cover"}
+PASSES = (
+    ("Statements",),
+    ("Details",),
+    ("Tables", "Notes", "Policies", "Uncategorized", ""),
+)
+
+
+def scan_edgar(
+    client: object, cik: str | int, adsh: str, tags: set[str]
+) -> dict[str, tuple[int, int]]:
+    """Option B, for a filing newer than the published SEC FSN data sets: sec.gov FilingSummary.xml read once,
+    then the R pages that can hold a note tag (FilingSummary MenuCategory Details first, then the other note
+    categories; Cover and Statements skipped), ascending, stopping as soon as every wanted tag has a page.
+    A tag is on a page when the page links its definition (defref_<prefix>_<Tag>).
+    Returns tag -> (lowest report number, 1): the count of reports is not scanned past the first hit.
+    `client` is fsn_store.edgar_fetch.EdgarClient."""
+    from scrooner_pipeline.fsn_store.edgar_fetch import filing_base
+
+    base = filing_base(cik, adsh)
+    pages = report_pages(client.get(f"{base}/FilingSummary.xml").content)  # type: ignore[attr-defined]
+    found: dict[str, tuple[int, int]] = {}
+    for cats in PASSES:
+        for n, cat in pages:
+            if cat not in cats or cat in SKIP_CATEGORIES:
+                continue
+            left = tags - set(found)
+            if not left:
+                return found
+            html = client.get(f"{base}/R{n}.htm").text  # type: ignore[attr-defined]
+            for t in set(DEFREF.findall(html)) & left:
+                found[t] = (n, 1)
+    return found
