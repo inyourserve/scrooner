@@ -143,6 +143,8 @@ if __name__ == '__main__':
     tick = {r[1]: r[0] for r in csv.reader(open('tk.csv'))}
     td = {(r['accession'], r['column']): r for r in csv.DictReader(open('total_debt_all.csv'))}
     rows = run(filings, notefacts, tick, td)
+    import resolve_is
+    rows = resolve_is.apply(rows, filings, notefacts, tick)  # IS family (resolve_is.py) replaces its six data points where decisive
     for r in rows: r.setdefault('nodes', '')
     keys = ['ticker', 'cik', 'accession', 'period_end', 'data_point', 'status', 'tags', 'value', 'r_page', 'nodes', 'why', 'source', 'calc_check', 'flags']
     w = csv.DictWriter(open('resolved_all.csv', 'w', newline=''), fieldnames=keys, extrasaction='ignore'); w.writeheader(); w.writerows(rows)

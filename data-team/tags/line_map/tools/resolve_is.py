@@ -161,6 +161,37 @@ def cfo_lines(L):
     return [l for l in cf if l['ln'] < end], cf
 
 
+def note_close(v, n):
+    """v equals the note fact n within n's own rounding (a note printed as $2.4 billion is rounded to its last nonzero digit)."""
+    if n is None or v is None or n == 0: return False
+    k = int(abs(n)); z = 0
+    while k and k % 10 == 0 and z < 12: k //= 10; z += 1
+    step = D(10) ** z
+    return step <= abs(n) * D('0.1') and abs(abs(v) - abs(n)) <= step / 2
+
+
+def dup_labels(lines):
+    """Labels carried by two or more face lines with different tags: such a label identifies neither line (AMD 2024 FSN
+    labels AdjustmentForAmortization 'Amortization of operating lease right-of-use assets', the label of the next line)."""
+    c = collections.Counter((l['lb'] or '').strip().lower() for l in lines)
+    return {k for k, n in c.items() if n > 1 and k}
+
+
+def proven_amort(cfo, notes):
+    """A generic amortization CF line (AdjustmentForAmortization, or 'Amortization (expense)', or a line whose label is a
+    duplicate) is intangible amortization when its value equals the filing's own intangible-amortization note fact."""
+    dl = dup_labels(cfo)
+    for t in NOTE_AMORT:
+        n = notes.get((t, 4))
+        if n is None: continue
+        for l in cfo:
+            lb = (l['lb'] or '').strip().lower()
+            generic = l['tag'] == 'AdjustmentForAmortization' or re.match(r'(?i)^amortization( expense)?$', lb) or lb in dl
+            if generic and not CAPSW.search(l['tag']) and l['tag'] not in ('OperatingLeaseRightOfUseAssetAmortizationExpense', 'AmortizationOfFinancingCostsAndDiscounts') and note_close(l['val'], n):
+                return l, t, n
+    return None
+
+
 def resolve_da(L, notes):
     cfo, cf = cfo_lines(L)
     isf = [l for l in face(L, 'IS') if l['val'] is not None]
@@ -172,6 +203,10 @@ def resolve_da(L, notes):
             t0 = tot[0]
             partial = t0['tag'] in ('Depreciation', 'OtherDepreciationAndAmortization') or re.search(r'Excluding', t0['tag']) or re.search(r'(?i)property|equipment|plant|excluding', t0['lb'] or '')
             ia = [l for l in lines if src == 'CF' and l is not t0 and INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] + l['tag']) and not re.search(r'(?i)inventory|above|below|lease|debt|financing', l['lb'] or '')]
+            if src == 'CF' and not ia and (partial or t0['tag'] == 'OtherDepreciationAndAmortization'):
+                pa = proven_amort(lines, notes)
+                if pa and pa[0] is not t0:
+                    return mk('depreciation_and_amortization', 'component_sum', [t0, pa[0]], f"CF face: {t0['lb']} (R{t0['rep']}:{t0['ln']}) plus the amortization line {pa[0]['tag']} (R{pa[0]['rep']}:{pa[0]['ln']}) that equals the intangible-amortization note fact {pa[1]}={pa[2]}", flags='face;amort_by_note_equality')
             if partial and ia:
                 ls = [t0] + ia
                 return mk('depreciation_and_amortization', 'component_sum', ls, f"CF face: {t0['lb']} excludes intangibles; plus the intangible amortization line(s)", flags='face')
@@ -196,8 +231,13 @@ def resolve_da(L, notes):
 def resolve_amort(L, notes):
     cfo, cf = cfo_lines(L)
     isf = [l for l in face(L, 'IS') if l['val'] is not None]
+    pa = proven_amort(cfo, notes)
+    if pa:
+        l, t, n = pa
+        return mk('amortization_of_intangibles', 'mapped', [l], f"CF face line {l['tag']} (R{l['rep']}:{l['ln']}) equals the filing's intangible-amortization note fact {t}={n} within the note's rounding; the face value is the precise one", flags='face;amort_by_note_equality')
     for src, lines in (('CF', cfo), ('IS', isf)):
-        ls = [l for l in lines if INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] or '') and not CAPSW.search(l['tag']) and not re.search(r'(?i)above|below|lease|debt|financing', l['lb'] or '')]
+        dl = dup_labels(lines) if src == 'CF' else set()  # the IS legitimately repeats a caption in the cost and opex sections
+        ls = [l for l in lines if (l['lb'] or '').strip().lower() not in dl and INT_LB.search(l['lb'] or '') and not re.match(r'(?i)depreciation', l['lb'] or '') and not CAPSW.search(l['lb'] or '') and not CAPSW.search(l['tag']) and not re.search(r'(?i)above|below|lease|debt|financing', l['lb'] or '')]
         if ls:
             tagrank = [l for l in ls if l['tag'] in NOTE_AMORT or AMORT_TAG.match(l['tag'])] or ls
             return mk('amortization_of_intangibles', 'mapped' if len(tagrank) == 1 else 'component_sum', tagrank, f"{src} face line(s) naming intangible amortization", flags='face')

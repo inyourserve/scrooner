@@ -59,3 +59,26 @@ def test_da_with_accretion_is_combined_and_intangible_amortization_excludes_capi
     r = run(cf)
     assert r['depreciation_and_amortization']['status'] == 'combined'
     assert r['amortization_of_intangibles']['value'] == D(3) and r['amortization_of_intangibles']['tags'] == 'AmortizationOfIntangibleAssets'
+
+
+AMD24 = [('CF', 'NetIncomeLoss', 'Net income', 1641), ('CF', 'OtherDepreciationAndAmortization', 'Depreciation and amortization', 671),
+         ('CF', 'AdjustmentForAmortization', 'Amortization of operating lease right-of-use assets', 2393),
+         ('CF', 'OperatingLeaseRightOfUseAssetAmortizationExpense', 'Amortization of operating lease right-of-use assets', 113),
+         ('CF', 'NetCashProvidedByUsedInOperatingActivities', 'Net cash provided by operating activities', 3041),
+         ('IS', 'AmortizationOfAcquisitionRelatedIntangibles_Opex', 'Amortization of acquisition-related intangibles', 1448)]
+
+
+def test_generic_amortization_line_equal_to_the_rounded_note_fact_is_intangible_amortization():
+    # AMD FY2024 (0000002488-25-000012): FSN gives line 5 the label of line 7; the tag and the note fact ($2.4 billion) decide
+    r = run(AMD24, {('AmortizationOfIntangibleAssets', 4): D(2400)})
+    a, d = r['amortization_of_intangibles'], r['depreciation_and_amortization']
+    assert a['status'] == 'mapped' and a['value'] == D(2393) and a['tags'] == 'AdjustmentForAmortization'
+    assert d['status'] == 'component_sum' and d['value'] == D(3064)
+    # without the note fact the generic line proves nothing: D&A stays the face line, amortization is not the lease line
+    r0 = run(AMD24)
+    assert r0['depreciation_and_amortization']['value'] == D(671) and r0['amortization_of_intangibles']['value'] != D(2393)
+
+
+def test_note_equality_respects_the_note_rounding():
+    assert R.note_close(D(1780), D(1800)) and R.note_close(D(2393), D(2400))
+    assert not R.note_close(D(1700), D(1800)) and not R.note_close(D(2399), D(2390)) and not R.note_close(D(5), D(100))
