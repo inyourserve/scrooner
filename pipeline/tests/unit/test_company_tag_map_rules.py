@@ -819,3 +819,53 @@ def test_sga_sum_stands_beside_a_printed_opex_total_that_ties_gp_to_oi():
     assert SGA_ID not in {c["canonical_concept_id"] for c in cells} and stats["held"]
     cells, stats = _shop("100", "40", {"A-10": {("OperatingExpenses", "S")}})  # G&A not a line of the filing
     assert SGA_ID not in {c["canonical_concept_id"] for c in cells}
+
+
+def _sga_cell(acc="A-10"):
+    return {
+        "canonical_concept_id": SGA_ID,
+        "period_id": 7,
+        "value": Decimal("60"),
+        "_accession": acc,
+        "_needs_tie": True,
+        "_from_components": True,
+        "_tie_reason": "components_without_single_calc_parent",
+        "_dcml_keys": [(acc, "S", END), (acc, "G", END)],
+    }
+
+
+def _opex_filing_sum(acc, value, tags):
+    return {"value": Decimal(value), "_accession": acc, "_dcml_keys": [(acc, t, END) for t in tags]}
+
+
+def test_sga_stands_when_its_own_filing_prints_opex_lines_that_tie_though_opex_came_from_another_filing():
+    # MSFT FY2015/FY2017: opex was built from a later filing (4 parts incl. impairment); the sga sum's own filing
+    # prints R&D + S&M + G&A + impairment = GP - OI. The sga sum is judged against ITS filing's face.
+    from scrooner_pipeline.mapper.company_tag_map import _sga_inside_tied_opex
+
+    opex_other = {
+        "canonical_concept_id": OPEX_ID,
+        "period_id": 7,
+        "value": Decimal("90"),
+        "_accession": "A-18",
+        "_from_components": True,
+        "_dcml_keys": [("A-18", t, END) for t in "RSGX"],
+    }
+    prints = {
+        ("gross_profit", 7, "A-10"): {"value": Decimal("100"), "_accession": "A-10", "_dcml_keys": [("A-10", "GP", END)]},
+        ("operating_income", 7, "A-10"): {"value": Decimal("10"), "_accession": "A-10", "_dcml_keys": [("A-10", "OI", END)]},
+    }
+
+    def go(sums_):
+        stats = {"held": []}
+        out = _sga_inside_tied_opex([_sga_cell(), opex_other], SGA_INFO, stats, prints, {}, {}, sums_)
+        return SGA_ID in {c["canonical_concept_id"] for c in out}, stats
+
+    kept, stats = go({(7, "A-10"): _opex_filing_sum("A-10", "90", "RSGX")})
+    assert kept and stats["held"] == []
+    kept, stats = go({(7, "A-10"): _opex_filing_sum("A-10", "80", "RSGX")})  # does not tie
+    assert not kept and stats["held"][0]["reason"] == "components_without_single_calc_parent"
+    kept, _ = go({(7, "A-10"): _opex_filing_sum("A-10", "90", "RX")})  # sga lines not among the filing's lines
+    assert not kept
+    kept, _ = go({})  # the filing prints no opex lines
+    assert not kept

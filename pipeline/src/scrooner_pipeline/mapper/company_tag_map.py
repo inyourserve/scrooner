@@ -59,6 +59,7 @@ from scrooner_pipeline.common.authority import (
     latest_complete_filing,
 )
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.polarity import apply_polarity, flip_note
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.common.fsn_dates import era_holds, fsn_end_matches
 from scrooner_pipeline.common.rule_flags import ON, rule_mode
@@ -1099,6 +1100,37 @@ def _printed_opex_ties(
     return abs(gp["value"] - opex["value"] - oi["value"]) <= tol
 
 
+def _filing_opex_sum_ties(
+    c: dict, by_name: dict, tie_prints: dict, dcml: dict, opex_sums: dict
+) -> bool:
+    """The sga sum's own filing prints the period's opex face lines (opex_sums, every component print of that
+    filing); they contain every sga line, and gross profit - their sum = operating income within the rounding
+    tolerance of that same filing. The tie is the completeness proof for the lines."""
+    acc, pid = c["_accession"], c["period_id"]
+    o = opex_sums.get((pid, acc))
+    gp = _span_start(by_name, tie_prints, pid, acc)
+    oi = tie_prints.get(("operating_income", pid, acc))
+    if oi is None:
+        cand = by_name.get(("operating_income", pid))
+        oi = cand if cand is not None and cand.get("_accession") == acc else None
+    if o is None or gp is None or oi is None:
+        return False
+    if not {(k[0], k[1]) for k in c["_dcml_keys"]} <= {
+        (k[0], k[1]) for k in o["_dcml_keys"]
+    }:
+        return False
+    tol = tol_of(
+        [
+            dcml.get(k)
+            for k in c["_dcml_keys"]
+            + o["_dcml_keys"]
+            + gp["_dcml_keys"]
+            + oi["_dcml_keys"]
+        ]
+    )
+    return abs(gp["value"] - o["value"] - oi["value"]) <= tol
+
+
 def _sga_inside_tied_opex(
     cells: list[dict],
     concept_info,
@@ -1106,10 +1138,13 @@ def _sga_inside_tied_opex(
     tie_prints: dict | None = None,
     dcml: dict | None = None,
     arcs: dict[str, set[tuple[str, str]]] | None = None,
+    opex_sums: dict[tuple[int, str], dict] | None = None,
 ) -> list[dict]:
     """An sga sum without calc arcs stands only when the same period's opex was built from components of the same
     filing, tied to gross profit and operating income (it survived _opex_tie), and contains every sga line; or,
-    when opex is the printed total, when that total ties and every sga line is a calc child (_printed_opex_ties)."""
+    when opex is the printed total, when that total ties and every sga line is a calc child (_printed_opex_ties);
+    or, when the opex cell came from another filing (or was dropped), when the sga sum's OWN filing prints opex
+    face lines (opex_sums) that contain every sga line and tie gross profit - opex = operating income."""
     by_name: dict[tuple[str, int], dict] = {}
     for c in cells:
         by_name.setdefault(
@@ -1139,6 +1174,8 @@ def _sga_inside_tied_opex(
             o is None
             or o["_accession"] != c["_accession"]
             or not set(c["_dcml_keys"]) <= set(o["_dcml_keys"])
+        ) and not _filing_opex_sum_ties(
+            c, by_name, tie_prints or {}, dcml or {}, opex_sums or {}
         ):
             stats["held"].append(
                 {
@@ -1281,13 +1318,21 @@ def build_cells(
                 if abs(total - ref_value) > tol:
                     hold(key, "printed_total_does_not_tie_to_components")
                     continue
+            # one sign per concept (common/polarity.py, shared with the proof): a single printed element whose
+            # filer uses the opposite polarity is flipped, flagged, the raw value kept in the note
+            served, flipped = apply_polarity(concept_info[key[0]][0], ref_value)
             cells.append(
                 {
                     "canonical_concept_id": key[0],
                     "period_id": key[1],
-                    "value": ref_value,
+                    "value": served,
                     **_lineage(d),
-                    "serve_note": _note(d),
+                    "serve_note": "; ".join(
+                        filter(
+                            None, [_note(d), flip_note(ref_value) if flipped else None]
+                        )
+                    )
+                    or None,
                     "_scaled": any(_scaled(r) for r, _ in d),
                     "_filing_id": ref.filing_id,
                     "_accession": ref.accession,
@@ -1413,7 +1458,43 @@ def build_cells(
                             },
                         )
     cells = _opex_tie(cells, concept_info, dcml, stats, tie_prints)
-    cells = _sga_inside_tied_opex(cells, concept_info, stats, tie_prints, dcml, arcs)
+    # operating-expense face lines as printed in EACH filing (any filing, not only the one the opex cell was built
+    # from): the sum of the filing's own opex component prints, so a sga sum read from another filing is judged
+    # against ITS filing's face (MSFT FY2015/FY2017: opex was built from a later restating filing)
+    opex_sums: dict[tuple[int, str], dict] = {}
+    seen_parts: set[tuple[int, str, str | None, str | None]] = set()
+    for row in rows:
+        if (
+            row.decision != "component"
+            or row.parent_concept_id is None
+            or _base(concept_info.get(row.parent_concept_id, ("",))[0])
+            != "operating_expenses"
+        ):
+            continue
+        for vs in (vintages, fsn_vintages):
+            for pid, prints in vs.get((row.taxonomy, row.tag), {}).items():
+                for f in prints:
+                    pk = (pid, f.accession, row.taxonomy, row.tag)
+                    if (
+                        f.ambiguous
+                        or not (_in_era(row, f.end) or _filing_in_era(row, f))
+                        or pk in seen_parts
+                    ):
+                        continue
+                    seen_parts.add(pk)
+                    acc_sum = opex_sums.setdefault(
+                        (pid, f.accession),
+                        {
+                            "value": Decimal(0),
+                            "_accession": f.accession,
+                            "_dcml_keys": [],
+                        },
+                    )
+                    acc_sum["value"] += f.value * _mult(row)
+                    acc_sum["_dcml_keys"].append((f.accession, row.tag, f.end))
+    cells = _sga_inside_tied_opex(
+        cells, concept_info, stats, tie_prints, dcml, arcs, opex_sums
+    )
     cells = _scale_sanity(cells, concept_info, periods, stats)
     cells = _proof_guard(cells, concept_info, periods, stats, proof_disagree or {})
     value_keys = {(c["canonical_concept_id"], c["period_id"]) for c in cells}

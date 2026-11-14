@@ -33,6 +33,7 @@ from decimal import Decimal
 from typing import Any
 
 from scrooner_pipeline.common import instance_facts
+from scrooner_pipeline.common.polarity import apply_polarity
 from scrooner_pipeline.common.tag_aliases import with_aliases
 from scrooner_pipeline.proof.dims import find_value_dim, split_part
 from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
@@ -44,7 +45,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v14_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v15_2026-11-14"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",
@@ -756,14 +757,19 @@ def _finish(
     sign: int,
     label: str,
     tol_override: Decimal | None = None,
+    single_element: bool = True,
 ) -> Proof:
-    """unit_scale + value comparison -> verdict (shared by every proof path)."""
+    """unit_scale + value comparison -> verdict (shared by every proof path). single_element: one printed fact
+    (not a component sum): the concept's fixed polarity applies (common/polarity.py, the table the serve path
+    uses); a component sum keeps its computed sign."""
     tol = (
         tol_override
         if tol_override is not None
         else slack_for(cls, dcml, shown.presentation_scale)
     )
     expect = sign * printed
+    if single_element:
+        expect, _flipped = apply_polarity(shown.data_point_name, expect)
     p.position_value = expect
     mag_ok = (
         shown.value == 0
@@ -994,6 +1000,7 @@ def prove_component(shown: Shown, structure: FilingStructure, p: Proof) -> Proof
         claim.sign,
         "the sum of " + ",".join(t for _s, t in claim.parts),
         tol_override=part_tol,
+        single_element=False,
     )
 
 
@@ -1117,7 +1124,7 @@ def prove_cell(
             p.verdict, p.reason_code = NOT_PRESENTED, "no_value_for_this_column"
             p.reason_text = f"{line.tag} is presented but carries no value for the column ending {shown.period_end}"
         return p
-    p.position_value = sign * nv.value
+    p.position_value = apply_polarity(shown.data_point_name, sign * nv.value)[0]
     face, why_face = on_statement_face(structure, stmt, nv)
     p.checks["statement_face"] = {"status": "pass" if face else "fail", "why": why_face}
     if not face:
@@ -1262,7 +1269,7 @@ def prove_derived(
             if not on:
                 p.reason_text = f"derivation input {line.tag} {nv.value} ({src.adsh}) is not printed on the face: {why_on}"
                 return p
-    q = sign * (ytd_n.value - ytd_prev.value)
+    q = apply_polarity(shown.data_point_name, sign * (ytd_n.value - ytd_prev.value))[0]
     tol = slack(ytd_n.dcml, shown.presentation_scale)
     p.position_value = q
     p.checks["period_length"] = {
