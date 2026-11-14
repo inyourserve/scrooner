@@ -2,7 +2,7 @@
 Core statement roles: resolve.py (tree positions); total_debt: total_debt.py; every other data point: rules/roles.csv
 (position = statement + calc parent; the element family only ranks candidates; label demotes, a custom line is accepted
 only when its own label names the role). Output: one row per filing x data point with value or reason."""
-import csv, json, re, sys, collections
+import csv, json, os, re, sys, collections
 from decimal import Decimal as D
 sys.path.insert(0, '.')
 from resolve import parse, face, children, resolve, DPS as CORE_DPS
