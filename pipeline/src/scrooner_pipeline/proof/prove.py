@@ -45,7 +45,7 @@ RULE_ID = "proof.cell_proof@1"
 # v3: component sums judged as sums, face-column-eligible vintages, fsn_xbrl lineage read by shown.py. The
 # guard test tests/unit/test_detector_version_pin.py fails when a verdict-relevant source changes without this
 # string changing.
-DETECTOR_VERSION = "cell_proof_v15_2026-11-14"
+DETECTOR_VERSION = "cell_proof_v16_2026-11-14"
 PROVEN, DISAGREE, NOT_PRESENTED, UNCHECKED = (
     "PROVEN",
     "DISAGREE",

@@ -32,8 +32,8 @@ VERDICT_SOURCES = (
     "common/polarity.py",
 )
 
-PINNED_VERSION = "cell_proof_v15_2026-11-14"
-PINNED_HASH = "051c850dacffc76eb50e27498c40a8e4a2483df207d7547188d381caa30bc631"
+PINNED_VERSION = "cell_proof_v16_2026-11-14"
+PINNED_HASH = "0c658cd70250c8e53952c4a6cc88ac872e025c53746d7fc62745281a96b112ee"
 
 
 def source_hash() -> str:

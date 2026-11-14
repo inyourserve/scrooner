@@ -383,3 +383,34 @@ def test_node_tie_within_the_filers_dcml_rounding():
         100 * M + 1, 0
     )  # a filer printing to the unit gets no slack beyond half a unit
     assert c == {"node_mismatch": 1}
+
+
+def test_component_sum_cell_is_no_single_node():
+    # opex = parts; the shown tags carry one part only, whose node is far below the sum
+    def run(kind):
+        ps = [mk("revenue_resolved", 100 * M, tags=("Revenues",))]
+        ps[0].checks["claim"] = {"kind": kind}
+        st = node_filing(10 * M, -6)
+        return apply_identities(ps, structures=st), ps
+
+    c, ps = run("concept")
+    assert c == {"node_mismatch": 1} and verdicts(ps) == [DISAGREE]
+    c, ps = run("component")
+    assert c == {} and verdicts(ps) == [PROVEN]
+
+
+def test_node_is_the_claimed_tag_not_a_source_record_tag():
+    # AMD cost of revenue: claimed on the node (100), the source records name another tag (a part)
+    def run(claim_tags):
+        ps = [mk("revenue_resolved", 100 * M, tags=("SomePartTag",))]
+        ps[0].checks["claim"] = {"kind": "concept", "tags": claim_tags}
+        st = node_filing(100 * M, -6)
+        st["acc"].num[("SomePartTag", FY[2], 4)].append(
+            NumValue("SomePartTag", "us-gaap/2017", FY[2], 4, "USD", Decimal(10 * M), -6)
+        )
+        return apply_identities(ps, structures=st), ps
+
+    c, ps = run(["Revenues"])
+    assert c == {} and verdicts(ps) == [PROVEN]
+    c, ps = run(["Revenues", "Other"])  # two claimed tags: no single node
+    assert c == {} and verdicts(ps) == [PROVEN]

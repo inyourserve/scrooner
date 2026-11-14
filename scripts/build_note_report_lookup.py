@@ -1,10 +1,13 @@
 """Build data-team/47-fsn-store/note_report_lookup.csv from the coverage export + the local SEC FSN quarter cache.
 
-usage: build_note_report_lookup.py <top100-coverage.csv> <fsn cache dir> [out.csv]
-Wanted pairs = rows of locator_source note_fact_report_not_stored (accession, each tag). Existing lookup rows are kept.
+usage: build_note_report_lookup.py <top100-coverage.csv or glob of several> <fsn cache dir> [out.csv] [--edgar]
+Wanted pairs = rows of locator_source note_fact_report_not_stored (accession, each tag), plus every `parts` entry
+(tag=value@accession#page) that has no page. Existing lookup rows are kept.
 """
 
 import csv
+import glob
+import re
 import sys
 from pathlib import Path
 
@@ -12,13 +15,26 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline" / "src")
 from scrooner_pipeline.mapper import note_report_lookup as nl
 
 
-def main(cov: Path, cache: Path, out: Path) -> int:
-    wanted = set()
-    for r in csv.DictReader(cov.open(newline="")):
-        if r["locator_source"] == "note_fact_report_not_stored" and r["accession"]:
-            for t in r["tag"].split(","):
-                if t.strip():
-                    wanted.add((r["accession"], t.strip()))
+PART = re.compile(r"([^=;]+)=[^@;]*@([^#;]+)#([^;]*)$")
+
+
+def wanted_pairs(covs: list[Path]) -> set[tuple[str, str]]:
+    wanted: set[tuple[str, str]] = set()
+    for cov in covs:
+        for r in csv.DictReader(cov.open(newline="")):
+            if r["locator_source"] == "note_fact_report_not_stored" and r["accession"]:
+                for t in r["tag"].split(","):
+                    if t.strip():
+                        wanted.add((r["accession"], t.strip()))
+            for part in (r.get("parts") or "").split(";"):
+                m = PART.match(part.strip())
+                if m and not m.group(3):  # a part with no R page
+                    wanted.add((m.group(2), m.group(1)))
+    return wanted
+
+
+def main(covs: list[Path], cache: Path, out: Path) -> int:
+    wanted = wanted_pairs(covs)
     have = nl.load_lookup(out) if out.exists() else {}
     old = list(csv.DictReader(out.open(newline=""))) if out.exists() else []
     rows, missing = nl.build_rows(cache, {k for k in wanted if k not in have})
@@ -70,4 +86,5 @@ if __name__ == "__main__":
         if len(sys.argv) > 3 and not sys.argv[3].startswith("--")
         else nl.DEFAULT_PATH
     )
-    sys.exit(main(Path(sys.argv[1]), Path(sys.argv[2]), out))
+    covs = [Path(x) for x in sorted(glob.glob(sys.argv[1]))]
+    sys.exit(main(covs, Path(sys.argv[2]), out))

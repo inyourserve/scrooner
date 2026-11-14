@@ -246,10 +246,19 @@ def _unit(nv: Any) -> Decimal:
 def node_mismatch(
     st: FilingStructure, dp: str, p: Proof, ddate: date, qtrs: int
 ) -> dict[str, Any] | None:
-    """A served single-tag member whose value is not its node (tag, column) in the statement filing."""
-    if len(p.shown.tags) != 1:
+    """A served single-tag member whose value is not its node (tag, column) in the statement filing.
+    The node is the cell's CLAIMED tag (the proof's claim, set from the mapping), not a tag of the source
+    records: a resolver-served cell has source records of only some of its parts (MSFT/TXN opex = R&D + SG&A +
+    restructuring listed as one part's tag; AMD cost of revenue claimed on CostOfGoodsAndServicesSold, source
+    tag AmortizationOfAcquisitionRelatedIntangibles). A component-sum claim is no single node."""
+    claim = p.checks.get("claim") or {}
+    if claim.get("kind") == "component":
         return None
-    nv = st.value(p.shown.tags[0], ddate, qtrs)
+    tags = tuple(claim.get("tags") or ()) or p.shown.tags
+    if len(tags) != 1:
+        return None
+    tag = tags[0]
+    nv = st.value(tag, ddate, qtrs)
     if nv is None:
         return None
     tol = Decimal("0.5") * _unit(nv)
@@ -260,7 +269,7 @@ def node_mismatch(
         "name": "node_mismatch",
         "source": "filing_check",
         "members": {dp: str(p.shown.value)},
-        "tag": p.shown.tags[0],
+        "tag": tag,
         "accession": st.adsh,
         "lhs": str(p.shown.value),
         "rhs": str(nv.value),
