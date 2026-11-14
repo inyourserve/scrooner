@@ -310,7 +310,7 @@ def parse_docmap(
     return rows, rejects
 
 
-FIX_FILE_RE = re.compile(r"(.+)-fixes-(\d{4}-\d{2}-\d{2})\.csv$")
+FIX_FILE_RE = re.compile(r"(.+?)-fixes-(?:v\d+-)?(\d{4}-\d{2}-\d{2})\.csv$")
 DEFAULT_FIXES_DIR = Path("data-team/companies/reads/fixes")
 
 
