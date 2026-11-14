@@ -34,8 +34,14 @@ def claim(**kw):
 
 
 def stub(monkeypatch, facts):
-    monkeypatch.setattr(rg, "concept_tags", lambda conn, names: {"comprehensive_income": {CI, NCI}})
-    monkeypatch.setattr(rg, "read_facts", lambda conn, cid, pairs: {k: v for k, v in facts.items() if k in pairs})
+    monkeypatch.setattr(
+        rg, "concept_tags", lambda conn, names: {"comprehensive_income": {CI, NCI}}
+    )
+    monkeypatch.setattr(
+        rg,
+        "read_facts",
+        lambda conn, cid, pairs: {k: v for k, v in facts.items() if k in pairs},
+    )
     monkeypatch.setattr(rg, "read_pages", lambda conn, pairs: {(ACC, CI): 5})
 
 
@@ -50,11 +56,18 @@ def test_loader_refuses_the_combined_claim_when_the_parent_tag_is_stored(monkeyp
 def test_loader_keeps_the_reason_when_nothing_is_stored(monkeypatch):
     c = claim()
     stub(monkeypatch, {(ACC, NCI): [rg.Fact(END, 4, False, "", D("7043000000"))]})
-    assert sl.reason_evidence(None, 1, "0001413329", [c], [c], {"comprehensive_income"}) == {}
+    assert (
+        sl.reason_evidence(None, 1, "0001413329", [c], [c], {"comprehensive_income"})
+        == {}
+    )
 
 
 def test_own_value_claim_tags_join_the_concept_tags(monkeypatch):
-    c = claim(data_point="amortization_of_intangibles", decision="not_presented", path="no line")
+    c = claim(
+        data_point="amortization_of_intangibles",
+        decision="not_presented",
+        path="no line",
+    )
     v = claim(
         data_point="amortization_of_intangibles",
         decision="mapped",
@@ -63,9 +76,13 @@ def test_own_value_claim_tags_join_the_concept_tags(monkeypatch):
     )
     monkeypatch.setattr(rg, "concept_tags", lambda conn, names: {})
     seen = {}
-    monkeypatch.setattr(rg, "read_facts", lambda conn, cid, pairs: seen.setdefault("p", pairs) and {})
+    monkeypatch.setattr(
+        rg, "read_facts", lambda conn, cid, pairs: seen.setdefault("p", pairs) and {}
+    )
     monkeypatch.setattr(rg, "read_pages", lambda conn, pairs: {})
-    sl.reason_evidence(None, 1, "0001413329", [c], [c, v], {"amortization_of_intangibles"})
+    sl.reason_evidence(
+        None, 1, "0001413329", [c], [c, v], {"amortization_of_intangibles"}
+    )
     assert seen["p"] == {(ACC, "AmortizationOfIntangibleAssets")}
 
 
@@ -80,17 +97,23 @@ def test_serving_side_drops_the_refuted_map_reason(monkeypatch):
         reason=f"combined line: {NCI}",
         evidence_plabel="Total comprehensive earnings",
     )
-    monkeypatch.setattr(rg, "concept_tags", lambda conn, names: {"comprehensive_income": {CI, NCI}})
+    monkeypatch.setattr(
+        rg, "concept_tags", lambda conn, names: {"comprehensive_income": {CI, NCI}}
+    )
     monkeypatch.setattr(
         rg,
         "read_facts",
-        lambda conn, cid, pairs: {(ACC, CI): [rg.Fact(END, 4, False, "", D("6810000000"))]},
+        lambda conn, cid, pairs: {
+            (ACC, CI): [rg.Fact(END, 4, False, "", D("6810000000"))]
+        },
     )
     monkeypatch.setattr(sd, "enabled", lambda: False)
     periods = {11: (date(2016, 1, 1), END, "duration")}
     info = {7: ("comprehensive_income", "income_statement")}
     out = sd.refuted_map_reasons(None, 1, "0001413329", [row], periods, info)
-    assert [(x["canonical_concept_id"], x["period_id"], x["tag"]) for x in out] == [(7, 11, CI)]
+    assert [(x["canonical_concept_id"], x["period_id"], x["tag"]) for x in out] == [
+        (7, 11, CI)
+    ]
     # no evidence stored: the reason is kept
     monkeypatch.setattr(rg, "read_facts", lambda conn, cid, pairs: {})
     assert sd.refuted_map_reasons(None, 1, "0001413329", [row], periods, info) == []

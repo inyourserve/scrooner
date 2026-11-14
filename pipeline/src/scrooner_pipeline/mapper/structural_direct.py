@@ -783,9 +783,7 @@ def apply_direct(
         for h in stats.get("held", [])
         if (h["canonical_concept_id"], h["period_id"]) not in keys
     ]
-    gone = keys | {
-        (x["canonical_concept_id"], x["period_id"]) for x in (refuted or [])
-    }
+    gone = keys | {(x["canonical_concept_id"], x["period_id"]) for x in (refuted or [])}
     stats["blanks"] = [
         b
         for b in stats.get("blanks", [])

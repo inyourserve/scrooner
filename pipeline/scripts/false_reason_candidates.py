@@ -34,9 +34,9 @@ def sweep(conn, resolver: Path) -> list[dict]:
     ver = {}
     with resolver.open(newline="") as fh:
         for r in csv.DictReader(fh):
-            ver[(r["ticker"].upper(), r["data_point"], r["period_end"], r["decision"])] = r.get(
-                "resolver_version", ""
-            )
+            ver[
+                (r["ticker"].upper(), r["data_point"], r["period_end"], r["decision"])
+            ] = r.get("resolver_version", "")
     with conn.cursor() as cur:
         cur.execute("select name from analytics.canonical_concept")
         names = {n for (n,) in cur.fetchall()}
@@ -71,13 +71,28 @@ def sweep(conn, resolver: Path) -> list[dict]:
                         if not e["member"]
                         else f"{e['value']} ({e['members']})",
                         "evidence R page": f"R{page}.htm" if page else "",
-                        "evidence_kind": "member_sum" if e["member"] else "undimensioned",
+                        "evidence_kind": "member_sum"
+                        if e["member"]
+                        else "undimensioned",
                         "resolver_version": ver.get(
-                            (c.ticker, c.data_point, c.period_end.isoformat(), c.decision), ""
+                            (
+                                c.ticker,
+                                c.data_point,
+                                c.period_end.isoformat(),
+                                c.decision,
+                            ),
+                            "",
                         ),
                     }
                 )
-    out.sort(key=lambda r: (r["ticker"], r["data_point"], r["fiscal_year"], r["evidence_tag"]))
+    out.sort(
+        key=lambda r: (
+            r["ticker"],
+            r["data_point"],
+            r["fiscal_year"],
+            r["evidence_tag"],
+        )
+    )
     return out
 
 

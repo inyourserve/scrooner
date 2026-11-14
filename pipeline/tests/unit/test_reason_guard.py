@@ -7,7 +7,9 @@ from scrooner_pipeline.mapper import reason_guard as rg
 
 END = date(2016, 12, 31)
 CI = "ComprehensiveIncomeNetOfTax"
-CI_NCI = "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest"
+CI_NCI = (
+    "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest"
+)
 AM = "AmortizationOfIntangibleAssets"
 
 
@@ -30,14 +32,23 @@ def test_combined_reason_refuted_by_parent_tag_not_by_the_tag_it_names():
     ev = rg.evidence_for(rg.COMBINED, END, False, {CI, CI_NCI}, text, facts)
     assert [e["tag"] for e in ev] == [CI] and ev[0]["value"] == D("6810000000")
     # only the named tag is stored: the reason stands
-    assert rg.evidence_for(rg.COMBINED, END, False, {CI, CI_NCI}, text, {CI_NCI: facts[CI_NCI]}) == []
+    assert (
+        rg.evidence_for(
+            rg.COMBINED, END, False, {CI, CI_NCI}, text, {CI_NCI: facts[CI_NCI]}
+        )
+        == []
+    )
 
 
 def test_member_rows_refute_not_presented_only():
     facts = {
         AM: [
             f("58000000", dim=True, seg="IncomeStatementLocation=CostOfSales;"),
-            f("101000000", dim=True, seg="IncomeStatementLocation=MarketingAdministrationAndResearchCosts;"),
+            f(
+                "101000000",
+                dim=True,
+                seg="IncomeStatementLocation=MarketingAdministrationAndResearchCosts;",
+            ),
         ]
     }
     ev = rg.evidence_for(rg.NOT_PRESENTED, END, False, {AM}, "", facts)

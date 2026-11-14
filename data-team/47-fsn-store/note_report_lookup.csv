@@ -274,36 +274,52 @@ accession,tag,report,n_reports,line,plabel
 0000019617-25-000270,CommonStockSharesOutstanding,198,1,9,Total outstanding - balance at December 31 (in shares)
 0000019617-25-000270,Goodwill,175,2,12,Total goodwill
 0000019617-25-000270,ShareBasedCompensation,126,1,4,Total noncash compensation expense related to employee share-based incentive plans
+0000021344-16-000050,AccountsPayableTradeCurrent,70,1,,
+0000021344-16-000050,AmortizationOfIntangibleAssets,68,1,,
 0000021344-16-000050,IncomeTaxesPaid,81,1,4,Income tax payments
 0000021344-16-000050,IncreaseDecreaseInAccountsReceivable,93,1,2,(Increase) decrease in trade accounts receivable
 0000021344-16-000050,IncreaseDecreaseInInventories,93,1,3,(Increase) decrease in inventories
 0000021344-16-000050,InterestPaid,72,1,72,Total interest paid
+0000021344-17-000009,AccountsPayableTradeCurrent,70,1,,
+0000021344-17-000009,AmortizationOfIntangibleAssets,68,1,,
 0000021344-17-000009,IncomeTaxesPaid,81,1,4,Income tax payments
 0000021344-17-000009,IncreaseDecreaseInAccountsReceivable,93,1,2,(Increase) decrease in trade accounts receivable
 0000021344-17-000009,IncreaseDecreaseInInventories,93,1,3,(Increase) decrease in inventories
 0000021344-17-000009,InterestPaid,72,1,69,Total interest paid
+0000021344-18-000008,AmortizationOfIntangibleAssets,68,1,,
 0000021344-19-000014,AccountsPayableTradeCurrent,73,1,,
+0000021344-19-000014,AmortizationOfIntangibleAssets,71,1,,
 0000021344-20-000006,AccountsPayableTradeCurrent,71,1,,
+0000021344-20-000006,AmortizationOfIntangibleAssets,69,1,,
 0000021344-20-000006,IncomeTaxesPaid,83,1,40,Income tax payments
 0000021344-20-000006,IncreaseDecreaseInAccountsReceivable,95,1,2,(Increase) decrease in trade accounts receivable
 0000021344-20-000006,IncreaseDecreaseInInventories,95,1,3,(Increase) decrease in inventories
 0000021344-20-000006,InterestPaid,74,1,67,Total interest paid
+0000021344-21-000008,AccountsPayableTradeCurrent,62,1,,
+0000021344-21-000008,AmortizationOfIntangibleAssets,60,1,,
 0000021344-21-000008,IncomeTaxesPaid,74,1,35,Income tax payments
 0000021344-21-000008,IncreaseDecreaseInAccountsReceivable,86,1,2,(Increase) decrease in trade accounts receivable
 0000021344-21-000008,IncreaseDecreaseInInventories,86,1,3,(Increase) decrease in inventories
 0000021344-21-000008,InterestPaid,65,1,39,Total interest paid
+0000021344-22-000009,AccountsPayableTradeCurrent,57,1,,
+0000021344-22-000009,AmortizationOfIntangibleAssets,56,1,,
 0000021344-22-000009,IncomeTaxesPaid,67,1,46,Income tax payments
 0000021344-22-000009,IncreaseDecreaseInAccountsReceivable,79,1,1,(Increase) decrease in trade accounts receivable
 0000021344-22-000009,IncreaseDecreaseInInventories,79,1,2,(Increase) decrease in inventories
 0000021344-22-000009,InterestPaid,60,1,42,Total interest paid
+0000021344-23-000011,AccountsPayableTradeCurrent,77,1,,
+0000021344-23-000011,AmortizationOfIntangibleAssets,76,1,,
 0000021344-23-000011,IncomeTaxesPaid,111,1,5,Income tax payments
 0000021344-23-000011,IncreaseDecreaseInAccountsReceivable,130,1,1,(Increase) decrease in trade accounts receivable
 0000021344-23-000011,IncreaseDecreaseInInventories,130,1,2,(Increase) decrease in inventories
 0000021344-23-000011,InterestPaid,85,1,36,Total interest paid
+0000021344-24-000009,AccountsPayableTradeCurrent,80,1,,
+0000021344-24-000009,AmortizationOfIntangibleAssets,79,1,,
 0000021344-24-000009,IncomeTaxesPaid,115,1,5,Income tax payments
 0000021344-24-000009,IncreaseDecreaseInAccountsReceivable,135,1,1,(Increase) decrease in trade accounts receivable
 0000021344-24-000009,IncreaseDecreaseInInventories,135,1,2,(Increase) decrease in inventories
 0000021344-24-000009,InterestPaid,89,1,19,Total interest paid
+0000021344-25-000011,AccountsPayableTradeCurrent,79,1,,
 0000021344-25-000011,IncreaseDecreaseInAccountsReceivable,130,1,1,(Increase) decrease in trade accounts receivable
 0000021344-25-000011,IncreaseDecreaseInInventories,130,1,2,Increase (Decrease) in Inventories
 0000021344-25-000011,InterestPaid,88,1,6,Total interest paid
@@ -372,6 +388,7 @@ accession,tag,report,n_reports,line,plabel
 0000059478-16-000321,IncomeTaxesPaid,67,1,24,Income Taxes Paid
 0000059478-16-000321,InterestExpense,55,2,39,Interest Expense
 0000059478-16-000321,InterestPaidNet,62,1,44,"Interest Paid, Net"
+0000059478-16-000321,InvestmentIncomeInterest,75,1,,
 0000059478-17-000098,InterestExpense,55,2,41,Interest Expense
 0000059478-17-000098,InterestPaidNet,62,1,50,"Interest Paid, Net"
 0000059478-18-000089,InterestExpense,90,1,1,Interest Expense
@@ -394,14 +411,18 @@ accession,tag,report,n_reports,line,plabel
 0000059478-22-000068,IncomeTaxesPaid,92,1,1,Cash payments of income taxes
 0000059478-22-000068,InterestExpense,107,1,1,Interest expense
 0000059478-22-000068,InterestPaidNet,84,1,1,Cash payments for interest on borrowings
+0000059478-22-000068,InvestmentIncomeInterest,107,1,,
 0000059478-23-000082,AmortizationOfIntangibleAssets,70,1,1,Amortization expense
 0000059478-23-000082,IncomeTaxesPaid,91,1,1,Cash payments of income taxes
 0000059478-23-000082,InterestExpense,105,1,1,Interest expense
 0000059478-23-000082,InterestPaidNet,83,1,1,Cash payments for interest on borrowings
+0000059478-23-000082,InvestmentIncomeInterest,105,1,,
 0000059478-24-000065,IncomeTaxesPaid,92,1,1,Cash payments of income taxes
+0000059478-24-000065,InvestmentIncomeInterest,105,1,,
 0000059478-25-000067,AmortizationOfIntangibleAssets,72,1,1,Amortization expense
 0000059478-25-000067,InterestExpenseNonoperating,105,2,1,Interest expense
 0000059478-25-000067,InterestPaidNet,85,1,1,Cash payments for interest on borrowings
+0000059478-25-000067,InvestmentIncomeInterest,105,1,,
 0000059478-26-000013,AmortizationOfIntangibleAssets,65,1,1,Amortization expense
 0000059478-26-000013,IncomeTaxesPaidNet,83,1,7,Cash payments of income taxes
 0000059478-26-000013,InterestExpenseNonoperating,75,1,1,Interest expense on borrowings
@@ -485,8 +506,10 @@ accession,tag,report,n_reports,line,plabel
 0000077476-16-000066,IncomeTaxesPaidNet,86,1,3,"Income taxes paid, net of refunds"
 0000077476-16-000066,InterestPaidNet,86,1,2,Interest paid
 0000077476-16-000066,ResearchAndDevelopmentExpense,42,1,,
+0000077476-17-000010,AccountsPayableCurrent,83,1,,
 0000077476-17-000010,IncomeTaxesPaidNet,84,1,4,"Income taxes paid, net of refunds"
 0000077476-17-000010,InterestPaidNet,84,1,3,Interest paid
+0000077476-17-000010,ResearchAndDevelopmentExpense,42,1,,
 0000077476-18-000012,AccountsPayableCurrent,83,1,,
 0000077476-18-000012,AmortizationOfIntangibleAssets,39,2,13,Amortization of Intangible Assets
 0000077476-18-000012,IncomeTaxesPaidNet,83,2,31,"Income Taxes Paid, Net"
@@ -497,28 +520,42 @@ accession,tag,report,n_reports,line,plabel
 0000077476-19-000017,IncomeTaxesPaidNet,85,1,4,"Income taxes paid, net of refunds"
 0000077476-19-000017,InterestPaidNet,85,1,3,Interest paid
 0000077476-19-000017,ResearchAndDevelopmentExpense,46,1,,
+0000077476-20-000015,AccountsPayableCurrent,93,1,,
 0000077476-20-000015,AmortizationOfIntangibleAssets,51,2,16,Amortization of Intangible Assets
 0000077476-20-000015,IncomeTaxesPaidNet,94,1,6,"Income taxes paid, net of refunds"
 0000077476-20-000015,InterestPaidNet,94,1,5,Interest paid
+0000077476-20-000015,ResearchAndDevelopmentExpense,54,1,,
+0000077476-21-000007,AccountsPayableCurrent,90,1,,
 0000077476-21-000007,AmortizationOfIntangibleAssets,48,2,16,Amortization of Intangible Assets
 0000077476-21-000007,IncomeTaxesPaidNet,91,1,5,"Income taxes paid, net of refunds"
 0000077476-21-000007,InterestPaidNet,91,1,4,Interest paid
+0000077476-21-000007,ResearchAndDevelopmentExpense,51,1,,
+0000077476-22-000010,AccountsPayableCurrent,89,1,,
 0000077476-22-000010,AmortizationOfIntangibleAssets,50,2,16,Amortization of Intangible Assets
 0000077476-22-000010,ImpairmentOfIntangibleAssetsExcludingGoodwill,60,1,,
 0000077476-22-000010,IncomeTaxesPaidNet,90,1,2,"Income taxes paid, net of refunds"
 0000077476-22-000010,InterestPaidNet,90,1,1,Interest paid
+0000077476-22-000010,ResearchAndDevelopmentExpense,53,1,,
+0000077476-23-000007,AccountsPayableCurrent,93,1,,
 0000077476-23-000007,AmortizationOfIntangibleAssets,52,2,16,Amortization of Intangible Assets
 0000077476-23-000007,IncomeTaxesPaidNet,94,1,2,"Income taxes paid, net of refunds"
 0000077476-23-000007,InterestPaidNet,94,1,1,Interest paid
+0000077476-23-000007,ResearchAndDevelopmentExpense,55,1,,
+0000077476-24-000008,AccountsPayableCurrent,101,1,,
 0000077476-24-000008,AmortizationOfIntangibleAssets,56,2,16,Amortization of Intangible Assets
 0000077476-24-000008,IncomeTaxesPaidNet,102,1,2,"Income taxes paid, net of refunds"
 0000077476-24-000008,InterestPaidNet,102,1,1,Interest paid
+0000077476-24-000008,ResearchAndDevelopmentExpense,59,1,,
+0000077476-25-000007,AccountsPayableCurrent,110,1,,
 0000077476-25-000007,AmortizationOfIntangibleAssets,60,2,16,Amortization of Intangible Assets
 0000077476-25-000007,IncomeTaxesPaidNet,111,1,2,"Income taxes paid, net of refunds"
 0000077476-25-000007,InterestPaidNet,111,1,1,Interest paid
+0000077476-25-000007,ResearchAndDevelopmentExpense,63,1,,
+0000077476-26-000007,AccountsPayableCurrent,109,1,,
 0000077476-26-000007,AmortizationOfIntangibleAssets,66,1,27,Amortization of intangible assets
 0000077476-26-000007,IncomeTaxesPaidNet,71,2,14,"Income taxes paid, net of refunds"
 0000077476-26-000007,InterestPaidNet,110,1,1,Interest paid
+0000077476-26-000007,ResearchAndDevelopmentExpense,58,1,,
 0000078003-16-000077,InterestExpense,60,1,2,Interest expense
 0000078003-16-000077,InvestmentIncomeInterest,60,1,1,Interest income
 0000078003-17-000014,InterestExpense,60,1,2,Interest expense
@@ -596,9 +633,12 @@ accession,tag,report,n_reports,line,plabel
 0000080661-22-000046,IncomeTaxesPaid,49,2,6,Income taxes
 0000080661-22-000046,InterestPaidNet,57,1,2,Interest
 0000080661-23-000006,IncomeTaxesPaid,47,2,6,Income taxes
+0000080661-24-000007,Goodwill,58,1,,
 0000080661-24-000007,IncomeTaxesPaid,48,2,6,Income taxes
 0000080661-24-000007,InterestPaidNet,56,1,2,Interest
+0000080661-25-000007,Goodwill,61,1,,
 0000080661-25-000007,InterestPaidNet,59,1,2,Interest
+0000080661-26-000086,AllocatedShareBasedCompensationExpense,59,1,,
 0000080661-26-000086,IncomeTaxesPaidNet,57,2,1,Income taxes
 0000080661-26-000086,InterestPaidNet,57,1,2,Interest
 0000093410-16-000049,IncomeTaxesPaid,62,1,9,Income taxes
@@ -714,19 +754,27 @@ accession,tag,report,n_reports,line,plabel
 0000097745-25-000010,InterestPaidNet,74,1,1,Interest
 0000097745-26-000018,IncomeTaxesPaidNet,77,1,14,"Total income taxes, net of refunds received"
 0000097745-26-000018,InterestPaidNet,77,1,10,Interest
+0000100885-16-000260,AccountsPayableCurrent,86,1,,
 0000100885-16-000260,InvestmentIncomeInterest,75,1,3,Interest Income
 0000100885-16-000260,ShareBasedCompensation,51,1,4,"Total stock-based compensation, before tax"
+0000100885-17-000056,AccountsPayableCurrent,86,1,,
 0000100885-17-000056,InvestmentIncomeInterest,75,1,3,Interest income
 0000100885-17-000056,ShareBasedCompensation,52,1,4,"Total stock-based compensation, before tax"
+0000100885-18-000048,AccountsPayableCurrent,88,1,,
 0000100885-18-000048,InvestmentIncomeInterest,77,1,3,Interest income
 0000100885-18-000048,ShareBasedCompensation,54,1,4,"Total stock-based compensation, before tax"
+0000100885-19-000060,AccountsPayableCurrent,91,1,,
 0000100885-19-000060,InvestmentIncomeInterest,80,1,4,Interest income
 0000100885-19-000060,ShareBasedCompensation,57,1,4,"Total stock-based compensation, before tax"
+0000100885-20-000065,AccountsPayableCurrent,89,1,,
 0000100885-20-000065,InvestmentIncomeInterest,78,1,3,Interest income
 0000100885-20-000065,ShareBasedCompensation,56,1,4,"Total stock-based compensation, before tax"
+0000100885-21-000068,AccountsPayableCurrent,84,1,,
 0000100885-21-000068,InvestmentIncomeInterest,73,1,4,Interest income
 0000100885-21-000068,ShareBasedCompensation,53,1,4,"Total stock-based compensation, before tax"
+0000100885-25-000042,AccountsPayableCurrent,83,1,,
 0000100885-25-000042,AllocatedShareBasedCompensationExpense,54,1,9,"Total stock-based compensation, before tax"
+0000100885-26-000037,AccountsPayableCurrent,84,1,,
 0000100885-26-000037,AllocatedShareBasedCompensationExpense,55,1,9,"Total stock-based compensation, before tax"
 0000100885-26-000037,InterestIncomeOther,72,1,7,Interest income
 0000101829-16-000050,AmortizationOfIntangibleAssets,62,1,6,Amortization of Intangible Assets
@@ -759,13 +807,19 @@ accession,tag,report,n_reports,line,plabel
 0000106040-25-000038,LongTermDebt,68,2,17,Net carrying value
 0000109198-20-000004,CommonStockDividendsPerShareDeclared,62,1,11,"Common Stock, Dividends, Per Share, Declared"
 0000109198-20-000004,IncomeTaxesPaid,103,1,2,Cash paid for: income taxes
+0000109198-20-000004,InterestExpense,47,1,,
+0000109198-20-000004,InterestPaidNet,103,1,,
 0000109198-20-000004,InvestmentIncomeInterest,47,1,3,Interest (income)
 0000109198-21-000006,CommonStockDividendsPerShareDeclared,56,2,26,Cash dividends declared per share (in dollars per share)
 0000109198-22-000008,CommonStockDividendsPerShareDeclared,61,1,11,Cash dividends declared per share (in dollars per share)
 0000109198-22-000008,IncomeTaxesPaid,100,1,2,Cash paid for: income taxes
+0000109198-22-000008,InterestExpense,47,1,,
+0000109198-22-000008,InterestPaidNet,100,1,,
 0000109198-22-000008,InvestmentIncomeInterest,47,1,3,Interest (income)
 0000109198-23-000004,CommonStockDividendsPerShareDeclared,60,1,11,Cash dividends declared per share (in dollars per share)
 0000109198-23-000004,IncomeTaxesPaid,99,1,2,Cash paid for: income taxes
+0000109198-23-000004,InterestExpense,47,1,,
+0000109198-23-000004,InterestPaidNet,99,1,,
 0000109198-23-000004,InvestmentIncomeInterest,47,1,3,Interest (income)
 0000109198-24-000014,CommonStockDividendsPerShareDeclared,63,1,11,Cash dividends declared per share (in dollars per share)
 0000109198-25-000010,CommonStockDividendsPerShareDeclared,65,1,11,Cash dividends declared per share (in dollars per share)

@@ -23,12 +23,40 @@ def test_reason_with_note_statement_cites_the_filings_income_statement():
         )
 
 
+def test_reason_whose_main_statement_is_not_a_report_of_the_filing_cites_its_income_statement():
+    """META dividends_per_share (stmt EQ, no EQ report in the filing): the IS shows the absence."""
+    from scrooner_pipeline.mapper.top100_coverage import (
+        LocatorIndex,
+        statement_page_fallback,
+    )
+
+    A = "0001326801-16-000043"
+    i = LocatorIndex()
+    i.add(A, 4, 1, "IS", "Revenues", "x")
+    i.add(A, 2, 1, "BS", "Assets", "x")
+    assert statement_page_fallback(A, "EQ", False, i) == (
+        "R4.htm",
+        "evidence_acc_stmt_page",
+    )
+    assert statement_page_fallback(A, "EQ", True, i) == (
+        "R2.htm",
+        "evidence_acc_stmt_page",
+    )
+    # META dividends_per_share has docmap stmt PAR: a duration cell, shown on the income statement
+    assert statement_page_fallback(A, "PAR", False, i) == (
+        "R4.htm",
+        "evidence_acc_stmt_page",
+    )
+
+
 def test_proven_note_fact_page_comes_from_the_note_lookup_of_that_filing():
     from scrooner_pipeline.mapper.top100_coverage import LocatorIndex, proven_locator
 
     A = "0001413329-25-000013"
     i = LocatorIndex()
-    i.add(A, 3, 5, "IS", "InterestIncomeExpenseNonoperatingNet", "Interest expense, net")
+    i.add(
+        A, 3, 5, "IS", "InterestIncomeExpenseNonoperatingNet", "Interest expense, net"
+    )
     tag = "InterestExpenseNonoperating"
     assert proven_locator(A, "IS", None, tag, i, {(A, tag): 116}) == (
         A,

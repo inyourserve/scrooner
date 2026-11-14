@@ -387,7 +387,9 @@ def statement_page_fallback(
     # a note stmt (NOTE, UN: the data point lives in a note, so this filing's faces do not print it) is "no
     # statement" here: the live PM amortization FY2022 REASON has stmt NOTE and cited no page (2026-11-14)
     stmt = "" if stmt in ("NOTE", "UN") else stmt
-    fallback = ["BS"] if instant else ([] if stmt else ["IS"])
+    # a main statement the filing does not carry as its own report (META dividends per share: no EQ report) falls
+    # back the same way: the income statement shows the absence of a duration line
+    fallback = ["BS"] if instant else ["IS"]
     for st in [stmt] + fallback:
         rep = idx.stmt_report(acc, st) if st else None
         if rep is not None:
@@ -884,14 +886,19 @@ def build_rows(
                     acc, page, lsrc = proven_locator(
                         pacc, pstmt, pline, ptag, idx, note_lookup
                     )
-                if lsrc in (
-                    "none",
-                    "note_fact_report_not_stored",
-                    "evidence_acc_no_page",
-                ) and not (acc and page) and not (
-                    # a PROVEN cell whose shown tag is a note fact cites that filing's NOTE page, never the
-                    # statement page of the year (PM interest_expense: IS prints only 'Interest expense, net')
-                    cls == "PROVEN" and lsrc == "note_fact_report_not_stored"
+                if (
+                    lsrc
+                    in (
+                        "none",
+                        "note_fact_report_not_stored",
+                        "evidence_acc_no_page",
+                    )
+                    and not (acc and page)
+                    and not (
+                        # a PROVEN cell whose shown tag is a note fact cites that filing's NOTE page, never the
+                        # statement page of the year (PM interest_expense: IS prints only 'Interest expense, net')
+                        cls == "PROVEN" and lsrc == "note_fact_report_not_stored"
+                    )
                 ):
                     own_acc, own_page = stmt_pages.get(
                         (c.company_id, e, dstmt), ("", "")

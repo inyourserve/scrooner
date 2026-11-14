@@ -89,7 +89,9 @@ def evidence_for(
                         "tag": tag,
                         "value": sum((f.value for f in members), Decimal(0)),
                         "member": True,
-                        "members": "; ".join(f"{f.segments}={f.value}" for f in members),
+                        "members": "; ".join(
+                            f"{f.segments}={f.value}" for f in members
+                        ),
                     }
                 )
     return out
@@ -140,9 +142,7 @@ def read_facts(
     return out
 
 
-def read_pages(
-    conn: Any, pairs: set[tuple[str, str]]
-) -> dict[tuple[str, str], int]:
+def read_pages(conn: Any, pairs: set[tuple[str, str]]) -> dict[tuple[str, str], int]:
     """(accession, tag) -> lowest report of fsn.line carrying the tag (statements first). One query."""
     out: dict[tuple[str, str], tuple[int, int]] = {}
     if not pairs:
